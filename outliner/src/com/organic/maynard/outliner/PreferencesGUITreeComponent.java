@@ -48,6 +48,10 @@ abstract class AbstractPreferencesGUITreeComponent implements PreferencesGUITree
 	
 	// Constants
 	public static final String A_LABEL = "label";
+	public static final String A_STYLE = "style";
+	
+	public static final String STYLE_SIDE_BY_SIDE = "side_by_side"; // The default
+	public static final String STYLE_SINGLE_CENTERED = "single_centered";
 	
 	// PreferencesGUITreeComponent Interface
 	public void setComponent(JComponent c) {
@@ -91,13 +95,29 @@ abstract class AbstractPreferencesGUITreeComponent implements PreferencesGUITree
 		// Add it to the PreferenceList in the parent panel
 		PreferencesPanel prefPanel = (PreferencesPanel) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 3);
 		prefPanel.addPreference(this);
-		
 	}
 
 	public void endSetup(AttributeList atts) {
-
+		AbstractPreferencesPanel prefPanel = (AbstractPreferencesPanel) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 3);
+		
+		// Get the style to use
+		String style = atts.getValue(A_STYLE);
+		if (style == null) {
+			style = STYLE_SIDE_BY_SIDE;
+		}
+		
+		if (style.equals(STYLE_SINGLE_CENTERED)) {
+			AbstractPreferencesPanel.addSingleItemCentered(new JLabel(getLabelText()), prefPanel.box);
+			AbstractPreferencesPanel.addSingleItemCentered(getComponent(), prefPanel.box);
+		} else if (style.equals(STYLE_SIDE_BY_SIDE)) {
+			AbstractPreferencesPanel.addPreferenceItem(getLabelText(), getComponent(), prefPanel.box);		
+		} else {
+			AbstractPreferencesPanel.addPreferenceItem(getLabelText(), getComponent(), prefPanel.box);
+		}
+		prefPanel.box.add(Box.createVerticalStrut(5));
 	}
 }
+
 
 class PreferencesGUITreeTextFieldComponent extends AbstractPreferencesGUITreeComponent {
 
@@ -105,24 +125,14 @@ class PreferencesGUITreeTextFieldComponent extends AbstractPreferencesGUITreeCom
 	public static final String A_SIZE = "size";
 
 	public void startSetup(AttributeList atts) {
-		// Set the Component
 		int size = 10;
 		try {
 			size = Integer.parseInt(atts.getValue(A_SIZE));
 		} catch (NumberFormatException e) {}
-		
 		JTextField component = new JTextField(size);
-		
 		setComponent(component);
-
 		super.startSetup(atts);
-
-		// Add it to the GUI
-		AbstractPreferencesPanel prefPanel = (AbstractPreferencesPanel) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 3);
 		component.addFocusListener(new TextFieldListener(component, getPreference()));
-		
-		AbstractPreferencesPanel.addPreferenceItem(getLabelText(), component, prefPanel.box);
-		prefPanel.box.add(Box.createVerticalStrut(5));
 	}
 }
 
@@ -130,111 +140,35 @@ class PreferencesGUITreeTextFieldComponent extends AbstractPreferencesGUITreeCom
 class PreferencesGUITreeCheckBoxComponent extends AbstractPreferencesGUITreeComponent {
 
 	public void startSetup(AttributeList atts) {
-		// Set the Component
 		JCheckBox component = new JCheckBox();
-		
 		setComponent(component);
-
 		super.startSetup(atts);
-
-		// Add it to the GUI
-		AbstractPreferencesPanel prefPanel = (AbstractPreferencesPanel) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 3);
 		component.addActionListener(new CheckboxListener(component, getPreference()));
-
-		AbstractPreferencesPanel.addPreferenceItem(getLabelText(), component, prefPanel.box);
-		prefPanel.box.add(Box.createVerticalStrut(5));
 	}
 }
 
 
 class PreferencesGUITreeComboBoxComponent extends AbstractPreferencesGUITreeComponent {
 
-	private final GraphicsEnvironment GRAPHICS_ENVIRONEMNT = GraphicsEnvironment.getLocalGraphicsEnvironment();
-	private final String[] LINE_WRAP_OPTIONS = {Preferences.TXT_WORDS, Preferences.TXT_CHARACTERS};
-
-	private static final String FONT_FACE = "font_face_component";
-	private static final String LINE_WRAP = "line_wrap_component";
-
-	private static final String LINE_ENDING = "line_end_component";
-	private static final String ENCODING_WHEN_OPENING = "open_encoding_component";
-	private static final String ENCODING_WHEN_SAVING = "save_encoding_component";
-	private static final String FORMAT_WHEN_OPENING = "open_format_component";
-	private static final String FORMAT_WHEN_SAVING = "save_format_component";
-	
 	public void startSetup(AttributeList atts) {
 		// Set the Component
-		JComboBox component;
-		if (FONT_FACE.equals(getGUITreeComponentID())) {
-			component = new JComboBox(GRAPHICS_ENVIRONEMNT.getAvailableFontFamilyNames());
-			
-		} else if (LINE_WRAP.equals(getGUITreeComponentID())) {
-			component = new JComboBox(LINE_WRAP_OPTIONS);
-			
-		} else if (LINE_ENDING.equals(getGUITreeComponentID())) {
-			component = new JComboBox(Preferences.PLATFORM_IDENTIFIERS);
-			
-		} else if (ENCODING_WHEN_OPENING.equals(getGUITreeComponentID())) {
-			component = new JComboBox();
-			for (int i = 0; i < Preferences.ENCODINGS.size(); i++) {
-				component.addItem((String) Preferences.ENCODINGS.elementAt(i));
-			}
-			
-		} else if (ENCODING_WHEN_SAVING.equals(getGUITreeComponentID())) {
-			component = new JComboBox();
-			for (int i = 0; i < Preferences.ENCODINGS.size(); i++) {
-				component.addItem((String) Preferences.ENCODINGS.elementAt(i));
-			}
-					
-		} else if (FORMAT_WHEN_OPENING.equals(getGUITreeComponentID())) {
-			component = new JComboBox();
-			for (int i = 0; i < Preferences.FILE_FORMATS_OPEN.size(); i++) {
-				component.addItem((String) Preferences.FILE_FORMATS_OPEN.elementAt(i));
-			}
-			
-		} else if (FORMAT_WHEN_SAVING.equals(getGUITreeComponentID())) {
-			component = new JComboBox();
-			for (int i = 0; i < Preferences.FILE_FORMATS_SAVE.size(); i++) {
-				component.addItem((String) Preferences.FILE_FORMATS_SAVE.elementAt(i));
-			}
-			
-		} else {
-			component = new JComboBox();
-			
-		}
-		
+		JComboBox component = new JComboBox();
 		setComponent(component);
-
 		super.startSetup(atts);
-
-		// Add it to the GUI
-		AbstractPreferencesPanel prefPanel = (AbstractPreferencesPanel) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 3);
 		component.addItemListener(new ComboBoxListener(component, getPreference()));
-
-		AbstractPreferencesPanel.addPreferenceItem(getLabelText(), component, prefPanel.box);
-		prefPanel.box.add(Box.createVerticalStrut(5));
 	}
 }
 
 
 class PreferencesGUITreeColorButtonComponent extends AbstractPreferencesGUITreeComponent implements ActionListener {
-	private static final String CHOOSE_COLOR = "Choose Color";
 
 	public void startSetup(AttributeList atts) {
 		// Set the Component
 		JButton component = new JButton("");
-		
 		setComponent(component);
-
 		super.startSetup(atts);
-
-		// Add it to the GUI
 		component.addActionListener(this);
 		component.setActionCommand(getLabelText());
-
-		AbstractPreferencesPanel prefPanel = (AbstractPreferencesPanel) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 3);
-		
-		AbstractPreferencesPanel.addPreferenceItem(getLabelText(), component, prefPanel.box);
-		prefPanel.box.add(Box.createVerticalStrut(5));
 	}
 	
 	// ActionListener Interface
@@ -242,7 +176,7 @@ class PreferencesGUITreeColorButtonComponent extends AbstractPreferencesGUITreeC
 		PreferencesFrame pf = (PreferencesFrame) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_FRAME);
 		PreferenceColor pref = (PreferenceColor) getPreference();
 		
-		Color newColor = JColorChooser.showDialog(pf, CHOOSE_COLOR, pref.tmp);
+		Color newColor = JColorChooser.showDialog(pf, getLabelText(), pref.tmp);
 		if (newColor != null) {
 			pref.tmp = newColor;
 			getComponent().setBackground(pref.tmp);

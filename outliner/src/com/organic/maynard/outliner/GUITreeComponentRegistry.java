@@ -82,6 +82,14 @@ public class GUITreeComponentRegistry {
 	public static final String PREFERENCES_PANEL_MISC = "preferences_panel_misc";
 	public static final String PREFERENCES_PANEL_OPEN_AND_SAVE = "preferences_panel_open_and_save";
 	public static final String PREFERENCES_PANEL_LOOK_AND_FEEL = "preferences_panel_look_and_feel";
+
+	public static final String COMPONENT_FONT_FACE = "font_face_component";
+	public static final String COMPONENT_LINE_WRAP = "line_wrap_component";
+	public static final String COMPONENT_LINE_ENDING = "line_end_component";
+	public static final String COMPONENT_ENCODING_WHEN_OPENING = "open_encoding_component";
+	public static final String COMPONENT_ENCODING_WHEN_SAVING = "save_encoding_component";
+	public static final String COMPONENT_FORMAT_WHEN_OPENING = "open_format_component";
+	public static final String COMPONENT_FORMAT_WHEN_SAVING = "save_format_component";
 	
 	private HashMap reg = new HashMap();
 	

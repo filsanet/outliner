@@ -20,8 +20,26 @@ package com.organic.maynard.outliner;
 
 import java.awt.Font;
 
-public class PreferencesPanelEditor extends AbstractPreferencesPanel implements PreferencesPanel, GUITreeComponent {
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
 
+import org.xml.sax.*;
+
+public class PreferencesPanelEditor extends AbstractPreferencesPanel implements PreferencesPanel, GUITreeComponent {
+	
+	private final GraphicsEnvironment GRAPHICS_ENVIRONEMNT = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	private final String[] LINE_WRAP_OPTIONS = {Preferences.TXT_WORDS, Preferences.TXT_CHARACTERS};
+
+	public void endSetup(AttributeList atts) {
+		super.endSetup(atts);
+		
+		AbstractPreferencesPanel.addArrayToComboBox(GRAPHICS_ENVIRONEMNT.getAvailableFontFamilyNames(), GUITreeComponentRegistry.COMPONENT_FONT_FACE);
+		AbstractPreferencesPanel.addArrayToComboBox(LINE_WRAP_OPTIONS, GUITreeComponentRegistry.COMPONENT_LINE_WRAP);
+	}
+	
+	
 	public void applyTemporaryToCurrent() {
 		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
 		

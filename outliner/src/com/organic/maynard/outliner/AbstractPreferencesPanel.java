@@ -92,6 +92,33 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 		return prefs.size();
 	}
 
+	public void setToCurrent() {
+
+		for (int i = 0; i < getPreferenceListSize(); i++) {
+			PreferencesGUITreeComponent comp = getPreference(i);
+			Preference pref = comp.getPreference();
+			
+			if (comp instanceof PreferencesGUITreeTextFieldComponent) {
+				JTextField text = (JTextField) comp.getComponent();
+				text.setText(pref.getCur());
+				
+			} else if (comp instanceof PreferencesGUITreeComboBoxComponent) {
+				JComboBox comboBox = (JComboBox) comp.getComponent();
+				comboBox.setSelectedItem(pref.getCur());
+							
+			} else if (comp instanceof PreferencesGUITreeCheckBoxComponent) {
+				JCheckBox checkBox = (JCheckBox) comp.getComponent();
+				checkBox.setSelected(new Boolean(pref.getCur()).booleanValue());
+							
+			} else if (comp instanceof PreferencesGUITreeColorButtonComponent) {
+				JButton button = (JButton) comp.getComponent();
+				PreferenceColor prefColor = (PreferenceColor) pref;
+				button.setBackground(prefColor.cur);
+							
+			}
+		}
+	}
+
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
@@ -128,37 +155,16 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 			}
 		}
 	}
-
-
-	public void setToCurrent() {
-
-		for (int i = 0; i < getPreferenceListSize(); i++) {
-			PreferencesGUITreeComponent comp = getPreference(i);
-			Preference pref = comp.getPreference();
-			
-			if (comp instanceof PreferencesGUITreeTextFieldComponent) {
-				JTextField text = (JTextField) comp.getComponent();
-				text.setText(pref.getCur());
-				
-			} else if (comp instanceof PreferencesGUITreeComboBoxComponent) {
-				JComboBox comboBox = (JComboBox) comp.getComponent();
-				comboBox.setSelectedItem(pref.getCur());
-							
-			} else if (comp instanceof PreferencesGUITreeCheckBoxComponent) {
-				JCheckBox checkBox = (JCheckBox) comp.getComponent();
-				checkBox.setSelected(new Boolean(pref.getCur()).booleanValue());
-							
-			} else if (comp instanceof PreferencesGUITreeColorButtonComponent) {
-				JButton button = (JButton) comp.getComponent();
-				PreferenceColor prefColor = (PreferenceColor) pref;
-				button.setBackground(prefColor.cur);
-							
-			}
-		}
-	}
 	
 	
 	// Static Methods
+	protected static void addArrayToComboBox(Object[] array, String componentID) {
+		JComboBox component = (JComboBox) ((PreferencesGUITreeComboBoxComponent) GUITreeLoader.reg.get(componentID)).getComponent();
+		for (int i = 0; i < array.length; i++) {
+			component.addItem(array[i].toString());
+		}	
+	}
+	
 	protected static void addPreferenceItem(String text, JComponent field, Container container) {
 		Box box = Box.createHorizontalBox();
 		box.add(Box.createHorizontalGlue());

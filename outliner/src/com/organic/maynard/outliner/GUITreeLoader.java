@@ -33,10 +33,12 @@ public class GUITreeLoader extends HandlerBase {
 
 	// Constants
 	public static final String E_SEPARATOR = "separator";
+	public static final String E_VERTICAL_STRUT = "vertical_strut";
 
 	public static final String A_ID = "id";
 	public static final String A_CLASS = "class";
 	public static final String A_POSITION = "position";
+	public static final String A_SIZE = "size";
 
 
 	// Class Fields
@@ -85,13 +87,18 @@ public class GUITreeLoader extends HandlerBase {
 	public void startElement (String name, AttributeList atts) {
 		
 		// Special Handling for elements that are not GUITreeComponents
-		if (name.equals(E_SEPARATOR)) {
-			try {
+		try {
+			if (name.equals(E_SEPARATOR)) {
 				JMenu menu = (JMenu) elementStack.get(elementStack.size() - 1);
 				menu.insertSeparator(menu.getItemCount());
-			} catch (Exception e) {
-				e.printStackTrace();
+				return;
+			} else if (name.equals(E_VERTICAL_STRUT)) {
+				Box box = ((AbstractPreferencesPanel) elementStack.get(elementStack.size() - 1)).box;
+				box.add(Box.createVerticalStrut(Integer.parseInt(atts.getValue(A_SIZE))));
+				return;		
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 			return;
 		}
 				
@@ -101,7 +108,7 @@ public class GUITreeLoader extends HandlerBase {
 
 		// Process Elements
 		try {
-			System.out.println("Setting component: " + className);
+			//System.out.println("Setting component: " + className);
 			GUITreeComponent obj = (GUITreeComponent) Class.forName(className).newInstance();
 			
 			// Set the GUITreeComponent's name
@@ -130,7 +137,7 @@ public class GUITreeLoader extends HandlerBase {
 	
 	public void endElement (String name) throws SAXException {
 		// Special Handling for elements that are not GUITreeComponents
-		if (name.equals(E_SEPARATOR)) {
+		if (name.equals(E_SEPARATOR) || name.equals(E_VERTICAL_STRUT)) {
 			return;
 		}
 		
