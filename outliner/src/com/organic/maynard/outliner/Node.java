@@ -19,6 +19,7 @@
 package com.organic.maynard.outliner;
 
 import java.awt.*;
+import java.util.*;
 
 public interface Node {
 
@@ -114,6 +115,10 @@ public interface Node {
 	// Data Methods
 	public void setValue(String str);
 	public String getValue();
+	
+	public void setAttribute(String key, Object value);
+	public Object getAttribute(String key);
+	public Iterator getAttributeKeys();
 
 	// String Representation Methods
 	public String depthPaddedValue(String lineEndString);

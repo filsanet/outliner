@@ -27,6 +27,8 @@ public class NodeImpl implements Node {
 	private TreeContext tree = null;
 	private Node parent = null;
 	private String value = null;
+	private HashMap attributes = null;
+	// IMPROVE: Could children be initially null and do lazy instantiation. This could save memory.
 	private ArrayList children = new ArrayList(10);
 
 	private int depth = -1; // -1 so that children of root will be depth 0.
@@ -550,6 +552,27 @@ public class NodeImpl implements Node {
 	// Data Methods
 	public void setValue(String value) {this.value = value;}
 	public String getValue() {return value;}
+
+	public void setAttribute(String key, Object value) {
+		if (attributes == null) {
+			attributes = new HashMap();
+		}
+		attributes.put(key, value);
+	}
+	
+	public Object getAttribute(String key) {
+		if (attributes != null && key != null) {
+			return attributes.get(key);
+		}
+		return null;
+	}
+	
+	public Iterator getAttributeKeys() {
+		if (attributes != null) {
+			return attributes.keySet().iterator();
+		}
+		return null;
+	}
 
 
 	// String Representation Methods	

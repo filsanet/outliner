@@ -98,54 +98,73 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		
 		StringBuffer buf = new StringBuffer();
 		
-		buf.append("<?xml version=\"1.0\" encoding=\"" + docInfo.getEncodingType() + "\" ?>" + lineEnding);
-		buf.append("<" + ELEMENT_OPML + " version=\"1.0\">" + lineEnding);
+		buf.append("<?xml version=\"1.0\" encoding=\"").append(docInfo.getEncodingType()).append("\" ?>").append(lineEnding);
+		buf.append("<").append(ELEMENT_OPML).append(" version=\"1.0\">").append(lineEnding);
 		
-		buf.append("<" + ELEMENT_HEAD + ">" + lineEnding);
+		buf.append("<").append(ELEMENT_HEAD).append(">").append(lineEnding);
 
-		buf.append("<" + ELEMENT_TITLE +                 ">" + escapeXMLText(docInfo.getPath()) +                        "</" + ELEMENT_TITLE +                 ">" + lineEnding); // We'll use path for the title since that is how our outliner difines window titles.
-		buf.append("<" + ELEMENT_DATE_CREATED +          ">" + escapeXMLText(docInfo.getDateCreated()) +                 "</" + ELEMENT_DATE_CREATED +          ">" + lineEnding);
-		buf.append("<" + ELEMENT_DATE_MODIFIED +         ">" + escapeXMLText(docInfo.getDateModified()) +                "</" + ELEMENT_DATE_MODIFIED +         ">" + lineEnding);
-		buf.append("<" + ELEMENT_OWNER_NAME +            ">" + escapeXMLText(docInfo.getOwnerName()) +                   "</" + ELEMENT_OWNER_NAME +            ">" + lineEnding);
-		buf.append("<" + ELEMENT_OWNER_EMAIL +           ">" + escapeXMLText(docInfo.getOwnerEmail()) +                  "</" + ELEMENT_OWNER_EMAIL +           ">" + lineEnding);
-		buf.append("<" + ELEMENT_EXPANSION_STATE +       ">" + escapeXMLText(docInfo.getExpandedNodesStringShifted(1)) + "</" + ELEMENT_EXPANSION_STATE +       ">" + lineEnding);
-		buf.append("<" + ELEMENT_VERTICAL_SCROLL_STATE + ">" + escapeXMLText("" + docInfo.getVerticalScrollState()) +    "</" + ELEMENT_VERTICAL_SCROLL_STATE + ">" + lineEnding);
-		buf.append("<" + ELEMENT_WINDOW_TOP +            ">" + escapeXMLText("" + docInfo.getWindowTop()) +              "</" + ELEMENT_WINDOW_TOP +            ">" + lineEnding);
-		buf.append("<" + ELEMENT_WINDOW_LEFT +           ">" + escapeXMLText("" + docInfo.getWindowLeft()) +             "</" + ELEMENT_WINDOW_LEFT +           ">" + lineEnding);
-		buf.append("<" + ELEMENT_WINDOW_BOTTOM +         ">" + escapeXMLText("" + docInfo.getWindowBottom()) +           "</" + ELEMENT_WINDOW_BOTTOM +         ">" + lineEnding);
-		buf.append("<" + ELEMENT_WINDOW_RIGHT +          ">" + escapeXMLText("" + docInfo.getWindowRight()) +            "</" + ELEMENT_WINDOW_RIGHT +          ">" + lineEnding);
+		buf.append("<").append(ELEMENT_TITLE).append(">").append(escapeXMLText(docInfo.getPath())).append("</").append(ELEMENT_TITLE).append(">").append(lineEnding); // We'll use path for the title since that is how our outliner difines window titles.
+		buf.append("<").append(ELEMENT_DATE_CREATED).append(">").append(escapeXMLText(docInfo.getDateCreated())).append("</").append(ELEMENT_DATE_CREATED).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_DATE_MODIFIED).append(">").append(escapeXMLText(docInfo.getDateModified())).append("</").append(ELEMENT_DATE_MODIFIED).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_OWNER_NAME).append(">").append(escapeXMLText(docInfo.getOwnerName())).append("</").append(ELEMENT_OWNER_NAME).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_OWNER_EMAIL).append(">").append(escapeXMLText(docInfo.getOwnerEmail())).append("</").append(ELEMENT_OWNER_EMAIL).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_EXPANSION_STATE).append(">").append(escapeXMLText(docInfo.getExpandedNodesStringShifted(1))).append("</").append(ELEMENT_EXPANSION_STATE).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_VERTICAL_SCROLL_STATE).append(">").append(escapeXMLText("" + docInfo.getVerticalScrollState())).append("</").append(ELEMENT_VERTICAL_SCROLL_STATE).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_WINDOW_TOP).append(">").append(escapeXMLText("" + docInfo.getWindowTop())).append("</").append(ELEMENT_WINDOW_TOP).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_WINDOW_LEFT).append(">").append(escapeXMLText("" + docInfo.getWindowLeft())).append("</").append(ELEMENT_WINDOW_LEFT).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_WINDOW_BOTTOM).append(">").append(escapeXMLText("" + docInfo.getWindowBottom())).append("</").append(ELEMENT_WINDOW_BOTTOM).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_WINDOW_RIGHT).append(">").append(escapeXMLText("" + docInfo.getWindowRight())).append("</").append(ELEMENT_WINDOW_RIGHT).append(">").append(lineEnding);
 
-		buf.append("</" + ELEMENT_HEAD + ">" + lineEnding);
+		buf.append("</").append(ELEMENT_HEAD).append(">").append(lineEnding);
 
 		buildOutliner(tree.getRootNode(),lineEnding, buf);
 		
-		buf.append("</" + ELEMENT_OPML + ">" + lineEnding);
+		buf.append("</").append(ELEMENT_OPML).append(">").append(lineEnding);
 		return buf.toString();
 	}
 
 	private void buildOutliner(Node node, String lineEnding, StringBuffer buf) {
 		if (node.isRoot()) {
-			buf.append("<" + ELEMENT_BODY + ">" + lineEnding);
+			buf.append("<").append(ELEMENT_BODY).append(">").append(lineEnding);
 			for (int i = 0; i < node.numOfChildren(); i++) {
 				buildOutliner(node.getChild(i), lineEnding, buf);
 			}
-			buf.append("</" + ELEMENT_BODY + ">" + lineEnding);
+			buf.append("</").append(ELEMENT_BODY).append(">").append(lineEnding);
 		} else if (node.isLeaf()) {
 			if (node.isComment()) {
-				buf.append("<" + ELEMENT_OUTLINE + " " + ATTRIBUTE_IS_COMMENT + "=\"true\" " + ATTRIBUTE_TEXT + "=\"" + escapeXMLAttribute(node.getValue()) + "\"/>" + lineEnding);
+				buf.append("<").append(ELEMENT_OUTLINE).append(" ").append(ATTRIBUTE_IS_COMMENT).append("=\"true\" ").append(ATTRIBUTE_TEXT).append("=\"").append(escapeXMLAttribute(node.getValue())).append("\"");
+				buildAttributes(node, buf);
+				buf.append("/>").append(lineEnding);
 			} else {
-				buf.append("<" + ELEMENT_OUTLINE + " " + ATTRIBUTE_TEXT + "=\"" + escapeXMLAttribute(node.getValue()) + "\"/>" + lineEnding);
+				buf.append("<").append(ELEMENT_OUTLINE).append(" ").append(ATTRIBUTE_TEXT).append("=\"").append(escapeXMLAttribute(node.getValue())).append("\"");
+				buildAttributes(node, buf);
+				buf.append("/>").append(lineEnding);
 			}
 		} else {
 			if (node.isComment()) {
-				buf.append("<" + ELEMENT_OUTLINE + " " + ATTRIBUTE_IS_COMMENT + "=\"true\" " + ATTRIBUTE_TEXT + "=\"" + escapeXMLAttribute(node.getValue()) + "\">" + lineEnding);
+				buf.append("<").append(ELEMENT_OUTLINE).append(" ").append(ATTRIBUTE_IS_COMMENT).append("=\"true\" ").append(ATTRIBUTE_TEXT).append("=\"").append(escapeXMLAttribute(node.getValue())).append("\"");
+				buildAttributes(node, buf);
+				buf.append(">").append(lineEnding);
 			} else {
-				buf.append("<" + ELEMENT_OUTLINE + " " + ATTRIBUTE_TEXT + "=\"" + escapeXMLAttribute(node.getValue()) + "\">" + lineEnding);
+				buf.append("<").append(ELEMENT_OUTLINE).append(" ").append(ATTRIBUTE_TEXT).append("=\"").append(escapeXMLAttribute(node.getValue())).append("\"");
+				buildAttributes(node, buf);
+				buf.append(">").append(lineEnding);
 			}
 			for (int i = 0; i < node.numOfChildren(); i++) {
 				buildOutliner(node.getChild(i), lineEnding, buf);
 			}
-			buf.append("</" + ELEMENT_OUTLINE + ">" + lineEnding);		
+			buf.append("</").append(ELEMENT_OUTLINE).append(">").append(lineEnding);		
+		}
+	}
+	
+	private void buildAttributes(Node node, StringBuffer buf) {
+		Iterator it = node.getAttributeKeys();
+		if (it != null) {
+			while (it.hasNext()) {
+				String key = (String) it.next();
+				Object value = node.getAttribute(key);
+				buf.append(" ").append(key).append("=\"").append(escapeXMLAttribute(value.toString())).append("\"");
+			}
 		}
 	}
 	
@@ -229,14 +248,25 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		elementStack.add(name);
 		
 		if (name.equals(ELEMENT_OUTLINE)) {
-			String text = atts.getValue(ATTRIBUTE_TEXT);
-			String isComment = atts.getValue(ATTRIBUTE_IS_COMMENT);
-			NodeImpl node = new NodeImpl(tree, text);
-			if (isComment != null && isComment.equals("true")) {
-				node.setComment(true);
-			} else {
-				node.setComment(false);
+			NodeImpl node = new NodeImpl(tree, "");
+			
+			for (int i = 0; i < atts.getLength(); i++) {
+				String attName = atts.getName(i);
+				String attValue = atts.getValue(i);
+				
+				if (attName.equals(ATTRIBUTE_TEXT)) {
+					node.setValue(attValue);
+				} else if (attName.equals(ATTRIBUTE_IS_COMMENT)) {
+					if (attValue != null && attValue.equals("true")) {
+						node.setComment(true);
+					} else {
+						node.setComment(false);
+					}
+				} else {
+					node.setAttribute(attName, attValue);
+				}
 			}
+			
 			currentParent.appendChild(node);
 			currentParent = node;
 		}
