@@ -34,10 +34,11 @@
 
 package com.psm.wiki;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.io.*;
 import com.organic.maynard.outliner.io.formats.AbstractFileFormat;
 import com.organic.maynard.outliner.*;
-
 import java.io.*;
 import java.util.*;
 
@@ -56,9 +57,9 @@ interface WikiParserHandler {
 }
 
 class WikiParserException extends Exception {
-    WikiParserException(String reason) {
-        super(reason);
-    }
+	WikiParserException(String reason) {
+		super(reason);
+	}
 }
 
 class WikiHandler implements WikiParserHandler {
@@ -124,7 +125,7 @@ class WikiFormatter {
 	}
 	
 	public StringBuffer write() {
-		String eol = PlatformCompatibility.platformToLineEnding(docInfo.getLineEnding());
+		String eol = PlatformCompatibility.platformToLineEnding(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_LINE_ENDING));
 		StringBuffer buf = new StringBuffer();
 		
 		Node node = tree.getRootNode();
@@ -603,7 +604,7 @@ public class WikiFileFormat extends AbstractFileFormat implements SaveFileFormat
 		this.tree = tree;
 		
 		try {
-			InputStreamReader inputStreamReader = new InputStreamReader(stream, docInfo.getEncodingType());
+			InputStreamReader inputStreamReader = new InputStreamReader(stream, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE));
 			BufferedReader buf = new BufferedReader(inputStreamReader);
 			
 			WikiHandler handler = new WikiHandler(docInfo, tree);
@@ -623,10 +624,10 @@ public class WikiFileFormat extends AbstractFileFormat implements SaveFileFormat
 		StringBuffer buf = formatter.write();
 		
 		try {
-		    return buf.toString().getBytes(docInfo.getEncodingType());
+			return buf.toString().getBytes(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE));
 		} catch (UnsupportedEncodingException ex) {
-		    ex.printStackTrace();
-		    return buf.toString().getBytes();
+			ex.printStackTrace();
+			return buf.toString().getBytes();
 		}
 	}
 	

@@ -34,6 +34,8 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.util.preferences.*;
 import com.organic.maynard.outliner.dom.*;
@@ -62,10 +64,10 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	public static final int MIN_WIDTH = 300;
 	public static final int MIN_HEIGHT = 100;
 	
- 	public static final int INITIAL_WIDTH = 450;
+	public static final int INITIAL_WIDTH = 450;
 	public static final int INITIAL_HEIGHT = 450;
 	
- 	public static final int INITIAL_X = 5; // Default starting location
+	public static final int INITIAL_X = 5; // Default starting location
 	public static final int INITIAL_Y = 5; // Default starting location
 	
 	
@@ -88,20 +90,16 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	private int dividerPosition = 0;
 	private String fileName = "";
 	private boolean fileModified = true;
-	
 	private Border border = null;
-	
 	private DocumentRepository repository = null;
 	private DocumentInfo docInfo = null;
-	
+	// TBD: move these into the constructor if possible.
 	public OutlinerPanel panel = new OutlinerPanel(this); // Needs to come before JoeTree declaration.
-	
 	public DocumentSettings settings = new DocumentSettings(this);
 	public JoeTree tree = Outliner.newTree(this); // Needs to come after OutlinerPanel declaration.
 	public HoistStack hoistStack = new HoistStack(this);
 	public AttributesPanel attPanel = new AttributesPanel(this);
 	public UndoQueue undoQueue = new UndoQueue(this);
-	
 	private JSplitPane splitPane = null;
 	private JScrollPane attJSP = new JScrollPane(attPanel);
 	
@@ -126,7 +124,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 			setTitle(title);
 		}
 		
-		setFileName(docInfo.getPath());
+		setFileName(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH));
 		
 		// Add it to the openDocuments list
 		Outliner.documents.addDocument(this);
@@ -220,6 +218,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	
 	public void setTree(JoeTree tree) {
 		this.tree = tree;
+		tree.setDocument(this);
 	}
 	
 	public JoeTree getTree() {
@@ -338,25 +337,6 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		}
 	}
 	
-	
-	// This method taken from the workaround for bug #4309079.
-	/*public void moveToFront() {
-		Window window = SwingUtilities.getWindowAncestor(this);
-		Component focusOwner = (window != null) ? window.getFocusOwner() : null;
-		boolean descendant = false;
-		
-		if (window != null && focusOwner != null && SwingUtilities.isDescendingFrom(focusOwner, this)) {
-			descendant = true;
-			requestFocus();
-		}
-		
-		super.moveToFront();
-		
-		if (descendant) {
-			focusOwner.requestFocus();
-		}
-	}*/
-	
 	public void setSelected(boolean selected) throws java.beans.PropertyVetoException {
 		super.setSelected(selected);
 		if (selected) {
@@ -421,7 +401,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		// Make the change
 		for (int i = 0, limit = Outliner.documents.openDocumentCount(); i < limit; i++) {
 			OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getDocument(i);
-			String pathname = doc.getDocumentInfo().getPath();
+			String pathname = PropertyContainerUtil.getPropertyAsString(doc.getDocumentInfo(), DocumentInfo.KEY_PATH);
 			
 			// Pass over untitled documents
 			if (pathname == null || pathname.equals("")) {

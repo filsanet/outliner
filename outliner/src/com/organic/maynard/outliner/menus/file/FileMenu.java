@@ -35,6 +35,8 @@
 
 package com.organic.maynard.outliner.menus.file;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.menus.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.data.IntList;
@@ -101,7 +103,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 	 * @param saveAs indicates if we are in the process of doing a "Save As" operation rather than a straight "Save".
 	 */
 	public static void saveFile(String filename, OutlinerDocument document, boolean saveAs) {
-		FileProtocol protocol = Outliner.fileProtocolManager.getProtocol(document.getDocumentInfo().getProtocolName());
+		FileProtocol protocol = Outliner.fileProtocolManager.getProtocol(PropertyContainerUtil.getPropertyAsString(document.getDocumentInfo(), DocumentInfo.KEY_PROTOCOL_NAME));
 		saveFile(filename, document, protocol, saveAs, MODE_SAVE);
 	}
 	
@@ -143,7 +145,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		String title;
 		
 		// set up the protocol
-		docInfo.setProtocolName(protocol.getName()) ;
+		PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_PROTOCOL_NAME, protocol.getName());
 		
 		// Get the proper file format object for the specified mode
 		// Initialize DocumentInfo with current document state, prefs and document settings.
@@ -151,7 +153,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		switch (mode) {
 			case MODE_SAVE:
 				if (saveAs) {
-					fileFormatName = docInfo.getFileFormat();
+					fileFormatName = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_FILE_FORMAT);
 				} else {
 					fileFormatName = document.settings.getSaveFormat().cur;
 				}
@@ -162,9 +164,9 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				break;
 				
 			case MODE_EXPORT:
-				fileFormatName = docInfo.getFileFormat();
+				fileFormatName = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_FILE_FORMAT);
 				saveOrExportFileFormat = Outliner.fileFormatManager.getExportFormat(fileFormatName);
-				docInfo.setPath(filename);
+				PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_PATH, filename);
 				break;
 				
 			default:
@@ -177,7 +179,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// if we couldn't get a saveOrExportFileFormat
 		if (saveOrExportFileFormat == null) {
 			msg = GUITreeLoader.reg.getText("error_could_not_save_no_file_format");
-			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH));
 			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_2, fileFormatName);
 			JOptionPane.showMessageDialog(document, msg);
 			return;
@@ -286,8 +288,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			docInfo.setOutputBytes(bytes);
 			
 			// if we're an imported file, the savee/exportee won't be
-			if (wereImported = docInfo.isImported()){
-				docInfo.setImported(false);
+			if (wereImported = PropertyContainerUtil.getPropertyAsBoolean(docInfo, DocumentInfo.KEY_IMPORTED)){
+				PropertyContainerUtil.setPropertyAsBoolean(docInfo, DocumentInfo.KEY_IMPORTED, false);
 			}
 			
 			// Ask the protocol to save/export the file. This is where the data actually gets written.
@@ -309,12 +311,12 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		switch (saveOrExportResult) {
 			case FAILURE:
 				msg = GUITreeLoader.reg.getText("error_could_not_save_file");
-				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
+				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH));
 				JOptionPane.showMessageDialog(document, msg);
 				
 			case USER_ABORTED:
 				if (wereImported) {
-					docInfo.setImported(true) ;
+					PropertyContainerUtil.setPropertyAsBoolean(docInfo, DocumentInfo.KEY_IMPORTED, true);
 				}
 				break;
 				
@@ -323,7 +325,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 					case MODE_EXPORT:
 						// if we were imported, we stay that way
 						if (wereImported) {
-							docInfo.setImported(true) ;
+							PropertyContainerUtil.setPropertyAsBoolean(docInfo, DocumentInfo.KEY_IMPORTED, true);
 						}
 						break;
 					
@@ -402,21 +404,20 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// an URL: "file:///C:/path/to/my/file.txt" for Local File System Protocol
 		//         "phpwebfile:///path/to/my/file.txt" for PHP:WebFile Protocol
 		//         "null:///Untitled 1" for unsaved documents.
-		String filename = docInfo.getPath();
+		String filename = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH);
 		if (!Outliner.documents.isFileNameUnique(filename)) {
 			String msg = GUITreeLoader.reg.getText("message_file_already_open");
 			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
-			
 			JOptionPane.showMessageDialog(Outliner.outliner, msg);
 			return;
 		}
 		
-		JoeTree tree = Outliner.newTree(null);
+		JoeTree tree = Outliner.newTree(null); // TBD: let's make a real factory class for trees if we even neeed one.
 		
-		// try to open the file and pour its data into that tree
+		// try to open the file and pour its data into the tree
 		int openOrImportResult = openOrImportFileAndGetTree(tree, docInfo, protocol, mode);
 		
-		// if things didn't go well, abort the mission
+		// if things didn't go well, abort
 		if ((openOrImportResult != SUCCESS) && (openOrImportResult != SUCCESS_MODIFIED)) { // Might be good to have codes we can do % on.
 			return;
 		}
@@ -429,56 +430,34 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				break;
 				
 			default:
-				// ack, as they say
 				// we should never get here
 				System.out.println("FileMenu:OpenFile: invalid mode parameter");
 				return;
 		}
 		
-		OutlinerDocument newDoc = new OutlinerDocument(docInfo.getPath(), docInfo);
+		OutlinerDocument newDoc = new OutlinerDocument(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH), docInfo);
 		
 		// Use document settings immediately, otherwise we would update the application prefs which is bad.
 		newDoc.settings.setUseDocumentSettings(true);
 		
-		// give it the docInfo we've got
-		newDoc.setDocumentInfo(docInfo);
-		
 		// hook the outline tree to the doc, and the doc to the outline tree
-		tree.setDocument(newDoc);
-		newDoc.tree = tree;
+		//tree.setDocument(newDoc);
+		newDoc.setTree(tree);
 		
-		// [srk] bug:we can get to this
-		// point with no line ending set
-		//  fix: set it to current pref
-		// if lineEnding is not yet set ...
-		if (docInfo.getLineEnding().length() == 0) {
-			docInfo.setLineEnding (Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur);
-		}
-		
-		// [srk] bug:we can get to this
-		// point with no owner name
-		//  fix: set it to current pref
-		// if ownerName is not yet set ...
-		if (docInfo.getOwnerName().length() == 0) {
-			docInfo.setOwnerName(Preferences.getPreferenceString(Preferences.OWNER_NAME).cur);
-		}
-		
-		// [srk] bug:we can get to this
-		// point with no owner email
-		//  fix: set it to current pref
-		// if ownerEmail is not yet set ...
-		if (docInfo.getOwnerEmail().length() == 0) {
-			docInfo.setOwnerEmail(Preferences.getPreferenceString(Preferences.OWNER_EMAIL).cur);
+		// [srk] bug:we can get to this point with no line ending set
+		//  fix: set it to current pref if lineEnding is not yet set ...
+		if (PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_LINE_ENDING).length() == 0) {
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_LINE_ENDING, Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur);
 		}
 		
 		// Update DocumentSettings
-		syncDocumentSettingsToDocInfo(newDoc, docInfo, mode);
+		syncDocumentToDocInfo(newDoc, mode);
 		
 		// make any final modal adjustments
 		switch (mode) {
 			case MODE_IMPORT:
 				// we were imported
-				docInfo.setImported(true);
+				PropertyContainerUtil.setPropertyAsBoolean(docInfo, DocumentInfo.KEY_IMPORTED, true);
 				break;
 				
 			case MODE_OPEN:
@@ -494,49 +473,58 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		setupAndDraw(docInfo, newDoc, openOrImportResult);
 	}
 	
-	protected static void syncDocumentSettingsToDocInfo(OutlinerDocument newDoc, DocumentInfo docInfo, int mode) {
+	private static void syncDocumentToDocInfo(OutlinerDocument doc, int mode) {
+		DocumentInfo docInfo = doc.getDocumentInfo();
+		
 		// Update DocumentSettings
-		newDoc.settings.getLineEnd().def = docInfo.getLineEnding();
-		newDoc.settings.getLineEnd().restoreCurrentToDefault();
-		newDoc.settings.getLineEnd().restoreTemporaryToDefault();
+		doc.settings.getLineEnd().def = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_LINE_ENDING);
+		doc.settings.getLineEnd().restoreCurrentToDefault();
+		doc.settings.getLineEnd().restoreTemporaryToDefault();
 		
-		newDoc.settings.getSaveEncoding().def = docInfo.getEncodingType();
-		newDoc.settings.getSaveEncoding().restoreCurrentToDefault();
-		newDoc.settings.getSaveEncoding().restoreTemporaryToDefault();
+		doc.settings.getSaveEncoding().def = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE);
+		doc.settings.getSaveEncoding().restoreCurrentToDefault();
+		doc.settings.getSaveEncoding().restoreTemporaryToDefault();
 		
-		// if we were imported ....
 		if (mode == MODE_IMPORT) {
 			// the doc's default save format is the app's default save format
-			newDoc.settings.getSaveFormat().def = Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur;
+			doc.settings.getSaveFormat().def = Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur;
 		} else {
 			// the doc's default save format is its existing format
-			newDoc.settings.getSaveFormat().def = docInfo.getFileFormat();
+			doc.settings.getSaveFormat().def = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_FILE_FORMAT);
 		}
-		newDoc.settings.getSaveFormat().restoreCurrentToDefault();
-		newDoc.settings.getSaveFormat().restoreTemporaryToDefault();
+		doc.settings.getSaveFormat().restoreCurrentToDefault();
+		doc.settings.getSaveFormat().restoreTemporaryToDefault();
 		
-		newDoc.settings.getApplyFontStyleForComments().def = docInfo.getApplyFontStyleForComments();
-		newDoc.settings.getApplyFontStyleForComments().restoreCurrentToDefault();
-		newDoc.settings.getApplyFontStyleForComments().restoreTemporaryToDefault();
+		doc.settings.getApplyFontStyleForComments().def = PropertyContainerUtil.getPropertyAsBoolean(docInfo, DocumentInfo.KEY_APPLY_FONT_STYLE_FOR_COMMENTS);
+		doc.settings.getApplyFontStyleForComments().restoreCurrentToDefault();
+		doc.settings.getApplyFontStyleForComments().restoreTemporaryToDefault();
 		
-		newDoc.settings.getApplyFontStyleForEditability().def = docInfo.getApplyFontStyleForEditability();
-		newDoc.settings.getApplyFontStyleForEditability().restoreCurrentToDefault();
-		newDoc.settings.getApplyFontStyleForEditability().restoreTemporaryToDefault();
+		doc.settings.getApplyFontStyleForEditability().def = PropertyContainerUtil.getPropertyAsBoolean(docInfo, DocumentInfo.KEY_APPLY_FONT_STYLE_FOR_EDITABILITY);
+		doc.settings.getApplyFontStyleForEditability().restoreCurrentToDefault();
+		doc.settings.getApplyFontStyleForEditability().restoreTemporaryToDefault();
 		
-		newDoc.settings.getApplyFontStyleForMoveability().def = docInfo.getApplyFontStyleForMoveability();
-		newDoc.settings.getApplyFontStyleForMoveability().restoreCurrentToDefault();
-		newDoc.settings.getApplyFontStyleForMoveability().restoreTemporaryToDefault();
+		doc.settings.getApplyFontStyleForMoveability().def = PropertyContainerUtil.getPropertyAsBoolean(docInfo, DocumentInfo.KEY_APPLY_FONT_STYLE_FOR_MOVEABILITY);
+		doc.settings.getApplyFontStyleForMoveability().restoreCurrentToDefault();
+		doc.settings.getApplyFontStyleForMoveability().restoreTemporaryToDefault();
 		
-		newDoc.settings.getUseCreateModDates().def = docInfo.getUseCreateModDates();
-		newDoc.settings.getUseCreateModDates().restoreCurrentToDefault();
-		newDoc.settings.getUseCreateModDates().restoreTemporaryToDefault();
+		doc.settings.getUseCreateModDates().def = PropertyContainerUtil.getPropertyAsBoolean(docInfo, DocumentInfo.KEY_USE_CREATE_MOD_DATES);
+		doc.settings.getUseCreateModDates().restoreCurrentToDefault();
+		doc.settings.getUseCreateModDates().restoreTemporaryToDefault();
 		
-		newDoc.settings.getCreateModDatesFormat().def = docInfo.getCreateModDatesFormat();
-		newDoc.settings.getCreateModDatesFormat().restoreCurrentToDefault();
-		newDoc.settings.getCreateModDatesFormat().restoreTemporaryToDefault();
+		doc.settings.getCreateModDatesFormat().def = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_CREATE_MOD_DATES_FORMAT);
+		doc.settings.getCreateModDatesFormat().restoreCurrentToDefault();
+		doc.settings.getCreateModDatesFormat().restoreTemporaryToDefault();
 		
-		newDoc.settings.setDateCreated(docInfo.getDateCreated());
-		newDoc.settings.setDateModified(docInfo.getDateModified());
+		doc.settings.setDateCreated(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_DATE_CREATED));
+		doc.settings.setDateModified(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_DATE_MODIFIED));
+		
+		// Update size and location based off of DocumentInfo
+		int width = docInfo.getWidth();
+		int height = docInfo.getHeight();
+		int left = PropertyContainerUtil.getPropertyAsInt(docInfo, DocumentInfo.KEY_WINDOW_LEFT);
+		int top = PropertyContainerUtil.getPropertyAsInt(docInfo, DocumentInfo.KEY_WINDOW_TOP);
+		doc.setSize(width, height);
+		doc.setLocation(left, top);
 	}
 	
 	// revert a file to it's previous state
@@ -544,10 +532,10 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 	protected static void revertFile(OutlinerDocument document) {
 		// get the document info and file protocol
 		DocumentInfo docInfo = document.getDocumentInfo();
-		FileProtocol protocol = Outliner.fileProtocolManager.getProtocol(docInfo.getProtocolName());
+		FileProtocol protocol = Outliner.fileProtocolManager.getProtocol(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PROTOCOL_NAME));
 		
 		// set mode based on whether we were OPENed or IMPORTed
-		int mode = docInfo.isImported() ? MODE_IMPORT:MODE_OPEN;
+		int mode = PropertyContainerUtil.getPropertyAsBoolean(docInfo, DocumentInfo.KEY_IMPORTED) ? MODE_IMPORT:MODE_OPEN;
 		
 		JoeTree tree = Outliner.newTree(null);
 		
@@ -559,8 +547,9 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		}
 		
 		// swap in the new tree
-		tree.setDocument(document);
-		document.tree = tree;
+		document.setTree(tree);
+		//tree.setDocument(document);
+		//document.tree = tree;
 		
 		document.undoQueue.clear();
 		document.hoistStack.clear();
@@ -570,7 +559,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		
 		// Reset the document preferences
 		document.getSettings().setUseDocumentSettings(true);
-		syncDocumentSettingsToDocInfo(document, docInfo, MODE_OPEN); // MODE_OPEN works becuase we're reverting so the existing values are correct.
+		syncDocumentToDocInfo(document, MODE_OPEN); // MODE_OPEN works becuase we're reverting so the existing values are correct.
 		((DocumentSettingsView) GUITreeLoader.reg.get(GUITreeComponentRegistry.JDIALOG_DOCUMENT_SETTINGS_VIEW)).configure(document.getSettings());
 		
 		setupAndDraw(docInfo, document, openOrImportResult);
@@ -593,11 +582,11 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		switch (mode) {
 			
 			case MODE_OPEN:
-				openOrImportFileFormat = Outliner.fileFormatManager.getOpenFormat(docInfo.getFileFormat());
+				openOrImportFileFormat = Outliner.fileFormatManager.getOpenFormat(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_FILE_FORMAT));
 				break;
 				
 			case MODE_IMPORT:
-				openOrImportFileFormat = Outliner.fileFormatManager.getImportFormat(docInfo.getFileFormat());
+				openOrImportFileFormat = Outliner.fileFormatManager.getImportFormat(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_FILE_FORMAT));
 				break;
 				
 			default:
@@ -610,18 +599,17 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// if we couldn't get a file format object reference ...
 		if (openOrImportFileFormat == null) {
 			msg = GUITreeLoader.reg.getText("error_could_not_open_no_file_format");
-			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
-			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_2, docInfo.getFileFormat());
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH));
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_2, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_FILE_FORMAT));
 			JOptionPane.showMessageDialog(Outliner.outliner, msg);
 		} else {
-			// we got one
-			// try to open the file
+			// we got one try to open the file
 			openOrImportResult = openOrImportFileFormat.open(tree, docInfo, docInfo.getInputStream());
 			
 			// if we couldn't ....
 			if (openOrImportResult == FAILURE) {
 				msg = GUITreeLoader.reg.getText("error_could_not_open_file");
-				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
+				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH));
 				
 				JOptionPane.showMessageDialog(Outliner.outliner, msg);
 				RecentFilesList.removeFileNameFromList(docInfo);
@@ -642,7 +630,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 	
 	private static void setupAndDraw(DocumentInfo docInfo, OutlinerDocument doc, int openOrImportResult) {
 		JoeTree tree = doc.tree;
-		String filename = docInfo.getPath();
+		String filename = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH);
 		
 		tree.clearSelection();
 		tree.getVisibleNodes().clear();
@@ -695,7 +683,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		Node firstVisibleNode;
 		int index = -1;
 		try {
-			index = docInfo.getVerticalScrollState() - 1;
+			index = PropertyContainerUtil.getPropertyAsInt(docInfo, DocumentInfo.KEY_VERTICAL_SCROLL_STATE) - 1;
 			firstVisibleNode = tree.getVisibleNodes().get(index);
 		} catch (IndexOutOfBoundsException e) {
 			index = 0;
@@ -703,8 +691,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		}
 		
 		// Record Document Settings
-		doc.settings.getOwnerName().cur = docInfo.getOwnerName();
-		doc.settings.getOwnerEmail().cur = docInfo.getOwnerEmail();
+		doc.settings.getOwnerName().cur = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_OWNER_NAME);
+		doc.settings.getOwnerEmail().cur = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_OWNER_EMAIL);
 		
 		tree.setEditingNode(firstVisibleNode);
 		tree.setCursorPosition(0);

@@ -41,6 +41,8 @@
 // we're a part of this
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.menus.file.*;
 import com.organic.maynard.outliner.guitree.*;
 import java.util.*;
@@ -89,7 +91,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 				}
 				
 			// else if it's not imported, do a Save
-			} else if (! doc.getDocumentInfo().isImported()) {
+			} else if (!PropertyContainerUtil.getPropertyAsBoolean(doc.getDocumentInfo(), DocumentInfo.KEY_IMPORTED)) {
 				// set up dialog
 				msg = GUITreeLoader.reg.getText("error_window_monitor_untitled_save_changes");
 				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, doc.getFileName());
@@ -118,7 +120,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 				
 				// deal with dialog results
 				if (result == JOptionPane.YES_OPTION) {
-					SaveAsFileMenuItem.saveAsOutlinerDocument(doc, Outliner.fileProtocolManager.getProtocol(doc.getDocumentInfo().getProtocolName()));
+					SaveAsFileMenuItem.saveAsOutlinerDocument(doc, Outliner.fileProtocolManager.getProtocol(PropertyContainerUtil.getPropertyAsString(doc.getDocumentInfo(), DocumentInfo.KEY_PROTOCOL_NAME)));
 				} else if (result == JOptionPane.NO_OPTION) {
 					// Do Nothing
 				} else if (result == JOptionPane.CANCEL_OPTION) {

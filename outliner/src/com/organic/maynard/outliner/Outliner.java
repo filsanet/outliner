@@ -35,6 +35,8 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.scripting.script.*;
 import com.organic.maynard.outliner.scripting.macro.*;
 import com.organic.maynard.outliner.menus.file.*;
@@ -408,9 +410,9 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 					
 					// crank up a fresh docInfo struct
 					DocumentInfo docInfo = new DocumentInfo();
-					docInfo.setPath(filepath);
-					docInfo.setEncodingType(Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur);
-					docInfo.setFileFormat(fileFormat);
+					PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_PATH, filepath);
+					PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE, Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur);
+					PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_FILE_FORMAT, fileFormat);
 					
 					// try to open up the file
 					FileMenu.openFile(docInfo, fileProtocolManager.getDefault());

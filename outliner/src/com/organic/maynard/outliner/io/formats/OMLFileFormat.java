@@ -34,6 +34,8 @@
  
 package com.organic.maynard.outliner.io.formats;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.io.*;
 import java.io.*;
@@ -117,7 +119,7 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 		StringBuffer buf = prepareFile(tree, docInfo);
 		
 		try {
-			return buf.toString().getBytes(docInfo.getEncodingType());
+			return buf.toString().getBytes(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return buf.toString().getBytes();
@@ -131,30 +133,30 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 	public boolean supportsDocumentAttributes() {return true;}
 	
 	private StringBuffer prepareFile(JoeTree tree, DocumentInfo docInfo) {
-		String lineEnding = PlatformCompatibility.platformToLineEnding(docInfo.getLineEnding());
+		String lineEnding = PlatformCompatibility.platformToLineEnding(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_LINE_ENDING));
 		
 		StringBuffer buf = new StringBuffer();
 		
-		buf.append("<?xml version=\"1.0\" encoding=\"").append(docInfo.getEncodingType()).append("\"?>").append(lineEnding);
+		buf.append("<?xml version=\"1.0\" encoding=\"").append(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE)).append("\"?>").append(lineEnding);
 		buf.append("<").append(ELEMENT_OML).append(" ").append(ATTRIBUTE_VERSION).append("=\"1.0\">").append(lineEnding);
 		
 		buf.append("<").append(ELEMENT_HEAD).append(">").append(lineEnding);
 		
-			appendMetadataElement(buf, TITLE, docInfo.getPath(), lineEnding);
-			appendMetadataElement(buf, DATE_CREATED, docInfo.getDateCreated(), lineEnding);
-			appendMetadataElement(buf, DATE_MODIFIED, docInfo.getDateModified(), lineEnding);
-			appendMetadataElement(buf, OWNER_NAME, docInfo.getOwnerName(), lineEnding);
-			appendMetadataElement(buf, OWNER_EMAIL, docInfo.getOwnerEmail(), lineEnding);
+			appendMetadataElement(buf, TITLE, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH), lineEnding);
+			appendMetadataElement(buf, DATE_CREATED, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_DATE_CREATED), lineEnding);
+			appendMetadataElement(buf, DATE_MODIFIED, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_DATE_MODIFIED), lineEnding);
+			appendMetadataElement(buf, OWNER_NAME, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_OWNER_NAME), lineEnding);
+			appendMetadataElement(buf, OWNER_EMAIL, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_OWNER_EMAIL), lineEnding);
 			appendMetadataElement(buf, EXPANSION_STATE, docInfo.getExpandedNodesStringShifted(1), lineEnding);
-			appendMetadataElement(buf, VERTICAL_SCROLL_STATE, "" + docInfo.getVerticalScrollState(), lineEnding);
-			appendMetadataElement(buf, WINDOW_TOP, "" + docInfo.getWindowTop(), lineEnding);
-			appendMetadataElement(buf, WINDOW_LEFT, "" + docInfo.getWindowLeft(), lineEnding);
-			appendMetadataElement(buf, WINDOW_BOTTOM, "" + docInfo.getWindowBottom(), lineEnding);
-			appendMetadataElement(buf, WINDOW_RIGHT, "" + docInfo.getWindowRight(), lineEnding);
+			appendMetadataElement(buf, VERTICAL_SCROLL_STATE, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_VERTICAL_SCROLL_STATE), lineEnding);
+			appendMetadataElement(buf, WINDOW_TOP, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_WINDOW_TOP), lineEnding);
+			appendMetadataElement(buf, WINDOW_LEFT, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_WINDOW_LEFT), lineEnding);
+			appendMetadataElement(buf, WINDOW_BOTTOM, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_WINDOW_BOTTOM), lineEnding);
+			appendMetadataElement(buf, WINDOW_RIGHT, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_WINDOW_RIGHT), lineEnding);
 			
-			appendMetadataElement(buf, APPLY_FONT_STYLE_FOR_COMMENTS, "" + docInfo.getApplyFontStyleForComments(), lineEnding);
-			appendMetadataElement(buf, APPLY_FONT_STYLE_FOR_EDITABILITY, "" + docInfo.getApplyFontStyleForEditability(), lineEnding);
-			appendMetadataElement(buf, APPLY_FONT_STYLE_FOR_MOVEABILITY, "" + docInfo.getApplyFontStyleForMoveability(), lineEnding);
+			appendMetadataElement(buf, APPLY_FONT_STYLE_FOR_COMMENTS, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_APPLY_FONT_STYLE_FOR_COMMENTS), lineEnding);
+			appendMetadataElement(buf, APPLY_FONT_STYLE_FOR_EDITABILITY, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_APPLY_FONT_STYLE_FOR_EDITABILITY), lineEnding);
+			appendMetadataElement(buf, APPLY_FONT_STYLE_FOR_MOVEABILITY, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_APPLY_FONT_STYLE_FOR_MOVEABILITY), lineEnding);
 			
 			buildMetadataElements(tree, lineEnding, buf);
 		
@@ -419,7 +421,7 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 		errorOccurred = false;
 		
 		try {
-			InputStreamReader inputStreamReader = new InputStreamReader(stream, docInfo.getEncodingType());
+			InputStreamReader inputStreamReader = new InputStreamReader(stream, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE));
 			BufferedReader buf = new BufferedReader(inputStreamReader);
 			
 			parser.parse(new InputSource(buf));
@@ -580,56 +582,56 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 				}
 			}
 		} else if (name.equals(TITLE)) {
-			docInfo.setTitle(text);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_TITLE, text);
 		
 		} else if (name.equals(DATE_CREATED)) {
-			docInfo.setDateCreated(text);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_DATE_CREATED, text);
 		
 		} else if (name.equals(DATE_MODIFIED)) {
-			docInfo.setDateModified(text);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_DATE_MODIFIED, text);
 		
 		} else if (name.equals(OWNER_NAME)) {
-			docInfo.setOwnerName(text);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_OWNER_NAME, text);
 		
 		} else if (name.equals(OWNER_EMAIL)) {
-			docInfo.setOwnerEmail(text);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_OWNER_EMAIL, text);
 		
 		} else if (name.equals(EXPANSION_STATE)) {
 			docInfo.setExpandedNodesStringShifted(text, -1);
 		
 		} else if (name.equals(VERTICAL_SCROLL_STATE)) {
 			try {
-				docInfo.setVerticalScrollState(Integer.parseInt(text));
+				PropertyContainerUtil.setPropertyAsInt(docInfo, DocumentInfo.KEY_VERTICAL_SCROLL_STATE, Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
 		
 		} else if (name.equals(WINDOW_TOP)) {
 			try {
-				docInfo.setWindowTop(Integer.parseInt(text));
+				PropertyContainerUtil.setPropertyAsInt(docInfo, DocumentInfo.KEY_WINDOW_TOP, Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
 		
 		} else if (name.equals(WINDOW_LEFT)) {
 			try {
-				docInfo.setWindowLeft(Integer.parseInt(text));
+				PropertyContainerUtil.setPropertyAsInt(docInfo, DocumentInfo.KEY_WINDOW_LEFT, Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
 		
 		} else if (name.equals(WINDOW_BOTTOM)) {
 			try {
-				docInfo.setWindowBottom(Integer.parseInt(text));
+				PropertyContainerUtil.setPropertyAsInt(docInfo, DocumentInfo.KEY_WINDOW_BOTTOM, Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
 		
 		} else if (name.equals(WINDOW_RIGHT)) {
 			try {
-				docInfo.setWindowRight(Integer.parseInt(text));
+				PropertyContainerUtil.setPropertyAsInt(docInfo, DocumentInfo.KEY_WINDOW_RIGHT, Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
 		
 		} else if (name.equals(APPLY_FONT_STYLE_FOR_COMMENTS)) {
-			docInfo.setApplyFontStyleForComments(Boolean.valueOf(text).booleanValue());
+			PropertyContainerUtil.setPropertyAsBoolean(docInfo, DocumentInfo.KEY_APPLY_FONT_STYLE_FOR_COMMENTS, Boolean.valueOf(text).booleanValue());
 		
 		} else if (name.equals(APPLY_FONT_STYLE_FOR_EDITABILITY)) {
-			docInfo.setApplyFontStyleForEditability(Boolean.valueOf(text).booleanValue());
+			PropertyContainerUtil.setPropertyAsBoolean(docInfo, DocumentInfo.KEY_APPLY_FONT_STYLE_FOR_EDITABILITY, Boolean.valueOf(text).booleanValue());
 		
 		} else if (name.equals(APPLY_FONT_STYLE_FOR_MOVEABILITY)) {
-			docInfo.setApplyFontStyleForMoveability(Boolean.valueOf(text).booleanValue());
+			PropertyContainerUtil.setPropertyAsBoolean(docInfo, DocumentInfo.KEY_APPLY_FONT_STYLE_FOR_MOVEABILITY, Boolean.valueOf(text).booleanValue());
 		
 		} else {
 			boolean isReadOnly = tree.isReadOnly(name);

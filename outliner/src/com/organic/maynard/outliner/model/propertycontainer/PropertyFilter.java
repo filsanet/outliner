@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
+ * Copyright (C) 2004 Maynard Demmon, maynard@organic.com
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or 
@@ -31,52 +31,29 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  */
- 
-package com.organic.maynard.outliner.menus.file;
 
-import com.organic.maynard.outliner.model.DocumentInfo;
-import com.organic.maynard.outliner.model.propertycontainer.*;
-import com.organic.maynard.outliner.menus.*;
-import com.organic.maynard.outliner.*;
-import com.organic.maynard.outliner.io.*;
-import java.awt.event.*;
-import javax.swing.*;
+package com.organic.maynard.outliner.model.propertycontainer;
 
-public class OpenFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener {
+import java.io.Serializable;
+
+/**
+ * Modifies a Property value as it is being set in a PropertyContainer.
+ */
+public interface PropertyFilter extends Cloneable, Serializable {
 	
-	private FileProtocol protocol = null;
+	/**
+	 * Sets the name of the PropertyFilter.
+	 */
+	public void setName(String name);
 	
-	// Constructors
-	public OpenFileMenuItem(FileProtocol protocol) {
-		setProtocol(protocol);
-		addActionListener(this);
-	}
+	/**
+	 * Gets the name of the PropertyFilter.
+	 */
+	public String getName();
 	
-	// Accessors
-	public FileProtocol getProtocol() {
-		return this.protocol;
-	}
-	
-	public void setProtocol(FileProtocol protocol) {
-		this.protocol = protocol;
-		setText(protocol.getName());
-	}
-	
-	
-	// ActionListener Interface
-	public void actionPerformed(ActionEvent e) {
-		openOutlinerDocument(getProtocol());
-	}
-	
-	protected static void openOutlinerDocument(FileProtocol protocol) {
-		DocumentInfo docInfo = new DocumentInfo();
-		PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_PROTOCOL_NAME, protocol.getName());
-		
-		// Select the file we are going to open.
-		if (!protocol.selectFileToOpen(docInfo, FileProtocol.OPEN)) {
-			return;
-		}
-		
-		FileMenu.openFile(docInfo, protocol);
-	}
+	/**
+	 * The method called by a PropertyFilterChain as the PropertyFilterChain is
+	 * executing it's applyFilter method.
+	 */
+	public Object filter(PropertyContainer container, Object value);
 }

@@ -52,7 +52,8 @@ import org.xml.sax.*;
  */
 
 public class OutlinerDesktopMenuBar extends JMenuBar implements GUITreeComponent {
-
+	
+	// Instance Fields
 	public FileMenu fileMenu = null;
 	public EditMenu editMenu = null;
 	public OutlineMenu outlineMenu = null;
@@ -64,8 +65,8 @@ public class OutlinerDesktopMenuBar extends JMenuBar implements GUITreeComponent
 	
 	// Constructor
 	public OutlinerDesktopMenuBar() {}
-
-
+	
+	
 	// GUITreeComponent interface
 	private String id = null;
 	public String getGUITreeComponentID() {return this.id;}

@@ -33,6 +33,8 @@
  */
 package com.yearahead.io;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.menus.file.RecentFilesList;
 import com.organic.maynard.outliner.io.*;
 import com.organic.maynard.outliner.io.protocols.*;
@@ -47,7 +49,7 @@ import com.organic.maynard.util.string.Replace;
 import javax.swing.filechooser.*;
 
 public class WebFilePHPFileProtocol extends AbstractFileProtocol {
-
+	
 	// private instance vars
 	private OutlinerFileChooser chooser = null;
 	private boolean isInitialized = false;
@@ -70,14 +72,14 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 		
 		isInitialized = true;
 	}
-
+	
 	
 	// select a file to save or export
 	public boolean selectFileToSave(OutlinerDocument document, int type) {
 		// we'll customize the approve button
 		// [srk] this is done here, rather than in configureForOpen/Import, to workaround a bug
 		String approveButtonText = null ;
-
+		
 		// make sure we're all set up
 		lazyInstantiation();
 		
@@ -103,11 +105,11 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 				System.out.println("ERROR: invalid save/export type used. (" + type +")");
 				return false;
 			} // end switch
-
-
+			
+			
 		// run the File Chooser
 		int option = chooser.showDialog(Outliner.outliner, approveButtonText) ;
-				
+		
 		// Handle User Input
 		if (option == JFileChooser.APPROVE_OPTION) {
 			String filename = chooser.getSelectedFile().getPath();
@@ -115,11 +117,11 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 			String lineEnd ;
 			String encoding ;
 			String fileFormat ;
-
+			
 			if (!Outliner.documents.isFileNameUnique(filename) && (!filename.equals(document.getFileName()))) {
 				String msg = GUITreeLoader.reg.getText("message_cannot_save_file_already_open");
 				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
-
+				
 				JOptionPane.showMessageDialog(Outliner.outliner, msg);
 				// We might want to move this test into the approveSelection method of the file chooser.
 				return false;
@@ -154,14 +156,14 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 				document.settings.getSaveFormat().cur = fileFormat;
 				document.settings.getSaveFormat().tmp = fileFormat;
 			}
-   			
+			
 			// Update Document Info
 			DocumentInfo docInfo = document.getDocumentInfo();
-			docInfo.setPath(filename);
-			docInfo.setLineEnding(lineEnd);
-			docInfo.setEncodingType(encoding);
-			docInfo.setFileFormat(fileFormat);
-						
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_PATH, filename);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_LINE_ENDING, lineEnd);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE, encoding);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_FILE_FORMAT, fileFormat);
+			
 			return true;
 		} else {
 			return false;
@@ -199,10 +201,10 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 				System.out.println("ERROR: invalid open/import type used. (" + type +")");
 				return false;
 			} // end switch
-
+			
 		// run the File Chooser
 		int option = chooser.showDialog(Outliner.outliner, approveButtonText) ;
-
+		
 		// Handle User Input
 		if (option == JFileChooser.APPROVE_OPTION) {
 			String filename = chooser.getSelectedFile().getPath();
@@ -223,12 +225,12 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 				default:
 					System.out.println("ERROR: invalid open/import type used. (" + type +")");
 					return false;
-				} // end switch
-
+				}
+				
 			// store data into docInfo structure
-			docInfo.setPath(filename);
-			docInfo.setEncodingType(encoding);
-			docInfo.setFileFormat(fileFormat);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_PATH, filename);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE, encoding);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_FILE_FORMAT, fileFormat);
 			
 			return true;
 		} else {
@@ -239,7 +241,7 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 	
 	public boolean saveFile(DocumentInfo docInfo) {
 		try {
-			return WebFile.save(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur, docInfo.getPath(), docInfo.getOutputBytes());
+			return WebFile.save(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH), docInfo.getOutputBytes());
 		} catch(IOException x) {
 			x.printStackTrace();
 			return false;
@@ -249,25 +251,26 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 	public boolean openFile(DocumentInfo docInfo) {
 		String msg = null;
 		
+		String path = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH);
 		try {
-			docInfo.setInputStream(WebFile.open(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur, docInfo.getPath()));
+			docInfo.setInputStream(WebFile.open(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur, path));
 			return true;
-						
+			
 		} catch (FileNotFoundException fnfe) {
 			msg = GUITreeLoader.reg.getText("error_file_not_found");
-			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
-
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, path);
+			
 			JOptionPane.showMessageDialog(Outliner.outliner, msg);
 			RecentFilesList.removeFileNameFromList(docInfo);
 			return false;
 			
 		} catch (Exception e) {
 			msg = GUITreeLoader.reg.getText("error_could_not_open_file");
-			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
-
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, path);
+			
 			JOptionPane.showMessageDialog(Outliner.outliner, msg);
 			RecentFilesList.removeFileNameFromList(docInfo);
 			return false;
-		}	
+		}
 	}
 }

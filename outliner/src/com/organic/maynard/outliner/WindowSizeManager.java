@@ -43,27 +43,27 @@ import java.awt.event.*;
  */
 
 public class WindowSizeManager implements ComponentListener {
-
+	
 	// Fields
 	private int minWidth = 100;
 	private int minHeight = 100;
-
+	
 	private int initialWidth = 100;
 	private int initialHeight = 100;
 	
 	private boolean resizeOnShow = true;
-
-
+	
+	
 	// The Constructor
 	public WindowSizeManager(int minWidth, int minHeight) {
 		this.minWidth = minWidth;
 		this.minHeight = minHeight;
 	}
-
+	
 	public WindowSizeManager(int initialWidth, int initialHeight, int minWidth, int minHeight) {
 		this(true, initialWidth, initialHeight, minWidth, minHeight);
 	}
-
+	
 	public WindowSizeManager(boolean resizeOnShow, int initialWidth, int initialHeight, int minWidth, int minHeight) {
 		this.resizeOnShow = resizeOnShow;
 		
@@ -72,15 +72,15 @@ public class WindowSizeManager implements ComponentListener {
 		this.initialWidth = initialWidth;
 		this.initialHeight = initialHeight;
 	}
-
-
+	
+	
 	// ComponentListener Interface
 	public void componentResized(ComponentEvent e) {
 		Component comp = e.getComponent();
 		
 		int width = comp.getWidth();
 		int height = comp.getHeight();
-
+		
 		boolean resize = false;
 		
 		if (width < minWidth) {
@@ -95,7 +95,7 @@ public class WindowSizeManager implements ComponentListener {
 			comp.setSize(width, height);
 		}
 	}
-
+	
 	public void componentMoved(ComponentEvent e) {}
 	
 	public void componentShown(ComponentEvent e) {

@@ -34,9 +34,10 @@
  
 package com.organic.maynard.outliner.io.formats;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.io.*;
-
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.util.preferences.*;
 import java.awt.*;
@@ -171,7 +172,7 @@ public class HTMLExportFileFormat extends AbstractFileFormat implements ExportFi
 	public boolean supportsDocumentAttributes() {return false;}
 	
 	public byte[] save(JoeTree tree, DocumentInfo docInfo) {
-		String lineEnding = PlatformCompatibility.platformToLineEnding(docInfo.getLineEnding());
+		String lineEnding = PlatformCompatibility.platformToLineEnding(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_LINE_ENDING));
 		
 		// Show dialog where use can pick a CSS or cancel. Do lazy instantiation since text assets won't be ready yet.
 		if (dialog == null) {
@@ -192,7 +193,7 @@ public class HTMLExportFileFormat extends AbstractFileFormat implements ExportFi
 		String merged = prepareFile(tree, docInfo, lineEnding, template);
 		
 		try {
-			return merged.getBytes(docInfo.getEncodingType());
+			return merged.getBytes(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return merged.getBytes();
@@ -219,12 +220,12 @@ public class HTMLExportFileFormat extends AbstractFileFormat implements ExportFi
 		}
 		
 		// Do replacements on the template.
-		template = StringTools.replace(template, "{$encoding}",      XMLTools.escapeHTML(docInfo.getEncodingType()));
-		template = StringTools.replace(template, "{$title}",         XMLTools.escapeHTML(docInfo.getPath()));
-		template = StringTools.replace(template, "{$date_created}",  XMLTools.escapeHTML(docInfo.getDateCreated()));
-		template = StringTools.replace(template, "{$date_modified}", XMLTools.escapeHTML(docInfo.getDateModified()));
-		template = StringTools.replace(template, "{$owner_name}",    XMLTools.escapeHTML(docInfo.getOwnerName()));
-		template = StringTools.replace(template, "{$owner_email}",   XMLTools.escapeHTML(docInfo.getOwnerEmail()));
+		template = StringTools.replace(template, "{$encoding}",      XMLTools.escapeHTML(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE)));
+		template = StringTools.replace(template, "{$title}",         XMLTools.escapeHTML(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH)));
+		template = StringTools.replace(template, "{$date_created}",  XMLTools.escapeHTML(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_DATE_CREATED)));
+		template = StringTools.replace(template, "{$date_modified}", XMLTools.escapeHTML(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_DATE_MODIFIED)));
+		template = StringTools.replace(template, "{$owner_name}",    XMLTools.escapeHTML(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_OWNER_NAME)));
+		template = StringTools.replace(template, "{$owner_email}",   XMLTools.escapeHTML(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_OWNER_EMAIL)));
 		
 		// Do Font and Color Replacements
 		String fontFace = Preferences.getPreferenceString(Preferences.FONT_FACE).cur;

@@ -34,12 +34,11 @@
  
 package com.organic.maynard.outliner.scripting.script;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
 import com.organic.maynard.outliner.*;
 import java.awt.*;
 import java.awt.event.*;
-
 import java.util.*;
-
 import javax.swing.*;
 import javax.swing.table.*;
 import javax.swing.event.*;
@@ -52,12 +51,12 @@ public class ScriptThread extends Thread {
 	ScriptThread(Script script, int startedBy) {
 		this.script = script;
 		setName(script.getName());
-
+		
 		// Register the thread
 		this.threadID = Outliner.scriptsManager.threadsTableModel.add(this, startedBy, DocumentInfo.getCurrentDateTimeString());
-
+		
 	}
-
+	
 	public void run() {
 		try {
 			// Process the Script

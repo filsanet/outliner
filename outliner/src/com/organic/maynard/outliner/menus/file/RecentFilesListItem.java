@@ -34,13 +34,21 @@
  
 package com.organic.maynard.outliner.menus.file;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.menus.*;
 import com.organic.maynard.outliner.*;
 import javax.swing.*;
 
+/**
+ * An item in the RecentFilesList. Holds a DocumentInfo Object so that when this
+ * item is selected it can pass along all relevant information needed to open it.
+ */
 public class RecentFilesListItem extends JMenuItem {
 	
+	// Instance Fields
 	private DocumentInfo docInfo = null;
+	
 	
 	// The Constructors
 	public RecentFilesListItem(String text, DocumentInfo docInfo) {
@@ -48,11 +56,18 @@ public class RecentFilesListItem extends JMenuItem {
 		setDocumentInfo(docInfo);
 	}
 	
+	
 	// Accessors
+	/**
+	 * Gets the DocumentInfo Object associated with this menu item.
+	 */
 	public DocumentInfo getDocumentInfo() {
 		return this.docInfo;
 	}
 	
+	/**
+	 * Sets the associated DocumentInfo Object for this menu item.
+	 */
 	public void setDocumentInfo(DocumentInfo docInfo) {
 		this.docInfo = docInfo;
 	}

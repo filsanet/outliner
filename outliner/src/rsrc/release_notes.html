@@ -6,6 +6,25 @@
 		<h2>JOE Release Notes</h2>
 		<hr>
 		<a name="release_notes"></a>
+		<h2>1.8.10.3 - ???</h2>
+			TODO: 
+				update the "about JOE" html page before release.
+				update the splash screen.
+			<b>Bug Fixes:</b>
+			<ol>
+				<li>Fixed the line endings in run_joe.sh so that they are unix rather than windows.</li>
+				<li>Fixed a bug where the menu item used to toggle attribute display was not staying in sync with the state of the current document as a user changed from one document to another.</li>
+			</ol>
+			<b>Feature Enhancements:</b>
+			<ol>
+				<li>Incorporated a patch provided by Axel Rauschmayer which makes the accelerator keys more platform independent, and which enables the top-level menubar in Mac OS X.</li>
+			</ol>
+			<b>Other Changes:</b>
+			<ol>
+				<li>Updated BeanShell to version 1.3.0 from version 1.2b7.</li>
+				<li>Updated jakarta-oro (Perl regular expression support) to version 2.0.8 from version 2.0.6.</li>
+				<li>Updated Jazzy spell checker to version 0.5 from version 0.4.</li>
+			</ol>
 		<h2>1.8.10.2 - 10/12/03</h2>
 			It's been a while since I did a release, and I haven't really been tracking my changes. However, there really haven't been many that I can think of, so it shouldn't matter much. Anyhow, the main purpose of this release is that it should fix the delete node problem listed in the bug fixes below.<br>
 			<br>
@@ -642,6 +661,12 @@
 		<a name="todo"></a>
 		<h2>TODO</h2>
 			<ol>
+				<li>Fix bug with spell check where last entered word shows up in next suggestion.</li>
+				<li>Release XML Module</li>
+				<li>Look at adding toolbar, or possible just more shortcuts.</li>
+				<li>Keep current documents open. Should do lazy instantiation.</li>
+				<li>Add tabbed document switching.</li>
+				<li>Auto-scoll during drag and drop.</li>
 				<li>Make the rest of the icons, arrows use colors.</li>
 				<li>Make sure window size/position is preserved for recent files.</li>
 				<li>See if i can track down minimize/maximize bug.</li>
@@ -649,8 +674,9 @@
 				<li>Implement hyperlinks.</li>
 				<li>Implement markers.</li>
 				<li>Syntax highlighting.</li>
-				<li>Fix bug with spell check where last entered word shows up in next suggestion.</li>
 				<li>Add an "Add Word" feature to spell checking.</li>
+				<li>Make line numbers autospace themselves</li>
+				<li>Provide an "advanced" preference to set the size of the line cache.</li>
 			</ol>
 	</body>
 </html>

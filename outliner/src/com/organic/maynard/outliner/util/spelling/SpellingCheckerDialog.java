@@ -37,7 +37,6 @@ package com.organic.maynard.outliner.util.spelling;
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.util.undo.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -45,7 +44,6 @@ import javax.swing.text.*;
 import javax.swing.event.*;
 import org.xml.sax.*;
 import java.util.*;
-
 import com.swabunga.spell.event.*;
 
 /**
@@ -58,7 +56,7 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 	// Constants
 	private static final int MINIMUM_WIDTH = 425;
 	private static final int MINIMUM_HEIGHT = 200;
- 	private static final int INITIAL_WIDTH = 425;
+	private static final int INITIAL_WIDTH = 425;
 	private static final int INITIAL_HEIGHT = 200;
 	
 	

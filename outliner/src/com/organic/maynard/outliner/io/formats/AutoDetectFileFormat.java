@@ -34,9 +34,10 @@
 
 package com.organic.maynard.outliner.io.formats;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.io.*;
-
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.util.preferences.*;
 import javax.swing.*;
@@ -65,11 +66,11 @@ public class AutoDetectFileFormat extends AbstractFileFormat implements OpenFile
 	public int open(JoeTree tree, DocumentInfo docInfo, InputStream stream) {
 		FileFormatManager manager = Outliner.fileFormatManager;
 		
-		String extension = getExtension(docInfo.getPath());
+		String extension = getExtension(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH));
 		OpenFileFormat format = null;
 		String format_name = null;
 		
-		if (docInfo.isImported()) {
+		if (PropertyContainerUtil.getPropertyAsBoolean(docInfo, DocumentInfo.KEY_IMPORTED)) {
 			format_name = manager.getImportFileFormatNameForExtension(extension);
 			format = manager.getImportFormat(format_name);
 		} else {
@@ -79,7 +80,7 @@ public class AutoDetectFileFormat extends AbstractFileFormat implements OpenFile
 		
 		System.out.println("EXTENSION: " + extension);
 		System.out.println("FORMAT_NAME: " + format_name);
-		docInfo.setFileFormat(format.getName());
+		PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_FILE_FORMAT, format.getName());
 		
 		return format.open(tree, docInfo, stream);
 	}

@@ -47,7 +47,7 @@ public abstract class AbstractOutlinerJDialog extends JDialog {
 	
 	// Fields
 	private WindowSizeManager windowSizeManager = null;
-		
+	
 	private boolean alwaysCenter = true;
 	private boolean hasBeenShown = false;
 	
@@ -56,7 +56,7 @@ public abstract class AbstractOutlinerJDialog extends JDialog {
 		super(Outliner.outliner, "", modal);
 		
 		this.alwaysCenter = alwaysCenter;
-
+		
 		setSize(initialWidth, initialHeight);
 		addComponentListener(new WindowSizeManager(resizeOnShow, initialWidth, initialHeight, minimumWidth, minimumHeight));
 	}

@@ -34,9 +34,10 @@
 
 package com.organic.maynard.outliner.io.formats;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.io.*;
-
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.util.preferences.*;
 import javax.swing.*;
@@ -53,10 +54,10 @@ public class SimpleFileFormat extends AbstractFileFormat implements SaveFileForm
 	// SaveFileFormat Interface
 	public byte[] save(JoeTree tree, DocumentInfo docInfo) {
 		StringBuffer buf = new StringBuffer();
-		tree.getRootNode().depthPaddedValue(buf, PlatformCompatibility.platformToLineEnding(docInfo.getLineEnding()));
+		tree.getRootNode().depthPaddedValue(buf, PlatformCompatibility.platformToLineEnding(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_LINE_ENDING)));
 		
 		try {
-			return buf.toString().getBytes(docInfo.getEncodingType());
+			return buf.toString().getBytes(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return buf.toString().getBytes();
@@ -77,7 +78,7 @@ public class SimpleFileFormat extends AbstractFileFormat implements SaveFileForm
 		String text = null;
 		
 		try {
-			BufferedReader buf = new BufferedReader(new InputStreamReader(stream, docInfo.getEncodingType()));
+			BufferedReader buf = new BufferedReader(new InputStreamReader(stream, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE)));
 			
 			StringBuffer sb = new StringBuffer();
 			String s;
@@ -107,7 +108,7 @@ public class SimpleFileFormat extends AbstractFileFormat implements SaveFileForm
 					String no = GUITreeLoader.reg.getText("no");
 					String confirm_open = GUITreeLoader.reg.getText("confirm_open");
 					String msg = GUITreeLoader.reg.getText("confirmation_inconsistent_hierarchy");
-					msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
+					msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH));
 					
 					
 					Object[] options = {yes, no};

@@ -34,9 +34,10 @@
  
 package com.organic.maynard.outliner.io.formats;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.io.*;
-
 import java.io.*;
 import java.util.*;
 import com.organic.maynard.util.string.StringTools;
@@ -110,7 +111,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		StringBuffer buf = prepareFile(tree, docInfo);
 		
 		try {
-			return buf.toString().getBytes(docInfo.getEncodingType());
+			return buf.toString().getBytes(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return buf.toString().getBytes();
@@ -122,37 +123,37 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	public boolean supportsMoveability() {return true;}	
 	public boolean supportsAttributes() {return true;}
 	public boolean supportsDocumentAttributes() {return true;}
-
+	
 	private StringBuffer prepareFile(JoeTree tree, DocumentInfo docInfo) {
-		String lineEnding = PlatformCompatibility.platformToLineEnding(docInfo.getLineEnding());
+		String lineEnding = PlatformCompatibility.platformToLineEnding(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_LINE_ENDING));
 		
 		StringBuffer buf = new StringBuffer();
 		
-		buf.append("<?xml version=\"1.0\" encoding=\"").append(docInfo.getEncodingType()).append("\"?>").append(lineEnding);
+		buf.append("<?xml version=\"1.0\" encoding=\"").append(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE)).append("\"?>").append(lineEnding);
 		buf.append("<").append(ELEMENT_OPML).append(" version=\"1.0\">").append(lineEnding);
 		
 		buf.append("<").append(ELEMENT_HEAD).append(">").append(lineEnding);
-
-		buf.append("<").append(ELEMENT_TITLE).append(">").append(escapeXMLText(docInfo.getPath())).append("</").append(ELEMENT_TITLE).append(">").append(lineEnding); // We'll use path for the title since that is how our outliner difines window titles.
-		buf.append("<").append(ELEMENT_DATE_CREATED).append(">").append(escapeXMLText(docInfo.getDateCreated())).append("</").append(ELEMENT_DATE_CREATED).append(">").append(lineEnding);
-		buf.append("<").append(ELEMENT_DATE_MODIFIED).append(">").append(escapeXMLText(docInfo.getDateModified())).append("</").append(ELEMENT_DATE_MODIFIED).append(">").append(lineEnding);
-		buf.append("<").append(ELEMENT_OWNER_NAME).append(">").append(escapeXMLText(docInfo.getOwnerName())).append("</").append(ELEMENT_OWNER_NAME).append(">").append(lineEnding);
-		buf.append("<").append(ELEMENT_OWNER_EMAIL).append(">").append(escapeXMLText(docInfo.getOwnerEmail())).append("</").append(ELEMENT_OWNER_EMAIL).append(">").append(lineEnding);
+		
+		buf.append("<").append(ELEMENT_TITLE).append(">").append(escapeXMLText(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH))).append("</").append(ELEMENT_TITLE).append(">").append(lineEnding); // We'll use path for the title since that is how our outliner difines window titles.
+		buf.append("<").append(ELEMENT_DATE_CREATED).append(">").append(escapeXMLText(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_DATE_CREATED))).append("</").append(ELEMENT_DATE_CREATED).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_DATE_MODIFIED).append(">").append(escapeXMLText(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_DATE_MODIFIED))).append("</").append(ELEMENT_DATE_MODIFIED).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_OWNER_NAME).append(">").append(escapeXMLText(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_OWNER_NAME))).append("</").append(ELEMENT_OWNER_NAME).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_OWNER_EMAIL).append(">").append(escapeXMLText(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_OWNER_EMAIL))).append("</").append(ELEMENT_OWNER_EMAIL).append(">").append(lineEnding);
 		buf.append("<").append(ELEMENT_EXPANSION_STATE).append(">").append(escapeXMLText(docInfo.getExpandedNodesStringShifted(1))).append("</").append(ELEMENT_EXPANSION_STATE).append(">").append(lineEnding);
-		buf.append("<").append(ELEMENT_VERTICAL_SCROLL_STATE).append(">").append(escapeXMLText("" + docInfo.getVerticalScrollState())).append("</").append(ELEMENT_VERTICAL_SCROLL_STATE).append(">").append(lineEnding);
-		buf.append("<").append(ELEMENT_WINDOW_TOP).append(">").append(escapeXMLText("" + docInfo.getWindowTop())).append("</").append(ELEMENT_WINDOW_TOP).append(">").append(lineEnding);
-		buf.append("<").append(ELEMENT_WINDOW_LEFT).append(">").append(escapeXMLText("" + docInfo.getWindowLeft())).append("</").append(ELEMENT_WINDOW_LEFT).append(">").append(lineEnding);
-		buf.append("<").append(ELEMENT_WINDOW_BOTTOM).append(">").append(escapeXMLText("" + docInfo.getWindowBottom())).append("</").append(ELEMENT_WINDOW_BOTTOM).append(">").append(lineEnding);
-		buf.append("<").append(ELEMENT_WINDOW_RIGHT).append(">").append(escapeXMLText("" + docInfo.getWindowRight())).append("</").append(ELEMENT_WINDOW_RIGHT).append(">").append(lineEnding);
-
-		buf.append("<").append(ELEMENT_APPLY_FONT_STYLE_FOR_COMMENTS).append(">").append(escapeXMLText("" + docInfo.getApplyFontStyleForComments())).append("</").append(ELEMENT_APPLY_FONT_STYLE_FOR_COMMENTS).append(">").append(lineEnding);
-		buf.append("<").append(ELEMENT_APPLY_FONT_STYLE_FOR_EDITABILITY).append(">").append(escapeXMLText("" + docInfo.getApplyFontStyleForEditability())).append("</").append(ELEMENT_APPLY_FONT_STYLE_FOR_EDITABILITY).append(">").append(lineEnding);
-		buf.append("<").append(ELEMENT_APPLY_FONT_STYLE_FOR_MOVEABILITY).append(">").append(escapeXMLText("" + docInfo.getApplyFontStyleForMoveability())).append("</").append(ELEMENT_APPLY_FONT_STYLE_FOR_MOVEABILITY).append(">").append(lineEnding);
-
+		buf.append("<").append(ELEMENT_VERTICAL_SCROLL_STATE).append(">").append(escapeXMLText(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_VERTICAL_SCROLL_STATE))).append("</").append(ELEMENT_VERTICAL_SCROLL_STATE).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_WINDOW_TOP).append(">").append(escapeXMLText(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_WINDOW_TOP))).append("</").append(ELEMENT_WINDOW_TOP).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_WINDOW_LEFT).append(">").append(escapeXMLText(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_WINDOW_LEFT))).append("</").append(ELEMENT_WINDOW_LEFT).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_WINDOW_BOTTOM).append(">").append(escapeXMLText(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_WINDOW_BOTTOM))).append("</").append(ELEMENT_WINDOW_BOTTOM).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_WINDOW_RIGHT).append(">").append(escapeXMLText(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_WINDOW_RIGHT))).append("</").append(ELEMENT_WINDOW_RIGHT).append(">").append(lineEnding);
+		
+		buf.append("<").append(ELEMENT_APPLY_FONT_STYLE_FOR_COMMENTS).append(">").append(escapeXMLText(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_APPLY_FONT_STYLE_FOR_COMMENTS))).append("</").append(ELEMENT_APPLY_FONT_STYLE_FOR_COMMENTS).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_APPLY_FONT_STYLE_FOR_EDITABILITY).append(">").append(escapeXMLText(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_APPLY_FONT_STYLE_FOR_EDITABILITY))).append("</").append(ELEMENT_APPLY_FONT_STYLE_FOR_EDITABILITY).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_APPLY_FONT_STYLE_FOR_MOVEABILITY).append(">").append(escapeXMLText(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_APPLY_FONT_STYLE_FOR_MOVEABILITY))).append("</").append(ELEMENT_APPLY_FONT_STYLE_FOR_MOVEABILITY).append(">").append(lineEnding);
+		
 		buildDocumentAttributes(tree, lineEnding, buf);
 		
 		buf.append("</").append(ELEMENT_HEAD).append(">").append(lineEnding);
-
+		
 		buf.append("<").append(ELEMENT_BODY).append(">").append(lineEnding);
 		Node node = tree.getRootNode();
 		for (int i = 0, limit = node.numOfChildren(); i < limit; i++) {
@@ -193,19 +194,19 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		} else if (node.getCommentState() == Node.COMMENT_FALSE) {
 			buf.append(ATTRIBUTE_IS_COMMENT).append("=\"false\" ");
 		}
-
+		
 		if (node.getEditableState() == Node.EDITABLE_TRUE) {
 			buf.append(ATTRIBUTE_IS_EDITABLE).append("=\"true\" ");
 		} else if (node.getEditableState() == Node.EDITABLE_FALSE) {
 			buf.append(ATTRIBUTE_IS_EDITABLE).append("=\"false\" ");
 		}
-
+		
 		if (node.getMoveableState() == Node.MOVEABLE_TRUE) {
 			buf.append(ATTRIBUTE_IS_MOVEABLE).append("=\"true\" ");
 		} else if (node.getMoveableState() == Node.MOVEABLE_FALSE) {
 			buf.append(ATTRIBUTE_IS_MOVEABLE).append("=\"false\" ");
 		}
-				
+		
 		buf.append(ATTRIBUTE_TEXT).append("=\"").append(escapeXMLAttribute(node.getValue())).append("\"");
 		buildAttributes(node, buf);
 		
@@ -257,24 +258,24 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		text = StringTools.replace(text, ">", "&gt;");
 		return text;
 	}
-
+	
 	private String escapeXMLText(String text) {
 		text = StringTools.replace(text, "&", "&amp;");
 		text = StringTools.replace(text, "<", "&lt;");
 		text = StringTools.replace(text, "]]>", "]]&gt;");
 		return text;
 	}
-
+	
 	
 	// OpenFileFormat Interface
 	private boolean errorOccurred = false;
-
-    private DocumentInfo docInfo = null;
-    private JoeTree tree = null;
+	
+	private DocumentInfo docInfo = null;
+	private JoeTree tree = null;
 	private ArrayList elementStack = new ArrayList();
 	private ArrayList attributesStack = new ArrayList();
 	private Node currentParent = null;
-
+	
 	public int open(JoeTree tree, DocumentInfo docInfo, InputStream stream) {
 		// Set the objects we are going to populate.
 		this.docInfo = docInfo;
@@ -285,9 +286,9 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		errorOccurred = false;
 		
 		try {
-			InputStreamReader inputStreamReader = new InputStreamReader(stream, docInfo.getEncodingType());
+			InputStreamReader inputStreamReader = new InputStreamReader(stream, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE));
 			BufferedReader buf = new BufferedReader(inputStreamReader);
-
+			
 			parser.parse(new InputSource(buf));
 			if (errorOccurred) {
 				System.out.println("Error Occurred in OPMLFileFormat");
@@ -325,9 +326,9 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 			currentParent.removeChild(currentParent.getLastChild());
 		}
 	}
-    
+	
 	public void endDocument () {}
-			
+	
 	public void startElement (String name, AttributeList atts) {
 		//System.out.println("Start element: " + name);
 		elementStack.add(name);
@@ -337,7 +338,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 			NodeImpl node = new NodeImpl(tree, "");
 			
 			String readOnlyAttsList = new String("");
-						
+			
 			for (int i = 0, limit = atts.getLength(); i < limit; i++) {
 				String attName = atts.getName(i);
 				String attValue = atts.getValue(i);
@@ -370,10 +371,10 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 					} else if (attValue != null && attValue.equals("true")) {
 						node.setCommentState(Node.COMMENT_TRUE);
 					}
-
+					
 				} else if (attName.equals(ATTRIBUTE_CREATED)) {
 					node.setAttribute(attName, attValue, true);
-
+					
 				} else if (attName.equals(ATTRIBUTE_MODIFIED)) {
 					node.setAttribute(attName, attValue, true);
 					
@@ -388,7 +389,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 				String key = tok.nextToken();
 				node.setReadOnly(key, true);
 			}
-						
+			
 			currentParent.appendChild(node);
 			currentParent = node;
 			
@@ -416,59 +417,58 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		String text = new String(ch, start, length);
 		String elementName = (String) elementStack.get(elementStack.size() - 1);
 		AttributeList atts = (AttributeList) attributesStack.get(attributesStack.size() - 1);
-		//System.out.println(text);
 		
 		if (elementName.equals(ELEMENT_TITLE)) {
-			docInfo.setTitle(text);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_TITLE, text);
 		
 		} else if (elementName.equals(ELEMENT_DATE_CREATED)) {
-			docInfo.setDateCreated(text);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_DATE_CREATED, text);
 		
 		} else if (elementName.equals(ELEMENT_DATE_MODIFIED)) {
-			docInfo.setDateModified(text);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_DATE_MODIFIED, text);
 		
 		} else if (elementName.equals(ELEMENT_OWNER_NAME)) {
-			docInfo.setOwnerName(text);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_OWNER_NAME, text);
 		
 		} else if (elementName.equals(ELEMENT_OWNER_EMAIL)) {
-			docInfo.setOwnerEmail(text);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_OWNER_EMAIL, text);
 		
 		} else if (elementName.equals(ELEMENT_EXPANSION_STATE)) {
 			docInfo.setExpandedNodesStringShifted(text, -1);
 		
 		} else if (elementName.equals(ELEMENT_VERTICAL_SCROLL_STATE)) {
 			try {
-				docInfo.setVerticalScrollState(Integer.parseInt(text));
+				PropertyContainerUtil.setPropertyAsInt(docInfo, DocumentInfo.KEY_VERTICAL_SCROLL_STATE, Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
 		
 		} else if (elementName.equals(ELEMENT_WINDOW_TOP)) {
 			try {
-				docInfo.setWindowTop(Integer.parseInt(text));
+				PropertyContainerUtil.setPropertyAsInt(docInfo, DocumentInfo.KEY_WINDOW_TOP, Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
 		
 		} else if (elementName.equals(ELEMENT_WINDOW_LEFT)) {
 			try {
-				docInfo.setWindowLeft(Integer.parseInt(text));
+				PropertyContainerUtil.setPropertyAsInt(docInfo, DocumentInfo.KEY_WINDOW_LEFT, Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
 		
 		} else if (elementName.equals(ELEMENT_WINDOW_BOTTOM)) {
 			try {
-				docInfo.setWindowBottom(Integer.parseInt(text));
+				PropertyContainerUtil.setPropertyAsInt(docInfo, DocumentInfo.KEY_WINDOW_BOTTOM, Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
 		
 		} else if (elementName.equals(ELEMENT_WINDOW_RIGHT)) {
 			try {
-				docInfo.setWindowRight(Integer.parseInt(text));
+				PropertyContainerUtil.setPropertyAsInt(docInfo, DocumentInfo.KEY_WINDOW_RIGHT, Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
 		
 		} else if (elementName.equals(ELEMENT_APPLY_FONT_STYLE_FOR_COMMENTS)) {
-			docInfo.setApplyFontStyleForComments(Boolean.valueOf(text).booleanValue());
+			PropertyContainerUtil.setPropertyAsBoolean(docInfo, DocumentInfo.KEY_APPLY_FONT_STYLE_FOR_COMMENTS, Boolean.valueOf(text).booleanValue());
 		
 		} else if (elementName.equals(ELEMENT_APPLY_FONT_STYLE_FOR_EDITABILITY)) {
-			docInfo.setApplyFontStyleForEditability(Boolean.valueOf(text).booleanValue());
+			PropertyContainerUtil.setPropertyAsBoolean(docInfo, DocumentInfo.KEY_APPLY_FONT_STYLE_FOR_EDITABILITY, Boolean.valueOf(text).booleanValue());
 		
 		} else if (elementName.equals(ELEMENT_APPLY_FONT_STYLE_FOR_MOVEABILITY)) {
-			docInfo.setApplyFontStyleForMoveability(Boolean.valueOf(text).booleanValue());
+			PropertyContainerUtil.setPropertyAsBoolean(docInfo, DocumentInfo.KEY_APPLY_FONT_STYLE_FOR_MOVEABILITY, Boolean.valueOf(text).booleanValue());
 		
 		} else if (elementName.equals(ELEMENT_DOCUMENT_ATTRIBUTE)) {
 			String key = atts.getValue(ATTRIBUTE_KEY);
@@ -483,18 +483,18 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		System.out.println("SAXParserException Error: " + e.getMessage());
 		this.errorOccurred = true;
 	}
-
+	
 	public void fatalError(SAXParseException e) {
 		System.out.println("SAXParserException Fatal Error: " + e.getMessage());
 		this.errorOccurred = true;
 	}
-
+	
 	public void warning(SAXParseException e) {
 		System.out.println("SAXParserException Warning: " + e.getMessage());
 		this.errorOccurred = true;
 	}
-
-
+	
+	
 	// File Extensions
 	private HashMap extensions = new HashMap();
 	
@@ -523,7 +523,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	public Iterator getExtensions() {
 		return extensions.keySet().iterator();
 	}
-
+	
 	public boolean extensionExists(String ext) {
 		Iterator it = getExtensions();
 		while (it.hasNext()) {

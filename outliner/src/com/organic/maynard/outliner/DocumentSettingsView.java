@@ -48,18 +48,18 @@ import org.xml.sax.*;
  */
  
 public class DocumentSettingsView extends AbstractGUITreeJDialog implements ActionListener {
-
+	
 	// Constants
 	private static final int INITIAL_WIDTH = 450;
 	private static final int INITIAL_HEIGHT = 300;
 	private static final int MINIMUM_WIDTH = 450;
 	private static final int MINIMUM_HEIGHT = 200;
-
-
+	
+	
 	protected static String OK = null;
 	protected static String CANCEL = null;
 	protected static String RESTORE_TO_GLOBAL = null;
-
+	
 	private static String LINE_TERMINATOR = null;
 	private static String ENCODING_WHEN_SAVING = null;
 	private static String FORMAT_WHEN_SAVING = null;
@@ -72,15 +72,15 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 	private static String MODIFICATION_DATE = null;
 	private static String USE_CREATE_MOD_DATES = null;
 	private static String CREATE_MOD_DATES_FORMAT = null;
-
+	
 	private static String IS_USING_APPLICATION_PREFS = null;
 	private static String IS_USING_DOCUMENT_PREFS = null;
-
+	
 	// GUI Elements
 	protected JButton buttonOK = null;
 	protected JButton buttonCancel = null;
 	protected JButton buttonRestoreToGlobal = null;
-
+	
 	protected JComboBox lineEndComboBox = null;
 	protected JComboBox saveEncodingComboBox = null;
 	protected JComboBox saveFormatComboBox = null;
@@ -91,11 +91,11 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 	protected JCheckBox applyFontStyleForMoveabilityCheckBox = null;
 	protected JCheckBox useCreateModDatesCheckBox = null;
 	protected JTextField createModDatesFormatField = null;
-
+	
 	protected JLabel creationDateLabel = null;
 	protected JLabel modificationDateLabel = null;
 	protected JLabel isInheritingPrefsLabel = null;
-
+	
 	protected ComboBoxListener lineEndComboBoxListener = null;
 	protected ComboBoxListener saveEncodingComboBoxListener = null;
 	protected ComboBoxListener saveFormatComboBoxListener = null;
@@ -106,17 +106,17 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 	protected CheckboxListener applyFontStyleForMoveabilityCheckBoxListener = null;
 	protected CheckboxListener useCreateModDatesCheckBoxListener = null;
 	protected TextFieldListener createModDatesFormatTextFieldListener = null;
-
+	
 	// The Constructors
 	public DocumentSettingsView() {
 		super(false, false, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
 	}
-
-	private void initialize() {		
+	
+	private void initialize() {
 		OK =                               GUITreeLoader.reg.getText("ok");
 		CANCEL =                           GUITreeLoader.reg.getText("cancel");
 		RESTORE_TO_GLOBAL =                GUITreeLoader.reg.getText("restore_to_application_preferences");
-
+		
 		LINE_TERMINATOR =                  GUITreeLoader.reg.getText("line_terminator");
 		ENCODING_WHEN_SAVING =             GUITreeLoader.reg.getText("encoding_when_saving");
 		FORMAT_WHEN_SAVING =               GUITreeLoader.reg.getText("format_when_saving");
@@ -129,14 +129,14 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		MODIFICATION_DATE =                GUITreeLoader.reg.getText("modification_date");
 		USE_CREATE_MOD_DATES =             GUITreeLoader.reg.getText("use_create_mod_dates"); // ???
 		CREATE_MOD_DATES_FORMAT =          GUITreeLoader.reg.getText("create_mod_dates_format"); // ???
-
+		
 		IS_USING_APPLICATION_PREFS =       GUITreeLoader.reg.getText("is_using_application_prefs");
 		IS_USING_DOCUMENT_PREFS =          GUITreeLoader.reg.getText("is_using_document_prefs");
-
+		
 		buttonOK =              new JButton(OK);
 		buttonCancel =          new JButton(CANCEL);
 		buttonRestoreToGlobal = new JButton(RESTORE_TO_GLOBAL);
-
+		
 		lineEndComboBox =                      new JComboBox(PlatformCompatibility.PLATFORM_IDENTIFIERS);
 		saveEncodingComboBox =                 new JComboBox();
 		saveFormatComboBox =                   new JComboBox();
@@ -147,11 +147,11 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		applyFontStyleForMoveabilityCheckBox = new JCheckBox();
 		useCreateModDatesCheckBox =            new JCheckBox();
 		createModDatesFormatField =            new JTextField(10);
-
+		
 		creationDateLabel =      new JLabel(" ");
 		modificationDateLabel =  new JLabel(" ");
 		isInheritingPrefsLabel = new JLabel(" ");
-
+		
 		lineEndComboBoxListener =                      new ComboBoxListener(lineEndComboBox, null);
 		saveEncodingComboBoxListener =                 new ComboBoxListener(saveEncodingComboBox, null);
 		saveFormatComboBoxListener =                   new ComboBoxListener(saveFormatComboBox, null);
@@ -162,22 +162,22 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		applyFontStyleForMoveabilityCheckBoxListener = new CheckboxListener(applyFontStyleForMoveabilityCheckBox, null);
 		useCreateModDatesCheckBoxListener =            new CheckboxListener(useCreateModDatesCheckBox, null);
 		createModDatesFormatTextFieldListener =        new TextFieldListener(createModDatesFormatField, null);
-
+		
 		// Setup ComboBoxes
 		for (int i = 0, limit = Preferences.ENCODINGS.size(); i < limit; i++) {
 			saveEncodingComboBox.addItem((String) Preferences.ENCODINGS.get(i));
 		}
-
+		
 		for (int i = 0, limit = Preferences.FILE_FORMATS_SAVE.size(); i < limit; i++) {
 			saveFormatComboBox.addItem((String) Preferences.FILE_FORMATS_SAVE.get(i));
 		}
-
+		
 		// Add Listeners
 		buttonOK.addActionListener(this);
 		buttonCancel.addActionListener(this);
 		buttonRestoreToGlobal.addActionListener(this);
 		buttonRestoreToGlobal.setToolTipText(GUITreeLoader.reg.getText("tooltip_restore_to_global"));
-
+		
 		lineEndComboBox.addItemListener(lineEndComboBoxListener);
 		saveEncodingComboBox.addItemListener(saveEncodingComboBoxListener);
 		saveFormatComboBox.addItemListener(saveFormatComboBoxListener);
@@ -188,8 +188,8 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		applyFontStyleForMoveabilityCheckBox.addActionListener(applyFontStyleForMoveabilityCheckBoxListener);
 		useCreateModDatesCheckBox.addActionListener(useCreateModDatesCheckBoxListener);
 		createModDatesFormatField.addFocusListener(createModDatesFormatTextFieldListener);
-
-
+		
+		
 		// Define the top panel
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new GridBagLayout());
@@ -197,14 +197,14 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		AbstractPreferencesPanel.addSingleItemCentered(isInheritingPrefsLabel,               topPanel);
 		AbstractPreferencesPanel.addPreferenceItem(CREATION_DATE,     creationDateLabel,     topPanel);
 		AbstractPreferencesPanel.addPreferenceItem(MODIFICATION_DATE, modificationDateLabel, topPanel);
-
+		
 		getContentPane().add(topPanel, BorderLayout.NORTH);
-
-
+		
+		
 		// Define the Center Panel
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new GridBagLayout());
-
+		
 		AbstractPreferencesPanel.addPreferenceItem(LINE_TERMINATOR,                  lineEndComboBox,                      centerPanel);
 		AbstractPreferencesPanel.addPreferenceItem(ENCODING_WHEN_SAVING,             saveEncodingComboBox,                 centerPanel);
 		AbstractPreferencesPanel.addPreferenceItem(FORMAT_WHEN_SAVING,               saveFormatComboBox,                   centerPanel);
@@ -215,12 +215,12 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		AbstractPreferencesPanel.addPreferenceItem(APPLY_FONT_STYLE_FOR_MOVEABILITY, applyFontStyleForMoveabilityCheckBox, centerPanel);
 		AbstractPreferencesPanel.addPreferenceItem(USE_CREATE_MOD_DATES,             useCreateModDatesCheckBox,            centerPanel);
 		AbstractPreferencesPanel.addPreferenceItem(CREATE_MOD_DATES_FORMAT,          createModDatesFormatField,            centerPanel);
-
+		
 		JScrollPane jsp = new JScrollPane(centerPanel);
 		
 		getContentPane().add(jsp, BorderLayout.CENTER);
-
-
+		
+		
 		// Define the Bottom Panel
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new FlowLayout());
@@ -230,8 +230,8 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		bottomPanel.add(buttonCancel);
 		
 		getContentPane().add(bottomPanel,BorderLayout.SOUTH);
-
-
+		
+		
 		// Set the default button
 		getRootPane().setDefaultButton(buttonOK);
 	}
@@ -241,7 +241,7 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 	public boolean isInitialized() {
 		return this.initialized;
 	}
-
+	
 	// Configuration
 	private DocumentSettings docSettings = null;
 	
@@ -280,7 +280,7 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 	
 	public void configureAndShow(DocumentSettings docSettings) {
 		configure(docSettings);
-  		super.show();
+		super.show();
 	}
 	
 	// ActionListener Interface
@@ -293,17 +293,17 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 			restoreToGlobal();
 		}
 	}
-
+	
 	private void ok() {
 		docSettings.setUseDocumentSettings(true);
 		applyChanges();
 		hide();
 	}
-
+	
 	private void cancel() {
 		hide();
 	}
-
+	
 	private void restoreToGlobal() {
 		// We should no longer use document settings because the user explicitly said Restore to Global to them.
 		docSettings.syncToGlobal();
@@ -312,10 +312,10 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		docSettings.setUseDocumentSettings(false);
 		hide();
 	}
-
+	
 	private void applyChanges() {
 		updateGUI();
-
+		
 		// Record all the changes.
 		docSettings.getLineEnd().applyTemporaryToCurrent();
 		docSettings.getSaveEncoding().applyTemporaryToCurrent();
@@ -329,7 +329,7 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		docSettings.getCreateModDatesFormat().applyTemporaryToCurrent();
 		docSettings.updateSimpleDateFormat(docSettings.getCreateModDatesFormat().cur);
 	}
-
+	
 	private void updateGUI() {
 		// If anything has changed then mark the doc as modified.
 		if (!docSettings.getLineEnd().cur.equals(docSettings.getLineEnd().tmp)
@@ -345,7 +345,7 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		) {
 			docSettings.getDocument().setModified(true);
 		}
-
+		
 		// If anything has changed that would effect the GUI then redraw.
 		boolean doRedraw = false;
 		if (!docSettings.getApplyFontStyleForComments().cur == docSettings.getApplyFontStyleForComments().tmp
@@ -364,36 +364,35 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 	private void syncToDocumentSettings() {
 		docSettings.getLineEnd().restoreTemporaryToCurrent();
 		lineEndComboBox.setSelectedItem(docSettings.getLineEnd().tmp);
-
+		
 		docSettings.getSaveEncoding().restoreTemporaryToCurrent();
 		saveEncodingComboBox.setSelectedItem(docSettings.getSaveEncoding().tmp);
-
+		
 		docSettings.getSaveFormat().restoreTemporaryToCurrent();
 		saveFormatComboBox.setSelectedItem(docSettings.getSaveFormat().tmp);
-
+		
 		docSettings.getOwnerName().restoreTemporaryToCurrent();
 		ownerNameField.setText(docSettings.getOwnerName().tmp);
-
+		
 		docSettings.getOwnerEmail().restoreTemporaryToCurrent();
 		ownerEmailField.setText(docSettings.getOwnerEmail().tmp);
-
+		
 		docSettings.getApplyFontStyleForComments().restoreTemporaryToCurrent();
 		applyFontStyleForCommentsCheckBox.setSelected(docSettings.getApplyFontStyleForComments().tmp);
-
+		
 		docSettings.getApplyFontStyleForEditability().restoreTemporaryToCurrent();
 		applyFontStyleForEditabilityCheckBox.setSelected(docSettings.getApplyFontStyleForEditability().tmp);
-
+		
 		docSettings.getApplyFontStyleForMoveability().restoreTemporaryToCurrent();
 		applyFontStyleForMoveabilityCheckBox.setSelected(docSettings.getApplyFontStyleForMoveability().tmp);
-
+		
 		docSettings.getUseCreateModDates().restoreTemporaryToCurrent();
 		useCreateModDatesCheckBox.setSelected(docSettings.getUseCreateModDates().tmp);
-
+		
 		docSettings.getCreateModDatesFormat().restoreTemporaryToCurrent();
 		createModDatesFormatField.setText(docSettings.getCreateModDatesFormat().tmp);
-
+		
 		creationDateLabel.setText(docSettings.getDateCreated());
 		modificationDateLabel.setText(docSettings.getDateModified());
 	}
 }
-

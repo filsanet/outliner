@@ -35,6 +35,8 @@
 
 package com.organic.maynard.outliner.io;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.util.preferences.*;
@@ -247,33 +249,33 @@ public class OutlinerFileChooser extends JFileChooser implements ItemListener {
 		
 		this.dialogType = JFileChooser.SAVE_DIALOG;
 	}
-
+	
 	public void configureForSave(OutlinerDocument doc, String protocolName, String currentDirectory) {
 		lazyInstantiate();
-
+		
 		// adjust title
 		setDialogTitle("Save: " + protocolName);
-
+		
 		// adjust approve button
 		setApproveButtonToolTipText("Save file as named");
-
+		
 		// Set the Accessory state
 		setAccessory(saveAccessory);
-
+		
 		// Set the Accessory GUI state.
 		saveLineEndComboBox.setSelectedItem(doc.settings.getLineEnd().cur);
 		saveEncodingComboBox.setSelectedItem(doc.settings.getSaveEncoding().cur);
 		saveFormatComboBox.setSelectedItem(doc.settings.getSaveFormat().cur);
-
+		
 		// Set the current directory location or selected file.
 		// grab the file's name
 		String currentFileName = doc.getFileName();
 		
 		// if it's an imported file ...
-		if (doc.getDocumentInfo().isImported()) {
+		if (PropertyContainerUtil.getPropertyAsBoolean(doc.getDocumentInfo(), DocumentInfo.KEY_IMPORTED)) {
 			// trim any extension off the file name
 			String trimmedFileName = StanStringTools.trimFileExtension(currentFileName);
-
+			
 			// obtain the current default save format's extension
 			String extension = 	(Outliner.fileFormatManager.getSaveFormat(doc.settings.getSaveFormat().cur)).getDefaultExtension();
 			

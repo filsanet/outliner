@@ -37,135 +37,125 @@
  * @version $Revision$, $Date$
  */
 
-// we're part of this
 package com.organic.maynard.outliner;
 
-// we use these
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import java.util.Comparator ;
 import java.lang.ClassCastException ;
 
-// this lets us put docInfo into a sorted-by-name/orSomeOtherString data structure
-public class StrungDocumentInfo 
-	implements Comparable, Comparator 
-	{
+/**
+ * This lets us put docInfo into a sorted-by-name/orSomeOtherString data structure
+ */
+public class StrungDocumentInfo implements Comparable, Comparator {
 	
-	// Instance Fields		
+	// Instance Fields
 	private DocumentInfo docInfo = null;
-	private String string = null ;
-	private boolean ignoreCase = false ;
-
+	private String string = null;
+	private boolean ignoreCase = false;
+	
+	
 	// The Constructors
 	public StrungDocumentInfo(
 		String someString, 
 		DocumentInfo someDocInfo
 		){
-			
-		docInfo = someDocInfo ;
-		string = someString ;
-		
-	} // end constructor
+		docInfo = someDocInfo;
+		string = someString;
+	}
 	
 	public String getString () {
-		return string ;
-	} // end method getString
+		return string;
+	}
 	
 	public DocumentInfo getDocumentInfo () {
-		return docInfo ;
-	} // end method getDocumentInfo
+		return docInfo;
+	}
 	
 	public void setString (String someString) {
-		string = someString ;
-	} // end method setString
+		string = someString;
+	}
 	
 	public void setDocumentInfo (DocumentInfo someDocInfo) {
-		docInfo = someDocInfo ;
-	} // end method setDocumentInfo
+		docInfo = someDocInfo;
+	}
 	
 	public void setIgnoreCase (boolean newSetting) {
-		ignoreCase = newSetting ;
-	} // end method setIgnoreCase
+		ignoreCase = newSetting;
+	}
 	
 	// Comparable interface method
 	public int compareTo(Object obj) {
-		// local vars
-		String objString = null ;
-		String ourString = null ;
+		String objString = null;
+		String ourString = null;
 		
 		// if obj is not effectively one of us ...
 		if (! this.getClass().isInstance(obj)) {
 			throw new ClassCastException ();
-		} // end if
+		}
 		
 		// get the strings
 		objString = ((StrungDocumentInfo)obj).getString();
-		ourString = string ;
+		ourString = string;
 		
-		// if we're ignoring case 
+		// if we're ignoring case
 		if (ignoreCase) {
 			// we'll compare in uppercase
-			objString = objString.toUpperCase() ;
-			ourString = ourString.toUpperCase() ;
-		} // end if
-
-		// compare
-		return ourString.compareTo(objString) ;
+			objString = objString.toUpperCase();
+			ourString = ourString.toUpperCase();
+		}
 		
-	} // end method compareTo
+		// compare
+		return ourString.compareTo(objString);
+	}
 	
 	
 	// Comparator interface methods
 	public int compare(Object obj01, Object obj02) {
-		// local vars
-		String obj01String = null ;
-		String obj02String = null ;
+		String obj01String = null;
+		String obj02String = null;
 		
 		// if obj01 or obj02 is not effectively one of us ...
 		if ( (! this.getClass().isInstance(obj01)) || (! this.getClass().isInstance(obj02)) ) {
 			throw new ClassCastException ();
-		} // end if
+		}
 		
 		// get the objects' strings
 		obj01String = ((StrungDocumentInfo)obj01).getString();
 		obj02String = ((StrungDocumentInfo)obj02).getString();
 		
-		// if we're ignoring case 
+		// if we're ignoring case
 		if (ignoreCase) {
 			// we'll compare in uppercase
-			obj01String = obj01String.toUpperCase() ;
-			obj02String = obj02String.toUpperCase() ;
-		} // end if
-
+			obj01String = obj01String.toUpperCase();
+			obj02String = obj02String.toUpperCase();
+		}
+		
 		// compare
-		return obj01String.compareTo(obj02String) ;
-
-	} // end method compare
-	
+		return obj01String.compareTo(obj02String);
+	}
 	
 	public boolean equals(Object obj) {
-		
-		// local vars
-		String objString = null ;
-		String ourString = null ;
+		String objString = null;
+		String ourString = null;
 		
 		// if obj is not effectively one of us ...
 		if (! this.getClass().isInstance(obj)) {
 			throw new ClassCastException ();
-		} // end if
+		}
 		
 		// get the strings
 		objString = ((StrungDocumentInfo)obj).getString();
-		ourString = string ;
+		ourString = string;
 		
-		// if we're ignoring case 
+		// if we're ignoring case
 		if (ignoreCase) {
 			// we'll compare in uppercase
-			objString = objString.toUpperCase() ;
-			ourString = ourString.toUpperCase() ;
-		} // end if
-
-		// return test result
-		return ourString.equals(objString) ;
+			objString = objString.toUpperCase();
+			ourString = ourString.toUpperCase();
+		}
 		
-	} // end method equals
-	
-} // end class StrungDocumentInfo
+		// return test result
+		return ourString.equals(objString);
+	}
+}

@@ -1,40 +1,4 @@
 /**
- * DocumentManager class
- * 
- * Manages sets of documents
- *	tracks whether they're open or shut
- *	stores their pathnames
- *		pathnames can come in many forms
- *		we just store 'em
- *		examples
- *			local:  c:\someDir\someDoc.opml
- *			network: \\some_machine\some_sharepoint\someDir\someDoc.opml
- *			internet: http://someSite.dom/someDir/someDoc.opml
- *			internet: ftp://someSite.dom/someDir/someDoc.opml
- * 
- * extends Object
- * implements JoeReturnCodes
- *
- * Members
- *	variables
- *		instance
- *			protected
- *				boolean [] docOpenStates
- *			private
- *				String [] docPaths
- *				int [] docAlfaOrder
- *i
- *	methods
- * 		instance
- *			public
- *				DocumentManager (int)
- *				boolean documentIsOpen(int)
- *				int isThisOneOfOurs (String)
- *			protected
- *				int setDocPath (int, String)
- *				String getDocPath (int)
- *
- *		
  * Copyright (C) 2001 Stan Krute <Stan@StanKrute.com>
  * All rights reserved.
  * 
@@ -70,6 +34,8 @@
 
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.dom.*;
 import com.organic.maynard.outliner.event.*;
 
@@ -104,7 +70,7 @@ public class DocumentManager implements DocumentRepositoryListener, JoeReturnCod
 	// DocumentRepositoryListener Interface
 	public void documentAdded(DocumentRepositoryEvent e) {
 		// local vars
-		int whichOne = isThisOneOfOurs(e.getDocument().getDocumentInfo().getPath());
+		int whichOne = isThisOneOfOurs(PropertyContainerUtil.getPropertyAsString(e.getDocument().getDocumentInfo(), DocumentInfo.KEY_PATH));
 		
 		// if it's one of ours ...
 		if (whichOne != DOCUMENT_NOT_FOUND) {
@@ -119,7 +85,7 @@ public class DocumentManager implements DocumentRepositoryListener, JoeReturnCod
 	
 	public void documentRemoved(DocumentRepositoryEvent e) {
 		// local vars
-		int whichOne = isThisOneOfOurs(e.getDocument().getDocumentInfo().getPath());
+		int whichOne = isThisOneOfOurs(PropertyContainerUtil.getPropertyAsString(e.getDocument().getDocumentInfo(), DocumentInfo.KEY_PATH));
 		
 		// if it's one of ours ...
 		if (whichOne != DOCUMENT_NOT_FOUND) {

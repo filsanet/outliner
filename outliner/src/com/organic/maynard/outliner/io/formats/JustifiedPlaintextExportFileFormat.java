@@ -34,10 +34,11 @@
  
 package com.organic.maynard.outliner.io.formats;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.io.*;
 import com.organic.maynard.data.IntList;
-
 import com.organic.maynard.outliner.util.preferences.*;
 import javax.swing.*;
 import java.io.*;
@@ -77,7 +78,7 @@ public class JustifiedPlaintextExportFileFormat extends AbstractFileFormat imple
 		StringBuffer buf = prepareFile(tree, docInfo);
 		
 		try {
-			return buf.toString().getBytes(docInfo.getEncodingType());
+			return buf.toString().getBytes(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return buf.toString().getBytes();
@@ -85,7 +86,7 @@ public class JustifiedPlaintextExportFileFormat extends AbstractFileFormat imple
 	}
 	
 	private StringBuffer prepareFile(JoeTree tree, DocumentInfo docInfo) {
-		String lineEnding = PlatformCompatibility.platformToLineEnding(docInfo.getLineEnding());
+		String lineEnding = PlatformCompatibility.platformToLineEnding(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_LINE_ENDING));
 		
 		StringBuffer buf = new StringBuffer();
 		if (NUMBER) {

@@ -55,7 +55,7 @@ public abstract class AbstractGUITreeJDialog extends AbstractOutlinerJDialog imp
 	private String id = null;
 	public String getGUITreeComponentID() {return this.id;}
 	public void setGUITreeComponentID(String id) {this.id = id;}
-
+	
 	public void startSetup(AttributeList atts) {
 		setTitle(atts.getValue(A_TITLE));
 	}

@@ -56,10 +56,10 @@ public class DocumentStatistics extends AbstractGUITreeJDialog {
 	// GUI Components
 	private static JLabel documentTitleName = null;
 	private static JLabel documentTitleValue = null;
-
+	
 	private static JLabel lineCountName = null;
 	private static JLabel lineCountValue = null;
-
+	
 	private static JLabel charCountName = null;
 	private static JLabel charCountValue = null;
 	
@@ -67,42 +67,42 @@ public class DocumentStatistics extends AbstractGUITreeJDialog {
 	// The Constructors
 	public DocumentStatistics() {
 		super(true, true, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
-
+		
 		Outliner.statistics = this;
 	}
-
+	
 	private void initialize() {
 		documentTitleValue = new JLabel("");
 		lineCountValue = new JLabel("");
 		charCountValue = new JLabel("");
-
+		
 		documentTitleName = new JLabel(GUITreeLoader.reg.getText("document") + " ");
 		lineCountName = new JLabel(GUITreeLoader.reg.getText("lines") + " ");
 		charCountName = new JLabel(GUITreeLoader.reg.getText("characters") + " ");
 		
 		// Create the Layout
 		Box vBox = Box.createVerticalBox();
-
+		
 		Box documentTitleBox = Box.createHorizontalBox();
 		documentTitleBox.add(documentTitleName);
 		documentTitleBox.add(documentTitleValue);
 		vBox.add(documentTitleBox);
-
+		
 		vBox.add(Box.createVerticalStrut(5));
-
+		
 		Box lineCountBox = Box.createHorizontalBox();
 		lineCountBox.add(lineCountName);
 		lineCountBox.add(lineCountValue);
 		vBox.add(lineCountBox);
-
+		
 		vBox.add(Box.createVerticalStrut(5));
-
+		
 		Box charCountBox = Box.createHorizontalBox();
 		charCountBox.add(charCountName);
 		charCountBox.add(charCountValue);
 		vBox.add(charCountBox);
 		
-		getContentPane().add(vBox,BorderLayout.CENTER);	
+		getContentPane().add(vBox,BorderLayout.CENTER);
 	}
 	
 	private boolean initialized = false;
@@ -117,7 +117,7 @@ public class DocumentStatistics extends AbstractGUITreeJDialog {
 			initialize();
 			initialized = true;
 		}
-
+		
 		OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
 		documentTitleValue.setText(doc.getTitle());
 		
@@ -127,6 +127,6 @@ public class DocumentStatistics extends AbstractGUITreeJDialog {
 		int charCount = doc.tree.getCharCount();
 		charCountValue.setText("" + charCount);
 		
-		super.show();		
+		super.show();
 	}
 }

@@ -35,6 +35,8 @@
 
 package com.organic.maynard.outliner.menus.file;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.menus.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.io.*;
@@ -81,7 +83,12 @@ public class SaveAsFileMenuItem extends AbstractOutlinerMenuItem implements Acti
 		DocumentInfo currentDocInfo = document.getDocumentInfo() ;
 		
 		// clone it
-		DocumentInfo cloneDocInfo = (DocumentInfo) currentDocInfo.clone() ;
+		DocumentInfo cloneDocInfo = null;
+		try {
+			cloneDocInfo = (DocumentInfo) currentDocInfo.clone();
+		} catch (CloneNotSupportedException cnse) {
+			cnse.printStackTrace();
+		}
 		
 		// attach the clone to the document 
 		document.setDocumentInfo(cloneDocInfo);
@@ -107,6 +114,6 @@ public class SaveAsFileMenuItem extends AbstractOutlinerMenuItem implements Acti
 		}
 		
 		// go ahead and try the save
-		FileMenu.saveFile(document.getDocumentInfo().getPath(), document, protocol, true);
+		FileMenu.saveFile(PropertyContainerUtil.getPropertyAsString(document.getDocumentInfo(), DocumentInfo.KEY_PATH), document, protocol, true);
 	}
 }

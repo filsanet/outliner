@@ -34,6 +34,8 @@
 
 package com.organic.maynard.outliner.io.protocols;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.menus.file.*;
 import com.organic.maynard.outliner.io.*;
 import com.organic.maynard.outliner.*;
@@ -157,10 +159,10 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 			
 			// Update Document Info
 			DocumentInfo docInfo = document.getDocumentInfo();
-			docInfo.setPath(filename);
-			docInfo.setLineEnding(lineEnd);
-			docInfo.setEncodingType(encoding);
-			docInfo.setFileFormat(fileFormat);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_PATH, filename);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_LINE_ENDING, lineEnd);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE, encoding);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_FILE_FORMAT, fileFormat);
 			
 			return true;
 		} else {
@@ -229,9 +231,9 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 			
 			
 			// store data into docInfo structure
-			docInfo.setPath(filename);
-			docInfo.setEncodingType(encoding);
-			docInfo.setFileFormat(fileFormat);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_PATH, filename);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE, encoding);
+			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_FILE_FORMAT, fileFormat);
 			
 			return true;
 		} else {
@@ -242,7 +244,7 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 	
 	public boolean saveFile(DocumentInfo docInfo) {
 		try {
-			FileOutputStream fileOutputStream = new FileOutputStream(docInfo.getPath());
+			FileOutputStream fileOutputStream = new FileOutputStream(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH));
 			fileOutputStream.write(docInfo.getOutputBytes());
 			fileOutputStream.flush();
 			fileOutputStream.close();
@@ -257,13 +259,14 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 	public boolean openFile(DocumentInfo docInfo) {
 		String msg = null;
 		
+		String path = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH);
 		try {
-			docInfo.setInputStream(new FileInputStream(docInfo.getPath()));
+			docInfo.setInputStream(new FileInputStream(path));
 			return true;
 			
 		} catch (FileNotFoundException fnfe) {
 			msg = GUITreeLoader.reg.getText("error_file_not_found");
-			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, path);
 			
 			JOptionPane.showMessageDialog(Outliner.outliner, msg);
 			RecentFilesList.removeFileNameFromList(docInfo);
@@ -271,7 +274,7 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 			
 		} catch (Exception e) {
 			msg = GUITreeLoader.reg.getText("error_could_not_open_file");
-			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, path);
 			
 			JOptionPane.showMessageDialog(Outliner.outliner, msg);
 			RecentFilesList.removeFileNameFromList(docInfo);

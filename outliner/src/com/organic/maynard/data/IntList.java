@@ -38,48 +38,62 @@ import java.util.*;
 import java.io.Serializable;
 
 public class IntList implements Serializable {
-
+	
 	// Constants
 	private static final int DEFAULT_SIZE = 10;
-
-
+	
+	
 	// Fields
 	private int data[];
 	private int size;
-
-
+	
+	
 	// Constructors
 	public IntList() {
 		this(DEFAULT_SIZE);
 	}
-   
+	
 	public IntList(int initialCapacity) {
 		if (initialCapacity < 0) {
 			throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
 		}
 		this.data = new int[initialCapacity];
 	}
-
-
+	
+	public IntList(String int_list, String delimeters) {
+		this();
+		
+		StringTokenizer tok = new StringTokenizer(int_list, delimeters);
+		while (tok.hasMoreTokens()) {
+			String int_string = tok.nextToken();
+			try {
+				add(Integer.parseInt(int_string));
+			} catch (NumberFormatException nfe) {
+				System.out.println("NumberFormatException when instantiating a new IntList.");
+			}
+		}
+	}
+	
+	
 	// Accessors
 	public int size() {
 		return size;
 	}
-
+	
 	public boolean isEmpty() {
 		return size == 0;
 	}
-
+	
 	public int get(int index) {
 		RangeCheck(index);
 		return data[index];
 	}
-
+	
 	public void set(int index, int datum) {
 		RangeCheck(index);
 		data[index] = datum;
 	}
-
+	
 	public void add(int datum) {
 		ensureCapacity(size + 1);
 		data[size++] = datum;
@@ -89,44 +103,44 @@ public class IntList implements Serializable {
 		if (index > size || index < 0) {
 			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
 		}
-
+		
 		ensureCapacity(size + 1);
 		System.arraycopy(data, index, data, index + 1, size - index);
 		data[index] = datum;
 		size++;
 	}
-
+	
 	public void remove(int index) {
 		RangeCheck(index);
-
+		
 		int numMoved = size - index - 1;
 		if (numMoved > 0) {
 			System.arraycopy(data, index + 1, data, index, numMoved);
 		}
 		--size; 
 	}
-
+	
 	public void removeRange(int fromIndex, int toIndex) {
 		int numMoved = size - toIndex;
 		System.arraycopy(data, toIndex, data, fromIndex, numMoved);
-
+		
 		size = size - (toIndex - fromIndex);
 	}
-
+	
 	public void clear() {
 		this.data = new int[DEFAULT_SIZE];
 		size = 0;
 	}
-
+	
 	// Index Of
 	public boolean contains(int datum) {
 		return indexOf(datum) >= 0;
 	}
-
+	
 	public int indexOf(int datum) {
 		return firstIndexOf(datum);
 	}
-
+	
 	public int firstIndexOf(int datum) {
 		for (int i = 0; i < size; i++) {
 			if (data[i] == datum) {
@@ -136,7 +150,7 @@ public class IntList implements Serializable {
 		
 		return -1;
 	}
-
+	
 	public int lastIndexOf(int datum) {
 		for (int i = size - 1; i >= 0; i--) {
 			if (data[i] == datum) {
@@ -166,15 +180,15 @@ public class IntList implements Serializable {
 		System.arraycopy(data, 0, result, 0, size);
 		return result;
 	}
-    
-    
+  
+  
 	// Misc Methods
 	private void RangeCheck(int index) {
 		if (index >= size || index < 0) {
 			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
 		}
 	}
-
+	
 	public void ensureCapacity(int minCapacity) {
 		int oldCapacity = data.length;
 		

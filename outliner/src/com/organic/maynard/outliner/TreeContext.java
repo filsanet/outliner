@@ -40,28 +40,28 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 public class TreeContext extends AttributeContainerImpl implements JoeTree {
-
+	
 	// Private Instance Variables
 	private OutlinerDocument document = null;
 	
 	private JoeNodeList visibleNodes = Outliner.newNodeList(1000);
 	private JoeNodeList selectedNodes = Outliner.newNodeList(100);
 	private Node rootNode = null;
-
-
+	
+	
 	// The Constructors
 	public TreeContext(OutlinerDocument document) {
 		this.document = document;
-
+		
 		resetStructure();
 		
 		document.panel.layout.setNodeToDrawFrom(getEditingNode(),0);
 	}
-
+	
 	public TreeContext() {
 		resetStructure();
 	}
-
+	
 	public void destroy() {
 		visibleNodes = null;
 		selectedNodes = null;
@@ -72,53 +72,53 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 		selectedNodesParent = null;
 		document = null;
 	}
-
+	
 	public void reset() {
 		document = null;
 		visibleNodes.clear();
 		selectedNodes.clear();
 		rootNode = null;
 		
-		resetStructure();	
+		resetStructure();
 	}
-
+	
 	private void resetStructure() {
 		// Create an empty Tree
 		setRootNode(new NodeImpl(this,"ROOT"));
 		rootNode.setHoisted(true);
-	
+		
 		NodeImpl child = new NodeImpl(this,"");
 		child.setDepth(0);
 		rootNode.insertChild(child, 0);
 		insertNode(child);
 		
 		// Record the current location
-		setEditingNode(child, false);	
+		setEditingNode(child, false);
 	}
-
+	
 	
 	// Comments
 	private boolean comment = false;
-
+	
 	// these two methods are part of JoeTree interface
 	public void setRootNodeCommentState(boolean comment) {this.comment = comment;}
 	public boolean getRootNodeCommentState() {return this.comment;}
-
+	
 	// Editablity
 	private boolean editable = true;
-
+	
 	// these two methods are part of JoeTree interface
 	public void setRootNodeEditableState(boolean editable) {this.editable = editable;}
 	public boolean getRootNodeEditableState() {return this.editable;}
-
+	
 	// Moveability
 	private boolean moveable = true;
-
+	
 	// these two methods are part of JoeTree interface
 	public void setRootNodeMoveableState(boolean moveable) {this.moveable = moveable;}
 	public boolean getRootNodeMoveableState() {return this.moveable;}
-
-
+	
+	
 	// Line Count Control
 	private int lineCountKey = 0;
 	
@@ -136,10 +136,10 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 			lineCountKey = 0;
 		}
 	}
-
+	
 	
 	// Accessors
-
+	
 	// Statistics
 	public int getLineCount() {
 		int total = 0;
@@ -160,11 +160,11 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 	private int cursorPosition = 0;
 	private int cursorMarkPosition = 0;
 	private int componentFocus = OutlineLayoutManager.TEXT;
-
+	
 	public void setEditingNode(Node editingNode) {
 		setEditingNode(editingNode, true);
 	}
-
+	
 	public void setEditingNode(Node editingNode, boolean updateAttPanel) {
 		this.editingNode = editingNode;
 		
@@ -176,10 +176,10 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 	public Node getEditingNode() {
 		return editingNode;
 	}
-
+	
 	public void setCursorMarkPosition(int cursorMarkPosition) {
 		this.cursorMarkPosition = cursorMarkPosition;
-
+		
 		// fireEvent
 		Outliner.documents.fireSelectionChangedEvent(this, getComponentFocus());
 	}
@@ -187,7 +187,7 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 	public int getCursorMarkPosition() {
 		return cursorMarkPosition;
 	}
-
+	
 	public void setComponentFocus(int componentFocus) {
 		this.componentFocus = componentFocus;
 		
@@ -198,7 +198,7 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 	public int getComponentFocus() {
 		return componentFocus;
 	}
-
+	
 	public void setCursorPosition(int cursorPosition) {
 		setCursorPosition(cursorPosition,true);
 	}
@@ -208,7 +208,7 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 		if (setMark) {
 			setCursorMarkPosition(cursorPosition);
 		}
-
+		
 		// fireEvent
 		Outliner.documents.fireSelectionChangedEvent(this, getComponentFocus());
 	}
@@ -218,8 +218,8 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 	}
 	
 	// TBD: need a method that sets componentfocus, mark and cursor all in one and only sends one event.
-
-
+	
+	
 	// Tree Methods
 	public Node getPrevNode(Node existingNode) {
 		int prevNodeIndex = visibleNodes.indexOf(existingNode) - 1;
@@ -228,7 +228,7 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 		}
 		return visibleNodes.get(prevNodeIndex);
 	}
-
+	
 	public Node getNextNode(Node existingNode) {
 		int nextNodeIndex = visibleNodes.indexOf(existingNode) + 1;
 		if (nextNodeIndex >= visibleNodes.size()) {
@@ -249,7 +249,7 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 			visibleNodes.removeRange(index, lastIndex + 1);
 		}
 	}
-
+	
 	public void insertNode(Node node) {
 		// Find the first Ancestor that is in the cache or Root
 		Node ancestor = TreeContext.getYoungestVisibleAncestor(node, this);
@@ -260,7 +260,7 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 		// Walk the tree Downwards inserting all expanded nodes and their children
 		insertChildrenIntoVisibleNodesCache(ancestor, this, visibleNodes.indexOf(ancestor));
 	}
-
+	
 	public int insertNodeAfter(Node existingNode, Node newNode) {
 		int nodeIndex = visibleNodes.indexOf(existingNode) + 1;
 		if (nodeIndex >= 0) {
@@ -268,11 +268,11 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 		}
 		return nodeIndex;
 	}
-
+	
 	public void insertNode(Node node, int index) {
 		visibleNodes.add(index, node);
 	}
-
+	
 	public void insertNodeAndChildren(Node node, int index) {
 		visibleNodes.add(index, node);
 		
@@ -296,7 +296,7 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 		if (doClear) {
 			clearSelection();
 		}
-		this.selectedNodesParent = node;	
+		this.selectedNodesParent = node;
 	}
 	
 	public Node getSelectedNodesParent() {return selectedNodesParent;}
@@ -362,9 +362,9 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 				theNode.setSelected(true);
 				selectedNodes.add(theNode);
 			}
-		}	
+		}
 	}
-
+	
 	public Node getYoungestInSelection() {
 		try {
 			return selectedNodes.get(0);
@@ -380,21 +380,21 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 			return null;
 		}
 	}
-
-
+	
+	
 	// Tree Manipulation
 	public void promoteNode(Node currentNode, int currentNodeIndex) {
 		if (currentNode.getParent().isRoot()) {
 			// Our parent is root. Since we can't be promoted to root level, Abort.
 			return;
 		}
-
+		
 		Node targetNode = currentNode.getParent().getParent();
 		int insertIndex = currentNode.getParent().currentIndex() + 1;
 		
 		// Remove the selected node from the current parent node.
 		currentNode.getParent().removeChild(currentNode, currentNodeIndex);
-			
+		
 		// Append the selected node to the target node.
 		targetNode.insertChild(currentNode, insertIndex);
 		currentNode.setDepthRecursively(targetNode.getDepth() + 1);
@@ -409,14 +409,14 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 			// We have no previous sibling, so Abort.
 			return;
 		}
-
+		
 		// Remove the selected node from the current parent node.
 		currentNode.getParent().removeChild(currentNode, currentNodeIndex);
-			
+		
 		// Append the selected node to the target node.
 		targetNode.insertChild(currentNode,targetNode.numOfChildren());
 		currentNode.setDepthRecursively(targetNode.getDepth() + 1);
-
+		
 		// Now Remove and Insert into the VisibleNodes Cache
 		removeNode(currentNode);
 		insertNode(currentNode);
@@ -477,7 +477,7 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 		rootNode = someNode;
 		rootNode.setExpandedClean(true);
 	}
-		
+	
 	
 	// Static Methods formerly instance methods of Node
 	public static Node getYoungestVisibleAncestor(Node node, TreeContext tree) {
@@ -491,7 +491,7 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 			return getYoungestVisibleAncestor(parent, tree);
 		}
 	}
-
+	
 	// This method could be optomized better by first finding the range and then doing a batch insert.
 	public static int insertChildrenIntoVisibleNodesCache(Node node, TreeContext tree, int index) {
 		if (node.isExpanded()) {
@@ -508,7 +508,7 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 					tree.getVisibleNodes().add(index, child);
 				}
 				index = insertChildrenIntoVisibleNodesCache(child, tree, index);
-			}		
+			}
 		}
 		return index;
 	}

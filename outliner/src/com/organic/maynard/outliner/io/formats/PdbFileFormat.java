@@ -1,61 +1,4 @@
 /**
- * PdbFileFormat class
- * 
- * Handles Palm Pilot pdb files
- *	reads 'em
- *	TBD writes 'em
- * 
- * extends Object 
- * implements 
- * 	PdbContentHandler
- * 	PdbErrorHandler
- * 	SaveFileFormat
- * 	OpenFileFormat
- * 	JoeReturnCodes
- * 
- * members
- *	variables
- *		instance
- *			protected
- *				PdbReaderWriter ourReaderWriter
- *				DocumentInfo docInfo
- *				JoeTree tree
- *				boolean errorOccurred
- *				Vector elementStack
- *				Node currentNode
- *				int currentLevel
- *				HashMap extensions
- *				boolean anyIsCommentInheritedAttributesFound
- *				boolean anyIsMoveableInheritedAttributesFound
- *
- *	methods
- * 		instance
- *			public
- *				constructors
- *					PdbFileFormat ()
- *				int open(JoeTree tree, DocumentInfo docInfo, InputStream stream)
- *				void startOutline ()
- *				void finishOutline ()
- *				void addNodeToOutline (NodeImpl node, int level)
- *				void error(JoeException someException)
- *				void fatalError(JoeException someException)
- *				void warning(JoeException someException)
- *				boolean supportsComments()
- *				boolean supportsEditability()
- *				boolean supportsMoveability()
- *				boolean supportsAttributes()
- *				boolean supportsDocumentAttributes()
- *				void addExtension(String ext, boolean isDefault)
- *				void removeExtension(String ext)
- *				String getDefaultExtension()
- *				Iterator getExtensions()
- *				boolean extensionExists(String ext)
- *				byte[] save(JoeTree tree, DocumentInfo docInfo)
- *			protected
- *				void createReaderWriter() 
- *				
- *
- *		
  * Copyright (C) 2001 Stan Krute <Stan@StanKrute.com>
  * Last Touched: 12/22/01 4:20PM
  *
@@ -91,9 +34,10 @@
  
 package com.organic.maynard.outliner.io.formats;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.io.*;
-
 import java.io.*;
 import java.util.*;
 
@@ -369,7 +313,7 @@ public class PdbFileFormat extends AbstractFileFormat implements
 		
 		
 		try {
-			return buf.toString().getBytes(docInfo.getEncodingType());
+			return buf.toString().getBytes(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE));
 		} 
 		catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

@@ -35,6 +35,8 @@
 
 package com.organic.maynard.outliner.menus.file;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.menus.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.io.*;
@@ -153,7 +155,8 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		DocumentInfo docInfo = ((RecentFilesListItem) e.getSource()).getDocumentInfo();
 		
 		// Get the protocol from the FileProtocolManager by using the protocolName
-		String protocolName = docInfo.getProtocolName();
+		String protocolName = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PROTOCOL_NAME);
+		
 		
 		FileProtocol protocol = null;
 		if (protocolName == null || protocolName.equals("")) {
@@ -163,7 +166,7 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		}
 		
 		// Open or Import the file, as is appropriate
-		if (!docInfo.isImported()) {
+		if (!PropertyContainerUtil.getPropertyAsBoolean(docInfo, DocumentInfo.KEY_IMPORTED)) {
 			FileMenu.openFile(docInfo, protocol);
 		} else {
 			FileMenu.importFile(docInfo, protocol);
@@ -197,7 +200,7 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		if (
 			(currentDisplayOrdering != ordering) || 
 			(currentDisplayNameForm != nameForm) || 
-			(currentDisplayDirection != direction)		
+			(currentDisplayDirection != direction)
 		) {
 			// store the new values.
 			currentDisplayOrdering = ordering;
@@ -239,8 +242,8 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		}
 		
 		// set up some local vars
-		DocumentInfo docInfo = null ;
-		StrungDocumentInfo strungDocInfo = null ;
+		DocumentInfo docInfo = null;
+		StrungDocumentInfo strungDocInfo = null;
 		
 		// let's go mine some data
 		
@@ -251,28 +254,29 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 			docInfo = (DocumentInfo) frameInfoList.get(i);
 			
 			// if we're a Help file, try the next frame
-			if (docInfo.isHelpFile()) {
+			if (PropertyContainerUtil.getPropertyAsBoolean(docInfo, DocumentInfo.KEY_HELP_FILE)) {
 				continue;
 			}
 			
 			// switch on name form
+			String path = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH);
 			switch (currentDisplayNameForm) {
 				
 				case FULL_PATHNAME: 
 				
 				default:
 					// package the docInfo up with the full pathname
-					strungDocInfo= new StrungDocumentInfo(docInfo.getPath(), docInfo) ;
+					strungDocInfo= new StrungDocumentInfo(path, docInfo) ;
 					break;
 					
 				case TRUNC_PATHNAME:
 					// package the docInfo up with a truncated pathname
-					strungDocInfo = new StrungDocumentInfo(StanStringTools.getTruncatedPathName(docInfo.getPath(), TRUNC_STRING), docInfo); 
+					strungDocInfo = new StrungDocumentInfo(StanStringTools.getTruncatedPathName(path, TRUNC_STRING), docInfo); 
 					break;
 					
 				case JUST_FILENAME:
 					// package the docInfo up with the filename
-					strungDocInfo = new StrungDocumentInfo(StanStringTools.getFileNameFromPathName(docInfo.getPath()), docInfo);
+					strungDocInfo = new StrungDocumentInfo(StanStringTools.getFileNameFromPathName(path), docInfo);
 					break;
 			}
 			
@@ -337,7 +341,7 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 					}
 					
 					// if we're a Help file, try the next frame
-					if (docInfo.isHelpFile()) {
+					if (PropertyContainerUtil.getPropertyAsBoolean(docInfo, DocumentInfo.KEY_HELP_FILE)) {
 						continue;
 					}
 					
@@ -374,31 +378,27 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		}
 	}
 	
-	
-	// add a menu item for a file to the menu
+	/**
+	 * Adds a menu item for a file to the  recent files menu.
+	 */
 	private void addMenuItemForFileToMenu(DocumentInfo docInfo) {
-		// local vars
 		RecentFilesListItem menuItem = null;
-		StrungDocumentInfo strungItem = null;
 		
 		// switch on nameform to create a menu item
+		String path = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH);
 		switch (currentDisplayNameForm) {
-			
 			case FULL_PATHNAME:
 			
 			default:
-				// create a menu item
-				menuItem = new RecentFilesListItem(docInfo.getPath(), docInfo);
+				menuItem = new RecentFilesListItem(path, docInfo);
 				break;
-			
+				
 			case TRUNC_PATHNAME:
-				// create a menu item
-				menuItem = new RecentFilesListItem(StanStringTools.getTruncatedPathName(docInfo.getPath(), TRUNC_STRING), docInfo);
+				menuItem = new RecentFilesListItem(StanStringTools.getTruncatedPathName(path, TRUNC_STRING), docInfo);
 				break;
-			
+				
 			case JUST_FILENAME:
-				// create a menu item
-				menuItem = new RecentFilesListItem(StanStringTools.getFileNameFromPathName(docInfo.getPath()), docInfo);
+				menuItem = new RecentFilesListItem(StanStringTools.getFileNameFromPathName(path), docInfo);
 				break;
 		}
 		
@@ -407,21 +407,20 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		
 		// switch out on menu's item orientation
 		switch (currentDisplayDirection) {
-			
 			case TOP_TO_BOTTOM:
 			
 			default:
 				// append the menu item to the menu
 				add(menuItem);
-				break ;
+				break;
 				
 			case BOTTOM_TO_TOP:
 				// prepend the menu item to the menu
 				insert(menuItem,0);
-				break ;	
+				break;
 		}
 		
-		// since we've got at least one item on our menu, we're enabled
+		// Since we've got at least one item in our menu we should be enabled.
 		setEnabled(true);
 	}
 	
@@ -430,19 +429,17 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 	
 	// this method is called by outsiders when a file is open or imported
 	// they're asking RFL to add the doc to the Recent Files List
-	
 	// if the file is not in frameInfoList, it gets added to it
 	// if the file is already in frameInfoList, it get moves to the tail of the list
-	
 	// we then sync up treeset and the menu
-	static void addFileNameToList(DocumentInfo docInfo) {
+	protected static void addFileNameToList(DocumentInfo docInfo) {
 		
 		// check to see if this file is in frameInfoList 
 		int position = NOT_THERE;
-		String filename = docInfo.getPath();
+		String filename = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH);
 		
 		for (int i = 0, limit = frameInfoList.size(); i < limit; i++) {
-			if (filename.equals(((DocumentInfo) frameInfoList.get(i)).getPath())) {
+			if (PropertyContainerUtil.propertyEqualsAsString(((DocumentInfo) frameInfoList.get(i)), DocumentInfo.KEY_PATH, filename)) {
 				position = i;
 			}
 		}
@@ -458,32 +455,30 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 			frameInfoList.add(docInfo);
 		} else {
 			// update its doc info
-			frameInfoList.set(position, docInfo) ;
+			frameInfoList.set(position, docInfo);
 			
 			// move that to the top of the list
-			StanVectorTools.moveElementToTail(frameInfoList, position) ;
+			StanVectorTools.moveElementToTail(frameInfoList, position);
 		}
 		
 		// sync
-		recentFilesList.syncTreeSet() ;
-		recentFilesList.syncMenuItems() ;
+		recentFilesList.syncTreeSet();
+		recentFilesList.syncMenuItems();
 	}
 	
 	
 	// this method is called by outsiders when a file is to be removed from Recent Files List
-	
 	// if the file is not in frameInfoList, we do nothing
 	// if the file is in frameInfoList, we remove it, then sync up the treeset and the menu items
-	
 	// we then sync up treeset and the menu
 	public static void removeFileNameFromList(DocumentInfo docInfo) {
 		
 		// check to see if this file is in frameInfoList 
 		int position = NOT_THERE;
-		String filename = docInfo.getPath();
+		String filename = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH);
 		
 		for (int i = 0, limit = frameInfoList.size(); i < limit; i++) {
-			if (filename.equals(((DocumentInfo) frameInfoList.get(i)).getPath())) {
+			if (PropertyContainerUtil.propertyEqualsAsString(((DocumentInfo) frameInfoList.get(i)), DocumentInfo.KEY_PATH, filename)) {
 				position = i;
 			}
 		}
@@ -523,17 +518,25 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 	}
 	
 	
-	// given a pathname, get docInfo from frameInfoList
+	/**
+	 * Gets a DocumentInfo object for the provided filepath if a recent file
+	 * exists for that filepath.
+	 */
 	public static DocumentInfo getDocumentInfo(String pathname) {
+		// Handle an invalid pathname
+		if (pathname == null) {
+			return null;
+		}
+		
+		// Check all the recent files
 		for (int i = 0, limit = frameInfoList.size(); i < limit; i++) {
 			DocumentInfo docInfo = (DocumentInfo) frameInfoList.get(i);
 			
-			// if it's nothing. Why would this ever happen?
 			if (docInfo == null) {
 				continue;
 			}
 			
-			if (pathname.equals(docInfo.getPath())) {
+			if (PropertyContainerUtil.propertyEqualsAsString(docInfo, DocumentInfo.KEY_PATH, pathname)) {
 				return docInfo;
 			}
 		}
@@ -542,6 +545,9 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 	
 	
 	// Config File
+	/**
+	 * Saves the recent files list to disk as a serialized object.
+	 */
 	public static void saveConfigFile(String filename) {
 		FileTools.writeObjectToFile(frameInfoList, filename);
 	}

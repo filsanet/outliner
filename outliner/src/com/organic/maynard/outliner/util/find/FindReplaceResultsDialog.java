@@ -34,6 +34,8 @@
  
 package com.organic.maynard.outliner.util.find;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.menus.file.FileMenu;
 import com.organic.maynard.outliner.menus.window.WindowMenu;
 import com.organic.maynard.outliner.*;
@@ -240,9 +242,9 @@ public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements
 				
 				// crank up a fresh docInfo struct
 				DocumentInfo docInfo = new DocumentInfo();
-				docInfo.setPath(filepath);
-				docInfo.setEncodingType(Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur);
-				docInfo.setFileFormat(fileFormat);
+				PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_PATH, filepath);
+				PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE, Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur);
+				PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_FILE_FORMAT, fileFormat);
 				
 				// try to open up the file
 				FileMenu.openFile(docInfo, Outliner.fileProtocolManager.getDefault());

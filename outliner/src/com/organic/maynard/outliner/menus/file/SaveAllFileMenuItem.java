@@ -34,6 +34,8 @@
  
 package com.organic.maynard.outliner.menus.file;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.menus.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.guitree.*;
@@ -73,7 +75,7 @@ public class SaveAllFileMenuItem extends AbstractOutlinerMenuItem implements Doc
 		for (int i = 0, limit = Outliner.documents.openDocumentCount(); i < limit; i++) {
 			Document doc = Outliner.documents.getDocument(i);
 			
-			if ((doc.isModified() || doc.getFileName().equals("")) && !doc.getDocumentInfo().isImported()) {
+			if ((doc.isModified() || doc.getFileName().equals("")) && !PropertyContainerUtil.getPropertyAsBoolean(doc.getDocumentInfo(), DocumentInfo.KEY_IMPORTED)) {
 				setEnabled(true);
 				return;
 			}
@@ -109,7 +111,7 @@ public class SaveAllFileMenuItem extends AbstractOutlinerMenuItem implements Doc
 		for (int i = 0; i < Outliner.documents.openDocumentCount(); i++) {
 			OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getDocument(i);
 			
-			if (doc.isModified() && !doc.getDocumentInfo().isImported()) {
+			if (doc.isModified() && !PropertyContainerUtil.getPropertyAsBoolean(doc.getDocumentInfo(), DocumentInfo.KEY_IMPORTED)) {
 				SaveFileMenuItem.saveOutlinerDocument(doc);
 			}
 		}

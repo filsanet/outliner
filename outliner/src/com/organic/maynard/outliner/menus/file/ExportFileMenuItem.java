@@ -34,6 +34,8 @@
  
 package com.organic.maynard.outliner.menus.file;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.menus.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.io.*;
@@ -83,14 +85,20 @@ public class ExportFileMenuItem extends AbstractOutlinerMenuItem implements Acti
 		DocumentInfo oldDocInfo = document.getDocumentInfo();
 		
 		DocumentSettings newSettings = new DocumentSettings(document);
-		DocumentInfo newDocInfo = (DocumentInfo) oldDocInfo.clone();
+		
+		DocumentInfo newDocInfo = null;
+		try {
+			newDocInfo = (DocumentInfo) oldDocInfo.clone();
+		} catch (CloneNotSupportedException cnse) {
+			cnse.printStackTrace();
+		}
 		
 		document.settings = newSettings;
 		document.setDocumentInfo(newDocInfo);
 		
 		
 		if (protocol.selectFileToSave(document, FileProtocol.EXPORT)) {
-			FileMenu.exportFile(document.getDocumentInfo().getPath(), document, protocol);
+			FileMenu.exportFile(PropertyContainerUtil.getPropertyAsString(document.getDocumentInfo(), DocumentInfo.KEY_PATH), document, protocol);
 		}
 		
 		// Swap it back the settings

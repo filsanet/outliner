@@ -34,6 +34,8 @@
  
 package com.organic.maynard.outliner.menus.file;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.menus.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.io.*;
@@ -70,8 +72,8 @@ public class ImportFileMenuItem extends AbstractOutlinerMenuItem implements Acti
 	
 	protected static void importOutlinerDocument(FileProtocol protocol) {
 		DocumentInfo docInfo = new DocumentInfo();
-		docInfo.setProtocolName(protocol.getName());
-		docInfo.setImported(true);
+		PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_PROTOCOL_NAME, protocol.getName());
+		PropertyContainerUtil.setPropertyAsBoolean(docInfo, DocumentInfo.KEY_IMPORTED, true);
 		
 		// Select the file we are going to open.
 		if (!protocol.selectFileToOpen(docInfo, FileProtocol.IMPORT)) {

@@ -34,6 +34,8 @@
  
 package com.organic.maynard.outliner.menus.file;
 
+import com.organic.maynard.outliner.model.DocumentInfo;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 import com.organic.maynard.outliner.menus.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.io.*;
@@ -77,7 +79,7 @@ public class SaveFileMenuItem extends AbstractOutlinerMenuItem implements Docume
 		// else if it has a name, thus it's not a new doc, and it's been modified
 		} else if (doc.isModified()) {
 			// If we're imported then we can't save.
-			if (doc.getDocumentInfo().isImported()) {
+			if (PropertyContainerUtil.getPropertyAsBoolean(doc.getDocumentInfo(), DocumentInfo.KEY_IMPORTED)) {
 				setEnabled(false);
 			} else {
 				setEnabled(true);
@@ -108,7 +110,7 @@ public class SaveFileMenuItem extends AbstractOutlinerMenuItem implements Docume
 	}
 	
 	public static void saveOutlinerDocument(OutlinerDocument document) {
-		FileProtocol protocol = Outliner.fileProtocolManager.getProtocol(document.getDocumentInfo().getProtocolName());
+		FileProtocol protocol = Outliner.fileProtocolManager.getProtocol(PropertyContainerUtil.getPropertyAsString(document.getDocumentInfo(), DocumentInfo.KEY_PROTOCOL_NAME));
 		
 		// Get the default protocol if none was found.
 		if (protocol == null) {
