@@ -6,6 +6,30 @@
 		<h2>JOE Release Notes</h2>
 		<hr>
 		<a name="release_notes"></a>
+		<h2>1.8.10.4 - 5/17/04</h2>
+			<b>Bug Fixes:</b>
+			<ol>
+				<li>Fixed a bug in Find/Replace where doing a "start from top" where the length of the last line in the document was less than the current cursor position within the current node would cause an out of bounds exception.</li>
+				<li>Fixed a bug in Find/Replace where the use of the '/' character in a regular expression was being escaped where it shouldn't have been causing character patterns such as /s, /w, etc. to not work correctly.</li>
+				<li>Fixed a bug where the backspace was not being consumed correctly in german locales, and possible other non-english locales. The patch was provided by Hans-Ulrich Teufel.</li>
+				<li>Fixed various text chunks that were not setup for internationalization.</li>
+				<li>Fixed a minor bug where the "Save As" file chooser was not being set to the most recent save directory for untitled documents.</li>
+				<li>Fixed a bug where the "Merge with Spaces" action was not applying the spaces to descendant nodes.</li>
+			</ol>
+			<b>New Features:</b>
+			<ol>
+				<li>Documents that were open when you last closed JOE will reopen themselves automatically the next time you open JOE. This behaviour can be enabled/disabled via a new preference called "Reopen documents on startup" on the "misc" preferences panel.</li>
+			</ol>
+			<b>Feature Enhancements:</b>
+			<ol>
+				<li>Added tabs to the Find/Replace frame for the three search scope. Generally cleaned up the layout of this screen and it's associated dialogs.</li>
+				<li>Changed "Merge with Spaces" to "Merge with Delimiter" and added preferences to the "Misc" panel for setting the delimiter, enabling/disabling trimming of whitespace, and enabling/disabling the inclusion of empty nodes.</li>
+			</ol>
+			<b>Other Changes:</b>
+				<li>We've got a more extensive and correct german translation file thanks to Hans-Ulrich Teufel.</li>
+				<li>We've got a more extensive and correct japanese translation file thanks to ka2hiro.</li>
+			<ol>
+			</ol>
 		<h2>1.8.10.3 - 02/23/04</h2>
 			<b>Bug Fixes:</b>
 			<ol>
@@ -664,16 +688,21 @@
 		<a name="todo"></a>
 		<h2>TODO</h2>
 			<ol>
-				<li>Release XML Module</li>
-				<li>Look at adding toolbar, or possible just more shortcuts.</li>
 				<li>Keep current documents open. Should do lazy instantiation.</li>
+				<li>Release XML Module</li>
+				<li>Java Web Start compatibility. Executable jar.</li>
+				<li>Break out installer code.</li>
+				<li>Basic printing support.</li>
+				<li>Look at adding toolbar, or possible just more shortcuts.</li>
 				<li>Add tabbed document switching.</li>
 				<li>Auto-scoll during drag and drop.</li>
 				<li>Make the rest of the icons, arrows use colors.</li>
 				<li>Implement hyperlinks.</li>
 				<li>Implement markers.</li>
+				<li>Line breaks within nodes.</li>
 				<li>Syntax highlighting.</li>
 				<li>Make line numbers autospace themselves</li>
+					<li>Make line style customizable. Add "legal" style: 1.2.25.23 for example.
 				<li>Provide an "advanced" preference to set the size of the line cache.</li>
 			</ol>
 	</body>

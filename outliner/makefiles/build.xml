@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir="../" default="all" name="JOE - Java Outline Editor">
-	<!-- TBD:
-		1) Add a "release" target that makes a clean outliner directory and then if possible, a tar.gz file.
-	-->
 	<!-- initialize -->
 		<!-- Set properties for this build -->
 			<property name="src" value="src"/>
@@ -15,7 +12,7 @@
 			<property name="doc-api" value="${doc}/api"/>
 			<property name="path-release" value="release"/>
 			<property name="path-release-dist" value="release/outliner"/>
-			<property name="dist" value="outliner-1.8.10.3"/>
+			<property name="dist" value="outliner-1.8.10.4"/>
 			<property name="jar_libpath" value="."/>
 			<property name="jar_modulepath" value="../modules"/>
 		<target name="init">
