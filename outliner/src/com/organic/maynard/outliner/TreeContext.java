@@ -188,8 +188,6 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 		
 		// fireEvent
 		Outliner.documents.fireSelectionChangedEvent(this, componentFocus);
-		
-		//updateEditMenu();
 	}
 	
 	public int getComponentFocus() {
@@ -208,8 +206,6 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 
 		// fireEvent
 		Outliner.documents.fireSelectionChangedEvent(this, getComponentFocus());
-
-		//updateEditMenu();
 	}
 	
 	public int getCursorPosition() {
@@ -323,7 +319,7 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 				int searchStartIndex = 0;
 				int childCount = parent.children.size() - 1;
 				
-				for (int i = 0; i < selectedNodes.size(); i++) {
+				for (int i = 0, limit = selectedNodes.size(); i < limit; i++) {
 					searchStartIndex = parent.children.indexOf(selectedNodes.get(i), searchStartIndex, childCount);
 					if (searchStartIndex > nodeIndex) {
 						selectedNodes.add(i, node);
