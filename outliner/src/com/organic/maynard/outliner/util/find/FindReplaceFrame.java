@@ -86,6 +86,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
         	
 	// Button Text and Other Copy
 	private static String FIND = null;
+	private static String FIND_ALL = null;
 	private static String REPLACE = null;
 	private static String REPLACE_ALL = null;
 
@@ -116,6 +117,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	private static JRadioButton RADIO_FILE_SYSTEM = null;
 	
 	private static JButton BUTTON_FIND = null;
+	private static JButton BUTTON_FIND_ALL = null;
 	private static JButton BUTTON_REPLACE = null;
 	private static JButton BUTTON_REPLACE_ALL = null;
 
@@ -147,6 +149,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		
 		if (RADIO_CURRENT_DOCUMENT.isSelected()) {
 			BUTTON_FIND.setEnabled(true);
+			BUTTON_FIND_ALL.setEnabled(true);
 			BUTTON_REPLACE.setEnabled(true);
 			BUTTON_REPLACE_ALL.setEnabled(true);
 			CHECKBOX_START_AT_TOP.setEnabled(true);
@@ -155,6 +158,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
 		} else if (RADIO_ALL_OPEN_DOCUMENTS.isSelected()) {
 			BUTTON_FIND.setEnabled(true);
+			BUTTON_FIND_ALL.setEnabled(true);
 			BUTTON_REPLACE.setEnabled(true);
 			BUTTON_REPLACE_ALL.setEnabled(true);
 			CHECKBOX_START_AT_TOP.setEnabled(false);
@@ -172,6 +176,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 
 		if (RADIO_CURRENT_DOCUMENT.isSelected() || RADIO_ALL_OPEN_DOCUMENTS.isSelected()) {
 			BUTTON_FIND.setEnabled(false);
+			BUTTON_FIND_ALL.setEnabled(false);
 			BUTTON_REPLACE.setEnabled(false);
 			BUTTON_REPLACE_ALL.setEnabled(false);
 			CHECKBOX_START_AT_TOP.setEnabled(false);
@@ -189,6 +194,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
 
 		FIND = GUITreeLoader.reg.getText("find");
+		FIND_ALL = "Find All"; //TBD: update gui tree and use: GUITreeLoader.reg.getText("find_all");
 		REPLACE = GUITreeLoader.reg.getText("replace");
 		REPLACE_ALL = GUITreeLoader.reg.getText("replace_all");
 
@@ -227,6 +233,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		RADIO_CURRENT_DOCUMENT.setSelected(true);
 
 		BUTTON_FIND = new JButton(FIND);
+		BUTTON_FIND_ALL = new JButton(FIND_ALL);
 		BUTTON_REPLACE = new JButton(REPLACE);
 		BUTTON_REPLACE_ALL = new JButton(REPLACE_ALL);
 		
@@ -337,11 +344,15 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		
 		// Define Button Box
 		BUTTON_FIND.addActionListener(this);
+		BUTTON_FIND_ALL.addActionListener(this);
 		BUTTON_REPLACE.addActionListener(this);
 		BUTTON_REPLACE_ALL.addActionListener(this);
 
 		Box buttonBox = Box.createHorizontalBox();
+		
 		buttonBox.add(BUTTON_FIND);
+		buttonBox.add(Box.createHorizontalStrut(5));
+		buttonBox.add(BUTTON_FIND_ALL);
 		buttonBox.add(Box.createHorizontalStrut(5));
 		buttonBox.add(BUTTON_REPLACE);
 		buttonBox.add(Box.createHorizontalStrut(5));
@@ -452,6 +463,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		// File Menu
 		if (e.getActionCommand().equals(FIND)) {
 			find(Outliner.getMostRecentDocumentTouched());
+		} else if (e.getActionCommand().equals(FIND_ALL)) {
+			find_all(Outliner.getMostRecentDocumentTouched());
 		} else if (e.getActionCommand().equals(REPLACE)) {
 			replace(Outliner.getMostRecentDocumentTouched());
 		} else if (e.getActionCommand().equals(REPLACE_ALL)) {
@@ -478,6 +491,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		// RadioButtons
 		} else if (e.getActionCommand().equals(CURRENT_DOCUMENT)) {
 			BUTTON_FIND.setEnabled(true);
+			BUTTON_FIND_ALL.setEnabled(true);
 			BUTTON_REPLACE.setEnabled(true);
 			BUTTON_REPLACE_ALL.setEnabled(true);
 			CHECKBOX_START_AT_TOP.setEnabled(true);
@@ -487,6 +501,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 
 		} else if (e.getActionCommand().equals(ALL_OPEN_DOCUMENTS)) {
 			BUTTON_FIND.setEnabled(true);
+			BUTTON_FIND_ALL.setEnabled(true);
 			BUTTON_REPLACE.setEnabled(true);
 			BUTTON_REPLACE_ALL.setEnabled(true);
 			CHECKBOX_START_AT_TOP.setEnabled(false);
@@ -496,6 +511,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			
 		} else if (e.getActionCommand().equals(FILE_SYSTEM)) {
 			BUTTON_FIND.setEnabled(false);
+			BUTTON_FIND_ALL.setEnabled(true);
 			BUTTON_REPLACE.setEnabled(false);
 			BUTTON_REPLACE_ALL.setEnabled(true);
 			CHECKBOX_START_AT_TOP.setEnabled(false);
@@ -579,6 +595,60 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		}
 	}
 
+	private void find_all(OutlinerDocument doc) {
+		int mode = getFindReplaceMode();
+		
+		FindReplaceResultsModel results = new FindReplaceResultsModel();
+		
+		switch (mode) {
+			case MODE_CURRENT_DOCUMENT:
+				findAll(
+					results,
+					doc, 
+					TEXTAREA_FIND.getText(), 
+					TEXTAREA_REPLACE.getText(), 
+					CHECKBOX_SELECTION_ONLY.isSelected(), 
+					CHECKBOX_START_AT_TOP.isSelected(),
+					CHECKBOX_IGNORE_CASE.isSelected(), 
+					CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
+					CHECKBOX_WRAP_AROUND.isSelected(),
+					CHECKBOX_REGEXP.isSelected()
+				);
+				
+				break;
+			
+			case MODE_ALL_OPEN_DOCUMENTS:
+				findAllAllOpenDocuments(
+					results,
+					TEXTAREA_FIND.getText(), 
+					TEXTAREA_REPLACE.getText(), 
+					CHECKBOX_SELECTION_ONLY.isSelected(), 
+					CHECKBOX_START_AT_TOP.isSelected(),
+					CHECKBOX_IGNORE_CASE.isSelected(), 
+					CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
+					CHECKBOX_WRAP_AROUND.isSelected(),
+					CHECKBOX_REGEXP.isSelected()
+				);
+				
+				break;
+			
+			case MODE_FILE_SYSTEM:
+				break;
+			
+			case MODE_UNKNOWN:
+				System.out.println("ERROR: Unknown Find/Replace mode.");
+				break;
+		}
+
+		if (results.size() == 0) {
+			// Beep to alert user no result found.
+			Outliner.outliner.getToolkit().beep();
+			return;
+		}
+
+		Outliner.findReplaceResultsDialog.show(results);
+	}
+	
 	private void replace(OutlinerDocument doc) {
 		int mode = getFindReplaceMode();
 
@@ -839,6 +909,220 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			);
 		}
 	}
+
+	public void findAllAllOpenDocuments(
+		FindReplaceResultsModel results,
+		String sFind,
+		String sReplace,
+		boolean selectionOnly,
+		boolean startAtTop,
+		boolean ignoreCase,
+		boolean includeReadOnlyNodes,
+		boolean wrapAround,
+		boolean isRegexp
+	) {
+		Iterator openDocuments = Outliner.getLoopedOpenDocumentIterator();
+		
+		while (openDocuments.hasNext()) {
+			OutlinerDocument doc = (OutlinerDocument) openDocuments.next();
+			
+			findAll(
+				results,
+				doc, 
+				sFind,
+				sReplace,
+				false,
+				true,
+				ignoreCase,
+				includeReadOnlyNodes,
+				false,
+				isRegexp
+			);
+		}
+	}
+	
+	public void findAll(
+		FindReplaceResultsModel results,
+		OutlinerDocument doc, 
+		String sFind,
+		String sReplace,
+		boolean selectionOnly,
+		boolean startAtTop,
+		boolean ignoreCase,
+		boolean includeReadOnlyNodes,
+		boolean wrapAround,
+		boolean isRegexp
+	) {
+		int count = 0;
+
+		String replacement = sReplace;
+		String textToMatch = sFind;
+		if (textToMatch.equals("")) {
+			// Beep to alert user no result found.
+			Outliner.outliner.getToolkit().beep();
+
+			return;
+		}
+		
+		if (selectionOnly) {
+			if (doc.tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
+				if (doc.tree.getCursorPosition() == doc.tree.getCursorMarkPosition()) {
+					// No selection, so return.
+					return;
+				} else {
+					int cursor = doc.tree.getCursorPosition();
+					int mark = doc.tree.getCursorMarkPosition();
+
+					Node nodeStart = doc.tree.getEditingNode();
+					int cursorStart = Math.min(cursor,mark);
+					Node nodeEnd = doc.tree.getEditingNode();
+					int cursorEnd = Math.max(cursor,mark);			
+		
+					while (true) {
+						//System.out.println("range: " + cursorStart + " : " + cursorEnd);
+						if ((nodeStart == nodeEnd) && (cursorStart == cursorEnd)) {break;}
+						NodeRangePair location = findText(
+							nodeStart,
+							cursorStart,
+							nodeEnd,
+							cursorEnd,
+							textToMatch,
+							replacement,
+							false,
+							true,
+							true, 
+							ignoreCase, 
+							includeReadOnlyNodes, 
+							wrapAround, 
+							isRegexp
+						);
+						
+						if (location == null) {
+							if (count == 0) {
+								return;
+							} else {
+								break;
+							}
+						}
+						if (location.loopedOver) {break;}
+						
+						// Add the Result
+						String match = location.node.getValue().substring(location.startIndex, location.endIndex);
+						int lineNumber = location.node.getLineNumber();
+						FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, "");
+						results.addResult(result);
+						
+						nodeStart = location.node;
+						cursorStart = location.endIndex;
+						
+						count++;
+					}
+					
+					// Adjust cursor and mark for new selection.
+					doc.tree.setCursorPosition(cursorEnd);
+					doc.tree.setCursorMarkPosition(Math.min(cursor,mark));
+						
+				}
+			} else {
+				for (int i = 0; i < doc.tree.getSelectedNodes().size(); i++) {					
+					Node nodeStart = doc.tree.getSelectedNodes().get(i);
+					int cursorStart = 0;
+					Node nodeEnd = nodeStart.getLastDecendent();
+					int cursorEnd = nodeEnd.getValue().length();
+		
+					while (true) {
+						//System.out.println("range: " + cursorStart + " : " + cursorEnd);
+						if ((nodeStart == nodeEnd) && (cursorStart == cursorEnd)) {break;}
+						NodeRangePair location = findText(
+							nodeStart,
+							cursorStart,
+							nodeEnd,
+							cursorEnd,
+							textToMatch,
+							replacement,
+							false,
+							false,
+							true, 
+							ignoreCase, 
+							includeReadOnlyNodes, 
+							wrapAround, 
+							isRegexp
+						);
+						
+						if (location == null) {
+							break;
+						}
+						if (location.loopedOver) {break;}
+						
+						// Add the Result
+						String match = location.node.getValue().substring(location.startIndex, location.endIndex);
+						String replacementTemp = sReplace;
+						int lineNumber = location.node.getLineNumber();
+						
+						FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, "");
+						results.addResult(result);
+
+						nodeStart = location.node;
+						cursorStart = location.endIndex;
+						
+						count++;
+					}					
+					
+				}
+			}	
+		} else {
+			Node nodeStart = doc.tree.getRootNode().getFirstChild();
+			int cursorStart = 0;
+			Node nodeEnd = doc.tree.getRootNode().getLastDecendent();
+			int cursorEnd = nodeEnd.getValue().length();			
+
+			while (true) {
+				//System.out.println("range: " + cursorStart + " : " + cursorEnd);
+				NodeRangePair location = findText(
+					nodeStart,
+					cursorStart,
+					nodeEnd,
+					cursorEnd,
+					textToMatch,
+					replacement,
+					false,
+					false,
+					true, 
+					ignoreCase, 
+					includeReadOnlyNodes, 
+					wrapAround, 
+					isRegexp
+				);
+				
+				if (location == null) {
+					if (count == 0) {
+						return;
+					} else {
+						break;
+					}
+				}
+				if (location.loopedOver) {break;}
+				
+				// Add the Result
+				String match = location.node.getValue().substring(location.startIndex, location.endIndex);
+				String replacementTemp = sReplace;
+				int lineNumber = location.node.getLineNumber();
+				if (isRegexp) {
+					replacementTemp = this.replacementText.substring(0, this.matchLength + this.difference);
+				}
+				FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, "");
+				results.addResult(result);
+
+				nodeStart = location.node;
+				cursorStart = location.endIndex;
+				
+				count++;
+			}
+		}
+	}
+
+
+
 
 	public void replace(
 		OutlinerDocument doc, 
