@@ -328,6 +328,10 @@
 					<validator id="mouse_wheel_scroll_speed_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="1" max="1000" default="1"/>
 					<preference_component id="mouse_wheel_scroll_speed_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Mouse Wheel Scroll Speed" size="2"/>
 				</preference>
+				<preference id="autosave_frequency" class="com.organic.maynard.outliner.PreferenceInt" default="30">
+					<validator id="autosave_frequency_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="10" max="3600" default="30"/>
+					<preference_component id="autosave_frequency_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Autosave Frequency (sec)" size="4"/>
+				</preference>
 			</preferencepanel>
 		</preferencesframe>
 	</preferences>
