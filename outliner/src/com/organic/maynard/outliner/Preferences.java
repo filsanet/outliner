@@ -138,10 +138,23 @@ public class Preferences implements GUITreeComponent {
 		public static final String IMPORT_FORMAT = "import_format";
 		public static final String EXPORT_FORMAT = "export_format";
 		
-			// File Format: Justified Plaintext
-			public static final String JUSTIFIED_PLAINTEXT_COL_WIDTH = "justified_plaintext_col_width";
-			public static final String JUSTIFIED_PLAINTEXT_DRAW_LINES = "justified_plaintext_draw_lines";
+		// File Format: Justified Plaintext
+		public static final String JUSTIFIED_PLAINTEXT_COL_WIDTH = "justified_plaintext_col_width";
+		public static final String JUSTIFIED_PLAINTEXT_DRAW_LINES = "justified_plaintext_draw_lines";
 		
+		// Recent Files List Options
+		public static final String RECENT_FILES_ORDERING = "recent_files_ordering";
+		public static final String RECENT_FILES_DIRECTION = "recent_files_direction";
+		public static final String RECENT_FILES_NAME_FORM= "recent_files_name_form";
+
+		public static final String RF_D_BOTTOMTOTOP= "rf_d_bottomtotop";
+		public static final String RF_D_TOPTOBOTTOM= "rf_d_toptobottom";
+		public static final String RF_NF_FILENAME= "rf_nf_filename";
+		public static final String RF_NF_PATHNAME= "rf_nf_pathname";
+		public static final String RF_O_ALPHABETICAL= "rf_o_alphabetical";
+		public static final String RF_O_ASCII= "rf_o_ascii";
+		public static final String RF_O_CHRONOLOGICAL= "rf_o_chronological";
+
 		// Misc Panel
 		public static final String PRINT_ENVIRONMENT = "print_environment";
 		public static final String NEW_DOC_ON_STARTUP = "new_doc_on_startup";

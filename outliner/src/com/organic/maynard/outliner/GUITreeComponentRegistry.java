@@ -102,6 +102,7 @@ public class GUITreeComponentRegistry {
 	public static final String PREFERENCES_PANEL_MISC = "preferences_panel_misc";
 	public static final String PREFERENCES_PANEL_OPEN_AND_SAVE = "preferences_panel_open_and_save";
 	public static final String PREFERENCES_PANEL_LOOK_AND_FEEL = "preferences_panel_look_and_feel";
+	public static final String PREFERENCES_PANEL_RECENT_FILES = "preferences_panel_recent_files";
 
 	public static final String COMPONENT_FONT_FACE = "font_face_component";
 	public static final String COMPONENT_LINE_WRAP = "line_wrap_component";
@@ -117,6 +118,10 @@ public class GUITreeComponentRegistry {
 	public static final String COMPONENT_FORMAT_WHEN_IMPORTING = "import_format_component";
 	public static final String COMPONENT_FORMAT_WHEN_SAVING = "save_format_component";
 	public static final String COMPONENT_FORMAT_WHEN_EXPORTING = "export_format_component";
+
+	public static final String COMPONENT_RECENT_FILES_ORDERING = "recent_files_ordering_component";
+	public static final String COMPONENT_RECENT_FILES_DIRECTION = "recent_files_direction_component";
+	public static final String COMPONENT_RECENT_FILES_NAME_FORM = "recent_files_name_form_component";
 
 	public static final String JDIALOG_DOCUMENT_SETTINGS_VIEW = "document_settings_view";
 
