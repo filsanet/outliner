@@ -124,9 +124,14 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	public void setGUITreeComponentID(String id) {this.id = id;}
 	
 	public void startSetup(AttributeList atts) {
+		// this lets us test what we read from file
+		Vector testVector = new Vector() ;
+
+		// get the menu's title and set it
 		String title = atts.getValue(A_TEXT);
 		setText(title);
 		
+		// we start out disabled
 		setEnabled(false);
 
 		// Add us to our parent menu.
@@ -144,23 +149,34 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		Object obj = ReadObjectFromFile(Outliner.RECENT_FILES_FILE);
 		
 		// we need to make sure we have a Vector
-		// because we used to use an ArrayList
+		
+		// we used to use an ArrayList for frameInfoList,
+		// but now we use a Vector 
+		
+		// anything else is just ignored
+		
+		// if we were able to read something ...
 		if (obj != null) {
-			// to help see what we've got
-			Vector testVector = new Vector() ;
 			
-			// if we've got a Vector ...
+			// if we have a Vector ...
 			if (testVector.getClass().isInstance(obj)) {
-				
-				// remove any duplicate entries
-				// saves youngest, removes oldest
-				StanVectorTools.removeDupesHeadside((Vector)obj) ;
 				
 				// set the var
 				frameInfoList = (Vector)obj ;
-			} else {
+				
+				// remove any duplicate entries
+				// saves youngest, removes oldest
+				StanVectorTools.removeDupesHeadside(frameInfoList) ;
+				
+			} // end if we have a Vector
+			
+			// else we don't have a Vector
+			else { 
+				// start a fresh list
 				frameInfoList = null ;
-			} // end if-else
+			} // end else we don't have a vector
+
+		// else we couldn't read anything
 		} else {
 			frameInfoList = null; 
 		} //end else
@@ -655,7 +671,10 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	
 	// Config File
 	public static void saveConfigFile(String filename) {
+		
+		// write out frameInfoList 
 		writeObjectToFile(frameInfoList, filename);
+		
 	} // end method saveConfigFile
 
 	// ActionListener Interface
