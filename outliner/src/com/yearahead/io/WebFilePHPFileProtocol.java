@@ -69,6 +69,11 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 	
 	// select a file to save or export
 	public boolean selectFileToSave(OutlinerDocument document, int type) {
+		// we'll customize the approve button
+		// [srk] this is done here, rather than in configureForOpen/Import, to workaround a bug
+		String approveButtonText = null ;
+
+		// make sure we're all set up
 		lazyInstantiation();
 		
 		String hostname = null;
@@ -80,17 +85,23 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 			return false;
 		}
 		// Setup the File Chooser to save or export
-		if (type == FileProtocol.SAVE) {
-			chooser.configureForSave(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
-		} else if (type == FileProtocol.EXPORT) {
-			chooser.configureForExport(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
-		} else {
-			System.out.println("ERROR: invalid save/export type used. (" + type +")");
-			return false;
-		}
+		switch (type) {
+			case FileProtocol.SAVE:
+				chooser.configureForSave(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
+				approveButtonText = "Save" ;
+				break ;
+			case FileProtocol.EXPORT:
+				chooser.configureForExport(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
+				approveButtonText = "Export" ;
+				break ;
+			default:
+				System.out.println("ERROR: invalid save/export type used. (" + type +")");
+				return false;
+			} // end switch
 
-		// run the File chooser
-		int option = chooser.showSaveDialog(Outliner.outliner);
+
+		// run the File Chooser
+		int option = chooser.showDialog(Outliner.outliner, approveButtonText) ;
 				
 		// Handle User Input
 		if (option == JFileChooser.APPROVE_OPTION) {
@@ -153,6 +164,11 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 	
 	// select a file to open or import
 	public boolean selectFileToOpen(DocumentInfo docInfo, int type) {
+		// we'll customize the approve button
+		// [srk] this is done here, rather than in configureForOpen/Import, to workaround a bug
+		String approveButtonText = null ;
+
+		// make sure we're all set up
 		lazyInstantiation();
 		
 		String hostname = null;
@@ -167,9 +183,11 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 		switch (type) {
 			case FileProtocol.OPEN:
 				chooser.configureForOpen(getName(), hostname);
+				approveButtonText = "Open" ;
 				break ;
 			case FileProtocol.IMPORT:
 				chooser.configureForImport(getName(), hostname);
+				approveButtonText = "Import" ;
 				break ;
 			default:
 				System.out.println("ERROR: invalid open/import type used. (" + type +")");
@@ -177,7 +195,7 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 			} // end switch
 
 		// run the File Chooser
-		int option = chooser.showOpenDialog(Outliner.outliner);
+		int option = chooser.showDialog(Outliner.outliner, approveButtonText) ;
 
 		// Handle User Input
 		if (option == JFileChooser.APPROVE_OPTION) {
