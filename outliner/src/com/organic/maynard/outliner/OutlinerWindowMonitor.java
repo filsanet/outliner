@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
+ * Portions copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
+ * Portions copyright (C) 2002   Stan Krute <Stan@StanKrute.com>
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or 
@@ -32,6 +33,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
  
+/**
+ * @last touched by $Author$
+ * @version $Revision$, $Date$
+ */
 package com.organic.maynard.outliner;
 
 import javax.swing.*;
@@ -50,32 +55,40 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 		OutlinerDocument doc = (OutlinerDocument) w;
 		
 		String msg = null;
-		if (doc.getFileName().equals("") && doc.isFileModified()) {
-			msg = GUITreeLoader.reg.getText("error_window_monitor_untitled_save_changes");
-
-			int result = JOptionPane.showConfirmDialog(doc, msg);
-			if (result == JOptionPane.YES_OPTION) {
-				SaveAsFileMenuItem item = (SaveAsFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
-				item.saveAsOutlinerDocument(doc, Outliner.fileProtocolManager.getDefault());
-			} else if (result == JOptionPane.NO_OPTION) {
-				// Do Nothing
-			} else if (result == JOptionPane.CANCEL_OPTION) {
-				return false;
-			}
-		} else if (doc.isFileModified()) {
-			msg = GUITreeLoader.reg.getText("error_window_monitor_untitled_save_changes");
-			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, doc.getFileName());
-
-			int result = JOptionPane.showConfirmDialog(doc, msg);
-			if (result == JOptionPane.YES_OPTION) {
-				SaveFileMenuItem item = (SaveFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_MENU_ITEM);
-				item.saveOutlinerDocument(doc);
-			} else if (result == JOptionPane.NO_OPTION) {
-				// Do Nothing
-			} else if (result == JOptionPane.CANCEL_OPTION) {
-				return false;
-			}
-		}
+		
+		// if the document is modified ....
+		if (doc.isFileModified()) {
+			
+			// if it's untitled or imported, do a Save As ...
+			if ( doc.getFileName().equals("")  |  doc.getDocumentInfo().getImported()) {
+				msg = GUITreeLoader.reg.getText("error_window_monitor_untitled_save_changes");
+	
+				int result = JOptionPane.showConfirmDialog(doc, msg);
+				if (result == JOptionPane.YES_OPTION) {
+					SaveAsFileMenuItem item = (SaveAsFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
+					item.saveAsOutlinerDocument(doc, Outliner.fileProtocolManager.getDefault());
+				} else if (result == JOptionPane.NO_OPTION) {
+					// Do Nothing
+				} else if (result == JOptionPane.CANCEL_OPTION) {
+					return false;
+				}
+			// else do a Save ...
+			} else {
+				msg = GUITreeLoader.reg.getText("error_window_monitor_untitled_save_changes");
+				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, doc.getFileName());
+	
+				int result = JOptionPane.showConfirmDialog(doc, msg);
+				if (result == JOptionPane.YES_OPTION) {
+					SaveFileMenuItem item = (SaveFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_MENU_ITEM);
+					item.saveOutlinerDocument(doc);
+				} else if (result == JOptionPane.NO_OPTION) {
+					// Do Nothing
+				} else if (result == JOptionPane.CANCEL_OPTION) {
+					return false;
+				}
+			} // end else do a Save
+			
+		} // end if the document is modified
 		
 		// Record current state into DocumentInfo in the RecentFileList if we can
 		DocumentInfo docInfo = RecentFilesList.getDocumentInfo(doc.getFileName());
