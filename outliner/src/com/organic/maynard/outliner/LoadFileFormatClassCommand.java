@@ -44,18 +44,18 @@ public class LoadFileFormatClassCommand extends Command {
 	private static final char[] DELIMITERS = {' ','\t'};
 	
 	// The Constructors
-	public LoadFileFormatClassCommand(String name, int numOfArgs) {
-		super(name,numOfArgs);
+	public LoadFileFormatClassCommand(String name) {
+		super(name);
 	}
 
-	public void execute(Vector signature) {
-		String formatType = (String) signature.elementAt(1);
-		String className = (String) signature.elementAt(2);
-		String formatName = (String) signature.elementAt(3);
+	public void execute(ArrayList signature) {
+		String formatType = (String) signature.get(1);
+		String className = (String) signature.get(2);
+		String formatName = (String) signature.get(3);
 		Vector extensions = null;
 
 		if (signature.size() > 4) {
-			extensions = StringTools.split((String) signature.elementAt(4), '\\', DELIMITERS);
+			extensions = StringTools.split((String) signature.get(4), '\\', DELIMITERS);
 		}
 		
 		Outliner.fileFormatManager.createFileFormat(formatType, formatName, className, extensions);

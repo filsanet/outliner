@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.guitree.*;
 import javax.swing.JMenuBar;
 import org.xml.sax.*;
 

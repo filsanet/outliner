@@ -40,8 +40,7 @@ import com.organic.maynard.util.*;
 import java.util.*;
 
 public class SetPrefCommand extends Command {
-	
-	
+
 	private static final boolean VERBOSE = false;
 	
 	// Constants
@@ -49,14 +48,14 @@ public class SetPrefCommand extends Command {
 
 
 	// The Constructors
-	public SetPrefCommand(String name, int numOfArgs) {
-		super(name, numOfArgs);
+	public SetPrefCommand(String name) {
+		super(name);
 	}
 
 
-	public void execute(Vector signature) {
-		String variableName = (String) signature.elementAt(1);
-		String value = (String) signature.elementAt(2);
+	public void execute(ArrayList signature) {
+		String variableName = (String) signature.get(1);
+		String value = (String) signature.get(2);
 		
 		if (variableName.equals(COMMAND_ENCODING)) {
 			Preferences.ENCODINGS.add(value);

@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.util.*;
 import java.util.*;
 import java.io.*;
@@ -54,31 +55,29 @@ public class LoadMacroCommand extends Command {
 	
 	
 	// The Constructors
-	public LoadMacroCommand(String name, int numOfArgs) {
-		super(name,numOfArgs);
+	public LoadMacroCommand(String name) {
+		super(name);
 	}
 
 
-	public void execute(Vector signature) {
-		String path = (String) signature.elementAt(1);
-		String className = (String) signature.elementAt(2);
+	public void execute(ArrayList signature) {
+		String path = (String) signature.get(1);
+		String className = (String) signature.get(2);
 		
 		try {
-			// Turn path into a File
-			File file = new File(new StringBuffer().append(Outliner.MACROS_DIR).append(path).toString());
-
 			// Create Instance
 			Macro obj = (Macro) Class.forName(className).newInstance();
 			
-			// Initialize it
+			// Set Macro's Name
 			int end = path.lastIndexOf(EXTENSION_SEPARATOR);
 			if (end == -1) {
-				end = path.length();
+				obj.setName(path);
+			} else {
+				obj.setName(path.substring(0, end));
 			}
-			obj.setName(path.substring(0, end));
-			boolean success = obj.init(file);
 			
-			if (!success) {
+			// Initialize it, abort if failed.
+			if (!obj.init(new File(new StringBuffer().append(Outliner.MACROS_DIR).append(path).toString()))) {
 				return;
 			}
 
@@ -127,7 +126,7 @@ public class LoadMacroCommand extends Command {
 			buffer.append(macro.getFileName());
 			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
 			buffer.append(macro.getClass().getName());
-			buffer.append(System.getProperty("line.separator"));
+			buffer.append(Outliner.FILE_SEPARATOR);
 		}
 
 		for (int i = 0, limit = MacroPopupMenu.sortMacros.size(); i < limit; i++) {
@@ -138,7 +137,7 @@ public class LoadMacroCommand extends Command {
 			buffer.append(macro.getFileName());
 			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
 			buffer.append(macro.getClass().getName());
-			buffer.append(System.getProperty("line.separator"));
+			buffer.append(Outliner.FILE_SEPARATOR);
 		}
 		return buffer.toString();
 	}

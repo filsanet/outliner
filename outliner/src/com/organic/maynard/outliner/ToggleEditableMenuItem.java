@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.guitree.*;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -52,47 +53,5 @@ public class ToggleEditableMenuItem extends AbstractOutlinerMenuItem implements 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		OutlineMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), Event.SHIFT_MASK, KeyEvent.VK_F11, false);
-	}
-}
-
-class ToggleEditableInheritanceMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
-	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
-		super.startSetup(atts);
-		addActionListener(this);
-	}
-
-
-	// ActionListener Interface
-	public void actionPerformed(ActionEvent e) {
-		OutlineMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), Event.CTRL_MASK, KeyEvent.VK_F11, false);
-	}
-}
-
-class ClearEditablesMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
-	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
-		super.startSetup(atts);
-		addActionListener(this);
-	}
-
-
-	// ActionListener Interface
-	public void actionPerformed(ActionEvent e) {
-		OutlineMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), Event.CTRL_MASK + Event.SHIFT_MASK, KeyEvent.VK_F11, false);
-	}
-}
-
-class ToggleEditableAndClearMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
-	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
-		super.startSetup(atts);
-		addActionListener(this);
-	}
-
-
-	// ActionListener Interface
-	public void actionPerformed(ActionEvent e) {
-		OutlineMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), 0, KeyEvent.VK_F11, false);
 	}
 }

@@ -55,6 +55,7 @@
 
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.guitree.*;
 import java.awt.event.*;
 import org.xml.sax.*;
 

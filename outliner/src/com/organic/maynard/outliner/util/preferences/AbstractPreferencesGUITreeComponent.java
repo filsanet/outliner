@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner.util.preferences;
 
+import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.*;
 
 import java.awt.*;
@@ -102,32 +103,24 @@ public abstract class AbstractPreferencesGUITreeComponent implements Preferences
 
 		// Set the Preference
 		Preference pref = (Preference) GUITreeLoader.getAncestorElementOfClass("com.organic.maynard.outliner.util.preferences.Preference");
-		
 		setPreference(pref);
-		
-		// Add it to the PreferenceList in the parent panel
-		PreferencesPanel prefPanel = (PreferencesPanel) GUITreeLoader.getAncestorElementOfClass("com.organic.maynard.outliner.util.preferences.PreferencesPanel");
-		prefPanel.addPreference(this);
 	}
 
 	public void endSetup(AttributeList atts) {
 		AbstractPreferencesPanel prefPanel = (AbstractPreferencesPanel) GUITreeLoader.getAncestorElementOfClass("com.organic.maynard.outliner.util.preferences.AbstractPreferencesPanel");
 		
-		// Get the style to use
-		String style = atts.getValue(A_STYLE);
-		if (style == null) {
-			style = STYLE_SIDE_BY_SIDE;
-		}
+		// Add it to the PreferenceList in the parent panel
+		prefPanel.addPreference(this);
+		
 		Container c = prefPanel.getCurrentContainer();
 		
-		if (style.equals(STYLE_SINGLE_CENTERED)) {
+		if (STYLE_SINGLE_CENTERED.equals(atts.getValue(A_STYLE))) {
 			AbstractPreferencesPanel.addSingleItemCentered(new JLabel(getLabelText()), c);
 			AbstractPreferencesPanel.addSingleItemCentered(getComponent(), c);
-		} else if (style.equals(STYLE_SIDE_BY_SIDE)) {
-			AbstractPreferencesPanel.addPreferenceItem(getLabelText(), getComponent(), c);		
 		} else {
 			AbstractPreferencesPanel.addPreferenceItem(getLabelText(), getComponent(), c);
 		}
+		
 		c.add(Box.createVerticalStrut(5));
 	}
 }

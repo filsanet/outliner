@@ -41,7 +41,7 @@
 // we're a part of this
 package com.organic.maynard.outliner;
 
-// we use these
+import com.organic.maynard.outliner.guitree.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;

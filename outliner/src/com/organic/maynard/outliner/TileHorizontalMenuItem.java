@@ -38,10 +38,9 @@
  * @version $Revision$, $Date$
  */
 
- // we're part of this
 package com.organic.maynard.outliner;
 
-// we use these
+import com.organic.maynard.outliner.guitree.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;

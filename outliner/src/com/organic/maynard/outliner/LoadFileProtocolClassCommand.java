@@ -41,14 +41,14 @@ import com.organic.maynard.util.string.StringTools;
 public class LoadFileProtocolClassCommand extends Command {
 
 	// The Constructors
-	public LoadFileProtocolClassCommand(String name, int numOfArgs) {
-		super(name,numOfArgs);
+	public LoadFileProtocolClassCommand(String name) {
+		super(name);
 	}
 
-	public void execute(Vector signature) {
+	public void execute(ArrayList signature) {
 		try {
-			String className = (String) signature.elementAt(1);
-			String protocolName = (String) signature.elementAt(2);
+			String className = (String) signature.get(1);
+			String protocolName = (String) signature.get(2);
 			
 			Outliner.fileProtocolManager.createFileProtocol(protocolName, className);
 		} catch (ArrayIndexOutOfBoundsException e) {

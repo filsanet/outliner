@@ -35,6 +35,7 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.util.find.*;
 import com.organic.maynard.outliner.dom.*;
 import com.organic.maynard.outliner.util.preferences.*;
@@ -73,17 +74,19 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	
 	
 	// Directory setup
+	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
+	
 	public static final String USER_OUTLINER_DIR = "outliner";
 	
 	// [deric] 31sep2001, We want to be able to specify the graphics dir via a Property in the packaging for MacOS X. If it isn't defined it defaults to the usual "graphics". 
-	public static String GRAPHICS_DIR =       new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.graphicsdir", "graphics")).append(System.getProperty("file.separator")).toString();
-	public static String PREFS_DIR =          new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.prefsdir", "prefs")).append(System.getProperty("file.separator")).toString();
+	public static String GRAPHICS_DIR =       new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.graphicsdir", "graphics")).append(FILE_SEPARATOR).toString();
+	public static String PREFS_DIR =          new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.prefsdir", "prefs")).append(FILE_SEPARATOR).toString();
 	public static String USER_PREFS_DIR =     PREFS_DIR;
-	public static final String APP_DIR_PATH = new StringBuffer().append(System.getProperty("user.dir")).append(System.getProperty("file.separator")).toString();
-	public static String DOX_DIR =            new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.doxdir", "dox")).append(System.getProperty("file.separator")).toString();
-	public static String EXTRAS_DIR =         new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.extrasdir", "extras")).append(System.getProperty("file.separator")).toString();
-	public static String LIB_DIR =            new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.libdir", "lib")).append(System.getProperty("file.separator")).toString();
-	public static String LOGS_DIR =           new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.logsdir", "logs")).append(System.getProperty("file.separator")).toString();
+	public static final String APP_DIR_PATH = new StringBuffer().append(System.getProperty("user.dir")).append(FILE_SEPARATOR).toString();
+	public static String DOX_DIR =            new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.doxdir", "dox")).append(FILE_SEPARATOR).toString();
+	public static String EXTRAS_DIR =         new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.extrasdir", "extras")).append(FILE_SEPARATOR).toString();
+	public static String LIB_DIR =            new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.libdir", "lib")).append(FILE_SEPARATOR).toString();
+	public static String LOGS_DIR =           new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.logsdir", "logs")).append(FILE_SEPARATOR).toString();
 	
 
 	// Find out if we've got a home directory to work with for user preferences, if
@@ -91,15 +94,15 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	static {
 		String userhome = System.getProperty("user.home");
 		if ((userhome != null) && !userhome.equals("")) {
-			USER_PREFS_DIR = new StringBuffer().append(userhome).append(System.getProperty("file.separator")).append(USER_OUTLINER_DIR).append(System.getProperty("file.separator")).toString();
+			USER_PREFS_DIR = new StringBuffer().append(userhome).append(FILE_SEPARATOR).append(USER_OUTLINER_DIR).append(FILE_SEPARATOR).toString();
 		}
 	}
 
 	// These prefs should be under the users prefs dir, or if no user prefs dir exists then
 	// they should be under the apps prefs dir.
-	public static String MACROS_DIR =        new StringBuffer().append(USER_PREFS_DIR).append("macros").append(System.getProperty("file.separator")).toString();
+	public static String MACROS_DIR =        new StringBuffer().append(USER_PREFS_DIR).append("macros").append(FILE_SEPARATOR).toString();
 	public static String MACROS_FILE =       new StringBuffer().append(USER_PREFS_DIR).append("macros.txt").toString();
-	public static String SCRIPTS_DIR =       new StringBuffer().append(USER_PREFS_DIR).append("scripts").append(System.getProperty("file.separator")).toString();
+	public static String SCRIPTS_DIR =       new StringBuffer().append(USER_PREFS_DIR).append("scripts").append(FILE_SEPARATOR).toString();
 	public static String SCRIPTS_FILE =      new StringBuffer().append(USER_PREFS_DIR).append("scripts.txt").toString();
 	public static String FIND_REPLACE_FILE = new StringBuffer().append(USER_PREFS_DIR).append("find_replace.xml").toString();
 	public static String CONFIG_FILE =       new StringBuffer().append(USER_PREFS_DIR).append("config.txt").toString();
@@ -289,7 +292,26 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	public static final String COMMAND_SCRIPT = "script";
 	public static final String COMMAND_FILE_FORMAT = "file_format";
 	public static final String COMMAND_FILE_PROTOCOL = "file_protocol";
+
+	public static final Command SET_PREF_COMMAND =                 new SetPrefCommand(COMMAND_SET);
+	public static final Command LOAD_MACRO_CLASS_COMMAND =         new LoadMacroClassCommand(COMMAND_MACRO_CLASS);
+	public static final Command LOAD_MACRO_COMMAND =               new LoadMacroCommand(COMMAND_MACRO);
+	public static final Command LOAD_SCRIPT_CLASS_COMMAND =        new LoadScriptClassCommand(COMMAND_SCRIPT_CLASS);
+	public static final Command LOAD_SCRIPT_COMMAND =              new LoadScriptCommand(COMMAND_SCRIPT);
+	public static final Command LOAD_FILE_FORMAT_CLASS_COMMAND =   new LoadFileFormatClassCommand(COMMAND_FILE_FORMAT);
+	public static final Command LOAD_FILE_PROTOCOL_CLASS_COMMAND = new LoadFileProtocolClassCommand(COMMAND_FILE_PROTOCOL);
+	
 	public static final CommandParser PARSER = new CommandParser(COMMAND_PARSER_SEPARATOR);
+	
+	static {
+		PARSER.addCommand(SET_PREF_COMMAND);
+		PARSER.addCommand(LOAD_MACRO_CLASS_COMMAND);
+		PARSER.addCommand(LOAD_MACRO_COMMAND);
+		PARSER.addCommand(LOAD_SCRIPT_CLASS_COMMAND);
+		PARSER.addCommand(LOAD_SCRIPT_COMMAND);
+		PARSER.addCommand(LOAD_FILE_FORMAT_CLASS_COMMAND);
+		PARSER.addCommand(LOAD_FILE_PROTOCOL_CLASS_COMMAND);
+	}
 	
 	
 	// GUI Objects
@@ -317,131 +339,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	public static HelpDocumentsManager helpDoxMgr = null;
 
 
-	// GUITreeComponent interface	
-	private String id = null;
-	public String getGUITreeComponentID() {return this.id;}
-	public void setGUITreeComponentID(String id) {this.id = id;}
-
-	public void startSetup(AttributeList atts) {
-		outliner = this;
-		
-		// MouseWheel
-		if (PlatformCompatibility.isWindows()) {
-			JMouseWheelSupport.setMinScrollDistance(1);
-		}
-
-		setTitle(atts.getValue(A_TITLE));
-
-		// Load Preferences
-		PARSER.addCommand(new SetPrefCommand(COMMAND_SET,2));
-		PARSER.addCommand(new LoadMacroClassCommand(COMMAND_MACRO_CLASS,2));
-		PARSER.addCommand(new LoadMacroCommand(COMMAND_MACRO,2));
-		PARSER.addCommand(new LoadScriptClassCommand(COMMAND_SCRIPT_CLASS,2));
-		PARSER.addCommand(new LoadScriptCommand(COMMAND_SCRIPT,2));
-		PARSER.addCommand(new LoadFileFormatClassCommand(COMMAND_FILE_FORMAT,2));
-		PARSER.addCommand(new LoadFileProtocolClassCommand(COMMAND_FILE_PROTOCOL,2));
-
-		loadPrefsFile(PARSER,ENCODINGS_FILE);
-		
-		// Setup the FileFormatManager and FileProtocolManager
-		fileFormatManager = new FileFormatManager();
-		fileProtocolManager = new FileProtocolManager();
-		
-		loadPrefsFile(PARSER,FILE_FORMATS_FILE);
-		
-		// Crank up the Help system	[srk] 8/5/01 1:30PM
-		helpDoxMgr = new HelpDocumentsManager();
-	}
-	
-	public void endSetup(AttributeList atts) {
-		// Set the Window Location.
-			// Get Main Window Dimension out of the prefs.
-			PreferenceInt pWidth = Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_W);
-			PreferenceInt pHeight = Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_H);
-			PreferenceInt pInitialPositionX = Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_X);
-			PreferenceInt pInitialPositionY = Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_Y);
-			
-			int minimumWidth = ((IntRangeValidator) pWidth.getValidator()).getMin();
-			int minimumHeight = ((IntRangeValidator) pHeight.getValidator()).getMin();
-			int minimumInitialPositionX = ((IntRangeValidator) pInitialPositionX.getValidator()).getMin();
-			int minimumInitialPositionY = ((IntRangeValidator) pInitialPositionY.getValidator()).getMin();
-			
-			int initialWidth = pWidth.cur;
-			int initialHeight = pHeight.cur;
-			int initialPositionX = pInitialPositionX.cur;
-			int initialPositionY = pInitialPositionY.cur;
-		
-			// Make sure initial position isn't off screen, or even really close to the edge.
-			int bottom_left_inset = 100;
-			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-			
-			if (initialPositionX < minimumInitialPositionX) {
-				initialPositionX = minimumInitialPositionX;
-			}
-			
-			if (initialPositionX > (screenSize.width - bottom_left_inset)) {
-				initialPositionX = screenSize.width - bottom_left_inset;
-			}
-
-			if (initialPositionY < minimumInitialPositionY) {
-				initialPositionY = minimumInitialPositionY;
-			}
-			
-			if (initialPositionY > (screenSize.height - bottom_left_inset)) {
-				initialPositionY = screenSize.height - bottom_left_inset;
-			}
-						
-			setLocation(initialPositionX, initialPositionY);
-
-
-		addComponentListener(new WindowSizeManager(initialWidth, initialHeight, minimumWidth, minimumHeight));
-		addWindowListener(
-			new WindowAdapter() {
-				public void windowClosing(WindowEvent e) {
-					QuitMenuItem item = (QuitMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.QUIT_MENU_ITEM);
-					item.quit();
-				}
-			}
-		);
-		
-		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
-		// Setup Desktop ScrollPane and set the ContentPane.
-		jsp = new JScrollPane(desktop, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		jsp.addComponentListener(new DesktopScrollPaneComponentListener());
-		setContentPane(jsp);
-
-		// Set Frame Icon
-		ImageIcon icon = new ImageIcon(GRAPHICS_DIR + "frame_icon.gif");
-		setIconImage(icon.getImage());
-
-		// Initialize open/save_as/export/export_selection menus.
-		fileProtocolManager.synchronizeDefault();
-		fileProtocolManager.synchronizeMenus();
-		
-		// Setup the MacroManager and the MacroPopupMenu
-		loadPrefsFile(PARSER,MACRO_CLASSES_FILE);
-		macroPopup = new MacroPopupMenu();
-		loadPrefsFile(PARSER,MACROS_FILE);
-		
-		// Setup the ScriptManager
-		loadPrefsFile(PARSER,SCRIPT_CLASSES_FILE);
-		loadPrefsFile(PARSER,SCRIPTS_FILE);
-		
-		// Setup the FindReplaceResultsDialog
-		findReplaceResultsDialog = new FindReplaceResultsDialog();
-		
-		// Apply the Preference Settings
-		Preferences.applyCurrentToApplication();
-
-		setVisible(true); // Seems OK to do this now rather than at the end of this method.
-
-		// Generate Icons
-		OutlineButton.createIcons();
-	}
-	
-	
-	// after the static initializers run, execution continues here	
+	// Main
 	public static void main(String args[]) {
 		System.out.println("START MEASURING TIME");
 		long startTime = System.currentTimeMillis();
@@ -517,6 +415,123 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		System.out.println("SECOND TIME: " + (endTime - startTime));
 		System.out.println(" TOTAL TIME: " + (endTime - earlyStartTime));
 	}
+	
+
+	// GUITreeComponent interface	
+	private String id = null;
+	public String getGUITreeComponentID() {return this.id;}
+	public void setGUITreeComponentID(String id) {this.id = id;}
+
+	public void startSetup(AttributeList atts) {
+		outliner = this;
+		
+		// MouseWheel
+		if (PlatformCompatibility.isWindows()) {
+			JMouseWheelSupport.setMinScrollDistance(1);
+		}
+
+		setTitle(atts.getValue(A_TITLE));
+
+		// Load Preferences
+		loadPrefsFile(PARSER, ENCODINGS_FILE);
+		
+		// Setup the FileFormatManager and FileProtocolManager
+		fileFormatManager = new FileFormatManager();
+		fileProtocolManager = new FileProtocolManager();
+		
+		loadPrefsFile(PARSER, FILE_FORMATS_FILE);
+		
+		// Crank up the Help system	[srk] 8/5/01 1:30PM
+		helpDoxMgr = new HelpDocumentsManager();
+	}
+	
+	public void endSetup(AttributeList atts) {
+		// Set the Window Location.
+			// Get Main Window Dimension out of the prefs.
+			PreferenceInt pWidth = Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_W);
+			PreferenceInt pHeight = Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_H);
+			PreferenceInt pInitialPositionX = Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_X);
+			PreferenceInt pInitialPositionY = Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_Y);
+			
+			int minimumWidth = ((IntRangeValidator) pWidth.getValidator()).getMin();
+			int minimumHeight = ((IntRangeValidator) pHeight.getValidator()).getMin();
+			int minimumInitialPositionX = ((IntRangeValidator) pInitialPositionX.getValidator()).getMin();
+			int minimumInitialPositionY = ((IntRangeValidator) pInitialPositionY.getValidator()).getMin();
+			
+			int initialWidth = pWidth.cur;
+			int initialHeight = pHeight.cur;
+			int initialPositionX = pInitialPositionX.cur;
+			int initialPositionY = pInitialPositionY.cur;
+		
+			// Make sure initial position isn't off screen, or even really close to the edge.
+			int bottom_left_inset = 100;
+			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+			
+			if (initialPositionX < minimumInitialPositionX) {
+				initialPositionX = minimumInitialPositionX;
+			}
+			
+			if (initialPositionX > (screenSize.width - bottom_left_inset)) {
+				initialPositionX = screenSize.width - bottom_left_inset;
+			}
+
+			if (initialPositionY < minimumInitialPositionY) {
+				initialPositionY = minimumInitialPositionY;
+			}
+			
+			if (initialPositionY > (screenSize.height - bottom_left_inset)) {
+				initialPositionY = screenSize.height - bottom_left_inset;
+			}
+						
+			setLocation(initialPositionX, initialPositionY);
+
+
+		addComponentListener(new WindowSizeManager(initialWidth, initialHeight, minimumWidth, minimumHeight));
+		addWindowListener(
+			new WindowAdapter() {
+				public void windowClosing(WindowEvent e) {
+					QuitMenuItem item = (QuitMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.QUIT_MENU_ITEM);
+					item.quit();
+				}
+			}
+		);
+		
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+		// Setup Desktop ScrollPane and set the ContentPane.
+		jsp = new JScrollPane(desktop, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		jsp.addComponentListener(new DesktopScrollPaneComponentListener());
+		setContentPane(jsp);
+
+		// Set Frame Icon
+		ImageIcon icon = new ImageIcon(GRAPHICS_DIR + "frame_icon.gif");
+		setIconImage(icon.getImage());
+
+		// Initialize open/save_as/export/export_selection menus.
+		fileProtocolManager.synchronizeDefault();
+		fileProtocolManager.synchronizeMenus();
+		
+		// Setup the MacroManager and the MacroPopupMenu
+		loadPrefsFile(PARSER, MACRO_CLASSES_FILE);
+		macroPopup = new MacroPopupMenu();
+		loadPrefsFile(PARSER, MACROS_FILE);
+		
+		// Setup the ScriptManager
+		loadPrefsFile(PARSER, SCRIPT_CLASSES_FILE);
+		loadPrefsFile(PARSER, SCRIPTS_FILE);
+		
+		// Setup the FindReplaceResultsDialog
+		findReplaceResultsDialog = new FindReplaceResultsDialog();
+		
+		// Apply the Preference Settings
+		Preferences.applyCurrentToApplication();
+
+		setVisible(true); // Seems OK to do this now rather than at the end of this method.
+
+		// Generate Icons
+		OutlineButton.createIcons();
+	}
+	
 
 	// ClipboardOwner Interface
 	public static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -526,16 +541,27 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	
 	// Misc Methods
 	public static void loadPrefsFile(CommandParser parser, String filename) {
-		CommandQueue commandQueue = new CommandQueue(25);
-		commandQueue.loadFromFile(filename);
-		
-		while (commandQueue.getSize() > 0) {
-			try {
-				parser.parse((String) commandQueue.getNext());
-			} catch (UnknownCommandException uce) {
-				System.out.println("Unknown Command");
+		try {
+			BufferedReader buffer = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
+			
+			String line = buffer.readLine();
+			while (line != null) {
+				try {
+					parser.parse(line, true, true);
+				} catch (UnknownCommandException uce) {
+					System.out.println("Unknown Command");
+				}
+				
+				line = buffer.readLine();
 			}
-		}	
+			
+			buffer.close();
+			
+		} catch (FileNotFoundException fnfe) {
+			System.err.println("File Not Found: " + filename + "\n" + fnfe);		
+		} catch (Exception e) {
+			System.err.println("Could not create FileReader: " + filename + "\n" + e);
+		}
 	}
 
 	// all calls for a new JoeTree come thru here

@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner.util.preferences;
 
+import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.*;
 
 import java.awt.*;
@@ -60,6 +61,7 @@ public class PreferencesGUITreeSubContainer extends JPanel implements GUITreeCom
 
 	// GUI Components
 	private Box box = Box.createVerticalBox();
+	private static final Insets insets = new Insets(5,5,5,5);
 	
 	
 	// Constructor
@@ -83,9 +85,8 @@ public class PreferencesGUITreeSubContainer extends JPanel implements GUITreeCom
 		// Set Border Style
 		String style = atts.getValue(A_STYLE);
 		if (style.equals(STYLE_BEVELED)) {
-			setBorder(new CompoundBorder(new BevelBorder(BevelBorder.RAISED), new EmptyBorder(new Insets(5,5,5,5))));
+			setBorder(new CompoundBorder(new BevelBorder(BevelBorder.RAISED), new EmptyBorder(insets)));
 		} else if (style.equals(STYLE_TITLED)) {
-			//setBorder(new TitledBorder(new EmptyBorder(new Insets(5,5,5,5)), atts.getValue(A_LABEL)));
 			setBorder(new TitledBorder(LineBorder.createBlackLineBorder(), atts.getValue(A_LABEL)));
 		}
 		

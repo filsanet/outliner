@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.util.*;
 import java.util.*;
 import java.io.*;
@@ -54,23 +55,23 @@ public class LoadScriptCommand extends Command {
 	
 	
 	// The Constructors
-	public LoadScriptCommand(String name, int numOfArgs) {
-		super(name,numOfArgs);
+	public LoadScriptCommand(String name) {
+		super(name);
 	}
 
 
-	public void execute(Vector signature) {
-		String path = (String) signature.elementAt(1);
-		String className = (String) signature.elementAt(2);
+	public void execute(ArrayList signature) {
+		String path = (String) signature.get(1);
+		String className = (String) signature.get(2);
 		
 		boolean isStartupScript = false;
 		if (signature.size() > 3) {
-			isStartupScript = (new Boolean((String) signature.elementAt(3))).booleanValue();
+			isStartupScript = (new Boolean((String) signature.get(3))).booleanValue();
 		}
 
 		boolean isShutdownScript = false;
 		if (signature.size() > 4) {
-			isShutdownScript = (new Boolean((String) signature.elementAt(4))).booleanValue();
+			isShutdownScript = (new Boolean((String) signature.get(4))).booleanValue();
 		}
 		
 		try {

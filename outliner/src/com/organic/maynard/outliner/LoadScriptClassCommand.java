@@ -40,13 +40,13 @@ import java.util.*;
 public class LoadScriptClassCommand extends Command {
 		
 	// The Constructors
-	public LoadScriptClassCommand(String name, int numOfArgs) {
-		super(name,numOfArgs);
+	public LoadScriptClassCommand(String name) {
+		super(name);
 	}
 
-	public void execute(Vector signature) {
-		String className = (String) signature.elementAt(1);
-		String name = (String) signature.elementAt(2);
+	public void execute(ArrayList signature) {
+		String className = (String) signature.get(1);
+		String name = (String) signature.get(2);
 		
 		Outliner.scriptsManager.scriptNames.add(name);
 		Outliner.scriptsManager.scriptClassNames.add(className);

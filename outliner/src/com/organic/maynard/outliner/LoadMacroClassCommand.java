@@ -40,13 +40,13 @@ import java.util.*;
 public class LoadMacroClassCommand extends Command {
 		
 	// The Constructors
-	public LoadMacroClassCommand(String name, int numOfArgs) {
-		super(name,numOfArgs);
+	public LoadMacroClassCommand(String name) {
+		super(name);
 	}
 
-	public void execute(Vector signature) {
-		String className = (String) signature.elementAt(1);
-		String name = (String) signature.elementAt(2);
+	public void execute(ArrayList signature) {
+		String className = (String) signature.get(1);
+		String name = (String) signature.get(2);
 		
 		Outliner.macroManager.macroNames.add(name);
 		Outliner.macroManager.macroClassNames.add(className);

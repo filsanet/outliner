@@ -36,6 +36,7 @@ package com.organic.maynard.outliner.util.preferences;
 
 import com.organic.maynard.outliner.*;
 
+import com.organic.maynard.outliner.guitree.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -80,7 +81,7 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 		// Add the preference panel at the appropriate depth.
 		int depth = 0;
 		while (true) {
-			GUITreeComponent c = (GUITreeComponent) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - ++depth);
+			GUITreeComponent c = GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - ++depth);
 			if(!(c instanceof PreferencesPanel)) {
 				depth--;
 				break;
@@ -92,8 +93,7 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 		Outliner.prefs.addPreferencesPanel(id, this);
 
 		// Start setting up box
-		JLabel label = new JLabel(atts.getValue(A_TITLE));
-		addSingleItemCentered(label, box);
+		addSingleItemCentered(new JLabel(title), box);
 		
 		box.add(Box.createVerticalStrut(10));
 	}
