@@ -50,8 +50,8 @@ import javax.swing.tree.*;
  */
  
 public class ButtonCellEditor extends DefaultCellEditor implements TableCellRenderer {
-	protected JButton button;
-	protected JButton rendererButton;
+	private JButton button;
+	private JButton rendererButton;
 	
 	private String    label;
 	private boolean   isPushed;
@@ -113,7 +113,7 @@ public class ButtonCellEditor extends DefaultCellEditor implements TableCellRend
 			doEditing();
 		}
 		isPushed = false;
-		return new String(label) ;
+		return new String(label);
 	}
 
 	protected void doEditing() {}
