@@ -55,7 +55,6 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 	
 	// Pseudo Constants
 	public static String DICTIONARIES_DIR = new StringBuffer().append(Outliner.PREFS_DIR).append(Outliner.FILE_SEPARATOR).append("dict").append(Outliner.FILE_SEPARATOR).toString();
-	public static String DICTIONARY_FILE = new StringBuffer().append(DICTIONARIES_DIR).append("dictionary.").append(Outliner.LANGUAGE).toString();
 	
 	// Instance fields
 	private SpellingCheckerDialog dialog = null;
@@ -71,15 +70,41 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 		if (!this.is_initialized) {
 			try {
 				this.dialog = new SpellingCheckerDialog(this);
-				this.dictionary = new SpellDictionary(new File(DICTIONARY_FILE));
-				this.spellCheck = new SpellChecker(dictionary);
-				this.spellCheck.addSpellCheckListener(this);
+				
+				reloadDictionaries();
+				
 				this.is_initialized = true;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return is_initialized;
+	}
+	
+	private void reloadDictionaries() {
+		try {
+			File dictonaries_dir = new File(DICTIONARIES_DIR);
+			File[] dictionaryFiles = dictonaries_dir.listFiles();
+			
+			boolean first_file = true;
+			for (int i = 0; i < dictionaryFiles.length; i++) {
+				File dictionary_file = dictionaryFiles[i];
+				if (dictionary_file.isFile() && dictionary_file.canRead() && dictionary_file.getName().endsWith(".dict")) {
+					System.out.println("Loading Dictionary File: " + dictionary_file.getName());
+					if (first_file) {
+						this.dictionary = new SpellDictionary(dictionary_file);
+						first_file = false;
+					} else {
+						this.dictionary.createDictionary(new BufferedReader(new FileReader(dictionary_file)));
+					}
+				}
+			}
+			
+			this.spellCheck = new SpellChecker(this.dictionary);
+			this.spellCheck.addSpellCheckListener(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	// Accessors
@@ -213,24 +238,16 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 			return;
 		}
 		
-		List suggestions = event.getSuggestions();
-		if (suggestions.size() > 0) {
-			this.misspelt_words.add(event);
-			this.nodes.add(this.current_node);
-			this.offsets.add(new Integer(this.current_offset));
-			
-			if (!this.found_a_misspelling) {
-				// We need this to trigger the gui when we find our first word.
-				this.found_a_misspelling = true;
-				this.dialog.updateGUI();
-			} else {
-				this.dialog.updateButtons();
-			}
-			
-			/*System.out.println("MISSPELT WORD: " + event.getInvalidWord());
-			for (Iterator suggestedWord = suggestions.iterator(); suggestedWord.hasNext();) {
-				System.out.println("  Suggested Word: = " + suggestedWord.next());
-			}*/
+		this.misspelt_words.add(event);
+		this.nodes.add(this.current_node);
+		this.offsets.add(new Integer(this.current_offset));
+		
+		if (!this.found_a_misspelling) {
+			// We need this to trigger the gui when we find our first word.
+			this.found_a_misspelling = true;
+			this.dialog.updateGUI();
+		} else {
+			this.dialog.updateButtons();
 		}
 	}
 }
