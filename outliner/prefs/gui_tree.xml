@@ -128,6 +128,7 @@
 			<menuitem id="paste" class="com.organic.maynard.outliner.PasteMenuItem" text="Paste" keybinding="V" keybindingmodifiers="control"/>
 			<separator/>
 			<menuitem id="select_all" class="com.organic.maynard.outliner.SelectAllMenuItem" text="Select All" keybinding="A" keybindingmodifiers="control"/>
+			<menuitem id="select_none" class="com.organic.maynard.outliner.SelectNoneMenuItem" text="Select None" keybinding="D" keybindingmodifiers="control"/>
 			<separator/>
 			<menuitem id="edit_document_settings" class="com.organic.maynard.outliner.EditDocumentSettingsMenuItem" text="Document Settings..."/>
 			<separator/>
