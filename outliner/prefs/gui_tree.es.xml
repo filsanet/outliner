@@ -30,7 +30,7 @@
 				<validator id="main_window_y_offset_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="2048" default="20">
 				</validator>
 			</preference>
-		<preferencesframe id="preferences_frame" class="com.organic.maynard.outliner.PreferencesFrame" title="Preferencias De la Aplicaci�n">
+		<preferencesframe id="preferences_frame" class="com.organic.maynard.outliner.PreferencesFrame" title="Preferencias De la Aplicación">
 			<preferencepanel id="preferences_panel_editor" class="com.organic.maynard.outliner.PreferencesPanelEditor" title="Editor">
 				<preference id="font_face" class="com.organic.maynard.outliner.PreferenceString" default="SansSerif">
 					<preference_component id="font_face_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Cara De la Fuente"/>
@@ -126,7 +126,7 @@
 					<preference_component id="save_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format when saving." style="single_centered"/>
 				</preference>
 			</preferencepanel>
-			<preferencepanel id="preferences_panel_misc" class="com.organic.maynard.outliner.PreferencesPanelMisc" title="Misceláneo">
+			<preferencepanel id="preferences_panel_misc" class="com.organic.maynard.outliner.PreferencesPanelMisc" title="MiscelÃ¡neo">
 				<preference id="print_environment" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
 					<validator id="print_environment_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
 					<preference_component id="print_environment_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Print environment to console on startup"/>
