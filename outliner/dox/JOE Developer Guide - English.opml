@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<opml version="1.0">
+<head>
+<title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide - English.opml</title>
+<dateCreated>Tue, 17 Jul 2001 02:49:03 GMT</dateCreated>
+<dateModified>Tue, 24 Jul 2001 07:54:48 GMT</dateModified>
+<ownerName></ownerName>
+<ownerEmail></ownerEmail>
+<expansionState></expansionState>
+<vertScrollState>1</vertScrollState>
+<windowTop>59</windowTop>
+<windowLeft>40</windowLeft>
+<windowBottom>509</windowBottom>
+<windowRight>525</windowRight>
+</head>
+<body>
+<outline text="Setting Up the JOE Open Source Project on a Windows System">
+<outline text="a Step-by-Simple-Step Guide"/>
+<outline text="Front Matter">
+<outline text="This Version">
+<outline text="2001-07-21"/>
+</outline>
+<outline text="Latest Version">
+<outline text="http://StanKrute.com/JOE/Setting Up the JOE Open Source Project on a Windows System.opml"/>
+</outline>
+<outline text="Feedback Invited">
+<outline text="send it to the author, Stan Krute"/>
+<outline text="Stan@StanKrute.com"/>
+</outline>
+<outline text="Copyright ">
+<outline text="This guide [c] 2001 by Stan Krute. All rights reserved."/>
+</outline>
+<outline text="Thanks &amp; More Thanks to">
+<outline text="Dan Weston">
+<outline text="my cyber Flint McCullough since 1979"/>
+</outline>
+<outline text="Maynard Demmon">
+<outline text="fountainhead of the JOE project"/>
+</outline>
+<outline text="Michael Hearn">
+<outline text="author of the SFSetup tool, which got me over the ssh download and setup hump after a number of false starts"/>
+</outline>
+<outline text="The folks who bring us">
+<outline text="SourceForge"/>
+<outline text="ssh"/>
+<outline text="cvs"/>
+<outline text="NetBeans"/>
+<outline text="Java"/>
+</outline>
+</outline>
+<outline text="References">
+<outline text="An Introductory Guide to Using SourceForge for Windows Development">
+<outline text="link: http://sourceforge.net/docman/display_doc.php?docid=766&amp;group_id=1"/>
+</outline>
+</outline>
+<outline text="OS assumptions">
+<outline text="You're running a modern Win32 Windows OS">
+<outline text="Win9x: Windows 98SE or later"/>
+<outline text="NT/2K: Windows 2000 or later"/>
+</outline>
+</outline>
+<outline text="Introduction">
+<outline text="Some cookie crumbs for your trail">
+<outline text="I was new to ssh, CVS, SourceForge, Java, Java JDK, NetBeans, and JOE"/>
+<outline text="It took me many hours to get things set up so that I could work on the JOE project"/>
+<outline text="I put together this doc with the hope that it can speed the process for others"/>
+</outline>
+<outline text="This is just one of a large number of paths">
+<outline text="Its main feature: it works."/>
+</outline>
+</outline>
+</outline>
+<outline text="Enroll at SourceForge"/>
+<outline text="Create some directories">
+<outline text="home at root of some drive">
+<outline text="mine is c:\home"/>
+<outline text="lots of unixoid programs will store data sub this directory"/>
+</outline>
+<outline text="cvs at root of some drive">
+<outline text="mine is c:\cvs"/>
+</outline>
+<outline text="ssh at root of some drive">
+<outline text="mine is c:\ssh"/>
+</outline>
+<outline text="a project directory somewhere">
+<outline text="mine is at e:\stan's java projects\Joe"/>
+</outline>
+</outline>
+<outline text="Adjust autoexec.bat">
+<outline text="environment settings">
+<outline text="(adjusting as necessary for your specific username, projectname, drive, and directories) "/>
+<outline text="set CVSROOT=:ext:your_username@cvs.outliner.sourceforge.net:/cvsroot/outliner"/>
+<outline text="set USERNAME=your_username"/>
+<outline text="set HOMEDRIVE=c:"/>
+<outline text="set HOME=\home"/>
+<outline text="set HOMEPATH=\home"/>
+<outline text="set CVS_RSH=ssh"/>
+</outline>
+<outline text="path">
+<outline text="add ssh directory and cvs directory to your path"/>
+<outline text="path=...;c:\ssh;c:\cvs"/>
+</outline>
+</outline>
+<outline text="Obtain and Install ssh">
+<outline text="Obtain and Install SourceForge Setup">
+<outline text="It's at "/>
+</outline>
+<outline text="Run it"/>
+<outline text="Choose to download and install ssh -- don't do WinCVS"/>
+<outline text="Log into your project">
+<outline text="ssh -l &lt;user_name&gt; projectname.sourceforge.net">
+<outline text="ssh -l stanley_krute outliner.sourceforge.net"/>
+</outline>
+</outline>
+<outline text="Log out">
+<outline text="exit"/>
+</outline>
+</outline>
+<outline text="Obtain and Install CVS">
+<outline text="Why CVS ?"/>
+<outline text="Download it ">
+<outline text="Get it from http://cvshome.org"/>
+</outline>
+<outline text="installation notes">
+<outline text="suggestions">
+<outline text="Install in a top-level directory">
+<outline text="e:\cvs"/>
+</outline>
+</outline>
+<outline text="adjust autoexec.bat">
+<outline text="add cvs install directory to path"/>
+<outline text="set CVSROOT">
+<outline text="set CVSROOT to point to the reposity, which in this case resides out on SourceForge"/>
+<outline text="set CVSROOT=:pserver:anonymous@cvs.outliner.sourceforge.net:/cvsroot/outliner"/>
+</outline>
+</outline>
+</outline>
+<outline text="Sample CVS Commands"/>
+</outline>
+<outline text="Set up your CVS directory on SourceForge">
+<outline text="Open up a command prompt"/>
+<outline text="Give this command">
+<outline text="ssh -l &lt;user_name&gt; cvs.sourceforge.net">
+<outline text="ssh -l stanley_krute cvs.sourceforge.net"/>
+</outline>
+</outline>
+<outline text="When prompted, supply your SourceForge password"/>
+<outline text="You'll be disconnected when the setup is done"/>
+<outline text="Sample output">
+<outline text="E:\stan's java projects\Joe\outliner&gt;ssh -l stanley_krute cvs.sourceforge.net"/>
+<outline text="Host 'cvs.sourceforge.net' added to the list of known hosts."/>
+<outline text="Password:"/>
+<outline text="Creating home directory '/home/users/s/st/stanley_krute'."/>
+<outline text="Linux usw-pr-cvs1 2.2.18pre11-va2.0-servers4 #1 SMP Thu Mar 29 20:48:12 PST 2001"/>
+<outline text=" i686 unknown"/>
+<outline text=""/>
+<outline text="Most of the programs included with the Debian GNU/Linux system are"/>
+<outline text="freely redistributable; the exact distribution terms for each program"/>
+<outline text="are described in the individual files in /usr/doc/*/copyright"/>
+<outline text=""/>
+<outline text="Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent"/>
+<outline text="permitted by applicable law."/>
+<outline text=""/>
+<outline text="Welcome to cvs.sourceforge.net"/>
+<outline text=""/>
+<outline text="This is a restricted Shell Account"/>
+<outline text="You cannot execute anything here."/>
+<outline text=""/>
+<outline text="Connection to cvs.sourceforge.net closed."/>
+<outline text=""/>
+<outline text="E:\stan's java projects\Joe\outliner&gt;"/>
+</outline>
+</outline>
+<outline text="Download Project Files">
+<outline text="Open up a command prompt"/>
+<outline text="go to the directory where your project will live"/>
+<outline text="give this command">
+<outline text="cvs -z3 -d:ext:developername@cvs.outliner.sourceforge.net:/cvsroot/outliner co outliner"/>
+<outline text="cvs -z3 -d:ext:stanley_krute@cvs.outliner.sourceforge.net:/cvsroot/outliner co outliner"/>
+</outline>
+<outline text="When prompted, provide your SourceForge password"/>
+<outline text="You'll see a whole bunch of files roll by"/>
+<outline text="The U stands for Updated file. Updated because it doesn't exist on your box."/>
+</outline>
+<outline text="Obtain and Install Java JDK">
+<outline text="Why Java ?"/>
+<outline text="Download it">
+<outline text="Latest version:"/>
+<outline text="Available at:"/>
+</outline>
+<outline text="installation notes"/>
+</outline>
+<outline text="Obtain and Install NetBeans IDE">
+<outline text="NetBeans">
+<outline text="Why NetBeans ?"/>
+</outline>
+<outline text="Download it">
+<outline text="Latest version:"/>
+<outline text="Available at:"/>
+</outline>
+<outline text="basic installation notes">
+<outline text="Double-click the download .exe file to run the NetBeans 3.2 Installer">
+<outline text="It should find the Java JDK installation">
+<outline text="If it doesn't, there's something wrong with your JDK installation, so abort, and re-install the JDK"/>
+</outline>
+</outline>
+<outline text="run the Initial NetBeans startup">
+<outline text="Do you need to import settings ?">
+<outline text="Default is no, that's fine"/>
+</outline>
+<outline text="Setup Wizard">
+<outline text="General NetBeans settings">
+<outline text="Set proxy server as necessary"/>
+<outline text="SDI is windowing default, that's fine"/>
+<outline text="Set web browser"/>
+</outline>
+<outline text="Ready To Go">
+<outline text="Click the Finish button"/>
+</outline>
+<outline text="Welcome to NetBeans">
+<outline text="Unchecked Show Welcome Screen on Startup widget"/>
+<outline text="Click the Close button"/>
+</outline>
+</outline>
+<outline text="Welcome to NetBeans">
+<outline text="Unchecked Show Welcome Screen on Startup widget"/>
+<outline text="Click the Close button"/>
+</outline>
+<outline text=""/>
+<outline text=""/>
+<outline text=""/>
+</outline>
+</outline>
+<outline text="Okay. You're in NetBeans. "/>
+</outline>
+<outline text="Set up Project in NetBeans IDE">
+<outline text="Create a new project">
+<outline text="Give the Project:Project Manager menu command"/>
+<outline text="In the Project Manager window, click New..."/>
+<outline text="Type in your project's name">
+<outline text="JOE in this case"/>
+</outline>
+<outline text="Explorer window now shows a Project JOE tab">
+<outline text="If the Explorer window is not open, open it by giving the View:Explorer menu command">
+<outline text="Give the View:Explorer menu command"/>
+</outline>
+<outline text="Right click on that tab to "/>
+</outline>
+</outline>
+<outline text="Set up the Explorer window's Filesystems tab">
+<outline text="Clean out the Filesystems tab">
+<outline text="Click on the Explorer's Filesystems tab"/>
+<outline text="It'll show a mounted Filesystem, stuff put by NetBeans into your JDK project file directory"/>
+<outline text="Right-click on that filesystem, and give the Unmount Filesystem command"/>
+</outline>
+<outline text="Add the root of your CVS project tree as a filesystem">
+<outline text="Right-click the Filesystems entry at the top of the Filesystems tab"/>
+<outline text="Give the Mount Directory menu command"/>
+<outline text="Choose the root directory of your CVS project tree"/>
+<outline text="In my case, that's e:\stan's java projects\Joe\outliner"/>
+<outline text="It shows up in the Filesystems tab"/>
+</outline>
+<outline text="Add a CVS Client as a filesystem">
+<outline text="Right-click the Filesystems entry at the top of the Filesystems tab"/>
+<outline text="The CVS Mount Wizard appears">
+<outline text="Working directory: ">
+<outline text="Choose the root directory of your CVS project tree"/>
+<outline text="In my case, that's e:\stan's java projects\Joe\outliner"/>
+</outline>
+<outline text="Relative mount point:">
+<outline text="In the JOE case, choose the src directory"/>
+<outline text="Click Next"/>
+</outline>
+<outline text="CVS connection method:">
+<outline text="You've already connected CVS from the command line, so this will be filled in for you"/>
+<outline text="Just click Next"/>
+</outline>
+<outline text="Home directory">
+<outline text="You've already set up CVS, so this will be filled in for you"/>
+<outline text="Just click Next"/>
+</outline>
+<outline text="CVS Client">
+<outline text="Use CVS Built-in Client will be marked"/>
+<outline text="Click Next"/>
+</outline>
+<outline text="CVS Login">
+<outline text="You are already logged in, as anonymous"/>
+<outline text="Click Finish"/>
+</outline>
+<outline text=""/>
+</outline>
+<outline text=""/>
+</outline>
+<outline text="Do a CVS update">
+<outline text="Let's do an Update"/>
+<outline text="Right-click the CVS Client in the Filesystems tab"/>
+<outline text="Give the CVS Client:Update menu command"/>
+<outline text="Update window will show up, and CVS tree will update itself"/>
+</outline>
+<outline text="Add the project's jar files to the filesystems tab">
+<outline text="The files are in outliner\lib"/>
+<outline text="Right-click on Filesystems icon"/>
+<outline text="Give the Mount JAR menu command"/>
+<outline text="You get to mount one jar at a time"/>
+<outline text="Mount all the jars in lib except outliner.jar"/>
+</outline>
+</outline>
+<outline text="Set up the Explorer window's Project JOE tab">
+<outline text="The Project JOE tab of the Explorer window should look like this [link to screenshot]"/>
+<outline text="Add the project tree">
+<outline text="Right-click on the Project Joe entry "/>
+<outline text="Give the Add Existing... menu command"/>
+<outline text="In the Select Objects window, select the Filesystem e:\my java projects\Joe\outliner"/>
+<outline text="Click OK"/>
+<outline text="a Root node appears under Project JOE in the Project JOE tab"/>
+<outline text="Open up Root and do some exploring"/>
+</outline>
+</outline>
+</outline>
+<outline text="Set up Ant to control compiles and builds"/>
+<outline text="Build and Run the Project"/>
+</outline>
+<outline text="Running the JOE Open Source Project on a Windows System">
+<outline text="downloading the latest versions of files">
+<outline text="Updating all project files">
+<outline text="open a command line, and go to the project's root directory"/>
+<outline text="give this command">
+<outline text="cvs update"/>
+</outline>
+</outline>
+<outline text="Updating specific project files"/>
+</outline>
+<outline text="checking in your changes to files">
+<outline text="Checking in a source file"/>
+<outline text="Checking-in your changes to a source file"/>
+</outline>
+<outline text="adding files to the project">
+<outline text="go to the directory containing the file[s]"/>
+<outline text="Give this command">
+<outline text="cvs add newFile1, newFile2, ..."/>
+<outline text="cvs commit newFile1, newFile2, ..."/>
+</outline>
+</outline>
+<outline text="adding directories to the project">
+<outline text="Go to the parent directory of your new directory"/>
+<outline text="Give these commands">
+<outline text="md newDir"/>
+<outline text="cvs add newDir"/>
+<outline text="cvs commit newDir"/>
+</outline>
+</outline>
+<outline text="Removing a file from the project"/>
+<outline text="Removing a directory from the project"/>
+</outline>
+<outline text="CVS Survival">
+<outline text="CVS Update Result Codes">
+<outline text="?">
+<outline text="The file is unknown to CVS"/>
+</outline>
+<outline text="A">
+<outline text="The file's been added to your world, but needs to be committed to the repository."/>
+</outline>
+<outline text="C">
+<outline text="There's a conflict."/>
+</outline>
+<outline text="M"/>
+<outline text="P">
+<outline text="Like U, but CVS has sent a patch for the file."/>
+</outline>
+<outline text="R">
+<outline text="The file's been removed from your private copy, but won't be removed from the repository until you commit the removal"/>
+</outline>
+<outline text="U">
+<outline text="The file's been Updated with what's in the repository."/>
+</outline>
+</outline>
+</outline>
+</body>
+</opml>
