@@ -79,7 +79,7 @@ public class DocumentRepository {
 	public void fireSelectionChangedEvent(JoeTree tree, int type) {
 		selectionChangedEvent.setTree(tree);
 		selectionChangedEvent.setType(type);
-		for (int i = 0; i < treeSelectionListeners.size(); i++) {
+		for (int i = 0, limit = treeSelectionListeners.size(); i < limit; i++) {
 			((TreeSelectionListener) treeSelectionListeners.get(i)).selectionChanged(selectionChangedEvent);
 		}
 		
@@ -106,7 +106,7 @@ public class DocumentRepository {
 	public void fireUndoQueueEvent(Document doc, int type) {
 		undoEvent.setDocument(doc);
 		undoEvent.setType(type);
-		for (int i = 0; i < undoQueueListeners.size(); i++) {
+		for (int i = 0, limit = undoQueueListeners.size(); i < limit; i++) {
 			((UndoQueueListener) undoQueueListeners.get(i)).undo(undoEvent);
 		}
 
@@ -132,10 +132,10 @@ public class DocumentRepository {
 	
 	public void fireModifiedStateChangedEvent(Document doc) {
 		modifiedStateChangedEvent.setDocument(doc);
-		for (int i = 0; i < documentListeners.size(); i++) {
+		for (int i = 0, limit = documentListeners.size(); i < limit; i++) {
 			((DocumentListener) documentListeners.get(i)).modifiedStateChanged(modifiedStateChangedEvent);
 		}
-		for (int i = 0; i < outlinerDocumentListeners.size(); i++) {
+		for (int i = 0, limit = outlinerDocumentListeners.size(); i < limit; i++) {
 			((DocumentListener) outlinerDocumentListeners.get(i)).modifiedStateChanged(modifiedStateChangedEvent);
 		}
 		
@@ -162,7 +162,7 @@ public class DocumentRepository {
 	
 	public void fireAttributesVisibilityChangedEvent(OutlinerDocument doc) {
 		attributesVisibilityChangedEvent.setOutlinerDocument(doc);
-		for (int i = 0; i < outlinerDocumentListeners.size(); i++) {
+		for (int i = 0, limit = outlinerDocumentListeners.size(); i < limit; i++) {
 			((OutlinerDocumentListener) outlinerDocumentListeners.get(i)).attributesVisibilityChanged(attributesVisibilityChangedEvent);
 		}
 
@@ -172,7 +172,7 @@ public class DocumentRepository {
 
 	public void fireHoistDepthChangedEvent(OutlinerDocument doc) {
 		hoistDepthChangedEvent.setOutlinerDocument(doc);
-		for (int i = 0; i < outlinerDocumentListeners.size(); i++) {
+		for (int i = 0, limit = outlinerDocumentListeners.size(); i < limit; i++) {
 			((OutlinerDocumentListener) outlinerDocumentListeners.get(i)).hoistDepthChanged(hoistDepthChangedEvent);
 		}
 
@@ -200,7 +200,7 @@ public class DocumentRepository {
 	
 	protected void fireDocumentAddedEvent(Document doc) {
 		addedEvent.setDocument(doc);
-		for (int i = 0; i < documentRepositoryListeners.size(); i++) {
+		for (int i = 0, limit = documentRepositoryListeners.size(); i < limit; i++) {
 			((DocumentRepositoryListener) documentRepositoryListeners.get(i)).documentAdded(addedEvent);
 		}
 
@@ -210,7 +210,7 @@ public class DocumentRepository {
 
 	protected void fireDocumentRemovedEvent(Document doc) {
 		removedEvent.setDocument(doc);
-		for (int i = 0; i < documentRepositoryListeners.size(); i++) {
+		for (int i = 0, limit = documentRepositoryListeners.size(); i < limit; i++) {
 			((DocumentRepositoryListener) documentRepositoryListeners.get(i)).documentRemoved(removedEvent);
 		}
 
@@ -220,7 +220,7 @@ public class DocumentRepository {
 
 	protected void fireChangedMostRecentDocumentTouchedEvent(Document doc) {
 		changedMostRecentDocumentTouchedEvent.setDocument(doc);
-		for (int i = 0; i < documentRepositoryListeners.size(); i++) {
+		for (int i = 0, limit = documentRepositoryListeners.size(); i < limit; i++) {
 			((DocumentRepositoryListener) documentRepositoryListeners.get(i)).changedMostRecentDocumentTouched(changedMostRecentDocumentTouchedEvent);
 		}
 
@@ -262,7 +262,7 @@ public class DocumentRepository {
 	
 	
 	public Document getDocument(String name) {
-		for (int i = 0; i < openDocuments.size(); i++) {
+		for (int i = 0, limit = openDocuments.size(); i < limit; i++) {
 			Document doc = getDocument(i);
 			if (name.equals(doc.getFileName())) {
 				return doc;
@@ -301,7 +301,7 @@ public class DocumentRepository {
 	}
 	
 	public boolean isFileNameUnique(String filename) {
-		for (int i = 0; i < openDocuments.size(); i++) {
+		for (int i = 0, limit = openDocuments.size(); i < limit; i++) {
 			if (PlatformCompatibility.areFilenamesEquivalent(filename, getDocument(i).getFileName())) {
 				return false;
 			}
@@ -330,7 +330,7 @@ public class DocumentRepository {
 
 	// Misc Methods
 	public void redrawAllOpenDocuments() {
-		for (int i = 0; i < openDocuments.size(); i++) {
+		for (int i = 0, limit = openDocuments.size(); i < limit; i++) {
 			((OutlinerDocument) getDocument(i)).panel.layout.redraw();
 		}		
 	}
