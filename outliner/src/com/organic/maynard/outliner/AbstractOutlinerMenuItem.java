@@ -49,10 +49,12 @@ import org.xml.sax.*;
 public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUITreeComponent, JoeXMLConstants {
 
 	// Constants
-	private static final String DELETE = "delete";
-	private static final String CTRL = "control";
 	private static final String SHIFT = "shift";
+	private static final String CTRL = "control";
 	private static final String ALT = "alt";
+	private static final String META = "meta";
+
+	private static final String DELETE = "delete";
 	private static final String TAB = "tab";
 	private static final String UP = "up";
 	private static final String DOWN = "down";
@@ -99,6 +101,9 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 			}
 			if (keyBindingModifiers.indexOf(ALT) != -1) {
 				mask += Event.ALT_MASK;
+			}
+			if (keyBindingModifiers.indexOf(META) != -1) {
+				mask += Event.META_MASK;
 			}
 		}
 
