@@ -213,9 +213,6 @@ public class NodeImpl implements Node {
 	public void setVisible(boolean visible) {this.visible = visible;}
 	public boolean isVisible() {return visible;}
 
-	public void setPartiallyVisible(boolean partiallyVisible) {this.partiallyVisible = partiallyVisible;}
-	public boolean isPartiallyVisible() {return partiallyVisible;}
-
 	// Selection Methods	
 	public void setSelected(boolean selected) {this.selected = selected;}
 	public boolean isSelected() {return selected;}
@@ -412,6 +409,16 @@ public class NodeImpl implements Node {
 			}
 		} else {
 			return node.getLastViewableDecendent();
+		}
+	}
+
+	public Node prevUnSelectedNode() {
+		// This does not test the current node.
+		Node node = prev();
+		if (node.isAncestorSelected()) {
+			return node.prevUnSelectedNode();
+		} else {
+			return node;
 		}
 	}
 	

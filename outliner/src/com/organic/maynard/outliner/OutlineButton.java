@@ -78,28 +78,13 @@ public class OutlineButton extends JLabel {
 	}
 	
 	public boolean isNode() {return node;}
-	public void setNode(boolean node) {
-		if (this.node != node) {
-			this.node = node;
-			updateIcon();
-		}
-	}
+	public void setNode(boolean node) {this.node = node;}
 	
 	public boolean isOpen() {return open;}
-	public void setOpen(boolean open) {
-		if (this.open != open) {
-			this.open = open;
-			updateIcon();
-		}
-	}
+	public void setOpen(boolean open) {this.open = open;}
 	
 	public boolean isSelected() {return selected;}
-	public void setSelected(boolean selected) {
-		if (this.selected != selected) {
-			this.selected = selected;
-			updateIcon();
-		}
-	}
+	public void setSelected(boolean selected) {this.selected = selected;}
 
 	public void updateIcon() {
 		if(isNode()) {

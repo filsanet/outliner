@@ -105,6 +105,7 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 	}
 	
 	public Node getNodeToDrawFrom() {return this.nodeToDrawFrom;}
+	public int getIndexOfNodeToDrawFrom() {return ioNodeToDrawFrom;}
 	
 	// Drawing Direction
 	public static final int UP = 1;
@@ -123,31 +124,23 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 	
 	public void draw(Node nodeThatMustBeVis, int focusElement) {
 		int ioNodeThatMustBeVis = panel.doc.tree.visibleNodes.indexOf(nodeThatMustBeVis);
-		
-		if (ioNodeThatMustBeVis <= ioFirstVisNode) {
-			//System.out.println("draw 1");
+
+		if (ioNodeThatMustBeVis < ioFirstVisNode) {
 			setDrawingDirection(outlineLayoutManager.DOWN);
 			setNodeToDrawFrom(nodeThatMustBeVis, ioNodeThatMustBeVis);
-		} else if (ioNodeThatMustBeVis == panel.doc.tree.visibleNodes.size() - 1) {
-			//System.out.println("draw 2");
+		} else if (ioNodeThatMustBeVis > ioLastVisNode) {
 			setDrawingDirection(outlineLayoutManager.UP);
-			setNodeToDrawFrom(nodeThatMustBeVis, ioNodeThatMustBeVis);
-		} else if ((ioNodeThatMustBeVis > ioFirstVisNode) && (ioNodeThatMustBeVis <= ioLastVisNode)) {
-			//System.out.println("draw 3");
-			setDrawingDirection(outlineLayoutManager.DOWN);
-		} else {
-			//System.out.println("draw 4");
-			setDrawingDirection(outlineLayoutManager.UP);
-			setNodeToDrawFrom(nodeThatMustBeVis, ioNodeThatMustBeVis);
+			setNodeToDrawFrom(nodeThatMustBeVis, ioNodeThatMustBeVis);		
 		}
 		
 		draw();
-		
 		setFocus(nodeThatMustBeVis,focusElement);
 	}
 	
+	//public static int drawCount = 0;
+	
 	public void draw() {
-		//System.out.println("Draw Called: " + panel.doc.getTitle());
+		//System.out.println("Draw Called: " + drawCount++);
 		numNodesDrawn = 0;
 		
 		// Compute the textArea width.
@@ -156,22 +149,30 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 		// Draw the visible components
 		if (getDrawingDirection() == DOWN) {
 			drawDown();
+			
+			if (partialCellDrawn) {
+				numNodesDrawn--;
+				partialCellDrawn = false;
+			}
+			
+			ioFirstVisNode = panel.doc.tree.visibleNodes.indexOf(textAreas[0].node);
+			ioLastVisNode = ioFirstVisNode + (numNodesDrawn - 1);		
+			if (ioLastVisNode >= panel.doc.tree.visibleNodes.size()) {
+				ioLastVisNode = ioFirstVisNode;
+			}
 		} else {
 			drawUp();
-			setDrawingDirection(DOWN);
-			numNodesDrawn = 0;
-			drawDown();
-		}
-		
-		if (partialCellDrawn) {
-			numNodesDrawn--;
-			partialCellDrawn = false;
-		}
-		
-		ioFirstVisNode = panel.doc.tree.visibleNodes.indexOf(textAreas[0].node);
-		ioLastVisNode = ioFirstVisNode + (numNodesDrawn - 1);		
-		if (ioLastVisNode >= panel.doc.tree.visibleNodes.size()) {
-			ioLastVisNode = ioFirstVisNode;
+
+			if (partialCellDrawn) {
+				numNodesDrawn--;
+				partialCellDrawn = false;
+			}
+			
+			ioFirstVisNode = panel.doc.tree.visibleNodes.indexOf(textAreas[numNodesDrawn - 1].node);
+			ioLastVisNode = ioFirstVisNode + (numNodesDrawn - 1);
+			if (ioLastVisNode >= panel.doc.tree.visibleNodes.size()) {
+				ioLastVisNode = ioFirstVisNode;
+			}
 		}
 		
 		// Draw the hidden component so that things work when we scroll away from the editing node.
@@ -186,20 +187,36 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 	}
 
 	private void drawUp() {
+		// Hide all the nodes from the previous draw
+		for (int i = 0; i < CACHE_SIZE; i++) {
+			if (textAreas[i].node != null) {
+				textAreas[i].node.setVisible(false);
+			}
+		}
+
 		// Now Draw as many nodes as neccessary.
 		Point startPoint = new Point(Preferences.LEFT_MARGIN.cur, this.bottom - Preferences.BOTTOM_MARGIN.cur);
 
 		Node node = getNodeToDrawFrom();
 		int nodeIndex = ioNodeToDrawFrom;
+
+		// Pre-compute some values
+		int effectiveTop = top + Preferences.TOP_MARGIN.cur;
 		
 		while (true) {
-			textAreas[numNodesDrawn].drawUp(startPoint, node);
+			OutlinerCellRendererImpl renderer = textAreas[numNodesDrawn];
+			renderer.drawUp(startPoint, node);
+			renderer.setVisible(true);
+			renderer.button.setVisible(true);
+
+			renderer.node.setVisible(true);
 			numNodesDrawn++;
+
 			// Make sure we don't draw past the top. And don't count nodes that are partially drawn.
-			if (startPoint.y < (top + Preferences.TOP_MARGIN.cur)) {
-				nodeIndex++;
-				setNodeToDrawFrom((Node) panel.doc.tree.visibleNodes.get(nodeIndex), nodeIndex);
-				return;
+			if (startPoint.y < effectiveTop) {
+				renderer.node.setVisible(false);
+				partialCellDrawn = true;
+				break;
 			}
 			
 			// Make sure we dont' try to draw more nodes than the cache size
@@ -215,7 +232,13 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 			}
 			node = (Node) panel.doc.tree.visibleNodes.get(nodeIndex);
 		}
-		setNodeToDrawFrom(node, nodeIndex);
+
+		// Hide any drawing elements that were not used.
+		for (int i = numNodesDrawn; i < CACHE_SIZE; i++) {
+			textAreas[i].setVisible(false);
+			outlineButtons[i].setVisible(false);
+		}
+
 	}
 	
 	private boolean partialCellDrawn = false;
@@ -234,6 +257,9 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 		Node node = getNodeToDrawFrom();
 		int nodeIndex = ioNodeToDrawFrom;
 		
+		// Pre-compute some values
+		int effectiveBottom = bottom - Preferences.BOTTOM_MARGIN.cur;
+		
 		while (true) {
 			OutlinerCellRendererImpl renderer = textAreas[numNodesDrawn];
 			renderer.drawDown(startPoint, node);
@@ -241,12 +267,11 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 			renderer.button.setVisible(true);
 
 			renderer.node.setVisible(true);
-			renderer.node.setPartiallyVisible(false);
 			numNodesDrawn++;
 			
 			// Make sure we don't draw past the bottom. And don't count nodes that are partially drawn.
-			if (startPoint.y > (bottom  - Preferences.BOTTOM_MARGIN.cur)) {
-				renderer.node.setPartiallyVisible(true);
+			if (startPoint.y > effectiveBottom) {
+				renderer.node.setVisible(false);
 				partialCellDrawn = true;
 				break;
 			}
@@ -366,7 +391,7 @@ public class OutlinerScrollBarUI extends MetalScrollBarUI {
 
 	public void layoutContainer(Container scrollbarContainer) {
 
-		JScrollBar scrollbar = (JScrollBar)scrollbarContainer;
+		JScrollBar scrollbar = (JScrollBar) scrollbarContainer;
 		switch (scrollbar.getOrientation()) {
 			case JScrollBar.VERTICAL:
 				layoutVScrollbar(scrollbar);

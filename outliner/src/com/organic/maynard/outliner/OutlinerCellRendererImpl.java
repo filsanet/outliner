@@ -24,12 +24,13 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellRenderer {
+
+	private static Font font = new Font(Preferences.FONT_FACE.cur,Font.PLAIN,Preferences.FONT_SIZE.cur);	
 	
 	public static int textAreaWidth = 0;
 	
 	public Node node = null;
 	public OutlineButton button = new OutlineButton(this);
-	private static Font font = new Font(Preferences.FONT_FACE.cur,Font.PLAIN,Preferences.FONT_SIZE.cur);	
 	
 	private TextKeyListener textListener = new TextKeyListener(this);
 	private IconKeyListener iconListener = new IconKeyListener(this);
@@ -54,11 +55,9 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		setSelectionColor(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
 		setSelectedTextColor(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
 				
-		//TextKeyListener textListener = new TextKeyListener(this);
 		addKeyListener(textListener);
 		addMouseListener(textListener);
 		
-		//IconKeyListener iconListener = new IconKeyListener(this);
 		button.addKeyListener(iconListener);
 		button.addMouseListener(iconListener);
 		
@@ -102,30 +101,36 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 
 
 	// OutlinerCellRenderer Interface
-	public void drawUp(Point p, Node node) { // Not really drawing, since drawUp is always followed by a draw down.
+	public void drawUp(Point p, Node node) {
+		this.node = node;
+		
+		// Adjust color when we are selected
+		updateColors();
+		
+		// Update the button
+		updateButton();
+		
+		// Draw the TextArea
 		setText(node.getValue());
-		p.y -= ((getBestHeight() + Preferences.VERTICAL_SPACING.cur));
+		
+		int indent = node.getDepth() * Preferences.INDENT.cur;
+		int width = textAreaWidth - indent;
+		
+		// Size needs to be set twice. The first time forces the lines to flow. The second then sets the correct height.
+		setSize(width,32);
+		int height = getBestHeight();
+		p.y -= (height + Preferences.VERTICAL_SPACING.cur);
+		setBounds(p.x + indent + OutlineButton.BUTTON_WIDTH, p.y, width, height);
+		
+		// Draw the Button
+		button.setBounds(p.x + indent, p.y, OutlineButton.BUTTON_WIDTH, height);
 	}
 		
 	public void drawDown(Point p, Node node) {
 		this.node = node;
 		
 		// Adjust color when we are selected
-		if (node.isAncestorSelected()) {
-			if (node.isSelected()) {
-				setBackground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
-				setForeground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
-				button.setBackground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
-			} else {
-				setBackground(Preferences.SELECTED_CHILD_COLOR.cur);
-				setForeground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
-				button.setBackground(Preferences.SELECTED_CHILD_COLOR.cur);
-			}
-		} else {
-			setBackground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
-			setForeground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
-			button.setBackground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);	
-		}
+		updateColors();
 		
 		// Update the button
 		updateButton();
@@ -147,6 +152,24 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		p.y += height + Preferences.VERTICAL_SPACING.cur;	
 	}
 	
+	private void updateColors() {
+		if (node.isAncestorSelected()) {
+			if (node.isSelected()) {
+				setBackground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
+				setForeground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
+				button.setBackground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
+			} else {
+				setBackground(Preferences.SELECTED_CHILD_COLOR.cur);
+				setForeground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
+				button.setBackground(Preferences.SELECTED_CHILD_COLOR.cur);
+			}
+		} else {
+			setBackground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
+			setForeground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
+			button.setBackground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);	
+		}	
+	}
+	
 	private void updateButton() {
 		if (node.isAncestorSelected()) {
 			button.setSelected(true);
@@ -164,6 +187,8 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 				button.setOpen(false);
 			}
 		}
+		
+		button.updateIcon();
 	}
 	
 	private int getBestHeight() {

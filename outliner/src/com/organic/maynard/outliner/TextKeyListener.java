@@ -200,7 +200,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 			UndoableEdit.freezeUndoEdit(currentNode);
 
 			// Redraw and Set Focus
-			if (nextNode.isVisible() && !nextNode.isPartiallyVisible()) {
+			if (nextNode.isVisible()) {
 				layout.setFocus(nextNode,outlineLayoutManager.TEXT);
 			} else {
 				layout.draw(nextNode,outlineLayoutManager.TEXT);
@@ -280,7 +280,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 				textArea.moveCaretPosition(0);
 
 				// Redraw and Set Focus
-				if (nextNode.isVisible() && !nextNode.isPartiallyVisible()) {
+				if (nextNode.isVisible()) {
 					layout.setFocus(nextNode,outlineLayoutManager.TEXT);
 				} else {
 					layout.draw(nextNode,outlineLayoutManager.TEXT);
@@ -376,7 +376,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 					e.consume();
 					return;
 				}
-								// Put the Undoable onto the UndoQueue
+				// Put the Undoable onto the UndoQueue
 				Node targetNode = currentNode.prevSibling();
 
 				CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(),targetNode);

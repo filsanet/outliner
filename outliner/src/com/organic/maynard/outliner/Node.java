@@ -56,8 +56,6 @@ public interface Node {
 	// Visibility Methods
 	public void setVisible(boolean visible);
 	public boolean isVisible();
-	public void setPartiallyVisible(boolean visible);
-	public boolean isPartiallyVisible();
 
 	// Selection Methods
 	public void setSelected(boolean selected);
@@ -89,6 +87,7 @@ public interface Node {
 	public Node nextUnSelectedNode();
 	public Node nextNode();
 	public Node prev();
+	public Node prevUnSelectedNode();
 	
 	// Data Methods
 	public void setValue(String str);

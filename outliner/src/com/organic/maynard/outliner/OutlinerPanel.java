@@ -18,13 +18,7 @@
  
 package com.organic.maynard.outliner;
 
-import java.awt.*;
-import java.awt.event.*;
-
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
 
 public class outlinerPanel extends JPanel {
 

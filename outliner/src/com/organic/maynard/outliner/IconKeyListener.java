@@ -118,398 +118,122 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			textArea.node.getTree().addNodeToSelection(textArea.node);
 		}		
 	}
-
+	
+	
 	// KeyListener Interface
 	public void keyPressed(KeyEvent e) {
 		//System.out.println("ICON Pressed: " + e.paramString());
 
 		// Create some short names for convienence
-		Node currentNode = textArea.node;
-		TreeContext tree = currentNode.getTree();
+		TreeContext tree = textArea.node.getTree();
 		outlineLayoutManager layout = tree.doc.panel.layout;
 
-		if (e.getKeyCode() == KeyEvent.VK_PAGE_DOWN) {
-			for (int i = 0; i < tree.selectedNodes.size(); i++) {
-				Node node = (Node) tree.selectedNodes.get(i);
-				if (node.isExpanded()) {
-					node.setExpanded(false);
-				} else {
-					node.setExpanded(true);
-				}
-			}
-
-			layout.draw();
-
-			e.consume();
-			return;
-		}
-
-		if ((e.getKeyCode() == KeyEvent.VK_DELETE) || (e.getKeyCode() == KeyEvent.VK_BACK_SPACE)) {
-			delete(tree,layout);
+		switch(e.getKeyCode()) {
+			case KeyEvent.VK_PAGE_DOWN:
+				toggleExpansion(tree,layout);
+				break;
 			
-			e.consume();
-			return;
-		}
+			case KeyEvent.VK_DELETE:
+				delete(tree,layout);
+				break;
 
-		if (e.getKeyCode() == KeyEvent.VK_UP) {
-			if (e.isShiftDown()) {
-				Node youngestNode = tree.getYoungestInSelection();
-				Node node = youngestNode.prevSibling();
-				if (node == youngestNode) {
-					e.consume();
-					return;
-				}
-
-				// Put the Undoable onto the UndoQueue
-				CompoundUndoableMove undoable = new CompoundUndoableMove(node.getParent(),node.getParent());
-				tree.doc.undoQueue.add(undoable);
-			
-				for (int i = 0; i < tree.selectedNodes.size(); i++) {
-					// Record the Insert in the undoable
-					Node nodeToMove = (Node) tree.selectedNodes.get(i);
-					undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), node.currentIndex()));
-					tree.moveNodeAboveAsSibling(nodeToMove,node);
-				}
+			case KeyEvent.VK_BACK_SPACE:
+				delete(tree,layout);
+				break;
 				
+			case KeyEvent.VK_UP:
+				if (e.isShiftDown()) {
+					moveUp(tree,layout);
+				} else {
+					navigate(tree, layout, UP);
+				}
+				break;
+
+			case KeyEvent.VK_DOWN:
+				if (e.isShiftDown()) {
+					moveDown(tree,layout);
+				} else {
+					navigate(tree,layout, DOWN);
+				}
+				break;
+
+			case KeyEvent.VK_LEFT:
+				if (e.isShiftDown()) {
+					moveLeft(tree,layout);
+				} else {
+					navigate(tree,layout, LEFT);
+				}
+				break;
+
+			case KeyEvent.VK_RIGHT:
+				if (e.isShiftDown()) {
+					moveRight(tree,layout);
+				} else {
+					navigate(tree,layout, RIGHT);
+				}
+				break;
+
+			case KeyEvent.VK_ENTER:
+				if (e.isShiftDown()) {
+					changeFocusToTextArea(tree,layout);
+				} else {
+					insert(tree,layout);
+				}
+				break;
+
+			case KeyEvent.VK_TAB:
+				if (e.isShiftDown()) {
+					promote(tree,layout);
+				} else {
+					demote(tree,layout);
+				}
+				// Update the selection model
+				Node youngestNode = tree.getYoungestInSelection();
+				tree.setSelectedNodesParent(youngestNode.getParent(),false);
+	
 				// Redraw and Set Focus
 				layout.draw(youngestNode,outlineLayoutManager.ICON);
-			} else {
-				navigate(tree, layout, UP);
-			}
-					
-			e.consume();
-			return;			
-		}
-
-		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			if (e.isShiftDown()) {
-				Node oldestNode = tree.getOldestInSelection();
-				Node node = oldestNode.nextSibling();
-				if (node == oldestNode) {
-					e.consume();
-					return;
-				}
-
-				// Put the Undoable onto the UndoQueue
-				CompoundUndoableMove undoable = new CompoundUndoableMove(node.getParent(),node.getParent());
-				tree.doc.undoQueue.add(undoable);
-			
-				// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
-				Node nodeToDrawFromTmp = layout.getNodeToDrawFrom().nextUnSelectedNode();
 				
-				// Do the move
-				for (int i = tree.selectedNodes.size() - 1; i >= 0; i--) {
-					// Record the Insert in the undoable
-					Node nodeToMove = (Node) tree.selectedNodes.get(i);
-					undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), node.currentIndex()));
-					tree.moveNodeBelowAsSibling(nodeToMove,node);
-				}
-				
-				// Redraw and Set Focus
-				if (layout.getNodeToDrawFrom().isAncestorSelected()) { // Makes sure we dont' stick at the top when multiple nodes are selected.
-					Node visNode = layout.getNodeToDrawFrom().prev();
-					int ioVisNode = tree.visibleNodes.indexOf(visNode);
-					int ioNodeToDrawFromTmp = tree.visibleNodes.indexOf(nodeToDrawFromTmp);
-					if (ioVisNode < ioNodeToDrawFromTmp) {
-						layout.setNodeToDrawFrom(visNode, ioVisNode);
-					} else {
-						layout.setNodeToDrawFrom(nodeToDrawFromTmp, ioNodeToDrawFromTmp);
-					}
-				}
-				
-				layout.draw(oldestNode.getLastViewableDecendent(), outlineLayoutManager.ICON);
-			} else {
-				navigate(tree, layout, DOWN);
-			}
-			
-			e.consume();
-			return;			
-		}
-		
-		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			if (e.isShiftDown()) {
-				Node youngestNode = tree.getYoungestInSelection();
-				Node node = tree.getPrevNode(youngestNode);
-				if (node == null) {
-					e.consume();
-					return;
-				}
+				break;
 
-				// Put the Undoable onto the UndoQueue
-				CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(), node.getParent());
-				tree.doc.undoQueue.add(undoable);
-			
-				for (int i = 0; i < tree.selectedNodes.size(); i++) {
-					// Record the Insert in the undoable
-					Node nodeToMove = (Node) tree.selectedNodes.get(i);
-					undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), node.currentIndex()));
-					tree.moveNodeAbove(nodeToMove,node);
-				}
-
-				// Update the selection model
-				tree.setSelectedNodesParent(node.getParent(),false);
-				
-				// Redraw and Set Focus
-				layout.draw(youngestNode,outlineLayoutManager.ICON);			
-			} else {
-				navigate(tree, layout, LEFT);
-			}
-						
-			e.consume();
-			return;			
-		}
-
-		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			if (e.isShiftDown()) {
-				Node oldestNode = tree.getOldestInSelection();
-				Node node = tree.getNextNode(oldestNode.getLastViewableDecendent());
-				if (node == null) {
-					e.consume();
-					return;
-				}
-
-				// Put the Undoable onto the UndoQueue
-				CompoundUndoableMove undoable;
-				if ((!node.isLeaf() && node.isExpanded())) {
-					undoable = new CompoundUndoableMove(oldestNode.getParent(),node);				
+			case KeyEvent.VK_C:
+				if (e.isControlDown()) {
+					copy(tree,layout);
+					break;
 				} else {
-					undoable = new CompoundUndoableMove(oldestNode.getParent(),node.getParent());
-				}
-				tree.doc.undoQueue.add(undoable);
-
-				// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
-				Node nodeToDrawFromTmp = layout.getNodeToDrawFrom().nextUnSelectedNode();
-			
-				for (int i = tree.selectedNodes.size() - 1; i >= 0; i--) {
-					// Record the Insert in the undoable
-					Node nodeToMove = (Node) tree.selectedNodes.get(i);
-					
-					int targetIndex = 0;
-					if ((!node.isLeaf() && node.isExpanded())) {
-						// do nothing
-					} else {
-						targetIndex = node.currentIndex();
-					}
-
-					if (nodeToMove.getParent() != node.getParent()) {
-						targetIndex++;
-					}
-					undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), targetIndex));
-
-					tree.moveNodeBelow(nodeToMove,node);
+					return;
 				}
 
-				// Update the selection model
-				tree.setSelectedNodesParent(node.getParent(),false);
-
-				// Redraw and Set Focus
-				if (layout.getNodeToDrawFrom().isAncestorSelected()) { // Makes sure we dont' stick at the top when multiple nodes are selected.
-					Node visNode = layout.getNodeToDrawFrom().prev();
-					int ioVisNode = tree.visibleNodes.indexOf(visNode);
-					int ioNodeToDrawFromTmp = tree.visibleNodes.indexOf(nodeToDrawFromTmp);
-					if (ioVisNode < ioNodeToDrawFromTmp) {
-						layout.setNodeToDrawFrom(visNode, ioVisNode);
-					} else {
-						layout.setNodeToDrawFrom(nodeToDrawFromTmp, ioNodeToDrawFromTmp);
-					}
-				}
-				
-				layout.draw(oldestNode.getLastViewableDecendent(), outlineLayoutManager.ICON);
-			} else {
-				navigate(tree, layout, RIGHT);
-			}
-			
-			e.consume();
-			return;				
-		}
-		
-		if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-			if (e.isShiftDown()) {
-				// Record the EditingNode and CursorPosition and ComponentFocus
-				tree.setComponentFocus(outlineLayoutManager.TEXT);
-
-				// Redraw and Set Focus
-				tree.clearSelection();
-				layout.draw(currentNode,outlineLayoutManager.TEXT);
-			} else {
-				// Create a new node and insert it as a sibling immediatly after the last selected node.
-				Node node = tree.getOldestInSelection();
-				Node newNode = new NodeImpl(tree,"");
-				
-				if ((!node.isLeaf()) && (node.isExpanded())) {
-					newNode.setDepth(node.getDepth() + 1);
-					node.insertChild(newNode,0);				
+			case KeyEvent.VK_X:
+				if (e.isControlDown()) {
+					cut(tree,layout);
+					break;
 				} else {
-					newNode.setDepth(node.getDepth());
-					node.getParent().insertChild(newNode,node.currentIndex() + 1);
-				}
-				
-				tree.insertNode(newNode);
-
-				// Record the EditingNode and CursorPosition and ComponentFocus
-				tree.setEditingNode(newNode);
-				tree.setCursorPosition(0);
-				tree.setComponentFocus(outlineLayoutManager.TEXT);
-
-				// Redraw and Set Focus
-				tree.clearSelection();
-				layout.draw(newNode,outlineLayoutManager.TEXT);
-
-				// Put the Undoable onto the UndoQueue
-				CompoundUndoableInsert undoable = new CompoundUndoableInsert(currentNode.getParent());
-				undoable.addPrimitive(new PrimitiveUndoableInsert(newNode.getParent(),newNode,newNode.currentIndex()));
-				tree.doc.undoQueue.add(undoable);
-			}
-			
-			e.consume();
-			return;
-		}
-
-		if (e.getKeyChar() == KeyEvent.VK_TAB) {
-			if (e.isShiftDown()) {
-				if (currentNode.getParent().isRoot()) {
-					e.consume();
 					return;
 				}
 
-				// Put the Undoable onto the UndoQueue
-				Node targetNode = currentNode.getParent().getParent();
-				int targetIndex = currentNode.getParent().currentIndex() + 1;
-				
-				CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(),targetNode);
-
-				for (int i = tree.selectedNodes.size() - 1; i >= 0; i--) {
-					// Record the Insert in the undoable
-					Node nodeToMove = (Node) tree.selectedNodes.get(i);
-					undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), targetIndex));
-					tree.promoteNode(nodeToMove);
-				}
-				
-				tree.doc.undoQueue.add(undoable);
-
-			} else {
-				if (tree.getYoungestInSelection().isFirstChild()) {
-					e.consume();
+			case KeyEvent.VK_V:
+				if (e.isControlDown()) {
+					paste(tree,layout);
+					break;
+				} else {
 					return;
 				}
-				
-				// Put the Undoable onto the UndoQueue
-				Node targetNode = tree.getYoungestInSelection().prevSibling();
 
-				CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(),targetNode);
-				
-				int existingChildren = targetNode.numOfChildren();
-				for (int i = 0; i < tree.selectedNodes.size(); i++) {
-					// Record the Insert in the undoable
-					Node nodeToMove = (Node) tree.selectedNodes.get(i);
-					undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), (existingChildren + i)));
-					tree.demoteNode(nodeToMove,targetNode);
+			case KeyEvent.VK_A:
+				if (e.isControlDown() && !e.isShiftDown()) {
+					selectAll(tree,layout);
+					break;
+				} else {
+					return;
 				}
-				
-				tree.doc.undoQueue.add(undoable);
-			}
-			
-			// Update the selection model
-			Node youngestNode = tree.getYoungestInSelection();
-			tree.setSelectedNodesParent(youngestNode.getParent(),false);
 
-			// Redraw and Set Focus
-			layout.draw(youngestNode,outlineLayoutManager.ICON);
-			
-			e.consume();
-			return;
+			default:
+				return;
 		}
 		
-		if ((e.getKeyCode() == KeyEvent.VK_C) && e.isControlDown()) {
-			StringBuffer buffer = new StringBuffer();
-			for (int i = 0; i < tree.selectedNodes.size(); i++) {
-				buffer.append(((Node) tree.selectedNodes.get(i)).depthPaddedValue(Preferences.LINE_END_STRING));
-			}
-			
-			// Put the text onto the clipboard
-			StringSelection selection = new StringSelection(buffer.toString());
-			Outliner.clipboard.setContents(selection, Outliner.outliner);
-			
-			e.consume();
-			return;
-		}
-
-		if ((e.getKeyCode() == KeyEvent.VK_X) && e.isControlDown()) {
-			StringBuffer buffer = new StringBuffer();
-			for (int i = 0; i < tree.selectedNodes.size(); i++) {
-				buffer.append(((Node) tree.selectedNodes.get(i)).depthPaddedValue(Preferences.LINE_END_STRING));
-			}
-			
-			// Put the text onto the clipboard
-			StringSelection selection = new StringSelection(buffer.toString());
-			Outliner.clipboard.setContents(selection, Outliner.outliner);
-			
-			delete(tree,layout);
-			
-			e.consume();
-			return;
-		}
-
-		if ((e.getKeyCode() == KeyEvent.VK_V) && e.isControlDown()) {
-			// Put the Undoable onto the UndoQueue
-			CompoundUndoableInsert undoable = new CompoundUndoableInsert(currentNode.getParent());
-			tree.doc.undoQueue.add(undoable);
-
-			// Get the text from the clipboard and turn it into a tree
-			StringSelection selection = (StringSelection) Outliner.clipboard.getContents(this);
-			String text = "";
-			try {
-				text = (String) selection.getTransferData(DataFlavor.stringFlavor);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-			
-			Node oldestNode = tree.getOldestInSelection();
-			
-			Node tempRoot = PadSelection.pad(text, tree, oldestNode.getDepth(),Preferences.LINE_END_STRING);
-			
-			Node parentForNewNode = oldestNode.getParent();
-			int indexForNewNode = parentForNewNode.getChildIndex(oldestNode);
-			for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
-				Node node = tempRoot.getChild(i);
-				parentForNewNode.insertChild(node, indexForNewNode + 1);
-				tree.insertNode(node);
-
-				// Record the Insert in the undoable
-				int index = node.currentIndex() + i;
-				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode,node,index));
-			}
-			
-			tree.clearSelection();
-
-			for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
-				tree.addNodeToSelection(tempRoot.getChild(i));
-			}
-
-
-			// Record the EditingNode and CursorPosition and ComponentFocus
-			tree.setEditingNode(tree.getYoungestInSelection());
-
-			// Redraw and Set Focus
-			layout.draw(tree.getYoungestInSelection(),outlineLayoutManager.ICON);
-			
-			e.consume();
-			return;
-		}
-
-		if ((e.getKeyCode() == KeyEvent.VK_A) && e.isControlDown() && !e.isShiftDown()) {
-			// select all siblings
-			Node parent = currentNode.getParent();
-			
-			tree.addNodeToSelection(parent.getChild(0));
-			tree.selectRangeFromMostRecentNodeTouched(parent.getChild(parent.numOfChildren() - 1));
-	
-			// Redraw and Set Focus
-			layout.draw(currentNode,outlineLayoutManager.ICON);
-
-			e.consume();
-			return;
-		}
+		e.consume();
+		return;
 	}
 	
 	public void keyTyped(KeyEvent e) {
@@ -552,68 +276,422 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		return;
 	}
 	public void keyReleased(KeyEvent e) {}
+
+
+
+	// Key Handlers
+	private void toggleExpansion(TreeContext tree, outlineLayoutManager layout) {
+		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+			Node node = (Node) tree.selectedNodes.get(i);
+			if (node.isExpanded()) {
+				node.setExpanded(false);
+			} else {
+				node.setExpanded(true);
+			}
+		}
+
+		layout.draw();
+	}
+
+	private void changeFocusToTextArea(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		tree.setComponentFocus(outlineLayoutManager.TEXT);
+		tree.clearSelection();
+		layout.draw(currentNode,outlineLayoutManager.TEXT);
+	}
+
+	private void moveUp(TreeContext tree, outlineLayoutManager layout) {
+		Node youngestNode = tree.getYoungestInSelection();
+		Node node = youngestNode.prevSibling();
+		if (node == youngestNode) {
+			return;
+		}
+
+		// Put the Undoable onto the UndoQueue
+		CompoundUndoableMove undoable = new CompoundUndoableMove(node.getParent(),node.getParent());
+		tree.doc.undoQueue.add(undoable);
+
+		// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
+		Node nodeToDrawFromTmp = layout.getNodeToDrawFrom().prevUnSelectedNode();
 	
-	public static final int UP = 1;
-	public static final int DOWN = 2;
-	public static final int LEFT = 3;
-	public static final int RIGHT = 4;
+		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+			// Record the Insert in the undoable
+			Node nodeToMove = (Node) tree.selectedNodes.get(i);
+			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), node.currentIndex()));
+			tree.moveNodeAboveAsSibling(nodeToMove,node);
+		}
+
+		// Redraw and Set Focus
+		if (layout.getNodeToDrawFrom().isAncestorSelected()) { // Makes sure we dont' stick at the bottom when multiple nodes are selected.
+			Node visNode = layout.getNodeToDrawFrom().next();
+			int ioVisNode = tree.visibleNodes.indexOf(visNode);
+			int ioNodeToDrawFromTmp = tree.visibleNodes.indexOf(nodeToDrawFromTmp);
+			if (ioVisNode > ioNodeToDrawFromTmp) {
+				layout.setNodeToDrawFrom(visNode, ioVisNode);
+			} else {
+				layout.setNodeToDrawFrom(nodeToDrawFromTmp, ioNodeToDrawFromTmp);
+			}
+		} else {
+			int ioYoungestNode = tree.visibleNodes.indexOf(youngestNode);
+			if (layout.getIndexOfNodeToDrawFrom() == ioYoungestNode) {
+				layout.setNodeToDrawFrom(youngestNode, ioYoungestNode);
+			}
+		}
+		
+		layout.draw(youngestNode,outlineLayoutManager.ICON);
+	}
 	
-	protected void navigate(TreeContext tree, outlineLayoutManager layout, int type) {
-		// Get Prev Node
+	private void moveDown(TreeContext tree, outlineLayoutManager layout) {
+		Node oldestNode = tree.getOldestInSelection();
+		Node node = oldestNode.nextSibling();
+		if (node == oldestNode) {
+			return;
+		}
+
+		// Put the Undoable onto the UndoQueue
+		CompoundUndoableMove undoable = new CompoundUndoableMove(node.getParent(),node.getParent());
+		tree.doc.undoQueue.add(undoable);
+	
+		// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
+		Node nodeToDrawFromTmp = layout.getNodeToDrawFrom().nextUnSelectedNode();
+		
+		// Do the move
+		for (int i = tree.selectedNodes.size() - 1; i >= 0; i--) {
+			// Record the Insert in the undoable
+			Node nodeToMove = (Node) tree.selectedNodes.get(i);
+			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), node.currentIndex()));
+			tree.moveNodeBelowAsSibling(nodeToMove,node);
+		}
+		
+		// Redraw and Set Focus
+		if (layout.getNodeToDrawFrom().isAncestorSelected()) { // Makes sure we dont' stick at the top when multiple nodes are selected.
+			Node visNode = layout.getNodeToDrawFrom().prev();
+			int ioVisNode = tree.visibleNodes.indexOf(visNode);
+			int ioNodeToDrawFromTmp = tree.visibleNodes.indexOf(nodeToDrawFromTmp);
+			if (ioVisNode < ioNodeToDrawFromTmp) {
+				layout.setNodeToDrawFrom(visNode, ioVisNode);
+			} else {
+				layout.setNodeToDrawFrom(nodeToDrawFromTmp, ioNodeToDrawFromTmp);
+			}
+		} else {
+			int ioOldestNode = tree.visibleNodes.indexOf(oldestNode.getLastViewableDecendent());
+			if (layout.getIndexOfNodeToDrawFrom() == ioOldestNode) {
+				layout.setNodeToDrawFrom(oldestNode.getLastViewableDecendent(), ioOldestNode);
+			}
+		}
+		
+		layout.draw(oldestNode.getLastViewableDecendent(), outlineLayoutManager.ICON);
+	}
+
+	private void moveLeft(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		Node youngestNode = tree.getYoungestInSelection();
+		Node node = tree.getPrevNode(youngestNode);
+		if (node == null) {
+			return;
+		}
+
+		// Put the Undoable onto the UndoQueue
+		CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(), node.getParent());
+		tree.doc.undoQueue.add(undoable);
+
+		// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
+		Node nodeToDrawFromTmp = layout.getNodeToDrawFrom().prevUnSelectedNode();
+	
+		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+			// Record the Insert in the undoable
+			Node nodeToMove = (Node) tree.selectedNodes.get(i);
+			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), node.currentIndex()));
+			tree.moveNodeAbove(nodeToMove,node);
+		}
+
+		// Update the selection model
+		tree.setSelectedNodesParent(node.getParent(),false);
+
+		// Redraw and Set Focus
+		if (layout.getNodeToDrawFrom().isAncestorSelected()) { // Makes sure we dont' stick at the bottom when multiple nodes are selected.
+			Node visNode = layout.getNodeToDrawFrom().next();
+			int ioVisNode = tree.visibleNodes.indexOf(visNode);
+			int ioNodeToDrawFromTmp = tree.visibleNodes.indexOf(nodeToDrawFromTmp);
+			if (ioVisNode > ioNodeToDrawFromTmp) {
+				layout.setNodeToDrawFrom(visNode, ioVisNode);
+			} else {
+				layout.setNodeToDrawFrom(nodeToDrawFromTmp, ioNodeToDrawFromTmp);
+			}
+		} else {
+			int ioYoungestNode = tree.visibleNodes.indexOf(youngestNode);
+			if (layout.getIndexOfNodeToDrawFrom() == ioYoungestNode) {
+				layout.setNodeToDrawFrom(youngestNode, ioYoungestNode);
+			}
+		}
+		
+		layout.draw(youngestNode,outlineLayoutManager.ICON);
+	}
+
+
+	private void moveRight(TreeContext tree, outlineLayoutManager layout) {
+		Node oldestNode = tree.getOldestInSelection();
+		Node node = tree.getNextNode(oldestNode.getLastViewableDecendent());
+		if (node == null) {
+			return;
+		}
+
+		// Put the Undoable onto the UndoQueue
+		CompoundUndoableMove undoable;
+		if ((!node.isLeaf() && node.isExpanded())) {
+			undoable = new CompoundUndoableMove(oldestNode.getParent(),node);				
+		} else {
+			undoable = new CompoundUndoableMove(oldestNode.getParent(),node.getParent());
+		}
+		tree.doc.undoQueue.add(undoable);
+
+		// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
+		Node nodeToDrawFromTmp = layout.getNodeToDrawFrom().nextUnSelectedNode();
+	
+		for (int i = tree.selectedNodes.size() - 1; i >= 0; i--) {
+			// Record the Insert in the undoable
+			Node nodeToMove = (Node) tree.selectedNodes.get(i);
+			
+			int targetIndex = 0;
+			if ((!node.isLeaf() && node.isExpanded())) {
+				// do nothing
+			} else {
+				targetIndex = node.currentIndex();
+			}
+
+			if (nodeToMove.getParent() != node.getParent()) {
+				targetIndex++;
+			}
+			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), targetIndex));
+
+			tree.moveNodeBelow(nodeToMove,node);
+		}
+
+		// Update the selection model
+		tree.setSelectedNodesParent(node.getParent(),false);
+
+		// Redraw and Set Focus
+		if (layout.getNodeToDrawFrom().isAncestorSelected()) { // Makes sure we dont' stick at the top when multiple nodes are selected.
+			Node visNode = layout.getNodeToDrawFrom().prev();
+			int ioVisNode = tree.visibleNodes.indexOf(visNode);
+			int ioNodeToDrawFromTmp = tree.visibleNodes.indexOf(nodeToDrawFromTmp);
+			if (ioVisNode < ioNodeToDrawFromTmp) {
+				layout.setNodeToDrawFrom(visNode, ioVisNode);
+			} else {
+				layout.setNodeToDrawFrom(nodeToDrawFromTmp, ioNodeToDrawFromTmp);
+			}
+		} else {
+			int ioOldestNode = tree.visibleNodes.indexOf(oldestNode.getLastViewableDecendent());
+			if (layout.getIndexOfNodeToDrawFrom() == ioOldestNode) {
+				layout.setNodeToDrawFrom(oldestNode.getLastViewableDecendent(), ioOldestNode);
+			}
+		}
+		
+		layout.draw(oldestNode.getLastViewableDecendent(), outlineLayoutManager.ICON);
+	}
+
+	private void insert(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		
+		// Create a new node and insert it as a sibling immediatly after the last selected node.
+		Node node = tree.getOldestInSelection();
+		Node newNode = new NodeImpl(tree,"");
+		
+		if ((!node.isLeaf()) && (node.isExpanded())) {
+			newNode.setDepth(node.getDepth() + 1);
+			node.insertChild(newNode,0);				
+		} else {
+			newNode.setDepth(node.getDepth());
+			node.getParent().insertChild(newNode,node.currentIndex() + 1);
+		}
+		
+		tree.insertNode(newNode);
+
+		// Record the EditingNode and CursorPosition and ComponentFocus
+		tree.setEditingNode(newNode);
+		tree.setCursorPosition(0);
+		tree.setComponentFocus(outlineLayoutManager.TEXT);
+
+		// Redraw and Set Focus
+		tree.clearSelection();
+		layout.draw(newNode,outlineLayoutManager.TEXT);
+
+		// Put the Undoable onto the UndoQueue
+		CompoundUndoableInsert undoable = new CompoundUndoableInsert(currentNode.getParent());
+		undoable.addPrimitive(new PrimitiveUndoableInsert(newNode.getParent(),newNode,newNode.currentIndex()));
+		tree.doc.undoQueue.add(undoable);
+	}
+
+	private void promote(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		
+		if (currentNode.getParent().isRoot()) {
+			return;
+		}
+
+		// Put the Undoable onto the UndoQueue
+		Node targetNode = currentNode.getParent().getParent();
+		int targetIndex = currentNode.getParent().currentIndex() + 1;
+		
+		CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(),targetNode);
+
+		for (int i = tree.selectedNodes.size() - 1; i >= 0; i--) {
+			// Record the Insert in the undoable
+			Node nodeToMove = (Node) tree.selectedNodes.get(i);
+			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), targetIndex));
+			tree.promoteNode(nodeToMove);
+		}
+		
+		tree.doc.undoQueue.add(undoable);
+	}
+
+	private void demote(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+
+		if (tree.getYoungestInSelection().isFirstChild()) {
+			return;
+		}
+		
+		// Put the Undoable onto the UndoQueue
+		Node targetNode = tree.getYoungestInSelection().prevSibling();
+
+		CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(),targetNode);
+		
+		int existingChildren = targetNode.numOfChildren();
+		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+			// Record the Insert in the undoable
+			Node nodeToMove = (Node) tree.selectedNodes.get(i);
+			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), (existingChildren + i)));
+			tree.demoteNode(nodeToMove,targetNode);
+		}
+		
+		tree.doc.undoQueue.add(undoable);
+	}
+
+	private void copy(TreeContext tree, outlineLayoutManager layout) {
+		StringBuffer buffer = new StringBuffer();
+		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+			buffer.append(((Node) tree.selectedNodes.get(i)).depthPaddedValue(Preferences.LINE_END_STRING));
+		}
+		
+		// Put the text onto the clipboard
+		Outliner.clipboard.setContents(new StringSelection(buffer.toString()), Outliner.outliner);
+	}
+
+	private void cut(TreeContext tree, outlineLayoutManager layout) {
+		StringBuffer buffer = new StringBuffer();
+		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+			buffer.append(((Node) tree.selectedNodes.get(i)).depthPaddedValue(Preferences.LINE_END_STRING));
+		}
+		
+		// Put the text onto the clipboard
+		Outliner.clipboard.setContents(new StringSelection(buffer.toString()), Outliner.outliner);
+		
+		delete(tree,layout);
+	}
+
+	private void paste(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+
+		// Put the Undoable onto the UndoQueue
+		CompoundUndoableInsert undoable = new CompoundUndoableInsert(currentNode.getParent());
+		tree.doc.undoQueue.add(undoable);
+
+		// Get the text from the clipboard and turn it into a tree
+		StringSelection selection = (StringSelection) Outliner.clipboard.getContents(this);
+		String text = "";
+		try {
+			text = (String) selection.getTransferData(DataFlavor.stringFlavor);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		Node oldestNode = tree.getOldestInSelection();
+		
+		Node tempRoot = PadSelection.pad(text, tree, oldestNode.getDepth(),Preferences.LINE_END_STRING);
+		
+		Node parentForNewNode = oldestNode.getParent();
+		int indexForNewNode = parentForNewNode.getChildIndex(oldestNode);
+		for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
+			Node node = tempRoot.getChild(i);
+			parentForNewNode.insertChild(node, indexForNewNode + 1);
+			tree.insertNode(node);
+
+			// Record the Insert in the undoable
+			int index = node.currentIndex() + i;
+			undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode,node,index));
+		}
+		
+		tree.clearSelection();
+
+		for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
+			tree.addNodeToSelection(tempRoot.getChild(i));
+		}
+
+
+		// Record the EditingNode and CursorPosition and ComponentFocus
+		tree.setEditingNode(tree.getYoungestInSelection());
+
+		// Redraw and Set Focus
+		layout.draw(tree.getYoungestInSelection(),outlineLayoutManager.ICON);
+	}
+
+	private void selectAll(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+
+		// select all siblings
+		Node parent = currentNode.getParent();
+		
+		tree.addNodeToSelection(parent.getChild(0));
+		tree.selectRangeFromMostRecentNodeTouched(parent.getChild(parent.numOfChildren() - 1));
+
+		// Redraw and Set Focus
+		layout.draw(currentNode,outlineLayoutManager.ICON);
+	}
+
+	private static final int UP = 1;
+	private static final int DOWN = 2;
+	private static final int LEFT = 3;
+	private static final int RIGHT = 4;
+	
+	private void navigate(TreeContext tree, outlineLayoutManager layout, int type) {
 		Node node = null;
 		Node youngestNode = null;
 		Node oldestNode = null;
+		
 		switch(type) {
 			case UP:
 				youngestNode = tree.getYoungestInSelection();
 				node = youngestNode.prevSibling();
 				if (node == youngestNode) {return;}
+				tree.clearSelection();
 				break;
 
 			case DOWN:
 				oldestNode = tree.getOldestInSelection();
 				node = oldestNode.nextSibling();
 				if (node == oldestNode) {return;}
+				tree.clearSelection();
 				break;
 
 			case LEFT:
 				youngestNode = tree.getYoungestInSelection();
 				node = tree.getPrevNode(youngestNode);
 				if (node == null) {return;}
+				tree.setSelectedNodesParent(node.getParent());
 				break;
 
 			case RIGHT:
 				oldestNode = tree.getOldestInSelection();
 				node = tree.getNextNode(oldestNode);
 				if (node == null) {return;}
+				tree.setSelectedNodesParent(node.getParent());
 				break;
 				
 			default:
 				return;
 		}
-				
-		// Adjust the selection
-		switch(type) {
-			case UP:
-				tree.clearSelection();
-				break;
-
-			case DOWN:
-				tree.clearSelection();
-				break;
-
-			case LEFT:
-				tree.setSelectedNodesParent(node.getParent());
-				break;
-
-			case RIGHT:
-				tree.setSelectedNodesParent(node.getParent());
-				break;
-				
-			default:
-				tree.clearSelection();
-				break;
-		}
+		
 		tree.addNodeToSelection(node);
 
 		// Record the EditingNode and CursorPosition and ComponentFocus
@@ -653,6 +731,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		return;
 	}
 
+
 	// Additional Outline Methods
 	public static void expandAllSubheads(TreeContext tree) {
 		for (int i = 0; i < tree.selectedNodes.size(); i++) {
@@ -676,5 +755,4 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		TextKeyListener.collapseEverything(tree);
 		return;
 	}
-
 }

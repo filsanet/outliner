@@ -202,25 +202,24 @@ public class TreeContext {
 	public Node getSelectedNodesParent() {return selectedNodesParent;}
 	
 	public void clearSelection() {
-		for (int i = 0; i < selectedNodes.size(); i++) {
-			((Node) selectedNodes.get(i)).setSelected(false);
+		// Walking it backwards should give better performance.
+		while (selectedNodes.size() > 0) {
+			((Node) selectedNodes.get(selectedNodes.size() - 1)).setSelected(false);
+			selectedNodes.remove(selectedNodes.size() - 1);
 		}
-		selectedNodes.clear();
 	}
 	
 	public void addNodeToSelection(Node node) {
-		if (node.getParent() == getSelectedNodesParent()) {
-			if (node.isSelected()) {
-				return; // Don't add a node if it is already selected.
-			}
-			
+		if (node.isSelected()) {
+			return; // Don't add a node if it is already selected.
+		} else if (node.getParent() == getSelectedNodesParent()) {			
 			node.setSelected(true);
 			mostRecentNodeTouched = node;
 			
 			// Maintain the selected nodes in order from youngest to oldest
 			for (int i = 0; i < selectedNodes.size(); i++) {
 				if (((Node) selectedNodes.get(i)).currentIndex() > node.currentIndex()) {
-					selectedNodes.add(i,node);
+					selectedNodes.add(i, node);
 					return;
 				}
 			}

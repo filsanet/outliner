@@ -80,10 +80,18 @@ public class Outliner extends JFrame implements ClipboardOwner {
 		PARSER.addCommand(new LoadMacroClassCommand(COMMAND_MACRO_CLASS,2,this));
 		PARSER.addCommand(new LoadFileFormatClassCommand(COMMAND_FILE_FORMAT,2,this));
 
+		System.out.println("Loading Config...");
 		loadPrefsFile(PARSER,CONFIG_FILE);
+		System.out.println("Done Loading Config.");
+		
+		System.out.println("Loading Recent File List...");
 		loadPrefsFile(PARSER,RECENT_FILES_FILE);
+		System.out.println("Done Loading Recent File List.");
+		
+		System.out.println("Loading Encoding Types...");
 		loadPrefsFile(PARSER,ENCODINGS_FILE);
-
+		System.out.println("Done Loading Encoding Types.");
+		
 		// Setup the FileFormatManager
 		fileFormatManager = new FileFormatManager();
 		System.out.println("Loading File Formats...");

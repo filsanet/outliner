@@ -201,6 +201,13 @@ public class SetPrefCommand extends Command {
 		}
 	}
 	
+	private void setStringPref(Vector signature, PreferenceString pref) {
+		try {
+			pref.cur = (String) signature.elementAt(2);
+			pref.restoreTemporaryToCurrent();
+		} catch (ArrayIndexOutOfBoundsException e) {}
+	}
+		
 	// Will go away when color is configured in the gui.
 	private static final Color parseColor(String rgb) {
 		// Split it into 3 ints
