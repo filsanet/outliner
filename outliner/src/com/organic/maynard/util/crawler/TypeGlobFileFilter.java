@@ -93,8 +93,6 @@ public class TypeGlobFileFilter implements FileFilter {
 	
 	// FileFilter Interface
 	public boolean isValid(File file) {
-		System.out.println("CHECKING: " + file.getName());
-		
 		if (globIncludeFilters.size() > 0) {
 			boolean matchFound = false;
 			for (int i = 0; i < globIncludeFilters.size(); i++) {
@@ -106,7 +104,6 @@ public class TypeGlobFileFilter implements FileFilter {
 			}
 			
 			if (!matchFound) {
-				System.out.println("REJECT NO INCLUDE MATCH");
 				return false;
 			}
 		}
@@ -114,12 +111,10 @@ public class TypeGlobFileFilter implements FileFilter {
 		for (int i = 0; i < globExcludeFilters.size(); i++) {
 			GlobFilenameFilter filter = (GlobFilenameFilter) globExcludeFilters.get(i);
 			if (filter.accept(file)) {
-				System.out.println("REJECT EXCLUDE MATCH");
 				return false;
 			}
 		}
 		
-		System.out.println("ACCEPT");		
 		return true;
 	}
 }
