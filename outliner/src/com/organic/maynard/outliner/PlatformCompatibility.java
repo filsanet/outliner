@@ -56,6 +56,18 @@ public class PlatformCompatibility {
 	
 	public static final String[] PLATFORM_IDENTIFIERS = {PLATFORM_MAC, PLATFORM_WIN, PLATFORM_UNIX};	
 
+	public static ArrayList JAVA_VERSION_ARRAY = new ArrayList();
+	
+	static {
+		String javaVersion = System.getProperty("java.version");
+
+		StringTokenizer tokenizer = new StringTokenizer(javaVersion,".");
+		while (tokenizer.hasMoreTokens()) {
+			String token = tokenizer.nextToken();
+			Integer value = new Integer(token);
+			JAVA_VERSION_ARRAY.add(value);
+		}
+	}
 
 	// Constructors
 	public PlatformCompatibility() {}
@@ -110,6 +122,34 @@ public class PlatformCompatibility {
 		}	
 	}
 
+	public static boolean isAtLeastJavaVersion(int major, int minor, int release) {
+		if (JAVA_VERSION_ARRAY.get(0) != null && major != -1) {
+			int currentMajor = ((Integer) JAVA_VERSION_ARRAY.get(0)).intValue();
+			
+			if (major > currentMajor) {
+				return false;
+			}
+		}
+
+		if (JAVA_VERSION_ARRAY.get(1) != null && minor != -1) {
+			int currentMinor = ((Integer) JAVA_VERSION_ARRAY.get(1)).intValue();
+
+			if (minor > currentMinor) {
+				return false;
+			}
+		}
+
+		if (JAVA_VERSION_ARRAY.get(2) != null && release != -1) {
+			int currentRelease = ((Integer) JAVA_VERSION_ARRAY.get(2)).intValue();
+
+			if (release > currentRelease) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 	// Line Ending and Platform conversions
 	public static String platformToLineEnding(String platform) {
 		if (platform.equals(PLATFORM_MAC)) {
