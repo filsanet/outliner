@@ -3,10 +3,10 @@
 <head>
 <title>e:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Mon, 30 Jul 2001 08:27:20 GMT</dateModified>
+<dateModified>Mon, 30 Jul 2001 11:22:13 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
-<expansionState>16</expansionState>
+<expansionState>17</expansionState>
 <vertScrollState>1</vertScrollState>
 <windowTop>0</windowTop>
 <windowLeft>86</windowLeft>
@@ -189,7 +189,7 @@
 </outline>
 <outline text="Closing Outlines"/>
 <outline text="Opening Outlines"/>
-<outline text="Links">
+<outline text="Hyperlinks in Outlines">
 <outline text="Link Nodes"/>
 <outline text="Links in Nodes"/>
 </outline>
@@ -198,7 +198,6 @@
 <outline text="Custom JOE"/>
 <outline text="Macros"/>
 <outline text="XML-RPC"/>
-<outline text="Help Develop JOE"/>
 <outline text="Menu Commands Reference">
 <outline text="File">
 <outline text="New">
@@ -280,7 +279,7 @@
 <outline text="Window"/>
 <outline text="Help"/>
 </outline>
-<outline text="Keystroke Commands Reference"/>
+<outline text="Keystroke Shortcuts Reference"/>
 <outline text="Outline Formats">
 <outline text="tabbed text">
 <outline text="each node is terminated by one of these line-ending character sequences">
