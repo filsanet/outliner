@@ -361,24 +361,19 @@
 							</preference>
 						</preferencepanel>
 						<preferencepanel id="preferences_panel_recent_files" class="com.organic.maynard.outliner.util.preferences.PreferencesPanelRecentFiles" title="Recent Files List">
-							<vertical_strut size="10"/>
 							<preference id="recent_files_list_size" class="com.organic.maynard.outliner.util.preferences.PreferenceInt" default="10">
 								<validator id="recent_files_list_size_validator" class="com.organic.maynard.outliner.util.preferences.IntRangeValidator" min="0" max="99" default="10"/>
 								<preference_component id="recent_files_list_size_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeTextFieldComponent" label="Size" size="4" />
 							</preference>
-							<vertical_strut size="10"/>
 							<preference id="recent_files_ordering" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="Chronological">
 								<preference_component id="recent_files_ordering_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Ordering" list="recent_files_orderings"/>
 							</preference>
-							<vertical_strut size="10"/>
 							<preference id="recent_files_direction" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="Top to Bottom">
 								<preference_component id="recent_files_direction_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Direction" list="recent_files_directions"/>
 							</preference>
-							<vertical_strut size="10"/>
 							<preference id="recent_files_name_form" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="Full Pathname">
 								<preference_component id="recent_files_name_form_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Name Form" list="recent_files_name_forms"/>
 							</preference>
-							<vertical_strut size="20"/>
 						</preferencepanel>
 					</preferencepanel>
 					<preferencepanel id="preferences_panel_misc" class="com.organic.maynard.outliner.util.preferences.PreferencesPanelMisc" title="Misc.">
