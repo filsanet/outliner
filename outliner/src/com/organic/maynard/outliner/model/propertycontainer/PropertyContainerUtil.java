@@ -35,11 +35,80 @@
 package com.organic.maynard.outliner.model.propertycontainer;
 
 import java.util.*;
+import java.lang.reflect.*;
+import com.organic.maynard.xml.XMLTools;
+import com.organic.maynard.xml.XMLProcessor;
+import org.xml.sax.*;
 
 /**
  * Holds static methods useful for working with PropertyContainer objects.
  */
 public class PropertyContainerUtil {
+	
+	// XML Serialization
+	private static final String ELEMENT_PROPERTY_CONTAINERS = "property_containers";
+	private static final String ELEMENT_PROPERTY_CONTAINER = "property_container";
+	private static final String ELEMENT_PROPERTY = "property";
+	private static final String ATTRIBUTE_CLASS = "class";
+	private static final String ATTRIBUTE_NAME = "name";
+	private static final String ATTRIBUTE_VALUE = "value";
+	
+	public static List parseXML(String filepath) {
+		PropertyContainerXMLParser parser = new PropertyContainerXMLParser();
+		try {
+			parser.process(filepath);
+			return parser.getPropertyContainerList();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static void writeXML(
+		StringBuffer buf, 
+		List containers, 
+		int depth, 
+		String line_ending
+	) {
+		if (containers != null) {
+			HashMap attributes = new HashMap();
+			attributes.put(ATTRIBUTE_CLASS, containers.getClass().getName());
+			XMLTools.writeElementStart(buf, depth, false, line_ending, ELEMENT_PROPERTY_CONTAINERS, attributes);
+			for (int i = 0; i < containers.size(); i++) {
+				PropertyContainer container = (PropertyContainer) containers.get(i);
+				PropertyContainerUtil.writeXML(buf, container, depth + 1, line_ending);
+			}
+			XMLTools.writeElementEnd(buf, depth, line_ending, ELEMENT_PROPERTY_CONTAINERS);
+		}
+	}
+	
+	public static void writeXML(
+		StringBuffer buf, 
+		PropertyContainer container, 
+		int depth, 
+		String line_ending
+	) {
+		if (container != null) {
+			HashMap attributes = new HashMap();
+			attributes.put(ATTRIBUTE_CLASS, container.getClass().getName());
+			XMLTools.writeElementStart(buf, depth, false, line_ending, ELEMENT_PROPERTY_CONTAINER, attributes);
+			Iterator it = container.getKeys();
+			while (it.hasNext()) {
+				String key = (String) it.next();
+				Object property = container.getProperty(key);
+				attributes = new HashMap();
+				attributes.put(ATTRIBUTE_NAME, key);
+				if (property != null) {
+					attributes.put(ATTRIBUTE_CLASS, property.getClass().getName());
+					attributes.put(ATTRIBUTE_VALUE, property.toString());
+				}
+				XMLTools.writeElementStart(buf, depth + 1, true, line_ending, ELEMENT_PROPERTY, attributes);
+			}
+			XMLTools.writeElementEnd(buf, depth, line_ending, ELEMENT_PROPERTY_CONTAINER);
+		} else {
+			throw new IllegalArgumentException("Provided PropertyContainer was null.");
+		}
+	}
 	
 	// String Typed
 	public static void setPropertyAsString(PropertyContainer container, String key, String value) {
@@ -240,5 +309,88 @@ public class PropertyContainerUtil {
 		} else {
 			throw new NullPointerException("Property value was null so it couldn't be converted to an int.");
 		}
+	}
+	
+	
+	// InnerClasses
+	private static class PropertyContainerXMLParser extends XMLProcessor {
+		// Instance Fields
+		private List containers;
+		private PropertyContainer container;
+		
+		
+		// Constructors
+		public PropertyContainerXMLParser() {
+			super();
+			init();
+		}
+		
+		private void init() {
+			containers = null;
+			container = null;
+		}
+		
+		
+		// Accessors
+		public List getPropertyContainerList() {
+			return this.containers;
+		}
+		
+		
+		// Sax DocumentHandler Implementation
+		public void startDocument () {}
+		
+		public void endDocument () {}
+		
+		public void startElement(String namespaceURI, String localName, String qName, Attributes atts) {
+			if (ELEMENT_PROPERTY.equals(qName)) {
+				try {
+					String class_name = atts.getValue(ATTRIBUTE_CLASS);
+					String property_name = atts.getValue(ATTRIBUTE_NAME);
+					String property_value = atts.getValue(ATTRIBUTE_VALUE);
+					
+					Class[] parameterTypes = {(new String("")).getClass()};
+					Constructor constructor = Class.forName(class_name).getConstructor(parameterTypes);
+					Object[] args = {property_value};
+					Object property = constructor.newInstance(args);
+					
+					if (container != null) {
+						container.setProperty(property_name, property);
+					} else {
+						System.out.println("Warning: no PropertyContainer to add property to during PropertyContainerXMLParser parsing.");
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else if (ELEMENT_PROPERTY_CONTAINER.equals(qName)) {
+				try {
+					String class_name = atts.getValue(ATTRIBUTE_CLASS);
+					container = (PropertyContainer) Class.forName(class_name).newInstance();
+					
+					// Instantiate a List if we don't have one by now.
+					if (containers == null) {
+						containers = new ArrayList();
+					}
+					containers.add(container);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else if (ELEMENT_PROPERTY_CONTAINERS.equals(qName)) {
+				try {
+					String class_name = atts.getValue(ATTRIBUTE_CLASS);
+					containers = (List) Class.forName(class_name).newInstance();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			super.startElement(namespaceURI, localName, qName, atts);
+		}
+		
+		public void endElement(String namespaceURI, String localName, String qName) {
+			super.endElement(namespaceURI, localName, qName);
+		}
+		
+		public void characters(char ch[], int start, int length) throws SAXException {}
 	}
 }

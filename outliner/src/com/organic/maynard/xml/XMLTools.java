@@ -290,6 +290,14 @@ public class XMLTools {
 	
 	// Miscellaneous
 	/**
+	 * Gets the XML version declaration for an XML document with the default
+	 * version id.
+	 */
+	public static String getXMLDeclaration() {
+		return getXmlDeclaration(null);
+	}
+	
+	/**
 	 * Gets the XML version declaration for an XML document.
 	 */
 	public static String getXmlDeclaration(String version) {

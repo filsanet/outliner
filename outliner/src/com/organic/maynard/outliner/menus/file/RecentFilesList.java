@@ -53,6 +53,7 @@ import com.organic.maynard.util.string.StringTools;
 import com.organic.maynard.util.string.Replace;
 import com.organic.maynard.util.string.StanStringTools;
 import com.organic.maynard.util.vector.StanVectorTools;
+import com.organic.maynard.xml.XMLTools;
 
 /**
  * @author  $Author$
@@ -81,7 +82,7 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 	private static final int NOT_THERE = -1;
 	
 	
-	// Static Fields
+	// Class Fields
 	private static RecentFilesList recentFilesList = null;
 	private static Vector frameInfoList = null; // All objects stored herein should be DocumentInfo objects.
 	
@@ -123,8 +124,7 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		currentRecentFilesListSize = Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur;
 		
 		// Try to load the frameInfoList from disk
-		// TBD [srk] rename RECENT_FILES_FILE to FRAME_INFO_LIST_FILE
-		Object obj = FileTools.ReadObjectFromFile(Outliner.RECENT_FILES_FILE);
+		java.util.List obj = PropertyContainerUtil.parseXML(Outliner.RECENT_FILES_FILE);
 		
 		// we need to make sure we have a Vector
 		// we used to use an ArrayList for frameInfoList,
@@ -549,6 +549,11 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 	 * Saves the recent files list to disk as a serialized object.
 	 */
 	public static void saveConfigFile(String filename) {
-		FileTools.writeObjectToFile(frameInfoList, filename);
+		StringBuffer buf = new StringBuffer();
+		buf.append(XMLTools.getXMLDeclaration());
+		String line_ending = "\n";
+		buf.append(line_ending);
+		PropertyContainerUtil.writeXML(buf, frameInfoList, 0, line_ending);
+		FileTools.dumpStringToFile(new File(filename), buf.toString(), "UTF-8");
 	}
 }

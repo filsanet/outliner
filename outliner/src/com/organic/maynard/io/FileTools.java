@@ -43,13 +43,13 @@ public class FileTools {
 	public static final char LF = '\n';
 	public static final char CR = '\r';
 	public static final char EOF = (char) -1;
-
+	
 	public static final String DEFAULT_ENCODING = "ISO-8859-1";
 	
 	// Constructors
 	public FileTools() {}
-
-
+	
+	
 	// Class Methods
 	public static void dumpArrayOfLinesToFile(File file, String encoding, ArrayList lines, ArrayList lineEndings) {
 		try {
@@ -73,7 +73,7 @@ public class FileTools {
 			out.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}	
+		}
 	}
 	
 	// Since we typically scan many many files repeatedly lets keep the object instantiation down to a minimum.
@@ -165,15 +165,15 @@ public class FileTools {
 		}
 		return false;
 	}
-
+	
 	public static String readFileToString(File file) {
 		return readFileToString(file, DEFAULT_ENCODING, LINE_ENDING_UNIX);
 	}
-
+	
 	public static String readFileToString(File file, String lineEnding) {
 		return readFileToString(file, DEFAULT_ENCODING, lineEnding);
 	}
-
+	
 	public static String readFileToString(File file, String encoding, String lineEnding) {
 		StringBuffer text = new StringBuffer("");
 		
@@ -202,7 +202,7 @@ public class FileTools {
 		
 		return text.toString();
 	}
-
+	
 	public static void dumpStringToFile(File file, String text) {
 		dumpStringToFile(file, text, DEFAULT_ENCODING);
 	}

@@ -41,11 +41,13 @@ public class IntList implements Serializable {
 	
 	// Constants
 	private static final int DEFAULT_SIZE = 10;
+	public static final String DEFAULT_DELIMITER = ",";
 	
 	
 	// Fields
 	private int data[];
 	private int size;
+	private String delimiter = DEFAULT_DELIMITER;
 	
 	
 	// Constructors
@@ -60,10 +62,16 @@ public class IntList implements Serializable {
 		this.data = new int[initialCapacity];
 	}
 	
-	public IntList(String int_list, String delimeters) {
+	public IntList(String int_list) {
+		this(int_list, DEFAULT_DELIMITER);
+	}
+	
+	public IntList(String int_list, String delimiter) {
 		this();
 		
-		StringTokenizer tok = new StringTokenizer(int_list, delimeters);
+		this.delimiter = delimiter;
+		
+		StringTokenizer tok = new StringTokenizer(int_list, delimiter);
 		while (tok.hasMoreTokens()) {
 			String int_string = tok.nextToken();
 			try {
@@ -72,6 +80,17 @@ public class IntList implements Serializable {
 				System.out.println("NumberFormatException when instantiating a new IntList.");
 			}
 		}
+	}
+	
+	public String toString() {
+		StringBuffer buf = new StringBuffer();
+		for (int i = 0; i < data.length; i++) {
+			if (i != 0) {
+				buf.append(this.delimiter);
+			}
+			buf.append("" + data[i]);
+		}
+		return buf.toString();
 	}
 	
 	
