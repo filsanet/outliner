@@ -1,3 +1,16 @@
+1.8.4 - ???
+	Bug Fixes:
+		1) Fixed a bug where changing the name of a macro during an "update macro" operation would not delete the old macro from the file system.
+		2) When you had a set of nodes selected and you typed a few characters quickly they would not all get sent to the youngest node in the selection. This was a result of the youngest node not being set as the current editing node.
+		3) Added alpha-numeric validation to attribute key in the new attribute dialog. If a non XML compliant key was used it would make the OPML unparseable and thus unreadable.
+	New Featurs:
+		1) Sorting
+		2) Document Attributes
+	Feature Enhancements:
+		1) The XML-RPC Macro now uses a single URL rather than server and port. This will allow for more flexibility in connecting to a server. However, this breaks any existing XML-RPC Macros. You will need to update any existing macros with the appropriate URL before using them.
+		2) More enhancements to the XML-RPC macro. Now you can put the body of the XML-RPC call within the macro. The current selection can be passed in and will substitute itself for {$value}. Inline replacement is improved. Return values now convey the correct heirarchy of <struct> and <array>.
+	Notes:
+		1) Note about manually moving macros for user's who are installing over an existing installation.
 1.8.3 - 08/21/01
 	Bug Fixes:
 		1) Fixed a bug where if you set the undo queue size to zero documents would no longer change their file modified state when you edited them.
