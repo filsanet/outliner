@@ -386,33 +386,35 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		ScriptsManagerModel.runStartupScripts();
 
 		// See if the command line included a file to be opened.
-		String filepath = args[1];
-		if ((filepath != null) && (!filepath.equals("")) && (!filepath.equals("%1")) ) {
-			// ensure that we have a full pathname [srk]
-			try {
-				filepath = new File(filepath).getCanonicalPath();
-			} catch (IOException e) {}
-			
-			// grab the file's extension
-			String extension = filepath.substring(filepath.lastIndexOf(".") + 1, filepath.length());
-			
-			// use the extension to figure out the file's format
-			String fileFormat = Outliner.fileFormatManager.getOpenFileFormatNameForExtension(extension);
-
-			// crank up a fresh docInfo struct
-			DocumentInfo docInfo = new DocumentInfo();
-			docInfo.setPath(filepath);
-			docInfo.setEncodingType(Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur);
-			docInfo.setFileFormat(fileFormat);
-			
-			// try to open up the file
-			FileMenu.openFile(docInfo, fileProtocolManager.getDefault());
-		} else {
-			// Create a Document. This must come after visiblity otherwise the window won't be activated.
-			if (Preferences.getPreferenceBoolean(Preferences.NEW_DOC_ON_STARTUP).cur) {
-				new OutlinerDocument("");
-			}
-		}
+		if (args.length > 1) {      // srk - put this test in -- 2002.09.03
+                    String filepath = args[1];
+			if ((filepath != null) && (!filepath.equals("")) && (!filepath.equals("%1")) ) {
+				// ensure that we have a full pathname [srk]
+				try {
+					filepath = new File(filepath).getCanonicalPath();
+				} catch (IOException e) {}
+				
+				// grab the file's extension
+				String extension = filepath.substring(filepath.lastIndexOf(".") + 1, filepath.length());
+				
+				// use the extension to figure out the file's format
+				String fileFormat = Outliner.fileFormatManager.getOpenFileFormatNameForExtension(extension);
+	
+				// crank up a fresh docInfo struct
+				DocumentInfo docInfo = new DocumentInfo();
+				docInfo.setPath(filepath);
+				docInfo.setEncodingType(Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur);
+				docInfo.setFileFormat(fileFormat);
+				
+				// try to open up the file
+				FileMenu.openFile(docInfo, fileProtocolManager.getDefault());
+			} else {
+				// Create a Document. This must come after visiblity otherwise the window won't be activated.
+				if (Preferences.getPreferenceBoolean(Preferences.NEW_DOC_ON_STARTUP).cur) {
+					new OutlinerDocument("");
+				} // end if
+			} // end if-else
+		} // end if
 
 		// For Debug Purposes
 		if (Preferences.getPreferenceBoolean(Preferences.PRINT_ENVIRONMENT).cur) {
