@@ -653,28 +653,21 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	}
 
 	private void copy(TreeContext tree, OutlineLayoutManager layout) {
-		StringBuffer buffer = new StringBuffer();
+		NodeSet nodeSet = new NodeSet();
 		for (int i = 0; i < tree.selectedNodes.size(); i++) {
-			((Node) tree.selectedNodes.get(i)).depthPaddedValue(buffer, Preferences.LINE_END_STRING);
-			
-			//buffer.append(((Node) tree.selectedNodes.get(i)).depthPaddedValue(Preferences.LINE_END_STRING));
+			nodeSet.addNode(((Node) tree.selectedNodes.get(i)).cloneClean());
 		}
-		
-		// Put the text onto the clipboard
-		Outliner.clipboard.setContents(new StringSelection(buffer.toString()), Outliner.outliner);
+		Outliner.clipboard.setContents(new NodeSetTransferable(nodeSet), Outliner.outliner);
 	}
 
 	private void cut(TreeContext tree, OutlineLayoutManager layout) {
-		StringBuffer buffer = new StringBuffer();
+		NodeSet nodeSet = new NodeSet();
 		for (int i = 0; i < tree.selectedNodes.size(); i++) {
-			((Node) tree.selectedNodes.get(i)).depthPaddedValue(buffer, Preferences.LINE_END_STRING);
-			
-			//buffer.append(((Node) tree.selectedNodes.get(i)).depthPaddedValue(Preferences.LINE_END_STRING));
+			nodeSet.addNode(((Node) tree.selectedNodes.get(i)).cloneClean());
 		}
+		Outliner.clipboard.setContents(new NodeSetTransferable(nodeSet), Outliner.outliner);
 		
-		// Put the text onto the clipboard
-		Outliner.clipboard.setContents(new StringSelection(buffer.toString()), Outliner.outliner);
-		
+		// Delete selection
 		delete(tree,layout,false);
 	}
 
@@ -686,36 +679,58 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		tree.doc.undoQueue.add(undoable);
 
 		// Get the text from the clipboard and turn it into a tree
+		boolean isNodeSet = false;
 		String text = "";
+		NodeSet nodeSet = new NodeSet();
 		try {
 			Transferable selection = (Transferable) Outliner.clipboard.getContents(this);
 			if (selection != null) {
-				text = (String) selection.getTransferData(DataFlavor.stringFlavor);
+				if (selection instanceof NodeSetTransferable) {
+					nodeSet = (NodeSet) selection.getTransferData(NodeSetTransferable.nsFlavor);
+					isNodeSet = true;
+				} else {
+					text = (String) selection.getTransferData(DataFlavor.stringFlavor);
+				}
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		
 		Node oldestNode = tree.getOldestInSelection();
-		
-		Node tempRoot = PadSelection.pad(text, tree, oldestNode.getDepth(),Preferences.LINE_END_STRING);
-		
 		Node parentForNewNode = oldestNode.getParent();
 		int indexForNewNode = parentForNewNode.getChildIndex(oldestNode);
-		for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
-			Node node = tempRoot.getChild(i);
-			parentForNewNode.insertChild(node, indexForNewNode + 1);
-			tree.insertNode(node);
-
-			// Record the Insert in the undoable
-			int index = node.currentIndex() + i;
-			undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode,node,index));
-		}
-				
+			
 		tree.clearSelection();
+		
+		if (isNodeSet) {
+			for (int i = nodeSet.getSize() - 1; i >= 0; i--) {
+				Node node = nodeSet.getNode(i);
+				parentForNewNode.insertChild(node, indexForNewNode + 1);
+				node.setDepthRecursively(parentForNewNode.getDepth() + 1);
+				tree.insertNode(node);
 
-		for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
-			tree.addNodeToSelection(tempRoot.getChild(i));
+				// Record the Insert in the undoable
+				int index = node.currentIndex() + i;
+				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode,node,index));
+
+				tree.addNodeToSelection(node);
+			}
+		} else {
+			System.out.println("isNotNodeSet: " + text);
+			Node tempRoot = PadSelection.pad(text, tree, oldestNode.getDepth(), Preferences.LINE_END_STRING);
+		
+			for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
+				System.out.println("adding them.");
+				Node node = tempRoot.getChild(i);
+				parentForNewNode.insertChild(node, indexForNewNode + 1);
+				tree.insertNode(node);
+
+				// Record the Insert in the undoable
+				int index = node.currentIndex() + i;
+				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode,node,index));
+
+				tree.addNodeToSelection(node);
+			}
 		}
 
 		// Record the EditingNode and CursorPosition and ComponentFocus

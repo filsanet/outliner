@@ -22,15 +22,15 @@ import java.util.*;
 import java.io.*;
 import java.awt.datatransfer.*;
 
-public class NodeSet implements Cloneable, Transferable {
-	
-	private DataFlavor[] dataFlavors = new DataFlavor[1];
+public class NodeSet implements Cloneable {
+
 	private ArrayList nodes = new ArrayList();
-			
+
+	// Good Info: http://developer.java.sun.com/developer/bugParade/bugs/4066902.html
+		
+
 	// The Constructors
-	public NodeSet() {
-		dataFlavors[0] = new NodeSetDataFlavor(this);
-	}
+	public NodeSet() {}
 	
 	
 	// Accessors
@@ -63,25 +63,6 @@ public class NodeSet implements Cloneable, Transferable {
 		
 		return nodeSet;
 	}
-	
-	// Transferable Interface
-	public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-		return clone();
-	}
-
-	public DataFlavor[] getTransferDataFlavors() {
-		return dataFlavors;
-	}
-	
-	public boolean isDataFlavorSupported(DataFlavor flavor) {
-		for (int i = 0; i < dataFlavors.length; i++) {
-			DataFlavor dataFlavor = dataFlavors[i];
-			if (dataFlavor.equals(flavor)) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	
 	// Overridden Methods
@@ -97,19 +78,56 @@ public class NodeSet implements Cloneable, Transferable {
 	}	
 }
 
-class NodeSetDataFlavor extends DataFlavor {
+
+class NodeSetTransferable extends StringSelection implements Transferable {
 	
-	// The Constructors
-	public NodeSetDataFlavor(NodeSet nodeSet) {
-		super(nodeSet.getClass(), "NodeSet");
+	private NodeSet nodeSet = null;
+	
+	public static DataFlavor nsFlavor;
+	
+	static {
+		try {
+			nsFlavor = new DataFlavor(Class.forName("com.organic.maynard.outliner.NodeSet"), "NodeSet");
+		} catch (ClassNotFoundException ex) {}
 	}
 	
-	public void writeExternal(ObjectOutput os) {
-		String s = new String("ack");
-		try {
-			os.write(s.getBytes());
-		} catch (Exception e) {
-			e.printStackTrace();
+	private static final int NODESET = 0;
+	private static final int STRING = 1;
+	
+	private DataFlavor[] flavors = {
+		nsFlavor, 
+		DataFlavor.stringFlavor
+	};
+	
+	
+	// The Constructors
+	public NodeSetTransferable(NodeSet nodeSet) {
+		super(nodeSet.toString());
+		this.nodeSet = nodeSet;
+	}
+
+
+	// Transferable Interface
+	public synchronized DataFlavor[] getTransferDataFlavors() {
+		return flavors;
+	}
+
+	public boolean isDataFlavorSupported(DataFlavor flavor) {
+		return (
+			flavor.equals(flavors[STRING]) || 
+			flavor.equals(flavors[NODESET])
+		);    
+	}
+    
+	public synchronized Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+		if (flavor.equals(flavors[STRING])) {
+			return nodeSet.toString();
+			
+		} else if (flavor.equals(flavors[NODESET])) {
+			return nodeSet.clone();
+			
+		} else {
+			throw new UnsupportedFlavorException(flavor);
 		}
 	}
 }

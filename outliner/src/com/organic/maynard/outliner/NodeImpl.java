@@ -69,6 +69,16 @@ public class NodeImpl implements Node {
 		nodeImpl.setDepth(depth);
 		nodeImpl.setComment(comment);
 		
+		// clone the attributes
+		Iterator it = getAttributeKeys();
+		if (it != null) {
+			while (it.hasNext()) {
+				String key = (String) it.next();
+				Object value = getAttribute(key); // this should be a clone, but that's impossible!!! Eventually we'll need a copyable interface to make this work.
+				nodeImpl.setAttribute(key, value);
+			}
+		}
+		
 		// And clone the children
 		for (int i = 0; i < numOfChildren(); i++) {
 			nodeImpl.insertChild(getChild(i).cloneClean(),i);

@@ -878,46 +878,69 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		inlinePaste = true;
 		
 		// Get the text from the clipboard and turn it into a tree
+		boolean isNodeSet = false;
 		String text = "";
+		NodeSet nodeSet = new NodeSet();
 		try {
 			Transferable selection = (Transferable) Outliner.clipboard.getContents(this);
 			if (selection != null) {
-				text = (String) selection.getTransferData(DataFlavor.stringFlavor);
+				if (selection instanceof NodeSetTransferable) {
+					nodeSet = (NodeSet) selection.getTransferData(NodeSetTransferable.nsFlavor);
+					inlinePaste = false;
+					isNodeSet = true;
+				} else {
+					text = (String) selection.getTransferData(DataFlavor.stringFlavor);
+					
+					// Need to make a check for inline pastes
+					if ((text.indexOf(Preferences.LINE_END_STRING) == -1) && (text.indexOf(Preferences.DEPTH_PAD_STRING) == -1)) {
+						return;
+					} else {
+						inlinePaste = false;
+					}
+				}
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-				
-		// Need to make a check for inline pastes
-		if ((text.indexOf(Preferences.LINE_END_STRING) == -1) && (text.indexOf(Preferences.DEPTH_PAD_STRING) == -1)) {
-			return;
-		} else {
-			inlinePaste = false;
-		}
+
 
 		// Put the Undoable onto the UndoQueue
 		CompoundUndoableInsert undoable = new CompoundUndoableInsert(currentNode.getParent());
 		tree.doc.undoQueue.add(undoable);
-			
-		Node tempRoot = PadSelection.pad(text, tree, currentNode.getDepth(),Preferences.LINE_END_UNIX);
-		
+
 		Node parentForNewNode = currentNode.getParent();
 		int indexForNewNode = parentForNewNode.getChildIndex(currentNode);
-		for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
-			Node node = tempRoot.getChild(i);
-			parentForNewNode.insertChild(node, indexForNewNode + 1);
-			tree.insertNode(node);
-
-			// Record the Insert in the undoable
-			int index = node.currentIndex() + i;
-			undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode,node,index));
-		}
-		
+	
 		tree.setSelectedNodesParent(parentForNewNode);
 
-		for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
-			Node node = tempRoot.getChild(i);
-			tree.addNodeToSelection(node);
+		if (isNodeSet) {
+			for (int i = nodeSet.getSize() - 1; i >= 0; i--) {
+				Node node = nodeSet.getNode(i);
+				parentForNewNode.insertChild(node, indexForNewNode + 1);
+				node.setDepthRecursively(parentForNewNode.getDepth() + 1);
+				tree.insertNode(node);
+
+				// Record the Insert in the undoable
+				int index = node.currentIndex() + i;
+				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode,node,index));
+
+				tree.addNodeToSelection(node);
+			}
+		} else {
+			Node tempRoot = PadSelection.pad(text, tree, currentNode.getDepth(), Preferences.LINE_END_STRING);
+		
+			for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
+				System.out.println("adding them.");
+				Node node = tempRoot.getChild(i);
+				parentForNewNode.insertChild(node, indexForNewNode + 1);
+				tree.insertNode(node);
+
+				// Record the Insert in the undoable
+				int index = node.currentIndex() + i;
+				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode,node,index));
+
+				tree.addNodeToSelection(node);
+			}
 		}
 			
 		Node nodeThatMustBeVisible = tree.getYoungestInSelection();
@@ -930,7 +953,6 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		// Redraw and Set Focus
 		layout.draw(nodeThatMustBeVisible,OutlineLayoutManager.ICON);
 	}
-
 
 	// Additional Outline Methods
 	public static void hoist(Node currentNode) {
