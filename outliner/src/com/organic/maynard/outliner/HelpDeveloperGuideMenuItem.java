@@ -78,7 +78,7 @@ public class HelpDeveloperGuideMenuItem
 			} // end if
 		else {
 			// it's not open; try to open it
-			openHelpDeveloperGuideDocument() ;
+			int result = openHelpDeveloperGuideDocument() ;
 			
 			} // end else
 		
