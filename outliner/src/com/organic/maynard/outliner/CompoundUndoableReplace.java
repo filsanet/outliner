@@ -110,8 +110,9 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 		boolean allWillBeDeleted = false;
 		Node fallbackNode = ((PrimitiveUndoableReplace) primitives.firstElement()).getOldNode().prev();
 		if (fallbackNode.isRoot()) {
-			fallbackNode = fallbackNode.nextUnSelectedNode();
+			fallbackNode = ((PrimitiveUndoableReplace) primitives.firstElement()).getOldNode().nextUnSelectedNode();
 			if (fallbackNode.isRoot()) {
+				System.out.println("B");
 				allWillBeDeleted = true;
 			}
 		}

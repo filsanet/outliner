@@ -83,6 +83,7 @@ public class UndoableEdit implements Undoable {
 		node.getTree().setCursorPosition(oldPosition);
 		node.getTree().doc.setPreferredCaretPosition(oldPosition);
 		node.getTree().setCursorMarkPosition(oldMarkPosition);
+		node.getTree().setEditingNode(node);
 		node.getTree().clearSelection();
 		node.getTree().insertNode(node); // Used for visibility
 		node.getTree().doc.panel.layout.draw(node, outlineLayoutManager.TEXT);
@@ -93,6 +94,7 @@ public class UndoableEdit implements Undoable {
 		node.getTree().setCursorPosition(newPosition);
 		node.getTree().doc.setPreferredCaretPosition(newPosition);
 		node.getTree().setCursorMarkPosition(newMarkPosition);
+		node.getTree().setEditingNode(node);
 		node.getTree().clearSelection();
 		node.getTree().insertNode(node); // Used for visibility
 		node.getTree().doc.panel.layout.draw(node, outlineLayoutManager.TEXT);
