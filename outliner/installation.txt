@@ -5,7 +5,6 @@ A couple notes about installation.
    file to call the correct version of java. This would look something like:
    c:\jdk1.3\bin\java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner
 
-2) User specific preferences are stored under your home directory. Becuase of
-   this, you should copy the macros found in prefs/macros/* to your 
-   home directory, otherwise they won't be available to you. The directory
-   YOu should copy them to is: %home%\outliner\macros\*.
+2) If you want to setup Windows "sendto" then use the sendto.bat file. In
+   the batch file you need to change the path for cd to the directory you
+   installed JOE into.
