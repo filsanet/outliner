@@ -429,7 +429,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 						msg = msg + "startSelection: -1\n" ;
 						msg = msg + "oldCaretPosition: " + oldCaretPosition + "\n" ;
 						msg = msg + "oldMarkPosition: " + oldMarkPosition ;
-						promptUser(msg); 
+						System.out.println("Stan_Debug:\t" + msg); 
 						return ;
 					} // end bug trap
 					newText = oldText.substring(0, startSelection) + oldText.substring(endSelection, oldText.length());				
