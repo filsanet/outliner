@@ -3,23 +3,45 @@
 <head>
 <title>e:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Thu, 26 Jul 2001 04:07:46 GMT</dateModified>
+<dateModified>Sun, 29 Jul 2001 04:20:18 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>23</windowTop>
-<windowLeft>179</windowLeft>
-<windowBottom>424</windowBottom>
-<windowRight>555</windowRight>
+<windowTop>24</windowTop>
+<windowLeft>119</windowLeft>
+<windowBottom>529</windowBottom>
+<windowRight>514</windowRight>
 </head>
 <body>
-<outline text="&lt;this is a work in perpetual progress&gt;">
-<outline text="send feedback/suggestions/links/content contributions to Stan@JavaOutlineEditor.org"/>
-</outline>
 <outline text="Front End">
-<outline text="About JOE"/>
-<outline text="About JUG"/>
+<outline text="About JOE">
+<outline text="Notable Features">
+<outline text="Smooth Solid Feel"/>
+<outline text="Straight-Forward UI"/>
+<outline text="Multiple undo">
+<outline text="limit [huge]: available memory"/>
+</outline>
+<outline text="Highly Customizable">
+<outline text="Application Preferences"/>
+<outline text="User Preferences [forthcoming]"/>
+</outline>
+<outline text="Multi-User Friendly"/>
+<outline text="Multiple Format Support">
+<outline text="Text "/>
+<outline text="XML"/>
+<outline text="OPML"/>
+<outline text="Palm pdf formats [forthcoming]"/>
+</outline>
+<outline text="'net-Friendly">
+<outline text="http support [forthcoming]"/>
+<outline text="ftp support [forthcoming]"/>
+<outline text="WebDav support [forthcoming]"/>
+</outline>
+</outline>
+</outline>
+<outline text="Use JOE"/>
+<outline text="Help Develop JOE"/>
 <outline text="Authors">
 <outline text="Stan Krute"/>
 </outline>
@@ -27,11 +49,13 @@
 <outline text="Maynard Demmon"/>
 <outline text="Philip Suh"/>
 <outline text="Steven Spencer"/>
-<outline text="Stanley Krute"/>
+<outline text="Stanley Krute">
+<outline text="Stan@JavaOutlineEditor.org"/>
+</outline>
 </outline>
 <outline text="Thanks To">
 <outline text="Dave Winer">
-<outline text="the fountainhead of outlining"/>
+<outline text="the fountainhead of outlining practice"/>
 <outline text="http://www.scripting.com"/>
 </outline>
 <outline text="SourceForge">
@@ -40,13 +64,6 @@
 <outline text="JOE's happy project home"/>
 </outline>
 <outline text="the Java community"/>
-</outline>
-<outline text="Use JOE">
-<outline text="Download the latest version here [link]"/>
-<outline text="Install it"/>
-</outline>
-<outline text="Help Develop JOE">
-<outline text="link to JOE Developer Guide.opml"/>
 </outline>
 <outline text="Feedback">
 <outline text="send feedback/suggestions/links/content contributions to Stan@JavaOutlineEditor.org"/>
@@ -108,6 +125,9 @@
 <outline text="Custom JOE"/>
 <outline text="Macros"/>
 <outline text="XML-RPC"/>
+<outline text="Help Develop JOE">
+<outline text="link to JOE Developer Guide.opml"/>
+</outline>
 <outline text="Menu Commands Reference">
 <outline text="File">
 <outline text="New">
@@ -191,9 +211,20 @@
 </outline>
 <outline text="Keystroke Commands Reference"/>
 <outline text="Outline Formats">
-<outline text="tabbed text"/>
+<outline text="tabbed text">
+<outline text="each node is terminated by one of these line-ending character sequences">
+<outline text="0D 0A [CR LF] [DOS Windows standard]"/>
+<outline text="0D [CR] [Mac standard]"/>
+<outline text="0A [LF] [Linux/Unix standard] "/>
+</outline>
+<outline text="hierarchical position is signalled by tab [09] characters"/>
+</outline>
+<outline text="OPML">
 <outline text="OPML 1.0">
 <outline text="http://opml.org/spec"/>
+</outline>
+<outline text="the Userland attribute extensions"/>
+<outline text="the JOE attribute extensions"/>
 </outline>
 <outline text="BrainForest .pdf"/>
 <outline text="Thought Manager .pdf"/>
