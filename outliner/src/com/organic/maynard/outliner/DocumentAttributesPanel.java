@@ -34,6 +34,8 @@
 
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.util.undo.*;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -50,27 +52,27 @@ import javax.swing.tree.*;
  */
  
 public class DocumentAttributesPanel extends AbstractAttributesPanel {
-
+	
 	// Instance Fields
 	private DocumentAttributesView view = null;
-
-
+	
+	
 	// The Constructor
 	public DocumentAttributesPanel() {
 		super();
 	}
-
+	
 	// Data Display
 	public void update(DocumentAttributesView view) {
 		this.view = view;
-
+		
 		AttributeContainer node = view.tree;
-
+		
 		model.keys.clear();
 		model.values.clear();
 		model.readOnly.clear();
 		clearSelection();
-
+		
 		if (node != null) {
 			Iterator it = node.getAttributeKeys();
 			if (it != null) {
@@ -84,20 +86,20 @@ public class DocumentAttributesPanel extends AbstractAttributesPanel {
 				}
 			}
 		}
-
+		
 		if (isEditing()) {
 			getCellEditor().cancelCellEditing();
 		}
-
+		
 		model.fireTableDataChanged();
 	}
-
+	
 	public void update() {}
-
+	
 	// Data Modification
 	public void newAttribute(String key, Object value, boolean isReadOnly, AttributeTableModel model) {
 		AttributeContainer node = view.tree;
-
+		
 		if (node == null) {
 			return;
 		}
@@ -105,43 +107,62 @@ public class DocumentAttributesPanel extends AbstractAttributesPanel {
  		model.keys.add(key);
 		model.values.add(value);
 		model.readOnly.add(new Boolean(isReadOnly));
-
+		
 		node.setAttribute(key, value);
-
-		view.tree.getDocument().setModified(true);
-
+		
+		OutlinerDocument doc = view.tree.getDocument();
+		doc.setModified(true);
+		
+		// undo
+		Undoable undoable = new UndoableDocumentAttributeChange(view.tree, null, null, false, key, value, isReadOnly);
+		undoable.setName("New Document Attribute");
+		doc.getUndoQueue().add(undoable);
+		
 		model.fireTableDataChanged();
 	}
-
+	
 	// Delete Attribute
 	public void deleteAttribute(int row, AttributeTableModel model) {
 		AttributeContainer node = view.tree;
-
+		
 		if (node == null) {
 			return;
 		}
 		
 		String key = (String) model.keys.get(row);
-
+		
+		Object oldValue = node.getAttribute(key);
+		boolean oldReadOnly = node.isReadOnly(key);
+		
 		node.removeAttribute(key);
 		model.keys.remove(row);
 		model.values.remove(row);
 		model.readOnly.remove(row);
 		
-		view.tree.getDocument().setModified(true);
-
+		OutlinerDocument doc = view.tree.getDocument();
+		doc.setModified(true);
+		
+		// undo
+		Undoable undoable = new UndoableDocumentAttributeChange(view.tree, key, oldValue, oldReadOnly, null, null, false);
+		undoable.setName("Delete Document Attribute");
+		doc.getUndoQueue().add(undoable);
+		
 		model.fireTableRowsDeleted(row, row);
 	}
-
+	
 	// Toggle Editability
 	public void toggleEditability(int row, AttributeTableModel model) {
 		AttributeContainer node = view.tree;
-
+		
 		if (node == null) {
 			return;
 		}
 		
 		String key = (String) model.keys.get(row);
+		Object oldAndNewValue = node.getAttribute(key);
+		
+		boolean oldReadOnly = node.isReadOnly(key);
+		boolean readOnly = !oldReadOnly;
 		
 		boolean oldValue = true;
 		ImageIcon isReadOnly = (ImageIcon) model.getValueAt(row, 1);
@@ -149,14 +170,20 @@ public class DocumentAttributesPanel extends AbstractAttributesPanel {
 			oldValue = true;
 		} else {
 			oldValue = false;
-		}		
+		}
 		
 		//boolean oldValue = ((Boolean) model.getValueAt(row, 1)).booleanValue();
 		boolean newValue = !oldValue;
 		model.readOnly.set(row, new Boolean(newValue));
 		node.setReadOnly(key, newValue);
 		
-		view.tree.getDocument().setModified(true);
+		OutlinerDocument doc = view.tree.getDocument();
+		doc.setModified(true);
+		
+		// undo
+		Undoable undoable = new UndoableDocumentAttributeChange(view.tree, key, oldAndNewValue, oldReadOnly, key, oldAndNewValue, readOnly);
+		undoable.setName("Toggle Document Attribute Editability");
+		doc.getUndoQueue().add(undoable);
 		
 		model.fireTableDataChanged();
 	}
@@ -164,43 +191,53 @@ public class DocumentAttributesPanel extends AbstractAttributesPanel {
 	// Set Value
 	public void setValueAt(Object value, int row, AttributeTableModel model) {
 		AttributeContainer node = view.tree;
-
+		
 		if (node == null) {
 			return;
 		}
 		
 		String key = (String) model.keys.get(row);
-
-    	model.values.set(row, value);
-    	node.setAttribute(key, value);
-    	
-    	view.tree.getDocument().setModified(true);
-    	
-    	model.fireTableDataChanged();
+		
+		boolean readOnly = node.isReadOnly(key);
+		
+		Object oldValue = node.getAttribute(key);
+		
+		model.values.set(row, value);
+		node.setAttribute(key, value);
+		
+		OutlinerDocument doc = view.tree.getDocument();
+		doc.setModified(true);
+		
+		// undo
+		Undoable undoable = new UndoableDocumentAttributeChange(view.tree, key, oldValue, readOnly, key, value, readOnly);
+		undoable.setName("Edit Document Attribute");
+		doc.getUndoQueue().add(undoable);
+		
+		model.fireTableDataChanged();
 	}
-
+	
 	// Misc
-    protected boolean isCellEditable() {
-    	if (view.tree == null) {
-    		return false;
-    	} else {
-    		return true;
-    	}
+	protected boolean isCellEditable() {
+		if (view.tree == null) {
+			return false;
+		} else {
+			return true;
+		}
 	}
-
+		
 	protected boolean isCellEditable(int row) {
 		AttributeContainer node = view.tree;
-
+		
 		if (node == null) {
 			return false;
 		}
 		
 		String key = (String) model.keys.get(row);
-
+		
 		if (node.isReadOnly(key)) {
-    		return false;
-    	}
-
-    	return true;
+			return false;
+		}
+		
+		return true;
 	}
 }

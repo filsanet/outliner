@@ -57,47 +57,47 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 	private static final int INITIAL_HEIGHT = 400;
 	private static final int MINIMUM_WIDTH = 250;
 	private static final int MINIMUM_HEIGHT = 300;
-
-	protected static String OK = null;
-
+	
+	protected static String CLOSE = null;
+	
 	// GUI Elements
 	protected DocumentAttributesPanel attPanel = null;
-
-	protected JButton buttonOK = null;
-
-
+	
+	protected JButton buttonCLOSE = null;
+	
+	
 	// The Constructors
 	public DocumentAttributesView() {
 		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
 		
 		Outliner.documentAttributes = this;
-
+		
 		Outliner.documents.addDocumentRepositoryListener(this);
 	}
-
+	
 	private void initialize() {
-		OK = GUITreeLoader.reg.getText("ok");
+		CLOSE = GUITreeLoader.reg.getText("close");
 		
-		buttonOK = new JButton(OK);
+		buttonCLOSE = new JButton(CLOSE);
 		
 		// Define the Bottom Panel
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new FlowLayout());
-		bottomPanel.add(buttonOK);
+		bottomPanel.add(buttonCLOSE);
 		
 		getContentPane().add(bottomPanel,BorderLayout.SOUTH);
-
+		
 		// Add Listeners
-		buttonOK.addActionListener(this);
-			
+		buttonCLOSE.addActionListener(this);
+		
 		// Define the Center Panel
 		attPanel = new DocumentAttributesPanel();
 		JScrollPane jsp = new JScrollPane(attPanel);
 		
 		getContentPane().add(jsp,BorderLayout.CENTER);
-	
+		
 		// Set the default button
-		getRootPane().setDefaultButton(buttonOK);	
+		getRootPane().setDefaultButton(buttonCLOSE);
 	}
 	
 	private boolean initialized = false;
@@ -105,8 +105,8 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 	public boolean isInitialized() {
 		return this.initialized;
 	}
-
-	// Configuration 
+	
+	// Configuration
 	protected JoeTree tree = null;
 	
 	public void configureAndShow(JoeTree tree) {
@@ -115,15 +115,20 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 			initialize();
 			initialized = true;
 		}
-
+		
 		this.tree = tree;
 		
 		attPanel.update(this);
-
+		
 		super.show();
 	}
-
-
+	
+	// Accessors
+	public DocumentAttributesPanel getDocumentAttributesPanel() {
+		return this.attPanel;
+	}
+	
+	
 	// DocumentRepositoryListener Interface
 	public void documentAdded(DocumentRepositoryEvent e) {}
 	
@@ -132,7 +137,7 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
 		calculateEnabledState(e.getDocument());
 	}
-
+	
 	private void calculateEnabledState(Document doc) {
 		if (doc == null) {
 			this.tree = null;
@@ -146,16 +151,16 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 			}
 		}
 	}
-
-
+	
+	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand().equals(OK)) {
-			ok();
+		if (e.getActionCommand().equals(CLOSE)) {
+			close();
 		}
 	}
 	
-	private void ok() {
+	private void close() {
 		hide();
 	}
 }
