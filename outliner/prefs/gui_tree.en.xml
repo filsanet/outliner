@@ -298,6 +298,10 @@
 				<preference id="owner_email" class="com.organic.maynard.outliner.PreferenceString" default="">
 					<preference_component id="owner_email_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Owner email" size="10"/>
 				</preference>
+				<preference id="mouse_wheel_scroll_speed" class="com.organic.maynard.outliner.PreferenceInt" default="1">
+					<validator id="mouse_wheel_scroll_speed_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="1" max="1000" default="1"/>
+					<preference_component id="mouse_wheel_scroll_speed_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Mouse Wheel Scroll Speed" size="2"/>
+				</preference>
 				<preference id="web_file_system" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
 					<validator id="web_file_system_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
 					<preference_component id="web_file_system_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Open/Save Remotely"/>
