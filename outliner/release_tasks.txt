@@ -1,10 +1,44 @@
 1) Update the compatibility comments in the gui.xml files.
+
 2) Rev the release notes.
+
 3) Rev the "About Joe" page.
+
 4) Rev the splash screen.
+
 5) Checkin latest versions of the jars.
-6) Run an ant release.
-7) FTP the release to sf.
-8) Add the release through the admin area of sf.
-9) Tag the new build in CVS.
-10) Update the website.
+
+6) Update the dist property to the release you're building in build.xml.
+
+7) Run an ant release.
+
+8) Decompress the release somewhere and give it a quick test.
+
+9) FTP the release to sf.
+   FTP instructions:
+     upload.sourceforge.net
+     login: anonymous
+     pass: maynard@organic.com
+     Change to "incoming" directory.
+
+10) Add the release through the admin area of sf.
+
+11) Tag the new build in CVS. The tagname should be of the form: "r1_8_9_3"
+    The command to add a tag in cvs is: "cvs tag tagname"
+
+12) Update the website.
+
+
+=========== Other notes =================================
+
+CVS INSTRUCTIONS:
+To import a new repository:
+cvs -d:ext:loginname@cvs.yourproject.sourceforge.net:/cvsroot/yourproject import directoryname vendor start 
+
+To checkout a repository:
+cvs -z3 -d:ext:maynardd@cvs.outliner.sourceforge.net:/cvsroot/outliner co outliner 
+
+SSH INSTRUCTIONS:
+ssh -l loginname yourproject.sourceforge.net 
+
+scp localfile loginname@yourproject.sourceforge.net:/home/groups/y/yo/yourproject/htdocs/ 
