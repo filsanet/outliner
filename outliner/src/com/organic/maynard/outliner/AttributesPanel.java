@@ -160,7 +160,7 @@ class AttributeTableModel extends AbstractTableModel implements MouseListener {
 	
 	public Object getValueAt(int row, int col) {
 		if (col == 0) {
-			return "";
+			return "Delete";
 		} else if (col == 1) {
 			return keys.get(row);
 		} else {
@@ -222,48 +222,21 @@ class AttributeTableModel extends AbstractTableModel implements MouseListener {
 }
 
 
+class AttributesButtonCellEditor extends ButtonCellEditor {
 
-class RemoveColumnRenderer extends AbstractCellEditor implements ActionListener, TableCellRenderer, TableCellEditor {
-	private JButton button = new JButton("Delete");
 	private AbstractAttributesPanel panel = null;
 	
-	public RemoveColumnRenderer(AbstractAttributesPanel panel) {
-		super();
+	public AttributesButtonCellEditor(AbstractAttributesPanel panel) {
+		super(new JCheckBox());
 		this.panel = panel;
-		button.addActionListener(this);
-	}
-	
-	public Component getTableCellRendererComponent(
-		JTable table, 
-		Object value, 
-		boolean isSelected, 
-		boolean hasFocus, 
-		int row, 
-		int column
-	) {
-		return button;
 	}
 
-	public Component getTableCellEditorComponent(
-		JTable table, 
-		Object value, 
-		boolean isSelected, 
-		int row, 
-		int column
-	) {
-		return button;
-	}
-	
-	public Object getCellEditorValue() {
-		return "remove_value";
-	}
-	
-	// ActionListener Interface
-	public void actionPerformed(ActionEvent e) {
-		panel.deleteAttribute(panel.getEditingRow(), (AttributeTableModel) panel.getModel());
+	protected void doEditing() {
+		if (this.col == 0) {
+			panel.deleteAttribute(this.row, (AttributeTableModel) panel.getModel());
+		}
 	}
 }
-
 
 
 class RemoveColumnHeaderRenderer extends JButton implements TableCellRenderer {

@@ -29,7 +29,7 @@ import bsh.NameSpace;
  * @version $Revision$, $Date$
  */
 
-public class BSHMacro extends MacroImpl {
+public class BSHMacro extends MacroImpl implements Script {
 
 	// Constants
 	private static final String E_SCRIPT = "script";
@@ -39,6 +39,8 @@ public class BSHMacro extends MacroImpl {
 
 	// Class Fields
 	private static BSHMacroConfig macroConfig = new BSHMacroConfig();
+
+	private static BSHScriptConfig scriptConfig = new BSHScriptConfig();
  
 	
 	// The Constructors
@@ -107,5 +109,33 @@ public class BSHMacro extends MacroImpl {
 		if (elementName.equals(E_SCRIPT)) {
 			setScript(text);
 		}
+	}
+	
+	
+	// Script Interface
+	private boolean isStartup = false;
+	private boolean isShutdown = false;
+	
+	public boolean isStartupScript() {return isStartup;}
+	public void setStartupScript(boolean b) {this.isStartup = b;}
+
+	public boolean isShutdownScript() {return isShutdown;}
+	public void setShutdownScript(boolean b) {this.isShutdown = b;}
+	
+	public ScriptConfig getScriptConfigurator() {return this.scriptConfig;}
+	public void setScriptConfigurator(ScriptConfig scriptConfig) {}
+
+	private Interpreter bsh = new Interpreter();
+	
+	public void process() throws Exception {
+		// Create the mini tree from the replacement pattern
+		if (script.equals("")) {
+			return;
+		}
+
+		NameSpace nameSpace = new NameSpace("outliner");
+		nameSpace.importPackage("com.organic.maynard.outliner");
+		bsh.setNameSpace(nameSpace);
+		bsh.eval(script);
 	}
 }

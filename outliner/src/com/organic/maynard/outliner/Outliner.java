@@ -68,6 +68,8 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	// they should be under the apps prefs dir.
 	public static String MACROS_DIR = USER_PREFS_DIR + "macros" + System.getProperty("file.separator");
 	public static String MACROS_FILE = USER_PREFS_DIR + "macros.txt";
+	public static String SCRIPTS_DIR = USER_PREFS_DIR + "scripts" + System.getProperty("file.separator");
+	public static String SCRIPTS_FILE = USER_PREFS_DIR + "scripts.txt";
 	public static String FIND_REPLACE_FILE = USER_PREFS_DIR + "find_replace.xml";
 	public static String CONFIG_FILE = USER_PREFS_DIR + "config.txt";
 	public static String RECENT_FILES_FILE = USER_PREFS_DIR + "recent_files.txt";
@@ -156,6 +158,73 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 				}
 			}
 
+		// Create scripts directory it it doesn't exist.
+		File scriptsFile = new File(SCRIPTS_DIR);
+		isCreated = scriptsFile.mkdirs();
+		if (isCreated) {
+			System.out.println("Created Scripts Directory: " + scriptsFile.getPath());
+		}
+		
+		// Copy over any scripts files that don't exist
+			// First, turn the scripts.txt file into a hashtable of lines keyed by the macro name.
+			lines = StringTools.split(FileTools.readFileToString(new File(PREFS_DIR + "scripts.txt")),'\\', delimiters);
+			indexedLines = new Hashtable();
+			for (int i = 0; i < lines.size(); i++) {
+				String line = (String) lines.elementAt(i);
+				if (line.indexOf("|") != -1) {
+					int start = line.indexOf("|");
+					int end = line.indexOf("|", start + 1);
+					String key = line.substring(start + 1, end);
+					indexedLines.put(key, line);
+				}
+			}
+			
+			// Second, copy macros that don't exist.
+			appendBuffer = new StringBuffer();
+
+			File fromScriptsFile = new File(PREFS_DIR + "scripts");
+			File[] scriptsFiles = fromScriptsFile.listFiles();
+			
+			for (int i = 0; i < scriptsFiles.length; i++) {
+				File fromFile = scriptsFiles[i];
+				File toFile = new File(SCRIPTS_DIR + fromFile.getName());
+				
+				if (!toFile.exists()) {
+					try {
+						FileTools.copy(fromFile, toFile);
+						String line = (String) indexedLines.get(fromFile.getName());
+						if (line != null) {
+							appendBuffer.append(Preferences.LINE_END_DEFAULT).append(line);
+						}
+						System.out.println("\tCopying script: " + fromFile.getName());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else {
+					scriptsFiles[i] = null; // Set to null, so later we know what got copied.
+				}
+			}
+		
+			// Third, either copy over entire macros.txt file if it doesn't exist, or append new lines to existing macros.txt file.
+			File userScriptsFile = new File(SCRIPTS_FILE);
+			if (!userScriptsFile.exists()) {
+				System.out.println("Copying over scripts config file: " + userScriptsFile.getPath());
+				try {
+					FileTools.copy(new File(PREFS_DIR + "scripts.txt"), userScriptsFile);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				try {
+					FileWriter fw = new FileWriter(userScriptsFile.getPath(), true);
+					fw.write(appendBuffer.toString());
+					fw.flush();
+					fw.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
 		// Copy over find_replace.xml from installation directory if it doesn't exist in the user's home directory.
 		File userFindReplaceFile = new File(FIND_REPLACE_FILE);
 		if (!userFindReplaceFile.exists()) {
@@ -170,6 +239,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	
 	// These dirs/files should always be under the apps prefs dir.
 	public static String MACRO_CLASSES_FILE = PREFS_DIR + "macro_classes.txt";
+	public static String SCRIPT_CLASSES_FILE = PREFS_DIR + "script_classes.txt";
 	public static String ENCODINGS_FILE = PREFS_DIR + "encodings.txt";
 	public static String FILE_FORMATS_FILE = PREFS_DIR + "file_formats.txt";
 	public static String GUI_TREE_FILE = PREFS_DIR + "gui_tree" + LANGUAGE + ".xml";
@@ -183,6 +253,8 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	public static final String COMMAND_SET = "set";
 	public static final String COMMAND_MACRO_CLASS = "macro_class";
 	public static final String COMMAND_MACRO = "macro";
+	public static final String COMMAND_SCRIPT_CLASS = "script_class";
+	public static final String COMMAND_SCRIPT = "script";
 	public static final String COMMAND_FILE_FORMAT = "file_format";
 	public static final CommandParser PARSER = new CommandParser(COMMAND_PARSER_SEPARATOR);
 	
@@ -190,6 +262,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	// GUI Objects
 	public static FindReplaceFrame findReplace = null;
 	public static MacroManagerFrame macroManager = null;
+	public static ScriptsManager scriptsManager = null;
 	public static MacroPopupMenu macroPopup = null;
 	public static FileFormatManager fileFormatManager = null;
 
@@ -227,6 +300,8 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		PARSER.addCommand(new SetPrefCommand(COMMAND_SET,2));
 		PARSER.addCommand(new LoadMacroClassCommand(COMMAND_MACRO_CLASS,2));
 		PARSER.addCommand(new LoadMacroCommand(COMMAND_MACRO,2));
+		PARSER.addCommand(new LoadScriptClassCommand(COMMAND_SCRIPT_CLASS,2));
+		PARSER.addCommand(new LoadScriptCommand(COMMAND_SCRIPT,2));
 		PARSER.addCommand(new LoadFileFormatClassCommand(COMMAND_FILE_FORMAT,2));
 
 		System.out.println("Loading Encoding Types...");
@@ -292,6 +367,14 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		loadPrefsFile(PARSER,MACROS_FILE);
 		System.out.println("Done Loading Macros.");
 		System.out.println("");
+
+		// Setup the ScriptManager
+		loadPrefsFile(PARSER,SCRIPT_CLASSES_FILE);
+		
+		System.out.println("Loading Scripts...");
+		loadPrefsFile(PARSER,SCRIPTS_FILE);
+		System.out.println("Done Loading Scripts.");
+		System.out.println("");
 		
 		// Generate Icons
 		OutlineButton.createIcons();
@@ -318,11 +401,6 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		Preferences.applyCurrentToApplication();
 		
 		setVisible(true);
-
-		// Create a Document. This must come after visiblity otherwise the window won't be activated.
-		if (Preferences.getPreferenceBoolean(Preferences.NEW_DOC_ON_STARTUP).cur) {
-			new OutlinerDocument("");
-		}
 	}
 		
 	public static void main(String args[]) {
@@ -349,7 +427,15 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 			System.out.println("GUI Loading Error: exiting.");
 			System.exit(0);
 		}
-	
+
+		// Run startup scripts. We're doing this just prior to opening any documents.
+		ScriptsManagerModel.runStartupScripts();
+		
+		// Create a Document. This must come after visiblity otherwise the window won't be activated.
+		if (Preferences.getPreferenceBoolean(Preferences.NEW_DOC_ON_STARTUP).cur) {
+			new OutlinerDocument("");
+		}
+			
 		// See if a file to open was provided at the command line.
 		String filepath = null;
 		try {

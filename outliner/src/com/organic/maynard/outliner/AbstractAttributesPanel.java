@@ -30,9 +30,6 @@ import javax.swing.tree.*;
 
 public abstract class AbstractAttributesPanel extends JTable {
 
-	protected TableCellRenderer removeColRenderer = new RemoveColumnRenderer(this);
-	protected TableCellEditor removeColEditor = new RemoveColumnRenderer(this);
-
 	protected RemoveColumnHeaderRenderer removeColumnHeaderRenderer = new RemoveColumnHeaderRenderer();
 	
 	// GUI Fields
@@ -48,10 +45,13 @@ public abstract class AbstractAttributesPanel extends JTable {
 		removeColumn.setMinWidth(80);
 		removeColumn.setMaxWidth(80);
 		removeColumn.setResizable(false);
-		removeColumn.setCellRenderer(removeColRenderer);
-		removeColumn.setCellEditor(removeColEditor);
+		
+		AttributesButtonCellEditor editor = new AttributesButtonCellEditor(this);
+		
+		removeColumn.setCellRenderer(editor);
+		removeColumn.setCellEditor(editor);
 
-		removeColumn.setHeaderRenderer(removeColumnHeaderRenderer);   
+		removeColumn.setHeaderRenderer(removeColumnHeaderRenderer);
 		getTableHeader().addMouseListener(model);   
 		getTableHeader().setReorderingAllowed(false); 
 	}

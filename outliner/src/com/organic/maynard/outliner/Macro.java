@@ -31,12 +31,12 @@ public interface Macro extends Serializable {
 	public static final int NOT_UNDOABLE = -1;
 	public static final int SIMPLE_UNDOABLE = 0;
 	public static final int COMPLEX_UNDOABLE = 1;
-	
 	public static final int RAW_MACRO_UNDOABLE = 2;
+
+	public String getFileName();
 	
 	public String getName();
 	public void setName(String name);
-	public String getFileName();
 	
 	public boolean isUndoable();
 	public int getUndoableType();

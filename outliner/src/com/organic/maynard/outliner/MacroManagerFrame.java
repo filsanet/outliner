@@ -44,9 +44,7 @@ public class MacroManagerFrame extends AbstractGUITreeJDialog implements ActionL
 	// Define Fields and Buttons
 	protected MacroEditor macroEditor = null;
 
-	protected ArrayList macroNames = new ArrayList();
-	//protected ArrayList sortMacroNames = new ArrayList();
-	
+	protected ArrayList macroNames = new ArrayList();	
 	protected ArrayList macroClassNames = new ArrayList();
 
 	private JButton newButton = null;

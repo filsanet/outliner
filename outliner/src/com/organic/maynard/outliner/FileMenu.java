@@ -50,7 +50,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 	
 	// Utility Methods
-	protected static void saveFile(String filename, OutlinerDocument document, boolean saveAs) {
+	public static void saveFile(String filename, OutlinerDocument document, boolean saveAs) {
 		// Get the file format object
 		String fileFormatName = document.settings.saveFormat.cur;
 		SaveFileFormat saveFileFormat = Outliner.fileFormatManager.getSaveFormat(fileFormatName);

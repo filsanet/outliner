@@ -348,7 +348,15 @@ public class DocumentInfo {
 		
 		return buffer.toString();
 	}
-	
+
+	public static String getCurrentDateTimeString() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z");
+		if (!Preferences.getPreferenceString(Preferences.TIME_ZONE_FOR_SAVING_DATES).cur.equals("")) {
+			dateFormat.setTimeZone(TimeZone.getTimeZone(Preferences.getPreferenceString(Preferences.TIME_ZONE_FOR_SAVING_DATES).cur));
+		}
+		return dateFormat.format(new Date());
+	}
+		
 	public void updateDocumentInfoForDocument(OutlinerDocument document, boolean saveAs) {
 		setPath(document.getFileName());
 		
@@ -374,11 +382,11 @@ public class DocumentInfo {
 			setApplyFontStyleForMoveability(Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur);
 		}
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z");
-		if (!Preferences.getPreferenceString(Preferences.TIME_ZONE_FOR_SAVING_DATES).cur.equals("")) {
-			dateFormat.setTimeZone(TimeZone.getTimeZone(Preferences.getPreferenceString(Preferences.TIME_ZONE_FOR_SAVING_DATES).cur));
-		}
-		String currentDateString = dateFormat.format(new Date());
+		//SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z");
+		//if (!Preferences.getPreferenceString(Preferences.TIME_ZONE_FOR_SAVING_DATES).cur.equals("")) {
+		//	dateFormat.setTimeZone(TimeZone.getTimeZone(Preferences.getPreferenceString(Preferences.TIME_ZONE_FOR_SAVING_DATES).cur));
+		//}
+		String currentDateString = getCurrentDateTimeString();
 		
 		setDateModified(currentDateString);
 		document.settings.dateModified = currentDateString;

@@ -19,6 +19,7 @@
 package com.organic.maynard.outliner;
 
 import java.awt.*;
+import java.io.*;
 import java.awt.event.*;
 import org.xml.sax.*;
 
@@ -65,6 +66,10 @@ public class QuitMenuItem extends AbstractOutlinerMenuItem implements ActionList
 		Preferences.saveConfigFile(Outliner.CONFIG_FILE);
 		RecentFilesList.saveConfigFile(Outliner.RECENT_FILES_FILE);
 		Outliner.findReplace.model.saveConfigFile();
+		LoadScriptCommand.saveConfigFile(new File(Outliner.SCRIPTS_FILE));
+
+		// Run shutdown scripts. This is the last thing we do before quitting.
+		ScriptsManagerModel.runShutdownScripts();
 
 		System.exit(0);
 	}
