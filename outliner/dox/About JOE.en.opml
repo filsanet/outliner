@@ -3,11 +3,11 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\About JOE.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Wed, 26 Dec 2001 12:17:38 GMT</dateModified>
+<dateModified>Wed, 26 Dec 2001 11:41:28 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
-<vertScrollState>2</vertScrollState>
+<vertScrollState>1</vertScrollState>
 <windowTop>5</windowTop>
 <windowLeft>5</windowLeft>
 <windowBottom>455</windowBottom>
@@ -19,7 +19,7 @@
 <body>
 <outline isEditable="true" isMoveable="true" text="About JOE" isMoveableInherited="true" isEditableInherited="true"/>
 <outline isEditable="true" isMoveable="true" text="------------" isMoveableInherited="true" isEditableInherited="true"/>
-<outline isEditable="true" isMoveable="true" text="Version" isMoveableInherited="true" isEditableInherited="true">
+<outline isEditable="true" isMoveable="true" text="Version " isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="1.8.7"/>
 </outline>
 <outline isEditable="true" isMoveable="true" text="Credits" isMoveableInherited="true" isEditableInherited="true">
