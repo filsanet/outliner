@@ -65,6 +65,24 @@ public class TreeContext {
 		selectedNodesParent = null;
 		doc = null;
 	}
+	
+	
+	// Line Count Control
+	private int lineCountKey = 0;
+	
+	public int getLineCountKey() {
+		return lineCountKey;
+	}
+	
+	public void incrementLineCountKey() {
+		// Lets not grow forever since it could be possible to 
+		// exceed max int although very very very unlikely, but still, better to be safe.
+		if (lineCountKey > 1000000) {
+			lineCountKey = 0;
+		} else {
+			lineCountKey++;
+		}
+	}
 
 	
 	// Accessors

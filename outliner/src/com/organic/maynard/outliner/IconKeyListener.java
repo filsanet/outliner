@@ -552,31 +552,41 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		
 		// Create a new node and insert it as a sibling immediatly after the last selected node.
 		Node node = tree.getOldestInSelection();
+		int nodeIndex = -1;
+		
 		Node newNode = new NodeImpl(tree,"");
+		int newNodeIndex = -1;
+		Node newNodeParent = null;
 		
 		if ((!node.isLeaf()) && (node.isExpanded())) {
+			newNodeIndex = 0;
+			newNodeParent = node;
 			newNode.setDepth(node.getDepth() + 1);
-			node.insertChild(newNode,0);				
+			node.insertChild(newNode, newNodeIndex);
 		} else {
+			nodeIndex = node.currentIndex();
+			newNodeIndex = nodeIndex + 1;
+			newNodeParent = node.getParent();
 			newNode.setDepth(node.getDepth());
-			node.getParent().insertChild(newNode,node.currentIndex() + 1);
+			newNodeParent.insertChild(newNode, newNodeIndex);
 		}
 		
-		tree.insertNode(newNode);
+		tree.insertNodeAfter(node, newNode);
 
 		// Record the EditingNode and CursorPosition and ComponentFocus
 		tree.setEditingNode(newNode);
 		tree.setCursorPosition(0);
+		tree.doc.setPreferredCaretPosition(0);
 		tree.setComponentFocus(outlineLayoutManager.TEXT);
+
+		// Put the Undoable onto the UndoQueue
+		CompoundUndoableInsert undoable = new CompoundUndoableInsert(newNodeParent);
+		undoable.addPrimitive(new PrimitiveUndoableInsert(newNodeParent, newNode, newNodeIndex));
+		tree.doc.undoQueue.add(undoable);
 
 		// Redraw and Set Focus
 		tree.clearSelection();
-		layout.draw(newNode,outlineLayoutManager.TEXT);
-
-		// Put the Undoable onto the UndoQueue
-		CompoundUndoableInsert undoable = new CompoundUndoableInsert(newNode.getParent());
-		undoable.addPrimitive(new PrimitiveUndoableInsert(newNode.getParent(),newNode,newNode.currentIndex()));
-		tree.doc.undoQueue.add(undoable);
+		layout.draw(newNode, outlineLayoutManager.TEXT);
 	}
 
 	private void promote(TreeContext tree, outlineLayoutManager layout) {

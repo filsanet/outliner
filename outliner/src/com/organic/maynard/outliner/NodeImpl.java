@@ -77,23 +77,32 @@ public class NodeImpl implements Node {
 	
 
 	// Statistics Methods
+	private int lineNumber = -1;
+	private int lineNumberUpdateKey = -1;
+	
 	public int getLineNumber() {
-		int count = 1;
+		return getLineNumber(-2);
+	}
+	
+	public int getLineNumber(int key) {
+		if (key == lineNumberUpdateKey) {
+			return lineNumber;
+		} else {
 		
-		Node current = this;
-		Node next = prevSiblingOrParent();
-		
-		while (current != next) {
-			if (current.getParent() == next) {
-				count++;
+			Node next = prevSiblingOrParent();
+			
+			if (next == this) {
+				lineNumber = 1;
+			} else if (this.getParent() == next) {
+				lineNumber = 1 + next.getLineNumber(key);
 			} else {
-				count += next.getDecendantCount() + 1;
+				lineNumber = 1 + next.getDecendantCount() + next.getLineNumber(key);
 			}
-			current = next;
-			next = next.prevSiblingOrParent();
+			
+			lineNumberUpdateKey = key;
+			
+			return lineNumber;
 		}
-		
-		return count;
 	}
 	
 	public void adjustDecendantCount(int amount) {
@@ -111,16 +120,6 @@ public class NodeImpl implements Node {
 	}
 	
 	public int getDecendantCount() {
-		/*if (isLeaf()) {
-			return 0;
-		} else {
-			int count = 0;
-			for (int i = 0; i < numOfChildren(); i++) {
-				count++;
-				count += getChild(i).getDecendantCount();
-			}
-			return count;
-		}*/
 		return decendantCount;
 	}
 	
@@ -135,7 +134,6 @@ public class NodeImpl implements Node {
 			}
 			return count;
 		}
-		//return decendantCharCount;
 	}
 	
 	// Parent Methods

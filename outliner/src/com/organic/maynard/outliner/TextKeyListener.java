@@ -640,35 +640,42 @@ public class TextKeyListener implements KeyListener, MouseListener {
 	private void insert(TreeContext tree, outlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
-		// Create a new node and insert it as a sibling immediatly after this node, unless
-		// the current node is expanded and has children. Then, we should insert it as the first child of the
-		// current node.
-		Node newNode = new NodeImpl(currentNode.getTree(),"");
+		// Create a new node and insert it as a sibling immediatly after the last selected node.
+		Node node = currentNode;
+		int nodeIndex = -1;
 		
-		if ((!currentNode.isLeaf()) && (currentNode.isExpanded())) {
-			newNode.setDepth(currentNode.getDepth() + 1);
-			currentNode.insertChild(newNode,0);				
+		Node newNode = new NodeImpl(tree,"");
+		int newNodeIndex = -1;
+		Node newNodeParent = null;
+		
+		if ((!node.isLeaf()) && (node.isExpanded())) {
+			newNodeIndex = 0;
+			newNodeParent = node;
+			newNode.setDepth(node.getDepth() + 1);
+			node.insertChild(newNode, newNodeIndex);
 		} else {
-			newNode.setDepth(currentNode.getDepth());
-			currentNode.getParent().insertChild(newNode,currentNode.currentIndex() + 1);
+			nodeIndex = node.currentIndex();
+			newNodeIndex = nodeIndex + 1;
+			newNodeParent = node.getParent();
+			newNode.setDepth(node.getDepth());
+			newNodeParent.insertChild(newNode, newNodeIndex);
 		}
 		
-		tree.insertNode(newNode);
+		tree.insertNodeAfter(node, newNode);
 
-		// Record the EditingNode and CursorPosition
+		// Record the EditingNode and CursorPosition and ComponentFocus
 		tree.setEditingNode(newNode);
 		tree.setCursorPosition(0);
-
-		// Update Preferred Caret Position
 		tree.doc.setPreferredCaretPosition(0);
+		tree.setComponentFocus(outlineLayoutManager.TEXT);
 
 		// Put the Undoable onto the UndoQueue
-		CompoundUndoableInsert undoable = new CompoundUndoableInsert(newNode.getParent());
-		undoable.addPrimitive(new PrimitiveUndoableInsert(newNode.getParent(),newNode,newNode.currentIndex()));
+		CompoundUndoableInsert undoable = new CompoundUndoableInsert(newNodeParent);
+		undoable.addPrimitive(new PrimitiveUndoableInsert(newNodeParent, newNode, newNodeIndex));
 		tree.doc.undoQueue.add(undoable);
-
+		
 		// Redraw and Set Focus
-		layout.draw(newNode,outlineLayoutManager.TEXT);
+		layout.draw(newNode, outlineLayoutManager.TEXT);
 	}
 
 	private void mergeWithPrevVisibleNode(TreeContext tree, outlineLayoutManager layout) {

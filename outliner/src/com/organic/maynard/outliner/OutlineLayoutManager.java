@@ -225,6 +225,9 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 		// Pre-compute some values
 		int effectiveBottom = bottom - Preferences.BOTTOM_MARGIN.cur;
 		
+		// Increment the LineCountKey
+		node.getTree().incrementLineCountKey();
+		
 		while (true) {
 			OutlinerCellRendererImpl renderer = textAreas[numNodesDrawn];
 			renderer.drawDown(startPoint, node);
@@ -287,6 +290,9 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 
 		// Pre-compute some values
 		int effectiveTop = top + Preferences.TOP_MARGIN.cur;
+
+		// Increment the LineCountKey
+		node.getTree().incrementLineCountKey();
 
 		Node newNodeToDrawFrom = null;
 		int ioNewNodeToDrawFrom = nodeIndex;

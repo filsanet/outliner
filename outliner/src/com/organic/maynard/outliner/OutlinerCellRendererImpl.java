@@ -127,10 +127,10 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		if (Preferences.SHOW_LINE_NUMBERS.cur) {
 			if (node.getTree().doc.hoistStack.isHoisted()) {
 				// TODO: This value should be pre-calculated.
-				int offset = node.getTree().doc.hoistStack.getLineCountOffset()  + node.getLineNumber();
+				int offset = node.getTree().doc.hoistStack.getLineCountOffset()  + node.getLineNumber(node.getTree().getLineCountKey());
 				lineNumber.setText("" + offset);
 			} else {
-				lineNumber.setText("" + node.getLineNumber());
+				lineNumber.setText("" + node.getLineNumber(node.getTree().getLineCountKey()));
 			}
 		} else {
 			lineNumber.setText("");
@@ -162,10 +162,10 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		if (Preferences.SHOW_LINE_NUMBERS.cur) {
 			if (node.getTree().doc.hoistStack.isHoisted()) {
 				// TODO: This value should be pre-calculated.
-				int offset = node.getTree().doc.hoistStack.getLineCountOffset()  + node.getLineNumber();
+				int offset = node.getTree().doc.hoistStack.getLineCountOffset()  + node.getLineNumber(node.getTree().getLineCountKey());
 				lineNumber.setText("" + offset);
 			} else {
-				lineNumber.setText("" + node.getLineNumber());
+				lineNumber.setText("" + node.getLineNumber(node.getTree().getLineCountKey()));
 			}
 		} else {
 			lineNumber.setText("");

@@ -34,6 +34,7 @@ public interface Node {
 	public void adjustDecendantCharCount(int amount);
 	
 	public int getLineNumber();
+	public int getLineNumber(int key);
 	
 	// Parent Methods
 	public void setParent(Node node);
