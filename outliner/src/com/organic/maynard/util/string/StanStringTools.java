@@ -58,6 +58,7 @@ package com.organic.maynard.util.string;
 // we use these
 import java.util.*;
 import java.io.File ;
+import com.organic.maynard.outliner.GUITreeLoader ;
 
 // Stan's string tools
 public class StanStringTools {
@@ -136,7 +137,7 @@ public class StanStringTools {
 		int secondSeparator = -1 ;
 		int lastSeparator = -1 ;
 		int length = pathNameString.length() ;
-		final String TRUNC_STRING = " ... " ;
+		String TRUNC_STRING = GUITreeLoader.reg.getText("trunc_string");
 		
 		// we're scanning the full string
 		for (int scanner = 0, separatorCount = 0; scanner < length; scanner ++) {
