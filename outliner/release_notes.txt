@@ -21,6 +21,7 @@
 		5) Added more new key commands.
 			shift-return: insert new node above. 
 			shift-ctrl-return: Split current node at cursor and insert above.
+		6) New BSH Macro, "Format Markup". This macro will reformat XML/HTML markup into a nice clean hierarchy of nodes. Still a bit rough, but worth a try if you've got markup to format.
 	Feature Enhancements:
 		1) Script and Macro editor now have save commands so you don't have to close the script editor to save the script.
 		2) Inserting a new node when nodes are selected now always puts the new node as the next older sibling of the oldest selected node. Inserting a new node when in text selection mode and the current node is an open branch node still inserts the new node as the first child of the current node rather than as an older sibling.
