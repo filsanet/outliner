@@ -72,7 +72,11 @@ public class OutlinerFileChooser extends JFileChooser {
 	private JComboBox exportEncodingComboBox = new JComboBox();
 	private JComboBox exportFormatComboBox = new JComboBox();
 
-	private boolean isInitialized = false;
+	private boolean isInitialized = false; 
+	
+	// dialogType is here so we know the type of dialog we are, since Swing forces 
+	// us to be CUSTOM_DIALOG. Without this the approveSelection() method won't work right.
+	private int dialogType = JFileChooser.CUSTOM_DIALOG;
 
 	// The Constructor
 	public OutlinerFileChooser(FileSystemView fsv) {
@@ -213,6 +217,8 @@ public class OutlinerFileChooser extends JFileChooser {
 			setCurrentDirectory(new File(currentDirectory));
 			setSelectedFile(null);
 		}
+		
+		this.dialogType = JFileChooser.SAVE_DIALOG;
 	}
 
 	public void configureForSave(OutlinerDocument doc, String protocolName, String currentDirectory) {
@@ -275,6 +281,8 @@ public class OutlinerFileChooser extends JFileChooser {
 			
 		} // end else it's not imported
 		
+		this.dialogType = JFileChooser.SAVE_DIALOG;
+		
 	} // end method configureForSave
 
 	public void configureForOpen(String protocolName, String currentDirectory) {
@@ -298,6 +306,8 @@ public class OutlinerFileChooser extends JFileChooser {
 		// Set the current directory location and selected file.
 		setCurrentDirectory(new File(currentDirectory));
 		setSelectedFile(null);
+		
+		this.dialogType = JFileChooser.OPEN_DIALOG;
 	}
 
 
@@ -322,6 +332,8 @@ public class OutlinerFileChooser extends JFileChooser {
 		// Set the current directory location and selected file.
 		setCurrentDirectory(new File(currentDirectory));
 		setSelectedFile(null);
+		
+		this.dialogType = JFileChooser.OPEN_DIALOG;
 	}
 
 
@@ -347,8 +359,8 @@ public class OutlinerFileChooser extends JFileChooser {
 	// Overriden Methods of JFileChooser
 	public void approveSelection() {
 		File file = getSelectedFile();
-
-		if (getDialogType() == JFileChooser.OPEN_DIALOG) {
+		
+		if (this.dialogType == JFileChooser.OPEN_DIALOG) {
 			// Alert if file does not exist.
 			if (!file.exists()) {
 				String msg = GUITreeLoader.reg.getText("error_file_not_found");
@@ -357,10 +369,10 @@ public class OutlinerFileChooser extends JFileChooser {
 				JOptionPane.showMessageDialog(this, msg);
 				return;
 			}
-		} else if (getDialogType() == JFileChooser.SAVE_DIALOG) {
+		} else if (this.dialogType == JFileChooser.SAVE_DIALOG) {
 			// Alert if file exists.
 			if (file.exists()) {
-				//Custom button text
+				// Custom button text
 				String yes = GUITreeLoader.reg.getText("yes");
 				String no = GUITreeLoader.reg.getText("no");
 				String confirm_replacement = GUITreeLoader.reg.getText("confirm_replacement");

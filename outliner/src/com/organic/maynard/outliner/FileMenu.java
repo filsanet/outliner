@@ -534,7 +534,21 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 	// open or import a file
 	protected static void openFile(DocumentInfo docInfo, FileProtocol protocol, int mode) {
-
+		
+		// Validate uniqueness of the filename
+		// At some point this should probably incorporate the protocol as well. More like
+		// an URL: "file:///C:/path/to/my/file.txt" for Local File System Protocol
+		//         "phpwebfile:///path/to/my/file.txt" for PHP:WebFile Protocol
+		//         "null:///Untitled 1" for unsaved documents.
+		String filename = docInfo.getPath();
+		if (!Outliner.documents.isFileNameUnique(filename)) {
+			String msg = GUITreeLoader.reg.getText("message_file_already_open");
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
+			
+			JOptionPane.showMessageDialog(Outliner.outliner, msg);
+			return;
+		}
+		
 		// create a fresh new tree
 		JoeTree tree = Outliner.newTree(null);
 		

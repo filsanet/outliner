@@ -33,26 +33,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * @author  $Author$
- * @version $Revision$, $Date$
- */
-
-// we're part of this
 package com.organic.maynard.outliner;
 
-// we use these
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
 import org.xml.sax.*;
+import com.organic.maynard.io.FileTools;
 import com.organic.maynard.util.string.StringTools;
 import com.organic.maynard.util.string.Replace;
 import com.organic.maynard.util.string.StanStringTools ;
 import com.organic.maynard.util.vector.StanVectorTools ;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
 public class RecentFilesList extends AbstractOutlinerMenu implements ActionListener, GUITreeComponent, JoeReturnCodes {
 
@@ -63,32 +61,31 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 	
 	// display mode constants [srk]
 	// ordering
-	private static final int CHRONO_ORDER = 0 ;
-	private static final int ALFA_ORDER = 1 ;
-	private static final int ASCII_ORDER = 2 ;
+	private static final int CHRONO_ORDER = 0;
+	private static final int ALFA_ORDER = 1;
+	private static final int ASCII_ORDER = 2;
 	// name form
-	private static final int FULL_PATHNAME = 0 ;
-	private static final int TRUNC_PATHNAME = 1 ;
-	private static final int JUST_FILENAME = 2 ;
+	private static final int FULL_PATHNAME = 0;
+	private static final int TRUNC_PATHNAME = 1;
+	private static final int JUST_FILENAME = 2;
 	// direction
-	private static final int TOP_TO_BOTTOM = 0 ;
-	private static final int BOTTOM_TO_TOP = 1 ;
+	private static final int TOP_TO_BOTTOM = 0;
+	private static final int BOTTOM_TO_TOP = 1;
 	
 	// presence in frameInfoList
-	private static final int NOT_THERE = -1 ;
+	private static final int NOT_THERE = -1;
 	
 	// Static Fields
-	private static Vector frameInfoList = null;
+	private static Vector frameInfoList = null; // All objects stored herein should be DocumentInfo objects.
+	
 	/*  TBD  
 	 * [srk] move frameInfoList into its own class for cleanth/power/flexibility
-	
 	 * 	its job is state maintenance for ALL internal frames opened in JOE
 	 *	not just std. outline docs, which go up on recent files list,
 	 *	but modeless dialogs and help doc outlines while they're open
 	 *	
 	 *	that will let it restore ALL were-open frames after a crash
 	 *	or at startup if desired
-	 *	
 	 */
 	
 	private static TreeSet alfaAsciiTree = null ; // [srk] for alfa/ascii ordering, we store filename/pathname strings here
@@ -97,10 +94,12 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 	private static int currentDisplayNameForm = -1 ;
 	private static int currentDisplayDirection = -1 ;
 	private static int currentRecentFilesListSize = 0 ;
-	
+
+
 	// The Constructors
 	public RecentFilesList() {}
-	
+
+
 	// Static Accessors
 	static Vector getFrameInfoList() {
 		return frameInfoList;
@@ -118,11 +117,9 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		frameInfoList.add(docInfo);
 	}
 
+
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
-		// this lets us test what we read from file
-		Vector testVector = new Vector() ;
-
 		// get the menu's title and set it
 		String title = atts.getValue(A_TEXT);
 		setText(title);
@@ -131,89 +128,49 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		setEnabled(false);
 
 		// Add us to our parent menu.
-		JMenu menu = (JMenu) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 2);
-		menu.add(this);
+		((JMenu) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 2)).add(this);
 		
 		// grab some preferences
+		// TBD: check if we can get this from Outliner.outliner.prefs
 		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
 		
 		// set size of Recent Files list
-		currentRecentFilesListSize = ((PreferenceInt)prefs.getPreference(Preferences.RECENT_FILES_LIST_SIZE)).cur;
+		currentRecentFilesListSize = Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur;
 
 		// Try to load the frameInfoList from disk
 		// TBD [srk] rename RECENT_FILES_FILE to FRAME_INFO_LIST_FILE
-		Object obj = ReadObjectFromFile(Outliner.RECENT_FILES_FILE);
+		Object obj = FileTools.ReadObjectFromFile(Outliner.RECENT_FILES_FILE);
 		
 		// we need to make sure we have a Vector
-		
 		// we used to use an ArrayList for frameInfoList,
 		// but now we use a Vector 
-		
 		// anything else is just ignored
 		
 		// if we were able to read something ...
-		if (obj != null) {
+		if ((obj != null) && (obj instanceof Vector)) {
+			frameInfoList = (Vector) obj;
 			
-			// if we have a Vector ...
-			if (testVector.getClass().isInstance(obj)) {
-				
-				// set the var
-				frameInfoList = (Vector)obj ;
-				
-				// remove any duplicate entries
-				// saves youngest, removes oldest
-				StanVectorTools.removeDupesHeadside(frameInfoList) ;
-				
-			} // end if we have a Vector
+			// Remove any duplicate entries. Saves youngest, removes oldest
+			StanVectorTools.removeDupesHeadside(frameInfoList);
 			
-			// else we don't have a Vector
-			else { 
-				// start a fresh list
-				frameInfoList = null ;
-			} // end else we don't have a vector
-
-		// else we couldn't read anything
-		} else {
-			frameInfoList = null; 
-		} //end else
-		
-		int filSize = ((PreferenceInt)prefs.getPreference(Preferences.FRAME_INFO_LIST_SIZE)).def ;
-		
-		// testing wipeout frameInfoList = null ;
-		
-		// if frameInfoList is null ...
-		if (frameInfoList == null) {
-			// start a new frameInfoList
-			frameInfoList = new Vector();
-		// else we're non-null
-		} else {
-			// if we're too large ...
+			int filSize = Preferences.getPreferenceInt(Preferences.FRAME_INFO_LIST_SIZE).cur;
+			
 			if (frameInfoList.size() > filSize) {
-				
 				// trim back
-				StanVectorTools.trimSizeSaveTail(frameInfoList, filSize) ;
-				
-			} // end if we're too large
-			
-		} // end if-else
-		
-		// apply our display settings
-		// this also populates the menu correctly
-		applyDisplaySettings() ;
-		
-		
-	} // end methor startSetup
+				StanVectorTools.trimSizeSaveTail(frameInfoList, filSize);
+			}
+		} else {
+			frameInfoList = new Vector();
+		}
+
+		// apply our display settings this also populates the menu correctly
+		applyDisplaySettings();
+	}
 	
 	// call on our UI panel to apply the latest display options
-	private void applyDisplaySettings () {
-		
-		// grab ahold of our prefs panel
-		PreferencesPanelRecentFiles prefsPanel = (PreferencesPanelRecentFiles) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_PANEL_RECENT_FILES);
-
-		// have it apply its current settings
-		prefsPanel.applyCurrentToApplication() ;
-		
-	} // end method applyDisplaySettings
+	private void applyDisplaySettings() {
+		((PreferencesPanelRecentFiles) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_PANEL_RECENT_FILES)).applyCurrentToApplication();
+	}
 
 	
 	// set display options -- adjust menu and treeset structures as necessary
@@ -222,59 +179,49 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		
 		// we are lazy, only work on change
 		boolean change = (currentDisplayOrdering != ordering)
-			|| (currentDisplayNameForm !=nameForm)
-			|| (currentDisplayDirection != direction) ;
+			|| (currentDisplayNameForm != nameForm)
+			|| (currentDisplayDirection != direction);
 		
-		// if there's change ...
 		if (change) {
 			// store the new values
-			currentDisplayOrdering = ordering ;
-			currentDisplayNameForm = nameForm ;
-			currentDisplayDirection = direction ;
+			currentDisplayOrdering = ordering;
+			currentDisplayNameForm = nameForm;
+			currentDisplayDirection = direction;
 			
-			// sync up the tree set
-			syncTreeSet() ;
-						
-			// sync up the menu items
-			syncMenuItems() ;
-			
-		} // end if we have a change
-		
-	} // end method setDisplayOptions
+			syncTreeSet();
+			syncMenuItems();
+		}
+	}
 	
 	
 	// ensure that the treeset contains the necessary info
-	private void syncTreeSet () {
+	private void syncTreeSet() {
 		
 		// if we don't have a treeset, leave
-		if ( ! ensureAlfaAsciiTree() ) {
+		if (!ensureAlfaAsciiTree()) {
 			return ;
-		} // end if
+		}
 		
 		// empty it out
-		// note that syncTreeSet 
-		// ALWAYS clears the tree if it exists
-		alfaAsciiTree.clear() ;
+		// note that syncTreeSet ALWAYS clears the tree if it exists
+		alfaAsciiTree.clear();
 		
 		// if this ordering does not use the tree ...
-		if ( (currentDisplayOrdering != ALFA_ORDER)  
-			&&  (currentDisplayOrdering != ASCII_ORDER) ) {
-			// leave
-			return ;
-		} // end if
+		if ((currentDisplayOrdering != ALFA_ORDER) && (currentDisplayOrdering != ASCII_ORDER)) {
+			return;
+		}
 		
 		// if frameInfoList is empty ...
 		int frameInfoListSize = frameInfoList.size() ;
 		if (frameInfoListSize == 0) {
-			// leave
-			return ;
-		} // end if
+			return;
+		}
 				
 		// if Recent Files size is zero, leave
-		int recentFilesListSize = Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur ;
+		int recentFilesListSize = Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur;
 		if (recentFilesListSize == 0) {
 			return;
-		} // end if
+		}
 
 		// set up some local vars
 		DocumentInfo docInfo = null ;
@@ -286,35 +233,35 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		for (int i = frameInfoListSize - 1, j = 0; (i >= 0) && (j < recentFilesListSize); i--) {
 			
 			// grab docInfo from frameInfoList
-			docInfo = (DocumentInfo) frameInfoList.get(i) ;
+			docInfo = (DocumentInfo) frameInfoList.get(i);
 			
 			// if we're a Help file, try the next frame
 			if (docInfo.isHelpFile()) {
-				continue ;
-			} // end if
+				continue;
+			}
 			
 			// switch on name form
 			switch (currentDisplayNameForm) {
 				
-			case FULL_PATHNAME: 
-			default:
-				// package the docInfo up with the full pathname
-				strungDocInfo= new StrungDocumentInfo(docInfo.getPath(), docInfo) ;
-				break ;
-				
-			case TRUNC_PATHNAME:
-				// package the docInfo up with a truncated pathname
-				strungDocInfo= new StrungDocumentInfo(
-					StanStringTools.getTruncatedPathName(docInfo.getPath(),TRUNC_STRING),
-					docInfo) ; 
-				break ;
-				
-			case JUST_FILENAME:
-				// package the docInfo up with the filename
-				strungDocInfo= new StrungDocumentInfo(
-					StanStringTools.getFileNameFromPathName(docInfo.getPath()),
-					docInfo) ;
-				break ;
+				case FULL_PATHNAME: 
+				default:
+					// package the docInfo up with the full pathname
+					strungDocInfo= new StrungDocumentInfo(docInfo.getPath(), docInfo) ;
+					break;
+					
+				case TRUNC_PATHNAME:
+					// package the docInfo up with a truncated pathname
+					strungDocInfo= new StrungDocumentInfo(
+						StanStringTools.getTruncatedPathName(docInfo.getPath(),TRUNC_STRING),
+						docInfo); 
+					break;
+					
+				case JUST_FILENAME:
+					// package the docInfo up with the filename
+					strungDocInfo= new StrungDocumentInfo(
+						StanStringTools.getFileNameFromPathName(docInfo.getPath()),
+						docInfo);
+					break;
 			
 			} // end switch on name form	
 			
@@ -326,11 +273,9 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 			alfaAsciiTree.add(strungDocInfo) ;
 			
 			// up the Recent Files list counter
-			j++ ;
-			
-		} // end for
-		
-	} // end method syncTreeSet
+			j++;
+		}
+	}
 
 		
 	// ensure that this menu contains the proper set of menu items
@@ -662,26 +607,16 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 	
 	// Config File
 	public static void saveConfigFile(String filename) {
-		
-		// write out frameInfoList 
-		writeObjectToFile(frameInfoList, filename);
-		
-	} // end method saveConfigFile
+		FileTools.writeObjectToFile(frameInfoList, filename);
+	}
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		DocumentInfo docInfo = ((RecentFilesListItem) e.getSource()).getDocumentInfo();
-		String filename = docInfo.getPath();
-		if (!Outliner.documents.isFileNameUnique(filename)) {
-			String msg = GUITreeLoader.reg.getText("message_file_already_open");
-			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
-			
-			JOptionPane.showMessageDialog(Outliner.outliner, msg);
-			return;
-		}
 
-		// TEMP: get protocol from protocolName
+		// Get the protocol from the FileProtocolManager by using the protocolName
 		String protocolName = docInfo.getProtocolName();
+		
 		FileProtocol protocol = null;
 		if (protocolName == null || protocolName.equals("")) {
 			protocol = Outliner.fileProtocolManager.getDefault();
@@ -690,75 +625,27 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		}
 
 		// Open or Import the file, as is appropriate
-		if (! docInfo.isImported()) {
+		if (!docInfo.isImported()) {
 			FileMenu.openFile(docInfo, protocol);
 		} else {
-			FileMenu.importFile(docInfo,protocol);
-		} // end if-else
-		
+			FileMenu.importFile(docInfo, protocol);
+		}
 	}
 	
 	
 	// Utility Functions
-	// TODO: these should be added to io in com.organic.maynard.jar
-	public static boolean writeObjectToFile(Object obj, String filename) {
-		try {
-			ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(filename));
-			stream.writeObject(obj);
-			stream.close();
-			return true;
-		} catch (IOException e) {
-			System.out.println("Exception: " + e.getMessage());
-			return false;
-		}
-	}
-
-	public static Object ReadObjectFromFile(String filename) {
-		Object obj = null;
-		
-		try {
-			ObjectInputStream stream = new ObjectInputStream(new FileInputStream(filename));
-			obj = stream.readObject();
-			stream.close();
-			
-		} catch (OptionalDataException ode) {
-			System.out.println("Exception: " + ode);
-			
-		} catch (ClassNotFoundException cnfe) {
-			System.out.println("Exception: " + cnfe);
-			
-		} catch (FileNotFoundException fnfe) {
-			System.out.println("Exception: " + fnfe);
-			
-		} catch (StreamCorruptedException sce) {
-			System.out.println("Exception: " + sce);
-					
-		} catch (IOException ioe) {
-			System.out.println("Exception: " + ioe);
-					
-		}
-		
-		return obj;
-	}
-	
-	
-		private void reverseDisplayDirection () {
-		
-			// so we temporarily change the direction of the menu
-			switch (currentDisplayDirection){
-				
+	private void reverseDisplayDirection() {
+		// so we temporarily change the direction of the menu
+		switch (currentDisplayDirection){
 			case TOP_TO_BOTTOM:
-				currentDisplayDirection = BOTTOM_TO_TOP ;
-				break ;
+				currentDisplayDirection = BOTTOM_TO_TOP;
+				break;
 				
 			case BOTTOM_TO_TOP:
-				currentDisplayDirection = TOP_TO_BOTTOM ;
-				break ;
+				currentDisplayDirection = TOP_TO_BOTTOM;
+				break;
 				
 			default:
-				break ;
-			} // end switch
-		} // end method reverseDisplayDirection
-			
-
+		}
+	}
 }

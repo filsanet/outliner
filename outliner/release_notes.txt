@@ -8,6 +8,8 @@
 		1) Dramatically sped up document closing times by doing the object destruction in a separate thread after after the window has been closed.
 	Bug Fixes:
 		1) Fixed a bug where "insert new node above" and "split current node and insert above" would throw an exception when you tried to undo them if the new node was the very first node in the document.
+		2) Fixed bug where the warning for doing a "Save As"/"Export" over an existing file didn't work. Now the warning shows up as it should. The warning for "Open"/"Import" of a non-existant file is also fixed.
+		3) The uniqueness check which prevents opening two files with the same path has been fixed. Previously it was only working for the recent files list.
 1.8.8 - 04/18/02
 	New Features:
 		1) Automatic node level created/modified dates. If turned on via application or document level preferences, node attributes for creation and modification dates will be generated. By default this feature is turned off.
