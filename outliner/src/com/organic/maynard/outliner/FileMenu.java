@@ -327,6 +327,16 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		tree.doc = newDoc;
 		newDoc.tree = tree;
 		
+		// [srk] bug: if opening a document that's not
+		//	on the recent files list, 3+we can get to this
+		//	point with no line ending set
+		// 	fix: set it to current default
+		
+		// if lineEnding is not yet set ...
+		if (docInfo.getLineEnding().length() == 0) {
+			docInfo.setLineEnding (Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur);
+		} // end if
+		
 		// Update DocumentSettings
 		//newDoc.settings.syncPrefs();
 		newDoc.settings.lineEnd.def = docInfo.getLineEnding();
