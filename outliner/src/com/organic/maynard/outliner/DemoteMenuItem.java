@@ -42,6 +42,13 @@ import javax.swing.*;
 
 import org.xml.sax.*;
 
+import com.organic.maynard.outliner.actions.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
 public class DemoteMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
@@ -49,9 +56,23 @@ public class DemoteMenuItem extends AbstractOutlinerMenuItem implements ActionLi
 		addActionListener(this);
 	}
 
-
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		OutlineMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), 0, KeyEvent.VK_TAB, true);
+		OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
+		OutlinerCellRendererImpl textArea = doc.panel.layout.getUIComponent(doc.tree.getEditingNode());
+		
+		if (textArea == null) {
+			return;
+		}
+
+		Node node = textArea.node;
+		JoeTree tree = node.getTree();
+		OutlineLayoutManager layout = tree.getDocument().panel.layout;
+		
+		if (doc.tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
+			PromoteDemoteAction.demoteText(node, tree, layout);
+		} else if (doc.tree.getComponentFocus() == OutlineLayoutManager.ICON) {
+			PromoteDemoteAction.demote(node, tree, layout);
+		}
 	}
 }

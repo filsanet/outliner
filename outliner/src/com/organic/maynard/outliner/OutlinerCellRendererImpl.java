@@ -38,6 +38,7 @@ import com.organic.maynard.outliner.util.preferences.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.text.Keymap;
 
 import com.organic.maynard.outliner.actions.*;
 
@@ -103,6 +104,13 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	private static final ToggleExpansionAction toggleExpansionAction = new ToggleExpansionAction();
 	private static final MergeAction mergeAction = new MergeAction();
 	private static final SelectNoneAction selectNoneAction = new SelectNoneAction();
+	private static final PromoteDemoteAction promoteDemoteAction = new PromoteDemoteAction();
+	private static final InsertAndSplitAction insertAndSplitAction = new InsertAndSplitAction();
+	private static final ChangeFocusAction changeFocusAction = new ChangeFocusAction();
+	private static final SelectAllAction selectAllAction = new SelectAllAction();
+	private static final SelectInverseAction selectInverseAction = new SelectInverseAction();
+	private static final DeleteAction deleteAction = new DeleteAction();
+	private static final BackspaceAction backspaceAction = new BackspaceAction();
 	
 	// The Constructors
 	public OutlinerCellRendererImpl() {
@@ -131,6 +139,32 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	}
 	
 	private void setupMaps(InputMap input_map, ActionMap action_map) {
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0, false), "delete");
+		action_map.put("delete", deleteAction);
+
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0, false), "backspace");
+		action_map.put("backspace", backspaceAction);
+
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_I, Event.CTRL_MASK, false), "select_inverse");
+		action_map.put("select_inverse", selectInverseAction);
+
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, Event.CTRL_MASK, false), "select_all");
+		action_map.put("select_all", selectAllAction);
+
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0, false), "change_focus");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, Event.SHIFT_MASK, false), "change_focus");
+		action_map.put("change_focus", changeFocusAction);
+
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "insert_and_split");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, Event.SHIFT_MASK, false), "insert_and_split");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, Event.CTRL_MASK, false), "insert_and_split");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, Event.CTRL_MASK + Event.SHIFT_MASK, false), "insert_and_split");
+		action_map.put("insert_and_split", insertAndSplitAction);
+
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0, false), "promote_demote");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, Event.SHIFT_MASK + Event.SHIFT_MASK, false), "promote_demote");
+		action_map.put("promote_demote", promoteDemoteAction);
+
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, Event.CTRL_MASK, false), "select_none");
 		action_map.put("select_none", selectNoneAction);
 

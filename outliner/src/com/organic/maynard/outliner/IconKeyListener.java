@@ -242,14 +242,6 @@ public class IconKeyListener implements KeyListener, MouseListener, FocusListene
 		OutlineLayoutManager layout = tree.getDocument().panel.layout;
 
 		switch(e.getKeyCode()) {
-		
-			case KeyEvent.VK_DELETE:
-				delete(tree,layout,true);
-				break;
-
-			case KeyEvent.VK_BACK_SPACE:
-				delete(tree,layout,false);
-				break;
 				
 			case KeyEvent.VK_UP:
 				if (e.isControlDown()) {
@@ -307,22 +299,6 @@ public class IconKeyListener implements KeyListener, MouseListener, FocusListene
 				}
 				break;
 
-			case KeyEvent.VK_ENTER:
-				if (e.isShiftDown()) {
-					insertAbove(tree,layout);								
-				} else {
-					insert(tree,layout);				
-				}
-				break;
-
-			case KeyEvent.VK_INSERT:
-				if (e.isShiftDown()) {
-					changeToParent(tree, layout);
-				} else {
-					changeFocusToTextArea(tree, layout, POSITION_CURRENT);
-				}
-				break;
-
 			case KeyEvent.VK_HOME:
 				if (tree.getSelectedNodes().size() > 1) {
 					changeSelectionToNode(tree, layout, POSITION_FIRST);
@@ -336,14 +312,6 @@ public class IconKeyListener implements KeyListener, MouseListener, FocusListene
 					changeSelectionToNode(tree, layout, POSITION_LAST);
 				} else {
 					changeFocusToTextArea(tree, layout, POSITION_LAST);
-				}
-				break;
-
-			case KeyEvent.VK_TAB:
-				if (e.isShiftDown()) {
-					promote(tree,layout);
-				} else {
-					demote(tree,layout);
 				}
 				break;
 
@@ -366,22 +334,6 @@ public class IconKeyListener implements KeyListener, MouseListener, FocusListene
 			case KeyEvent.VK_V:
 				if (e.isControlDown()) {
 					paste(tree,layout);
-					break;
-				} else {
-					return;
-				}
-
-			case KeyEvent.VK_I:
-				if (e.isControlDown()) {
-					selectInverse(tree,layout);
-					break;
-				} else {
-					return;
-				}
-
-			case KeyEvent.VK_A:
-				if (e.isControlDown() && !e.isShiftDown()) {
-					selectAll(tree,layout);
 					break;
 				} else {
 					return;
@@ -638,119 +590,6 @@ public class IconKeyListener implements KeyListener, MouseListener, FocusListene
 		}
 	}
 
-	private void insertAbove(JoeTree tree, OutlineLayoutManager layout) {
-		Node node = tree.getOldestInSelection();
-
-		// Abort if node is not editable
-		if (!node.isEditable()) {
-			return;
-		}
-		
-		tree.clearSelection();
-		
-		TextKeyListener.doInsertAbove(node, tree, layout);
-	}
-
-	private void insert(JoeTree tree, OutlineLayoutManager layout) {
-		Node node = tree.getOldestInSelection();
-
-		// Abort if node is not editable
-		if (!node.isEditable()) {
-			return;
-		}
-		
-		tree.clearSelection();
-
-		Node newNode = new NodeImpl(tree,"");
-		int newNodeIndex = node.currentIndex() + 1;
-		Node newNodeParent = node.getParent();
-
-		newNode.setDepth(node.getDepth());
-		newNodeParent.insertChild(newNode, newNodeIndex);
-
-		//int visibleIndex = tree.insertNodeAfter(node, newNode);
-		tree.insertNode(newNode);
-
-		// Record the EditingNode and CursorPosition and ComponentFocus
-		tree.setEditingNode(newNode);
-		tree.setCursorPosition(0);
-		tree.getDocument().setPreferredCaretPosition(0);
-		tree.setComponentFocus(OutlineLayoutManager.TEXT);
-
-		// Put the Undoable onto the UndoQueue
-		CompoundUndoableInsert undoable = new CompoundUndoableInsert(newNodeParent);
-		undoable.addPrimitive(new PrimitiveUndoableInsert(newNodeParent, newNode, newNodeIndex));
-		tree.getDocument().undoQueue.add(undoable);
-		
-		// Redraw and Set Focus
-		layout.draw(newNode, OutlineLayoutManager.TEXT);	
-	}
-
-	private void promote(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-		Node parent = currentNode.getParent();
-		
-		if (parent.isRoot()) {
-			return;
-		}
-
-		// Put the Undoable onto the UndoQueue
-		Node targetNode = parent.getParent();
-		int targetIndex = parent.currentIndex() + 1;
-		
-		CompoundUndoableMove undoable = new CompoundUndoableMove(parent, targetNode);
-
-		JoeNodeList nodeList = tree.getSelectedNodes();
-		for (int i = nodeList.size() - 1; i >= 0; i--) {
-			// Record the Insert in the undoable
-			Node nodeToMove = nodeList.get(i);
-
-			// Abort if node is not moveable
-			if (!nodeToMove.isMoveable()) {
-				continue;
-			}
-		
-			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), targetIndex));
-		}
-		
-		if (!undoable.isEmpty()) {
-			tree.getDocument().undoQueue.add(undoable);
-			undoable.redo();
-		}
-	}
-
-	private void demote(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-
-		if (tree.getYoungestInSelection().isFirstChild()) {
-			return;
-		}
-	
-		// Put the Undoable onto the UndoQueue
-		Node targetNode = tree.getYoungestInSelection().prevSibling();
-
-		CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(),targetNode);
-		
-		int existingChildren = targetNode.numOfChildren();
-		JoeNodeList nodeList = tree.getSelectedNodes();
-		for (int i = nodeList.size() - 1; i >= 0; i--) {
-			// Record the Insert in the undoable
-			Node nodeToMove = nodeList.get(i);
-
-			// Abort if node is not moveable
-			if (!nodeToMove.isMoveable()) {
-				continue;
-			}
-
-			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), existingChildren));
-		}
-
-		if (!undoable.isEmpty()) {
-			tree.getDocument().undoQueue.add(undoable);
-			undoable.redo();
-		}
-	}
-
 	private void copy(JoeTree tree, OutlineLayoutManager layout) {
 		NodeSet nodeSet = new NodeSet();
 		JoeNodeList nodeList = tree.getSelectedNodes();
@@ -874,58 +713,6 @@ public class IconKeyListener implements KeyListener, MouseListener, FocusListene
 
 		// Redraw and Set Focus
 		layout.draw(nodeThatMustBeVisible, OutlineLayoutManager.ICON);
-	}
-
-	private void selectAll(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-
-		// select all siblings
-		Node parent = currentNode.getParent();
-		
-		tree.clearSelection();
-		tree.addNodeToSelection(parent.getChild(0));
-		tree.selectRangeFromMostRecentNodeTouched(parent.getChild(parent.numOfChildren() - 1));
-
-		// Redraw and Set Focus
-		layout.draw(currentNode, OutlineLayoutManager.ICON);
-	}
-
-	private void selectInverse(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-
-		// select all siblings
-		Node parent = currentNode.getParent();
-		
-		for (int i = 0, limit = parent.numOfChildren(); i < limit; i++) {
-			Node child = parent.getChild(i);
-			
-			if (child.isSelected()) {
-				tree.removeNodeFromSelection(child);
-			} else {
-				tree.addNodeToSelection(child);
-			}
-		}
-		
-		if (tree.getNumberOfSelectedNodes() == 0) {
-			// Change to text node if all nodes were deselected.
-			changeFocusToTextArea(tree, layout, POSITION_FIRST);
-		} else {
-			// Redraw and Set Focus
-			layout.draw(currentNode, OutlineLayoutManager.ICON);
-		}
-	}
-
-	private void changeToParent(JoeTree tree, OutlineLayoutManager layout) {
-		Node newSelectedNode = textArea.node.getParent();
-		if (newSelectedNode.isRoot()) {return;}
-		
-		tree.setSelectedNodesParent(newSelectedNode.getParent());
-		tree.addNodeToSelection(newSelectedNode);
-		
-		tree.setEditingNode(newSelectedNode);
-		
-		// Redraw and Set Focus
-		layout.draw(newSelectedNode, OutlineLayoutManager.ICON);		
 	}
 	
 	private static final int UP = 1;
@@ -1072,7 +859,7 @@ public class IconKeyListener implements KeyListener, MouseListener, FocusListene
 		layout.draw(node,OutlineLayoutManager.ICON);
 	}
 	
-	protected void delete (JoeTree tree, OutlineLayoutManager layout, boolean deleteMode) {
+	private void delete (JoeTree tree, OutlineLayoutManager layout, boolean deleteMode) {
 		Node youngestNode = tree.getYoungestInSelection();
 		Node parent = youngestNode.getParent();
 		CompoundUndoableReplace undoable = new CompoundUndoableReplace(parent, deleteMode);
