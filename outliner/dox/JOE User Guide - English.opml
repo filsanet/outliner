@@ -1,39 +1,59 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <opml version="1.0">
 <head>
-<title>E:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
+<title>e:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Wed, 25 Jul 2001 07:52:17 GMT</dateModified>
+<dateModified>Thu, 26 Jul 2001 08:11:19 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
-<vertScrollState>5</vertScrollState>
-<windowTop>35</windowTop>
-<windowLeft>35</windowLeft>
-<windowBottom>485</windowBottom>
-<windowRight>485</windowRight>
+<vertScrollState>1</vertScrollState>
+<windowTop>17</windowTop>
+<windowLeft>36</windowLeft>
+<windowBottom>553</windowBottom>
+<windowRight>460</windowRight>
 </head>
 <body>
-<outline text="Introduction">
+<outline text="&lt;this is a work in perpetual progress&gt;">
+<outline text="send feedback/suggestions/links/content contributions to Stan@JavaOutlineEditor.org"/>
+</outline>
+<outline text="Front End">
 <outline text="About JOE"/>
-<outline text="People Behind JOE">
+<outline text="Using This Guide"/>
+<outline text="Authors"/>
+<outline text="JOE People">
 <outline text="Maynard Demmon"/>
 <outline text="Philip Suh"/>
 <outline text="Steven Spencer"/>
-<outline text="Stan Krute"/>
+<outline text="Stanley Krute"/>
 </outline>
 <outline text="Thanks To">
-<outline text="SourceForge"/>
-<outline text="Java community"/>
+<outline text="Dave Winer">
+<outline text="outlining fountainhead &amp; mensch"/>
+<outline text="http://www.scripting.com"/>
+</outline>
+<outline text="SourceForge">
+<outline text="23,000 projects"/>
+<outline text="230,000 developers"/>
+<outline text="the path is clear"/>
+</outline>
+<outline text="the Java community"/>
 </outline>
 <outline text="Use JOE">
 <outline text="Download the latest version here [link]"/>
 <outline text="Install it"/>
 </outline>
-<outline text="Develop JOE">
+<outline text="Help Develop JOE">
 <outline text="link to JOE Developer Guide.opml"/>
 </outline>
-<outline text="Feedback"/>
+<outline text="Feedback">
+<outline text="send feedback/suggestions/links/content contributions to Stan@JavaOutlineEditor.org"/>
+</outline>
+<outline text="Copyright"/>
+<outline text="Version">
+<outline text="versionStamp: 2001.07.25.001"/>
+</outline>
+<outline text="Cataloging Info"/>
 </outline>
 <outline text="Installation and Setup">
 <outline text="Prepare your system">
