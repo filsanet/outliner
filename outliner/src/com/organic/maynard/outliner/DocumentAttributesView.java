@@ -52,11 +52,10 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 	protected static String OK = null;
 
 	// GUI Elements
-	protected Box box = null;
-	
 	protected DocumentAttributesPanel attPanel = null;
 
 	protected JButton buttonOK = null;
+
 
 	// The Constructors
 	public DocumentAttributesView() {
@@ -66,11 +65,9 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 	}
 
 	private void initialize() {
-		box = Box.createVerticalBox();
-		
 		OK = GUITreeLoader.reg.getText("ok");
 		
-		buttonOK= new JButton(OK);
+		buttonOK = new JButton(OK);
 		
 		// Define the Bottom Panel
 		JPanel bottomPanel = new JPanel();
