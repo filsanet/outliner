@@ -82,6 +82,7 @@ public interface JoeTree
 	public void insertNode(Node node);
 	public int insertNodeAfter(Node existingNode, Node newNode);
 	public void insertNode(Node node, int index);
+	public void insertNodeAndChildren(Node node, int index);
 	public void promoteNode(Node currentNode, int currentNodeIndex);
 	public void demoteNode(Node currentNode, Node targetNode, int currentNodeIndex);
 	

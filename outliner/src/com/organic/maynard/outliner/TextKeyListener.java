@@ -177,7 +177,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		
 		switch(e.getKeyCode()) {
 			case KeyEvent.VK_PAGE_DOWN:
-				toggleExpansion(tree, layout);
+				toggleExpansion(tree,layout, e.isShiftDown());
 				break;
 
 			case KeyEvent.VK_PAGE_UP:
@@ -614,17 +614,21 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 
 	// Key Handlers
-	private void toggleExpansion(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
+	private void toggleExpansion(JoeTree tree, OutlineLayoutManager layout, boolean shiftDown) {
+		Node node = textArea.node;
 		
-		if (currentNode.isExpanded()) {
-			currentNode.setExpanded(false);
+		if (node.isExpanded()) {
+			node.setExpanded(false, !shiftDown);
 		} else {
-			currentNode.setExpanded(true);
+			if (shiftDown) {
+				node.ExpandAllSubheads();
+			} else {
+				node.setExpanded(true, true);
+			}
 		}
 
 		// Redraw
-		layout.draw(currentNode, OutlineLayoutManager.TEXT);
+		layout.draw(node, OutlineLayoutManager.TEXT);
 	}
 
 	// Comments

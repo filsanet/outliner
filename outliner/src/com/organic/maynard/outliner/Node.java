@@ -131,6 +131,7 @@ public interface Node extends AttributeContainer {
 	// Navigation Methods
 	public void setExpandedClean(boolean expanded);
 	public void setExpanded(boolean expanded);
+	public void setExpanded(boolean expanded, boolean collapseChildrenWhenCollapsing);
 	public boolean isExpanded();
 	public void ExpandAllSubheads();
 	public void CollapseAllSubheads();

@@ -240,6 +240,13 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 	public void insertNode(Node node, int index) {
 		visibleNodes.add(index, node);
 	}
+
+	public void insertNodeAndChildren(Node node, int index) {
+		visibleNodes.add(index, node);
+		
+		// Walk the tree Downwards inserting all expanded nodes and their children
+		insertChildrenIntoVisibleNodesCache(node, this, index);
+	}
 	
 	// Handling Node Selection
 	private Node mostRecentNodeTouched = null;

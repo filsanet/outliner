@@ -501,6 +501,10 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	}
 	
 	public void setExpanded(boolean expanded) {
+		setExpanded(expanded, true);
+	}
+	
+	public void setExpanded(boolean expanded, boolean collapseChildrenWhenCollapsing) {
 		if (expanded == isExpanded()) {
 			// Since we have not changed state, Abort.
 			return;
@@ -512,19 +516,20 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 			return;
 		}
 		
+		int childCount = this.numOfChildren();
 		if (isExpanded()) {
 			int index = tree.getVisibleNodes().indexOf(this) + 1;
-			for (int i = this.numOfChildren() - 1; i >= 0; i--) {
-				//tree.insertNodeAfter(this,getChild(i));
-				tree.insertNode(getChild(i), index);
-			}				
+			for (int i = childCount - 1; i >= 0; i--) {
+				tree.insertNodeAndChildren(getChild(i), index);
+			}			
 		} else {
-			int childCount = this.numOfChildren();
 			for (int i = 0; i < childCount; i++) {
 				Node child = getChild(i);
 				tree.removeNode(child);
-				if (child.isExpanded()) {
-					child.setExpanded(false);
+				if (collapseChildrenWhenCollapsing) {
+					if (child.isExpanded()) {
+						child.setExpanded(false);
+					}
 				}
 			}		
 		}

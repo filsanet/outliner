@@ -177,16 +177,28 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	}
 	
 	protected void processDoubleClick(MouseEvent e) {
+		textArea.node.getTree().setSelectedNodesParent(textArea.node.getParent());
+		textArea.node.getTree().addNodeToSelection(textArea.node);
+
 		if (textArea.node.isExpanded()) {
-			textArea.node.setExpanded(false);
+			if (e.isShiftDown()) {
+				textArea.node.setExpanded(false, false);
+			} else {
+				textArea.node.setExpanded(false, true);
+			}
 		} else {
-			textArea.node.setExpanded(true);
+			if (e.isShiftDown()) {
+				textArea.node.ExpandAllSubheads();
+			} else {
+				textArea.node.setExpanded(true, true);
+			}
 		}
 		
-		if (textArea.node.isSelected()) {
-			textArea.node.getTree().setSelectedNodesParent(textArea.node.getParent());
-			textArea.node.getTree().addNodeToSelection(textArea.node);
-		}		
+		// This lets us double click to make the current node the only node in the selection no matter the circumstances.
+		//if (textArea.node.isSelected()) {
+		//	textArea.node.getTree().setSelectedNodesParent(textArea.node.getParent());
+		//	textArea.node.getTree().addNodeToSelection(textArea.node);
+		//}		
 	}
 	
 	
@@ -200,7 +212,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 		switch(e.getKeyCode()) {
 			case KeyEvent.VK_PAGE_DOWN:
-				toggleExpansion(tree,layout);
+				toggleExpansion(tree,layout, e.isShiftDown());
 				break;
 
 			case KeyEvent.VK_PAGE_UP:
@@ -467,15 +479,19 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 
 	// Key Handlers
-	private void toggleExpansion(JoeTree tree, OutlineLayoutManager layout) {
+	private void toggleExpansion(JoeTree tree, OutlineLayoutManager layout, boolean shiftDown) {
 		Node currentNode = textArea.node;
 		
 		for (int i = 0; i < tree.getSelectedNodes().size(); i++) {
 			Node node = tree.getSelectedNodes().get(i);
 			if (node.isExpanded()) {
-				node.setExpanded(false);
+				node.setExpanded(false, !shiftDown);
 			} else {
-				node.setExpanded(true);
+				if (shiftDown) {
+					node.ExpandAllSubheads();
+				} else {
+					node.setExpanded(true, true);
+				}
 			}
 		}
 
