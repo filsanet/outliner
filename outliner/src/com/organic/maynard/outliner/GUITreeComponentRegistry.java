@@ -1,37 +1,37 @@
 /**
  * Copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
  * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or 
- * without modification, are permitted provided that the 
+ *
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are permitted provided that the
  * following conditions are met:
- * 
- *  - Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- *  - Redistributions in binary form must reproduce the above 
- *    copyright notice, this list of conditions and the following 
- *    disclaimer in the documentation and/or other materials provided 
- *    with the distribution. 
- * 
- *  - Neither the names "Java Outline Editor", "JOE" nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ *
+ *  - Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ *  - Redistributions in binary form must reproduce the above
+ *    copyright notice, this list of conditions and the following
+ *    disclaimer in the documentation and/or other materials provided
+ *    with the distribution.
+ *
+ *  - Neither the names "Java Outline Editor", "JOE" nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package com.organic.maynard.outliner;
 
 import java.util.HashMap;
@@ -49,7 +49,7 @@ public class GUITreeComponentRegistry {
 	public static final String FIND_MENU_ITEM = "find";
 	public static final String STACK_MENU_ITEM = "stack";
 	public static final String RECENT_FILE_MENU = "recent_file_list";
-	
+
 	public static final String OPEN_MENU_ITEM = "open";
 	public static final String SAVE_MENU_ITEM = "save";
 	public static final String SAVE_AS_MENU_ITEM = "save_as";
@@ -106,10 +106,16 @@ public class GUITreeComponentRegistry {
 	public static final String COMPONENT_LINE_WRAP = "line_wrap_component";
 	public static final String COMPONENT_FILE_PROTOCOL = "file_protocol_component";
 	public static final String COMPONENT_LINE_ENDING = "line_end_component";
+	
 	public static final String COMPONENT_ENCODING_WHEN_OPENING = "open_encoding_component";
+	public static final String COMPONENT_ENCODING_WHEN_IMPORTING = "import_encoding_component";
 	public static final String COMPONENT_ENCODING_WHEN_SAVING = "save_encoding_component";
+	public static final String COMPONENT_ENCODING_WHEN_EXPORTING = "export_encoding_component";
+	
 	public static final String COMPONENT_FORMAT_WHEN_OPENING = "open_format_component";
+	public static final String COMPONENT_FORMAT_WHEN_IMPORTING = "import_format_component";
 	public static final String COMPONENT_FORMAT_WHEN_SAVING = "save_format_component";
+	public static final String COMPONENT_FORMAT_WHEN_EXPORTING = "export_format_component";
 
 	public static final String JDIALOG_DOCUMENT_SETTINGS_VIEW = "document_settings_view";
 
@@ -117,10 +123,10 @@ public class GUITreeComponentRegistry {
 	public static final String RUN_AS_BSH_SCRIPT_MENU_ITEM = "run_as_bsh_script";
 
 	// Other Constants
-	public static final String PLACEHOLDER_1 = "{$value_1}";	
-	public static final String PLACEHOLDER_2 = "{$value_2}";	
-	public static final String PLACEHOLDER_3 = "{$value_3}";	
-	
+	public static final String PLACEHOLDER_1 = "{$value_1}";
+	public static final String PLACEHOLDER_2 = "{$value_2}";
+	public static final String PLACEHOLDER_3 = "{$value_3}";
+
 	// Fields
 	private HashMap reg = new HashMap();
 	private HashMap textResources = new HashMap();
@@ -128,33 +134,33 @@ public class GUITreeComponentRegistry {
 
 	// Constructors
 	public GUITreeComponentRegistry() {}
-	
-	
+
+
 	// Accessors
 	public void add(GUITreeComponent comp) {
-		reg.put(comp.getGUITreeComponentID(), comp);
+  reg.put(comp.getGUITreeComponentID(), comp);
 	}
 
 	public GUITreeComponent get(String name) {
-		return (GUITreeComponent) reg.get(name);
+  return (GUITreeComponent) reg.get(name);
 	}
 
 	public void addText(String key, String value) {
-		value = Replace.replace(value,"\\n", "\n");
-		value = Replace.replace(value,"\\\\", "\\");
-		
-		if (textResources.get(key) != null) {
-			System.out.println("WARNING: Writing over existing text repository key: " + key);
-		}
-		
-		textResources.put(key, value);
-	}
+  value = Replace.replace(value,"\\n", "\n");
+  value = Replace.replace(value,"\\\\", "\\");
 
-	public String getText(String key) {
-		String retVal = (String) textResources.get(key);
-		if (retVal == null) {
-			System.out.println("Invalid text resource key: " + key);
-		}
-		return retVal;
-	}
+  if (textResources.get(key) != null) {
+   System.out.println("WARNING: Writing over existing text repository key: " + key);
+  }
+
+  textResources.put(key, value);
+ }
+
+ public String getText(String key) {
+  String retVal = (String) textResources.get(key);
+  if (retVal == null) {
+   System.out.println("Invalid text resource key: " + key);
+  }
+  return retVal;
+ }
 }
