@@ -69,10 +69,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	public static String LANGUAGE = "en"; // Defaults to English.
 	
 	// Splash Screen
-	public static SplashScreen splash = null;
-	static {
-		splash = new SplashScreen(Thread.currentThread().getContextClassLoader().getResource("graphics/splash_screen.gif"));
-	}
+	public static SplashScreen splash = new SplashScreen(Thread.currentThread().getContextClassLoader().getResource("graphics/splash_screen.gif"));
 	
 	// Directory setup
 	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
@@ -352,7 +349,13 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		// Set the preferred language to use.
 		String ISO639LangCode = Locale.getDefault().getLanguage();
 		if (ISO639LangCode != null && !ISO639LangCode.equals("")) {
-			LANGUAGE = ISO639LangCode;
+			// Verify that gui_tree.xml file exists for this language.
+			File file = new File(new StringBuffer().append(PREFS_DIR).append("gui_tree.").append(ISO639LangCode).append(".xml").toString());
+			if (file.exists()) {
+				LANGUAGE = ISO639LangCode;
+			} else {
+				System.out.println("WARNING: Default language code, " + ISO639LangCode + " does not have a gui_tree.xml file. Using default value instead.");
+			}
 		}
 		
 		// Load the Main GUITree
@@ -389,27 +392,27 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 			}
 			String filepath = sb_filepath.toString();
 			if ((filepath != null) && (!filepath.equals("")) && (!filepath.equals("%1")) ) {
-				// ensure that we have a full pathname [srk]
 				try {
+					// ensure that we have a full pathname [srk]
 					filepath = new File(filepath).getCanonicalPath();
+					
+					// grab the file's extension
+					String extension = filepath.substring(filepath.lastIndexOf(".") + 1, filepath.length());
+					
+					// use the extension to figure out the file's format
+					String fileFormat = Outliner.fileFormatManager.getOpenFileFormatNameForExtension(extension);
+					
+					// crank up a fresh docInfo struct
+					DocumentInfo docInfo = new DocumentInfo();
+					docInfo.setPath(filepath);
+					docInfo.setEncodingType(Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur);
+					docInfo.setFileFormat(fileFormat);
+					
+					// try to open up the file
+					FileMenu.openFile(docInfo, fileProtocolManager.getDefault());
 				} catch (IOException e) {
 					System.out.println("IOException: " + e.getMessage());
 				}
-				
-				// grab the file's extension
-				String extension = filepath.substring(filepath.lastIndexOf(".") + 1, filepath.length());
-				
-				// use the extension to figure out the file's format
-				String fileFormat = Outliner.fileFormatManager.getOpenFileFormatNameForExtension(extension);
-				
-				// crank up a fresh docInfo struct
-				DocumentInfo docInfo = new DocumentInfo();
-				docInfo.setPath(filepath);
-				docInfo.setEncodingType(Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur);
-				docInfo.setFileFormat(fileFormat);
-				
-				// try to open up the file
-				FileMenu.openFile(docInfo, fileProtocolManager.getDefault());
 			} else {
 				// Create a Document. This must come after visiblity otherwise the window won't be activated.
 				if (Preferences.getPreferenceBoolean(Preferences.NEW_DOC_ON_STARTUP).cur) {
@@ -567,7 +570,6 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 			}
 			
 			buffer.close();
-			
 		} catch (FileNotFoundException fnfe) {
 			System.err.println("File Not Found: " + filename + "\n" + fnfe);
 		} catch (Exception e) {
