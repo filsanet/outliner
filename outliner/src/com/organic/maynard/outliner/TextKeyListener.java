@@ -183,6 +183,9 @@ public class TextKeyListener implements KeyListener, MouseListener {
 			case KeyEvent.VK_V:
 				if (e.isControlDown()) {
 					paste(tree,layout);
+					if (!inlinePaste) {
+						e.consume();
+					}
 				}
 				return;
 				
