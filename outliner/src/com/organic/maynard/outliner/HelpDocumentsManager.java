@@ -59,7 +59,8 @@ package com.organic.maynard.outliner;
 // we manage a set of Help system documents
 public class HelpDocumentsManager 
 
-	extends DocumentManager {
+	extends DocumentManager
+	implements JOEReturnCodes {
 	
 	// public class constants
 	public static final int USER_GUIDE = 0 ;
