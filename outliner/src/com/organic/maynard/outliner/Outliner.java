@@ -29,12 +29,15 @@ import javax.swing.*;
 import org.xml.sax.*;
 
 import com.organic.maynard.util.*;
+import com.organic.maynard.io.FileTools;
 
 // WebFile
 import javax.swing.filechooser.*;
 import com.yearahead.io.*;
 
 public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent {
+	
+	public static final String USER_OUTLINER_DIR = "outliner";
 	
 	// Directory setup
 	public static String GRAPHICS_DIR = "graphics";
@@ -46,7 +49,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	static {
 		String userhome = System.getProperty("user.home");
 		if ((userhome != null) && !userhome.equals("")) {
-			USER_PREFS_DIR = userhome + System.getProperty("file.separator") + "outliner" + System.getProperty("file.separator");
+			USER_PREFS_DIR = userhome + System.getProperty("file.separator") + USER_OUTLINER_DIR + System.getProperty("file.separator");
 		}
 	}
 
@@ -77,6 +80,14 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		isCreated = macrosFile.mkdirs();
 		if (isCreated) {
 			System.out.println("Created Macros Directory: " + macrosFile.getPath());
+			
+			// Copy over macros.txt and contents of macros directory.
+			try {
+				FileTools.copy(new File(PREFS_DIR + "macros"), macrosFile);
+				FileTools.copy(new File(PREFS_DIR + "macros.txt"), new File(MACROS_FILE));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
