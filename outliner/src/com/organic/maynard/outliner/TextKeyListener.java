@@ -227,6 +227,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		}
 		
 		// Keep unwanted keystrokes from effecting undoability.
+		boolean doUndo = true;
 		switch(e.getKeyCode()) {
 			case KeyEvent.VK_SHIFT:
 				return;
@@ -248,6 +249,14 @@ public class TextKeyListener implements KeyListener, MouseListener {
 				return;
 			case KeyEvent.VK_TAB:
 				return;
+			// These keystrokes should not effect undoablility, but do 
+			// effect cursor position and redraw.
+			case KeyEvent.VK_HOME:
+				doUndo = false;
+				break;
+			case KeyEvent.VK_END:
+				doUndo = false;
+				break;
 		}
 
 		// Create some short names for convienence
@@ -255,30 +264,35 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		TreeContext tree = currentNode.getTree();
 		outlineLayoutManager layout = tree.doc.panel.layout;
 
-		// Update the value in the node and get some values
+		// Record some Values
 		int caretPosition = textArea.getCaretPosition();
-		String oldText = currentNode.getValue();
-		String newText = textArea.getText();
-		currentNode.setValue(newText);
 
-		// Put the Undoable onto the UndoQueue
-		UndoableEdit undoable = tree.doc.undoQueue.getIfEdit();
-		if ((undoable != null) && (undoable.getNode() == currentNode) && (!undoable.isFrozen())) {
-			if (e.isControlDown() && ((e.getKeyCode() == KeyEvent.VK_X) || (e.getKeyCode() == KeyEvent.VK_V))) {
-				tree.doc.undoQueue.add(new UndoableEdit(currentNode, oldText, newText, tree.getCursorPosition(), caretPosition, tree.getCursorMarkPosition(), caretPosition));
+		if (doUndo) {
+			// Update the value in the node
+			String oldText = currentNode.getValue();
+			String newText = textArea.getText();
+			currentNode.setValue(newText);
+	
+			// Put the Undoable onto the UndoQueue
+			UndoableEdit undoable = tree.doc.undoQueue.getIfEdit();
+			if ((undoable != null) && (undoable.getNode() == currentNode) && (!undoable.isFrozen())) {
+				if (e.isControlDown() && ((e.getKeyCode() == KeyEvent.VK_X) || (e.getKeyCode() == KeyEvent.VK_V))) {
+					tree.doc.undoQueue.add(new UndoableEdit(currentNode, oldText, newText, tree.getCursorPosition(), caretPosition, tree.getCursorMarkPosition(), caretPosition));
+				} else {
+					undoable.setNewText(newText);
+					undoable.setNewPosition(caretPosition);
+					undoable.setNewMarkPosition(caretPosition);
+				}
 			} else {
-				undoable.setNewText(newText);
-				undoable.setNewPosition(caretPosition);
-				undoable.setNewMarkPosition(caretPosition);
+				tree.doc.undoQueue.add(new UndoableEdit(currentNode, oldText, newText, tree.getCursorPosition(), caretPosition, tree.getCursorMarkPosition(), caretPosition));
 			}
-		} else {
-			tree.doc.undoQueue.add(new UndoableEdit(currentNode, oldText, newText, tree.getCursorPosition(), caretPosition, tree.getCursorMarkPosition(), caretPosition));
 		}
 
 		// Record the EditingNode, Mark and CursorPosition
 		tree.setEditingNode(currentNode);
 		tree.setCursorMarkPosition(textArea.getCaret().getMark());
 		tree.setCursorPosition(caretPosition, false);
+		tree.doc.setPreferredCaretPosition(caretPosition);
 
 		// Do the Redraw if we have wrapped or if we are currently off screen.
 		if (textArea.getPreferredSize().height != textArea.height || !currentNode.isVisible()) {

@@ -29,9 +29,17 @@ import javax.swing.event.*;
 import com.organic.maynard.util.string.*;
 
 public class IconKeyListener implements KeyListener, MouseListener {
-	
+
+	// Constants for setting cursor position.
+	private static final int POSITION_FIRST = 0;
+	private static final int POSITION_CURRENT = 1;
+	private static final int POSITION_LAST = 2;
+
+
+	// Instance Fields
 	private OutlinerCellRendererImpl textArea = null;
-		
+
+
 	// The Constructors
 	public IconKeyListener() {}
 	
@@ -83,8 +91,6 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		// Consume the current event and then propogate a new event to
 		// the DnD listener since if a drawUp() happened, the old event
 		// will most likely have an invalid component.
-		//OutlinerCellRendererImpl c = tree.doc.panel.layout.getUIComponent(node);
-		//textArea = c;
 		e.consume();
 
 		MouseEvent eNew = new MouseEvent(
@@ -103,13 +109,12 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	public void mouseReleased(MouseEvent e) {
 		recordRenderer(e.getComponent());
 		
-		//System.out.println("ICON Mouse Released: " + e.paramString());
-		
 		// This is detection for Windows
 		if (e.isPopupTrigger() && textArea.node.isSelected()) {
 			Outliner.macroPopup.show(e.getComponent(),e.getX(), e.getY());
 		}
-	} 
+	}
+	
 	public void mouseClicked(MouseEvent e) {}
 	    
 	protected void processSingleClick(MouseEvent e) {
@@ -205,9 +210,25 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 			case KeyEvent.VK_ENTER:
 				if (e.isShiftDown()) {
-					changeFocusToTextArea(tree,layout);
+					changeFocusToTextArea(tree, layout, POSITION_CURRENT);
 				} else {
 					insert(tree,layout);
+				}
+				break;
+
+			case KeyEvent.VK_HOME:
+				if (tree.selectedNodes.size() > 1) {
+					changeSelectionToNode(tree, layout, POSITION_FIRST);
+				} else {
+					changeFocusToTextArea(tree, layout, POSITION_FIRST);
+				}
+				break;
+
+			case KeyEvent.VK_END:
+				if (tree.selectedNodes.size() > 1) {
+					changeSelectionToNode(tree, layout, POSITION_LAST);
+				} else {
+					changeFocusToTextArea(tree, layout, POSITION_LAST);
 				}
 				break;
 
@@ -361,11 +382,43 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		layout.draw(currentNode, outlineLayoutManager.ICON);
 	}
 
-	private void changeFocusToTextArea(TreeContext tree, outlineLayoutManager layout) {
+	private void changeFocusToTextArea(TreeContext tree, outlineLayoutManager layout, int positionType) {
 		Node currentNode = textArea.node;
+		
+		if (positionType == POSITION_FIRST) {
+			tree.setCursorPosition(0);
+			tree.doc.setPreferredCaretPosition(0);
+		} else if (positionType == POSITION_LAST) {
+			int index = textArea.getText().length();
+			tree.setCursorPosition(index);
+			tree.doc.setPreferredCaretPosition(index);		
+		}
+		
 		tree.setComponentFocus(outlineLayoutManager.TEXT);
 		tree.clearSelection();
 		layout.draw(currentNode,outlineLayoutManager.TEXT);
+	}
+
+	private void changeSelectionToNode(TreeContext tree, outlineLayoutManager layout, int positionType) {
+		Node selectedNode = null;
+		
+		if (positionType == POSITION_FIRST) {
+			selectedNode = tree.getYoungestInSelection();
+		} else if (positionType == POSITION_LAST) {
+			selectedNode = tree.getOldestInSelection();
+		}
+		
+		// Update Selection
+		tree.clearSelection();
+		tree.addNodeToSelection(selectedNode);
+
+		// Record State
+		tree.setEditingNode(selectedNode);
+		tree.setCursorPosition(0);
+		tree.doc.setPreferredCaretPosition(0);
+		
+		// Redraw and Set Focus	
+		layout.draw(selectedNode, outlineLayoutManager.ICON);
 	}
 
 	private void moveUp(TreeContext tree, outlineLayoutManager layout) {
