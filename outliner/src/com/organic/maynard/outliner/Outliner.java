@@ -453,11 +453,12 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		
 		setVisible(true);
 	}
-		
+	
+	
+	// after the static initializers run, execution continues here	
 	public static void main(String args[]) {
 		// This allows scrollbars to be resized while they are being dragged.
 		UIManager.put("ScrollBarUI", PlatformCompatibility.getScrollBarUIClassName());
-
 
 		// See if we've got a preferred language to use. 
 		// lang should be a ISO 639 two letter lang code. 
@@ -470,14 +471,17 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 				GUI_TREE_FILE = PREFS_DIR + "gui_tree." + LANGUAGE + ".xml";
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {}
-                
-		// Load the GUI
+		
+		// try to load the GUI
 		GUITreeLoader loader = new GUITreeLoader();
 		boolean success = loader.load(Outliner.GUI_TREE_FILE);
+		// if we fail ...
 		if (!success) {
+			// confess
 			System.out.println("GUI Loading Error: exiting.");
+			// outta here
 			System.exit(0);
-		}
+		} // end if
 
 		// Run startup scripts. We're doing this just prior to opening any documents.
 		ScriptsManagerModel.runStartupScripts();
@@ -485,12 +489,18 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		// Create a Document. This must come after visiblity otherwise the window won't be activated.
 		if (Preferences.getPreferenceBoolean(Preferences.NEW_DOC_ON_STARTUP).cur) {
 			new OutlinerDocument("");
-		}
-			
-		// See if a file to open was provided at the command line.
+		} // end if we're new-doccing on startup
+		
+		// See if the command line included a file to be opened.
 		String filepath = null;
 		try {
+			// build up the filepath
 			filepath = args[1];
+			// [srk] the following is needed because java*.exe splits up
+			//	pathnames containing spaces into multiple arg strings
+			for (int i= 2, argCount = args.length; i< argCount; i++) {
+				filepath = filepath + " " +  args[i] ;
+			} // end for
 			
 			// if the filepath is present and non-empty ...
 			if ((filepath != null) && (! filepath.equals("")) && (! filepath.equals("%1")) ) {
@@ -498,17 +508,24 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 				// ensure that we have a full pathname [srk]
 				filepath = canonicalPath(filepath) ;
 				
+				// grab the file's extension
 				String extension = filepath.substring(filepath.lastIndexOf(".") + 1,filepath.length());
+				
+				// use the extension to figure out the file's format
 				String fileFormat = Outliner.fileFormatManager.getOpenFileFormatNameForExtension(extension);
 	
+				// crank up a fresh docInfo struct
 				DocumentInfo docInfo = new DocumentInfo();
 				docInfo.setPath(filepath);
 				docInfo.setEncodingType(Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur);
 				docInfo.setFileFormat(fileFormat);
 				
+				// try to open up the file
 				FileMenu.openFile(docInfo, fileProtocolManager.getDefault());
-			}
-		} catch (ArrayIndexOutOfBoundsException e) {}
+			} // end if the filepath is present and non-empty
+		} // end try
+		catch (ArrayIndexOutOfBoundsException e) {
+		} // end catch
 
 
 		// For Debug Purposes
@@ -518,12 +535,11 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 			while (names.hasMoreElements()) {
 				String name = (String) names.nextElement();
 				System.out.println(name + " : " + properties.getProperty(name));
-			}
-		}
-	}
+			} // end while
+		} // end if
+		
+	} // end method main
 	
-
-
 	
 	// Open Document Repository
 	private static ArrayList openDocuments = new ArrayList();
@@ -531,7 +547,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 
 	public static OutlinerDocument getMostRecentDocumentTouched() {
 		return mostRecentDocumentTouched;
-	}
+	} // end method getMostRecentDocumentTouched
 	
 	public static void setMostRecentDocumentTouched(OutlinerDocument doc) {
 		mostRecentDocumentTouched = doc;
@@ -553,8 +569,9 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 			ScriptMenu.updateScriptMenu(doc);
 			WindowMenu.updateWindowMenu();
 			HelpMenu.updateHelpMenu();	// [srk] 8/5/01 1:06PM
-		}
-	}
+		} // end if-else
+	} // end method setMostRecentDocumentTouched
+	
 	
 	public static void addDocument(OutlinerDocument document) {
 		openDocuments.add(document);
@@ -571,21 +588,24 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 
 		// Notify the Help documents manager	[srk 8/5/01 1:12PM]
 		helpDoxMgr.someDocumentJustOpened(document) ;
-	}
+	} // end method addDocument
+	
 	
 	public static OutlinerDocument getDocument(int i) {
 		return (OutlinerDocument) openDocuments.get(i);
-	}
+	} // end method getDocument
+	
 	
 	public static OutlinerDocument getDocument(String filename) {
 		for (int i = 0; i < openDocuments.size(); i++) {
 			OutlinerDocument doc = getDocument(i);
 			if (filename.equals(doc.getFileName())) {
 				return doc;
-			}
-		}
+			} // end if
+		} // end for
 		return null;	
-	}
+	} // end method getDocument
+	
 	
 	public static void removeDocument(OutlinerDocument document) {
 		// Remove the document from the window menus
