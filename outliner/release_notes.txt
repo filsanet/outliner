@@ -1,3 +1,16 @@
+1.8.5 - 09/21/01
+	Bug Fixes:
+		1) If you select the first child node and then select another sibling node, doing a select all wouldn't work right. Now it does.
+		2) Fixed bug #458868 where double clicking to select a word wouldn't actually get recorded internal to the app, even though visually it looked OK. This would cause macros not to apply themselves to the correct selection.
+		3) Fixed bug with go to line where the view wasn't jumping to a node that was not currently on screen.
+		4) Fixed a Stack Overflow issue with line numbers. The moral, recursive methods elegant, but bad if they're going to recurse thousands of times.
+		5) Fixed a bug with delete where the current node to draw from would not get hidden initially when you deleted the current node to draw from.
+	Feature Enhancements:
+		1) Performance improvements.
+		2) Added Scripts Manager. You can now create scripts and run them in their own thread of execution. Basic facilities for monitoring and managing these threads is also included. I implemented an auto-save agent as an example script. Scripts can also be designated as startup or shutdown scripts.
+		3) Added mouse wheel support for windows. Thanks to the JMouseWheel project on SourceForge: http://sourceforge.net/projects/jmousewheel/.
+	Notes:
+		1) The windows mousewheel code also apparently relies on a MSVCP60.dll file. This seems to be included by default under Win2k, but isn't for 95/98/NT. You can download this dll off the net. It's about 393k. You'll know you need it if you get a windows dialog at startup bitching about not being able to find this. If you choose not to get the dll things will still work ok, but you won't have the mousewheel support, and you'll have to deal with the annoying dialog's on startup. I'll post the dll at http://outliner.sourceforge.net/MSVCP60.dll so you don't need to hunt for it.
 1.8.4 - 09/04/01
 	Bug Fixes:
 		1) Fixed a bug where changing the name of a macro during an "update macro" operation would not delete the old macro from the file system.
