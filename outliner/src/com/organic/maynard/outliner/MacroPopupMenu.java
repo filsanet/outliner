@@ -59,9 +59,12 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		SORT_SHALLOW = GUITreeLoader.reg.getText("sort_shallow");
 		SORT_DEEP = GUITreeLoader.reg.getText("sort_deep");
 
-		SORT_MENU = new JMenu(SORT);
-		SORT_SHALLOW_MENU = new JMenu(SORT_SHALLOW);
-		SORT_DEEP_MENU = new JMenu(SORT_DEEP);
+		SORT_MENU = new OutlinerSubMenuItem();
+		SORT_MENU.setText(SORT);
+		SORT_SHALLOW_MENU = new OutlinerSubMenuItem();
+		SORT_SHALLOW_MENU.setText(SORT_SHALLOW);
+		SORT_DEEP_MENU = new OutlinerSubMenuItem();
+		SORT_DEEP_MENU.setText(SORT_DEEP);
 		
 		SORT_MENU.insert(SORT_SHALLOW_MENU, 0);
 		SORT_MENU.insert(SORT_DEEP_MENU, 1);
