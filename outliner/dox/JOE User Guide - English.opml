@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Wed, 25 Jul 2001 02:39:19 GMT</dateModified>
+<dateModified>Wed, 25 Jul 2001 02:43:38 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>68</windowTop>
-<windowLeft>98</windowLeft>
-<windowBottom>449</windowBottom>
-<windowRight>562</windowRight>
+<windowTop>60</windowTop>
+<windowLeft>35</windowLeft>
+<windowBottom>441</windowBottom>
+<windowRight>499</windowRight>
 </head>
 <body>
 <outline text="Introduction">
@@ -48,7 +48,10 @@
 </outline>
 </outline>
 </outline>
-<outline text="Download the latest JOE"/>
+<outline text="Download the latest JOE">
+<outline text="Go to http://sourceforge.net/projects/outliner"/>
+<outline text="You'll find the latest JOE file releases halfway down the page"/>
+</outline>
 <outline text="Install the download"/>
 <outline text="Create some shortcuts"/>
 <outline text="Start 'im up"/>
