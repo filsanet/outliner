@@ -57,6 +57,13 @@ public class AttributeContainerImpl implements AttributeContainer {
 	}
 	
 	public void setAttribute(String key, Object value, boolean isReadOnly) {
+		// Map null keys to empty keys to prevent NPEs for code that wants to work
+		// with the keys.
+		if (key == null) {
+			key = "";
+			System.out.println("Warning: key was null in AttibuteContainerImpl setAttribute(String key, Object value, boolean isReadOnly)");
+		}
+		
 		if (attributes == null) {
 			this.attributes = new HashMap();
 			this.isReadOnly = new HashMap();
@@ -66,7 +73,11 @@ public class AttributeContainerImpl implements AttributeContainer {
 	}
 	
 	public void removeAttribute(String key) {
-		if (attributes != null && key != null) {
+		if (attributes != null) {
+			if (key == null) {
+				key = "";
+			}
+			
 			this.attributes.remove(key);
 			this.isReadOnly.remove(key);
 		}
@@ -80,14 +91,22 @@ public class AttributeContainerImpl implements AttributeContainer {
 	}
 	
 	public Object getAttribute(String key) {
-		if (attributes != null && key != null) {
+		if (attributes != null) {
+			if (key == null) {
+				key = "";
+			}
+			
 			return attributes.get(key);
 		}
 		return null;
 	}
 	
 	public boolean isReadOnly(String key) {
-		if (isReadOnly != null && key != null) {
+		if (isReadOnly != null) {
+			if (key == null) {
+				key = "";
+			}
+			
 			Boolean b = (Boolean) isReadOnly.get(key);
 			if (b != null) {
 				return b.booleanValue();
@@ -97,6 +116,10 @@ public class AttributeContainerImpl implements AttributeContainer {
 	}
 	
 	public void setReadOnly(String key, boolean isReadOnly) {
+		if (key == null) {
+			key = "";
+		}
+		
 		if (attributes == null || !(this.isReadOnly.containsKey(key))) {
 			return;
 		}
