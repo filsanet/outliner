@@ -59,6 +59,16 @@ public class TreeContext extends AttributeContainerImpl {
 	}
 
 	public TreeContext() {
+		reset();
+	}
+	
+	public void reset() {
+		doc = null;
+		visibleNodes.clear();
+		selectedNodes.clear();
+		rootNode = null;
+		attributes = null;
+		
 		// Create an empty Tree
 		setRootNode(new NodeImpl(this,"ROOT"));
 		rootNode.setHoisted(true);
@@ -69,7 +79,7 @@ public class TreeContext extends AttributeContainerImpl {
 		insertNode(child);
 		
 		// Record the current location
-		setEditingNode(child, false);
+		setEditingNode(child, false);	
 	}
 	
 	public void destroy() {
