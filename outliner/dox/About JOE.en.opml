@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\About JOE.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Mon, 4 Feb 2002 05:54:56 GMT</dateModified>
+<dateModified>Mon, 4 Feb 2002 08:24:35 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>0</windowTop>
-<windowLeft>0</windowLeft>
-<windowBottom>447</windowBottom>
-<windowRight>371</windowRight>
+<windowTop>5</windowTop>
+<windowLeft>5</windowLeft>
+<windowBottom>455</windowBottom>
+<windowRight>455</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -26,17 +26,20 @@
 <outline isEditable="true" isMoveable="true" text="Version" isMoveableInherited="true" isEditableInherited="true">
 	<outline text="1.8.7"/>
 	<outline text="sub-version">
-		<outline isEditable="true" isMoveable="true" text="2002.02.03.000"/>
+		<outline isEditable="true" isMoveable="true" text="2002.02.04.000"/>
+		<outline text="previous sub-versions">
+			<outline text="&lt;none&gt;"/>
+		</outline>
 	</outline>
 </outline>
 <outline text="Release Notes ">
-	<outline text="1.8.7 - 2/3/02">
+	<outline text="1.8.7 - 2/4/02">
 		<outline text="License Change:">
-			<outline text="1) Switched to a BSD license."/>
+			<outline text="1) Switched to a BSD-style license."/>
 			<outline text="2) We are now building our own jmousewheel.jar library. Code separation is much cleaner so that there is now only a &quot;uses&quot; relationship between outliner.jar and jmousewheel.jar. This should make things compatible between the use of a BSD license for outliner.jar and the LGPL for jmousewheel.jar."/>
 		</outline>
 		<outline text="New Features:">
-			<outline text="1) Support for multiple File Protocols added.">
+			<outline text="1) Added support for multiple File Protocols.">
 				<outline text="a) Implemented LocalFileSystemFileProtocol for opening/saving/exporting to the local filesystem."/>
 				<outline text="b) Implemented WebFilePHPFileProtocol for opening/saving/exporting to Steven Spencer's PHP based remote file storage system. The WebFile code is now contained in it's own jar: com.yearahead.io.webfile.jar."/>
 			</outline>
@@ -680,15 +683,26 @@
 	</outline>
 </outline>
 <outline text="------------"/>
-<outline text="User Guide">
-	<outline text="http://JavaOutlineEditor.org/dox/JOE_User_Guide.en.opml"/>
-	<outline text="http://JavaOutlineEditor.org/dox/JOE_User_Guide.en.txt"/>
-	<outline text="http://JavaOutlineEditor.org/dox/JOE_User_Guide.en.html"/>
-</outline>
-<outline text="Developer Guide">
-	<outline text="http://JavaOutlineEditor.org/dev/JOE_User_Guide.en.opml"/>
-	<outline text="http://JavaOutlineEditor.org/dev/JOE_User_Guide.en.txt"/>
-	<outline text="http://JavaOutlineEditor.org/dev/JOE_User_Guide.en.html"/>
+<outline text="Download Sites">
+	<outline text="JOE"/>
+	<outline text="---"/>
+	<outline text="About JOE">
+		<outline text="http://JavaOutlineEditor.org/dox/About_JOE.en.opml"/>
+		<outline text="http://JavaOutlineEditor.org/dox/About_JOE.en.txt"/>
+		<outline text="http://JavaOutlineEditor.org/dox/About_JOE.en.html"/>
+	</outline>
+	<outline text="User Guide">
+		<outline text="http://JavaOutlineEditor.org/dox/JOE_User_Guide.en.opml"/>
+		<outline text="http://JavaOutlineEditor.org/dox/JOE_User_Guide.en.txt"/>
+		<outline text="http://JavaOutlineEditor.org/dox/JOE_User_Guide.en.html"/>
+	</outline>
+	<outline text="Developer Guide">
+		<outline text="http://JavaOutlineEditor.org/dev/JOE_User_Guide.en.opml"/>
+		<outline text="http://JavaOutlineEditor.org/dev/JOE_User_Guide.en.txt"/>
+		<outline text="http://JavaOutlineEditor.org/dev/JOE_User_Guide.en.html"/>
+	</outline>
+	<outline text="Tutorials"/>
+	<outline text="Bookmarks"/>
 </outline>
 <outline text="------------"/>
 <outline isEditable="true" isMoveable="true" text="Feedback" isMoveableInherited="true" isEditableInherited="true">
