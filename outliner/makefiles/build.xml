@@ -142,7 +142,6 @@
 					<pathelement path="${lib}/jakarta-oro.jar"/>
 					<pathelement path="${lib}/jmousewheel.jar"/>
 					<pathelement path="${lib}/sax.jar"/>
-					<pathelement path="${lib}/xerces.jar"/>
 					<pathelement path="${lib}/xp.jar"/>
 				</classpath>
 			</javac>
