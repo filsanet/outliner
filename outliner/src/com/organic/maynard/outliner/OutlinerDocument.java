@@ -32,6 +32,7 @@ import javax.swing.event.*;
 public class OutlinerDocument extends JInternalFrame implements ComponentListener {
 
 	// Constants
+	public static final String UNTITLED_DOCUMENT_NAME = "Untitled";
 	private static final ImageIcon ICON_DOCUMENT_SAVED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "document_saved.gif");
 	private static final ImageIcon ICON_DOCUMENT_UNSAVED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "document_unsaved.gif");
 	
@@ -45,7 +46,9 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	public static final int INITIAL_Y = 5;
 		
 	// Class Variables
-	public static int untitledDocumentCount = 0;
+	private static int untitledDocumentCount = 0;
+	private static OutlinerWindowMonitor monitor = new OutlinerWindowMonitor();
+
 
 	// Instance Variables
 	public outlinerPanel panel = new outlinerPanel(this);
@@ -53,7 +56,6 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	public UndoQueue undoQueue = new UndoQueue(this);
 	public DocumentSettings settings = new DocumentSettings(this);
 
-	private OutlinerWindowMonitor monitor = new OutlinerWindowMonitor();
 	
 	// The Constructor
 	public OutlinerDocument(String title) {
@@ -64,7 +66,7 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		// Set the window title
 		if (title.equals("")) {
 			untitledDocumentCount++;
-			setTitle("Untitled " + untitledDocumentCount);
+			setTitle(UNTITLED_DOCUMENT_NAME + " " + untitledDocumentCount);
 		} else {
 			setTitle(title);
 		}
@@ -109,8 +111,6 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		
 		settings.destroy();
 		settings = null;
-		
-		monitor = null;
 		
 		border = null;
 		fileName = null;
@@ -157,10 +157,10 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		}
 	}
 
+
 	// ComponentListener Interface
 	public void componentResized(ComponentEvent e) {
 		panel.layout.draw();
-		//panel.layout.setFocus(tree.getEditingNode(),tree.getComponentFocus());
 	}
 	
 	public void componentHidden(ComponentEvent e) {} 

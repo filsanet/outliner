@@ -28,29 +28,37 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 	// Copy Used
 	private static final String MENU_TITLE = "Window";
 	
+	private static final String WINDOW_STATISTICS = "Statistics";
 	private static final String WINDOW_STACK = "Stack";
 	private static final String WINDOW_NEXT = "Next";
 	private static final String WINDOW_PREV = "Previous";
 	
 	
 	// The MenuItems
+	public JMenuItem WINDOW_STATISTICS_ITEM = new JMenuItem(WINDOW_STATISTICS);
+	// Seperator
 	public JMenuItem windowStackItem = new JMenuItem(WINDOW_STACK);
 	// Seperator
 	public JMenuItem WINDOW_NEXT_ITEM = new JMenuItem(WINDOW_NEXT);
 	public JMenuItem WINDOW_PREV_ITEM = new JMenuItem(WINDOW_PREV);
 	// Seperator
 	
-	private static final int WINDOW_LIST_START = 5;
+	private static final int WINDOW_LIST_START = 7;
 
 
 	// The Constructors
 	public WindowMenu() {
 		super(MENU_TITLE);
+
+		WINDOW_STATISTICS_ITEM.addActionListener(this);
+		add(WINDOW_STATISTICS_ITEM);
+
+		insertSeparator(1);
 		
 		windowStackItem.addActionListener(this);
 		add(windowStackItem);
 
-		insertSeparator(1);
+		insertSeparator(3);
 
 		WINDOW_NEXT_ITEM.setAccelerator(KeyStroke.getKeyStroke('S', Event.CTRL_MASK + Event.SHIFT_MASK, false));
 		WINDOW_NEXT_ITEM.addActionListener(this);
@@ -60,7 +68,7 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 		WINDOW_PREV_ITEM.addActionListener(this);
 		add(WINDOW_PREV_ITEM);
 
-		insertSeparator(4);
+		insertSeparator(6);
 		
 		setEnabled(false);
 	}	
@@ -115,7 +123,10 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand().equals(WINDOW_STACK)) {
+		if (e.getActionCommand().equals(WINDOW_STATISTICS)) {
+			showDocumentStatistics();
+
+		} else if (e.getActionCommand().equals(WINDOW_STACK)) {
 			if (!Outliner.desktop.desktopManager.isMaximized()) {
 				stack_windows();
 			}
@@ -134,6 +145,10 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 
 
 	// Window Menu Methods
+	private static void showDocumentStatistics() {
+		Outliner.statistics.show();
+	}
+	
 	private static void changeToNextWindow() {
 		WindowMenu menu = Outliner.menuBar.windowMenu;
 	

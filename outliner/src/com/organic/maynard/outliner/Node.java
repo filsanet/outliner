@@ -26,6 +26,10 @@ public interface Node {
 	
 	public Node cloneClean();
 
+	// Statistics Methods
+	public int getDecendantCount();
+	public int getDecendantCharCount();
+	
 	// Parent Methods
 	public void setParent(Node node);
 	public Node getParent();

@@ -193,6 +193,7 @@ public class Preferences {
 			UNDO_QUEUE_SIZE.applyTemporaryToCurrent();
 			for (int i = 0; i < Outliner.openDocumentCount(); i++) {
 				Outliner.getDocument(i).undoQueue.trim();
+				UndoQueue.updateMenuBar(Outliner.getDocument(i)); // This probably needs to be just on the current doc.
 			}
 		}
 
@@ -248,6 +249,7 @@ public class Preferences {
 				doc.panel.layout.textAreas[j].setFont(font);
 				doc.panel.layout.textAreas[j].setSelectionColor(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
 				doc.panel.layout.textAreas[j].setSelectedTextColor(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
+				doc.panel.layout.textAreas[j].setCaretColor(Preferences.SELECTED_CHILD_COLOR.cur);
 				doc.panel.layout.textAreas[j].setWrapStyleWord(line_wrap);
 			}
 		}

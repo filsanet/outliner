@@ -69,6 +69,33 @@ public class NodeImpl implements Node {
 		return nodeImpl;
 	}
 	
+
+	// Statistics Methods
+	public int getDecendantCount() {
+		if (isLeaf()) {
+			return 0;
+		} else {
+			int count = 0;
+			for (int i = 0; i < numOfChildren(); i++) {
+				count++;
+				count += getChild(i).getDecendantCount();
+			}
+			return count;
+		}
+	}
+	
+	public int getDecendantCharCount() {
+		if (isLeaf()) {
+			return 0;
+		} else {
+			int count = 0;
+			for (int i = 0; i < numOfChildren(); i++) {
+				count += getChild(i).getValue().length();
+				count += getChild(i).getDecendantCharCount();
+			}
+			return count;
+		}
+	}
 	
 	// Parent Methods
 	public void setParent(Node node) {this.parent = node;}

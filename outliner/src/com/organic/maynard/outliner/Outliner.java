@@ -64,6 +64,7 @@ public class Outliner extends JFrame implements ClipboardOwner {
 	public static JScrollPane jsp;
 	public static OutlinerDesktopMenuBar menuBar;
 	public static OutlinerFileChooser chooser = null;
+	public static DocumentStatistics statistics = new DocumentStatistics();
 
 	static {
 		jsp = new JScrollPane(desktop,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED ,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);

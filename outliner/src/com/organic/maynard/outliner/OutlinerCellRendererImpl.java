@@ -40,6 +40,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 
 		setFont(font);
 		setCursor(cursor);
+		setCaretColor(Preferences.SELECTED_CHILD_COLOR.cur);
 		setMargin(marginInsets);
 		setSelectionColor(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
 		setSelectedTextColor(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);

@@ -72,6 +72,17 @@ public class TreeContext {
 		rootNode.setExpandedClean(true);
 	}
 
+
+	// Statistics
+	public int getLineCount() {
+		return rootNode.getDecendantCount();
+	}
+	
+	public int getCharCount() {
+		return rootNode.getDecendantCharCount();
+	}
+	
+	
 	// Tracking the Editing Location
 	private Node editingNode = null;
 	private int cursorPosition = 0;

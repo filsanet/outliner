@@ -41,33 +41,6 @@ public class UndoQueue {
 		queue = null;
 	}
 	
-	public static void updateMenuBar(OutlinerDocument doc) {
-		// First make sure the document still exists
-		if (doc == null) {
-			Outliner.menuBar.editMenu.EDIT_UNDO_ITEM.setEnabled(false);
-			Outliner.menuBar.editMenu.EDIT_UNDO_ALL_ITEM.setEnabled(false);
-			Outliner.menuBar.editMenu.EDIT_REDO_ITEM.setEnabled(false);
-			Outliner.menuBar.editMenu.EDIT_REDO_ALL_ITEM.setEnabled(false);
-			return;
-		} else {
-			if(doc.undoQueue.isUndoable()) {
-				Outliner.menuBar.editMenu.EDIT_UNDO_ITEM.setEnabled(true);
-				Outliner.menuBar.editMenu.EDIT_UNDO_ALL_ITEM.setEnabled(true);
-			} else {
-				Outliner.menuBar.editMenu.EDIT_UNDO_ITEM.setEnabled(false);
-				Outliner.menuBar.editMenu.EDIT_UNDO_ALL_ITEM.setEnabled(false);
-			}
-	
-			if(doc.undoQueue.isRedoable()) {
-				Outliner.menuBar.editMenu.EDIT_REDO_ITEM.setEnabled(true);
-				Outliner.menuBar.editMenu.EDIT_REDO_ALL_ITEM.setEnabled(true);
-			} else {
-				Outliner.menuBar.editMenu.EDIT_REDO_ITEM.setEnabled(false);
-				Outliner.menuBar.editMenu.EDIT_REDO_ALL_ITEM.setEnabled(false);
-			}
-		}
-	}
-	
 	public void add(Undoable undoable) {
 		// Short Circuit if undo is disabled.
 		if (Preferences.UNDO_QUEUE_SIZE.cur == 0) {
@@ -83,6 +56,7 @@ public class UndoQueue {
 			queue.removeElementAt(0);
 			queue.addElement(undoable);
 		}
+		
 		updateMenuBar(doc);
 		doc.setFileModified(true);
 	}
@@ -113,8 +87,6 @@ public class UndoQueue {
 			queue.removeElementAt(0);
 			cursor--;
 		}
-		
-		updateMenuBar(doc);
 	}
 
 	public void clear() {
@@ -123,37 +95,27 @@ public class UndoQueue {
 		queue.setSize(0);
 		updateMenuBar(doc);
 	}
-	
+
+
+	// Undo Methods
 	public void undo() {
-		//System.out.println("Undo");
 		if (isUndoable()) {
-			((Undoable) queue.elementAt(cursor)).undo();
-			cursor--;
+			primitiveUndo();
 			updateMenuBar(doc);
-			doc.setFileModified(true);
 		}
 	}
 
 	public void undoAll() {
 		while (isUndoable()) {
-			undo();
+			primitiveUndo();
 		}
+		updateMenuBar(doc);
 	}
-		
-	public void redo() {
-		//System.out.println("Redo");
-		if (isRedoable()) {
-			cursor++;
-			((Undoable) queue.elementAt(cursor)).redo();
-			updateMenuBar(doc);
-			doc.setFileModified(true);
-		}	
-	}
-	
-	public void redoAll() {
-		while (isRedoable()) {
-			redo();
-		}	
+
+	private void primitiveUndo() {
+		((Undoable) queue.elementAt(cursor)).undo();
+		cursor--;
+		doc.setFileModified(true);
 	}
 	
 	public boolean isUndoable() {
@@ -164,11 +126,60 @@ public class UndoQueue {
 		}
 	}
 
+
+	// Redo Methods	
+	public void redo() {
+		if (isRedoable()) {
+			primitiveRedo();
+			updateMenuBar(doc);
+		}	
+	}
+
+	public void redoAll() {
+		while (isRedoable()) {
+			primitiveRedo();
+		}
+		updateMenuBar(doc);
+	}
+	
+	private void primitiveRedo() {
+		cursor++;
+		((Undoable) queue.elementAt(cursor)).redo();
+		doc.setFileModified(true);	
+	}
+
 	public boolean isRedoable() {
 		if (cursor < queue.size() - 1) {
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+
+	// Static Methods
+	public static void updateMenuBar(OutlinerDocument doc) {
+		if (doc == null) {
+			Outliner.menuBar.editMenu.EDIT_UNDO_ITEM.setEnabled(false);
+			Outliner.menuBar.editMenu.EDIT_UNDO_ALL_ITEM.setEnabled(false);
+			Outliner.menuBar.editMenu.EDIT_REDO_ITEM.setEnabled(false);
+			Outliner.menuBar.editMenu.EDIT_REDO_ALL_ITEM.setEnabled(false);
+		} else {
+			if(doc.undoQueue.isUndoable()) {
+				Outliner.menuBar.editMenu.EDIT_UNDO_ITEM.setEnabled(true);
+				Outliner.menuBar.editMenu.EDIT_UNDO_ALL_ITEM.setEnabled(true);
+			} else {
+				Outliner.menuBar.editMenu.EDIT_UNDO_ITEM.setEnabled(false);
+				Outliner.menuBar.editMenu.EDIT_UNDO_ALL_ITEM.setEnabled(false);
+			}
+	
+			if(doc.undoQueue.isRedoable()) {
+				Outliner.menuBar.editMenu.EDIT_REDO_ITEM.setEnabled(true);
+				Outliner.menuBar.editMenu.EDIT_REDO_ALL_ITEM.setEnabled(true);
+			} else {
+				Outliner.menuBar.editMenu.EDIT_REDO_ITEM.setEnabled(false);
+				Outliner.menuBar.editMenu.EDIT_REDO_ALL_ITEM.setEnabled(false);
+			}
 		}
 	}
 }

@@ -30,7 +30,7 @@ import javax.swing.plaf.metal.*;
 public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 	
 	static {
-		FocusManager.setCurrentManager(new OutlinerFocusManager());
+		javax.swing.FocusManager.setCurrentManager(new OutlinerFocusManager());
 	}
 	
 	public outlinerPanel panel = null;
@@ -457,16 +457,20 @@ public class OutlinerScrollBarUI extends MetalScrollBarUI {
 public class OutlinerFocusManager extends DefaultFocusManager {
 
 	public void processKeyEvent(Component c, KeyEvent e) {
-		if (c instanceof OutlinerCellRendererImpl) {
-			OutlinerCellRendererImpl renderer = (OutlinerCellRendererImpl) c;
-			TreeContext tree = renderer.node.getTree();
-			if (renderer.node != tree.getEditingNode()) {
-				tree.doc.panel.layout.getUIComponent(tree.getEditingNode()).fireKeyEvent(e);
-				e.consume();
-				return;
+		try {
+			if (c instanceof OutlinerCellRendererImpl) {
+				OutlinerCellRendererImpl renderer = (OutlinerCellRendererImpl) c;
+				TreeContext tree = renderer.node.getTree();
+				if (renderer.node != tree.getEditingNode()) {
+					tree.doc.panel.layout.getUIComponent(tree.getEditingNode()).fireKeyEvent(e);
+					e.consume();
+					return;
+				}
 			}
+		} catch (NullPointerException npe) {
+			// Document may have been destroyed in the interim, so let's abort.
+			return;
 		}
 		super.processKeyEvent(c,e);
 	}
-                                     
 }
