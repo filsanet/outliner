@@ -3,19 +3,124 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide - English.opml</title>
 <dateCreated>Tue, 17 Jul 2001 02:49:03 GMT</dateCreated>
-<dateModified>Fri, 27 Jul 2001 05:51:42 GMT</dateModified>
+<dateModified>Mon, 30 Jul 2001 08:56:30 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
-<expansionState>4,5,9</expansionState>
+<expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>59</windowTop>
-<windowLeft>40</windowLeft>
-<windowBottom>509</windowBottom>
-<windowRight>525</windowRight>
+<windowTop>175</windowTop>
+<windowLeft>60</windowLeft>
+<windowBottom>625</windowBottom>
+<windowRight>545</windowRight>
 </head>
 <body>
+<outline text="Front End">
+<outline text="About JOE">
+<outline text="Notable Features">
+<outline text="Smooth Solid Feel"/>
+<outline text="Standards-Respectful UI">
+<outline text="Userland-inspired outline-editing UI">
+<outline text="link to Userland outliner site[s]"/>
+</outline>
+<outline text="Best-practices File/Edit/Search/Window/Help menu command sets"/>
+</outline>
+<outline text="Multiple undo">
+<outline text="limit [huge]: available memory"/>
+</outline>
+<outline text="Highly Customizable">
+<outline text="Application Preferences"/>
+<outline text="User Preferences [forthcoming]"/>
+<outline text="Document Preferences"/>
+</outline>
+<outline text="Multi-User Friendly"/>
+<outline text="Multiple Format Support">
+<outline text="Text "/>
+<outline text="XML"/>
+<outline text="OPML">
+<outline text="OPML 1.0"/>
+<outline text="Userland node types and attributes"/>
+<outline text="JOE node types and attributes"/>
+</outline>
+<outline text="Palm pdf formats [forthcoming]">
+<outline text="Brain Forest"/>
+<outline text="Thought Manager"/>
+</outline>
+</outline>
+<outline text="'net-Friendly">
+<outline text="http support [forthcoming]"/>
+<outline text="ftp support [forthcoming]"/>
+<outline text="WebDav support [forthcoming]"/>
+</outline>
+<outline text="OS-Agnostic">
+<outline text="JOE is programmed in Java, using the Swing UI classes">
+<outline text="JOE supports native platform look and feel [forthcoming when Sun gets this stuff stable]"/>
+</outline>
+<outline text="JOE releases are available for these platforms">
+<outline text="Windows"/>
+<outline text="Linux/Unix [forthcoming]"/>
+<outline text="Macintosh [forthcoming]"/>
+</outline>
+</outline>
+<outline text="Open Source"/>
+</outline>
+</outline>
+<outline text="About JOE Developer Guide [JDG]">
+<outline text="This is a work in perpetual progress."/>
+<outline text="Empty andor missing nodes are not bugs, they're just things we just haven't gotten 'round to thinking andor writing about yet"/>
+<outline text="Wanna help ?? ">
+<outline text="Send suggestions for nodes"/>
+<outline text="Send content contributions">
+<outline text="Study the JDG style, write up a node or two, stick the OPML up on the web, and send a link to it"/>
+</outline>
+<outline text="Send to Devhead@JavaOutlineEditor.org"/>
+</outline>
+</outline>
+<outline text="Feedback">
+<outline text="JOE Developer Guide Feedback">
+<outline text="send feedback/suggestions/links/content contributions concerning JOE Developer Guide to Devhead@JavaOutlineEditor.org"/>
+</outline>
+<outline text="JOE itself Feedback">
+<outline text="send feedback/suggestions/links/content contributions concerning JOE itself to Joe@JavaOutlineEditor.org"/>
+</outline>
+</outline>
+<outline text="JOE People">
+<outline text="Maynard Demmon"/>
+<outline text="Philip Suh"/>
+<outline text="Steven Spencer"/>
+<outline text="Stanley Krute">
+<outline text="Stan@JavaOutlineEditor.org"/>
+</outline>
+</outline>
+<outline text="JOE Developer Guide Authors">
+<outline text="Stanley Krute"/>
+</outline>
+<outline text="Thanks To"/>
+<outline text="Copyright"/>
+<outline text="Version">
+<outline text="JDG versionStamp: 2001.07.30.001"/>
+</outline>
+<outline text="Cataloging Info">
+<outline text="Library of Congress Classification System"/>
+<outline text="Dewey Decimal System"/>
+</outline>
+</outline>
+<outline text="JOE on SourceForge">
+<outline text="entrance">
+<outline text="http://SourceForge/projects/outliner/"/>
+</outline>
+<outline text="forums">
+<outline text="General"/>
+<outline text="Developers"/>
+<outline text="Feature Requests"/>
+<outline text="Design Thoughts"/>
+<outline text="Bugs"/>
+</outline>
+<outline text="code">
+<outline text="CVS Tree"/>
+</outline>
+</outline>
+<outline text="Setting Up a JOE Development Environment">
 <outline text="Windows">
-<outline text="Setting Up the JOE Open Source Project on a Windows System">
 <outline text="Front Matter">
 <outline text="This Version">
 <outline text="2001-07-21"/>
@@ -30,17 +135,11 @@
 <outline text="Copyright ">
 <outline text="This guide [c] 2001 by Stan Krute. All rights reserved."/>
 </outline>
-<outline text="Thanks &amp; More Thanks to">
-<outline text="Dan Weston">
-<outline text="my cyber Flint McCullough since 1979"/>
-</outline>
-<outline text="Maynard Demmon">
-<outline text="fountainhead of the JOE project"/>
-</outline>
-<outline text="Michael Hearn">
-<outline text="author of the SFSetup tool, which got me over the ssh download and setup hump after a number of false starts"/>
-</outline>
-<outline text="The folks who bring us">
+<outline text="Thanks to">
+<outline text="Dan Weston"/>
+<outline text="Maynard Demmon"/>
+<outline text="Michael Hearn"/>
+<outline text="These Fine Tools &amp; Their Communities">
 <outline text="SourceForge"/>
 <outline text="ssh"/>
 <outline text="cvs"/>
@@ -71,7 +170,7 @@
 </outline>
 </outline>
 <outline text="Enroll at SourceForge"/>
-<outline text="Create some directories">
+<outline text="Set Up Directories">
 <outline text="home at root of some drive">
 <outline text="mine is c:\home"/>
 <outline text="lots of unixoid programs will store data sub this directory"/>
@@ -86,6 +185,7 @@
 <outline text="mine is at e:\stan's java projects\Joe"/>
 </outline>
 </outline>
+<outline text="Adjust config.sys"/>
 <outline text="Adjust autoexec.bat">
 <outline text="environment settings">
 <outline text="(adjusting as necessary for your specific username, projectname, drive, and directories) "/>
@@ -320,7 +420,11 @@
 <outline text="Set up Ant to control compiles and builds"/>
 <outline text="Build and Run the Project"/>
 </outline>
-<outline text="Running the JOE Open Source Project on a Windows System">
+<outline text="Linux/Unix"/>
+<outline text="Macintosh"/>
+</outline>
+<outline text="JOE Development Cookbooks">
+<outline text="Windows">
 <outline text="downloading the latest versions of files">
 <outline text="Updating all project files">
 <outline text="open a command line, and go to the project's root directory"/>
@@ -353,10 +457,12 @@
 <outline text="Removing a file from the project"/>
 <outline text="Removing a directory from the project"/>
 </outline>
-</outline>
 <outline text="Linux/Unix"/>
 <outline text="Macintosh"/>
-<outline text="CVS Survival">
+</outline>
+<outline text="Open Source Development Survival Guides">
+<outline text="ssh"/>
+<outline text="CVS ">
 <outline text="CVS Update and Commit Result Codes">
 <outline text="?">
 <outline text="The file is unknown to CVS"/>
@@ -385,6 +491,32 @@
 <outline text="please send changes/additions/deletions to Stan@StanKrute.com"/>
 <outline text=""/>
 </outline>
+</outline>
+<outline text="SourceForge"/>
+<outline text="Java JDK"/>
+<outline text="NetBeans"/>
+<outline text="Ant"/>
+<outline text="jBuilder"/>
+<outline text="Metrowerks Java"/>
+</outline>
+<outline text="Open Questions">
+<outline text="Got a question about a JOE development tool ?">
+<outline text="Send it to Devhead@JavaOutlineEditor.org"/>
+</outline>
+<outline text="ssh">
+<outline text="How to avoid having to type in ssh password when command-lining a cvs command"/>
+</outline>
+<outline text="CVS">
+<outline text="How to avoid having to type in ssh password when command-lining a cvs command"/>
+</outline>
+<outline text="SourceForge"/>
+<outline text="Java JDK"/>
+<outline text="NetBeans">
+<outline text="How to debug JOE with the NetBeans step-thru debugger"/>
+</outline>
+<outline text="Ant"/>
+<outline text="jBuilder"/>
+<outline text="Metrowerks Java "/>
 </outline>
 </body>
 </opml>
