@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
+ * Portions copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
+ * Portions copyright (C) 2002  Stan Krute <Stan@StanKrute.com>
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or 
@@ -492,7 +493,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 			filepath = args[1];
 			
 			// if the filepath is present and non-empty ...
-			if (filepath != null && (! filepath.equals(""))) {
+			if ((filepath != null) && (! filepath.equals("")) && (! filepath.equals("%1")) ) {
 				
 				// ensure that we have a full pathname [srk]
 				filepath = canonicalPath(filepath) ;
