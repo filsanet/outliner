@@ -41,9 +41,6 @@ public class PreferencesPanelMisc extends AbstractPreferencesPanel implements Pr
 
 		PreferenceInt pScrollSpeed = (PreferenceInt) prefs.getPreference(Preferences.MOUSE_WHEEL_SCROLL_SPEED);
 
-		// Trim the recent file menu since we may have a new size.
-		RecentFilesList.trim();
-
 		// Set the scroll speed on outliner. This will be inherited by all GUI elements contained within.
 		Outliner.outliner.setScrollSpeed(pScrollSpeed.cur); 
 	}

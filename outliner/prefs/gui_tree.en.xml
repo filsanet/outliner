@@ -123,6 +123,7 @@
 		<asset type="text" key="tooltip_toggle_comment" value="Click to Toggle Comment"/>
 		<asset type="text" key="tooltip_toggle_editability" value="Click to Toggle Read-Only Mode"/>
 		<asset type="text" key="tooltip_toggle_moveability" value="Click to Toggle Moveability Mode"/>
+		<asset type="text" key="trunc_string" value=" . . "/>
 		<asset type="text" key="unescape" value="Un-Escape"/>
 		<asset type="text" key="unix" value="Unix"/>
 		<asset type="text" key="untitled" value="Untitled"/>
