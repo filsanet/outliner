@@ -401,7 +401,7 @@
 				<menuitem id="import" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Import"/>
 				<separator/>
 				<menuitem id="save" class="com.organic.maynard.outliner.SaveFileMenuItem" text="Speichern" keybinding="S" keybindingmodifiers="control"/>
-				<menuitem id="save_all" class="com.organic.maynard.outliner.SaveAllFileMenuItem" text="Alle speichern/>
+				<menuitem id="save_all" class="com.organic.maynard.outliner.SaveAllFileMenuItem" text="Alle speichern"/>
 				<menuitem id="save_as" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Speichern unter..."/>
 				<menuitem id="revert" class="com.organic.maynard.outliner.RevertFileMenuItem" text="Neu einlesen"/>
 				<separator/>
@@ -484,7 +484,7 @@
 			<menu id="search" class="com.organic.maynard.outliner.SearchMenu" text="Suchen">
 				<menuitem id="goto" class="com.organic.maynard.outliner.GoToMenuItem" text="Gehe zu Zeile..." keybinding="G" keybindingmodifiers="control"/>
 				<separator/>
-				<menuitem id="find" class="com.organic.maynard.outliner.FindMenuItem" text=""Suchen/Ersetzen..." keybinding="F" keybindingmodifiers="control"/>
+				<menuitem id="find" class="com.organic.maynard.outliner.FindMenuItem" text="Suchen/Ersetzen..." keybinding="F" keybindingmodifiers="control"/>
 			</menu>
 			<menu id="script" class="com.organic.maynard.outliner.ScriptMenu" text="Skript">
 				<menuitem id="macros" class="com.organic.maynard.outliner.MacrosMenuItem" text="Makro Manager..."/>
