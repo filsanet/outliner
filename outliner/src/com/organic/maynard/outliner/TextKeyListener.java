@@ -1111,42 +1111,55 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		
+		// We're not doing an inline paste.
 
+		// Figure out where to do the insert
+		Node parentForNewNode = null;
+		int indexForNewNode = 0;
+		int depth = 0;
+
+		if ((!currentNode.isLeaf()) && (currentNode.isExpanded())) {
+			parentForNewNode = currentNode;
+			depth = parentForNewNode.getDepth() + 1;
+			indexForNewNode = 0;
+		} else {
+			parentForNewNode = currentNode.getParent();
+			depth = currentNode.getDepth();
+			indexForNewNode = currentNode.currentIndex() + 1;
+		}
+
+		tree.setSelectedNodesParent(parentForNewNode);
 
 		// Put the Undoable onto the UndoQueue
-		CompoundUndoableInsert undoable = new CompoundUndoableInsert(currentNode.getParent());
+		CompoundUndoableInsert undoable = new CompoundUndoableInsert(parentForNewNode);
 		tree.getDocument().undoQueue.add(undoable);
-
-		Node parentForNewNode = currentNode.getParent();
-		int indexForNewNode = parentForNewNode.getChildIndex(currentNode);
-	
-		tree.setSelectedNodesParent(parentForNewNode);
 
 		if (isNodeSet) {
 			for (int i = nodeSet.getSize() - 1; i >= 0; i--) {
 				Node node = nodeSet.getNode(i);
 				node.setTree(tree, true);
-				parentForNewNode.insertChild(node, indexForNewNode + 1);
-				node.setDepthRecursively(parentForNewNode.getDepth() + 1);
+				parentForNewNode.insertChild(node, indexForNewNode);
+				node.setDepthRecursively(depth);
 				tree.insertNode(node);
 
 				// Record the Insert in the undoable
 				int index = node.currentIndex() + i;
-				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode,node,index));
+				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode, node, index));
 
 				tree.addNodeToSelection(node);
 			}
 		} else {
-			Node tempRoot = PadSelection.pad(text, tree, currentNode.getDepth(), Preferences.LINE_END_STRING);
+			Node tempRoot = PadSelection.pad(text, tree, depth, Preferences.LINE_END_STRING);
 		
 			for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
 				Node node = tempRoot.getChild(i);
-				parentForNewNode.insertChild(node, indexForNewNode + 1);
+				parentForNewNode.insertChild(node, indexForNewNode);
 				tree.insertNode(node);
 
 				// Record the Insert in the undoable
 				int index = node.currentIndex() + i;
-				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode,node,index));
+				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode, node, index));
 
 				tree.addNodeToSelection(node);
 			}

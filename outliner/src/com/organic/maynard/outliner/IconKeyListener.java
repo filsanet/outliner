@@ -928,10 +928,6 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			return;
 		}
 			
-		// Put the Undoable onto the UndoQueue
-		CompoundUndoableInsert undoable = new CompoundUndoableInsert(currentNode.getParent());
-		tree.getDocument().undoQueue.add(undoable);
-
 		// Get the text from the clipboard and turn it into a tree
 		boolean isNodeSet = false;
 		String text = "";
@@ -949,48 +945,67 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
+
+		// Figure out where to do the insert
 		Node oldestNode = tree.getOldestInSelection();
-		Node parentForNewNode = oldestNode.getParent();
-		int indexForNewNode = parentForNewNode.getChildIndex(oldestNode);
-			
+		Node parentForNewNode = null;
+		int indexForNewNode = 0;
+		int depth = 0;
+
+		if ((!oldestNode.isLeaf()) && (oldestNode.isExpanded())) {
+			parentForNewNode = oldestNode;
+			depth = parentForNewNode.getDepth() + 1;
+			indexForNewNode = 0;
+		} else {
+			parentForNewNode = oldestNode.getParent();
+			depth = oldestNode.getDepth();
+			indexForNewNode = oldestNode.currentIndex() + 1;
+		}
+
 		tree.clearSelection();
+		tree.setSelectedNodesParent(parentForNewNode);
+
+		// Put the Undoable onto the UndoQueue
+		CompoundUndoableInsert undoable = new CompoundUndoableInsert(parentForNewNode);
+		tree.getDocument().undoQueue.add(undoable);
 		
 		if (isNodeSet) {
 			for (int i = nodeSet.getSize() - 1; i >= 0; i--) {
 				Node node = nodeSet.getNode(i);
 				node.setTree(tree, true);
-				parentForNewNode.insertChild(node, indexForNewNode + 1);
-				node.setDepthRecursively(parentForNewNode.getDepth() + 1);
+				parentForNewNode.insertChild(node, indexForNewNode);
+				node.setDepthRecursively(depth);
 				tree.insertNode(node);
 
 				// Record the Insert in the undoable
 				int index = node.currentIndex() + i;
-				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode,node,index));
+				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode, node, index));
 
 				tree.addNodeToSelection(node);
 			}
 		} else {
-			Node tempRoot = PadSelection.pad(text, tree, oldestNode.getDepth(), Preferences.LINE_END_STRING);
+			Node tempRoot = PadSelection.pad(text, tree, depth, Preferences.LINE_END_STRING);
 		
 			for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
 				Node node = tempRoot.getChild(i);
-				parentForNewNode.insertChild(node, indexForNewNode + 1);
+				parentForNewNode.insertChild(node, indexForNewNode);
 				tree.insertNode(node);
 
 				// Record the Insert in the undoable
 				int index = node.currentIndex() + i;
-				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode,node,index));
+				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode, node, index));
 
 				tree.addNodeToSelection(node);
 			}
 		}
 
+		Node nodeThatMustBeVisible = tree.getYoungestInSelection();
+
 		// Record the EditingNode and CursorPosition and ComponentFocus
-		tree.setEditingNode(tree.getYoungestInSelection());
+		tree.setEditingNode(nodeThatMustBeVisible);
 
 		// Redraw and Set Focus
-		layout.draw(tree.getYoungestInSelection(),OutlineLayoutManager.ICON);
+		layout.draw(nodeThatMustBeVisible, OutlineLayoutManager.ICON);
 	}
 
 	private void selectAll(JoeTree tree, OutlineLayoutManager layout) {
