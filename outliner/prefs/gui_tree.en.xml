@@ -2,6 +2,20 @@
 <root id="outliner" class="com.organic.maynard.outliner.Outliner" title="JOE">
 	<!-- COMPATIBLE WITH JOE VERSION: 1.8.10.3 -->
 	<!-- TEXT REPOSITORY -->
+		<asset type="text" key="confirm_addword" value="Add Word"/>
+		<asset type="text" key="confirmation_msg_addword" value="Add the word &quot;{$value_1}&quot; to the word dictionary?"/>
+		<asset type="text" key="tooltip_spellcheck_replacement" value="The text that will replace the misspelled word."/>
+		<asset type="text" key="tooltip_spellcheck_suggestions" value="A list of suggested spellings for the misspelled word."/>
+		<asset type="text" key="tooltip_spellcheck_context" value="The text from the outline node where the misspelling occurs. The misspelled word is highlighted in bold red."/>
+		<asset type="text" key="tooltip_spellcheck_skip" value="Skips this occurrence of the misspelled word."/>
+		<asset type="text" key="tooltip_spellcheck_skipall" value="Skips all occurrences of the misspelled word."/>
+		<asset type="text" key="tooltip_spellcheck_replace" value="Replaces this occurrence of the misspelled word with the replacement text."/>
+		<asset type="text" key="tooltip_spellcheck_replaceall" value="Replaces all occurrences of the misspelled word with the replacement text."/>
+		<asset type="text" key="tooltip_spellcheck_addword" value="Adds a new word to the dictionary."/>
+		<asset type="text" key="tooltip_spellcheck_done" value="Finishes spell checking and applys all replacements to the document."/>
+		<asset type="text" key="tooltip_spellcheck_cancel" value="Cancels spell checking and does not apply any changes to the document."/>
+		<asset type="text" key="spelling_checker" value="Spelling Checker"/>
+		<asset type="text" key="add_word" value="Add Word"/>
 		<asset type="text" key="use_create_mod_dates" value="Automatically Generate Node Attributes"/>
 		<asset type="text" key="create_mod_dates_format" value="Date Format for Node Attributes"/>
 		<asset type="text" key="new_script" value="New Script"/>

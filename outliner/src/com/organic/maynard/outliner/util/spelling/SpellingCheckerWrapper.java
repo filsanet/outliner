@@ -121,17 +121,19 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 			File dictonaries_dir = new File(DICTIONARIES_DIR);
 			File[] dictionaryFiles = dictonaries_dir.listFiles();
 			
-			boolean first_file = true;
+			// Load the user specific dictionary. We do this first since it will
+			// cause it to be the file where added words are saved to.
+			File user_dictionary_file = new File(Outliner.ADDED_WORDS_FILE);
+			if (user_dictionary_file.isFile() && user_dictionary_file.canRead()) {
+				System.out.println("Loading Dictionary File: " + user_dictionary_file.getName());
+				this.dictionary = new SpellDictionaryHashMap(user_dictionary_file);
+			}
+			
 			for (int i = 0; i < dictionaryFiles.length; i++) {
 				File dictionary_file = dictionaryFiles[i];
 				if (dictionary_file.isFile() && dictionary_file.canRead() && dictionary_file.getName().endsWith(".dict")) {
 					System.out.println("Loading Dictionary File: " + dictionary_file.getName());
-					if (first_file) {
-						this.dictionary = new SpellDictionaryHashMap(dictionary_file);
-						first_file = false;
-					} else {
-						this.dictionary.createDictionary(new BufferedReader(new FileReader(dictionary_file)));
-					}
+					this.dictionary.createDictionary(new BufferedReader(new FileReader(dictionary_file)));
 				}
 			}
 			
@@ -235,6 +237,17 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 			}
 			Node child = node.getChild(i);
 			checkSpelling(child);
+		}
+	}
+	
+	// DictionaryManagement
+	/**
+	 * Adds a word to the dictionary.
+	 */
+	public void addWord(String word) {
+		// Only add words that do not exist in the dictionary yet.
+		if (!dictionary.isCorrect(word)) {
+			dictionary.addWord(word);
 		}
 	}
 	

@@ -45,6 +45,7 @@ import javax.swing.event.*;
 import org.xml.sax.*;
 import java.util.*;
 import com.swabunga.spell.event.*;
+import com.organic.maynard.util.string.Replace;
 
 /**
  * A JDialog which enables a "spell checking session" on a document or selection
@@ -106,27 +107,33 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 	
 	
 	// Main Component Containers
-	private JPanel PANEL_BUTTONS = null;
-	private JPanel PANEL_MAIN = null;
-	private JScrollPane JSP = null;
+	private JScrollPane JSP_CONTEXT = null;
+	private JScrollPane JSP_SUGGESTIONS = null;
 	
 	// Button Text and Other Copy
-	private static String DONE = null;
 	private static String SKIP = null;
 	private static String SKIP_ALL = null;
 	private static String REPLACE = null;
 	private static String REPLACE_ALL = null;
+	private static String ADD_WORD = null;
+	private static String DONE = null;
+	private static String CANCEL = null;
 	
 	// Define Fields and Buttons
-	private JTextPane TEXT = null;
-	private JComboBox SUGGESTIONS = null;
 	private JLabel WORD = null;
 	private JLabel STATUS = null;
-	private JButton BUTTON_DONE = null;
+	
+	private JTextPane CONTEXT = null;
+	private JTextField REPLACEMENT = null;
+	private JList SUGGESTIONS = null;
+	
 	private JButton BUTTON_SKIP = null;
 	private JButton BUTTON_SKIP_ALL = null;
 	private JButton BUTTON_REPLACE = null;
 	private JButton BUTTON_REPLACE_ALL = null;
+	private JButton BUTTON_ADD_WORD = null;
+	private JButton BUTTON_DONE = null;
+	private JButton BUTTON_CANCEL = null;
 	
 	
 	// The Constructor
@@ -136,70 +143,187 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 	 */
 	public SpellingCheckerDialog(SpellingCheckerWrapper spellChecker) {
 		super(false, true, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+		super.setTitle(GUITreeLoader.reg.getText("spelling_checker"));
 		
 		this.spellChecker = spellChecker;
 		
+		// Add a window listener to intercept close operations
+		addWindowListener(
+			new WindowAdapter() {
+				public void windowClosing(WindowEvent e) {
+					cancel();
+				}
+			}
+		);
+		
 		// Button Text and Other Copy
-		DONE = GUITreeLoader.reg.getText("done");
 		SKIP = GUITreeLoader.reg.getText("skip");
 		SKIP_ALL = GUITreeLoader.reg.getText("skip_all");
 		REPLACE = GUITreeLoader.reg.getText("replace");
 		REPLACE_ALL = GUITreeLoader.reg.getText("replace_all");
+		ADD_WORD = GUITreeLoader.reg.getText("add_word");
+		DONE = GUITreeLoader.reg.getText("done");
+		CANCEL = GUITreeLoader.reg.getText("cancel");
 		
 		// Define Fields and Buttons
-		this.STATUS = new JLabel();
+		STATUS = new JLabel();
+		WORD = new JLabel("Misspelt Word: ");
 		
-		this.TEXT = new JTextPane();
-		StyledDocument doc = TEXT.getStyledDocument();
-		Style style = TEXT.addStyle("Red", null);
+		CONTEXT = new JTextPane();
+		StyledDocument doc = CONTEXT.getStyledDocument();
+		Style style = CONTEXT.addStyle("Red", null);
 		StyleConstants.setForeground(style, Color.red);
 		StyleConstants.setBold(style, true);
-		TEXT.setEditable(false);
-		TEXT.setEnabled(false);
+		CONTEXT.setEditable(false);
+		CONTEXT.setEnabled(false);
+		JSP_CONTEXT = new JScrollPane(CONTEXT);
+		CONTEXT.setToolTipText(GUITreeLoader.reg.getText("tooltip_spellcheck_context"));
 		
-		this.JSP = new JScrollPane(TEXT);
-		this.WORD = new JLabel("Misspelt Word: ");
+		SUGGESTIONS = new JList();
+		SUGGESTIONS.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		SUGGESTIONS.addListSelectionListener(
+			new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent e) {
+					Object value = SUGGESTIONS.getSelectedValue();
+					if (value != null) {
+						REPLACEMENT.setText(value.toString());
+					}
+				}
+			}
+		);
+		JSP_SUGGESTIONS = new JScrollPane(SUGGESTIONS);
+		SUGGESTIONS.setToolTipText(GUITreeLoader.reg.getText("tooltip_spellcheck_suggestions"));
 		
-		this.SUGGESTIONS = new JComboBox();
-		this.SUGGESTIONS.setEditable(true);
+		REPLACEMENT = new JTextField();
+		REPLACEMENT.setToolTipText(GUITreeLoader.reg.getText("tooltip_spellcheck_replacement"));
 		
-		this.BUTTON_DONE = new JButton(DONE);
-		this.BUTTON_DONE.addActionListener(this);
+		BUTTON_SKIP = new JButton(SKIP);
+		BUTTON_SKIP.addActionListener(this);
+		BUTTON_SKIP.setToolTipText(GUITreeLoader.reg.getText("tooltip_spellcheck_skip"));
 		
-		this.BUTTON_SKIP = new JButton(SKIP);
-		this.BUTTON_SKIP.addActionListener(this);
+		BUTTON_SKIP_ALL = new JButton(SKIP_ALL);
+		BUTTON_SKIP_ALL.addActionListener(this);
+		BUTTON_SKIP_ALL.setToolTipText(GUITreeLoader.reg.getText("tooltip_spellcheck_skipall"));
 		
-		this.BUTTON_SKIP_ALL = new JButton(SKIP_ALL);
-		this.BUTTON_SKIP_ALL.addActionListener(this);
+		BUTTON_REPLACE = new JButton(REPLACE);
+		BUTTON_REPLACE.addActionListener(this);
+		BUTTON_REPLACE.setToolTipText(GUITreeLoader.reg.getText("tooltip_spellcheck_replace"));
 		
-		this.BUTTON_REPLACE = new JButton(REPLACE);
-		this.BUTTON_REPLACE.addActionListener(this);
+		BUTTON_REPLACE_ALL = new JButton(REPLACE_ALL);
+		BUTTON_REPLACE_ALL.addActionListener(this);
+		BUTTON_REPLACE_ALL.setToolTipText(GUITreeLoader.reg.getText("tooltip_spellcheck_replaceall"));
 		
-		this.BUTTON_REPLACE_ALL = new JButton(REPLACE_ALL);
-		this.BUTTON_REPLACE_ALL.addActionListener(this);
+		BUTTON_ADD_WORD = new JButton(ADD_WORD);
+		BUTTON_ADD_WORD.addActionListener(this);
+		BUTTON_ADD_WORD.setToolTipText(GUITreeLoader.reg.getText("tooltip_spellcheck_addword"));
+		
+		BUTTON_DONE = new JButton(DONE);
+		BUTTON_DONE.addActionListener(this);
+		BUTTON_DONE.setToolTipText(GUITreeLoader.reg.getText("tooltip_spellcheck_done"));
+		
+		BUTTON_CANCEL = new JButton(CANCEL);
+		BUTTON_CANCEL.addActionListener(this);
+		BUTTON_CANCEL.setToolTipText(GUITreeLoader.reg.getText("tooltip_spellcheck_cancel"));
 		
 		getRootPane().setDefaultButton(BUTTON_REPLACE);
 		
 		// Add Components
-		this.PANEL_MAIN = new JPanel();
-		this.PANEL_MAIN.setLayout(new BorderLayout());
-		this.PANEL_MAIN.add(this.WORD, BorderLayout.NORTH);
-		this.PANEL_MAIN.add(this.JSP, BorderLayout.CENTER);
-		this.PANEL_MAIN.add(this.SUGGESTIONS, BorderLayout.SOUTH);
-		
-		this.PANEL_BUTTONS = new JPanel();
-		this.PANEL_BUTTONS.setLayout(new FlowLayout());
-		this.PANEL_BUTTONS.add(this.BUTTON_DONE);
-		this.PANEL_BUTTONS.add(this.BUTTON_SKIP);
-		this.PANEL_BUTTONS.add(this.BUTTON_SKIP_ALL);
-		this.PANEL_BUTTONS.add(this.BUTTON_REPLACE);
-		this.PANEL_BUTTONS.add(this.BUTTON_REPLACE_ALL);
-		
-		getContentPane().add(STATUS, BorderLayout.NORTH);
-		getContentPane().add(PANEL_MAIN, BorderLayout.CENTER);
-		getContentPane().add(PANEL_BUTTONS, BorderLayout.SOUTH);
-		
-		pack();
+			GridBagConstraints c = new GridBagConstraints();
+			
+			// Main Panel
+			JPanel main_panel = new JPanel();
+			GridBagLayout main_layout = new GridBagLayout();
+			main_panel.setLayout(main_layout);
+			
+			c.weighty = 0;
+			c.weightx = 1;
+			c.anchor = GridBagConstraints.WEST;
+			c.gridwidth = GridBagConstraints.REMAINDER;
+			c.fill = GridBagConstraints.NONE;
+			main_layout.setConstraints(STATUS, c);
+			main_panel.add(STATUS);
+			
+			c.weighty = 1;
+			c.weightx = 1;
+			c.anchor = GridBagConstraints.WEST;
+			c.gridwidth = GridBagConstraints.REMAINDER;
+			c.fill = GridBagConstraints.BOTH;
+			main_layout.setConstraints(JSP_CONTEXT, c);
+			main_panel.add(JSP_CONTEXT);
+			
+			c.weighty = 0;
+			c.weightx = 1;
+			c.anchor = GridBagConstraints.WEST;
+			c.gridwidth = GridBagConstraints.REMAINDER;
+			c.fill = GridBagConstraints.NONE;
+			main_layout.setConstraints(WORD, c);
+			main_panel.add(WORD);
+			
+			c.weighty = 0;
+			c.weightx = 1;
+			c.anchor = GridBagConstraints.WEST;
+			c.gridwidth = GridBagConstraints.REMAINDER;
+			c.fill = GridBagConstraints.HORIZONTAL;
+			main_layout.setConstraints(REPLACEMENT, c);
+			main_panel.add(REPLACEMENT);
+			
+			c.weighty = 1;
+			c.weightx = 1;
+			c.anchor = GridBagConstraints.WEST;
+			c.gridwidth = GridBagConstraints.REMAINDER;
+			c.fill = GridBagConstraints.BOTH;
+			main_layout.setConstraints(JSP_SUGGESTIONS, c);
+			main_panel.add(JSP_SUGGESTIONS);
+			
+			// Button Panel
+			JPanel button_panel = new JPanel();
+			GridBagLayout button_layout = new GridBagLayout();
+			button_panel.setLayout(button_layout);
+			
+			c.weighty = 0;
+			c.weightx = 1;
+			c.anchor = GridBagConstraints.WEST;
+			c.gridwidth = GridBagConstraints.REMAINDER;
+			c.fill = GridBagConstraints.HORIZONTAL;
+			button_layout.setConstraints(BUTTON_SKIP, c);
+			button_panel.add(BUTTON_SKIP);
+			button_layout.setConstraints(BUTTON_SKIP_ALL, c);
+			button_panel.add(BUTTON_SKIP_ALL);
+			button_layout.setConstraints(BUTTON_REPLACE, c);
+			button_panel.add(BUTTON_REPLACE);
+			button_layout.setConstraints(BUTTON_REPLACE_ALL, c);
+			button_panel.add(BUTTON_REPLACE_ALL);
+			button_layout.setConstraints(BUTTON_ADD_WORD, c);
+			button_panel.add(BUTTON_ADD_WORD);
+			button_layout.setConstraints(BUTTON_DONE, c);
+			button_panel.add(BUTTON_DONE);
+			button_layout.setConstraints(BUTTON_CANCEL, c);
+			button_panel.add(BUTTON_CANCEL);
+			
+			// Outer Layout
+			JPanel outer_panel = new JPanel();
+			GridBagLayout outer_layout = new GridBagLayout();
+			outer_panel.setLayout(outer_layout);
+			
+			c.weighty = 1;
+			c.weightx = 1;
+			c.anchor = GridBagConstraints.NORTH;
+			c.gridwidth = 1;
+			c.fill = GridBagConstraints.BOTH;
+			outer_layout.setConstraints(main_panel, c);
+			outer_panel.add(main_panel);
+			
+			c.weighty = 0;
+			c.weightx = 0;
+			c.anchor = GridBagConstraints.NORTH;
+			c.gridwidth = GridBagConstraints.REMAINDER;
+			c.fill = GridBagConstraints.HORIZONTAL;
+			outer_layout.setConstraints(button_panel, c);
+			outer_panel.add(button_panel);
+			
+			getContentPane().add(outer_panel, BorderLayout.CENTER);
+			
+			pack();
 	}
 	
 	/**
@@ -221,11 +345,12 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 	 * Resets this SpellingCheckerDialog so that it can be reused.
 	 */
 	public void reset() {
-		this.stop_thread = false;
-		this.word_index = 0;
-		this.skip_list = new HashMap();
-		this.replace_list = new HashMap();
-		this.spellChecker.reset();
+		stop_thread = false;
+		word_index = 0;
+		current_offset_adj = 0;
+		skip_list = new HashMap();
+		replace_list = new HashMap();
+		spellChecker.reset();
 		
 		OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
 		undoable = new CompoundUndoableEdit(doc.tree);
@@ -287,7 +412,56 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 			replace();
 		} else if (e.getActionCommand().equals(REPLACE_ALL)) {
 			replace_all();
+		} else if (e.getActionCommand().equals(ADD_WORD)) {
+			add_word();
+		} else if (e.getActionCommand().equals(CANCEL)) {
+			cancel();
 		}
+	}
+	
+	/**
+	 * Action triggered by the user clicking on the "add word" button in this Dialog.
+	 */
+	private void add_word() {
+		String word = REPLACEMENT.getText();
+		String yes = GUITreeLoader.reg.getText("yes");
+		String no = GUITreeLoader.reg.getText("no");
+		String confirm_addword = GUITreeLoader.reg.getText("confirm_addword");
+		String msg = GUITreeLoader.reg.getText("confirmation_msg_addword");
+		msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, word);
+		
+		Object[] options = {yes, no};
+		int result = JOptionPane.showOptionDialog(this,
+			msg,
+			confirm_addword,
+			JOptionPane.YES_NO_OPTION,
+			JOptionPane.QUESTION_MESSAGE,
+			null,
+			options,
+			options[0]
+		);
+		if (result == JOptionPane.YES_OPTION) {
+			spellChecker.addWord(word);
+		} else if (result == JOptionPane.NO_OPTION) {
+			return;
+		} else {
+			return;
+		}
+	}
+	
+	/**
+	 * Action triggered by the user clicking on the "cancel" button in this Dialog.
+	 * Causes the spell checking thread to stop, discards the undoable which
+	 * contains any text changes and hides the Dialog.
+	 */
+	private void cancel() {
+		this.stop();
+		
+		if (!undoable.isEmpty()) {
+			undoable.undo();
+		}
+		
+		hide();
 	}
 	
 	/**
@@ -360,7 +534,7 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 		// Look for a value for "replace all"
 		String replacement = (String) replace_list.get(word);
 		if (replacement == null) {
-			replacement = SUGGESTIONS.getSelectedItem().toString();
+			replacement = REPLACEMENT.getText();
 		}
 		
 		Node node = this.spellChecker.getMisspeltWordNode(word_index);
@@ -408,7 +582,7 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 	private void replace_all() {
 		SpellCheckEvent event = this.spellChecker.getMisspeltWord(word_index);
 		String word = event.getInvalidWord();
-		String replacement = SUGGESTIONS.getSelectedItem().toString();
+		String replacement = REPLACEMENT.getText();
 		replace_list.put(word,replacement);
 		
 		replace();
@@ -425,11 +599,16 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 			// Update Word Display
 			WORD.setText("Misspelt Word: ");
 			
-			// Update Combobox
-			SUGGESTIONS.removeAllItems();
+			// Set Replacement Text
+			REPLACEMENT.setText("");
 			
-			// Update TextArea
-			TEXT.setText("");
+			// Update Suggestions List
+			SUGGESTIONS.clearSelection();
+			Object[] list_data = new Object[0];
+			SUGGESTIONS.setListData(list_data);
+			
+			// Update Context TextArea
+			CONTEXT.setText("");
 			
 			return false;
 		} else {
@@ -437,26 +616,28 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 			String word = event.getInvalidWord();
 			WORD.setText("Misspelled Word: " + word);
 			
-			// Update Combobox
-			SUGGESTIONS.removeAllItems();
+			// Set Replacement Text
+			REPLACEMENT.setText(word);
 			
+			// Update Suggestions List
+			SUGGESTIONS.clearSelection();
 			java.util.List suggestions = event.getSuggestions();
-			if (suggestions.size() > 0) {
-				for (Iterator suggestedWord = suggestions.iterator(); suggestedWord.hasNext();) {
-					SUGGESTIONS.addItem(suggestedWord.next().toString());
-				}
+			Object[] list_data = new Object[suggestions.size()];
+			for (int i = 0; i < suggestions.size(); i++) {
+				list_data[i] = suggestions.get(i);
 			}
+			SUGGESTIONS.setListData(list_data);
 			
 			// Update TextArea
 			Node node = this.spellChecker.getMisspeltWordNode(word_index);
 			int offset = this.spellChecker.getMisspeltWordOffset(word_index);
-			TEXT.setText(node.getValue());
-			//TEXT.setText(event.getWordContext());
+			CONTEXT.setText(node.getValue());
+			//CONTEXT.setText(event.getWordContext());
 			//int position = event.getWordContextPosition();
 			int position = offset + event.getWordContextPosition() + current_offset_adj;
 			
-			StyledDocument doc = TEXT.getStyledDocument();
-			doc.setCharacterAttributes(position, word.length(), TEXT.getStyle("Red"), true);
+			StyledDocument doc = CONTEXT.getStyledDocument();
+			doc.setCharacterAttributes(position, word.length(), CONTEXT.getStyle("Red"), true);
 			
 			return true;
 		}
@@ -482,12 +663,14 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 			BUTTON_SKIP_ALL.setEnabled(false);
 			BUTTON_REPLACE.setEnabled(false);
 			BUTTON_REPLACE_ALL.setEnabled(false);
+			BUTTON_ADD_WORD.setEnabled(false);
 		} else {
 			STATUS.setText(text.append(word_index + 1).append(" of ").append(current_word_count).append(".").toString());
 			BUTTON_SKIP.setEnabled(true);
 			BUTTON_SKIP_ALL.setEnabled(true);
 			BUTTON_REPLACE.setEnabled(true);
 			BUTTON_REPLACE_ALL.setEnabled(true);
+			BUTTON_ADD_WORD.setEnabled(true);
 		}
 	}
 }

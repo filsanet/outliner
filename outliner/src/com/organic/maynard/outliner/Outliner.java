@@ -110,6 +110,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	public static String FIND_REPLACE_FILE = new StringBuffer().append(USER_PREFS_DIR).append("find_replace.xml").toString();
 	public static String CONFIG_FILE =       new StringBuffer().append(USER_PREFS_DIR).append("config.txt").toString();
 	public static String RECENT_FILES_FILE = new StringBuffer().append(USER_PREFS_DIR).append("recent_files.xml").toString();
+	public static String ADDED_WORDS_FILE =  new StringBuffer().append(USER_PREFS_DIR).append("added_words.dict").toString();
 	
 	// These dirs/files should always be under the apps prefs dir.
 	public static String MACRO_CLASSES_FILE =  new StringBuffer().append(PREFS_DIR).append("macro_classes.txt").toString();
@@ -277,6 +278,17 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 			System.out.println("Copying over find_replace config file: " + userFindReplaceFile.getPath());
 			try {
 				FileTools.copy(new File(PREFS_DIR + "find_replace.xml"), userFindReplaceFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// Copy over added_words.dict from installation directory if it doesn't exist in the user's home directory.
+		File userAddedWordsFile = new File(ADDED_WORDS_FILE);
+		if (!userAddedWordsFile.exists()) {
+			System.out.println("Copying over added_words.dict file: " + userAddedWordsFile.getPath());
+			try {
+				FileTools.copy(new File(PREFS_DIR + "added_words.dict"), userAddedWordsFile);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
