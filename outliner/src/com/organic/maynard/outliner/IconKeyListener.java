@@ -81,12 +81,11 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		tree.setEditingNode(textArea.node);
 		tree.setComponentFocus(OutlineLayoutManager.ICON);
 		
-		// Store the node
+		// Store the node since it may get lost by the time we want to throw the new mouse event.
 		Node node = textArea.node;
 		
 		// Redraw and set focus
-		textArea.button.requestFocus();
-		tree.doc.panel.layout.draw();
+		tree.doc.panel.layout.draw(node, OutlineLayoutManager.ICON);
 		
 		// Consume the current event and then propogate a new event to
 		// the DnD listener since if a drawUp() happened, the old event
