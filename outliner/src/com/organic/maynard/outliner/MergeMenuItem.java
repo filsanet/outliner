@@ -42,6 +42,13 @@ import javax.swing.*;
 
 import org.xml.sax.*;
 
+import com.organic.maynard.outliner.actions.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
 public class MergeMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
@@ -49,9 +56,21 @@ public class MergeMenuItem extends AbstractOutlinerMenuItem implements ActionLis
 		addActionListener(this);
 	}
 
-
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		OutlineMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), Event.CTRL_MASK, KeyEvent.VK_M, false);
+		OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
+		OutlinerCellRendererImpl textArea = doc.panel.layout.getUIComponent(doc.tree.getEditingNode());
+		
+		if (textArea == null) {
+			return;
+		}
+
+		Node node = textArea.node;
+		JoeTree tree = node.getTree();
+		OutlineLayoutManager layout = tree.getDocument().panel.layout;
+		
+		if (doc.tree.getComponentFocus() == OutlineLayoutManager.ICON) {
+			MergeAction.merge(node, tree, layout, false);
+		}
 	}
 }

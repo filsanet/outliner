@@ -46,6 +46,13 @@ import javax.swing.event.*;
 
 import com.organic.maynard.util.string.*;
 
+import com.organic.maynard.outliner.actions.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
 public class IndicatorMouseListener implements MouseListener {
 
 	// Instance Fields
@@ -148,7 +155,7 @@ public class IndicatorMouseListener implements MouseListener {
 	private void clearComment(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.clearCommentForSingleNode(currentNode, undoable);
+		ToggleCommentAction.clearCommentForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
 			tree.getDocument().undoQueue.add(undoable);
@@ -158,7 +165,7 @@ public class IndicatorMouseListener implements MouseListener {
 	private void toggleCommentAndClear(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.toggleCommentAndClearForSingleNode(currentNode, undoable);
+		ToggleCommentAction.toggleCommentAndClearForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
 			tree.getDocument().undoQueue.add(undoable);
@@ -168,7 +175,7 @@ public class IndicatorMouseListener implements MouseListener {
 	private void toggleComment(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.toggleCommentForSingleNode(currentNode, undoable);
+		ToggleCommentAction.toggleCommentForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
 			tree.getDocument().undoQueue.add(undoable);
@@ -178,7 +185,7 @@ public class IndicatorMouseListener implements MouseListener {
 	private void toggleCommentInheritance(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.toggleCommentInheritanceForSingleNode(currentNode, undoable);
+		ToggleCommentAction.toggleCommentInheritanceForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
 			tree.getDocument().undoQueue.add(undoable);
@@ -189,7 +196,7 @@ public class IndicatorMouseListener implements MouseListener {
 	private void clearEditable(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.clearEditableForSingleNode(currentNode, undoable);
+		ToggleEditableAction.clearEditableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
 			tree.getDocument().undoQueue.add(undoable);
@@ -201,7 +208,7 @@ public class IndicatorMouseListener implements MouseListener {
 	private void toggleEditableAndClear(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.toggleEditableAndClearForSingleNode(currentNode, undoable);
+		ToggleEditableAction.toggleEditableAndClearForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
 			tree.getDocument().undoQueue.add(undoable);
@@ -213,7 +220,7 @@ public class IndicatorMouseListener implements MouseListener {
 	private void toggleEditable(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.toggleEditableForSingleNode(currentNode, undoable);
+		ToggleEditableAction.toggleEditableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
 			tree.getDocument().undoQueue.add(undoable);
@@ -225,7 +232,7 @@ public class IndicatorMouseListener implements MouseListener {
 	private void toggleEditableInheritance(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.toggleEditableInheritanceForSingleNode(currentNode, undoable);
+		ToggleEditableAction.toggleEditableInheritanceForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
 			tree.getDocument().undoQueue.add(undoable);
@@ -238,7 +245,7 @@ public class IndicatorMouseListener implements MouseListener {
 	private void clearMoveable(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.clearMoveableForSingleNode(currentNode, undoable);
+		ToggleMoveableAction.clearMoveableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
 			tree.getDocument().undoQueue.add(undoable);
@@ -248,7 +255,7 @@ public class IndicatorMouseListener implements MouseListener {
 	private void toggleMoveableAndClear(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.toggleMoveableAndClearForSingleNode(currentNode, undoable);
+		ToggleMoveableAction.toggleMoveableAndClearForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
 			tree.getDocument().undoQueue.add(undoable);
@@ -258,7 +265,7 @@ public class IndicatorMouseListener implements MouseListener {
 	private void toggleMoveable(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.toggleMoveableForSingleNode(currentNode, undoable);
+		ToggleMoveableAction.toggleMoveableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
 			tree.getDocument().undoQueue.add(undoable);
@@ -268,7 +275,7 @@ public class IndicatorMouseListener implements MouseListener {
 	private void toggleMoveableInheritance(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.toggleMoveableInheritanceForSingleNode(currentNode, undoable);
+		ToggleMoveableAction.toggleMoveableInheritanceForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
 			tree.getDocument().undoQueue.add(undoable);

@@ -42,6 +42,13 @@ import javax.swing.*;
 
 import org.xml.sax.*;
 
+import com.organic.maynard.outliner.actions.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
 public class ClearMoveablesMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
@@ -49,9 +56,23 @@ public class ClearMoveablesMenuItem extends AbstractOutlinerMenuItem implements 
 		addActionListener(this);
 	}
 
-
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		OutlineMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), Event.CTRL_MASK + Event.SHIFT_MASK, KeyEvent.VK_F12, false);
+		OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
+		OutlinerCellRendererImpl textArea = doc.panel.layout.getUIComponent(doc.tree.getEditingNode());
+		
+		if (textArea == null) {
+			return;
+		}
+
+		Node node = textArea.node;
+		JoeTree tree = node.getTree();
+		OutlineLayoutManager layout = tree.getDocument().panel.layout;
+		
+		if (doc.tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
+			ToggleMoveableAction.clearMoveableText(node, tree, layout);
+		} else if (doc.tree.getComponentFocus() == OutlineLayoutManager.ICON) {
+			ToggleMoveableAction.clearMoveable(node, tree, layout);
+		}
 	}
 }

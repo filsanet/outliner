@@ -33,7 +33,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
  
-// we're part of this
 package com.organic.maynard.outliner;
 
 import com.organic.maynard.outliner.util.preferences.*;
@@ -43,6 +42,11 @@ import javax.swing.event.*;
 import java.awt.event.*;
 import java.awt.datatransfer.*;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
 public class TextKeyListener implements KeyListener, MouseListener, FocusListener {
 	
 	private OutlinerCellRendererImpl textArea = null;
@@ -193,52 +197,6 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 		OutlineLayoutManager layout = tree.getDocument().panel.layout;
 		
 		switch(e.getKeyCode()) {
-			case KeyEvent.VK_PAGE_DOWN:
-				toggleExpansion(tree,layout, e.isShiftDown());
-				break;
-
-			case KeyEvent.VK_PAGE_UP:
-				if (e.isControlDown()) {
-					if (e.isShiftDown()) {
-						clearComment(tree, layout);
-					} else {
-						toggleCommentInheritance(tree,layout);
-					}
-				} else if (e.isShiftDown()) {
-					toggleComment(tree,layout);
-				} else {
-					toggleCommentAndClear(tree, layout);
-				}
-				break;
-
-			case KeyEvent.VK_F11:
-				if (e.isControlDown()) {
-					if (e.isShiftDown()) {
-						clearEditable(tree, layout);
-					} else {
-						toggleEditableInheritance(tree,layout);
-					}
-				} else if (e.isShiftDown()) {
-					toggleEditable(tree,layout);
-				} else {
-					toggleEditableAndClear(tree, layout);
-				}
-				break;
-
-			case KeyEvent.VK_F12:
-				if (e.isControlDown()) {
-					if (e.isShiftDown()) {
-						clearMoveable(tree, layout);
-					} else {
-						toggleMoveableInheritance(tree,layout);
-					}
-				} else if (e.isShiftDown()) {
-					toggleMoveable(tree,layout);
-				} else {
-					toggleMoveableAndClear(tree, layout);
-				}
-				break;
-
 			case KeyEvent.VK_UP:
 				moveUp(tree, layout);
 				break;
@@ -407,18 +365,6 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 					}
 				}
 				return;
-
-			case KeyEvent.VK_M:
-				if (e.isControlDown()) {
-					break;
-				}
-				return;
-
-			case KeyEvent.VK_D:
-				if (e.isControlDown()) {
-					selectNone(tree,layout);
-				}
-				break;
 				
 			default:
 				// If we're read-only then abort
@@ -663,76 +609,6 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 
 
 	// Key Handlers
-	private void toggleExpansion(JoeTree tree, OutlineLayoutManager layout, boolean shiftDown) {
-		Node node = textArea.node;
-		
-		if (node.isExpanded()) {
-			node.setExpanded(false, !shiftDown);
-		} else {
-			if (shiftDown) {
-				node.ExpandAllSubheads();
-			} else {
-				node.setExpanded(true, true);
-			}
-		}
-
-		// Redraw
-		layout.draw(node, OutlineLayoutManager.TEXT);
-	}
-
-	// Comments
-	private void clearComment(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.clearCommentForSingleNode(currentNode, undoable);
-
-		if (!undoable.isEmpty()) {
-			tree.getDocument().undoQueue.add(undoable);
-		}
-
-		// Redraw
-		layout.draw(currentNode, OutlineLayoutManager.TEXT);
-	}
-
-	private void toggleCommentAndClear(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.toggleCommentAndClearForSingleNode(currentNode, undoable);
-
-		if (!undoable.isEmpty()) {
-			tree.getDocument().undoQueue.add(undoable);
-		}
-
-		// Redraw
-		layout.draw(currentNode, OutlineLayoutManager.TEXT);
-	}
-
-	private void toggleComment(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.toggleCommentForSingleNode(currentNode, undoable);
-
-		if (!undoable.isEmpty()) {
-			tree.getDocument().undoQueue.add(undoable);
-		}
-
-		// Redraw
-		layout.draw(currentNode, OutlineLayoutManager.TEXT);
-	}
-
-	private void toggleCommentInheritance(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.toggleCommentInheritanceForSingleNode(currentNode, undoable);
-
-		if (!undoable.isEmpty()) {
-			tree.getDocument().undoQueue.add(undoable);
-		}
-
-		// Redraw
-		layout.draw(currentNode, OutlineLayoutManager.TEXT);
-	}
-	
 	private void moveUp(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
@@ -1133,23 +1009,6 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 		// Redraw and Set Focus
 		layout.draw(newNode,OutlineLayoutManager.TEXT);
 	}
-
-	private void selectNone(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-
-		// Clear Text Selection
-		int caretPosition = textArea.getCaretPosition();
-		tree.setCursorPosition(caretPosition);
-		textArea.setCaretPosition(caretPosition);
-		textArea.moveCaretPosition(caretPosition);
-		
-		// Update the undoable if neccessary
-		UndoableEdit undoable = tree.getDocument().undoQueue.getIfEdit();
-		if ((undoable != null) && (undoable.getNode() == currentNode) && (!undoable.isFrozen())) {
-			undoable.setNewPosition(caretPosition);
-			undoable.setNewMarkPosition(caretPosition);
-		}
-	}
 		
 	private void promote(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
@@ -1381,116 +1240,5 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 		tree.getDocument().panel.layout.draw(firstNode,OutlineLayoutManager.ICON);
 		
 		return;
-	}
-
-	// Editable
-	private void clearEditable(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.clearEditableForSingleNode(currentNode, undoable);
-
-		if (!undoable.isEmpty()) {
-			tree.getDocument().undoQueue.add(undoable);
-		}
-
-		// Redraw
-		tree.getDocument().attPanel.update();
-		layout.draw(currentNode, OutlineLayoutManager.TEXT);
-	}
-
-	private void toggleEditableAndClear(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.toggleEditableAndClearForSingleNode(currentNode, undoable);
-
-		if (!undoable.isEmpty()) {
-			tree.getDocument().undoQueue.add(undoable);
-		}
-
-		// Redraw
-		tree.getDocument().attPanel.update();
-		layout.draw(currentNode, OutlineLayoutManager.TEXT);
-	}
-
-	private void toggleEditable(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.toggleEditableForSingleNode(currentNode, undoable);
-
-		if (!undoable.isEmpty()) {
-			tree.getDocument().undoQueue.add(undoable);
-		}
-
-		// Redraw
-		tree.getDocument().attPanel.update();
-		layout.draw(currentNode, OutlineLayoutManager.TEXT);
-	}
-
-	private void toggleEditableInheritance(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.toggleEditableInheritanceForSingleNode(currentNode, undoable);
-
-		if (!undoable.isEmpty()) {
-			tree.getDocument().undoQueue.add(undoable);
-		}
-
-		// Redraw
-		tree.getDocument().attPanel.update();
-		layout.draw(currentNode, OutlineLayoutManager.TEXT);
-	}
-
-
-	// Moveable
-	private void clearMoveable(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.clearMoveableForSingleNode(currentNode, undoable);
-
-		if (!undoable.isEmpty()) {
-			tree.getDocument().undoQueue.add(undoable);
-		}
-
-		// Redraw
-		layout.draw(currentNode, OutlineLayoutManager.TEXT);
-	}
-
-	private void toggleMoveableAndClear(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.toggleMoveableAndClearForSingleNode(currentNode, undoable);
-
-		if (!undoable.isEmpty()) {
-			tree.getDocument().undoQueue.add(undoable);
-		}
-
-		// Redraw
-		layout.draw(currentNode, OutlineLayoutManager.TEXT);
-	}
-
-	private void toggleMoveable(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.toggleMoveableForSingleNode(currentNode, undoable);
-
-		if (!undoable.isEmpty()) {
-			tree.getDocument().undoQueue.add(undoable);
-		}
-
-		// Redraw
-		layout.draw(currentNode, OutlineLayoutManager.TEXT);
-	}
-
-	private void toggleMoveableInheritance(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-		IconKeyListener.toggleMoveableInheritanceForSingleNode(currentNode, undoable);
-
-		if (!undoable.isEmpty()) {
-			tree.getDocument().undoQueue.add(undoable);
-		}
-
-		// Redraw
-		layout.draw(currentNode, OutlineLayoutManager.TEXT);
 	}
 }

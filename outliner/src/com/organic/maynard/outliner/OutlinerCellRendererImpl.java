@@ -39,6 +39,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import com.organic.maynard.outliner.actions.*;
+
 /**
  * @author  $Author$
  * @version $Revision$, $Date$
@@ -95,10 +97,22 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	public boolean hasFocus = false;
 
 
+	private static final ToggleCommentAction toggleCommentAction = new ToggleCommentAction();
+	private static final ToggleEditableAction toggleEditableAction = new ToggleEditableAction();
+	private static final ToggleMoveableAction toggleMoveableAction = new ToggleMoveableAction();
+	private static final ToggleExpansionAction toggleExpansionAction = new ToggleExpansionAction();
+	private static final MergeAction mergeAction = new MergeAction();
+	private static final SelectNoneAction selectNoneAction = new SelectNoneAction();
+	
 	// The Constructors
 	public OutlinerCellRendererImpl() {
 		super();
-				
+		
+		// Add Actions to TextArea
+		setupMaps(this.getInputMap(), this.getActionMap());
+		setupMaps(this.button.getInputMap(), this.button.getActionMap());
+
+		// Settings
 		setFont(font);
 		setCursor(cursor);
 		setCaretColor(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur);
@@ -114,6 +128,39 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		}
 		
 		setVisible(false);
+	}
+	
+	private void setupMaps(InputMap input_map, ActionMap action_map) {
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, Event.CTRL_MASK, false), "select_none");
+		action_map.put("select_none", selectNoneAction);
+
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_M, Event.CTRL_MASK, false), "merge");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_M, Event.CTRL_MASK + Event.SHIFT_MASK, false), "merge");
+		action_map.put("merge", mergeAction);
+
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0, false), "expansion");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, Event.SHIFT_MASK, false), "expansion");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, Event.CTRL_MASK, false), "expansion");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, Event.CTRL_MASK + Event.SHIFT_MASK, false), "expansion");
+		action_map.put("expansion", toggleExpansionAction);
+
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0, false), "comments");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, Event.SHIFT_MASK, false), "comments");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, Event.CTRL_MASK, false), "comments");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, Event.CTRL_MASK + Event.SHIFT_MASK, false), "comments");
+		action_map.put("comments", toggleCommentAction);
+
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0, false), "editable");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_F11, Event.SHIFT_MASK, false), "editable");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_F11, Event.CTRL_MASK, false), "editable");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_F11, Event.CTRL_MASK + Event.SHIFT_MASK, false), "editable");
+		action_map.put("editable", toggleEditableAction);
+
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0, false), "moveable");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_F12, Event.SHIFT_MASK, false), "moveable");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_F12, Event.CTRL_MASK, false), "moveable");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_F12, Event.CTRL_MASK + Event.SHIFT_MASK, false), "moveable");
+		action_map.put("moveable", toggleMoveableAction);	
 	}
 
 	public void destroy() {
