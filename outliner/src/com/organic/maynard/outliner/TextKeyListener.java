@@ -108,6 +108,19 @@ public class TextKeyListener implements KeyListener, MouseListener {
 			Outliner.macroPopup.show(e.getComponent(),e.getX(), e.getY());
 			return;
 		}
+	}
+
+ 	public void mouseClicked(MouseEvent e) {
+  		// Catch for Solaris/Mac if they did the popup trigger.
+ 		if (e.isConsumed()) {
+ 			return;
+ 		}
+ 		
+ 		textArea = (OutlinerCellRendererImpl) e.getComponent();
+ 		
+		// Shorthand
+		Node currentNode = textArea.node;
+ 		TreeContext tree = currentNode.getTree();
 		
 		// Set the Mark
 		tree.setCursorMarkPosition(textArea.getCaret().getMark());
@@ -118,10 +131,8 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		if ((undoable != null) && (undoable.getNode() == currentNode)) {
 			undoable.setNewPosition(textArea.getCaretPosition());
 			undoable.setNewMarkPosition(textArea.getCaret().getMark());
-		}
-	}
-
- 	public void mouseClicked(MouseEvent e) {}
+		}	
+ 	}
 	
 	
 	// KeyListener Interface

@@ -326,7 +326,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			if (nodeIndex == panel.doc.tree.visibleNodes.size()) {
 				break;
 			}
-			node = (Node) panel.doc.tree.visibleNodes.get(nodeIndex);
+			node = panel.doc.tree.visibleNodes.get(nodeIndex);
 		}
 
 		// Hide any drawing elements that were not used.
@@ -404,7 +404,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			if (nodeIndex == -1) {
 				break;
 			}
-			node = (Node) panel.doc.tree.visibleNodes.get(nodeIndex);
+			node = panel.doc.tree.visibleNodes.get(nodeIndex);
 		}
 
 		// Hide any drawing elements that were not used.
@@ -443,7 +443,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	private void drawDownExtraNodes(int nodeIndex) {
 		Node node = null;
 		try {
-			node = (Node) panel.doc.tree.visibleNodes.get(nodeIndex);
+			node = panel.doc.tree.visibleNodes.get(nodeIndex);
 		} catch (IndexOutOfBoundsException e) {
 			return;
 		}
@@ -483,7 +483,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			if (nodeIndex == panel.doc.tree.visibleNodes.size()) {
 				break;
 			}
-			node = (Node) panel.doc.tree.visibleNodes.get(nodeIndex);
+			node = panel.doc.tree.visibleNodes.get(nodeIndex);
 		}
 
 		// Hide any drawing elements that were not used.
@@ -561,7 +561,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		if (drawBlock) {return;}
 		
 		// Explicit call to draw and focus, so that we can scroll away from our current component focus.
-		setNodeToDrawFrom((Node) panel.doc.tree.visibleNodes.get(e.getValue()), e.getValue());		
+		setNodeToDrawFrom(panel.doc.tree.visibleNodes.get(e.getValue()), e.getValue());		
 		drawingDirection = DOWN;
 		redraw();
 	}

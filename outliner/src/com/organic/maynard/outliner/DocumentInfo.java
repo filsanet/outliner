@@ -405,7 +405,7 @@ public class DocumentInfo {
 		
 		getExpandedNodes().clear();
 		for (int i = 0; i < document.tree.visibleNodes.size(); i++) {
-			Node node = (Node) document.tree.visibleNodes.get(i);
+			Node node = document.tree.visibleNodes.get(i);
 			if (node.isExpanded()) {
 				addExpandedNodeNum(i);
 			}

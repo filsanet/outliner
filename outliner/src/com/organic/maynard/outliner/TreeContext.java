@@ -19,7 +19,6 @@
 package com.organic.maynard.outliner;
 
 import java.util.*;
-
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -28,8 +27,8 @@ public class TreeContext extends AttributeContainerImpl {
 	// Instance Variables
 	public OutlinerDocument doc = null;
 	
-	public ArrayList visibleNodes = new ArrayList(1000);
-	public ArrayList selectedNodes = new ArrayList(100);
+	public NodeList visibleNodes = new NodeList(1000);
+	public NodeList selectedNodes = new NodeList(100);
 	public Node rootNode = null;
 
 	private HashMap attributes = null;
@@ -145,17 +144,25 @@ public class TreeContext extends AttributeContainerImpl {
 		}
 	}
 	
-	public Node getEditingNode() {return editingNode;}
+	public Node getEditingNode() {
+		return editingNode;
+	}
 
-	public void setCursorMarkPosition(int cursorMarkPosition) {this.cursorMarkPosition = cursorMarkPosition;}
-	public int getCursorMarkPosition() {return cursorMarkPosition;}
+	public void setCursorMarkPosition(int cursorMarkPosition) {
+		this.cursorMarkPosition = cursorMarkPosition;
+	}
+	public int getCursorMarkPosition() {
+		return cursorMarkPosition;
+	}
 
 	public void setComponentFocus(int componentFocus) {
 		this.componentFocus = componentFocus;
 		updateEditMenu();
 	}
 	
-	public int getComponentFocus() {return componentFocus;}
+	public int getComponentFocus() {
+		return componentFocus;
+	}
 
 	public void setCursorPosition(int cursorPosition) {
 		setCursorPosition(cursorPosition,true);
@@ -169,7 +176,9 @@ public class TreeContext extends AttributeContainerImpl {
 		updateEditMenu();
 	}
 	
-	public int getCursorPosition() {return cursorPosition;}
+	public int getCursorPosition() {
+		return cursorPosition;
+	}
 
 	private static JMenuItem cutItem = null;
 	private static JMenuItem copyItem = null;
@@ -218,7 +227,7 @@ public class TreeContext extends AttributeContainerImpl {
 		if (prevNodeIndex < 0) {
 			return null;
 		}
-		return (Node) visibleNodes.get(prevNodeIndex);
+		return visibleNodes.get(prevNodeIndex);
 	}
 
 	public Node getNextNode(Node existingNode) {
@@ -226,7 +235,7 @@ public class TreeContext extends AttributeContainerImpl {
 		if (nextNodeIndex >= visibleNodes.size()) {
 			return null;
 		}
-		return (Node) visibleNodes.get(nextNodeIndex);
+		return visibleNodes.get(nextNodeIndex);
 	}
 	
 	public void addNode(Node node) {
@@ -234,7 +243,12 @@ public class TreeContext extends AttributeContainerImpl {
 	}
 	
 	public void removeNode(Node node) {
-		node.removeFromVisibleNodesCache();
+		int index = visibleNodes.indexOf(node);
+		
+		if (index != -1) {
+			int lastIndex = visibleNodes.indexOf(node.getLastViewableDecendent());
+			visibleNodes.removeRange(index, lastIndex + 1);
+		}
 	}
 
 	public void insertNode(Node node) {
@@ -283,7 +297,7 @@ public class TreeContext extends AttributeContainerImpl {
 	
 	public void clearSelection() {
 		for (int i = selectedNodes.size() - 1; i >= 0; i--) {
-			((Node) selectedNodes.get(i)).setSelected(false);
+			selectedNodes.get(i).setSelected(false);
 		}
 		
 		selectedNodes.clear();
@@ -297,11 +311,19 @@ public class TreeContext extends AttributeContainerImpl {
 			mostRecentNodeTouched = node;
 			
 			// Maintain the selected nodes in order from youngest to oldest
-			int nodeIndex = node.currentIndex();
-			for (int i = 0; i < selectedNodes.size(); i++) {
-				if (((Node) selectedNodes.get(i)).currentIndex() > nodeIndex) {
-					selectedNodes.add(i, node);
-					return;
+			if (selectedNodes.size() > 0) {
+				int nodeIndex = node.currentIndex();
+				
+				NodeImpl parent = (NodeImpl) selectedNodesParent;
+				int searchStartIndex = 0;
+				int childCount = parent.children.size() - 1;
+				
+				for (int i = 0; i < selectedNodes.size(); i++) {
+					searchStartIndex = parent.children.indexOf(selectedNodes.get(i), searchStartIndex, childCount);
+					if (searchStartIndex > nodeIndex) {
+						selectedNodes.add(i, node);
+						return;
+					}
 				}
 			}
 			
@@ -339,7 +361,7 @@ public class TreeContext extends AttributeContainerImpl {
 
 	public Node getYoungestInSelection() {
 		try {
-			return (Node) selectedNodes.get(0);
+			return selectedNodes.get(0);
 		} catch (IndexOutOfBoundsException e) {
 			return null;
 		}
@@ -347,7 +369,7 @@ public class TreeContext extends AttributeContainerImpl {
 	
 	public Node getOldestInSelection() {
 		try {
-			return (Node) selectedNodes.get(selectedNodes.size() - 1);
+			return selectedNodes.get(selectedNodes.size() - 1);
 		} catch (IndexOutOfBoundsException e) {
 			return null;
 		}

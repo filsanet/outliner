@@ -438,7 +438,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		for (int i = 0; i < expandedNodes.size(); i++) {
 			int nodeNum = ((Integer) expandedNodes.get(i)).intValue();
 			try {
-				Node node = (Node) doc.tree.visibleNodes.get(nodeNum);
+				Node node = doc.tree.visibleNodes.get(nodeNum);
 				node.setExpanded(true);
 			} catch (Exception e) {
 				break;
@@ -450,10 +450,10 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		int index = -1;
 		try {
 			index = docInfo.getVerticalScrollState() - 1;
-			firstVisibleNode = (Node) tree.visibleNodes.get(index);
+			firstVisibleNode = tree.visibleNodes.get(index);
 		} catch (IndexOutOfBoundsException e) {
 			index = 0;
-			firstVisibleNode = (Node) tree.visibleNodes.get(0);
+			firstVisibleNode = tree.visibleNodes.get(0);
 		}
 		
 		// Record Document Settings

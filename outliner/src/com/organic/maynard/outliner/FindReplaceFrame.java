@@ -681,7 +681,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				}
 			} else {
 				for (int i = 0; i < doc.tree.selectedNodes.size(); i++) {					
-					Node nodeStart = (Node) doc.tree.selectedNodes.get(i);
+					Node nodeStart = doc.tree.selectedNodes.get(i);
 					int cursorStart = 0;
 					Node nodeEnd = nodeStart.getLastDecendent();
 					int cursorEnd = nodeEnd.getValue().length();
@@ -867,7 +867,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			} else {
 				for (int i = 0; i < doc.tree.selectedNodes.size(); i++) {
 					// Record the Insert in the undoable
-					Node nodeStart = (Node) doc.tree.selectedNodes.get(i);
+					Node nodeStart = doc.tree.selectedNodes.get(i);
 					int cursorStart = 0;
 					Node nodeEnd = nodeStart.getLastDecendent();
 					int cursorEnd = nodeEnd.getValue().length();

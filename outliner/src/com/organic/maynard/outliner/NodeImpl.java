@@ -27,8 +27,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	private TreeContext tree = null;
 	private Node parent = null;
 	private String value = null;
-	//private HashMap attributes = null;
-	protected ArrayList children = null;
+	protected NodeList children = null;
 	private static final int INITIAL_ARRAY_LIST_SIZE = 10;
 
 	private int depth = -1; // -1 so that children of root will be depth 0.
@@ -56,7 +55,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	public void destroy() {
 		if (children != null) {
 			for (int i = 0; i < children.size(); i++) {
-				Node child = (Node) children.get(i);
+				Node child = children.get(i);
 				child.destroy();
 			}
 		}
@@ -171,7 +170,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	
 	public void appendChild(Node node) {
 		if (children == null) {
-			children = new ArrayList(INITIAL_ARRAY_LIST_SIZE);
+			children = new NodeList(INITIAL_ARRAY_LIST_SIZE);
 		}
 		
 		children.add(node);
@@ -195,7 +194,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		}
 		
 		node.setParent(null);
-		children.remove(node);
+		children.remove(children.indexOf(node));
 
 		// Adjust Counts
 		adjustDecendantCount(-(node.getDecendantCount() + 1));
@@ -219,7 +218,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		}
 		
 		try {
-			return (Node) children.get(i);
+			return children.get(i);
 		} catch (IndexOutOfBoundsException iofbe) {
 			return null;
 		}
@@ -233,7 +232,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		if (isLeaf()) {
 			return null;
 		} else {
-			return (Node) children.get(0);
+			return children.get(0);
 		}
 	}
 	
@@ -245,7 +244,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		if (isLeaf()) {
 			return null;
 		} else {
-			return (Node) children.get(children.size() - 1);
+			return children.get(children.size() - 1);
 		}
 	}
 	
@@ -304,24 +303,9 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		return index;
 	}
 	
-	// This method could be optomized better by first finding the range and then doing a batch removal.
-	public void removeFromVisibleNodesCache() {
-		int index = tree.visibleNodes.indexOf(this);
-		
-		if (index != -1) {
-			tree.visibleNodes.remove(index);
-			if (isExpanded()) {
-				int childrenCount = this.numOfChildren();
-				for (int i = 0; i < childrenCount; i++) {
-					getChild(i).removeFromVisibleNodesCache();
-				}		
-			}
-		}
-	}
-	
 	public void insertChild(Node node, int i) {
 		if (children == null) {
-			children = new ArrayList(INITIAL_ARRAY_LIST_SIZE);
+			children = new NodeList(INITIAL_ARRAY_LIST_SIZE);
 		}
 
 		children.add(i,node);

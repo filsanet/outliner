@@ -53,7 +53,6 @@ public interface Node extends AttributeContainer {
 	public Node getLastViewableDecendent();
 	public Node getYoungestVisibleAncestor();
 	public int insertChildrenIntoVisibleNodesCache(int index);
-	public void removeFromVisibleNodesCache();
 	public void insertChild(Node node, int i);
 	
 	public int getChildIndex(Node node);

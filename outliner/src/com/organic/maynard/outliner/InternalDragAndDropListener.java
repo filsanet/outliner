@@ -152,7 +152,7 @@ public class InternalDragAndDropListener implements MouseListener {
 		
 		for (int i = 0; i < tree.selectedNodes.size(); i++) {
 			// Record the Insert in the undoable
-			Node nodeToMove = (Node) tree.selectedNodes.get(i);
+			Node nodeToMove = tree.selectedNodes.get(i);
 
 			// Abort if node is not moveable
 			if (!nodeToMove.isMoveable()) {
@@ -193,7 +193,7 @@ public class InternalDragAndDropListener implements MouseListener {
 		int currentIndexAdj = 0;
 		
 		for (int i = tree.selectedNodes.size() - 1; i >= 0; i--) {
-			Node nodeToMove = (Node) tree.selectedNodes.get(i);
+			Node nodeToMove = tree.selectedNodes.get(i);
 
 			// Abort if node is not moveable
 			if (!nodeToMove.isMoveable()) {
