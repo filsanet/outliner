@@ -38,19 +38,20 @@ import com.organic.maynard.outliner.util.preferences.*;
 import javax.swing.*;
 import java.awt.event.*;
 
-public class OutlinerPanel extends JPanel {
-
-
+public class OutlinerPanel extends JPanel implements MouseWheelListener {
+	
 	// GUI Fields
 	public OutlinerDocument doc = null;
 	public OutlineLayoutManager layout = new OutlineLayoutManager(this);
-
-
+	
+	
 	// The Constructor
 	public OutlinerPanel(OutlinerDocument doc) {
 		this.doc = doc;
 		setBackground(Preferences.getPreferenceColor(Preferences.PANEL_BACKGROUND_COLOR).cur);
 		setLayout(layout);
+		
+		addMouseWheelListener(this);
 		
 		//addMouseMotionListener(new TestMouseMotionListener());
 	}
@@ -64,6 +65,13 @@ public class OutlinerPanel extends JPanel {
 		layout = null;
 		
 		removeAll();
+	}
+	
+	// MouseWheelListener Interface
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		int clicks = e.getWheelRotation() * Preferences.getPreferenceInt(Preferences.MOUSE_WHEEL_SCROLL_SPEED).cur;
+		BoundedRangeModel model = this.layout.scrollBar.getModel();
+		model.setValue(model.getValue() + clicks);
 	}
 }
 

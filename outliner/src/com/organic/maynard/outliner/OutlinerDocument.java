@@ -45,7 +45,6 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.beans.*;
-import gui.DummyJScrollPane;
 import com.organic.maynard.util.string.StanStringTools ;
 
 /**
@@ -97,7 +96,6 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	private DocumentInfo docInfo = null;
 	
 	public OutlinerPanel panel = new OutlinerPanel(this); // Needs to come before JoeTree declaration.
-	public DummyJScrollPane dummy = null;
 	
 	public DocumentSettings settings = new DocumentSettings(this);
 	public JoeTree tree = Outliner.newTree(this); // Needs to come after OutlinerPanel declaration.
@@ -140,9 +138,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		
 		// Create the Layout
-		dummy = new DummyJScrollPane(panel, panel.layout.scrollBar);
-		
-		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, dummy, attJSP);
+		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, panel, attJSP);
 		splitPane.setResizeWeight(1.0);
 		splitPane.addPropertyChangeListener(this);
 		
@@ -197,7 +193,6 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		border = null;
 		fileName = null;
 		repository = null;
-		dummy = null;
 		attPanel = null;
 		splitPane = null;
 		attJSP = null;
@@ -212,7 +207,6 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	
 	
 	// Accessors
-	
 	public DocumentSettings getSettings() {
 		return this.settings ;
 	}
@@ -302,8 +296,8 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		
 		if (isShowingAttributes()) {
 			// Swap the components
-			getContentPane().remove(dummy);
-			splitPane.setTopComponent(dummy);
+			getContentPane().remove(panel);
+			splitPane.setTopComponent(panel);
 			attPanel.update();
 			getContentPane().add(splitPane, BorderLayout.CENTER);
 			
@@ -315,7 +309,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 			
 			// Swap the components
 			getContentPane().remove(splitPane);
-			getContentPane().add(dummy, BorderLayout.CENTER);
+			getContentPane().add(panel, BorderLayout.CENTER);
 		}
 		
 		if (isVisible()) {
