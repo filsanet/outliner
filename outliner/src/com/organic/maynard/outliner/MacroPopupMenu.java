@@ -431,6 +431,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 
 		if (macro.isUndoable()) {
 			if (!undoable.isEmpty()) {
+				undoable.setName(new StringBuffer().append(macro.getName()).append(" Macro").toString());
 				document.undoQueue.add(undoable);
 			}
 		} else {
@@ -487,6 +488,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 
 		if (macro.isUndoable()) {
 			if (!undoable.isEmpty()) {
+				undoable.setName(new StringBuffer().append(macro.getName()).append(" Macro").toString());
 				document.undoQueue.add(undoable);
 				undoable.redo();
 			}

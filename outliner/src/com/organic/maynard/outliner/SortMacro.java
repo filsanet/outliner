@@ -205,6 +205,7 @@ public class SortMacro extends MacroImpl implements RawMacro {
 		// Put the undoable onto the queue
 		if (isUndoable()) {
 			if (!undoable.isEmpty()) {
+				undoable.setName(new StringBuffer().append(this.getName()).append(" Sort Macro").toString());
 				document.undoQueue.add(undoable);
 				undoable.redo();
 			}
@@ -216,8 +217,8 @@ public class SortMacro extends MacroImpl implements RawMacro {
 	
 	// Saving the Macro
 	protected void prepareFile (StringBuffer buf) {
-		buf.append(XMLTools.getXmlDeclaration(null) + "\n");
-		buf.append(XMLTools.getElementStart(E_COMPARATOR) + XMLTools.escapeXMLText(getComparator()) + XMLTools.getElementEnd(E_COMPARATOR)+ "\n");
+		buf.append(XMLTools.getXmlDeclaration(null)).append("\n");
+		buf.append(XMLTools.getElementStart(E_COMPARATOR)).append(XMLTools.escapeXMLText(getComparator())).append(XMLTools.getElementEnd(E_COMPARATOR)).append("\n");
 	}
 
 
