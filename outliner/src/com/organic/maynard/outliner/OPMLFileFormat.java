@@ -53,13 +53,13 @@ public class OPMLFileFormat
 	public static final String ATTRIBUTE_TEXT = "text";
 	
 	public static final String ATTRIBUTE_IS_EDITABLE = "isEditable";
-	public static final String ATTRIBUTE_IS_EDITABLE_INHERITED = "isEditableInherited";
+	//public static final String ATTRIBUTE_IS_EDITABLE_INHERITED = "isEditableInherited";
 
 	public static final String ATTRIBUTE_IS_MOVEABLE = "isMoveable";
-	public static final String ATTRIBUTE_IS_MOVEABLE_INHERITED = "isMoveableInherited";
+	//public static final String ATTRIBUTE_IS_MOVEABLE_INHERITED = "isMoveableInherited";
 
 	public static final String ATTRIBUTE_IS_COMMENT = "isComment";
-	public static final String ATTRIBUTE_IS_COMMENT_INHERITED = "isCommentInherited";
+	//public static final String ATTRIBUTE_IS_COMMENT_INHERITED = "isCommentInherited";
 
 	// Open File Settings
     private org.xml.sax.Parser parser = new com.jclark.xml.sax.Driver();
@@ -130,48 +130,25 @@ public class OPMLFileFormat
 	}
 	
 	private void buildOutlineElement(Node node, String lineEnding, StringBuffer buf) {
+		indent(node, buf);
 		buf.append("<").append(ELEMENT_OUTLINE).append(" ");
 		
 		if (node.getCommentState() == Node.COMMENT_TRUE) {
 			buf.append(ATTRIBUTE_IS_COMMENT).append("=\"true\" ");
-			buf.append(ATTRIBUTE_IS_COMMENT_INHERITED).append("=\"true\" ");
-			
 		} else if (node.getCommentState() == Node.COMMENT_FALSE) {
 			buf.append(ATTRIBUTE_IS_COMMENT).append("=\"false\" ");
-			buf.append(ATTRIBUTE_IS_COMMENT_INHERITED).append("=\"true\" ");
-			
-		} else {
-			if (node.isComment()) {
-				buf.append(ATTRIBUTE_IS_COMMENT).append("=\"true\" ");
-			}
 		}
 
 		if (node.getEditableState() == Node.EDITABLE_TRUE) {
 			buf.append(ATTRIBUTE_IS_EDITABLE).append("=\"true\" ");
-			buf.append(ATTRIBUTE_IS_EDITABLE_INHERITED).append("=\"true\" ");
-			
 		} else if (node.getEditableState() == Node.COMMENT_FALSE) {
 			buf.append(ATTRIBUTE_IS_EDITABLE).append("=\"false\" ");
-			buf.append(ATTRIBUTE_IS_EDITABLE_INHERITED).append("=\"true\" ");
-			
-		} else {
-			if (node.isEditable()) {
-				buf.append(ATTRIBUTE_IS_EDITABLE).append("=\"true\" ");
-			}
 		}
 
 		if (node.getMoveableState() == Node.MOVEABLE_TRUE) {
 			buf.append(ATTRIBUTE_IS_MOVEABLE).append("=\"true\" ");
-			buf.append(ATTRIBUTE_IS_MOVEABLE_INHERITED).append("=\"true\" ");
-			
 		} else if (node.getMoveableState() == Node.MOVEABLE_FALSE) {
 			buf.append(ATTRIBUTE_IS_MOVEABLE).append("=\"false\" ");
-			buf.append(ATTRIBUTE_IS_MOVEABLE_INHERITED).append("=\"true\" ");
-			
-		} else {
-			if (node.isMoveable()) {
-				buf.append(ATTRIBUTE_IS_MOVEABLE).append("=\"true\" ");
-			}
 		}
 				
 		buf.append(ATTRIBUTE_TEXT).append("=\"").append(escapeXMLAttribute(node.getValue())).append("\"");
@@ -186,8 +163,15 @@ public class OPMLFileFormat
 				buildOutlineElement(node.getChild(i), lineEnding, buf);
 			}
 			
+			indent(node, buf);
 			buf.append("</").append(ELEMENT_OUTLINE).append(">").append(lineEnding);		
 		}	
+	}
+	
+	private void indent(Node node, StringBuffer buf) {
+		for (int i = 0; i < node.getDepth(); i++) {
+			buf.append("\t");
+		}
 	}
 	
 	private void buildAttributes(Node node, StringBuffer buf) {
@@ -264,25 +248,14 @@ public class OPMLFileFormat
 	
 	private Vector elementStack = new Vector();
 	private Node currentParent = null;
-	
-	private boolean anyIsCommentInheritedAttributesFound = false; // used to provide for better interop with outliners that don't support isCommentInherited.
-	private boolean anyIsEditableInheritedAttributesFound = false; // used to provide for better interop with outliners that don't support isEditableInherited.
-	private boolean anyIsMoveableInheritedAttributesFound = false; // used to provide for better interop with outliners that don't support isMoveableInherited.
-	
+		
 	public void startElement (String name, AttributeList atts) {
 		//System.out.println("Start element: " + name);
 		elementStack.add(name);
 		
 		if (name.equals(ELEMENT_OUTLINE)) {
 			NodeImpl node = new NodeImpl(tree, "");
-			
-			boolean isEditable = true;
-			boolean isEditableInherited = false;
-			boolean isMoveable = true;
-			boolean isMoveableInherited = false;
-			boolean isComment = false;
-			boolean isCommentInherited = false;
-			
+						
 			for (int i = 0; i < atts.getLength(); i++) {
 				String attName = atts.getName(i);
 				String attValue = atts.getValue(i);
@@ -290,80 +263,29 @@ public class OPMLFileFormat
 				if (attName.equals(ATTRIBUTE_TEXT)) {
 					node.setValue(attValue);
 					
-				} else if (attName.equals(ATTRIBUTE_IS_EDITABLE)) {
-					if (attValue != null && attValue.equals("false")) {
-						isEditable = false;;
-					}
-				} else if (attName.equals(ATTRIBUTE_IS_EDITABLE_INHERITED)) {
-					if (attValue != null && attValue.equals("true")) {
-						isEditableInherited = true;;
-					}
-					anyIsEditableInheritedAttributesFound = true;
-					
 				} else if (attName.equals(ATTRIBUTE_IS_MOVEABLE)) {
 					if (attValue != null && attValue.equals("false")) {
-						isMoveable = false;;
+						node.setMoveableState(Node.MOVEABLE_FALSE);
+					} else if (attValue != null && attValue.equals("true")) {
+						node.setMoveableState(Node.MOVEABLE_TRUE);
 					}
-				} else if (attName.equals(ATTRIBUTE_IS_MOVEABLE_INHERITED)) {
-					if (attValue != null && attValue.equals("true")) {
-						isMoveableInherited = true;;
+					
+				} else if (attName.equals(ATTRIBUTE_IS_EDITABLE)) {
+					if (attValue != null && attValue.equals("false")) {
+						node.setEditableState(Node.EDITABLE_FALSE);
+					} else if (attValue != null && attValue.equals("true")) {
+						node.setEditableState(Node.EDITABLE_TRUE);
 					}
-					anyIsMoveableInheritedAttributesFound = true;
-
+					
 				} else if (attName.equals(ATTRIBUTE_IS_COMMENT)) {
-					if (attValue != null && attValue.equals("true")) {
-						isComment = true;;
+					if (attValue != null && attValue.equals("false")) {
+						node.setCommentState(Node.COMMENT_FALSE);
+					} else if (attValue != null && attValue.equals("true")) {
+						node.setCommentState(Node.COMMENT_TRUE);
 					}
-				} else if (attName.equals(ATTRIBUTE_IS_COMMENT_INHERITED)) {
-					if (attValue != null && attValue.equals("true")) {
-						isCommentInherited = true;;
-					}
-					anyIsCommentInheritedAttributesFound = true;
 					
 				} else {
 					node.setAttribute(attName, attValue);
-				}
-			}
-			
-			if (anyIsCommentInheritedAttributesFound) {
-				if (isCommentInherited) {
-					if (isComment) {
-						node.setCommentState(Node.COMMENT_TRUE);
-					} else {
-						node.setCommentState(Node.COMMENT_FALSE);
-					}
-				}
-			} else {
-				if (isComment) {
-					node.setCommentState(Node.COMMENT_TRUE);
-				}
-			}
-
-			if (anyIsEditableInheritedAttributesFound) {
-				if (isEditableInherited) {
-					if (isEditable) {
-						node.setEditableState(Node.EDITABLE_TRUE);
-					} else {
-						node.setEditableState(Node.EDITABLE_FALSE);
-					}
-				}
-			} else {
-				if (!isEditable) {
-					node.setEditableState(Node.EDITABLE_FALSE);
-				}
-			}
-
-			if (anyIsMoveableInheritedAttributesFound) {
-				if (isMoveableInherited) {
-					if (isMoveable) {
-						node.setMoveableState(Node.MOVEABLE_TRUE);
-					} else {
-						node.setMoveableState(Node.MOVEABLE_FALSE);
-					}
-				}
-			} else {
-				if (!isMoveable) {
-					node.setMoveableState(Node.MOVEABLE_FALSE);
 				}
 			}
 						
