@@ -326,9 +326,14 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				UndoableEdit.freezeUndoEdit(document.tree.getEditingNode());
 
 				// Update the Recent File List
-				if (saveAs && !document.getFileName().equals(filename)) {
+				// if we changed our name on a save as operation
+				// or we're saving an imported doc
+				if (wereImported | (saveAs && !document.getFileName().equals(filename))) {
+					// add the new name to the list
 					RecentFilesList.addFileNameToList(docInfo);
+				// else we haven't changed our name on a save as op and weren't imported
 				} else {
+					// adjust the name that's already in the list
 					RecentFilesList.updateFileNameInList(filename, docInfo);
 				} // end else
 
