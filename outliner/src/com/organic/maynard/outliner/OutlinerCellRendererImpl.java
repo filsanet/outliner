@@ -32,6 +32,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	
 	public Node node = null;
 	public OutlineButton button = new OutlineButton(this);
+	public OutlineLineNumber lineNumber = new OutlineLineNumber(this);
 	
 	
 	// The Constructors
@@ -63,6 +64,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		currentTextAreaSize = null;
 		
 		button = null;
+		lineNumber = null;
 	}
 		
 	public boolean isManagingFocus() {
@@ -92,9 +94,14 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	public void setVisible(boolean visibility) {
 		super.setVisible(visibility);
 		button.setVisible(visibility);
+		lineNumber.setVisible(visibility);
 	}
 	
 	public void verticalShift (int amount) {
+		Point lp = lineNumber.getLocation();
+		lp.y += amount;
+		lineNumber.setLocation(lp);
+		
 		Point tp = getLocation();
 		tp.y += amount;
 		setLocation(tp);
@@ -127,6 +134,14 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		
 		// Draw the Button
 		button.setBounds(p.x + indent, p.y, OutlineButton.BUTTON_WIDTH, height);
+		
+		// Draw the LineNumber
+		if (Preferences.SHOW_LINE_NUMBERS.cur) {
+			lineNumber.setText("" + node.getLineNumber());
+		} else {
+			lineNumber.setText("");
+		}
+		lineNumber.setBounds(Preferences.LEFT_MARGIN.cur, p.y, OutlineLineNumber.LINE_NUMBER_WIDTH + indent, height);
 	}
 		
 	public void drawDown(Point p, Node node) {
@@ -148,6 +163,14 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		
 		// Draw the Button
 		button.setBounds(p.x + indent, p.y, OutlineButton.BUTTON_WIDTH, height);
+
+		// Draw the LineNumber
+		if (Preferences.SHOW_LINE_NUMBERS.cur) {
+			lineNumber.setText("" + node.getLineNumber());
+		} else {
+			lineNumber.setText("");
+		}
+		lineNumber.setBounds(Preferences.LEFT_MARGIN.cur, p.y, OutlineLineNumber.LINE_NUMBER_WIDTH + indent, height);
 		
 		p.y += height + Preferences.VERTICAL_SPACING.cur;	
 		
@@ -160,15 +183,21 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 			if (node.isSelected()) {
 				setForeground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
 				setBackground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
+				lineNumber.setForeground(Preferences.SELECTED_CHILD_COLOR.cur);
+				lineNumber.setBackground(Preferences.LINE_NUMBER_SELECTED_COLOR.cur);
 				button.setBackground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
 			} else {
 				setForeground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
 				setBackground(Preferences.SELECTED_CHILD_COLOR.cur);
+				lineNumber.setForeground(Preferences.SELECTED_CHILD_COLOR.cur);
+				lineNumber.setBackground(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR.cur);
 				button.setBackground(Preferences.SELECTED_CHILD_COLOR.cur);
 			}
 		} else {
 			setForeground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
 			setBackground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
+			lineNumber.setForeground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
+			lineNumber.setBackground(Preferences.LINE_NUMBER_COLOR.cur);
 			button.setBackground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);	
 		}	
 	}
@@ -194,7 +223,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		button.updateIcon();
 	}
 	
-	private int getBestHeight() {
-		return Math.max(getPreferredSize().height, OutlineButton.BUTTON_HEIGHT);
+	public int getBestHeight() {
+		return Math.max(Math.max(getPreferredSize().height, OutlineButton.BUTTON_HEIGHT), OutlineLineNumber.LINE_NUMBER_HEIGHT);
 	}
 }

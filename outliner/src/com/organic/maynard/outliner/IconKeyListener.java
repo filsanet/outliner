@@ -39,6 +39,15 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		textArea = null;
 	}
 
+	
+	private void recordRenderer(Component c) {
+		if (c instanceof OutlineButton) {
+			textArea = ((OutlineButton) c).renderer;
+		} else if (c instanceof OutlineLineNumber) {
+			textArea = ((OutlineLineNumber) c).renderer;
+		}
+	}
+
 	// MouseListener Interface
 	public void mouseEntered(MouseEvent e) {
 		//System.out.println("ICON Mouse Entered: " + e.paramString());
@@ -49,7 +58,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	}
 	
 	public void mousePressed(MouseEvent e) {
-		textArea = ((OutlineButton) e.getComponent()).renderer;
+		recordRenderer(e.getComponent());
 		
 		//System.out.println("ICON Mouse Pressed: " + e.paramString());
 		
@@ -76,7 +85,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	}
 	
 	public void mouseReleased(MouseEvent e) {
-		textArea = ((OutlineButton) e.getComponent()).renderer;
+		recordRenderer(e.getComponent());
 		
 		//System.out.println("ICON Mouse Released: " + e.paramString());
 		
@@ -86,7 +95,6 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		}
 	} 
 	public void mouseClicked(MouseEvent e) {}
-	
 	    
 	protected void processSingleClick(MouseEvent e) {
 		Node node = textArea.node;
@@ -124,7 +132,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	
 	// KeyListener Interface
 	public void keyPressed(KeyEvent e) {
-		textArea = ((OutlineButton) e.getComponent()).renderer;
+		recordRenderer(e.getComponent());
 	
 		//System.out.println("ICON Pressed: " + e.paramString());
 
@@ -241,7 +249,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	}
 	
 	public void keyTyped(KeyEvent e) {
-		textArea = ((OutlineButton) e.getComponent()).renderer;
+		recordRenderer(e.getComponent());
 		
 		// Catch any unwanted chars that slip through
 		if (e.isControlDown() ||

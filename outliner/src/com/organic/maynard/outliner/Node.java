@@ -30,6 +30,11 @@ public interface Node {
 	public int getDecendantCount();
 	public int getDecendantCharCount();
 	
+	public void adjustDecendantCount(int amount);
+	public void adjustDecendantCharCount(int amount);
+	
+	public int getLineNumber();
+	
 	// Parent Methods
 	public void setParent(Node node);
 	public Node getParent();
@@ -87,6 +92,7 @@ public interface Node {
 	
 	public Node nextSibling();
 	public Node prevSibling();
+	public Node prevSiblingOrParent();
 	public Node next();
 	public Node nextUnSelectedNode();
 	public Node nextNode();

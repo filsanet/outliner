@@ -232,6 +232,8 @@ public class InternalDragAndDropListener implements MouseListener {
 			return ((OutlinerCellRendererImpl) source).node;
 		} else if (source instanceof OutlineButton) {
 			return ((OutlineButton) source).renderer.node;
+		} else if (source instanceof OutlineLineNumber) {
+			return ((OutlineLineNumber) source).renderer.node;
 		} else {
 			return null;
 		}
@@ -245,6 +247,10 @@ public class InternalDragAndDropListener implements MouseListener {
 		} else if (source instanceof OutlineButton) {
 			prevRenderer = currentRenderer;
 			currentRenderer = ((OutlineButton) source).renderer;
+			return ICON;
+		} else if (source instanceof OutlineLineNumber) {
+			prevRenderer = currentRenderer;
+			currentRenderer = ((OutlineLineNumber) source).renderer;
 			return ICON;
 		} else {
 			// Something went wrong.

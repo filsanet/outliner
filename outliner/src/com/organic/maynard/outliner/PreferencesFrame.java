@@ -33,11 +33,11 @@ import javax.swing.border.*;
 
 public class PreferencesFrame extends JFrame implements TreeSelectionListener, ActionListener {
 
-	static final int MIN_WIDTH = 350;
-	static final int MIN_HEIGHT = 375;
+	static final int MIN_WIDTH = 450;
+	static final int MIN_HEIGHT = 425;
  
- 	static final int INITIAL_WIDTH = 350;
-	static final int INITIAL_HEIGHT = 375;
+ 	static final int INITIAL_WIDTH = 450;
+	static final int INITIAL_HEIGHT = 425;
 
 	// Main Component Containers
 	public static final JPanel RIGHT_PANEL = new JPanel();
@@ -59,6 +59,10 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 	public static final String DESKTOP_COLOR = "Desktop Color";
 	public static final String TEXT_COLOR = "Text/Selection Color";
 	public static final String SELECTED_CHILDREN_COLOR = "Selected Children Color";
+	public static final String LINE_NUMBER_COLOR = "Line Number Color";
+	public static final String LINE_NUMBER_SELECTED_COLOR = "Line Number Selected Color";
+	public static final String LINE_NUMBER_SELECTED_CHILD_COLOR = "Line Number Selected Children Color";
+	public static final String SHOW_LINE_NUMBERS = "Show Line Numbers";
 
 	public static final String PANEL_EDITOR = "Editor";
 	public static final String PANEL_LOOK_AND_FEEL = "Look & Feel";
@@ -78,6 +82,9 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 		public static final JButton TEXTAREA_BACKGROUND_COLOR_BUTTON = new JButton("");
 		public static final JButton TEXTAREA_FOREGROUND_COLOR_BUTTON = new JButton("");
 		public static final JButton SELECTED_CHILD_COLOR_BUTTON = new JButton("");
+		public static final JButton LINE_NUMBER_COLOR_BUTTON = new JButton("");
+		public static final JButton LINE_NUMBER_SELECTED_COLOR_BUTTON = new JButton("");
+		public static final JButton LINE_NUMBER_SELECTED_CHILD_COLOR_BUTTON = new JButton("");
 		public static final JTextField INDENT_FIELD = new JTextField(4);
 		public static final JTextField VERTICAL_SPACING_FIELD = new JTextField(4);
 		public static final JTextField LEFT_MARGIN_FIELD = new JTextField(4);
@@ -95,6 +102,8 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 		
 		public static final String[] LINE_WRAP_OPTIONS = {Preferences.TXT_WORDS,Preferences.TXT_CHARACTERS};
 		public static final JComboBox LINE_WRAP_COMBOBOX = new JComboBox(LINE_WRAP_OPTIONS);
+
+		public static final JCheckBox SHOW_LINE_NUMBERS_CHECKBOX = new JCheckBox();
 		
 		public static final JButton RESTORE_DEFAULT_EDITOR_BUTTON = new JButton(RESTORE_DEFAULTS);
 
@@ -128,6 +137,13 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 			TEXTAREA_FOREGROUND_COLOR_BUTTON.setActionCommand(TEXT_COLOR);
 			SELECTED_CHILD_COLOR_BUTTON.addActionListener(new LookAndFeelAction());
 			SELECTED_CHILD_COLOR_BUTTON.setActionCommand(SELECTED_CHILDREN_COLOR);
+
+			LINE_NUMBER_COLOR_BUTTON.addActionListener(new LookAndFeelAction());
+			LINE_NUMBER_COLOR_BUTTON.setActionCommand(LINE_NUMBER_COLOR);
+			LINE_NUMBER_SELECTED_COLOR_BUTTON.addActionListener(new LookAndFeelAction());
+			LINE_NUMBER_SELECTED_COLOR_BUTTON.setActionCommand(LINE_NUMBER_SELECTED_COLOR);
+			LINE_NUMBER_SELECTED_CHILD_COLOR_BUTTON.addActionListener(new LookAndFeelAction());
+			LINE_NUMBER_SELECTED_CHILD_COLOR_BUTTON.setActionCommand(LINE_NUMBER_SELECTED_CHILD_COLOR);
 					
 			RESTORE_DEFAULT_LOOK_AND_FEEL_BUTTON.addActionListener(new LookAndFeelAction());		
 			INDENT_FIELD.addFocusListener(new TextFieldListener(INDENT_FIELD, Preferences.INDENT));
@@ -143,6 +159,7 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 			FONT_SIZE_FIELD.addFocusListener(new TextFieldListener(FONT_SIZE_FIELD, Preferences.FONT_SIZE));
 			FONT_FACE_COMBOBOX.addItemListener(new ComboBoxListener(FONT_FACE_COMBOBOX, Preferences.FONT_FACE));
 			LINE_WRAP_COMBOBOX.addItemListener(new ComboBoxListener(LINE_WRAP_COMBOBOX, Preferences.LINE_WRAP));
+			SHOW_LINE_NUMBERS_CHECKBOX.addActionListener(new CheckboxListener(SHOW_LINE_NUMBERS_CHECKBOX, Preferences.SHOW_LINE_NUMBERS));
 
 			// Open and Save
 			RESTORE_DEFAULT_OPEN_AND_SAVE_BUTTON.addActionListener(new OpenAndSaveAction());		
@@ -249,6 +266,8 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,true,jsp,jsp2);
 		getContentPane().add(BOTTOM_PANEL, BorderLayout.SOUTH);
 		getContentPane().add(splitPane, BorderLayout.CENTER);
+		
+		
 	}
 	
 	
@@ -311,9 +330,18 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 
 		addPreferenceItem(DESKTOP_COLOR, DESKTOP_BACKGROUND_COLOR_BUTTON, lookAndFeelBox);
 		addPreferenceItem(BACKGROUND_COLOR, PANEL_BACKGROUND_COLOR_BUTTON, lookAndFeelBox);
+		
+		lookAndFeelBox.add(Box.createVerticalStrut(5));
+		
 		addPreferenceItem(FOREGROUND_COLOR, TEXTAREA_BACKGROUND_COLOR_BUTTON, lookAndFeelBox);
 		addPreferenceItem(TEXT_COLOR, TEXTAREA_FOREGROUND_COLOR_BUTTON, lookAndFeelBox);
 		addPreferenceItem(SELECTED_CHILDREN_COLOR, SELECTED_CHILD_COLOR_BUTTON, lookAndFeelBox);
+
+		lookAndFeelBox.add(Box.createVerticalStrut(5));
+
+		addPreferenceItem(LINE_NUMBER_COLOR, LINE_NUMBER_COLOR_BUTTON, lookAndFeelBox);
+		addPreferenceItem(LINE_NUMBER_SELECTED_COLOR, LINE_NUMBER_SELECTED_COLOR_BUTTON, lookAndFeelBox);
+		addPreferenceItem(LINE_NUMBER_SELECTED_CHILD_COLOR, LINE_NUMBER_SELECTED_CHILD_COLOR_BUTTON, lookAndFeelBox);
 
 		lookAndFeelBox.add(Box.createVerticalStrut(5));
 
@@ -357,6 +385,10 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 		editorBox.add(Box.createVerticalStrut(5));
 
 		addPreferenceItem("Undo Queue Size", UNDO_QUEUE_SIZE_FIELD, editorBox);
+
+		editorBox.add(Box.createVerticalStrut(5));
+
+		addPreferenceItem(SHOW_LINE_NUMBERS, SHOW_LINE_NUMBERS_CHECKBOX, editorBox);
 
 		editorBox.add(Box.createVerticalStrut(10));
 
@@ -545,6 +577,15 @@ public class LookAndFeelAction implements ActionListener {
 				PreferencesFrame.SELECTED_CHILD_COLOR_BUTTON.setBackground(Preferences.SELECTED_CHILD_COLOR.def);
 				Preferences.SELECTED_CHILD_COLOR.restoreTemporaryToDefault();
 
+				PreferencesFrame.LINE_NUMBER_COLOR_BUTTON.setBackground(Preferences.LINE_NUMBER_COLOR.def);
+				Preferences.LINE_NUMBER_COLOR.restoreTemporaryToDefault();
+
+				PreferencesFrame.LINE_NUMBER_SELECTED_COLOR_BUTTON.setBackground(Preferences.LINE_NUMBER_SELECTED_COLOR.def);
+				Preferences.LINE_NUMBER_SELECTED_COLOR.restoreTemporaryToDefault();
+
+				PreferencesFrame.LINE_NUMBER_SELECTED_CHILD_COLOR_BUTTON.setBackground(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR.def);
+				Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR.restoreTemporaryToDefault();
+
 				PreferencesFrame.INDENT_FIELD.setText(String.valueOf(Preferences.INDENT.def));
 				Preferences.INDENT.restoreTemporaryToDefault();
 				
@@ -595,6 +636,24 @@ public class LookAndFeelAction implements ActionListener {
 				Preferences.SELECTED_CHILD_COLOR.tmp = newColor;
 				PreferencesFrame.SELECTED_CHILD_COLOR_BUTTON.setBackground(Preferences.SELECTED_CHILD_COLOR.tmp);
 			}
+		} else if (e.getActionCommand().equals(PreferencesFrame.LINE_NUMBER_COLOR)) {
+			Color newColor = JColorChooser.showDialog(Outliner.prefs,"Choose Color",Preferences.LINE_NUMBER_COLOR.tmp);
+			if (newColor != null) {
+				Preferences.LINE_NUMBER_COLOR.tmp = newColor;
+				PreferencesFrame.LINE_NUMBER_COLOR_BUTTON.setBackground(Preferences.LINE_NUMBER_COLOR.tmp);
+			}
+		} else if (e.getActionCommand().equals(PreferencesFrame.LINE_NUMBER_SELECTED_COLOR)) {
+			Color newColor = JColorChooser.showDialog(Outliner.prefs,"Choose Color",Preferences.LINE_NUMBER_SELECTED_COLOR.tmp);
+			if (newColor != null) {
+				Preferences.LINE_NUMBER_SELECTED_COLOR.tmp = newColor;
+				PreferencesFrame.LINE_NUMBER_SELECTED_COLOR_BUTTON.setBackground(Preferences.LINE_NUMBER_SELECTED_COLOR.tmp);
+			}
+		} else if (e.getActionCommand().equals(PreferencesFrame.LINE_NUMBER_SELECTED_CHILD_COLOR)) {
+			Color newColor = JColorChooser.showDialog(Outliner.prefs,"Choose Color",Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR.tmp);
+			if (newColor != null) {
+				Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR.tmp = newColor;
+				PreferencesFrame.LINE_NUMBER_SELECTED_CHILD_COLOR_BUTTON.setBackground(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR.tmp);
+			}
 		}
 	}
 	
@@ -604,6 +663,10 @@ public class LookAndFeelAction implements ActionListener {
 		PreferencesFrame.TEXTAREA_BACKGROUND_COLOR_BUTTON.setBackground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
 		PreferencesFrame.TEXTAREA_FOREGROUND_COLOR_BUTTON.setBackground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
 		PreferencesFrame.SELECTED_CHILD_COLOR_BUTTON.setBackground(Preferences.SELECTED_CHILD_COLOR.cur);
+
+		PreferencesFrame.LINE_NUMBER_COLOR_BUTTON.setBackground(Preferences.LINE_NUMBER_COLOR.cur);
+		PreferencesFrame.LINE_NUMBER_SELECTED_COLOR_BUTTON.setBackground(Preferences.LINE_NUMBER_SELECTED_COLOR.cur);
+		PreferencesFrame.LINE_NUMBER_SELECTED_CHILD_COLOR_BUTTON.setBackground(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR.cur);
 		
 		PreferencesFrame.INDENT_FIELD.setText(String.valueOf(Preferences.INDENT.cur));
 		PreferencesFrame.VERTICAL_SPACING_FIELD.setText(String.valueOf(Preferences.VERTICAL_SPACING.cur));
@@ -629,6 +692,9 @@ public class EditorAction implements ActionListener {
 
 				PreferencesFrame.LINE_WRAP_COMBOBOX.setSelectedItem(Preferences.LINE_WRAP.def);
 				Preferences.LINE_WRAP.restoreTemporaryToDefault();
+
+				PreferencesFrame.SHOW_LINE_NUMBERS_CHECKBOX.setSelected(Preferences.SHOW_LINE_NUMBERS.def);
+				Preferences.SHOW_LINE_NUMBERS.restoreTemporaryToDefault();
 			} catch (Exception ex) {
 				System.out.println("Exception: " + ex);
 			}
@@ -640,6 +706,7 @@ public class EditorAction implements ActionListener {
 		PreferencesFrame.FONT_SIZE_FIELD.setText(String.valueOf(Preferences.FONT_SIZE.cur));
 		PreferencesFrame.FONT_FACE_COMBOBOX.setSelectedItem(Preferences.FONT_FACE.cur);
 		PreferencesFrame.LINE_WRAP_COMBOBOX.setSelectedItem(Preferences.LINE_WRAP.cur);
+		PreferencesFrame.SHOW_LINE_NUMBERS_CHECKBOX.setSelected(Preferences.SHOW_LINE_NUMBERS.cur);
 	}
 }
 

@@ -50,7 +50,7 @@ public class Preferences {
 
 
 	// Static Fields (Global Preferences) These are saved.
-	public static final Preference[] pref_list = new Preference[29];
+	public static final Preference[] pref_list = new Preference[33];
 
 	public static final Vector ENCODINGS = new Vector();
 	public static final Vector FILE_FORMATS_OPEN = new Vector();
@@ -62,15 +62,19 @@ public class Preferences {
 	public static final String MOST_RECENT_OPEN_DIR_DEFAULT = ".";
 	public static final boolean IS_MAXIMIZED_DEFAULT = false;
 	
+	public static final boolean SHOW_LINE_NUMBERS_DEFAULT = true;
 	public static final boolean PRINT_ENVIRONMENT_DEFAULT = false;
 	public static final boolean NEW_DOC_ON_STARTUP_DEFAULT = true;
 	public static final Color DESKTOP_BACKGROUND_COLOR_DEFAULT = new Color(90,90,90);
 	public static final Color PANEL_BACKGROUND_COLOR_DEFAULT = new Color(255,255,255);
-	public static final Color TEXTAREA_BACKGROUND_COLOR_DEFAULT = new Color(255,255,255);
+	public static final Color TEXTAREA_BACKGROUND_COLOR_DEFAULT = new Color(235,235,235);
 	public static final Color TEXTAREA_FOREGROUND_COLOR_DEFAULT = new Color(0,0,0);
-	public static final Color SELECTED_CHILD_COLOR_DEFAULT = new Color(127,127,127);
+	public static final Color SELECTED_CHILD_COLOR_DEFAULT = new Color(115,115,115);
+	public static final Color LINE_NUMBER_COLOR_DEFAULT = new Color(245,245,245);
+	public static final Color LINE_NUMBER_SELECTED_COLOR_DEFAULT = new Color(195,195,195);
+	public static final Color LINE_NUMBER_SELECTED_CHILD_COLOR_DEFAULT = new Color(215,215,215);
 	public static final int INDENT_DEFAULT = 15;
-	public static final int VERTICAL_SPACING_DEFAULT = 2;
+	public static final int VERTICAL_SPACING_DEFAULT = 1;
 	public static final int LEFT_MARGIN_DEFAULT = 5;
 	public static final int TOP_MARGIN_DEFAULT = 5;
 	public static final int RIGHT_MARGIN_DEFAULT = 5;
@@ -94,6 +98,7 @@ public class Preferences {
 	
 	// Editing Settings
 	public static final PreferenceInt UNDO_QUEUE_SIZE = new PreferenceInt(UNDO_QUEUE_SIZE_DEFAULT,UNDO_QUEUE_SIZE_DEFAULT,"undo_queue_size",SetPrefCommand.UNDO_QUEUE_SIZE_VALIDATOR);
+	public static final PreferenceBoolean SHOW_LINE_NUMBERS = new PreferenceBoolean(SHOW_LINE_NUMBERS_DEFAULT,false,"show_line_numbers");
 	
 	// Look and Feel Settings
 		// Color
@@ -102,6 +107,9 @@ public class Preferences {
 		public static final PreferenceColor TEXTAREA_BACKGROUND_COLOR = new PreferenceColor(TEXTAREA_BACKGROUND_COLOR_DEFAULT,TEXTAREA_BACKGROUND_COLOR_DEFAULT,"textarea_background_color");
 		public static final PreferenceColor TEXTAREA_FOREGROUND_COLOR = new PreferenceColor(TEXTAREA_FOREGROUND_COLOR_DEFAULT,TEXTAREA_FOREGROUND_COLOR_DEFAULT,"textarea_foreground_color");
 		public static final PreferenceColor SELECTED_CHILD_COLOR = new PreferenceColor(SELECTED_CHILD_COLOR_DEFAULT,SELECTED_CHILD_COLOR_DEFAULT,"selected_child_color");
+		public static final PreferenceColor LINE_NUMBER_COLOR = new PreferenceColor(LINE_NUMBER_COLOR_DEFAULT,LINE_NUMBER_COLOR_DEFAULT,"line_number_color");
+		public static final PreferenceColor LINE_NUMBER_SELECTED_COLOR = new PreferenceColor(LINE_NUMBER_SELECTED_COLOR_DEFAULT,LINE_NUMBER_SELECTED_COLOR_DEFAULT,"line_number_selected_color");
+		public static final PreferenceColor LINE_NUMBER_SELECTED_CHILD_COLOR = new PreferenceColor(LINE_NUMBER_SELECTED_CHILD_COLOR_DEFAULT,LINE_NUMBER_SELECTED_CHILD_COLOR_DEFAULT,"line_number_selected_child_color");
 		
 		// Spatial
 		public static final PreferenceInt INDENT = new PreferenceInt(INDENT_DEFAULT,15,"indent",SetPrefCommand.INDENT_VALIDATOR);
@@ -166,6 +174,10 @@ public class Preferences {
 		pref_list[26] = OWNER_NAME;	
 		pref_list[27] = OWNER_EMAIL;	
 		pref_list[28] = TIME_ZONE_FOR_SAVING_DATES;	
+		pref_list[29] = LINE_NUMBER_COLOR;	
+		pref_list[30] = LINE_NUMBER_SELECTED_COLOR;	
+		pref_list[31] = LINE_NUMBER_SELECTED_CHILD_COLOR;	
+		pref_list[32] = SHOW_LINE_NUMBERS;	
 	}
 		
 	// Static Methods	
@@ -202,7 +214,7 @@ public class Preferences {
 			RECENT_FILES_LIST_SIZE.applyTemporaryToCurrent();
 			RecentFilesList.trim();
 		}
-
+		
 		// Update the file modified status
 		if (!LINE_END.tmp.equals(LINE_END.cur) || !SAVE_ENCODING.tmp.equals(SAVE_ENCODING.cur) || !SAVE_FORMAT.tmp.equals(SAVE_FORMAT.cur)) {
 			for (int i = 0; i < Outliner.openDocumentCount(); i++) {
@@ -227,6 +239,13 @@ public class Preferences {
 			pref_list[i].applyTemporaryToCurrent();
 		}
 
+		// Update the line numbers
+		if (SHOW_LINE_NUMBERS.cur) {
+			OutlineLineNumber.LINE_NUMBER_WIDTH = OutlineLineNumber.LINE_NUMBER_WIDTH_DEFAULT;
+		} else {
+			OutlineLineNumber.LINE_NUMBER_WIDTH = OutlineLineNumber.LINE_NUMBER_WIDTH_MIN;
+		}
+
 		// Set the Desktop Background color
 		Outliner.jsp.getViewport().setBackground(Preferences.DESKTOP_BACKGROUND_COLOR.cur);
 		Outliner.desktop.setBackground(Preferences.DESKTOP_BACKGROUND_COLOR.cur);
@@ -236,6 +255,7 @@ public class Preferences {
 			Outliner.getDocument(i).panel.setBackground(Preferences.PANEL_BACKGROUND_COLOR.cur);
 		}
 
+		// This is probably not the best way to set the font now that it is static.
 		Font font = new Font(Preferences.FONT_FACE.cur,Font.PLAIN,Preferences.FONT_SIZE.cur);
 
 		boolean line_wrap = true;
@@ -251,6 +271,13 @@ public class Preferences {
 				doc.panel.layout.textAreas[j].setSelectedTextColor(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
 				doc.panel.layout.textAreas[j].setCaretColor(Preferences.SELECTED_CHILD_COLOR.cur);
 				doc.panel.layout.textAreas[j].setWrapStyleWord(line_wrap);
+				
+				// Updated line number visibility
+				if (SHOW_LINE_NUMBERS.cur) {
+					doc.panel.layout.textAreas[j].lineNumber.setOpaque(true);
+				} else {
+					doc.panel.layout.textAreas[j].lineNumber.setOpaque(false);
+				}
 			}
 		}
 	}

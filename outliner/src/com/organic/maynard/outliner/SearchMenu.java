@@ -80,9 +80,20 @@ public class SearchMenu extends AbstractOutlinerMenu implements ActionListener {
 			return;
 		}
 		
+		int currentLineNumber = doc.tree.getEditingNode().getLineNumber();
+		
 		int lineNumber = 1;
 		while (true) {
-			String lineNumberString = JOptionPane.showInputDialog("Enter a line number.");
+			String lineNumberString = (String) JOptionPane.showInputDialog(
+				Outliner.outliner, 
+				"Enter a line number.", 
+				"Goto Line", 
+				JOptionPane.QUESTION_MESSAGE, 
+				null, 
+				null, 
+				"" + currentLineNumber
+			);
+			
 			if (lineNumberString == null) {
 				return;
 			}

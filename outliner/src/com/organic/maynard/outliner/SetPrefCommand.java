@@ -73,9 +73,25 @@ public class SetPrefCommand extends Command {
 			Preferences.SELECTED_CHILD_COLOR.cur = parseColor((String) signature.elementAt(2));
 			Preferences.SELECTED_CHILD_COLOR.restoreTemporaryToCurrent();
 
+		} else if (variableName.equals(Preferences.LINE_NUMBER_COLOR.getCommand())) {
+			Preferences.LINE_NUMBER_COLOR.cur = parseColor((String) signature.elementAt(2));
+			Preferences.LINE_NUMBER_COLOR.restoreTemporaryToCurrent();
+
+		} else if (variableName.equals(Preferences.LINE_NUMBER_SELECTED_COLOR.getCommand())) {
+			Preferences.LINE_NUMBER_SELECTED_COLOR.cur = parseColor((String) signature.elementAt(2));
+			Preferences.LINE_NUMBER_SELECTED_COLOR.restoreTemporaryToCurrent();
+
+		} else if (variableName.equals(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR.getCommand())) {
+			Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR.cur = parseColor((String) signature.elementAt(2));
+			Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR.restoreTemporaryToCurrent();
+
 		} else if (variableName.equals(Preferences.PRINT_ENVIRONMENT.getCommand())) {
 			Preferences.PRINT_ENVIRONMENT.cur = BOOLEAN_VALIDATOR.getValidValue((String) signature.elementAt(2));
 			Preferences.PRINT_ENVIRONMENT.restoreTemporaryToCurrent();
+
+		} else if (variableName.equals(Preferences.SHOW_LINE_NUMBERS.getCommand())) {
+			Preferences.SHOW_LINE_NUMBERS.cur = BOOLEAN_VALIDATOR.getValidValue((String) signature.elementAt(2));
+			Preferences.SHOW_LINE_NUMBERS.restoreTemporaryToCurrent();
 
 		} else if (variableName.equals(Preferences.IS_MAXIMIZED.getCommand())) {
 			Preferences.IS_MAXIMIZED.cur = BOOLEAN_VALIDATOR.getValidValue((String) signature.elementAt(2));

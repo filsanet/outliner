@@ -36,6 +36,9 @@ public class NodeImpl implements Node {
 	private boolean partiallyVisible = false;
 	private boolean selected = false;
 	
+	private int decendantCount = 0;
+	private int decendantCharCount = 0;
+	
 
 	// The Constructors
 	public NodeImpl(TreeContext tree, String value) {
@@ -71,8 +74,41 @@ public class NodeImpl implements Node {
 	
 
 	// Statistics Methods
+	public int getLineNumber() {
+		int count = 1;
+		
+		Node current = this;
+		Node next = prevSiblingOrParent();
+		
+		while (current != next) {
+			if (current.getParent() == next) {
+				count++;
+			} else {
+				count += next.getDecendantCount() + 1;
+			}
+			current = next;
+			next = next.prevSiblingOrParent();
+		}
+		
+		return count;
+	}
+	
+	public void adjustDecendantCount(int amount) {
+		decendantCount += amount;
+		if (!isRoot()) {
+			getParent().adjustDecendantCount(amount);
+		}
+	}
+	
+	public void adjustDecendantCharCount(int amount) {
+		decendantCharCount += amount;
+		if (!isRoot()) {
+			getParent().adjustDecendantCharCount(amount);
+		}
+	}
+	
 	public int getDecendantCount() {
-		if (isLeaf()) {
+		/*if (isLeaf()) {
 			return 0;
 		} else {
 			int count = 0;
@@ -81,7 +117,8 @@ public class NodeImpl implements Node {
 				count += getChild(i).getDecendantCount();
 			}
 			return count;
-		}
+		}*/
+		return decendantCount;
 	}
 	
 	public int getDecendantCharCount() {
@@ -95,6 +132,7 @@ public class NodeImpl implements Node {
 			}
 			return count;
 		}
+		//return decendantCharCount;
 	}
 	
 	// Parent Methods
@@ -115,11 +153,19 @@ public class NodeImpl implements Node {
 		if (isExpanded()) {
 			tree.insertNodeAfter(this, node);
 		}
+		
+		// Adjust Counts
+		adjustDecendantCount(node.getDecendantCount() + 1);
+		//adjustDecendantCharCount(node.getDecendantCharCount() + node.getValue().length());
 	}
 	
 	public void removeChild(Node node) {
 		node.setParent(null);
 		children.remove(node);
+
+		// Adjust Counts
+		adjustDecendantCount(-(node.getDecendantCount() + 1));
+		//adjustDecendantCharCount(-(node.getDecendantCharCount() + node.getValue().length()));
 	}
 	
 	public Node getChild(int i) {
@@ -211,6 +257,10 @@ public class NodeImpl implements Node {
 	public void insertChild(Node node, int i) {
 		children.add(i,node);
 		node.setParent(this);
+
+		// Adjust Counts
+		adjustDecendantCount(node.getDecendantCount() + 1);
+		//adjustDecendantCharCount(node.getDecendantCharCount() + node.getValue().length());
 	}
 	
 	public int getChildIndex(Node node) {
@@ -377,6 +427,17 @@ public class NodeImpl implements Node {
 		}	
 	}
 	
+	public Node prevSiblingOrParent() {
+		Node node = prevSibling();
+		if (node == this) {
+			node = getParent();
+			if (node == null || node.isRoot()) {
+				return this;
+			}
+		}
+		return node;		
+	}
+	
 	public Node next() {
 		if (isExpanded() && !isLeaf()) {
 			return getChild(0);
@@ -450,7 +511,15 @@ public class NodeImpl implements Node {
 	}
 	
 	// Data Methods
-	public void setValue(String value) {this.value = value;}
+	public void setValue(String value) {
+		//int oldLength = this.value.length();
+		this.value = value;
+
+		// Adjust Counts
+		//if (!isRoot()) {
+		//	getParent().adjustDecendantCharCount(value.length() - oldLength);
+		//}
+	}
 	public String getValue() {return value;}
 
 	// String Representation Methods
