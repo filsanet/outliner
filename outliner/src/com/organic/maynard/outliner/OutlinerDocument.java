@@ -103,10 +103,10 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		
 		// Draw and Set Focus to the First Visible Node
 		Outliner.menuBar.windowMenu.changeToWindow(this);
-
+		
 		dividerPosition = getSize().height - 120;
 		splitPane.setDividerLocation(dividerPosition); // This sets the position in the event that we don't show the atts initially.
-		
+
 		if (Preferences.getPreferenceBoolean(Preferences.SHOW_ATTRIBUTES).cur) {
 			showAttributes(true);
 		} else {
@@ -144,10 +144,10 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 			getContentPane().add(dummy, BorderLayout.CENTER);
 		}
 
-		validate();
-				
-		panel.layout.draw();
-		panel.layout.setFocus(tree.getEditingNode(),tree.getComponentFocus());
+		if (isVisible()) {
+			validate();
+			panel.layout.redraw();
+		}
 	}
 	
 	public void destroy() {
