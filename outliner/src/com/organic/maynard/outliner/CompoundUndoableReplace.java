@@ -30,10 +30,10 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 		this(parent, false);
 	}
 
-	public CompoundUndoableReplace(Node parent, boolean delteMode) {
+	public CompoundUndoableReplace(Node parent, boolean deleteMode) {
 		super();
 		this.parent = parent;
-		this.deleteMode = delteMode;
+		this.deleteMode = deleteMode;
 	}
 
 
