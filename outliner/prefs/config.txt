@@ -1,19 +1,19 @@
 set|print_environment|false
-set|desktop_background_color|72,0,72
-set|panel_background_color|111,0,111
-set|textarea_background_color|130,0,130
-set|textarea_foreground_color|255,204,0
+set|desktop_background_color|0,0,0
+set|panel_background_color|0,38,103
+set|textarea_background_color|0,62,133
+set|textarea_foreground_color|205,241,255
 set|indent|15
 set|vertical_spacing|2
 set|left_margin|5
 set|top_margin|5
 set|right_margin|5
 set|bottom_margin|5
-set|undo_queue_size|100
+set|undo_queue_size|1000
 set|recent_files_list_size|15
 set|selected_child_color|255,255,153
-set|font_size|12
-set|font_face|SansSerif
+set|font_size|13
+set|font_face|Courier New
 set|line_end|Windows
 set|open_encoding|ISO-8859-1
 set|save_encoding|ISO-8859-1
