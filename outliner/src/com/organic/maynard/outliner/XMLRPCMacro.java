@@ -120,7 +120,7 @@ public class XMLRPCMacro extends MacroImpl {
 				nodeRangePair.startIndex = firstChunk.length();
 				nodeRangePair.endIndex = nodeRangePair.startIndex + text.length();
 			} else {
-				replacementNode = PadSelection.pad(text, nodeRangePair.node.getTree(), nodeRangePair.node.getDepth(), Preferences.LINE_END_UNIX).getFirstChild();
+				replacementNode = PadSelection.pad(text, nodeRangePair.node.getTree(), nodeRangePair.node.getDepth(), PlatformCompatibility.LINE_END_UNIX).getFirstChild();
 				nodeRangePair.node = replacementNode;
 				nodeRangePair.startIndex = -1;
 				nodeRangePair.endIndex = -1;

@@ -30,7 +30,7 @@ public class PreferencesPanelOpenAndSave extends AbstractPreferencesPanel implem
 	public void endSetup(AttributeList atts) {
 		super.endSetup(atts);
 		
-		AbstractPreferencesPanel.addArrayToComboBox(Preferences.PLATFORM_IDENTIFIERS, GUITreeComponentRegistry.COMPONENT_LINE_ENDING);
+		AbstractPreferencesPanel.addArrayToComboBox(PlatformCompatibility.PLATFORM_IDENTIFIERS, GUITreeComponentRegistry.COMPONENT_LINE_ENDING);
 		AbstractPreferencesPanel.addArrayToComboBox(Preferences.ENCODINGS.toArray(), GUITreeComponentRegistry.COMPONENT_ENCODING_WHEN_OPENING);
 		AbstractPreferencesPanel.addArrayToComboBox(Preferences.ENCODINGS.toArray(), GUITreeComponentRegistry.COMPONENT_ENCODING_WHEN_SAVING);
 		AbstractPreferencesPanel.addArrayToComboBox(Preferences.FILE_FORMATS_OPEN.toArray(), GUITreeComponentRegistry.COMPONENT_FORMAT_WHEN_OPENING);

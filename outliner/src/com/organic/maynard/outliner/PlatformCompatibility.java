@@ -29,8 +29,18 @@ import javax.swing.*;
 public class PlatformCompatibility {
 
 	// Constants
+	public static final String LINE_END_MAC = "\r";
+	public static final String LINE_END_WIN = "\r\n";
+	public static final String LINE_END_UNIX = "\n";
+	public static final String LINE_END_DEFAULT = System.getProperty("line.separator");
+
+	public static final String PLATFORM_MAC = "Macintosh";
+	public static final String PLATFORM_WIN = "Windows";
+	public static final String PLATFORM_UNIX = "Unix";
 	
-	
+	public static final String[] PLATFORM_IDENTIFIERS = {PLATFORM_MAC, PLATFORM_WIN, PLATFORM_UNIX};	
+
+
 	// Constructors
 	public PlatformCompatibility() {}
 
@@ -73,5 +83,31 @@ public class PlatformCompatibility {
 		} else {
 			return false;
 		}	
+	}
+
+	// Line Ending and Platform conversions
+	public static String platformToLineEnding(String platform) {
+		if (platform.equals(PLATFORM_MAC)) {
+			return LINE_END_MAC;
+		} else if (platform.equals(PLATFORM_WIN)) {
+			return LINE_END_WIN;
+		} else if (platform.equals(PLATFORM_UNIX)) {
+			return LINE_END_UNIX;
+		} else {
+			return LINE_END_DEFAULT;
+		}
+	}
+
+	public static String lineEndingToPlatform(String line_ending) {
+		if (line_ending.equals(LINE_END_MAC)) {
+			return PLATFORM_MAC;
+		} else if (line_ending.equals(LINE_END_WIN)) {
+			return PLATFORM_WIN;
+		} else if (line_ending.equals(LINE_END_UNIX)) {
+			return PLATFORM_UNIX;
+		} else {
+			System.out.println("Unknown line ending: " + line_ending);
+			return "UNKNOWN";
+		}
 	}
 }

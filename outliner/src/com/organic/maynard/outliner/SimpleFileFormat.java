@@ -34,7 +34,7 @@ public class SimpleFileFormat
 	// SaveFileFormat Interface
 	public byte[] save(TreeContext tree, DocumentInfo docInfo) {
 		StringBuffer buf = new StringBuffer();
-		tree.rootNode.depthPaddedValue(buf, Preferences.platformToLineEnding(docInfo.getLineEnding()));
+		tree.rootNode.depthPaddedValue(buf, PlatformCompatibility.platformToLineEnding(docInfo.getLineEnding()));
 		
 		try {
 			return buf.toString().getBytes(docInfo.getEncodingType());
@@ -76,7 +76,7 @@ public class SimpleFileFormat
 
 		if (text != null) {
 			Node newNode = new NodeImpl(tree,"");
-			int padSuccess = PadSelection.pad(text, tree, 0,Preferences.LINE_END_UNIX, newNode);
+			int padSuccess = PadSelection.pad(text, tree, 0,PlatformCompatibility.LINE_END_UNIX, newNode);
 			
 			switch (padSuccess) {
 			

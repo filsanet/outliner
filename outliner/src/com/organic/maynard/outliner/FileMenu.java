@@ -50,10 +50,30 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 	
 	// Utility Methods
+	private static final int MODE_SAVE = 0;
+	private static final int MODE_EXPORT = 1;
+	
+	public static void exportFile(String filename, OutlinerDocument document) {
+		saveFile(filename, document, true, MODE_EXPORT);
+	}
+
 	public static void saveFile(String filename, OutlinerDocument document, boolean saveAs) {
+		saveFile(filename, document, saveAs, MODE_SAVE);
+	}
+	
+	public static void saveFile(String filename, OutlinerDocument document, boolean saveAs, int mode) {
 		// Get the file format object
 		String fileFormatName = document.settings.saveFormat.cur;
-		SaveFileFormat saveFileFormat = Outliner.fileFormatManager.getSaveFormat(fileFormatName);
+		SaveFileFormat saveFileFormat = null;
+		if (mode == MODE_SAVE) {
+			saveFileFormat = Outliner.fileFormatManager.getSaveFormat(fileFormatName);
+		} else if (mode == MODE_EXPORT) {
+			saveFileFormat = Outliner.fileFormatManager.getExportFormat(fileFormatName);
+		} else {
+			// Ack, this shouldn't happen.
+		}
+		
+		
 		String msg = null;
 		if (saveFileFormat == null) {
 			msg = GUITreeLoader.reg.getText("error_could_not_save_no_file_format");
@@ -65,10 +85,19 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		}
 		
 		// Initialize DocumentInfo with current document state, prefs and document settings.
-		document.setFileName(filename);
+		if (mode == MODE_SAVE) {
+			document.setFileName(filename);
+		}
+		
 		DocumentInfo docInfo = new DocumentInfo();
 		docInfo.updateDocumentInfoForDocument(document, saveAs);
-		
+
+		if (mode == MODE_EXPORT) {
+			// Set it here since this would normally be pulled from the document's filename during
+			// updateDocumentInfoForDocument method.
+			docInfo.setPath(filename);
+		}
+				
 		document.settings.useDocumentSettings = true;
 		
 		// Check File Format Support
@@ -184,6 +213,11 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		}
 							
 
+		// Don't update the gui if we're an export.
+		if (mode == MODE_EXPORT) {
+			return;
+		}
+		
 		// Stop collecting text edits into the current undoable.
 		UndoableEdit.freezeUndoEdit(document.tree.getEditingNode());
 		

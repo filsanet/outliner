@@ -94,7 +94,7 @@ public class OPMLFileFormat
 	public boolean supportsDocumentAttributes() {return true;}
 
 	private StringBuffer prepareFile(TreeContext tree, DocumentInfo docInfo) {
-		String lineEnding = Preferences.platformToLineEnding(docInfo.getLineEnding());
+		String lineEnding = PlatformCompatibility.platformToLineEnding(docInfo.getLineEnding());
 		
 		StringBuffer buf = new StringBuffer();
 		

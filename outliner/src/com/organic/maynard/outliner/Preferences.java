@@ -35,24 +35,13 @@ public class Preferences implements GUITreeComponent {
 	public static final String DEPTH_PAD_STRING = "\t"; // Specific to Outliner Docs
 	public static final String LINE_END_STRING = "\n"; // Specific to Outliner Docs
 
-	public static final String LINE_END_MAC = "\r";
-	public static final String LINE_END_WIN = "\r\n";
-	public static final String LINE_END_UNIX = "\n";
-	public static final String LINE_END_DEFAULT = System.getProperty("line.separator");
-	
-
-	public static String PLATFORM_MAC = null;
-	public static String PLATFORM_WIN = null;
-	public static String PLATFORM_UNIX = null;
-	
-	public static String[] PLATFORM_IDENTIFIERS = new String[3];
-
 	public static String TXT_WORDS = null;
 	public static String TXT_CHARACTERS = null;
 
 	public static final Vector ENCODINGS = new Vector();
 	public static final Vector FILE_FORMATS_OPEN = new Vector();
 	public static final Vector FILE_FORMATS_SAVE = new Vector();
+	public static final Vector FILE_FORMATS_EXPORT = new Vector();
 
 	
 	// Start Preference Keys: All the preferences used by the core app are here. If you are adding your own
@@ -136,14 +125,6 @@ public class Preferences implements GUITreeComponent {
 
 	// The Constructors
 	public Preferences() {
-		PLATFORM_MAC = GUITreeLoader.reg.getText("mac");
-		PLATFORM_WIN = GUITreeLoader.reg.getText("windows");
-		PLATFORM_UNIX = GUITreeLoader.reg.getText("unix");
-		
-		PLATFORM_IDENTIFIERS[0] = PLATFORM_MAC;
-		PLATFORM_IDENTIFIERS[1] = PLATFORM_WIN;
-		PLATFORM_IDENTIFIERS[2] = PLATFORM_UNIX;
-
 		TXT_WORDS = GUITreeLoader.reg.getText("wrap_words");
 		TXT_CHARACTERS = GUITreeLoader.reg.getText("wrap_characters");
 	}
@@ -313,36 +294,9 @@ public class Preferences implements GUITreeComponent {
 			buffer.append(pref.getCommand());
 			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
 			buffer.append(StringTools.escape(pref.toString(), '\\', null));
-			buffer.append(LINE_END_DEFAULT);
+			buffer.append(PlatformCompatibility.LINE_END_DEFAULT);
 		}
 
 		return buffer.toString();
-	}
-
-
-	// Line Ending and Platform conversions
-	public static String platformToLineEnding(String platform) {
-		if (platform.equals(PLATFORM_MAC)) {
-			return LINE_END_MAC;
-		} else if (platform.equals(PLATFORM_WIN)) {
-			return LINE_END_WIN;
-		} else if (platform.equals(PLATFORM_UNIX)) {
-			return LINE_END_UNIX;
-		} else {
-			return LINE_END_DEFAULT;
-		}
-	}
-
-	public static String lineEndingToPlatform(String line_ending) {
-		if (line_ending.equals(LINE_END_MAC)) {
-			return PLATFORM_MAC;
-		} else if (line_ending.equals(LINE_END_WIN)) {
-			return PLATFORM_WIN;
-		} else if (line_ending.equals(LINE_END_UNIX)) {
-			return PLATFORM_UNIX;
-		} else {
-			System.out.println("Unknown line ending: " + line_ending);
-			return "UNKNOWN";
-		}
 	}
 }

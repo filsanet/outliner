@@ -362,7 +362,7 @@ public class DocumentInfo {
 		
 		recordWindowPositioning(document);
 
-		// These three settings are set by SavAsMenuItem so we can allways be sure they exist in DocumentSettings
+		// These three settings are set by SaveAsMenuItem so we can always be sure they exist in DocumentSettings
 		setEncodingType(document.settings.saveEncoding.cur);
 		setLineEnding(document.settings.lineEnd.cur);
 		setFileFormat(document.settings.saveFormat.cur);
@@ -382,10 +382,6 @@ public class DocumentInfo {
 			setApplyFontStyleForMoveability(Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur);
 		}
 
-		//SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z");
-		//if (!Preferences.getPreferenceString(Preferences.TIME_ZONE_FOR_SAVING_DATES).cur.equals("")) {
-		//	dateFormat.setTimeZone(TimeZone.getTimeZone(Preferences.getPreferenceString(Preferences.TIME_ZONE_FOR_SAVING_DATES).cur));
-		//}
 		String currentDateString = getCurrentDateTimeString();
 		
 		setDateModified(currentDateString);

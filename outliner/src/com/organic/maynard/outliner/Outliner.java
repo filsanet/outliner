@@ -130,7 +130,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 						FileTools.copy(fromFile, toFile);
 						String line = (String) indexedLines.get(fromFile.getName());
 						if (line != null) {
-							appendBuffer.append(Preferences.LINE_END_DEFAULT).append(line);
+							appendBuffer.append(PlatformCompatibility.LINE_END_DEFAULT).append(line);
 						}
 						System.out.println("\tCopying macro: " + fromFile.getName());
 					} catch (Exception e) {
@@ -197,7 +197,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 						FileTools.copy(fromFile, toFile);
 						String line = (String) indexedLines.get(fromFile.getName());
 						if (line != null) {
-							appendBuffer.append(Preferences.LINE_END_DEFAULT).append(line);
+							appendBuffer.append(PlatformCompatibility.LINE_END_DEFAULT).append(line);
 						}
 						System.out.println("\tCopying script: " + fromFile.getName());
 					} catch (Exception e) {
@@ -616,29 +616,34 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		JMenuItem revertItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.REVERT_MENU_ITEM);
 		JMenuItem closeItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CLOSE_MENU_ITEM);
 		JMenuItem closeAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CLOSE_ALL_MENU_ITEM);
+		JMenuItem exportItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_MENU_ITEM);
 	
 		if (getMostRecentDocumentTouched() == null) {
 			saveItem.setEnabled(false);
 			saveAsItem.setEnabled(false);
 			revertItem.setEnabled(false);
+			exportItem.setEnabled(false);
 			closeItem.setEnabled(false);
 			closeAllItem.setEnabled(false);
 		} else if (getMostRecentDocumentTouched().getFileName().equals("")) {
 			saveItem.setEnabled(true);
 			saveAsItem.setEnabled(true);
 			revertItem.setEnabled(false);
+			exportItem.setEnabled(true);
 			closeItem.setEnabled(true);
 			closeAllItem.setEnabled(true);
 		} else if (getMostRecentDocumentTouched().isFileModified()) {
 			saveItem.setEnabled(true);
 			saveAsItem.setEnabled(true);
 			revertItem.setEnabled(true);
+			exportItem.setEnabled(true);
 			closeItem.setEnabled(true);
 			closeAllItem.setEnabled(true);
 		} else {
 			saveItem.setEnabled(false);
 			saveAsItem.setEnabled(true);
 			revertItem.setEnabled(false);
+			exportItem.setEnabled(true);
 			closeItem.setEnabled(true);
 			closeAllItem.setEnabled(true);
 		}

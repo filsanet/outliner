@@ -34,12 +34,18 @@ public class OutlinerFileChooser extends JFileChooser {
 
 	private JPanel openAccessory = new JPanel();
 	private JPanel saveAccessory = new JPanel();
+	private JPanel exportAccessory = new JPanel();
 	
-	private JComboBox lineEndComboBox = new JComboBox(Preferences.PLATFORM_IDENTIFIERS);
+	private JComboBox lineEndComboBox = new JComboBox(PlatformCompatibility.PLATFORM_IDENTIFIERS);
 	private JComboBox saveEncodingComboBox = new JComboBox();
+	private JComboBox saveFormatComboBox = new JComboBox();
+
 	private JComboBox openEncodingComboBox = new JComboBox();
 	private JComboBox openFormatComboBox = new JComboBox();
-	private JComboBox saveFormatComboBox = new JComboBox();
+
+	private JComboBox exportLineEndComboBox = new JComboBox(PlatformCompatibility.PLATFORM_IDENTIFIERS);
+	private JComboBox exportEncodingComboBox = new JComboBox();
+	private JComboBox exportFormatComboBox = new JComboBox();
 
 	
 	// The Constructor
@@ -52,6 +58,7 @@ public class OutlinerFileChooser extends JFileChooser {
 		for (int i = 0; i < Preferences.ENCODINGS.size(); i++) {
 			String encoding = (String) Preferences.ENCODINGS.elementAt(i);
 			saveEncodingComboBox.addItem(encoding);
+			exportEncodingComboBox.addItem(encoding);
 			openEncodingComboBox.addItem(encoding);
 		}
 		
@@ -61,6 +68,10 @@ public class OutlinerFileChooser extends JFileChooser {
 
 		for (int i = 0; i < Preferences.FILE_FORMATS_SAVE.size(); i++) {
 			saveFormatComboBox.addItem((String) Preferences.FILE_FORMATS_SAVE.elementAt(i));
+		}
+
+		for (int i = 0; i < Preferences.FILE_FORMATS_EXPORT.size(); i++) {
+			exportFormatComboBox.addItem((String) Preferences.FILE_FORMATS_EXPORT.elementAt(i));
 		}
 		
 		// Layout save panel
@@ -80,6 +91,24 @@ public class OutlinerFileChooser extends JFileChooser {
 		addSingleItemCentered(saveFormatComboBox, box);
 
 		saveAccessory.add(box,BorderLayout.CENTER);
+
+		// Layout export panel
+		Box box3 = Box.createVerticalBox();
+
+		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("line_terminator")), box3);
+		addSingleItemCentered(exportLineEndComboBox, box3);
+
+		box3.add(Box.createVerticalStrut(5));
+
+		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_encoding")), box3);
+		addSingleItemCentered(exportEncodingComboBox, box3);
+
+		box3.add(Box.createVerticalStrut(5));
+
+		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_format")), box3);
+		addSingleItemCentered(exportFormatComboBox, box3);
+
+		exportAccessory.add(box3,BorderLayout.CENTER);
 		
 		// Layout open panel
 		Box box2 = Box.createVerticalBox();
@@ -103,8 +132,34 @@ public class OutlinerFileChooser extends JFileChooser {
 		box.add(Box.createHorizontalGlue());
 		container.add(box);
 	}
-	
+
+	public void configureForExport(OutlinerDocument doc) {
+		setDialogTitle("Export");
+		
+		// Set the Accessory state
+		setAccessory(exportAccessory);
+		
+		// Set the Accessory GUI state.
+		exportLineEndComboBox.setSelectedItem(doc.settings.lineEnd.cur);
+		exportEncodingComboBox.setSelectedItem(doc.settings.saveEncoding.cur);
+		exportFormatComboBox.setSelectedItem(doc.settings.saveFormat.cur);
+
+		// Set the current directory location or selected file.
+		String currentFileName = doc.getFileName();
+		if (!currentFileName.equals("")) {
+			setSelectedFile(new File(currentFileName));
+		} else {
+			// WebFile
+			if (!Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
+				setCurrentDirectory(new File(Preferences.getPreferenceString(Preferences.MOST_RECENT_SAVE_DIR).cur));
+				setSelectedFile(null);
+			}
+		}
+	}
+		
 	public void configureForSave(OutlinerDocument doc) {
+		setDialogTitle("Save");
+		
 		// Set the Accessory state
 		setAccessory(saveAccessory);
 		
@@ -127,6 +182,8 @@ public class OutlinerFileChooser extends JFileChooser {
 	}
 
 	public void configureForOpen(String lineEnding, String encoding, String format) {
+		setDialogTitle("Open");
+		
 		// Set the Accessory state.
 		setAccessory(openAccessory);
 		
@@ -149,6 +206,10 @@ public class OutlinerFileChooser extends JFileChooser {
 	public String getSaveEncoding() {return (String) saveEncodingComboBox.getSelectedItem();}
 	public String getOpenFileFormat() {return (String) openFormatComboBox.getSelectedItem();}
 	public String getSaveFileFormat() {return (String) saveFormatComboBox.getSelectedItem();}
+
+	public String getExportLineEnding() {return (String) exportLineEndComboBox.getSelectedItem();}
+	public String getExportEncoding() {return (String) exportEncodingComboBox.getSelectedItem();}
+	public String getExportFileFormat() {return (String) exportFormatComboBox.getSelectedItem();}
 	
 	
 	// Overriden Methods of JFileChooser

@@ -198,8 +198,8 @@ public class FindReplaceModel extends HandlerBase {
 	private String prepareConfigFile() {
 		StringBuffer buf = new StringBuffer();
 
-		buf.append(XMLTools.getXmlDeclaration(null) + Preferences.LINE_END_DEFAULT);
-		buf.append(XMLTools.getElementStart(E_ROOT) + Preferences.LINE_END_DEFAULT);
+		buf.append(XMLTools.getXmlDeclaration(null) + PlatformCompatibility.LINE_END_DEFAULT);
+		buf.append(XMLTools.getElementStart(E_ROOT) + PlatformCompatibility.LINE_END_DEFAULT);
 
 		for (int i = 0; i < getSize(); i++) {
 			buf.append("<" + E_ITEM);
@@ -214,10 +214,10 @@ public class FindReplaceModel extends HandlerBase {
 			buf.append(" " + A_INCLUDE_READ_ONLY + "=\"" + XMLTools.escapeXMLAttribute("" + getIncludeReadOnly(i)) + "\"");
 			buf.append(" " + A_REGEXP + "=\"" + XMLTools.escapeXMLAttribute("" + getRegExp(i)) + "\"");
 
-			buf.append("/>" + Preferences.LINE_END_DEFAULT);
+			buf.append("/>" + PlatformCompatibility.LINE_END_DEFAULT);
 		}
 
-		buf.append(XMLTools.getElementEnd(E_ROOT) + Preferences.LINE_END_DEFAULT);
+		buf.append(XMLTools.getElementEnd(E_ROOT) + PlatformCompatibility.LINE_END_DEFAULT);
 
 		return buf.toString();
 	}

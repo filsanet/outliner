@@ -63,7 +63,7 @@ public class EnhancedTextMacro extends MacroImpl {
 		if (replacementPattern.equals("")) {
 			return null;
 		}
-		Node replacementNode = PadSelection.pad(replacementPattern, node.getTree(), node.getDepth(), Preferences.LINE_END_UNIX).getFirstChild();
+		Node replacementNode = PadSelection.pad(replacementPattern, node.getTree(), node.getDepth(), PlatformCompatibility.LINE_END_UNIX).getFirstChild();
 		
 		// Walk the tree backwards.
 		boolean walking = true;

@@ -80,6 +80,8 @@ public class FileFormatManager {
 	// public class constants	[srk]
 	public static final String FORMAT_TYPE_OPEN = "open";
 	public static final String FORMAT_TYPE_SAVE = "save";
+	public static final String FORMAT_TYPE_EXPORT = "export";
+	public static final String FORMAT_TYPE_IMPORT = "import";
 	public static final String FORMAT_TYPE_OPEN_DEFAULT = "open_default";
 	public static final String FORMAT_TYPE_SAVE_DEFAULT = "save_default";
 
@@ -89,6 +91,9 @@ public class FileFormatManager {
 	
 	private Vector savers = new Vector();
 	private Vector saverNames = new Vector();
+
+	private Vector exporters = new Vector();
+	private Vector exporterNames = new Vector();
 	
 	private OpenFileFormat defaultOpenFileFormat = null;
 	private SaveFileFormat defaultSaveFileFormat = null;
@@ -140,6 +145,7 @@ public class FileFormatManager {
 				
 				// try to add this format to our set of Save formats		[srk]
 				boolean success = addSaveFormat(formatName, saveFileFormat);
+				addExportFormat(formatName, saveFileFormat);
 				
 				// supply some feedback	[srk]
 				// if we succeed ...	[srk]
@@ -153,8 +159,32 @@ public class FileFormatManager {
 				
 				} // end if FORMAT_TYPE_SAVE
 			
+			// else if it's a Export format spec ....
+			else if (formatType.equals(FORMAT_TYPE_EXPORT)) {
+				
+				// create a SaveFileFormat object to hold it
+				ExportFileFormat exportFileFormat = (ExportFileFormat) theClass.newInstance();
+				
+				// set filename extensions for the Save format 	[srk]
+				setExtensions(exportFileFormat, extensions) ;
+				
+				// try to add this format to our set of Save formats		[srk]
+				boolean success = addExportFormat(formatName, exportFileFormat);
+				
+				// supply some feedback	[srk]
+				// if we succeed ...	[srk]
+				if (success) {
+					System.out.println("  Export: " + className + " -> " + formatName);
+					} // end if
+				else {
+					// failure comes from duplication
+					System.out.println("  Duplicate File Format Name: " + formatName);
+					} // end else
+				
+				} // end if FORMAT_TYPE_EXPORT
+			
 			// else if it's a Default Open format type ... 
-			 else if (formatType.equals(FORMAT_TYPE_OPEN_DEFAULT)) {
+			else if (formatType.equals(FORMAT_TYPE_OPEN_DEFAULT)) {
 			 	
 			 	// create an OpenFileFormat object to hold it
 				OpenFileFormat openFileFormat = (OpenFileFormat) theClass.newInstance();
@@ -194,6 +224,7 @@ public class FileFormatManager {
 				
 				// try to add this format to our set of Save formats	[srk]
 				boolean success = addSaveFormat(formatName, saveFileFormat);
+				addExportFormat(formatName, saveFileFormat);
 				
 				// supply some feedback	[srk]
 				// if we succeed ...	[srk]
@@ -359,6 +390,41 @@ public class FileFormatManager {
 	}
 
 
+	public boolean addExportFormat(String formatName, SaveFileFormat format) {
+		if (isNameUnique(formatName, exporterNames)) {
+			exporterNames.add(formatName);
+			exporters.add(format);
+			
+			// Also add it to the list of formats stored in the preferences
+			Preferences.FILE_FORMATS_EXPORT.add(formatName);
+
+			return true;
+		}
+		return false;
+	}
+	
+	public SaveFileFormat getExportFormat(String formatName) {
+		int index = indexOfName(formatName, exporterNames);
+		if (index >= 0) {
+			return (SaveFileFormat) exporters.elementAt(index);
+		}
+		return null;
+	}
+	
+	public boolean removeExportFormat(String formatName) {
+		int index = indexOfName(formatName, exporterNames);
+		if (index >= 0) {
+			exporterNames.removeElementAt(index);
+			exporters.removeElementAt(index);
+
+			// Also remove it from the list of formats stored in the preferences
+			Preferences.FILE_FORMATS_EXPORT.removeElementAt(index);
+
+			return true;
+		}
+		return false;	
+	}
+
 	// Utility Methods
 	public static boolean isNameUnique(String name, Vector list) {
 		for (int i = 0; i < list.size(); i++) {
@@ -394,7 +460,7 @@ public class FileFormatManager {
 				if (theLine == null) {
 					eof = true;
 				} else {
-					text.append(theLine + Preferences.LINE_END_UNIX);
+					text.append(theLine + PlatformCompatibility.LINE_END_UNIX);
 				}
 			}
 

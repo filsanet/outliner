@@ -107,7 +107,7 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		buttonCancel = new JButton(CANCEL);
 		buttonRestoreToGlobal = new JButton(RESTORE_TO_GLOBAL);
 		
-		lineEndComboBox = new JComboBox(Preferences.PLATFORM_IDENTIFIERS);
+		lineEndComboBox = new JComboBox(PlatformCompatibility.PLATFORM_IDENTIFIERS);
 		saveEncodingComboBox = new JComboBox();
 		saveFormatComboBox = new JComboBox();
 		ownerNameField = new JTextField(10);
