@@ -202,15 +202,15 @@ public class MacroManagerFrame extends JFrame implements ActionListener {
 			macro = (Macro) stream.readObject();
 			stream.close();
 		} catch (OptionalDataException ode) {
-			System.out.println("Exception: " + ode);
+			System.out.println("Exception loading " + filename + ": " + ode);
 		} catch (ClassNotFoundException cnfe) {
-			System.out.println("Exception: " + cnfe);
+			System.out.println("Exception loading " + filename + ": " + cnfe);
 		} catch (FileNotFoundException fnfe) {
-			System.out.println("Exception: " + fnfe);
+			System.out.println("Exception loading " + filename + ": " + fnfe);
 		} catch (StreamCorruptedException sce) {
-			System.out.println("Exception: " + sce);		
+			System.out.println("Exception loading " + filename + ": " + sce);		
 		} catch (IOException ioe) {
-			System.out.println("Exception: " + ioe);		
+			System.out.println("Exception loading " + filename + ": " + ioe);		
 		}
 		
 		return macro;

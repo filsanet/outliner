@@ -100,11 +100,19 @@ public class TextKeyListener implements KeyListener, MouseListener {
  		//System.out.println("Released: " + textArea.node.getValue() + " " + e.paramString());
 		
 		// Shorthand
- 		TreeContext tree = textArea.node.getTree();
+		Node currentNode = textArea.node;
+ 		TreeContext tree = currentNode.getTree();
 
 		// Set the Mark
 		tree.setCursorMarkPosition(textArea.getCaret().getMark());
 		tree.setCursorPosition(textArea.getCaretPosition(),false);
+
+		// Lets record changes to the selection state into the current undoable if it is an UndoableEdit
+		UndoableEdit undoable = tree.doc.undoQueue.getIfEdit();
+		if ((undoable != null) && (undoable.getNode() == currentNode)) {
+			undoable.setNewPosition(textArea.getCaretPosition());
+			undoable.setNewMarkPosition(textArea.getCaret().getMark());
+		}
 
 		// This is detection for Windows
 		if (e.isPopupTrigger()) {
@@ -360,7 +368,11 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 				tree.promoteNode(currentNode);
 			} else {		
-				// Put the Undoable onto the UndoQueue
+				if (currentNode.isFirstChild()) {
+					e.consume();
+					return;
+				}
+								// Put the Undoable onto the UndoQueue
 				Node targetNode = currentNode.prevSibling();
 
 				CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(),targetNode);
@@ -451,15 +463,17 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		// Numbers are used for Control, Shift, VK_PAGE_UP, VK_PAGE_DOWN, VK_UP, VK_DOWN, VK_LEFT, VK_RIGHT since
 		// the characters don't seem to work here for some reason.
 		
-		// Let contorl-a, control-x and control-v slip through
+		// Let control-x and control-v slip through
 		if (e.isControlDown()) {
-			if ((e.getKeyCode() == KeyEvent.VK_A) ||
-				(e.getKeyCode() == KeyEvent.VK_X) ||
-				((e.getKeyCode() == KeyEvent.VK_V) && inlinePaste)) {
+			if ((e.getKeyCode() == KeyEvent.VK_X) || ((e.getKeyCode() == KeyEvent.VK_V) && inlinePaste)) {
 				// Do Nothing
 			} else {
 				return;
 			}
+		}
+		
+		if (e.isControlDown() && e.isShiftDown()) {
+			return;
 		}
 		
 		if ((e.getKeyCode() == 16) ||
@@ -487,13 +501,14 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		UndoableEdit undoable = tree.doc.undoQueue.getIfEdit();
 		if ((undoable != null) && (undoable.getNode() == currentNode) && (undoable.frozen == false)) {
 			if (e.isControlDown() && ((e.getKeyCode() == KeyEvent.VK_X) || (e.getKeyCode() == KeyEvent.VK_V))) {
-				tree.doc.undoQueue.add(new UndoableEdit(currentNode,currentNode.getValue(),textArea.getText(),tree.getCursorPosition(),textArea.getCaretPosition()));
+				tree.doc.undoQueue.add(new UndoableEdit(currentNode,currentNode.getValue(),textArea.getText(),tree.getCursorPosition(),textArea.getCaretPosition(),tree.getCursorMarkPosition(),textArea.getCaretPosition()));
 			} else {
 				undoable.setNewText(textArea.getText());
 				undoable.setNewPosition(textArea.getCaretPosition());
+				undoable.setNewMarkPosition(textArea.getCaretPosition());
 			}
 		} else {
-			tree.doc.undoQueue.add(new UndoableEdit(currentNode,currentNode.getValue(),textArea.getText(),tree.getCursorPosition(),textArea.getCaretPosition()));
+			tree.doc.undoQueue.add(new UndoableEdit(currentNode,currentNode.getValue(),textArea.getText(),tree.getCursorPosition(),textArea.getCaretPosition(),tree.getCursorMarkPosition(),textArea.getCaretPosition()));
 		}
 			
 		// Update the value in the node

@@ -78,6 +78,7 @@ public class OutlinerDesktop extends JDesktopPane implements Scrollable {
 		return (new Dimension(maxWidth,maxHeight));
 	}
 	
+	
 	// Scrollable Interface
 	public Dimension getPreferredScrollableViewportSize() {
 		return getPreferredSize();

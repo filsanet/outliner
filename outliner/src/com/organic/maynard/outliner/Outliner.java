@@ -92,7 +92,7 @@ public class Outliner extends JFrame {
 		macroPopup.init();		
 		
 		// Setup the Desktop
-		menuBar = new OutlinerDesktopMenuBar(this);
+		menuBar = new OutlinerDesktopMenuBar();
 		addComponentListener(new WindowSizeManager(INITIAL_WIDTH,INITIAL_HEIGHT,MIN_WIDTH,MIN_HEIGHT));
 		addWindowListener(
 			new WindowAdapter() {
@@ -120,7 +120,7 @@ public class Outliner extends JFrame {
 
 		setVisible(true);
 
-		// Create a Document.
+		// Create a Document. This must come after visiblity otherwise the window won't be activated.
 		if (Preferences.NEW_DOC_ON_STARTUP.cur) {
 			new OutlinerDocument("");
 		}
@@ -152,23 +152,23 @@ public class Outliner extends JFrame {
 	}
 	
 	public static void setMostRecentDocumentTouched(OutlinerDocument doc) {
-		//System.out.println("Set most recent document touched " + doc.getTitle());
 		mostRecentDocumentTouched = doc;
 		
 		if(mostRecentDocumentTouched != null) {
-			//System.out.println("Calling selectWindow " + doc.getTitle());
 			Outliner.menuBar.windowMenu.selectWindow(doc);
 			FindReplaceFrame.enableButtons();
 		} else {
 			FindReplaceFrame.disableButtons();
+			
 			updateSaveMenuItem();
 			updateSaveAllMenuItem();
+			
 			UndoQueue.updateMenuBar(doc);
-
 			EditMenu.updateEditMenu(doc);
+			
 			OutlineMenu.updateOutlineMenu(doc);
 			SearchMenu.updateSearchMenu(doc);
-			WindowMenu.updateWindowMenu(doc);
+			WindowMenu.updateWindowMenu();
 		}
 	}
 	
@@ -186,25 +186,23 @@ public class Outliner extends JFrame {
 	
 	public static void removeDocument(OutlinerDocument document) {
 		openDocuments.removeElement(document);
-		if (mostRecentDocumentTouched == document) {
+		IS_CURRENT_DOCUMENT: if (mostRecentDocumentTouched == document) {
 			if (openDocumentCount() > 0) {
 				for (int i = openDocumentCount() - 1; i >= 0; i--) {
 					OutlinerDocument newDoc = getDocument(i);
 					if (!newDoc.isIcon()) {
 						Outliner.menuBar.windowMenu.changeToWindow(newDoc);
-						break;
+						break IS_CURRENT_DOCUMENT;
 					}
 				}
-			} else {
-				setMostRecentDocumentTouched(null);
 			}
+			setMostRecentDocumentTouched(null);
+			
 		}
 		
-		// Update the close menu item
-		if (openDocumentCount() == 0) {
-			menuBar.fileMenu.FILE_CLOSE_ITEM.setEnabled(false);
-			menuBar.fileMenu.FILE_CLOSE_ALL_ITEM.setEnabled(false);
-		}
+		// Update the Save All Menu Item
+		Outliner.updateSaveMenuItem();
+		Outliner.updateSaveAllMenuItem();
 	}
 	
 	public static int openDocumentCount() {
@@ -213,8 +211,7 @@ public class Outliner extends JFrame {
 	
 	public static boolean isFileNameUnique(String filename) {
 		for (int i = 0; i < openDocuments.size(); i++) {
-			OutlinerDocument doc = getDocument(i);
-			if (filename.equals(doc.getFileName())) {
+			if (filename.equals(getDocument(i).getFileName())) {
 				return false;
 			}
 		}
@@ -285,18 +282,26 @@ public class Outliner extends JFrame {
 			Outliner.menuBar.fileMenu.FILE_SAVE_ITEM.setEnabled(false);
 			Outliner.menuBar.fileMenu.FILE_SAVE_AS_ITEM.setEnabled(false);
 			Outliner.menuBar.fileMenu.FILE_REVERT_ITEM.setEnabled(false);
+			Outliner.menuBar.fileMenu.FILE_CLOSE_ITEM.setEnabled(false);
+			Outliner.menuBar.fileMenu.FILE_CLOSE_ALL_ITEM.setEnabled(false);
 		} else if (getMostRecentDocumentTouched().getFileName().equals("")) {
 			Outliner.menuBar.fileMenu.FILE_SAVE_ITEM.setEnabled(true);
 			Outliner.menuBar.fileMenu.FILE_SAVE_AS_ITEM.setEnabled(true);
 			Outliner.menuBar.fileMenu.FILE_REVERT_ITEM.setEnabled(false);
+			Outliner.menuBar.fileMenu.FILE_CLOSE_ITEM.setEnabled(true);
+			Outliner.menuBar.fileMenu.FILE_CLOSE_ALL_ITEM.setEnabled(true);
 		} else if (getMostRecentDocumentTouched().isFileModified()) {
 			Outliner.menuBar.fileMenu.FILE_SAVE_ITEM.setEnabled(true);
 			Outliner.menuBar.fileMenu.FILE_SAVE_AS_ITEM.setEnabled(true);
 			Outliner.menuBar.fileMenu.FILE_REVERT_ITEM.setEnabled(true);
+			Outliner.menuBar.fileMenu.FILE_CLOSE_ITEM.setEnabled(true);
+			Outliner.menuBar.fileMenu.FILE_CLOSE_ALL_ITEM.setEnabled(true);
 		} else {
 			Outliner.menuBar.fileMenu.FILE_SAVE_ITEM.setEnabled(false);
 			Outliner.menuBar.fileMenu.FILE_SAVE_AS_ITEM.setEnabled(true);
 			Outliner.menuBar.fileMenu.FILE_REVERT_ITEM.setEnabled(false);
+			Outliner.menuBar.fileMenu.FILE_CLOSE_ITEM.setEnabled(true);
+			Outliner.menuBar.fileMenu.FILE_CLOSE_ALL_ITEM.setEnabled(true);
 		}
 	}
 	

@@ -23,8 +23,6 @@ import java.awt.event.*;
 
 public class DesktopScrollPaneComponentListener implements ComponentListener {
 	
-	private Dimension dOld = null;
-	
 	// ComponentListener Interface
 	public void componentResized(ComponentEvent e) {
 		Outliner.jsp.getHorizontalScrollBar().revalidate();
@@ -32,8 +30,6 @@ public class DesktopScrollPaneComponentListener implements ComponentListener {
 	}
 
 	public void componentMoved(ComponentEvent e) {}
-	
 	public void componentShown(ComponentEvent e) {}
-	
 	public void componentHidden(ComponentEvent e) {}
 }

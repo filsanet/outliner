@@ -34,17 +34,13 @@ import com.organic.maynard.util.*;
 
 public class OutlinerDesktopMenuBar extends JMenuBar {
 
-	public Outliner outliner = null;
-		
 	public FileMenu fileMenu = new FileMenu();
 	public EditMenu editMenu = new EditMenu();
 	public OutlineMenu outlineMenu = new OutlineMenu();
 	public SearchMenu searchMenu = new SearchMenu();
 	public WindowMenu windowMenu = new WindowMenu();
 	
-	public OutlinerDesktopMenuBar(Outliner outliner) {
-		this.outliner = outliner;
-		
+	public OutlinerDesktopMenuBar() {
 		add(fileMenu);
 		add(editMenu);
 		add(outlineMenu);

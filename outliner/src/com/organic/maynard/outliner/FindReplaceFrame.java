@@ -279,7 +279,7 @@ public class FindReplaceFrame extends JInternalFrame implements ActionListener, 
 			String newText = oldText.substring(0,location.startIndex) + TEXTAREA_REPLACE.getText() + oldText.substring(location.endIndex,oldText.length()); //
 			int oldPosition = location.endIndex;
 			int newPosition = location.endIndex + difference;
-			doc.undoQueue.add(new UndoableEdit(location.node,oldText,newText,oldPosition,newPosition));
+			doc.undoQueue.add(new UndoableEdit(location.node,oldText,newText,oldPosition,newPosition,oldPosition,location.startIndex));
 
 			// Update the model
 			location.node.setValue(newText);

@@ -30,16 +30,21 @@ public class UndoableEdit implements Undoable {
 
 	private int newPosition = 0;
 	private int oldPosition = 0;
+
+	private int newMarkPosition = 0;
+	private int oldMarkPosition = 0;
 	
 	public boolean frozen = false;
 	
 	// The Constructors
-	public UndoableEdit(Node node, String oldText, String newText, int oldPosition, int newPosition) {
+	public UndoableEdit(Node node, String oldText, String newText, int oldPosition, int newPosition, int oldMarkPosition, int newMarkPosition) {
 		this.node = node;
 		this.newText = newText;
 		this.oldText = oldText;
 		this.newPosition = newPosition;
 		this.oldPosition = oldPosition;
+		this.newMarkPosition = newMarkPosition;
+		this.oldMarkPosition = oldMarkPosition;
 	}
 	
 	// Accessors
@@ -51,22 +56,39 @@ public class UndoableEdit implements Undoable {
 
 	public void setNewPosition(int newPosition) {this.newPosition = newPosition;}
 	public int getNewPosition() {return this.newPosition;}
+
+	public void setNewMarkPosition(int newMarkPosition) {this.newMarkPosition = newMarkPosition;}
+	public int getNewMarkPosition() {return this.newMarkPosition;}
 	
 	// Undoable Interface
 	public void undo() {
 		node.setValue(oldText);
 		node.getTree().setCursorPosition(oldPosition);
+		node.getTree().setCursorMarkPosition(oldMarkPosition);
 		node.getTree().clearSelection();
 		node.getTree().insertNode(node); // Used for visibility
 		node.getTree().doc.panel.layout.draw(node,outlineLayoutManager.TEXT);
+		
+		// fix the stored textarea size since it will have changed if the number of lines changed.
+		OutlinerCellRendererImpl textArea = node.getTree().doc.panel.layout.getUIComponent(node);
+		if (textArea != null) {
+			textArea.setCurrentTextAreaSize(textArea.getPreferredSize());
+		}
 	}
 	
 	public void redo() {
 		node.setValue(newText);
 		node.getTree().setCursorPosition(newPosition);
+		node.getTree().setCursorMarkPosition(newMarkPosition);
 		node.getTree().clearSelection();
 		node.getTree().insertNode(node); // Used for visibility
 		node.getTree().doc.panel.layout.draw(node,outlineLayoutManager.TEXT);
+
+		// fix the stored textarea size since it will have changed if the number of lines changed.
+		OutlinerCellRendererImpl textArea = node.getTree().doc.panel.layout.getUIComponent(node);
+		if (textArea != null) {
+			textArea.setCurrentTextAreaSize(textArea.getPreferredSize());
+		}
 	}
 	
 	public int getType() {return Undoable.EDIT_TYPE;}

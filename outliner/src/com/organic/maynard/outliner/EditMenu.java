@@ -59,18 +59,22 @@ public class EditMenu extends AbstractOutlinerMenu implements ActionListener {
 			
 		EDIT_UNDO_ITEM.setAccelerator(KeyStroke.getKeyStroke('Z', Event.CTRL_MASK, false));
 		EDIT_UNDO_ITEM.addActionListener(this);
+		EDIT_UNDO_ITEM.setEnabled(false);
 		add(EDIT_UNDO_ITEM);
 
 		EDIT_REDO_ITEM.setAccelerator(KeyStroke.getKeyStroke('Z', Event.CTRL_MASK + Event.SHIFT_MASK, false));
 		EDIT_REDO_ITEM.addActionListener(this);
+		EDIT_REDO_ITEM.setEnabled(false);
 		add(EDIT_REDO_ITEM);
 
 		insertSeparator(2);
 
 		EDIT_UNDO_ALL_ITEM.addActionListener(this);
+		EDIT_UNDO_ALL_ITEM.setEnabled(false);
 		add(EDIT_UNDO_ALL_ITEM);
 
 		EDIT_REDO_ALL_ITEM.addActionListener(this);
+		EDIT_REDO_ALL_ITEM.setEnabled(false);
 		add(EDIT_REDO_ALL_ITEM);
 
 		insertSeparator(5);
@@ -78,26 +82,31 @@ public class EditMenu extends AbstractOutlinerMenu implements ActionListener {
 		EDIT_CUT_ITEM.setAccelerator(KeyStroke.getKeyStroke('X', Event.CTRL_MASK, false));
 		EDIT_CUT_ITEM.addActionListener(this);
 		EDIT_CUT_ITEM.setEnabled(false);
+		EDIT_CUT_ITEM.setEnabled(false);
 		add(EDIT_CUT_ITEM);
 
 		EDIT_COPY_ITEM.setAccelerator(KeyStroke.getKeyStroke('C', Event.CTRL_MASK, false));
 		EDIT_COPY_ITEM.addActionListener(this);
 		EDIT_COPY_ITEM.setEnabled(false);
+		EDIT_COPY_ITEM.setEnabled(false);
 		add(EDIT_COPY_ITEM);
 
 		EDIT_PASTE_ITEM.setAccelerator(KeyStroke.getKeyStroke('V', Event.CTRL_MASK, false));
 		EDIT_PASTE_ITEM.addActionListener(this);
+		EDIT_PASTE_ITEM.setEnabled(false);
 		add(EDIT_PASTE_ITEM);
 
 		insertSeparator(9);
 
 		EDIT_SELECT_ALL_ITEM.setAccelerator(KeyStroke.getKeyStroke('A', Event.CTRL_MASK, false));
 		EDIT_SELECT_ALL_ITEM.addActionListener(this);
+		EDIT_SELECT_ALL_ITEM.setEnabled(false);
 		add(EDIT_SELECT_ALL_ITEM);
 
 		insertSeparator(11);
 
 		EDIT_DOCUMENT_SETTINGS_ITEM.addActionListener(this);
+		EDIT_DOCUMENT_SETTINGS_ITEM.setEnabled(false);
 		add(EDIT_DOCUMENT_SETTINGS_ITEM);
 
 		EDIT_PREFERENCES_ITEM.addActionListener(this);

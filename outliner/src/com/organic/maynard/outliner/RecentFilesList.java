@@ -24,6 +24,8 @@ import java.io.*;
 import java.util.*;
 import javax.swing.*;
 
+import com.organic.maynard.util.string.StringTools;
+
 public class RecentFilesList extends JMenu implements ActionListener {
 	
 	private OutlinerDocument doc = null;
@@ -130,7 +132,14 @@ public class RecentFilesList extends JMenu implements ActionListener {
 	private static String prepareConfigFile() {
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < fileList.size(); i++) {
-			buffer.append(Outliner.COMMAND_SET + Outliner.COMMAND_PARSER_SEPARATOR + "recent_file" + Outliner.COMMAND_PARSER_SEPARATOR + (String) fileList.elementAt(i) + Outliner.COMMAND_PARSER_SEPARATOR + (String) encodingList.elementAt(i) + System.getProperty("line.separator"));
+			buffer.append(Outliner.COMMAND_SET);
+			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+			buffer.append("recent_file");
+			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+			buffer.append(StringTools.escape((String) fileList.elementAt(i), '\\', null));
+			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+			buffer.append(StringTools.escape((String) encodingList.elementAt(i), '\\', null));
+			buffer.append(System.getProperty("line.separator"));
 		}
 		return buffer.toString();
 	}

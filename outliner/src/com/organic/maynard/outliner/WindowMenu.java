@@ -26,8 +26,16 @@ import javax.swing.*;
 public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 
 	public static final String WINDOW_STACK = "Stack";
+	public static final String WINDOW_NEXT = "Next";
+	public static final String WINDOW_PREV = "Previous";
 	
 	public JMenuItem windowStackItem = new JMenuItem(WINDOW_STACK);
+	// Seperator
+	public JMenuItem WINDOW_NEXT_ITEM = new JMenuItem(WINDOW_NEXT);
+	public JMenuItem WINDOW_PREV_ITEM = new JMenuItem(WINDOW_PREV);
+	// Seperator
+	
+	public static final int WINDOW_LIST_START = 5;
 	
 	// The Constructors
 	public WindowMenu() {
@@ -37,6 +45,18 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 		add(windowStackItem);
 
 		insertSeparator(1);
+
+		WINDOW_NEXT_ITEM.setAccelerator(KeyStroke.getKeyStroke('X', Event.CTRL_MASK + Event.SHIFT_MASK, false));
+		WINDOW_NEXT_ITEM.addActionListener(this);
+		add(WINDOW_NEXT_ITEM);
+		
+		WINDOW_PREV_ITEM.setAccelerator(KeyStroke.getKeyStroke('Z', Event.CTRL_MASK + Event.SHIFT_MASK, false));
+		WINDOW_PREV_ITEM.addActionListener(this);
+		add(WINDOW_PREV_ITEM);
+
+		insertSeparator(4);
+		
+		setEnabled(false);
 	}	
 
 	public static void addWindow(OutlinerDocument doc) {
@@ -59,7 +79,7 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 	
 	public static void selectWindow(OutlinerDocument doc) {
 		// DeSelect Old Window
-		if ((indexOfOldSelection >= 2) && (indexOfOldSelection < Outliner.menuBar.windowMenu.getItemCount())) {
+		if ((indexOfOldSelection >= WINDOW_LIST_START) && (indexOfOldSelection < Outliner.menuBar.windowMenu.getItemCount())) {
 			Outliner.menuBar.windowMenu.getItem(indexOfOldSelection).setSelected(false);
 		}
 
@@ -89,21 +109,52 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 			if (!Outliner.desktop.desktopManager.isMaximized()) {
 				stack_windows();
 			}
+		} else if (e.getActionCommand().equals(WINDOW_PREV)) {
+			changeToPrevWindow();
+		} else if (e.getActionCommand().equals(WINDOW_NEXT)) {
+			changeToNextWindow();
 		} else {
 			changeToWindow(((WindowMenuItem) e.getSource()).doc);
 		}
 	}
 
-	public static void updateWindowMenu(OutlinerDocument doc) {
-		if (doc == null) {
-			Outliner.menuBar.windowMenu.setEnabled(false);
-		} else {
+	public static void updateWindowMenu() {
+	
+		if (Outliner.openDocumentCount() > 0) {
 			Outliner.menuBar.windowMenu.setEnabled(true);
+		} else {
+			Outliner.menuBar.windowMenu.setEnabled(false);
 		}
 	}
 
 
 	// Window Menu Methods
+	public static void changeToNextWindow() {
+		WindowMenu menu = Outliner.menuBar.windowMenu;
+	
+		if (indexOfOldSelection != -1) {
+			int indexOfNewSelection = indexOfOldSelection + 1;
+			if (indexOfNewSelection >= menu.getItemCount()) {
+				indexOfNewSelection = WINDOW_LIST_START;
+			}
+			
+			changeToWindow(((WindowMenuItem) menu.getItem(indexOfNewSelection)).doc);
+		}
+	}
+
+	public static void changeToPrevWindow() {
+		WindowMenu menu = Outliner.menuBar.windowMenu;
+	
+		if (indexOfOldSelection != -1) {
+			int indexOfNewSelection = indexOfOldSelection - 1;
+			if (indexOfNewSelection < WINDOW_LIST_START) {
+				indexOfNewSelection = menu.getItemCount() - 1;
+			}
+			
+			changeToWindow(((WindowMenuItem) menu.getItem(indexOfNewSelection)).doc);
+		}	
+	}
+	
 	public static void changeToWindow(OutlinerDocument doc) {
 		try {
 			OutlinerDocument prevDoc = Outliner.getMostRecentDocumentTouched();

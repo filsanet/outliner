@@ -103,7 +103,10 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 
 		OUTLINE_DEMOTE_ITEM.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0, false));
 		OUTLINE_DEMOTE_ITEM.addActionListener(this);
-		add(OUTLINE_DEMOTE_ITEM);	}
+		add(OUTLINE_DEMOTE_ITEM);
+		
+		setEnabled(false);
+	}
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {

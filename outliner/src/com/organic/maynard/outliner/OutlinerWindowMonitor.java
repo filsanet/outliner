@@ -61,9 +61,6 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 		
 		// Remove the document.
 		Outliner.removeDocument(doc);
-
-		// Update the Save All Menu Item
-		Outliner.updateSaveAllMenuItem();
 		
 		return true;
 	}

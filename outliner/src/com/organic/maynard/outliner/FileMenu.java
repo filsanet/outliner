@@ -71,24 +71,31 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 
 		FILE_SAVE_ITEM.setAccelerator(KeyStroke.getKeyStroke('S', Event.CTRL_MASK, false));
 		FILE_SAVE_ITEM.addActionListener(this);
+		FILE_SAVE_ITEM.setEnabled(false);
 		add(FILE_SAVE_ITEM);
 
 		FILE_SAVE_ALL_ITEM.addActionListener(this);
+		FILE_SAVE_ALL_ITEM.setEnabled(false);
 		add(FILE_SAVE_ALL_ITEM);
+		
 
 		FILE_SAVE_AS_ITEM.addActionListener(this);
+		FILE_SAVE_AS_ITEM.setEnabled(false);
 		add(FILE_SAVE_AS_ITEM);
 
 		FILE_REVERT_ITEM.addActionListener(this);
+		FILE_REVERT_ITEM.setEnabled(false);
 		add(FILE_REVERT_ITEM);
 
 		insertSeparator(8);
 
 		FILE_CLOSE_ITEM.setAccelerator(KeyStroke.getKeyStroke('W', Event.CTRL_MASK, false));
 		FILE_CLOSE_ITEM.addActionListener(this);
+		FILE_CLOSE_ITEM.setEnabled(false);
 		add(FILE_CLOSE_ITEM);
 
 		FILE_CLOSE_ALL_ITEM.addActionListener(this);
+		FILE_CLOSE_ALL_ITEM.setEnabled(false);
 		add(FILE_CLOSE_ALL_ITEM);
 
 		insertSeparator(11);
@@ -97,6 +104,7 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		FILE_QUIT_ITEM.addActionListener(this);
 		add(FILE_QUIT_ITEM);
 	}
+
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {

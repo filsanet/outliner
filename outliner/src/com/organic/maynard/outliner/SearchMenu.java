@@ -42,7 +42,9 @@ public class SearchMenu extends AbstractOutlinerMenu implements ActionListener {
 
 		insertSeparator(1);
 
+		SEARCH_GOTO_LINE_ITEM.setAccelerator(KeyStroke.getKeyStroke('G', Event.CTRL_MASK, false));
 		SEARCH_GOTO_LINE_ITEM.addActionListener(this);
+		SEARCH_GOTO_LINE_ITEM.setEnabled(false);
 		add(SEARCH_GOTO_LINE_ITEM);
 	}
 

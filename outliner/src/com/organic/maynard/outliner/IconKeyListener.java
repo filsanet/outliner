@@ -539,7 +539,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 		// Put the Undoable onto the UndoQueue
 		OutlinerCellRendererImpl youngestTextArea = layout.getUIComponent(youngestNode);
-		tree.doc.undoQueue.add(new UndoableEdit(youngestNode,youngestTextArea.getText(),youngestNode.getValue(),youngestTextArea.getCaretPosition(),tree.getCursorPosition()));
+		tree.doc.undoQueue.add(new UndoableEdit(youngestNode,youngestTextArea.getText(),youngestNode.getValue(),youngestTextArea.getCaretPosition(),tree.getCursorPosition(),youngestTextArea.getCaret().getMark(),tree.getCursorPosition()));
 		
 		// Redraw and Set Focus
 		layout.draw(youngestNode,outlineLayoutManager.TEXT);
