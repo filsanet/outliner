@@ -103,6 +103,14 @@
 		<asset type="text" key="replacements_made" value="{$value_1} {$value_2} made."/>
 		<asset type="text" key="restore_defaults" value="Restore Defaults"/>
 		<asset type="text" key="restore_to_application_preferences" value="Restore to Application Preferences"/>
+		<asset type="text" key="rf_d_bottomtotop" value="Bottom to Top"/>
+		<asset type="text" key="rf_d_toptobottom" value="Top to Bottom"/>
+		<asset type="text" key="rf_nf_filename" value="Filename Only"/>
+		<asset type="text" key="rf_nf_full_pathname" value="Full Pathname"/>
+		<asset type="text" key="rf_nf_trunc_pathname" value="Truncated Pathname"/>
+		<asset type="text" key="rf_o_alphabetical" value="Alphabetical"/>
+		<asset type="text" key="rf_o_ascii" value="ASCII"/>
+		<asset type="text" key="rf_o_chronological" value="Chronological"/>
 		<asset type="text" key="selection_only" value="Selection only"/>
 		<asset type="text" key="sort" value="Sort"/>
 		<asset type="text" key="sort_ascending" value="Ascending"/>
@@ -166,187 +174,204 @@
 				<preference id="bookmarks_path" class="com.organic.maynard.outliner.PreferenceString" default="usr\Default User\My JOE Bookmarks.opml"/>
 				<preference id="tutorials_path" class="com.organic.maynard.outliner.PreferenceString" default="dox\JOE Tutorials.en.opml"/>
 				<preference id="about_path" class="com.organic.maynard.outliner.PreferenceString" default="dox\About JOE.en.opml"/>
-			<preferencesframe id="preferences_frame" class="com.organic.maynard.outliner.PreferencesFrame" title="Application Preferences">
-				<preferencepanel id="preferences_panel_editor" class="com.organic.maynard.outliner.PreferencesPanelEditor" title="Editor">
-					<preference id="font_face" class="com.organic.maynard.outliner.PreferenceString" default="SansSerif">
-						<preference_component id="font_face_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Font Face"/>
-					</preference>
-					<preference id="font_size" class="com.organic.maynard.outliner.PreferenceInt" default="12">
-						<validator id="font_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="6" max="36" default="12"/>
-						<preference_component id="font_size_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Font Size" size="4"/>
-					</preference>
-					<preference id="line_wrap" class="com.organic.maynard.outliner.PreferenceString" default="words">
-						<preference_component id="line_wrap_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Line Wrap"/>
-					</preference>
-					<preference id="undo_queue_size" class="com.organic.maynard.outliner.PreferenceInt" default="100">
-						<validator id="undo_queue_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="100000" default="100"/>
-						<preference_component id="undo_queue_size_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Undo Queue Size" size="4"/>
-					</preference>
-					<preference id="show_line_numbers" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
-						<validator id="show_line_numbers_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
-						<preference_component id="show_line_numbers_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Show Line Numbers"/>
-					</preference>
-					<preference id="show_attributes" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
-						<validator id="show_attributes_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
-						<preference_component id="show_attributes_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Show Attributes for new documents"/>
-					</preference>
-					<preference id="show_indicators" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
-						<validator id="show_indicators_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
-						<preference_component id="show_indicators_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Show Indicators"/>
-					</preference>
-					<preference id="apply_font_style_for_comments" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
-						<validator id="apply_font_style_for_comments_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
-						<preference_component id="apply_font_style_for_comments_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Apply Font Style for Comments."/>
-					</preference>
-					<preference id="apply_font_style_for_editability" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
-						<validator id="apply_font_style_for_editability_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
-						<preference_component id="apply_font_style_for_editability_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Apply Font Style for Editability."/>
-					</preference>
-					<preference id="apply_font_style_for_moveability" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
-						<validator id="apply_font_style_for_moveability_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
-						<preference_component id="apply_font_style_for_moveability_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Apply Font Style for Moveability."/>
-					</preference>
-				</preferencepanel>
-				<preferencepanel id="preferences_panel_look_and_feel" class="com.organic.maynard.outliner.PreferencesPanelLookAndFeel" title="Look &amp; Feel">
-					<preference id="desktop_background_color" class="com.organic.maynard.outliner.PreferenceColor" default="-16777216">
-						<preference_component id="desktop_background_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Desktop Color"/>
-					</preference>
-					<preference id="panel_background_color" class="com.organic.maynard.outliner.PreferenceColor" default="-1">
-						<preference_component id="panel_background_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Background Color"/>
-					</preference>
-					<preference id="textarea_background_color" class="com.organic.maynard.outliner.PreferenceColor" default="-986896">
-						<preference_component id="textarea_background_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Foreground Color"/>
-					</preference>
-					<preference id="textarea_foreground_color" class="com.organic.maynard.outliner.PreferenceColor" default="-16777216">
-						<preference_component id="textarea_foreground_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Text/Selection Color"/>
-					</preference>
-					<preference id="textarea_comment_color" class="com.organic.maynard.outliner.PreferenceColor" default="-65536">
-						<preference_component id="textarea_comment_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Commented Text Color"/>
-					</preference>
-					<preference id="selected_child_color" class="com.organic.maynard.outliner.PreferenceColor" default="-10987432">
-						<preference_component id="selected_child_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Selected Children Color"/>
-					</preference>
-					<preference id="line_number_color" class="com.organic.maynard.outliner.PreferenceColor" default="-1315861">
-						<preference_component id="line_number_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Line Number Color"/>
-					</preference>
-					<preference id="line_number_selected_color" class="com.organic.maynard.outliner.PreferenceColor" default="-2960686">
-						<preference_component id="line_number_selected_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Line Number Selected Color"/>
-					</preference>
-					<preference id="line_number_selected_child_color" class="com.organic.maynard.outliner.PreferenceColor" default="-2302756">
-						<preference_component id="line_number_selected_children_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Line Number Selected Children Color"/>
-					</preference>
-					<vertical_strut size="5"/>
-					<preference id="vertical_spacing" class="com.organic.maynard.outliner.PreferenceInt" default="2">
-						<validator id="vertical_spacing_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="2"/>
-						<preference_component id="vertical_spacing_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Vertical Spacing" size="4"/>
-					</preference>
-					<preference id="indent" class="com.organic.maynard.outliner.PreferenceInt" default="15">
-						<validator id="indent_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="1" max="99" default="15"/>
-						<preference_component id="indent_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Indent" size="4"/>
-					</preference>
-					<vertical_strut size="5"/>
-					<preference id="left_margin" class="com.organic.maynard.outliner.PreferenceInt" default="5">
-						<validator id="left_margin_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="5"/>
-						<preference_component id="left_margin_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Left Margin" size="4"/>
-					</preference>
-					<preference id="top_margin" class="com.organic.maynard.outliner.PreferenceInt" default="5">
-						<validator id="top_margin_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="5"/>
-						<preference_component id="top_margin_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Top Margin" size="4"/>
-					</preference>
-					<preference id="right_margin" class="com.organic.maynard.outliner.PreferenceInt" default="5">
-						<validator id="right_margin_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="5"/>
-						<preference_component id="right_margin_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Right Margin" size="4"/>
-					</preference>
-					<preference id="bottom_margin" class="com.organic.maynard.outliner.PreferenceInt" default="5">
-						<validator id="bottom_margin_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="5"/>
-						<preference_component id="bottom_margin_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Bottom Margin" size="4"/>
-					</preference>
-				</preferencepanel>
-				<preferencepanel id="preferences_panel_open_and_save" class="com.organic.maynard.outliner.PreferencesPanelOpenAndSave" title="Open &amp; Save">
-					<preference id="file_protocol" class="com.organic.maynard.outliner.PreferenceString" default="Local File System">
-						<preference_component id="file_protocol_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="File Protocol" style="single_centered"/>
-					</preference>
-					<vertical_strut size="5"/>
-					<preference id="save_line_end" class="com.organic.maynard.outliner.PreferenceLineEnding">
-						<preference_component id="line_end_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Line Terminator" style="single_centered"/>
-					</preference>
-					<vertical_strut size="5"/>
-					<preference id="open_encoding" class="com.organic.maynard.outliner.PreferenceString" default="ISO-8859-1">
-						<preference_component id="open_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Encoding when opening." style="single_centered"/>
-					</preference>
-					<preference id="import_encoding" class="com.organic.maynard.outliner.PreferenceString" default="ISO-8859-1">
-						<preference_component id="import_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Encoding when importing." style="single_centered"/>
-					</preference>
-					<preference id="save_encoding" class="com.organic.maynard.outliner.PreferenceString" default="ISO-8859-1">
-						<preference_component id="save_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Encoding when saving." style="single_centered"/>
-					</preference>
-					<preference id="export_encoding" class="com.organic.maynard.outliner.PreferenceString" default="ISO-8859-1">
-						<preference_component id="export_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Encoding when exporting." style="single_centered"/>
-					</preference>
-					<vertical_strut size="5"/>
-					<preference id="open_format" class="com.organic.maynard.outliner.PreferenceString" default="Plaintext">
-						<preference_component id="open_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format when opening." style="single_centered"/>
-					</preference>
-					<preference id="import_format" class="com.organic.maynard.outliner.PreferenceString" default="BrainForest Palm pdb">
-						<preference_component id="import_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format when importing." style="single_centered"/>
-					</preference>
-					<preference id="save_format" class="com.organic.maynard.outliner.PreferenceString" default="Plaintext">
-						<preference_component id="save_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format when saving." style="single_centered"/>
-					</preference>
-					<preference id="export_format" class="com.organic.maynard.outliner.PreferenceString" default="Plaintext">
-						<preference_component id="export_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format when exporting." style="single_centered"/>
-					</preference>
-					<preferencepanel id="preferences_panel_justified_plaintext" class="com.organic.maynard.outliner.PreferencesPanelImpl" title="File Format: Justified Plaintext">
-						<preference id="justified_plaintext_col_width" class="com.organic.maynard.outliner.PreferenceInt" default="80">
-							<validator id="justified_plaintext_col_width_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="999" default="80"/>
-							<preference_component id="justified_plaintext_col_width_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Column Width" size="3"/>
+			<!-- USER-ADJUSTABLE PREFS -->
+				<preferencesframe id="preferences_frame" class="com.organic.maynard.outliner.PreferencesFrame" title="Application Preferences">
+					<preferencepanel id="preferences_panel_editor" class="com.organic.maynard.outliner.PreferencesPanelEditor" title="Editor">
+						<preference id="font_face" class="com.organic.maynard.outliner.PreferenceString" default="SansSerif">
+							<preference_component id="font_face_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Font Face"/>
 						</preference>
-						<preference id="justified_plaintext_draw_lines" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
-							<validator id="justified_plaintext_draw_lines_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
-							<preference_component id="justified_plaintext_draw_lines_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Draw Heirarchy Lines"/>
+						<preference id="font_size" class="com.organic.maynard.outliner.PreferenceInt" default="12">
+							<validator id="font_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="6" max="36" default="12"/>
+							<preference_component id="font_size_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Font Size" size="4"/>
+						</preference>
+						<preference id="line_wrap" class="com.organic.maynard.outliner.PreferenceString" default="words">
+							<preference_component id="line_wrap_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Line Wrap"/>
+						</preference>
+						<preference id="undo_queue_size" class="com.organic.maynard.outliner.PreferenceInt" default="100">
+							<validator id="undo_queue_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="100000" default="100"/>
+							<preference_component id="undo_queue_size_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Undo Queue Size" size="4"/>
+						</preference>
+						<preference id="show_line_numbers" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+							<validator id="show_line_numbers_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+							<preference_component id="show_line_numbers_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Show Line Numbers"/>
+						</preference>
+						<preference id="show_attributes" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
+							<validator id="show_attributes_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+							<preference_component id="show_attributes_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Show Attributes for new documents"/>
+						</preference>
+						<preference id="show_indicators" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+							<validator id="show_indicators_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+							<preference_component id="show_indicators_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Show Indicators"/>
+						</preference>
+						<preference id="apply_font_style_for_comments" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+							<validator id="apply_font_style_for_comments_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+							<preference_component id="apply_font_style_for_comments_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Apply Font Style for Comments."/>
+						</preference>
+						<preference id="apply_font_style_for_editability" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+							<validator id="apply_font_style_for_editability_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+							<preference_component id="apply_font_style_for_editability_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Apply Font Style for Editability."/>
+						</preference>
+						<preference id="apply_font_style_for_moveability" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+							<validator id="apply_font_style_for_moveability_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+							<preference_component id="apply_font_style_for_moveability_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Apply Font Style for Moveability."/>
 						</preference>
 					</preferencepanel>
-					<preferencepanel id="preferences_panel_web_file" class="com.organic.maynard.outliner.PreferencesPanelImpl" title="File Protocol: WebFile">
-						<preference id="web_file_url" class="com.organic.maynard.outliner.PreferenceString" default="http://localhost/outliner.php">
-							<preference_component id="web_file_url_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Remote URL" size="10"/>
+					<preferencepanel id="preferences_panel_look_and_feel" class="com.organic.maynard.outliner.PreferencesPanelLookAndFeel" title="Look &amp; Feel">
+						<preference id="desktop_background_color" class="com.organic.maynard.outliner.PreferenceColor" default="-16777216">
+							<preference_component id="desktop_background_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Desktop Color"/>
 						</preference>
-						<preference id="web_file_user" class="com.organic.maynard.outliner.PreferenceString" default="">
-							<preference_component id="web_file_user_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Remote username" size="10"/>
+						<preference id="panel_background_color" class="com.organic.maynard.outliner.PreferenceColor" default="-1">
+							<preference_component id="panel_background_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Background Color"/>
 						</preference>
-						<preference id="web_file_password" class="com.organic.maynard.outliner.PreferenceString" default="">
-							<preference_component id="web_file_password_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Remote password" size="10"/>
+						<preference id="textarea_background_color" class="com.organic.maynard.outliner.PreferenceColor" default="-986896">
+							<preference_component id="textarea_background_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Foreground Color"/>
+						</preference>
+						<preference id="textarea_foreground_color" class="com.organic.maynard.outliner.PreferenceColor" default="-16777216">
+							<preference_component id="textarea_foreground_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Text/Selection Color"/>
+						</preference>
+						<preference id="textarea_comment_color" class="com.organic.maynard.outliner.PreferenceColor" default="-65536">
+							<preference_component id="textarea_comment_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Commented Text Color"/>
+						</preference>
+						<preference id="selected_child_color" class="com.organic.maynard.outliner.PreferenceColor" default="-10987432">
+							<preference_component id="selected_child_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Selected Children Color"/>
+						</preference>
+						<preference id="line_number_color" class="com.organic.maynard.outliner.PreferenceColor" default="-1315861">
+							<preference_component id="line_number_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Line Number Color"/>
+						</preference>
+						<preference id="line_number_selected_color" class="com.organic.maynard.outliner.PreferenceColor" default="-2960686">
+							<preference_component id="line_number_selected_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Line Number Selected Color"/>
+						</preference>
+						<preference id="line_number_selected_child_color" class="com.organic.maynard.outliner.PreferenceColor" default="-2302756">
+							<preference_component id="line_number_selected_children_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Line Number Selected Children Color"/>
+						</preference>
+						<vertical_strut size="5"/>
+						<preference id="vertical_spacing" class="com.organic.maynard.outliner.PreferenceInt" default="2">
+							<validator id="vertical_spacing_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="2"/>
+							<preference_component id="vertical_spacing_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Vertical Spacing" size="4"/>
+						</preference>
+						<preference id="indent" class="com.organic.maynard.outliner.PreferenceInt" default="15">
+							<validator id="indent_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="1" max="99" default="15"/>
+							<preference_component id="indent_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Indent" size="4"/>
+						</preference>
+						<vertical_strut size="5"/>
+						<preference id="left_margin" class="com.organic.maynard.outliner.PreferenceInt" default="5">
+							<validator id="left_margin_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="5"/>
+							<preference_component id="left_margin_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Left Margin" size="4"/>
+						</preference>
+						<preference id="top_margin" class="com.organic.maynard.outliner.PreferenceInt" default="5">
+							<validator id="top_margin_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="5"/>
+							<preference_component id="top_margin_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Top Margin" size="4"/>
+						</preference>
+						<preference id="right_margin" class="com.organic.maynard.outliner.PreferenceInt" default="5">
+							<validator id="right_margin_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="5"/>
+							<preference_component id="right_margin_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Right Margin" size="4"/>
+						</preference>
+						<preference id="bottom_margin" class="com.organic.maynard.outliner.PreferenceInt" default="5">
+							<validator id="bottom_margin_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="5"/>
+							<preference_component id="bottom_margin_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Bottom Margin" size="4"/>
 						</preference>
 					</preferencepanel>
-				</preferencepanel>
-				<preferencepanel id="preferences_panel_misc" class="com.organic.maynard.outliner.PreferencesPanelMisc" title="Misc.">
-					<preference id="print_environment" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
-						<validator id="print_environment_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
-						<preference_component id="print_environment_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Print environment to console on startup"/>
-					</preference>
-					<preference id="new_doc_on_startup" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
-						<validator id="new_doc_on_startup_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
-						<preference_component id="new_doc_on_startup_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="New document on startup"/>
-					</preference>
-					<preference id="recent_files_list_size" class="com.organic.maynard.outliner.PreferenceInt" default="10">
-						<validator id="recent_files_list_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="10"/>
-						<preference_component id="recent_files_list_size_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Recent files list size" size="2"/>
-					</preference>
-					<preference id="owner_name" class="com.organic.maynard.outliner.PreferenceString" default="">
-						<preference_component id="owner_name_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Owner name" size="10"/>
-					</preference>
-					<preference id="owner_email" class="com.organic.maynard.outliner.PreferenceString" default="">
-						<preference_component id="owner_email_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Owner email" size="10"/>
-					</preference>
-					<preference id="mouse_wheel_scroll_speed" class="com.organic.maynard.outliner.PreferenceInt" default="1">
-						<validator id="mouse_wheel_scroll_speed_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="1" max="1000" default="1"/>
-						<preference_component id="mouse_wheel_scroll_speed_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Mouse Wheel Scroll Speed" size="2"/>
-					</preference>
-					<preference id="autosave_frequency" class="com.organic.maynard.outliner.PreferenceInt" default="30">
-						<validator id="autosave_frequency_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="10" max="3600" default="30"/>
-						<preference_component id="autosave_frequency_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Autosave Frequency (sec)" size="4"/>
-					</preference>
-				</preferencepanel>
-			</preferencesframe>
+					<preferencepanel id="preferences_panel_open_and_save" class="com.organic.maynard.outliner.PreferencesPanelOpenAndSave" title="Open &amp; Save">
+						<preference id="file_protocol" class="com.organic.maynard.outliner.PreferenceString" default="Local File System">
+							<preference_component id="file_protocol_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="File Protocol" style="single_centered"/>
+						</preference>
+						<vertical_strut size="5"/>
+						<preference id="save_line_end" class="com.organic.maynard.outliner.PreferenceLineEnding">
+							<preference_component id="line_end_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Line Terminator" style="single_centered"/>
+						</preference>
+						<vertical_strut size="5"/>
+						<preference id="open_encoding" class="com.organic.maynard.outliner.PreferenceString" default="ISO-8859-1">
+							<preference_component id="open_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Encoding when opening." style="single_centered"/>
+						</preference>
+						<preference id="import_encoding" class="com.organic.maynard.outliner.PreferenceString" default="ISO-8859-1">
+							<preference_component id="import_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Encoding when importing." style="single_centered"/>
+						</preference>
+						<preference id="save_encoding" class="com.organic.maynard.outliner.PreferenceString" default="ISO-8859-1">
+							<preference_component id="save_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Encoding when saving." style="single_centered"/>
+						</preference>
+						<preference id="export_encoding" class="com.organic.maynard.outliner.PreferenceString" default="ISO-8859-1">
+							<preference_component id="export_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Encoding when exporting." style="single_centered"/>
+						</preference>
+						<vertical_strut size="5"/>
+						<preference id="open_format" class="com.organic.maynard.outliner.PreferenceString" default="Plaintext">
+							<preference_component id="open_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format when opening." style="single_centered"/>
+						</preference>
+						<preference id="import_format" class="com.organic.maynard.outliner.PreferenceString" default="BrainForest Palm pdb">
+							<preference_component id="import_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format when importing." style="single_centered"/>
+						</preference>
+						<preference id="save_format" class="com.organic.maynard.outliner.PreferenceString" default="Plaintext">
+							<preference_component id="save_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format when saving." style="single_centered"/>
+						</preference>
+						<preference id="export_format" class="com.organic.maynard.outliner.PreferenceString" default="Plaintext">
+							<preference_component id="export_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format when exporting." style="single_centered"/>
+						</preference>
+						<preferencepanel id="preferences_panel_justified_plaintext" class="com.organic.maynard.outliner.PreferencesPanelImpl" title="File Format: Justified Plaintext">
+							<preference id="justified_plaintext_col_width" class="com.organic.maynard.outliner.PreferenceInt" default="80">
+								<validator id="justified_plaintext_col_width_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="999" default="80"/>
+								<preference_component id="justified_plaintext_col_width_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Column Width" size="3"/>
+							</preference>
+							<preference id="justified_plaintext_draw_lines" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+								<validator id="justified_plaintext_draw_lines_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+								<preference_component id="justified_plaintext_draw_lines_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Draw Heirarchy Lines"/>
+							</preference>
+						</preferencepanel>
+						<preferencepanel id="preferences_panel_web_file" class="com.organic.maynard.outliner.PreferencesPanelImpl" title="File Protocol: WebFile">
+							<preference id="web_file_url" class="com.organic.maynard.outliner.PreferenceString" default="http://localhost/outliner.php">
+								<preference_component id="web_file_url_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Remote URL" size="10"/>
+							</preference>
+							<preference id="web_file_user" class="com.organic.maynard.outliner.PreferenceString" default="">
+								<preference_component id="web_file_user_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Remote username" size="10"/>
+							</preference>
+							<preference id="web_file_password" class="com.organic.maynard.outliner.PreferenceString" default="">
+								<preference_component id="web_file_password_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Remote password" size="10"/>
+							</preference>
+						</preferencepanel>
+						<preferencepanel id="preferences_panel_recent_files" class="com.organic.maynard.outliner.PreferencesPanelRecentFiles" title="Recent Files List">
+							<vertical_strut size="10"/>
+							<preference id="recent_files_list_size" class="com.organic.maynard.outliner.PreferenceInt" default="10">
+								<validator id="recent_files_list_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="10"/>
+								<preference_component id="recent_files_list_size_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Size" size="4" />
+							</preference>
+							<vertical_strut size="10"/>
+							<preference id="recent_files_ordering" class="com.organic.maynard.outliner.PreferenceString" default="Chronological">
+								<preference_component id="recent_files_ordering_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Ordering" />
+							</preference>
+							<vertical_strut size="10"/>
+							<preference id="recent_files_direction" class="com.organic.maynard.outliner.PreferenceString" default="Top to Bottom">
+								<preference_component id="recent_files_direction_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Direction" />
+							</preference>
+							<vertical_strut size="10"/>
+							<preference id="recent_files_name_form" class="com.organic.maynard.outliner.PreferenceString" default="Full Pathname">
+								<preference_component id="recent_files_name_form_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Name Form" />
+							</preference>
+							<vertical_strut size="20"/>
+						</preferencepanel>
+					</preferencepanel>
+					<preferencepanel id="preferences_panel_misc" class="com.organic.maynard.outliner.PreferencesPanelMisc" title="Misc.">
+						<preference id="print_environment" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
+							<validator id="print_environment_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+							<preference_component id="print_environment_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Print environment to console on startup"/>
+						</preference>
+						<preference id="new_doc_on_startup" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+							<validator id="new_doc_on_startup_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+							<preference_component id="new_doc_on_startup_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="New document on startup"/>
+						</preference>
+						<preference id="owner_name" class="com.organic.maynard.outliner.PreferenceString" default="">
+							<preference_component id="owner_name_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Owner name" size="10"/>
+						</preference>
+						<preference id="owner_email" class="com.organic.maynard.outliner.PreferenceString" default="">
+							<preference_component id="owner_email_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Owner email" size="10"/>
+						</preference>
+						<preference id="mouse_wheel_scroll_speed" class="com.organic.maynard.outliner.PreferenceInt" default="1">
+							<validator id="mouse_wheel_scroll_speed_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="1" max="1000" default="1"/>
+							<preference_component id="mouse_wheel_scroll_speed_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Mouse Wheel Scroll Speed" size="2"/>
+						</preference>
+						<preference id="autosave_frequency" class="com.organic.maynard.outliner.PreferenceInt" default="30">
+							<validator id="autosave_frequency_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="10" max="3600" default="30"/>
+							<preference_component id="autosave_frequency_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Autosave Frequency (sec)" size="4"/>
+						</preference>
+					</preferencepanel>
+				</preferencesframe>
 		</preferences>
 	<!-- MENUBARS -->
 		<menubar id="menubar" class="com.organic.maynard.outliner.OutlinerDesktopMenuBar">
