@@ -84,6 +84,8 @@
 					<pathelement path="${lib}/sax.jar"/>
 					<pathelement path="${lib}/xerces.jar"/>
 					<pathelement path="${lib}/xp.jar"/>
+					<pathelement path="${lib}/outliner.jar"/>
+					<pathelement path="${lib}/jmousewheel.jar"/>
 				</classpath>
 				<exclude name="outliner/**"/>
 			</javac>
