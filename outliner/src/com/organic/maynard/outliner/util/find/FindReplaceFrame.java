@@ -783,7 +783,26 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				break;
 			
 			case MODE_FILE_SYSTEM:
-				replaceAllFileSystem(results);
+				Object path = COMBOBOX_PATH.getSelectedItem();
+				if (path == null) {
+					path = new String("");
+				}
+
+				Object extensions = COMBOBOX_FILE_FILTER.getSelectedItem();
+				if (extensions == null) {
+					extensions = new String("");
+				}
+				
+				replaceAllFileSystem(
+					results,
+					path.toString(),
+					CHECKBOX_INCLUDE_SUB_DIRECTORIES.isSelected(),
+					extensions.toString(), 
+					TEXTAREA_FIND.getText(), 
+					TEXTAREA_REPLACE.getText(), 
+					CHECKBOX_IGNORE_CASE.isSelected(), 
+					CHECKBOX_REGEXP.isSelected()
+				);
 				break;
 			
 			case MODE_UNKNOWN:
@@ -863,6 +882,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	}
 
 	private static FileSystemFind fileSystemFind = null;
+	private static FileSystemReplace fileSystemReplace = null;
 	
 	private String[] convertListToStringArray(java.util.List list) {
 		String[] array = new String[list.size()];
@@ -900,11 +920,40 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		}
 
 		// Do it
-		fileSystemFind.find(model, convertListToStringArray(extensions), startingPath, sFind, isRegexp, includeSubDirectories);
+		fileSystemFind.find(model, convertListToStringArray(extensions), startingPath, sFind, isRegexp, ignoreCase, includeSubDirectories);
 	}
 	
-	public void replaceAllFileSystem(FindReplaceResultsModel model) {
-	
+	public void replaceAllFileSystem(
+		FindReplaceResultsModel model, 
+		String startingPath, 
+		boolean includeSubDirectories,
+		String fileExtensions, 
+		String sFind, 
+		String sReplace, 
+		boolean ignoreCase, 
+		boolean isRegexp
+	) {
+		// Lazy Instantiation
+		if (fileSystemReplace == null) {
+			fileSystemReplace = new FileSystemReplace();
+		}
+		
+		// Prep Query
+		if (isRegexp) {
+			sReplace = prepareRegEx(true, ignoreCase, sFind, sReplace);
+			sFind = prepareRegEx(false, ignoreCase, sFind, "");
+		}
+		
+		// Prep Extensions List
+		ArrayList extensions = new ArrayList();
+		StringTokenizer tok = new StringTokenizer(fileExtensions);
+		while (tok.hasMoreTokens()) {
+			String extension = tok.nextToken();
+			extensions.add(extension);
+		}
+
+		// Do it
+		fileSystemReplace.replace(model, convertListToStringArray(extensions), startingPath, sFind, sReplace, isRegexp, ignoreCase, includeSubDirectories);
 	}
 
 	// This method is public and should have no direct dependancy on 

@@ -44,25 +44,28 @@ import java.util.*;
  * @version $Revision$, $Date$
  */
  
- public class FileSystemFind {
+ public class FileSystemReplace {
 	
 	private DirectoryCrawler crawler = null;
 			
-	public FileSystemFind() {
+	public FileSystemReplace() {
 		crawler = new DirectoryCrawler();
 	}
 	
-	public void find(
+	public void replace(
 		FindReplaceResultsModel model, 
 		String[] fileExtensions, 
 		String startingPath, 
 		String query,
+		String replacement,
 		boolean isRegexp,
 		boolean ignoreCase,
 		boolean includeSubDirectories
 	) {		
 		// Setup the Crawler
-		crawler.setFileHandler(new FileSystemFindFileContentsHandler(query, model, isRegexp, ignoreCase, PlatformCompatibility.LINE_END_UNIX));
+		String lineEnd = PlatformCompatibility.platformToLineEnding(Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur);
+		
+		crawler.setFileHandler(new FileSystemReplaceFileContentsHandler(query, replacement, model, isRegexp, ignoreCase, lineEnd));
 		if (fileExtensions.length > 0) {
 			crawler.setFileFilter(new FileExtensionFilter(fileExtensions));
 		} else {

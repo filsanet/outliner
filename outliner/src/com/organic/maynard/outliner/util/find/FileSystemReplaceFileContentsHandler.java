@@ -54,9 +54,10 @@ import org.apache.oro.text.regex.MatchResult;
  * @version $Revision$, $Date$
  */
  
-public class FileSystemFindFileContentsHandler extends FileContentsInspector {
+public class FileSystemReplaceFileContentsHandler extends FileContentsHandler {
 
 	private String query = null;
+	private String replacement = null;
 	private Perl5Util util = new Perl5Util();
 	private PatternMatcherInput input = null;
 	private MatchResult result = null;
@@ -67,7 +68,7 @@ public class FileSystemFindFileContentsHandler extends FileContentsInspector {
 	
 	
 	// Constructors
-	public FileSystemFindFileContentsHandler(String query, FindReplaceResultsModel results, boolean isRegexp, boolean ignoreCase, String lineEnding) {
+	public FileSystemReplaceFileContentsHandler(String query, String replacement, FindReplaceResultsModel results, boolean isRegexp, boolean ignoreCase, String lineEnding) {
 		super(lineEnding);
 		this.results = results;
 		this.isRegexp = isRegexp;
@@ -78,10 +79,14 @@ public class FileSystemFindFileContentsHandler extends FileContentsInspector {
 		} else {
 			this.query = query;
 		}
+		
+		this.replacement = replacement;
 	}
 	
 	// Overridden Methods
-	protected void inspectContents(File file, String contents) {
+	protected String processContents(File file, String contents) {
+		StringBuffer buf = new StringBuffer();
+		
 		// Split it into lines
 		StringSplitter splitter = new StringSplitter(contents, getLineEnding());
 		
@@ -91,16 +96,50 @@ public class FileSystemFindFileContentsHandler extends FileContentsInspector {
 			String line = (String) splitter.nextElement();
 			
 			if (isRegexp) {
-				input = new PatternMatcherInput(line);
+				// Do the regex find and return result
 				try {
-					while(util.match(query, input)) {
+					String textToSearch = line;
+					int searchStartIndex = 0;
+					input = new PatternMatcherInput(textToSearch);
+					String replacementText = null;
+					int matchLength = -1;
+					int difference = 0;
+					
+					while (util.match(query, input)) {
+						// Record Match Information
 						result = util.getMatch();
-						results.addResult(new FindReplaceResult(file, lineCount, result.beginOffset(0), result.group(0), ""));
+						matchLength = result.length(); // Store length since this method does not return it.
+						int matchStartIndex = result.beginOffset(0);
+						int matchEndIndex = matchStartIndex + matchLength;
+						
+						// Do the replacement
+						int originalLength = textToSearch.length();
+						replacementText = util.substitute(replacement, textToSearch);
+
+						// Calculate the difference
+						difference = replacementText.length() - originalLength;
+	
+						// Record Replacement Information
+						int replacementEndIndex = matchEndIndex + difference;
+
+						// Apply change to line
+						line = line.substring(0, searchStartIndex) + replacementText;
+												
+						// Add Result
+						results.addResult(new FindReplaceResult(file, lineCount, searchStartIndex + matchStartIndex, result.group(0), replacementText.substring(matchStartIndex,replacementEndIndex)));
+						
+						// Prep for next match
+						searchStartIndex += replacementEndIndex;
+						
+						textToSearch = line.substring(searchStartIndex, line.length());
+						if (textToSearch.length() == 0) {
+							break;
+						}
+						
+						input = new PatternMatcherInput(textToSearch);
 					}
 				} catch (MalformedPerl5PatternException e) {
 					System.out.println("MalformedPerl5PatternException: " + e.getMessage());
-					System.out.println("Valid expression: [m]/pattern/[i][m][s][x]");
-					return;
 				}
 			} else {
 				String searchLine = null;
@@ -111,20 +150,40 @@ public class FileSystemFindFileContentsHandler extends FileContentsInspector {
 				}
 				
 				int start = 0;
-				int end = line.length();
 				
-				while (start < end) {
+				while (true) {
+					// Record Match Information
 					start = searchLine.indexOf(query, start);
+					
 					if (start != -1) {
-						results.addResult(new FindReplaceResult(file, lineCount, start, line.substring(start,start + query.length()), ""));
-						start = start + query.length();
+						// Record Match
+						String match = line.substring(start, start + query.length());
+						
+						// Apply change to line
+						line = line.substring(0, start) + replacement + line.substring(start + query.length(), line.length());
+						searchLine = searchLine.substring(0, start) + replacement + searchLine.substring(start + query.length(), searchLine.length());
+						
+						// Add Result
+						results.addResult(new FindReplaceResult(file, lineCount, start, match, replacement));
+						
+						// Prep for next match
+						start = start + replacement.length();
 					} else {
-						start = end;
+						break;
 					}
 				}
 			}
 			
+			buf.append(line).append(getLineEnding()); //TBD: preserve real line endings.
+			
 			lineCount++;
+		}
+		
+		if (results.size() == 0) {
+			// If we made no changes then don't write a re-write the file.
+			return null;
+		} else {
+			return buf.toString();
 		}
 	}	
 }
