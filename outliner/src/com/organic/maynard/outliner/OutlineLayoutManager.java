@@ -498,14 +498,14 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	private int right = 0;
 	
 	public void layoutContainer(Container container) {
-		Insets insets = panel.insets();
+		Insets insets = panel.getInsets();
 		this.top = insets.top;
-		this.bottom = panel.size().height - insets.bottom;
+		this.bottom = panel.getSize().height - insets.bottom;
 		this.left = insets.left;
-		this.right = panel.size().width - insets.right;
+		this.right = panel.getSize().width - insets.right;
 		
 		// Update the scrollbar size
-		Dimension d = scrollBar.preferredSize();
+		Dimension d = scrollBar.getPreferredSize();
 		scrollBar.setBounds(right - d.width, top, d.width, bottom - top);
 
 	}
