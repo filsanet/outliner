@@ -1,17 +1,35 @@
 <?xml version="1.0"?>
 <root id="outliner" class="com.organic.maynard.outliner.Outliner" title="JOE">
 	<preferences id="prefs" class="com.organic.maynard.outliner.Preferences">
-		<preference id="most_recent_open_dir" class="com.organic.maynard.outliner.PreferenceString" default="."/>
-		<preference id="most_recent_save_dir" class="com.organic.maynard.outliner.PreferenceString" default="."/>
-		<preference id="is_maximized" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
-			<validator id="is_maximized_validator" class="com.organic.maynard.outliner.BooleanValidator">
-			</validator>
-		</preference>
-		<preference id="time_zone_for_saving_dates" class="com.organic.maynard.outliner.PreferenceString" default="GMT"/>
-		<preference id="renderer_widgit_cache_size" class="com.organic.maynard.outliner.PreferenceInt" default="40">
-			<validator id="renderer_widgit_cache_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="4" max="256" default="40">
-			</validator>
-		</preference>
+		<!-- MISC HIDDEN PREFS -->
+			<preference id="most_recent_open_dir" class="com.organic.maynard.outliner.PreferenceString" default="."/>
+			<preference id="most_recent_save_dir" class="com.organic.maynard.outliner.PreferenceString" default="."/>
+			<preference id="is_maximized" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
+				<validator id="is_maximized_validator" class="com.organic.maynard.outliner.BooleanValidator">
+				</validator>
+			</preference>
+			<preference id="time_zone_for_saving_dates" class="com.organic.maynard.outliner.PreferenceString" default="GMT"/>
+			<preference id="renderer_widgit_cache_size" class="com.organic.maynard.outliner.PreferenceInt" default="40">
+				<validator id="renderer_widgit_cache_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="4" max="256" default="40">
+				</validator>
+			</preference>
+		<!-- MAIN WINDOW PREFS -->
+			<preference id="main_window_width" class="com.organic.maynard.outliner.PreferenceInt" default="600">
+				<validator id="main_window_width_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="350" max="2048" default="600">
+				</validator>
+			</preference>
+			<preference id="main_window_height" class="com.organic.maynard.outliner.PreferenceInt" default="600">
+				<validator id="main_window_height_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="250" max="2048" default="600">
+				</validator>
+			</preference>
+			<preference id="main_window_x_offset" class="com.organic.maynard.outliner.PreferenceInt" default="20">
+				<validator id="main_window_x_offset_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="2048" default="20">
+				</validator>
+			</preference>
+			<preference id="main_window_y_offset" class="com.organic.maynard.outliner.PreferenceInt" default="20">
+				<validator id="main_window_y_offset_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="2048" default="20">
+				</validator>
+			</preference>
 		<preferencesframe id="preferences_frame" class="com.organic.maynard.outliner.PreferencesFrame" title="Application Preferences">
 			<preferencepanel id="preferences_panel_editor" class="com.organic.maynard.outliner.PreferencesPanelEditor" title="Editor">
 				<preference id="font_face" class="com.organic.maynard.outliner.PreferenceString" default="SansSerif">
