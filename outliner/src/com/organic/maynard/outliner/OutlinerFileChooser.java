@@ -278,11 +278,11 @@ public class OutlinerFileChooser extends JFileChooser {
 	// Accessors
 //	public String getLineEnding() {return (String) lineEndComboBox.getSelectedItem();}
 
-	public String getOpenLineEnding() {return (String) openLineEndComboBox.getSelectedItem();}
+//	public String getOpenLineEnding() {return (String) openLineEndComboBox.getSelectedItem();}
 	public String getOpenEncoding() {return (String) openEncodingComboBox.getSelectedItem();}
 	public String getOpenFileFormat() {return (String) openFormatComboBox.getSelectedItem();}
 
-	public String getImportLineEnding() {return (String) importLineEndComboBox.getSelectedItem();}
+//	public String getImportLineEnding() {return (String) importLineEndComboBox.getSelectedItem();}
 	public String getImportEncoding() {return (String) importEncodingComboBox.getSelectedItem();}
 	public String getImportFileFormat() {return (String) importFormatComboBox.getSelectedItem();}
 
