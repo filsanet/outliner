@@ -65,7 +65,6 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		add(FILE_OPEN_ITEM);
 
 		FILE_OPEN_RECENT_MENU = new RecentFilesList(FILE_OPEN_RECENT,Outliner.getMostRecentDocumentTouched());
-		FILE_OPEN_RECENT_MENU.setEnabled(false);
 		add(FILE_OPEN_RECENT_MENU);
 
 		insertSeparator(3);

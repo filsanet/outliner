@@ -37,6 +37,7 @@ public class RecentFilesList extends JMenu implements ActionListener {
 	public RecentFilesList(String text, OutlinerDocument doc) {
 		super(text);
 		this.doc = doc;
+		setEnabled(false);
 		
 		// Populate the Menu with the existing filenames
 		for (int i = 0; i < docInfoList.size(); i++) {
@@ -48,6 +49,7 @@ public class RecentFilesList extends JMenu implements ActionListener {
 		RecentFilesListItem item = new RecentFilesListItem(docInfo.getPath(), docInfo);
 		item.addActionListener(this);
 		add(item);
+		setEnabled(true);
 	}
 	
 	// Static methods
@@ -70,7 +72,6 @@ public class RecentFilesList extends JMenu implements ActionListener {
 
 			// Add to menus
 			Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.addFileName(docInfo);
-			Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.setEnabled(true);
 		}	
 	}
 
