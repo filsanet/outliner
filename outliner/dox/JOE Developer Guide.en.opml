@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide.en.opml</title>
 <dateCreated>Tue, 17 Jul 2001 02:49:03 GMT</dateCreated>
-<dateModified>Mon, 13 Aug 2001 06:47:02 GMT</dateModified>
+<dateModified>Mon, 13 Aug 2001 08:55:03 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>171</windowTop>
-<windowLeft>580</windowLeft>
+<windowTop>47</windowTop>
+<windowLeft>322</windowLeft>
 <windowBottom>699</windowBottom>
-<windowRight>1105</windowRight>
+<windowRight>998</windowRight>
 </head>
 <body>
 <outline isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="JOE Developer Guide [JDG]"/>
@@ -689,10 +689,12 @@
 </outline>
 <outline isEditable="true" isMoveable="true" text="ssh">
 <outline isEditable="true" isMoveable="true" text="How to avoid having to type in ssh password when command-lining a cvs command">
-<outline isEditable="true" isMoveable="true" text="the path so far">
+<outline isEditable="true" isMoveable="true" text="aha !!! this one's figured out -- I just need to clean up the instructions">
 <outline isEditable="true" isMoveable="true" text="create a public key ">
 <outline isEditable="true" isMoveable="true" text="run ssh-keygen -C &quot;someUsefulIdentifier&quot;"/>
-<outline isEditable="true" isMoveable="true" text="if your machine is secure, use an empty passphrase"/>
+<outline isEditable="true" isMoveable="true" text="if your machine is secure, use an empty passphrase">
+<outline isEditable="true" isMoveable="true" text="that way, you can just run cvs without having to continually enter a password or passphrase"/>
+</outline>
 <outline isEditable="true" isMoveable="true" text="sample">
 <outline isEditable="true" isMoveable="true" text="C:\Home\.ssh&gt;ssh-keygen -C JoeOnSourceForge"/>
 <outline isEditable="true" isMoveable="true" text="Initializing random number generator..."/>
