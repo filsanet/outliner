@@ -147,11 +147,12 @@ const char * MS_DOS_SYS_SECTION_STRINGS [] = {
 #define DOC_TYPE_NOT_HOOKED "Unable to hook up "
 #define DOC_TYPE_HOOKER_0 " documents to "
 
-#define SHORTCUT_ADDED  "Added "
+#define SHORTCUT_ADDED  "Added a "
 #define SHORTCUT_NOT_ADDED  "Unable to add "
-#define SHORTCUT_TO_PROG_MENU  " to the Programs menu."
-#define SHORTCUT_TO_START_MENU  " to the top of the Start menu."
-#define SHORTCUT_TO_DESKTOP  " to the Desktop."
+#define SHORTCUT_TO_PROG_MENU  " shortcut to the Programs menu."
+#define SHORTCUT_TO_START_MENU  " shortcut to the top of the Start menu."
+#define SHORTCUT_TO_DESKTOP  " shortcut to the Desktop."
+#define SHORTCUT_TO_QUICK_LAUNCH  " shortcut to the Quick Launch toolbar."
 
 
 // ---------- datatypes
