@@ -559,20 +559,21 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		DocumentInfo docInfo = document.getDocumentInfo();
 		FileProtocol protocol = Outliner.fileProtocolManager.getProtocol(docInfo.getProtocolName());
 
-		// determine whether we were OPENed or IMPORTed
-		// TBD
-		// for now, just set it to OPEN
-		int mode = MODE_OPEN;
+		// set mode based on whether we were OPENed or IMPORTed
+		int mode = docInfo.getImported()?MODE_IMPORT:MODE_OPEN;
 		
-		// Get the TreeContext
+		// try to open/import the file and put its outline into a tree
 		TreeContext tree = new TreeContext();
 		int openOrImportResult = openOrImportFileAndGetTree(tree, docInfo, protocol, mode);
 		
+		// if we failed somehow, bag it
 		if ((openOrImportResult != SUCCESS) && (openOrImportResult != SUCCESS_MODIFIED)) { // Might be good to have codes we can do % on.
 			return;
-		}
+		} // end if we failed somehow
 		
-		// Swap in the new tree
+		// we succeeded
+		
+		// swap in the new tree
 		tree.doc = document;
 		document.tree = tree;
 		
@@ -583,7 +584,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		document.hoistStack.clear();
 
 		// make any necessary adjustments based on mode
-		// TBD make this real
+		// TBD as warranted
 		switch (mode) {
 			case MODE_OPEN:
 				break ;
@@ -593,7 +594,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				break ;
 			} // end switch
 		
-			
+		
+		// okay, let's finish up and draw the suckah
 		setupAndDraw(docInfo, document, openOrImportResult);
 	
 		} // end method Revert
