@@ -1,4 +1,4 @@
-Installation for JOE 1.8.10.1
+Installation for JOE 1.8.10.2
 
 If you have any trouble getting JOE running please post
 your questions to the JOE help forums:
@@ -21,7 +21,7 @@ Windows:
    and change it to something like:
      c:\jdk1.4.1_01\bin\java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner "%1"
 
-4) (optional) If you want to run JOE using a language other than english
+4) (optional) If you want to run JOE using a language other than English
    you will need to uncomment one of the java lines with a language
    specified, and comment out the java line with no language. For example,
    to run with Japanese it would look something like this:
@@ -40,7 +40,7 @@ Windows:
    settings, scripts, macros and find/replace patterns are stored here.
 
 
-UNIX/Linux/Solaris:
+Unix/Linux/Solaris:
 
 1) Follow steps 1 and 2 from the windows instructions above.
 
