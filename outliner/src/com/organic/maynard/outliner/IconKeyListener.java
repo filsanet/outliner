@@ -209,10 +209,14 @@ public class IconKeyListener implements KeyListener, MouseListener {
 				break;
 
 			case KeyEvent.VK_ENTER:
+				insert(tree,layout);
+				break;
+
+			case KeyEvent.VK_INSERT:
 				if (e.isShiftDown()) {
-					changeFocusToTextArea(tree, layout, POSITION_CURRENT);
+					changeToParent(tree, layout);
 				} else {
-					insert(tree,layout);
+					changeFocusToTextArea(tree, layout, POSITION_CURRENT);
 				}
 				break;
 
@@ -299,7 +303,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		if (e.isControlDown() ||
 			(e.getKeyChar() == KeyEvent.VK_BACK_SPACE) ||
 			(e.getKeyChar() == KeyEvent.VK_TAB) ||
-			(e.getKeyChar() == KeyEvent.VK_ENTER)) {
+			(e.getKeyChar() == KeyEvent.VK_ENTER) ||
+			(e.getKeyChar() == KeyEvent.VK_INSERT)
+		) {
 			return;
 		}
 				
@@ -703,6 +709,20 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		layout.draw(currentNode,outlineLayoutManager.ICON);
 	}
 
+	private void changeToParent(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		Node newSelectedNode = currentNode.getParent();
+		if (newSelectedNode.isRoot()) {return;}
+		
+		tree.setSelectedNodesParent(newSelectedNode.getParent());
+		tree.addNodeToSelection(newSelectedNode);
+		
+		tree.setEditingNode(newSelectedNode);
+		
+		// Redraw and Set Focus
+		layout.draw(newSelectedNode, outlineLayoutManager.ICON);		
+	}
+	
 	private static final int UP = 1;
 	private static final int DOWN = 2;
 	private static final int LEFT = 3;

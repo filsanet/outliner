@@ -27,6 +27,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 	private OutlinerCellRendererImpl textArea = null;
 	
 	private boolean inlinePaste = true;
+	private boolean backspaceMerge = false;
 
 
 	// The Constructors
@@ -169,14 +170,28 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 				return;
 
+			case KeyEvent.VK_BACK_SPACE:
+				backspaceMerge = false;
+				int caretPosition = textArea.getCaretPosition();
+				int markPosition = textArea.getCaret().getMark();
+
+				if ((caretPosition == 0) && (caretPosition == markPosition) && textArea.node.isLeaf()) {
+					mergeWithPrevVisibleNode(tree, layout);
+					e.consume();
+				}
+
+				return;
+
 			case KeyEvent.VK_ENTER:
-				if (e.isShiftDown()) {
-					changeFocusToIcon(tree,layout);
-				} else if (e.isControlDown()) {
+				if (e.isControlDown()) {
 					split(tree,layout);
 				} else {
 					insert(tree,layout);
 				}
+				break;
+
+			case KeyEvent.VK_INSERT:
+				changeFocusToIcon(tree,layout);
 				break;
 
 			case KeyEvent.VK_TAB:
@@ -210,7 +225,63 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		return;
 	}
 	
-	public void keyTyped(KeyEvent e) {}
+	public void keyTyped(KeyEvent e) {
+		textArea = (OutlinerCellRendererImpl) e.getComponent();
+
+		if(e.paramString().indexOf("Backspace") != -1) {
+			if (backspaceMerge) {
+				backspaceMerge = false;
+				e.consume();
+			} else {
+				Node currentNode = textArea.node;
+				TreeContext tree = currentNode.getTree();
+				
+				String oldText = currentNode.getValue();
+				String newText = null;
+				int oldCaretPosition = textArea.getCaretPosition();
+				int oldMarkPosition = textArea.getCaret().getMark();
+				int newCaretPosition = -1;
+				int newMarkPosition = -1;
+				
+				int startSelection = Math.min(oldCaretPosition, oldMarkPosition);
+				int endSelection = Math.max(oldCaretPosition, oldMarkPosition);
+				
+				if (startSelection != endSelection) {
+					newCaretPosition = startSelection;
+					newMarkPosition = startSelection;
+					newText = oldText.substring(0, startSelection) + oldText.substring(endSelection, oldText.length());				
+				} else if (startSelection == 0) {
+					newCaretPosition = 0;
+					newMarkPosition = 0;
+					newText = oldText;				
+				} else {
+					newCaretPosition = startSelection - 1;
+					newMarkPosition = startSelection - 1;
+					newText = oldText.substring(0, newCaretPosition) + oldText.substring(newCaretPosition + 1, oldText.length());				
+				}
+
+				UndoableEdit undoable = tree.doc.undoQueue.getIfEdit();
+				if ((undoable != null) && (undoable.getNode() == currentNode) && (!undoable.isFrozen())) {
+					undoable.setNewText(newText);
+					undoable.setNewPosition(newCaretPosition);
+					undoable.setNewMarkPosition(newMarkPosition);
+				} else {
+					UndoableEdit newUndoable = new UndoableEdit(
+						currentNode, 
+						oldText, 
+						newText, 
+						oldCaretPosition, 
+						newCaretPosition, 
+						oldMarkPosition, 
+						newMarkPosition
+					);
+					tree.doc.undoQueue.add(newUndoable);
+				}
+
+				currentNode.setValue(newText);
+			}
+		}
+	}
 	
 	public void keyReleased(KeyEvent e) {
 		textArea = (OutlinerCellRendererImpl) e.getComponent();
@@ -247,10 +318,15 @@ public class TextKeyListener implements KeyListener, MouseListener {
 				return;
 			case KeyEvent.VK_ENTER:
 				return;
+			case KeyEvent.VK_INSERT:
+				return;
 			case KeyEvent.VK_TAB:
 				return;
 			// These keystrokes should not effect undoablility, but do 
 			// effect cursor position and redraw.
+			case KeyEvent.VK_BACK_SPACE: // Undoability already recorded in keyTyped.
+				doUndo = false;
+				break;
 			case KeyEvent.VK_HOME:
 				doUndo = false;
 				break;
@@ -530,6 +606,45 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		layout.draw(newNode,outlineLayoutManager.TEXT);
 	}
 
+	private void mergeWithPrevVisibleNode(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		Node prevNode = tree.getPrevNode(currentNode);
+		if (prevNode == null) {
+			return;
+		}
+		
+		Node parent = currentNode.getParent();
+
+		// Get Text for nodes.
+		String prevNodeText = prevNode.getValue();
+		String currentNodeText = currentNode.getValue();
+		String newPrevNodeText = prevNodeText + currentNodeText;
+
+		// Put the Undoable onto the UndoQueue
+		UndoableEdit undoableEdit = new UndoableEdit(
+			prevNode, 
+			prevNodeText, 
+			newPrevNodeText, 
+			0, 
+			prevNodeText.length(), 
+			0, 
+			prevNodeText.length()
+		);
+		
+		CompoundUndoableReplace undoableReplace = new CompoundUndoableReplace(parent);
+		undoableReplace.addPrimitive(new PrimitiveUndoableReplace(parent, currentNode, null));
+		
+		CompoundUndoableImpl undoable = new CompoundUndoableImpl(tree);
+		undoable.addPrimitive(undoableReplace);
+		undoable.addPrimitive(undoableEdit);
+		
+		tree.doc.undoQueue.add(undoable);
+				
+		undoable.redo();
+		
+		backspaceMerge = true;
+	}
+	
 	private void split(TreeContext tree, outlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
@@ -577,6 +692,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		// Redraw and Set Focus
 		layout.draw(newNode,outlineLayoutManager.TEXT);
 	}
+	
 	private void promote(TreeContext tree, outlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
