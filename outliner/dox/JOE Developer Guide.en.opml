@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide.en.opml</title>
 <dateCreated>Tue, 17 Jul 2001 02:49:03 GMT</dateCreated>
-<dateModified>Sun, 12 Aug 2001 04:47:55 GMT</dateModified>
+<dateModified>Sun, 12 Aug 2001 05:41:22 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>37</windowTop>
-<windowLeft>301</windowLeft>
-<windowBottom>646</windowBottom>
-<windowRight>1007</windowRight>
+<windowTop>72</windowTop>
+<windowLeft>381</windowLeft>
+<windowBottom>681</windowBottom>
+<windowRight>1087</windowRight>
 </head>
 <body>
 <outline text="JOE Developer Guide [JDG]"/>
@@ -80,7 +80,9 @@
 </outline>
 </outline>
 </outline>
-<outline text="Feedback"/>
+<outline text="Feedback">
+<outline text="http://JavaOutlineEditor.org/feedback"/>
+</outline>
 <outline text="JOE People">
 <outline text="Maynard Demmon"/>
 <outline text="Philip Suh"/>
@@ -94,19 +96,22 @@
 <outline text="access: Stan@JavaOutlineEditor.org"/>
 <outline text="Stan's Preface">
 <outline text="Open Source development via SourceForge, cvs, ssh, NetBeans, and Java are all new to me"/>
-<outline text="This guide came about as I climbed the learning curve">
-<outline text="My climb notebook"/>
-</outline>
+<outline text="This guide's come about as I wander the learning curve"/>
 <outline text="Hopefully it'll flatten that curve for those to come"/>
 </outline>
 </outline>
 </outline>
-<outline text="Thanks To">
-<outline text="links to other Thanks To nodes"/>
+<outline text="Thanks">
+<outline text="Stan thanks ...">
+<outline text="Dan Weston"/>
+<outline text="Maynard Demmon"/>
 </outline>
-<outline text="Copyright"/>
+</outline>
+<outline text="Copyright">
+<outline text="portions copyright 2001 by Stan Krute &lt;Stan@StanKrute.com&gt;"/>
+</outline>
 <outline text="Version">
-<outline text="JDG versionStamp: 2001.07.30.001"/>
+<outline text="2001.08.12.10.04.00"/>
 </outline>
 <outline text="Cataloging Info">
 <outline text="Library of Congress Classification System"/>
@@ -615,7 +620,7 @@
 <outline text="CVS"/>
 </outline>
 </outline>
-<outline text="Life with JOE">
+<outline text="How-To's">
 <outline text="Windows">
 <outline text="Updating to Latest File Versions">
 <outline text="Preparing for a general source update">
@@ -643,12 +648,11 @@
 <outline text="cvs commit newFile1, newFile2, ..."/>
 </outline>
 </outline>
-<outline text="adding directories to the project">
+<outline text="Adding a Directory to the Project">
 <outline text="Go to the parent directory of your new directory"/>
-<outline text="Give these commands">
+<outline text="Give these commands, in this order">
 <outline text="md newDir"/>
 <outline text="cvs add newDir"/>
-<outline text="cvs commit newDir"/>
 </outline>
 </outline>
 <outline text="Renaming a File">
