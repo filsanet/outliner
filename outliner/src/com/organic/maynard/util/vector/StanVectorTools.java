@@ -67,6 +67,8 @@ import java.util.TreeSet ;
 // a few useful vector tools
 public class StanVectorTools {
 
+	// TBD [srk] run rigorous tests on these to ensure no memory leakage
+	
 	// Public Class Methods
 	
 	// move an element to the tail end of a vector
