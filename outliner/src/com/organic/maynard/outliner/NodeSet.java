@@ -75,28 +75,50 @@ public class NodeSet implements Cloneable {
 
 	
 	// Overridden Methods
+	
+	// turn the node set into a string
 	public String toString() {
+		
+		// a buffer to hold the string		[sk]
 		StringBuffer buf = new StringBuffer();
 		
+		// for each node ...		[sk]
 		for (int i = 0; i < nodes.size(); i++) {
+			
+			// grab the node		[sk]
 			Node node = (Node) nodes.get(i);
 			
-			// Since a node may be a root node, and depthPaddedValue doesn't throw in root level text,
+			// Since a node may be a root node, 
+			// and depthPaddedValue doesn't throw in root level text,
 			// let's put it back in.
 			if (node.isRoot()) {
+				
+				// for each level of depth ...		[sk]
 				for (int j = 0; j < node.getDepth(); j++) {
+					
+					// add a depth padding string to the buffer		[sk]
 					buf.append(Preferences.DEPTH_PAD_STRING);
-				}
+					
+					} // end for
+				
+				// add the root node's text, and a line-ending string, to the buffer		[sk]
 				buf.append(node.getValue()).append(Preferences.LINE_END_STRING);
-			}
+				
+				} // end if the node's a root
 			
+			// for both root nodes and not-root-nodes: append the not-root nodes' text		[sk]
 			node.depthPaddedValue(buf,  Preferences.LINE_END_STRING);
-		}
+		
+			} // end for each node
+		
+		// return the string		[sk]
 		return buf.toString();
-	}	
-}
+	
+		}  // end method toString
+		
+	} // end class NodeSet
 
-
+// non-public class for transferring node sets
 class NodeSetTransferable extends StringSelection implements Transferable {
 	
 	private NodeSet nodeSet = null;
