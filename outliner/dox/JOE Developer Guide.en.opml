@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide.en.opml</title>
 <dateCreated>Thu, 1 Nov 2001 12:22:52 GMT</dateCreated>
-<dateModified>Wed, 23 Jan 2002 04:54:34 GMT</dateModified>
+<dateModified>Wed, 23 Jan 2002 09:04:13 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>5</windowTop>
-<windowLeft>5</windowLeft>
-<windowBottom>455</windowBottom>
-<windowRight>455</windowRight>
+<windowTop>44</windowTop>
+<windowLeft>130</windowLeft>
+<windowBottom>477</windowBottom>
+<windowRight>571</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -84,7 +84,7 @@
 		</outline>
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="Feedback">
-		<outline isEditable="true" isMoveable="true" text="http://JavaOutlineEditor.org/feedback"/>
+		<outline isEditable="true" isMoveable="true" text="http://JavaOutlineEditor.org/feedback/dox"/>
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="JOE People">
 		<outline isEditable="true" isMoveable="true" text="Maynard Demmon">
@@ -747,10 +747,28 @@
 </outline>
 <outline isEditable="true" isMoveable="true" text="How-To's" isMoveableInherited="true" isEditableInherited="true">
 	<outline text="Non-Platform-Specific">
-		<outline text="Propagating gui_tree.en.xml">
-			<outline text="When you change this file, copy it to the other language versions and commit those as well"/>
+		<outline text="Working with gui_tree.en.xml [beta dox]">
+			<outline text="String Constants">
+				<outline text="Make an asset entry in gui_tree.en.xml that's a child of the &lt;!-- TEXT REPOSITORY --&gt; node ">
+					<outline text="example">
+						<outline text="&lt;asset type=&quot;text&quot; key=&quot;trunc_string&quot; value=&quot; . . &quot;/&gt;"/>
+					</outline>
+				</outline>
+				<outline text="To obtain the value, use the GUITreeLoader.reg.getText method">
+					<outline text="example">
+						<outline text="String TRUNC_STRING = GUITreeLoader.reg.getText(&quot;trunc_sring&quot;);"/>
+					</outline>
+				</outline>
+			</outline>
+			<outline text="Number Constants"/>
+			<outline text="Preferences">
+				<outline text="Make an entry in Preferences.java that defines a string constant for the asset entry"/>
+			</outline>
+			<outline text="Propagating gui_tree.en.xml">
+				<outline text="When you make changes to gui_tree.en.xml, copy it to the other language versions and cvs commit those as well"/>
+				<outline text="That lets the translators discover they've got work to do"/>
+			</outline>
 		</outline>
-		<outline text="Working with gui_tree.en.xml"/>
 		<outline text="Adding a File Format">
 			<outline text="About this How-To">
 				<outline text="This How-To shows what you need to know to add a file format for opening and saving documents with JOE. "/>
@@ -1099,6 +1117,35 @@
 	<outline isEditable="true" isMoveable="true" text="Metrowerks Java "/>
 	<outline isEditable="true" isMoveable="true" text="Windows Command Line">
 		<outline isEditable="true" isMoveable="true" text="What's the easiest way to get a line buffer &gt; 50 lines ?"/>
+	</outline>
+</outline>
+<outline text="Beta Dox">
+	<outline text="What Are Beta Dox ?">
+		<outline text="Documentation that's still under development."/>
+		<outline text="We invite your review, and solicit your feedback"/>
+		<outline text="Feedback site: http://JavaOutlineEditor.org/feedback/dox"/>
+	</outline>
+	<outline text="Working with gui_tree.en.xml">
+		<outline text="String Constants">
+			<outline text="Make an asset entry in gui_tree.en.xml that's a child of the &lt;!-- TEXT REPOSITORY --&gt; node ">
+				<outline text="example">
+					<outline text="&lt;asset type=&quot;text&quot; key=&quot;trunc_string&quot; value=&quot; . . &quot;/&gt;"/>
+				</outline>
+			</outline>
+			<outline text="To obtain the value, use the GUITreeLoader.reg.getText method">
+				<outline text="example">
+					<outline text="String TRUNC_STRING = GUITreeLoader.reg.getText(&quot;trunc_sring&quot;);"/>
+				</outline>
+			</outline>
+		</outline>
+		<outline text="Number Constants"/>
+		<outline text="Preferences">
+			<outline text="Make an entry in Preferences.java that defines a string constant for the asset entry"/>
+		</outline>
+		<outline text="Propagating gui_tree.en.xml">
+			<outline text="When you make changes to gui_tree.en.xml, copy it to the other language versions and cvs commit those as well"/>
+			<outline text="That lets the translators discover they've got work to do"/>
+		</outline>
 	</outline>
 </outline>
 </body>
