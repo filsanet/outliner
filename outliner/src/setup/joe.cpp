@@ -79,6 +79,11 @@ PSTR szCmdLine, int iCmdShow) {
 				// we're done
 				return 1 ;
 	
+	// if we're starting up after an installation ...
+			// reset startupAfterInstall flag
+			// any file to open on this startup ??
+			// if so, grab it
+
 	// prep the CreateProcess data structures
 	ZeroMemory( &si, sizeof(si) );
 	si.cb = sizeof(si);
@@ -126,20 +131,19 @@ int buildClassPath (char * classPathBuffer) {
 	strcat(classPathBuffer, ROOT_PATH) ;
 	strcat(classPathBuffer, "com.yearahead.io.webfile.jar;") ;
 	strcat(classPathBuffer, ROOT_PATH) ;
+	strcat(classPathBuffer, "com.psm.wiki.jar;") ;
+	strcat(classPathBuffer, ROOT_PATH) ;
 	strcat(classPathBuffer, "sax.jar;") ;
 	strcat(classPathBuffer, ROOT_PATH) ;
 	strcat(classPathBuffer, "xp.jar;") ;
 	strcat(classPathBuffer, ROOT_PATH) ;
-	strcat(classPathBuffer, "helma.xmlrpc.jar;") ;
+	strcat(classPathBuffer, "xmlrpc.jar;") ;
 	strcat(classPathBuffer, ROOT_PATH) ;
-	strcat(classPathBuffer, "bsh-1_2b1.jar;") ;
+	strcat(classPathBuffer, "bsh.jar;") ;
 	strcat(classPathBuffer, ROOT_PATH) ;
-	strcat(classPathBuffer, "jakarta-oro-2.0.4.jar;") ;
+	strcat(classPathBuffer, "jakarta-oro.jar;") ;
 	strcat(classPathBuffer, ROOT_PATH) ;
-	strcat(classPathBuffer, "jmousewheel.jar;") ;
-	strcat(classPathBuffer, ROOT_PATH) ;
-	strcat(classPathBuffer, "xp.jar;") ;
-	strcat(classPathBuffer, ROOT_PATH) ;
+	strcat(classPathBuffer, "jmousewheel.jar") ;
 	
 	return 1 ;
 }  // end function buildClassPath
@@ -147,8 +151,11 @@ int buildClassPath (char * classPathBuffer) {
 
 int buildCommandLine (char * commandLine, char * classPathBuffer, char * passedParams) {
 
-	strcpy(commandLine, "javaw -cp ") ;
+	// we're supplying a class path
+	strcpy(commandLine, "java -cp ") ;
+	// strcpy(commandLine, "javaw -cp ") ;
 	strcat(commandLine, classPathBuffer) ;
+	// use incremental garbage collection, English
 	strcat(commandLine, " -Xincgc com.organic.maynard.outliner.Outliner en \"") ;
 	strcat(commandLine, passedParams) ;
 	strcat(commandLine, "\"") ;

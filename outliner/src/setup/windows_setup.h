@@ -54,7 +54,7 @@
 
 #define APP_NAME_STRING  "JOE"
 #define APP_REG_KEY_STRING  "JOE"
-#define APP_VERSION_STRING  "1.8.8"
+#define APP_VERSION_STRING  "1.8.9"
 #define WELCOME_STRING  "Windows Setup Program"
 
 #define APP_HOME_REM  "\n\nrem Java Outline Editor [JOE] home directory\n"
