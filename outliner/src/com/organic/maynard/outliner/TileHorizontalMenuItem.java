@@ -124,7 +124,7 @@ public class TileHorizontalMenuItem
 
 		// obtain minimum tiling row height
 		// TBD -- for now we hardwire fake it
-		int minTileRowHeight = 50 ;
+		int minTileRowHeight = 45 ;
 		
 		// determine the maximum number of rows
 		int maxRows = (int)availHeight/minTileRowHeight;

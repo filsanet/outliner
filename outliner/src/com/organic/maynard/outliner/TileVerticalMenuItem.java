@@ -46,6 +46,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import org.xml.sax.*;
+import java.util.Vector ;
 
 // our class
 public class TileVerticalMenuItem 
@@ -74,6 +75,30 @@ public class TileVerticalMenuItem
 		// a general-purpose doc var
 		OutlinerDocument doc = null ;
 		
+		// let's build a list of not-iconified windows
+		// [we don't touch iconified windows]
+		Vector notIconified = new Vector() ;
+		
+		// for each open document
+		for (int counter = 0; counter < openDocCount; counter++) {
+			// grab the doc ref
+			doc = Outliner.getDocument(counter) ;
+			
+			// if we're not iconified
+			if (! doc.isIcon()) {
+				// add us to the list
+				notIconified.add(doc) ;
+			} // end if
+		} // end for
+		
+		// store the count
+		int openNotIconifiedDocCount = notIconified.size() ;
+		
+		// if everybody's iconified, leave
+		if (openNotIconifiedDocCount == 0) {
+			return ;
+		} // end if
+
 		// if we're in a maximized state ...
 		if (Outliner.desktop.desktopManager.isMaximized()) {
 			// leave that state
@@ -110,11 +135,11 @@ public class TileVerticalMenuItem
 		int actualColumns = 0 ;
 		
 		// plenty of room ?
-		boolean plentyOfRoom = maxColumns >= openDocCount ;
+		boolean plentyOfRoom = maxColumns >= openNotIconifiedDocCount ;
 		
 		// determine actual number of columns we'll need
 		actualColumns = plentyOfRoom
-			? openDocCount 
+			? openNotIconifiedDocCount 
 			: maxColumns ;
 			
 		// some column arrays
@@ -124,10 +149,10 @@ public class TileVerticalMenuItem
 		// if we have plenty of columns
 		if (plentyOfRoom) {
 			// we have a limit
-			int limit = openDocCount - 1 ;
+			int limit = openNotIconifiedDocCount - 1 ;
 			
 			// determine nominal column width
-			nominalColumnWidth = (int) (availWidth/openDocCount) ;
+			nominalColumnWidth = (int) (availWidth/openNotIconifiedDocCount) ;
 			// determine final row width
 			finalColumnWidth = (int)availWidth - (nominalColumnWidth * limit) ;
 			
@@ -160,13 +185,13 @@ public class TileVerticalMenuItem
 		Dimension dSize = new Dimension();
 		
 		// for each open doc
-		for (int counter = 0; counter < openDocCount; counter++) {
+		for (int counter = 0; counter < openNotIconifiedDocCount; counter++) {
 			// TBD [srk] make this a bit slicker
 			// tile em in z order
 			// right now we just use chrono order
 			
 			// grab the doc ref
-			doc = Outliner.getDocument(counter) ;
+			doc = (OutlinerDocument)notIconified.get(counter) ;
 			
 			// set up location
 			pLocation.setLocation(columnPositions[counter],0) ;
