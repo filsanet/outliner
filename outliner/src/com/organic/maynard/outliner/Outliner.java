@@ -42,6 +42,11 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	
 	public static final String USER_OUTLINER_DIR = "outliner";
 	
+	
+	// Language Handling
+	public static String LANGUAGE = "";
+	
+	
 	// Directory setup
 	public static String GRAPHICS_DIR = "graphics" + System.getProperty("file.separator");
 	public static String PREFS_DIR = "prefs" + System.getProperty("file.separator");
@@ -107,7 +112,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	public static String MACRO_CLASSES_FILE = PREFS_DIR + "macro_classes.txt";
 	public static String ENCODINGS_FILE = PREFS_DIR + "encodings.txt";
 	public static String FILE_FORMATS_FILE = PREFS_DIR + "file_formats.txt";
-	public static String GUI_TREE_FILE = PREFS_DIR + "gui_tree.xml";
+	public static String GUI_TREE_FILE = PREFS_DIR + "gui_tree" + LANGUAGE + ".xml";
 	
 	
 	// Command Parser
@@ -257,17 +262,32 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		// This allows scrollbars to be resized while they are being dragged.
 		UIManager.put("ScrollBarUI", "com.organic.maynard.outliner.OutlinerScrollBarUI");
 
+
+		// See if we've got a preferred language to use. 
+		// lang should be a ISO 639 two letter lang code. 
+		// List at: http://www.ics.uci.edu/pub/ietf/http/related/iso639.txt
+		String lang = null;
+		try {
+			lang = args[0];
+			if (lang != null && lang.length() == 2) {
+				LANGUAGE = "." + lang;
+				GUI_TREE_FILE = PREFS_DIR + "gui_tree" + LANGUAGE + ".xml";
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {}
+
+
+		// Load the GUI
 		GUITreeLoader loader = new GUITreeLoader();
 		boolean success = loader.load(Outliner.GUI_TREE_FILE);
 		if (!success) {
 			System.out.println("GUI Loading Error: exiting.");
 			System.exit(0);
 		}
-
+	
 		// See if a file to open was provided at the command line.
 		String filepath = null;
 		try {
-			filepath = args[0];
+			filepath = args[1];
 			if (filepath != null) {
 				String extension = filepath.substring(filepath.lastIndexOf(".") + 1,filepath.length());
 				String fileFormat = Outliner.fileFormatManager.getOpenFileFormatNameForExtension(extension);
@@ -280,7 +300,8 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 				FileMenu.openFile(docInfo);
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {}
-		
+
+
 		// For Debug Purposes
 		if (Preferences.getPreferenceBoolean(Preferences.PRINT_ENVIRONMENT).cur) {
 			Properties properties = System.getProperties();
