@@ -58,14 +58,50 @@ public class CompoundUndoableReplace implements Undoable {
 			((PrimitiveUndoableReplace) primitives.elementAt(i)).undo();
 		}
 
+		// Find fallback node for drawing and editing
+		if (tree.selectedNodes.size() == 0) {
+			Node fallbackNode = ((PrimitiveUndoableReplace) primitives.lastElement()).getNewNode();
+			if (fallbackNode != null) {
+				fallbackNode = fallbackNode.next();
+				if (fallbackNode.isRoot()) {
+					fallbackNode = fallbackNode.prevUnSelectedNode();
+					if (fallbackNode.isRoot()) {
+						tree.setSelectedNodesParent(tree.getRootNode());
+					} else {
+						layout.setNodeToDrawFrom(fallbackNode, tree.visibleNodes.indexOf(fallbackNode));
+						tree.setSelectedNodesParent(fallbackNode.getParent());
+						tree.addNodeToSelection(fallbackNode);
+					}
+				} else {
+					tree.setSelectedNodesParent(fallbackNode.getParent());
+					tree.addNodeToSelection(fallbackNode);
+				}
+			}
+		}
+		
 		// Record the EditingNode
-		Node newSelectedNode = ((PrimitiveUndoableReplace) primitives.lastElement()).getOldNode();
+		Node firstNewSelectedNode = tree.getYoungestInSelection();
+		int ioFirstNewSelectedNode = tree.visibleNodes.indexOf(firstNewSelectedNode);
+		Node lastNewSelectedNode = tree.getOldestInSelection();
+		int ioLastNewSelectedNode = tree.visibleNodes.indexOf(lastNewSelectedNode);
+
+		Node newSelectedNode = null;
+		if (ioFirstNewSelectedNode == 0) {
+			layout.setNodeToDrawFrom(firstNewSelectedNode, ioFirstNewSelectedNode);
+			newSelectedNode = firstNewSelectedNode;
+		} else if (ioLastNewSelectedNode == (tree.visibleNodes.size() - 1)) {
+			layout.setNodeToDrawFrom(lastNewSelectedNode, ioLastNewSelectedNode);
+			newSelectedNode = lastNewSelectedNode;
+		} else {
+			newSelectedNode = firstNewSelectedNode;
+		}
 		
 		tree.setEditingNode(newSelectedNode);
 		tree.setCursorPosition(0);
 		tree.setCursorMarkPosition(0);
 		tree.setComponentFocus(outlineLayoutManager.ICON);
-		layout.draw(newSelectedNode,outlineLayoutManager.ICON);
+		
+		layout.draw(newSelectedNode, outlineLayoutManager.ICON);
 	}
 	
 	public void redo() {
@@ -73,43 +109,51 @@ public class CompoundUndoableReplace implements Undoable {
 		TreeContext tree = parent.getTree();
 		outlineLayoutManager layout = tree.doc.panel.layout;
 
-		tree.setSelectedNodesParent(parent);
-
 		// Find fallback node for drawing and editing
+		boolean allWillBeDeleted = false;
 		Node fallbackNode = ((PrimitiveUndoableReplace) primitives.firstElement()).getOldNode().prev();
+		if (fallbackNode.isRoot()) {
+			fallbackNode = fallbackNode.nextUnSelectedNode();
+			if (fallbackNode.isRoot()) {
+				allWillBeDeleted = true;
+				tree.setSelectedNodesParent(tree.getRootNode());
+			} else {
+				layout.setNodeToDrawFrom(fallbackNode, tree.visibleNodes.indexOf(fallbackNode));
+				tree.setSelectedNodesParent(fallbackNode.getParent());
+				tree.addNodeToSelection(fallbackNode);
+			}
+		} else {
+			tree.setSelectedNodesParent(fallbackNode.getParent());
+			tree.addNodeToSelection(fallbackNode);
+		}
 		
 		// Replace Everything
 		for (int i = primitives.size() - 1; i >= 0; i--) {
 			((PrimitiveUndoableReplace) primitives.elementAt(i)).redo();
 		}
 
-		// Select a sibling if it exists, rather than the parent
-		if ((fallbackNode == parent) && (parent.numOfChildren() > 0)) {
-			fallbackNode = parent.getFirstChild();
-		}
-		
-		if (fallbackNode.isRoot()) {
-			fallbackNode = tree.rootNode.getFirstChild();
+		Node firstNewSelectedNode = tree.getYoungestInSelection();
+		int ioFirstNewSelectedNode = tree.visibleNodes.indexOf(firstNewSelectedNode);
+		Node lastNewSelectedNode = tree.getOldestInSelection();
+		int ioLastNewSelectedNode = tree.visibleNodes.indexOf(lastNewSelectedNode);
+
+		Node newSelectedNode = null;
+		if (ioFirstNewSelectedNode == 0) {
+			layout.setNodeToDrawFrom(firstNewSelectedNode, ioFirstNewSelectedNode);
+			newSelectedNode = firstNewSelectedNode;
+		} else if (ioLastNewSelectedNode == (tree.visibleNodes.size() - 1)) {
+			newSelectedNode = lastNewSelectedNode;
+		} else {
+			newSelectedNode = firstNewSelectedNode;
 		}
 
-		// Record the EditingNode
-		Node newSelectedNode = ((PrimitiveUndoableReplace) primitives.firstElement()).getNewNode();
-		if (newSelectedNode == null) {
-			newSelectedNode = fallbackNode;
-			tree.addNodeToSelection(newSelectedNode);
-		}
-		
-		// Deal with selection if we ended up changing focus to a node deeper in the tree.
-		if (newSelectedNode.getParent() != tree.getSelectedNodesParent()) {
-			tree.setSelectedNodesParent(newSelectedNode.getParent());
-			tree.addNodeToSelection(newSelectedNode);
-		}
-		
+		//System.out.println("node: " + newSelectedNode.getValue());
 		tree.setEditingNode(newSelectedNode);
 		tree.setCursorPosition(0);
 		tree.setCursorMarkPosition(0);
 		tree.setComponentFocus(outlineLayoutManager.ICON);
-		layout.draw(newSelectedNode,outlineLayoutManager.ICON);
+
+		layout.draw(newSelectedNode, outlineLayoutManager.ICON);
 	}
 	
 	public int getType() {return Undoable.COMPOUND_REPLACE_TYPE;}

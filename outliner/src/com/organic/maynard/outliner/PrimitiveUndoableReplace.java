@@ -65,10 +65,10 @@ public class PrimitiveUndoableReplace implements Undoable {
 			tree.addNodeToSelection(oldNode);
 	
 			// Handle updating the Node to Draw From
-			outlineLayoutManager layout = tree.doc.panel.layout;
+			/*outlineLayoutManager layout = tree.doc.panel.layout;
 			if (layout.getNodeToDrawFrom() == newNode) {
 				layout.setNodeToDrawFrom(oldNode, tree.visibleNodes.indexOf(oldNode));
-			}		
+			}*/		
 		} else {
 			// Swap the nodes
 			parent.insertChild(oldNode,index);
@@ -91,7 +91,7 @@ public class PrimitiveUndoableReplace implements Undoable {
 			
 			// Swap the nodes
 			parent.removeChild(oldNode);
-			parent.insertChild(newNode,index);
+			parent.insertChild(newNode, index);
 			
 			// Insert the node into the visible nodes cache
 			tree.insertNode(newNode);
@@ -100,30 +100,35 @@ public class PrimitiveUndoableReplace implements Undoable {
 			tree.addNodeToSelection(newNode);
 	
 			// Handle updating the Node to Draw From
-			outlineLayoutManager layout = tree.doc.panel.layout;
-			if (layout.getNodeToDrawFrom().isDecendantOf(oldNode)) {
-				layout.setNodeToDrawFrom(newNode, tree.visibleNodes.indexOf(newNode));
-			}
+			//outlineLayoutManager layout = tree.doc.panel.layout;
+			//if (layout.getNodeToDrawFrom().isDecendantOf(oldNode)) {
+				//layout.setNodeToDrawFrom(newNode, tree.visibleNodes.indexOf(newNode));
+			//}
 		} else {
 			// Store a node to draw from just in case
-			Node nodeToDrawFrom = getNodeToDrawFrom();
+			//Node nodeToDrawFrom = getNodeToDrawFrom();
 			
 			// Remove node from visible nodes cache
 			tree.removeNode(oldNode);
 			
 			// Swap the nodes
 			parent.removeChild(oldNode);
-	
+			
 			// Handle updating the Node to Draw From
-			outlineLayoutManager layout = tree.doc.panel.layout;
-			if (layout.getNodeToDrawFrom().isDecendantOf(oldNode)) {
-				layout.setNodeToDrawFrom(nodeToDrawFrom, tree.visibleNodes.indexOf(nodeToDrawFrom));
-			}		
+			//outlineLayoutManager layout = tree.doc.panel.layout;
+			//if (layout.getNodeToDrawFrom().isDecendantOf(oldNode)) {
+				//layout.setNodeToDrawFrom(nodeToDrawFrom, tree.visibleNodes.indexOf(nodeToDrawFrom));
+			//}		
 		}
 	}
 	
 	public Node getNodeToDrawFrom() {
 		Node nodeToDrawFrom = oldNode.prev();
+		if (nodeToDrawFrom.isRoot()) {
+			System.out.println("ROOT!");
+			nodeToDrawFrom = oldNode.next();
+			parent.getTree().doc.panel.layout.setNodeToDrawFrom(nodeToDrawFrom, parent.getTree().visibleNodes.indexOf(nodeToDrawFrom));
+		}
 		return nodeToDrawFrom;
 	}
 	

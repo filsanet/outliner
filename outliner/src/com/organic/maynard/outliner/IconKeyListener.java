@@ -33,9 +33,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	private OutlinerCellRendererImpl textArea = null;
 		
 	// The Constructors
-	public IconKeyListener(OutlinerCellRendererImpl textArea) {
-		this.textArea = textArea;
-	}
+	public IconKeyListener() {}
 	
 	public void destroy() {
 		textArea = null;
@@ -51,6 +49,8 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	}
 	
 	public void mousePressed(MouseEvent e) {
+		textArea = ((OutlineButton) e.getComponent()).renderer;
+		
 		//System.out.println("ICON Mouse Pressed: " + e.paramString());
 		
 		// This is detection for Solaris
@@ -76,6 +76,8 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	}
 	
 	public void mouseReleased(MouseEvent e) {
+		textArea = ((OutlineButton) e.getComponent()).renderer;
+		
 		//System.out.println("ICON Mouse Released: " + e.paramString());
 		
 		// This is detection for Windows
@@ -122,6 +124,8 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	
 	// KeyListener Interface
 	public void keyPressed(KeyEvent e) {
+		textArea = ((OutlineButton) e.getComponent()).renderer;
+	
 		//System.out.println("ICON Pressed: " + e.paramString());
 
 		// Create some short names for convienence
@@ -237,6 +241,8 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	}
 	
 	public void keyTyped(KeyEvent e) {
+		textArea = ((OutlineButton) e.getComponent()).renderer;
+		
 		// Catch any unwanted chars that slip through
 		if (e.isControlDown() ||
 			(e.getKeyChar() == KeyEvent.VK_BACK_SPACE) ||
@@ -248,9 +254,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		//System.out.println("ICON Typed: " + e.paramString());
 
 		// Create some short names for convienence
-		TreeContext tree = textArea.node.getTree();
 		Node currentNode = textArea.node;
-		outlineLayoutManager layout = textArea.node.getTree().doc.panel.layout;
+		TreeContext tree = currentNode.getTree();
+		outlineLayoutManager layout = tree.doc.panel.layout;
 
 
 		Node youngestNode = tree.getYoungestInSelection();
@@ -259,15 +265,16 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		tree.clearSelection();
 		
 		// Replace the text with the character that was typed
-		youngestNode.setValue(String.valueOf(e.getKeyChar()));
+		String oldText = youngestNode.getValue();
+		String newText = String.valueOf(e.getKeyChar());
+		youngestNode.setValue(newText);
 
 		// Record the EditingNode and CursorPosition and ComponentFocus
 		tree.setCursorPosition(1);
 		tree.setComponentFocus(outlineLayoutManager.TEXT);
 
 		// Put the Undoable onto the UndoQueue
-		OutlinerCellRendererImpl youngestTextArea = layout.getUIComponent(youngestNode);
-		tree.doc.undoQueue.add(new UndoableEdit(youngestNode,youngestTextArea.getText(),youngestNode.getValue(),youngestTextArea.getCaretPosition(),tree.getCursorPosition(),youngestTextArea.getCaret().getMark(),tree.getCursorPosition()));
+		tree.doc.undoQueue.add(new UndoableEdit(youngestNode,oldText,newText,0,1,0,1));
 		
 		// Redraw and Set Focus
 		layout.draw(youngestNode,outlineLayoutManager.TEXT);
@@ -281,6 +288,8 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 	// Key Handlers
 	private void toggleExpansion(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		
 		for (int i = 0; i < tree.selectedNodes.size(); i++) {
 			Node node = (Node) tree.selectedNodes.get(i);
 			if (node.isExpanded()) {
@@ -290,7 +299,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			}
 		}
 
-		layout.draw();
+		layout.draw(currentNode, outlineLayoutManager.ICON);
 	}
 
 	private void changeFocusToTextArea(TreeContext tree, outlineLayoutManager layout) {
@@ -517,7 +526,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		layout.draw(newNode,outlineLayoutManager.TEXT);
 
 		// Put the Undoable onto the UndoQueue
-		CompoundUndoableInsert undoable = new CompoundUndoableInsert(currentNode.getParent());
+		CompoundUndoableInsert undoable = new CompoundUndoableInsert(newNode.getParent());
 		undoable.addPrimitive(new PrimitiveUndoableInsert(newNode.getParent(),newNode,newNode.currentIndex()));
 		tree.doc.undoQueue.add(undoable);
 	}

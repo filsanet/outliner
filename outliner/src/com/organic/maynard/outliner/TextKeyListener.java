@@ -34,9 +34,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 	private OutlinerCellRendererImpl textArea = null;
 		
 	// The Constructors
-	public TextKeyListener(OutlinerCellRendererImpl textArea) {
-		this.textArea = textArea;
-	}
+	public TextKeyListener() {}
 
 	public void destroy() {
 		textArea = null;
@@ -53,6 +51,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
  	}
  	
  	public void mousePressed(MouseEvent e) {
+ 		textArea = (OutlinerCellRendererImpl) e.getComponent();
 		//System.out.println("TEXT Mouse Pressed: " + e.paramString()); 	
  		//System.out.println("Pressed: " + textArea.node.getValue() + " " + e.paramString());
  		
@@ -99,6 +98,8 @@ public class TextKeyListener implements KeyListener, MouseListener {
  	}
  	
  	public void mouseReleased(MouseEvent e) {
+ 		textArea = (OutlinerCellRendererImpl) e.getComponent();
+ 		
 		//System.out.println("TEXT Mouse Released: " + e.paramString()); 	
  		//System.out.println("Released: " + textArea.node.getValue() + " " + e.paramString());
 		
@@ -134,12 +135,14 @@ public class TextKeyListener implements KeyListener, MouseListener {
 	
 	// KeyListener Interface
 	public void keyPressed(KeyEvent e) {
+		textArea = (OutlinerCellRendererImpl) e.getComponent();
+		
 		//System.out.println("TEXTAREA KEY PRESSED: " + e.paramString());
 		
 		// Shorthand
-		TreeContext tree = textArea.node.getTree();
 		Node currentNode = textArea.node;
-		outlineLayoutManager layout = textArea.node.getTree().doc.panel.layout;
+		TreeContext tree = currentNode.getTree();
+		outlineLayoutManager layout = tree.doc.panel.layout;
 
 		if (e.getKeyCode() == KeyEvent.VK_PAGE_DOWN) {
 			if (currentNode.isExpanded()) {
@@ -149,8 +152,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 			}
 
 			// Redraw
-			layout.draw();
-			layout.setFocus(currentNode, outlineLayoutManager.TEXT);
+			layout.draw(currentNode, outlineLayoutManager.TEXT);
 
 			e.consume();
 			return;
@@ -340,7 +342,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 				tree.doc.setPreferredCaretPosition(0);
 
 				// Put the Undoable onto the UndoQueue
-				CompoundUndoableInsert undoable = new CompoundUndoableInsert(currentNode.getParent());
+				CompoundUndoableInsert undoable = new CompoundUndoableInsert(newNode.getParent());
 				undoable.addPrimitive(new PrimitiveUndoableInsert(newNode.getParent(),newNode,newNode.currentIndex()));
 				tree.doc.undoQueue.add(undoable);
 
@@ -463,43 +465,50 @@ public class TextKeyListener implements KeyListener, MouseListener {
 	private boolean inlinePaste = true;
 	
 	public void keyReleased(KeyEvent e) {
-		// Catch any unwanted chars that slip through
-		// Numbers are used for Control, Shift, VK_PAGE_UP, VK_PAGE_DOWN, VK_UP, VK_DOWN, VK_LEFT, VK_RIGHT since
-		// the characters don't seem to work here for some reason.
+		textArea = (OutlinerCellRendererImpl) e.getComponent();
 		
-		// Let control-x and control-v slip through
+		// Let control-x and control-v slip through so that cut and paste will be recorded as undoable.
 		if (e.isControlDown()) {
-			if ((e.getKeyCode() == KeyEvent.VK_X) || ((e.getKeyCode() == KeyEvent.VK_V) && inlinePaste)) {
+			if (e.isShiftDown()) {
+				return;
+			} else if ((e.getKeyCode() == KeyEvent.VK_X) || ((e.getKeyCode() == KeyEvent.VK_V) && inlinePaste)) {
 				// Do Nothing
 			} else {
 				return;
 			}
 		}
 		
-		if (e.isControlDown() && e.isShiftDown()) {
-			return;
-		}
-		
-		if ((e.getKeyCode() == 16) ||
-			(e.getKeyCode() == 17) ||
-			(e.getKeyCode() == 33) ||
-			(e.getKeyCode() == 34) ||
-			(e.getKeyCode() == 37) ||
-			(e.getKeyCode() == 38) ||
-			(e.getKeyCode() == 39) ||
-			(e.getKeyCode() == 40) ||
-			(e.getKeyChar() == KeyEvent.VK_TAB) ||
-			(e.getKeyChar() == KeyEvent.VK_ENTER)) {
-			return;
+		// Keep unwanted keystrokes from effecting undoability.
+		switch(e.getKeyCode()) {
+			case KeyEvent.VK_SHIFT:
+				return;
+			case KeyEvent.VK_CONTROL:
+				return;
+			case KeyEvent.VK_PAGE_UP:
+				return;
+			case KeyEvent.VK_PAGE_DOWN:
+				return;
+			case KeyEvent.VK_UP:
+				return;
+			case KeyEvent.VK_DOWN:
+				return;
+			case KeyEvent.VK_LEFT:
+				return;
+			case KeyEvent.VK_RIGHT:
+				return;
+			case KeyEvent.VK_ENTER:
+				return;
+			case KeyEvent.VK_TAB:
+				return;
 		}
 
 		// All other keys
 		//System.out.println("KeyReleased: " + e.paramString());
 
 		// Create some short names for convienence
-		TreeContext tree = textArea.node.getTree();
 		Node currentNode = textArea.node;
-		outlineLayoutManager layout = textArea.node.getTree().doc.panel.layout;
+		TreeContext tree = currentNode.getTree();
+		outlineLayoutManager layout = tree.doc.panel.layout;
 
 		// Put the Undoable onto the UndoQueue
 		UndoableEdit undoable = tree.doc.undoQueue.getIfEdit();
@@ -523,7 +532,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		tree.setCursorMarkPosition(textArea.getCaret().getMark());
 		tree.setCursorPosition(textArea.getCaretPosition(),false);
 
-		// Do the Redraw if we have wrapped.
+		// Do the Redraw if we have wrapped or if we are currently off screen.
 		if (!textArea.getPreferredSize().equals(textArea.getCurrentTextAreaSize())) {
 			textArea.setCurrentTextAreaSize(textArea.getPreferredSize());
 			layout.draw(currentNode,outlineLayoutManager.TEXT);

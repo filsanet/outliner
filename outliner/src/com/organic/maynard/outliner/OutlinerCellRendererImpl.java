@@ -20,27 +20,29 @@ package com.organic.maynard.outliner;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
 
 public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellRenderer {
 
 	private static Font font = new Font(Preferences.FONT_FACE.cur,Font.PLAIN,Preferences.FONT_SIZE.cur);	
+	private static Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
+	private static Insets marginInsets = new Insets(1,3,1,3);
 	
 	public static int textAreaWidth = 0;
 	
 	public Node node = null;
 	public OutlineButton button = new OutlineButton(this);
 	
-	private TextKeyListener textListener = new TextKeyListener(this);
-	private IconKeyListener iconListener = new IconKeyListener(this);
 	
 	// The Constructors
 	public OutlinerCellRendererImpl() {
 		super();
 
-		setCursor(new Cursor(Cursor.TEXT_CURSOR));
-
+		setFont(font);
+		setCursor(cursor);
+		setMargin(marginInsets);
+		setSelectionColor(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
+		setSelectedTextColor(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
 		setLineWrap(true);
 
 		if (Preferences.LINE_WRAP.cur.equals(Preferences.TXT_CHARACTERS)) {
@@ -48,18 +50,6 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		} else {
 			setWrapStyleWord(true);
 		}
-		
-		setMargin(new Insets(1,3,1,3));
-
-		setFont(font);
-		setSelectionColor(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
-		setSelectedTextColor(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
-				
-		addKeyListener(textListener);
-		addMouseListener(textListener);
-		
-		button.addKeyListener(iconListener);
-		button.addMouseListener(iconListener);
 		
 		setVisible(false);
 	}
@@ -71,27 +61,24 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		node = null;
 		currentTextAreaSize = null;
 		
-		removeKeyListener(textListener);
-		removeMouseListener(textListener);
-		textListener.destroy();
-		textListener = null;
-		
-		button.removeKeyListener(iconListener);
-		button.removeMouseListener(iconListener);
-		iconListener.destroy();
-		iconListener = null;
-		
 		button = null;
 	}
 		
-	public boolean isManagingFocus() {return true;}
+	public boolean isManagingFocus() {
+		return true;
+	}
 
 
 	// Dimension Methods
 	private Dimension currentTextAreaSize = new Dimension(1,1); // Random unlikely value so it isn't null.
 
-	public void setCurrentTextAreaSize(Dimension d) {this.currentTextAreaSize = d;}
-	public Dimension getCurrentTextAreaSize() {return currentTextAreaSize;}
+	public void setCurrentTextAreaSize(Dimension d) {
+		this.currentTextAreaSize = d;
+	}
+	
+	public Dimension getCurrentTextAreaSize() {
+		return currentTextAreaSize;
+	}
 
 
 	// Used to fire key events
@@ -101,6 +88,21 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 
 
 	// OutlinerCellRenderer Interface
+	public void setVisible(boolean visibility) {
+		super.setVisible(visibility);
+		button.setVisible(visibility);
+	}
+	
+	public void verticalShift (int amount) {
+		Point tp = getLocation();
+		tp.y += amount;
+		setLocation(tp);
+
+		Point bp = button.getLocation();
+		bp.y += amount;
+		button.setLocation(bp);
+	}
+	
 	public void drawUp(Point p, Node node) {
 		this.node = node;
 		
@@ -129,9 +131,6 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	public void drawDown(Point p, Node node) {
 		this.node = node;
 		
-		// Adjust color when we are selected
-		updateColors();
-		
 		// Update the button
 		updateButton();
 		
@@ -150,22 +149,25 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		button.setBounds(p.x + indent, p.y, OutlineButton.BUTTON_WIDTH, height);
 		
 		p.y += height + Preferences.VERTICAL_SPACING.cur;	
+		
+		// Adjust color when we are selected
+		updateColors();
 	}
 	
 	private void updateColors() {
 		if (node.isAncestorSelected()) {
 			if (node.isSelected()) {
-				setBackground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
 				setForeground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
+				setBackground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
 				button.setBackground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
 			} else {
-				setBackground(Preferences.SELECTED_CHILD_COLOR.cur);
 				setForeground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
+				setBackground(Preferences.SELECTED_CHILD_COLOR.cur);
 				button.setBackground(Preferences.SELECTED_CHILD_COLOR.cur);
 			}
 		} else {
-			setBackground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
 			setForeground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
+			setBackground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
 			button.setBackground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);	
 		}	
 	}
