@@ -47,6 +47,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.XMLReader;
 import org.xml.sax.InputSource;
 import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A base class for SAX2 parsers used by this webapp. This class is responsible 
@@ -274,7 +275,7 @@ public abstract class XMLProcessor extends DefaultHandler implements XMLParserCo
 		component_stack.push(component);
 		component = null;
 		elements_stack.push(qName);
-		attributes_stack.push(atts);
+		attributes_stack.push(new AttributesImpl(atts));
 		characters_stack.push(new StringBuffer());
 		
 		if (isVerboseEnough(VERBOSITY_DEBUG)) {
