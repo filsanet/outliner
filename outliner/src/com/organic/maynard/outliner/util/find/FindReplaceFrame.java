@@ -43,10 +43,12 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.border.*;
 import org.xml.sax.*;
-import com.organic.maynard.util.string.Replace;
+import com.organic.maynard.util.string.*;
 
 import org.apache.oro.text.perl.Perl5Util;
-import org.apache.oro.text.perl.MalformedPerl5PatternException;
+import org.apache.oro.text.regex.Perl5Compiler;
+import org.apache.oro.text.regex.MalformedPatternException;
+import org.apache.oro.text.MalformedCachePatternException;
 import org.apache.oro.text.regex.PatternMatcherInput;
 import org.apache.oro.text.regex.MatchResult;
 
@@ -82,6 +84,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	private static Perl5Util util = new Perl5Util();
 	private static PatternMatcherInput input = null;
 	private static MatchResult result = null;
+	private static Perl5Compiler compiler = new Perl5Compiler();
 
         	
 	// Button Text and Other Copy
@@ -909,6 +912,10 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		// Prep Query
 		if (isRegexp) {
 			sFind = prepareRegEx(false, ignoreCase, sFind, "");
+			if (sFind == null) {
+				// An Error Occurred so abort.
+				return;
+			}
 		}
 		
 		// Prep Extensions List
@@ -942,6 +949,10 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		if (isRegexp) {
 			sReplace = prepareRegEx(true, ignoreCase, sFind, sReplace);
 			sFind = prepareRegEx(false, ignoreCase, sFind, "");
+			if (sFind == null || sReplace == null) {
+				// An Error Occurred so abort.
+				return;
+			}
 		}
 		
 		// Prep Extensions List
@@ -1926,9 +1937,14 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	private int matchLength = 0;
 	private int difference = 0;
 	private String replacementText = null;
+	private static char[] reservedRegexChars = {'/'};
 	
 	private String prepareRegEx(boolean isReplace, boolean ignoreCase, String match, String replacement) {
 		StringBuffer retVal = new StringBuffer();
+		
+		// Escape '/' characters
+		match = StringTools.escape(match, '\\',  reservedRegexChars);
+		replacement = StringTools.escape(replacement, '\\',  reservedRegexChars);
 		
 		if (isReplace) {
 			retVal.append(REGEX_REPLACE_START).append(match).append(REGEX_REPLACE_MIDDLE).append(replacement);
@@ -1946,8 +1962,16 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				retVal.append(REGEX_MATCH_END);
 			}		
 		}
-		
-		return retVal.toString();
+
+		// Compile the Regex to check for syntax errors
+		try {
+			compiler.compile(retVal.toString());
+			return retVal.toString();
+		} catch (MalformedPatternException e) {
+			// Syntax error found so display error and return null
+			JOptionPane.showMessageDialog(Outliner.outliner, e.getMessage());
+			return null;
+		}
 	}
 	
 	private int matchText(
@@ -1963,12 +1987,19 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			input = new PatternMatcherInput(text);
 
 			// Prepare the regex
-			String regex = prepareRegEx(isReplace, ignoreCase, match, replacement);
+			String regex = prepareRegEx(false, ignoreCase, match, replacement);
+			if (regex == null) {
+				// An Error Occurred so abort.
+				return -1;
+			}
 							
 			if (isReplace) {
 				// Prepare the replacement regex
 				String subRegex = prepareRegEx(isReplace, ignoreCase, match, replacement);
-								
+				if (subRegex == null) {
+					// An Error Occurred so abort.
+					return -1;
+				}								
 				// Do the regex find and return result
 				try {
 					if (util.match(regex, input)) {
@@ -1986,8 +2017,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						this.replacementText = this.replacementText.substring(matchStartIndex, this.replacementText.length());
 						return matchStartIndex;
 					}
-				} catch (MalformedPerl5PatternException e) {
-					System.out.println("MalformedPerl5PatternException: " + e.getMessage());
+				} catch (MalformedCachePatternException e) {
+					System.out.println("MalformedCachePatternException: " + e.getMessage());
 				}
 				return -1;
 			} else {
@@ -1998,8 +2029,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						matchLength = result.length(); // Store length since this method does not return it.
 						return result.beginOffset(0);
 					}
-				} catch (MalformedPerl5PatternException e) {
-					System.out.println("MalformedPerl5PatternException: " + e.getMessage());
+				} catch (MalformedCachePatternException e) {
+					System.out.println("MalformedCachePatternException: " + e.getMessage());
 				}
 				return -1;
 			}

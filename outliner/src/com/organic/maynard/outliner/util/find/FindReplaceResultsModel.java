@@ -120,7 +120,7 @@ public class FindReplaceResultsModel extends AbstractTableModel {
 		if (col == 0) {
 			int type = result.getType();
 			if (type == FindReplaceResult.TYPE_DOC) {
-				return result.getDocument().getFileName();
+				return result.getDocument().getTitle();
 			} else if (type == FindReplaceResult.TYPE_FILE) {
 				return result.getFile().getPath();
 			} else {
