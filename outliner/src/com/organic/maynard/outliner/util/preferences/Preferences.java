@@ -43,6 +43,8 @@ import javax.swing.*;
 import org.xml.sax.*;
 import com.organic.maynard.util.string.*;
 
+import com.organic.maynard.data.StringList;
+
 /**
  * @author  $Author$
  * @version $Revision$, $Date$
@@ -51,17 +53,19 @@ import com.organic.maynard.util.string.*;
 public class Preferences implements GUITreeComponent {
 
 	// Constants
+	public static final String EXTENSION_SEPARATOR = ".";
+	
 	public static final String DEPTH_PAD_STRING = "\t"; // Specific to Outliner Docs
 	public static final String LINE_END_STRING = "\n"; // Specific to Outliner Docs
 
 	public static String TXT_WORDS = null;
 	public static String TXT_CHARACTERS = null;
 
-	public static final ArrayList ENCODINGS = new ArrayList();
-	public static final ArrayList FILE_FORMATS_OPEN = new ArrayList();
-	public static final ArrayList FILE_FORMATS_IMPORT = new ArrayList();
-	public static final ArrayList FILE_FORMATS_SAVE = new ArrayList();
-	public static final ArrayList FILE_FORMATS_EXPORT = new ArrayList();
+	public static final StringList ENCODINGS = new StringList();
+	public static final StringList FILE_FORMATS_OPEN = new StringList();
+	public static final StringList FILE_FORMATS_IMPORT = new StringList();
+	public static final StringList FILE_FORMATS_SAVE = new StringList();
+	public static final StringList FILE_FORMATS_EXPORT = new StringList();
 
 	public static final ArrayList FILE_PROTOCOLS = new ArrayList();
 

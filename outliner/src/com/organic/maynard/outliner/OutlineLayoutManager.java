@@ -252,7 +252,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		setFocus(nodeThatMustBeVis,focusElement);
 	}
 		
-	private void draw() {
+	public void draw() {
 		//System.out.println("Draw Called: " + drawCount++);
 		numNodesDrawn = 0;
 		

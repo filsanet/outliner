@@ -127,6 +127,15 @@ public class StringTools {
 		return text.substring(substringStart, text.length());
 	}
 
+	public static String trimExtension(String text, String separator) {
+		int index = text.lastIndexOf(separator);
+		if (index == -1) {
+			return text;
+		} else {
+			return text.substring(0, index);
+		}
+	}
+	
 	public static String escape(String text, char escapeChar,  char[] reserved) {
 		StringBuffer buf = new StringBuffer();
 

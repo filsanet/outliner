@@ -331,7 +331,14 @@ public class DocumentRepository {
 	// Misc Methods
 	public void redrawAllOpenDocuments() {
 		for (int i = 0, limit = openDocuments.size(); i < limit; i++) {
-			((OutlinerDocument) getDocument(i)).panel.layout.redraw();
+			OutlinerDocument doc = (OutlinerDocument) getDocument(i);
+			
+			// Only request focus for the current document.
+			if (doc == getMostRecentDocumentTouched()) {
+				doc.panel.layout.redraw();
+			} else {
+				doc.panel.layout.draw();
+			}
 		}		
 	}
 }

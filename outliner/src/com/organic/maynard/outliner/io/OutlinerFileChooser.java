@@ -46,13 +46,14 @@ import javax.swing.*;
 import com.organic.maynard.util.string.Replace;
 import javax.swing.filechooser.*;
 import com.organic.maynard.util.string.StanStringTools;
+import com.organic.maynard.util.string.StringTools;
 
 /**
  * @author  $Author$
  * @version $Revision$, $Date$
  */
 
-public class OutlinerFileChooser extends JFileChooser {
+public class OutlinerFileChooser extends JFileChooser implements ItemListener {
 
 	private JPanel openAccessory = new JPanel();
 	private JPanel importAccessory = new JPanel();
@@ -73,11 +74,29 @@ public class OutlinerFileChooser extends JFileChooser {
 	private JComboBox exportEncodingComboBox = new JComboBox();
 	private JComboBox exportFormatComboBox = new JComboBox();
 
+	/**
+	 * Indicates that lazy instantiation has occurred.
+	 */
 	private boolean isInitialized = false; 
 	
-	// dialogType is here so we know the type of dialog we are, since Swing forces 
-	// us to be CUSTOM_DIALOG. Without this the approveSelection() method won't work right.
+	/**
+	 * dialogType is here so we know the type of dialog we are, since Swing forces 
+	 * us to be CUSTOM_DIALOG. Without this the approveSelection() method won't work right.
+	 *
+	 * This field is updated in each of the configure methods so that it reflects the current
+	 * dialog type being used.
+	 */
 	private int dialogType = JFileChooser.CUSTOM_DIALOG;
+
+	/**
+	 * Holds a reference to the JTextField for entering filenames. Since the API for JFileChooser
+	 * does not expose this component. Any use of this component should always check for a null
+	 * value first since there is no guarantee it was found.
+	 * 
+	 * This field is currently populated during lazy instantiation.
+	 */
+	protected JTextField textEntryField = null;
+
 
 	// The Constructor
 	public OutlinerFileChooser(FileSystemView fsv) {
@@ -88,105 +107,129 @@ public class OutlinerFileChooser extends JFileChooser {
 		if (isInitialized) {
 			return;
 		}
+		
+		// This is a hack to get the JTextField used to enter text since they don't expose it in the API.
+		// This should be done before adding accessories since we might find a JTextField in an accessory
+		// by accident. Also, the search should be slightly faster if we don't have to crawl the accessories
+		// too.
+		ArrayList components = new ArrayList();
+		int cursor = 0;
+		components.add(this);
+		
+		while (cursor < components.size()) {
+			Object o = components.get(cursor);
+			
+			if (o instanceof JTextField) {
+    			this.textEntryField = (JTextField) o;
+    			break;			
+			} else if (o instanceof Container) {
+				Container c = (Container) o;
+				for (int i = 0, limit = c.getComponentCount(); i < limit; i++) {
+		    		components.add(c.getComponent(i));
+		    	}			
+			} else {
+				// do nothing
+			}
+			
+			cursor++;
+		}
+
 
 		// TBD [srk] have different encoding prefs for each of these OPs
-		for (int i = 0; i < Preferences.ENCODINGS.size(); i++) {
-			String encoding = (String) Preferences.ENCODINGS.get(i);
+		for (int i = 0, limit = Preferences.ENCODINGS.size(); i < limit; i++) {
+			String encoding = Preferences.ENCODINGS.get(i);
 			saveEncodingComboBox.addItem(encoding);
 			exportEncodingComboBox.addItem(encoding);
 			openEncodingComboBox.addItem(encoding);
 			importEncodingComboBox.addItem(encoding);
 		}
 
-		for (int i = 0; i < Preferences.FILE_FORMATS_OPEN.size(); i++) {
-			openFormatComboBox.addItem((String) Preferences.FILE_FORMATS_OPEN.get(i));
+		for (int i = 0, limit = Preferences.FILE_FORMATS_OPEN.size(); i < limit; i++) {
+			openFormatComboBox.addItem(Preferences.FILE_FORMATS_OPEN.get(i));
 		}
 
-		for (int i = 0; i < Preferences.FILE_FORMATS_IMPORT.size(); i++) {
-			importFormatComboBox.addItem((String) Preferences.FILE_FORMATS_IMPORT.get(i));
+		for (int i = 0, limit = Preferences.FILE_FORMATS_IMPORT.size(); i < limit; i++) {
+			importFormatComboBox.addItem(Preferences.FILE_FORMATS_IMPORT.get(i));
 		}
 
-		for (int i = 0; i < Preferences.FILE_FORMATS_SAVE.size(); i++) {
-			saveFormatComboBox.addItem((String) Preferences.FILE_FORMATS_SAVE.get(i));
+		for (int i = 0, limit = Preferences.FILE_FORMATS_SAVE.size(); i < limit; i++) {
+			saveFormatComboBox.addItem(Preferences.FILE_FORMATS_SAVE.get(i));
 		}
 
-		for (int i = 0; i < Preferences.FILE_FORMATS_EXPORT.size(); i++) {
-			exportFormatComboBox.addItem((String) Preferences.FILE_FORMATS_EXPORT.get(i));
+		for (int i = 0, limit = Preferences.FILE_FORMATS_EXPORT.size(); i < limit; i++) {
+			exportFormatComboBox.addItem(Preferences.FILE_FORMATS_EXPORT.get(i));
 		}
+		
+		String lineTerminatorText = GUITreeLoader.reg.getText("line_terminator");
+		String fileEncodingText = GUITreeLoader.reg.getText("file_encoding");
+		String fileFormatText = GUITreeLoader.reg.getText("file_format");
 
 		// Lay out save panel
 		Box saveBox = Box.createVerticalBox();
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("line_terminator")), saveBox);
-		addSingleItemCentered(saveLineEndComboBox, saveBox);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(lineTerminatorText), saveBox);
+		AbstractPreferencesPanel.addSingleItemCentered(saveLineEndComboBox, saveBox);
 
 		saveBox.add(Box.createVerticalStrut(5));
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_encoding")), saveBox);
-		addSingleItemCentered(saveEncodingComboBox, saveBox);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileEncodingText), saveBox);
+		AbstractPreferencesPanel.addSingleItemCentered(saveEncodingComboBox, saveBox);
 
 		saveBox.add(Box.createVerticalStrut(5));
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_format")), saveBox);
-		addSingleItemCentered(saveFormatComboBox, saveBox);
+		saveFormatComboBox.addItemListener(this);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileFormatText), saveBox);
+		AbstractPreferencesPanel.addSingleItemCentered(saveFormatComboBox, saveBox);
 
-		saveAccessory.add(saveBox,BorderLayout.CENTER);
+		saveAccessory.add(saveBox, BorderLayout.CENTER);
 
 		// Lay out export panel
 		Box exportBox = Box.createVerticalBox();
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("line_terminator")), exportBox);
-		addSingleItemCentered(exportLineEndComboBox, exportBox);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(lineTerminatorText), exportBox);
+		AbstractPreferencesPanel.addSingleItemCentered(exportLineEndComboBox, exportBox);
 
 		exportBox.add(Box.createVerticalStrut(5));
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_encoding")), exportBox);
-		addSingleItemCentered(exportEncodingComboBox, exportBox);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileEncodingText), exportBox);
+		AbstractPreferencesPanel.addSingleItemCentered(exportEncodingComboBox, exportBox);
 
 		exportBox.add(Box.createVerticalStrut(5));
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_format")), exportBox);
-		addSingleItemCentered(exportFormatComboBox, exportBox);
+		exportFormatComboBox.addItemListener(this);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileFormatText), exportBox);
+		AbstractPreferencesPanel.addSingleItemCentered(exportFormatComboBox, exportBox);
 
-		exportAccessory.add(exportBox,BorderLayout.CENTER);
+		exportAccessory.add(exportBox, BorderLayout.CENTER);
 
 		// Layout open panel
 		Box openBox = Box.createVerticalBox();
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_encoding")), openBox);
-		addSingleItemCentered(openEncodingComboBox, openBox);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileEncodingText), openBox);
+		AbstractPreferencesPanel.addSingleItemCentered(openEncodingComboBox, openBox);
 
 		openBox.add(Box.createVerticalStrut(5));
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_format")), openBox);
-		addSingleItemCentered(openFormatComboBox, openBox);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileFormatText), openBox);
+		AbstractPreferencesPanel.addSingleItemCentered(openFormatComboBox, openBox);
 
-		openAccessory.add(openBox,BorderLayout.CENTER);
+		openAccessory.add(openBox, BorderLayout.CENTER);
 
 		// Layout import panel
 		Box importBox = Box.createVerticalBox();
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_encoding")), importBox);
-		addSingleItemCentered(importEncodingComboBox, importBox);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileEncodingText), importBox);
+		AbstractPreferencesPanel.addSingleItemCentered(importEncodingComboBox, importBox);
 
 		importBox.add(Box.createVerticalStrut(5));
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_format")), importBox);
-		addSingleItemCentered(importFormatComboBox, importBox);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileFormatText), importBox);
+		AbstractPreferencesPanel.addSingleItemCentered(importFormatComboBox, importBox);
 
-		importAccessory.add(importBox,BorderLayout.CENTER);
+		importAccessory.add(importBox, BorderLayout.CENTER);
 
 		// Set the flag
 		isInitialized = true;
-	}
-
-	private static void addSingleItemCentered(JComponent component, Container container) {
-		Box box = Box.createHorizontalBox();
-		box.add(Box.createHorizontalGlue());
-		component.setMaximumSize(component.getPreferredSize());
-		box.add(component);
-		box.add(Box.createHorizontalGlue());
-		container.add(box);
 	}
 
 
@@ -198,9 +241,7 @@ public class OutlinerFileChooser extends JFileChooser {
 		setDialogTitle("Export: " + protocolName);
 
 		// adjust approve button
-		setApproveButtonToolTipText ("Export file as named") ;
-		// [srk] this next doesn't work right - so we do this adjustment in the file protocol's code
-		// setApproveButtonText ("Export") ;
+		setApproveButtonToolTipText("Export file as named");
 
 		// Set the Accessory state
 		setAccessory(exportAccessory);
@@ -229,9 +270,7 @@ public class OutlinerFileChooser extends JFileChooser {
 		setDialogTitle("Save: " + protocolName);
 
 		// adjust approve button
-		setApproveButtonToolTipText ("Save file as named") ;
-		// [srk] this next doesn't work right - so we do this adjustment in the file protocol's code
-		// setApproveButtonText ("Save") ;
+		setApproveButtonToolTipText("Save file as named");
 
 		// Set the Accessory state
 		setAccessory(saveAccessory);
@@ -248,43 +287,37 @@ public class OutlinerFileChooser extends JFileChooser {
 		// if it's an imported file ...
 		if (doc.getDocumentInfo().isImported()) {
 			// trim any extension off the file name
-			String trimmedFileName = StanStringTools.trimFileExtension(currentFileName) ;
+			String trimmedFileName = StanStringTools.trimFileExtension(currentFileName);
 
 			// obtain the current default save format's extension
-			String extension = 	(Outliner.fileFormatManager.getSaveFormat(doc.settings.getSaveFormat().cur)).getDefaultExtension() ;
+			String extension = 	(Outliner.fileFormatManager.getSaveFormat(doc.settings.getSaveFormat().cur)).getDefaultExtension();
 			
 			// addemup
-			setSelectedFile(new File(trimmedFileName + "." + extension)) ;
+			setSelectedFile(new File(trimmedFileName + "." + extension));
 		
-		// else it's not an imported file
 		} else {
-			// if it has a name ... 
 			if (!currentFileName.equals("")) {
 				
 				// set up using the filename
 				setSelectedFile(new File(currentFileName));
 				
-			// else it has no name (it's a new file)
-		} else {
+			} else {
 				// use the current directory
 				setCurrentDirectory(new File(currentDirectory));
 				
 				// start with the window title
-				String title = doc.getTitle() ;
+				String title = doc.getTitle();
 				
 				// obtain the current default save format's extension
-				String extension = 	(Outliner.fileFormatManager.getSaveFormat(doc.settings.getSaveFormat().cur)).getDefaultExtension() ;
+				String extension = 	(Outliner.fileFormatManager.getSaveFormat(doc.settings.getSaveFormat().cur)).getDefaultExtension();
 			
 				// addemup
-				setSelectedFile(new File(title + "." + extension)) ;
-				
-			} // end else it has no name
-			
-		} // end else it's not imported
+				setSelectedFile(new File(title + "." + extension));
+			}
+		}
 		
 		this.dialogType = JFileChooser.SAVE_DIALOG;
-		
-	} // end method configureForSave
+	}
 
 	public void configureForOpen(String protocolName, String currentDirectory) {
 		lazyInstantiate();
@@ -293,9 +326,7 @@ public class OutlinerFileChooser extends JFileChooser {
 		setDialogTitle("Open: " + protocolName);
 
 		// adjust approve button
-		setApproveButtonToolTipText ("Open selected file") ;
-		// [srk] this next doesn't work reliably - so we do this adjustment in the file protocol's code
-		// setApproveButtonText ("Open") ;
+		setApproveButtonToolTipText("Open selected file");
 		
 		// Set the Accessory state.
 		setAccessory(openAccessory);
@@ -319,9 +350,7 @@ public class OutlinerFileChooser extends JFileChooser {
 		setDialogTitle("Import: " + protocolName);
 		
 		// adjust approve button
-		setApproveButtonToolTipText ("Import selected file") ;
-		// [srk] this next doesn't work right - so we do this adjustment in the file protocol's code
-		// setApproveButtonText ("Import") ;
+		setApproveButtonToolTipText("Import selected file");
 
 		// Set the Accessory state.
 		setAccessory(importAccessory);
@@ -338,23 +367,95 @@ public class OutlinerFileChooser extends JFileChooser {
 	}
 
 
-
 	// Accessors
-// public String getLineEnding() {return (String) lineEndComboBox.getSelectedItem();}
+	public String getOpenEncoding() {
+		return (String) openEncodingComboBox.getSelectedItem();
+	}
+	
+	public String getOpenFileFormat() {
+		return (String) openFormatComboBox.getSelectedItem();
+	}
 
-	public String getOpenEncoding() {return (String) openEncodingComboBox.getSelectedItem();}
-	public String getOpenFileFormat() {return (String) openFormatComboBox.getSelectedItem();}
+	public String getImportEncoding() {
+		return (String) importEncodingComboBox.getSelectedItem();
+	}
+	
+	public String getImportFileFormat() {
+		return (String) importFormatComboBox.getSelectedItem();
+	}
 
-	public String getImportEncoding() {return (String) importEncodingComboBox.getSelectedItem();}
-	public String getImportFileFormat() {return (String) importFormatComboBox.getSelectedItem();}
+	public String getSaveLineEnding() {
+		return (String) saveLineEndComboBox.getSelectedItem();
+	}
+	
+	public String getSaveEncoding() {
+		return (String) saveEncodingComboBox.getSelectedItem();
+	}
+	
+	public String getSaveFileFormat() {
+		return (String) saveFormatComboBox.getSelectedItem();
+	}
 
-	public String getSaveLineEnding() {return (String) saveLineEndComboBox.getSelectedItem();}
-	public String getSaveEncoding() {return (String) saveEncodingComboBox.getSelectedItem();}
-	public String getSaveFileFormat() {return (String) saveFormatComboBox.getSelectedItem();}
+	public String getExportLineEnding() {
+		return (String) exportLineEndComboBox.getSelectedItem();
+	}
+	
+	public String getExportEncoding() {
+		return (String) exportEncodingComboBox.getSelectedItem();
+	}
+	
+	public String getExportFileFormat() {
+		return (String) exportFormatComboBox.getSelectedItem();
+	}
 
-	public String getExportLineEnding() {return (String) exportLineEndComboBox.getSelectedItem();}
-	public String getExportEncoding() {return (String) exportEncodingComboBox.getSelectedItem();}
-	public String getExportFileFormat() {return (String) exportFormatComboBox.getSelectedItem();}
+
+	// ItemListener Interface
+	// The purpose of this listener is to update the file extension to the default 
+	// extension of the newly selected format.
+	public void itemStateChanged(ItemEvent e) {
+		if (textEntryField == null) {
+			// We we're unable to find a JTextField component that was a decendant of this
+			// JFileChooser so we need to abort.
+			return;
+		}
+		
+		String filename = textEntryField.getText();
+		
+		if (filename == null || filename.equals("")) {
+			return;
+		}
+		
+		// Get the file format
+		FileFormat format;
+		if (e.getSource() == saveFormatComboBox) {
+			format = Outliner.fileFormatManager.getSaveFormat(getSaveFileFormat());
+		} else if (e.getSource() == exportFormatComboBox) {
+			format = Outliner.fileFormatManager.getExportFormat(getExportFileFormat());
+		} else {
+			// Unknown source;
+			System.out.println("Unknown source for itemStateChanged in OutlinerFileChooser.");
+			return;
+		}
+		
+		if (format == null) {
+			System.out.println("Format is null for itemStateChanged in OutlinerFileChooser.");
+			return;
+		}
+		
+		// Get extension
+		String extension = format.getDefaultExtension();
+		
+		// Abort if we don't have an extension.
+		if (extension == null || extension.equals("")) {
+			return;
+		}
+
+		// trim any extension off the file name
+		String newFileName = StringTools.trimExtension(filename, Preferences.EXTENSION_SEPARATOR);
+		
+		// Set the filename in the Chooser
+		textEntryField.setText(new StringBuffer().append(newFileName).append(Preferences.EXTENSION_SEPARATOR).append(extension).toString());
+	}
 
 
 	// Overriden Methods of JFileChooser

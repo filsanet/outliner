@@ -432,6 +432,11 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 			OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getDocument(i);
 			String pathname = doc.getDocumentInfo().getPath();
 			
+			// Pass over untitled documents
+			if (pathname == null || pathname.equals("")) {
+				continue;
+			}
+			
 			// case out on the form to build the title
 			String newTitle = null;
 			switch (nameFormIndex) {
