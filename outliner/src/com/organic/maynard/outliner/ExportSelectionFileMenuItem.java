@@ -116,11 +116,9 @@ public class ExportSelectionFileMenuItem extends AbstractOutlinerMenuItem implem
 
 		document.tree = newTree;
 
-		if (!protocol.selectFileToSave(document, FileProtocol.EXPORT)) {
-			return;
+		if (protocol.selectFileToSave(document, FileProtocol.EXPORT)) {
+			FileMenu.exportFile(document.getDocumentInfo().getPath(), document, protocol);
 		}
-		
-		FileMenu.exportFile(document.getDocumentInfo().getPath(), document, protocol);
 
 		// Swap it back the settings
 		document.settings = oldSettings;

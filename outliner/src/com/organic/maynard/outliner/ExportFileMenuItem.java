@@ -78,11 +78,9 @@ public class ExportFileMenuItem extends AbstractOutlinerMenuItem implements Acti
 		document.setDocumentInfo(newDocInfo);
 
 
-		if (!protocol.selectFileToSave(document, FileProtocol.EXPORT)) {
-			return;
+		if (protocol.selectFileToSave(document, FileProtocol.EXPORT)) {
+			FileMenu.exportFile(document.getDocumentInfo().getPath(), document, protocol);
 		}
-		
-		FileMenu.exportFile(document.getDocumentInfo().getPath(), document, protocol);
 
 		// Swap it back the settings
 		document.settings = oldSettings;
