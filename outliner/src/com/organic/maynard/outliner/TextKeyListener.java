@@ -417,9 +417,21 @@ public class TextKeyListener implements KeyListener, MouseListener {
 				if (startSelection != endSelection) {
 					newCaretPosition = startSelection;
 					newMarkPosition = startSelection;
-					// TBD [srk] bug here: 2nd arg to substring can be out of range
+					// TBD [srk] bug here: 2nd arg to substring can have the value -1
 					//	causing a StringIndexOutOfBoundsException
+					// that's gotta be startSelection
+					// which gets here as the minimum of oldCaretPosition and oldMarkPosition
+					// one of which must have the value -1
 					//	-- this needs to be investigated
+					// set a bug trap
+					if (startSelection == -1) {
+						String msg = "Error at TextKeyListener:keyTyped():\n" ;
+						msg = msg + "startSelection: -1\n" ;
+						msg = msg + "oldCaretPosition: " + oldCaretPosition + "\n" ;
+						msg = msg + "oldMarkPosition: " + oldMarkPosition ;
+						promptUser(msg); 
+						return ;
+					} // end bug trap
 					newText = oldText.substring(0, startSelection) + oldText.substring(endSelection, oldText.length());				
 				} else if (startSelection == 0) {
 					newCaretPosition = 0;
