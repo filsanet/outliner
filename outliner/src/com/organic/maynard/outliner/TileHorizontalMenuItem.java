@@ -46,6 +46,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import org.xml.sax.*;
+import java.util.Vector ;
 
 // our class
 public class TileHorizontalMenuItem 
@@ -71,9 +72,33 @@ public class TileHorizontalMenuItem
 			return ;
 		} // end if
 		
-		// a general-purpose doc var
+		// a general purpose doc var
 		OutlinerDocument doc = null ;
 		
+		// let's build a list of not-iconified windows
+		// [we don't touch iconified windows]
+		Vector notIconified = new Vector() ;
+		
+		// for each open document
+		for (int counter = 0; counter < openDocCount; counter++) {
+			// grab the doc ref
+			doc = Outliner.getDocument(counter) ;
+			
+			// if we're not iconified
+			if (! doc.isIcon()) {
+				// add us to the list
+				notIconified.add(doc) ;
+			} // end if
+		} // end for
+		
+		// store the count
+		int openNotIconifiedDocCount = notIconified.size() ;
+		
+		// if everybody's iconified, leave
+		if (openNotIconifiedDocCount == 0) {
+			return ;
+		} // end if
+
 		// if we're in a maximized state ...
 		if (Outliner.desktop.desktopManager.isMaximized()) {
 			// leave that state
@@ -98,8 +123,8 @@ public class TileHorizontalMenuItem
 		double availHeight = curAvailSpace.getHeight() ;
 
 		// obtain minimum tiling row height
-		// TBD
-		int minTileRowHeight = 60 ;
+		// TBD -- for now we hardwire fake it
+		int minTileRowHeight = 50 ;
 		
 		// determine the maximum number of rows
 		int maxRows = (int)availHeight/minTileRowHeight;
@@ -110,11 +135,11 @@ public class TileHorizontalMenuItem
 		int actualRows = 0 ;
 		
 		// plenty of room ?
-		boolean plentyOfRoom = maxRows >= openDocCount ;
+		boolean plentyOfRoom = maxRows >= openNotIconifiedDocCount ;
 		
 		// determine actual number of rows we'll need
 		actualRows = plentyOfRoom
-			? openDocCount 
+			? openNotIconifiedDocCount 
 			: maxRows ;
 			
 		// some row arrays
@@ -124,10 +149,10 @@ public class TileHorizontalMenuItem
 		// if we have plenty of rows
 		if (plentyOfRoom) {
 			// we have a limit
-			int limit = openDocCount - 1 ;
+			int limit = openNotIconifiedDocCount - 1 ;
 			
 			// determine nominal row height
-			nominalRowHeight = (int) (availHeight/openDocCount) ;
+			nominalRowHeight = (int) (availHeight/openNotIconifiedDocCount) ;
 			// determine final row height
 			finalRowHeight = (int)availHeight - (nominalRowHeight * limit) ;
 			
@@ -160,13 +185,13 @@ public class TileHorizontalMenuItem
 		Dimension dSize = new Dimension();
 		
 		// for each open doc
-		for (int counter = 0; counter < openDocCount; counter++) {
+		for (int counter = 0; counter < openNotIconifiedDocCount; counter++) {
 			// TBD [srk] make this a bit slicker
 			// tile em in z order
 			// right now we just use chrono order
 			
 			// grab the doc ref
-			doc = Outliner.getDocument(counter) ;
+			doc = (OutlinerDocument)notIconified.get(counter) ;
 			
 			// set up location
 			pLocation.setLocation(0, rowPositions[counter]) ;
