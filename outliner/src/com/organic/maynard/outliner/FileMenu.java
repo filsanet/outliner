@@ -359,7 +359,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				// document.setTitle(StanStringTools.getTruncatedPathName(filename, TRUNC_STRING)) ;
 				
 				// case out on the form to build the title
-				switch (document.getTitleNameForm()) {
+				switch (OutlinerDocument.getTitleNameForm()) {
 				
 				case FULL_PATHNAME:
 				default: 
@@ -714,6 +714,9 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// set the title
 		doc.setTitle(title) ;
 
+		// update window menu entry
+		WindowMenu.updateWindow(doc) ;
+		
 		// Expand Nodes
 		ArrayList expandedNodes = docInfo.getExpandedNodes();
 		for (int i = 0; i < expandedNodes.size(); i++) {

@@ -432,7 +432,7 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 				doc.setTitle(newTitle) ;
 				
 				// update the entry in the windows menu
-				// TBD
+				WindowMenu.updateWindow(doc) ;
 				
 			} // end for each open document
 			
