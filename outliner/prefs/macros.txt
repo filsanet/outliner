@@ -1,0 +1,7 @@
+macro|HTML Bold.txt|com.organic.maynard.outliner.TextMacro
+macro|HTML Escape.txt|com.organic.maynard.outliner.HTMLEscapeMacro
+macro|HTML Un-Escape.txt|com.organic.maynard.outliner.HTMLEscapeMacro
+macro|URL Decode.txt|com.organic.maynard.outliner.URLEncodeMacro
+macro|URL Encode.txt|com.organic.maynard.outliner.URLEncodeMacro
+macro|XSL text disable.txt|com.organic.maynard.outliner.TextMacro
+macro|XSL value-of disable.txt|com.organic.maynard.outliner.TextMacro
