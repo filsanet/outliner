@@ -1,4 +1,4 @@
-echo off
+@echo off
 
 set root_path=.\lib\
 
@@ -8,5 +8,5 @@ set CP=%CP%;%root_path%sax.jar
 set CP=%CP%;%root_path%xp.jar
 set CP=%CP%;%root_path%xmlrpc.jar
 
-echo on
+@echo on
 java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner
