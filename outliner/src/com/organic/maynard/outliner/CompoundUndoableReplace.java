@@ -56,7 +56,7 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 		}
 
 		// Find fallback node for drawing and editing
-		if (tree.selectedNodes.size() == 0) {
+		if (tree.selectedNodes.size() <= 0) {
 			Node fallbackNode = ((PrimitiveUndoableReplace) primitives.lastElement()).getNewNode();
 			if (fallbackNode != null) {
 				fallbackNode = fallbackNode.next();
@@ -113,20 +113,30 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 			fallbackNode = fallbackNode.nextUnSelectedNode();
 			if (fallbackNode.isRoot()) {
 				allWillBeDeleted = true;
-				tree.setSelectedNodesParent(tree.getRootNode());
-			} else {
-				layout.setNodeToDrawFrom(fallbackNode, tree.visibleNodes.indexOf(fallbackNode));
-				tree.setSelectedNodesParent(fallbackNode.getParent());
-				tree.addNodeToSelection(fallbackNode);
 			}
-		} else {
-			tree.setSelectedNodesParent(fallbackNode.getParent());
-			tree.addNodeToSelection(fallbackNode);
 		}
+		
+		tree.setSelectedNodesParent(parent);
 		
 		// Replace Everything
 		for (int i = primitives.size() - 1; i >= 0; i--) {
 			((PrimitiveUndoableReplace) primitives.elementAt(i)).redo();
+		}
+		
+		if (tree.selectedNodes.size() <= 0) {
+			// Find fallback node for drawing and editing
+			if (fallbackNode.isRoot()) {
+				if (allWillBeDeleted) {
+					tree.setSelectedNodesParent(tree.getRootNode());
+				} else {
+					layout.setNodeToDrawFrom(fallbackNode, tree.visibleNodes.indexOf(fallbackNode));
+					tree.setSelectedNodesParent(fallbackNode.getParent());
+					tree.addNodeToSelection(fallbackNode);
+				}
+			} else {
+				tree.setSelectedNodesParent(fallbackNode.getParent());
+				tree.addNodeToSelection(fallbackNode);
+			}
 		}
 
 		Node firstNewSelectedNode = tree.getYoungestInSelection();

@@ -40,6 +40,8 @@ public interface Undoable {
 	public static final int COMPOUND_PROPERTY_CHANGE_TYPE = 11;
 	public static final int PRIMITIVE_COMMENT_PROPERTY_CHANGE_TYPE = 12;
 
+	public static final int COMPOUND_UNDOABLE_TYPE = 13;
+
 	public void destroy();
 
 	public void undo();

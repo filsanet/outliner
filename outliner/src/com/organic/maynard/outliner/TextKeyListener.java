@@ -171,6 +171,8 @@ public class TextKeyListener implements KeyListener, MouseListener {
 			case KeyEvent.VK_ENTER:
 				if (e.isShiftDown()) {
 					changeFocusToIcon(tree,layout);
+				} else if (e.isControlDown()) {
+					split(tree,layout);
 				} else {
 					insert(tree,layout);
 				}
@@ -190,6 +192,12 @@ public class TextKeyListener implements KeyListener, MouseListener {
 					if (!inlinePaste) {
 						e.consume();
 					}
+				}
+				return;
+
+			case KeyEvent.VK_M:
+				if (e.isControlDown()) {
+					break;
 				}
 				return;
 				
@@ -507,6 +515,53 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		layout.draw(newNode,outlineLayoutManager.TEXT);
 	}
 
+	private void split(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+
+		// Get Text for nodes.
+		String oldText = currentNode.getValue();
+		String oldNodeText = currentNode.getValue().substring(0,textArea.getCaretPosition());
+		String newNodeText = currentNode.getValue().substring(textArea.getCaretPosition(), currentNode.getValue().length());
+		currentNode.setValue(oldNodeText);
+		
+		// Create a new node and insert it as a sibling immediatly after this node, unless
+		// the current node is expanded and has children. Then, we should insert it as the first child of the
+		// current node.
+		Node newNode = new NodeImpl(currentNode.getTree(),newNodeText);
+		
+		if ((!currentNode.isLeaf()) && (currentNode.isExpanded())) {
+			newNode.setDepth(currentNode.getDepth() + 1);
+			currentNode.insertChild(newNode,0);				
+		} else {
+			newNode.setDepth(currentNode.getDepth());
+			currentNode.getParent().insertChild(newNode,currentNode.currentIndex() + 1);
+		}
+		
+		tree.insertNode(newNode);
+
+		// Record the EditingNode and CursorPosition
+		tree.setEditingNode(newNode);
+		tree.setCursorPosition(0);
+
+		// Update Preferred Caret Position
+		tree.doc.setPreferredCaretPosition(0);
+
+		// Put the Undoable onto the UndoQueue
+		CompoundUndoableEdit undoableEdit = new CompoundUndoableEdit(tree);
+		undoableEdit.addPrimitive(new PrimitiveUndoableEdit(currentNode, oldText, oldNodeText));
+		
+		CompoundUndoableInsert undoableInsert = new CompoundUndoableInsert(newNode.getParent());
+		undoableInsert.addPrimitive(new PrimitiveUndoableInsert(newNode.getParent(),newNode,newNode.currentIndex()));
+		
+		CompoundUndoableImpl undoable = new CompoundUndoableImpl(tree);
+		undoable.addPrimitive(undoableEdit);
+		undoable.addPrimitive(undoableInsert);
+		
+		tree.doc.undoQueue.add(undoable);
+
+		// Redraw and Set Focus
+		layout.draw(newNode,outlineLayoutManager.TEXT);
+	}
 	private void promote(TreeContext tree, outlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 

@@ -568,4 +568,30 @@ public class NodeImpl implements Node {
 		
 		return retVal.toString();
 	}
+	
+	public void getMergedValue(StringBuffer buf) {
+		buf.append(getValue());
+		
+		// Recursive Part
+		for (int i = 0; i < this.numOfChildren(); i++) {
+			this.getChild(i).getMergedValue(buf);
+		}
+	}
+
+	public void getMergedValueWithSpaces(StringBuffer buf) {
+		if (buf.length() > 0) {
+			if (buf.charAt(buf.length() - 1) != ' ') {
+				buf.append(' ').append(getValue());
+			} else {
+				buf.append(getValue());
+			}
+		} else {
+			buf.append(getValue());
+		}
+		
+		// Recursive Part
+		for (int i = 0; i < this.numOfChildren(); i++) {
+			this.getChild(i).getMergedValue(buf);
+		}
+	}
 }

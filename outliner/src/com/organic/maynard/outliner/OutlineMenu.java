@@ -40,6 +40,8 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 	private static final String OUTLINE_MOVE_LEFT = "Move Left";
 	private static final String OUTLINE_PROMOTE = "Promote";
 	private static final String OUTLINE_DEMOTE = "Demote";
+	private static final String OUTLINE_MERGE = "Merge";
+	private static final String OUTLINE_MERGE_WITH_SPACES = "Merge with Spaces";
 
 
 	// The MenuItems.
@@ -60,6 +62,9 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 	// Seperator	
 	public JMenuItem OUTLINE_PROMOTE_ITEM = new JMenuItem(OUTLINE_PROMOTE);
 	public JMenuItem OUTLINE_DEMOTE_ITEM = new JMenuItem(OUTLINE_DEMOTE);
+	// Seperator	
+	public JMenuItem OUTLINE_MERGE_ITEM = new JMenuItem(OUTLINE_MERGE);
+	public JMenuItem OUTLINE_MERGE_WITH_SPACES_ITEM = new JMenuItem(OUTLINE_MERGE_WITH_SPACES);
 	
 	// The Constructors
 	public OutlineMenu() {
@@ -118,6 +123,16 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 		OUTLINE_DEMOTE_ITEM.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0, false));
 		OUTLINE_DEMOTE_ITEM.addActionListener(this);
 		add(OUTLINE_DEMOTE_ITEM);
+
+		insertSeparator(17);
+
+		OUTLINE_MERGE_ITEM.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, Event.CTRL_MASK, false));
+		OUTLINE_MERGE_ITEM.addActionListener(this);
+		add(OUTLINE_MERGE_ITEM);
+
+		OUTLINE_MERGE_WITH_SPACES_ITEM.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, Event.CTRL_MASK + Event.SHIFT_MASK, false));
+		OUTLINE_MERGE_WITH_SPACES_ITEM.addActionListener(this);
+		add(OUTLINE_MERGE_WITH_SPACES_ITEM);
 		
 		setEnabled(false);
 	}
@@ -159,6 +174,12 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 			
 		} else if (e.getActionCommand().equals(OUTLINE_DEMOTE)) {
 			fireKeyEvent(Outliner.getMostRecentDocumentTouched(), 0, KeyEvent.VK_TAB, true);
+			
+		} else if (e.getActionCommand().equals(OUTLINE_MERGE)) {
+			fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.CTRL_MASK, KeyEvent.VK_M, false);
+
+		} else if (e.getActionCommand().equals(OUTLINE_MERGE_WITH_SPACES)) {
+			fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.CTRL_MASK + Event.SHIFT_MASK, KeyEvent.VK_M, false);
 			
 		}
 	}

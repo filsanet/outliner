@@ -244,6 +244,18 @@ public class IconKeyListener implements KeyListener, MouseListener {
 					return;
 				}
 
+			case KeyEvent.VK_M:
+				if (e.isControlDown()) {
+					if (e.isShiftDown()) {
+						merge(tree,layout,true);
+					} else {
+						merge(tree,layout,false);
+					}
+					break;
+				} else {
+					return;
+				}
+
 			default:
 				return;
 		}
@@ -773,6 +785,42 @@ public class IconKeyListener implements KeyListener, MouseListener {
 				Node node = (Node) tree.selectedNodes.get(i);
 				undoable.addPrimitive(new PrimitiveUndoableReplace(parent,node,null));
 			}
+		}
+
+		tree.doc.undoQueue.add(undoable);
+		undoable.redo();
+		return;
+	}
+
+	private void merge(TreeContext tree, outlineLayoutManager layout, boolean withSpaces) {
+		Node youngestNode = tree.getYoungestInSelection();
+		int youngestNodeDepth = youngestNode.getDepth();
+		boolean youngestNodeIsComment = youngestNode.isComment();
+		Node parent = tree.getEditingNode().getParent();
+		CompoundUndoableReplace undoable = new CompoundUndoableReplace(parent);
+
+		// Get merged text
+		StringBuffer buf = new StringBuffer();
+		
+		if (withSpaces) {
+			for (int i = 0; i < tree.selectedNodes.size(); i++) {
+				((Node) tree.selectedNodes.get(i)).getMergedValueWithSpaces(buf);
+			}
+		} else {
+			for (int i = 0; i < tree.selectedNodes.size(); i++) {
+				((Node) tree.selectedNodes.get(i)).getMergedValue(buf);
+			}		
+		}
+
+		Node newNode = new NodeImpl(tree,buf.toString());
+		newNode.setDepth(youngestNodeDepth);
+		newNode.setComment(youngestNodeIsComment);
+		undoable.addPrimitive(new PrimitiveUndoableReplace(parent, youngestNode, newNode));
+
+		// Iterate over the remaining selected nodes deleting each one
+		for (int i = 1; i < tree.getNumberOfSelectedNodes(); i++) {
+			Node node = (Node) tree.selectedNodes.get(i);
+			undoable.addPrimitive(new PrimitiveUndoableReplace(parent,node,null));
 		}
 
 		tree.doc.undoQueue.add(undoable);
