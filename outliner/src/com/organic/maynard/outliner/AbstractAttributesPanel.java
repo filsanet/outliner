@@ -356,21 +356,14 @@ class NewAttributeDialog extends JDialog implements ActionListener {
 		getContentPane().add(bottomPanel,BorderLayout.SOUTH);
 
 		// Define the Center Panel
-		Box box = Box.createVerticalBox();
+		JPanel centerPanel = new JPanel();
+		centerPanel.setLayout(new GridBagLayout());
 
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(ATTRIBUTE), box);
-		AbstractPreferencesPanel.addSingleItemCentered(attributeField, box);
+		AbstractPreferencesPanel.addPreferenceItem(ATTRIBUTE, attributeField, centerPanel);
+		AbstractPreferencesPanel.addPreferenceItem(VALUE, valueField, centerPanel);
+		AbstractPreferencesPanel.addSingleItemCentered(errorLabel, centerPanel);
 
-		box.add(Box.createVerticalStrut(5));
-
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(VALUE), box);
-		AbstractPreferencesPanel.addSingleItemCentered(valueField, box);
-
-		box.add(Box.createVerticalStrut(5));
-
-		AbstractPreferencesPanel.addSingleItemCentered(errorLabel, box);
-
-		getContentPane().add(box,BorderLayout.CENTER);
+		getContentPane().add(centerPanel, BorderLayout.CENTER);
 
 		// Set the default button
 		getRootPane().setDefaultButton(buttonOK);
