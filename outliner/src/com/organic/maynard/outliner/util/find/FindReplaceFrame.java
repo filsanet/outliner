@@ -31,7 +31,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package com.organic.maynard.outliner.util.find;
 
 import com.organic.maynard.outliner.guitree.*;
@@ -73,39 +73,39 @@ import org.apache.oro.text.regex.MatchResult;
  */
 
 public class FindReplaceFrame extends AbstractGUITreeJDialog implements DocumentRepositoryListener, ActionListener, KeyListener, ListSelectionListener {
-
+	
 	// Constants
 	private static final int MINIMUM_WIDTH = 550;
 	private static final int MINIMUM_HEIGHT = 650;
  	private static final int INITIAL_WIDTH = 550;
 	private static final int INITIAL_HEIGHT = 650;
-
+	
 	private static final String REGEX_MATCH_START = "m/";
 	private static final String REGEX_MATCH_END = "/";
 	private static final String REGEX_MATCH_END_IGNORE_CASE = "/i";
-
+	
 	private static final String REGEX_REPLACE_START = "s/";
 	private static final String REGEX_REPLACE_MIDDLE = "/";
 	private static final String REGEX_REPLACE_END = "/";
 	private static final String REGEX_REPLACE_END_IGNORE_CASE = "/i";
-
+	
 	
 	// Perl Regex
 	private static Perl5Util util = null;
 	private static PatternMatcherInput input = null;
 	private static MatchResult result = null;
 	private static Perl5Compiler compiler = null;
-
-        	
+	
+        
 	// Button Text and Other Copy
 	private static String FIND = null;
 	private static String FIND_ALL = null;
 	private static String REPLACE = null;
 	private static String REPLACE_ALL = null;
-
+	
 	private static String NEW = null;
 	private static String DELETE = null;
-
+	
 	private static String START_AT_TOP = null;
 	private static String WRAP_ARROUND = null;
 	private static String SELECTION_ONLY = null;
@@ -138,8 +138,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 	
 	// ToolTip Text
 	private static String TT_FILTER = "Use ';' to seperate globs.";
-
-
+	
+	
 	// Define Fields and Buttons
 	private static JCheckBox CHECKBOX_START_AT_TOP = null;
 	private static JCheckBox CHECKBOX_WRAP_AROUND = null;
@@ -147,7 +147,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 	private static JCheckBox CHECKBOX_IGNORE_CASE = null;
 	private static JCheckBox CHECKBOX_INCLUDE_READ_ONLY_NODES = null;
 	private static JCheckBox CHECKBOX_REGEXP = null;
-
+	
 	private static JRadioButton RADIO_CURRENT_DOCUMENT = null;
 	private static JRadioButton RADIO_ALL_OPEN_DOCUMENTS = null;
 	private static JRadioButton RADIO_FILE_SYSTEM = null;
@@ -156,13 +156,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 	private static JButton BUTTON_FIND_ALL = null;
 	private static JButton BUTTON_REPLACE = null;
 	private static JButton BUTTON_REPLACE_ALL = null;
-
+	
 	private static JLabel LABEL_FIND = null;
 	private static JTextArea TEXTAREA_FIND = null;
-
+	
 	private static JLabel LABEL_REPLACE = null;
 	private static JTextArea TEXTAREA_REPLACE = null;
-
+	
 	private static JLabel LABEL_PATH = null;
 	private static JTextField TEXTFIELD_PATH = null;
 	private static JButton BUTTON_SELECT = null;
@@ -176,7 +176,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 	private static JTextField TEXTFIELD_FILE_FILTER_EXCLUDE = null;
 	private static JCheckBox CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE = null;
 	private static JCheckBox CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE = null;
-
+	
 	private static JLabel LABEL_DIR_FILTER = null;
 	private static JLabel LABEL_DIR_FILTER_INCLUDE = null;
 	private static JLabel LABEL_DIR_FILTER_EXCLUDE = null;
@@ -184,14 +184,14 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 	private static JTextField TEXTFIELD_DIR_FILTER_EXCLUDE = null;
 	private static JCheckBox CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE = null;
 	private static JCheckBox CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE = null;
-
+	
 	// Define the left panel
 	protected static JList LIST = null;
 	private static JScrollPane jsp = null;
-
+	
 	private static JButton BUTTON_NEW = null;
 	private static JButton BUTTON_DELETE = null;
-
+	
 	
 	// Model
 	public static FindReplaceModel model = null;
@@ -266,14 +266,14 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 			LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
 			LABEL_DIR_FILTER_EXCLUDE.setEnabled(false);
 		}
-
+		
 		documentRadiosEnabled = true;
 	}
-
+	
 	private static void disableButtons() {
 		RADIO_CURRENT_DOCUMENT.setEnabled(false);
 		RADIO_ALL_OPEN_DOCUMENTS.setEnabled(false);
-
+		
 		if (RADIO_CURRENT_DOCUMENT.isSelected() || RADIO_ALL_OPEN_DOCUMENTS.isSelected()) {
 			BUTTON_FIND.setEnabled(false);
 			BUTTON_FIND_ALL.setEnabled(false);
@@ -303,11 +303,11 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 			LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
 			LABEL_DIR_FILTER_EXCLUDE.setEnabled(false);
 		}
-				
+		
 		documentRadiosEnabled = false;
 	}
-
-		
+	
+	
 	// The Constructor
 	public FindReplaceFrame() {
 		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
@@ -320,8 +320,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		compiler = new Perl5Compiler();
 		LIST = new JList();
 		monitor = new ProgressDialog();
-
-
+		
+		
 		FIND = GUITreeLoader.reg.getText("find");
 		FIND_ALL = "Find All"; //TBD: update gui tree and use: GUITreeLoader.reg.getText("find_all");
 		REPLACE = GUITreeLoader.reg.getText("replace");
@@ -333,14 +333,14 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		RADIO_ALL_OPEN_DOCUMENTS.addActionListener(this);
 		RADIO_FILE_SYSTEM = new JRadioButton(FILE_SYSTEM);
 		RADIO_FILE_SYSTEM.addActionListener(this);
-
+		
 		START_AT_TOP = GUITreeLoader.reg.getText("start_at_top");
 		WRAP_ARROUND = GUITreeLoader.reg.getText("wrap_around");
 		SELECTION_ONLY = GUITreeLoader.reg.getText("selection_only");
 		IGNORE_CASE = GUITreeLoader.reg.getText("ignore_case");
 		INCLUDE_READ_ONLY_NODES = GUITreeLoader.reg.getText("include_read_only_nodes");
 		REGEXP = GUITreeLoader.reg.getText("regexp");
-
+		
 		CHECKBOX_REGEXP = new JCheckBox(REGEXP);
 		CHECKBOX_REGEXP.addActionListener(this);
 		CHECKBOX_START_AT_TOP = new JCheckBox(START_AT_TOP);
@@ -354,7 +354,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		CHECKBOX_INCLUDE_READ_ONLY_NODES = new JCheckBox(INCLUDE_READ_ONLY_NODES);
 		CHECKBOX_INCLUDE_READ_ONLY_NODES.addActionListener(this);
 		
-
+		
 		LABEL_PATH = new JLabel(PATH);
 		TEXTFIELD_PATH = new JTextField();
 		BUTTON_SELECT = new JButton(SELECT_DOTS);
@@ -398,7 +398,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		radioButtonGroup.add(RADIO_ALL_OPEN_DOCUMENTS);
 		radioButtonGroup.add(RADIO_FILE_SYSTEM);
 		RADIO_CURRENT_DOCUMENT.setSelected(true);
-
+		
 		BUTTON_FIND = new JButton(FIND);
 		BUTTON_FIND_ALL = new JButton(FIND_ALL);
 		BUTTON_REPLACE = new JButton(REPLACE);
@@ -407,11 +407,11 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		LABEL_FIND = new JLabel(FIND);
 		TEXTAREA_FIND = new JTextArea();
 		TEXTAREA_FIND.getDocument().addDocumentListener(new FindReplaceJTextAreaDocumentListener(FindReplaceJTextAreaDocumentListener.TYPE_FIND));
-
+		
 		LABEL_REPLACE = new JLabel(REPLACE);
 		TEXTAREA_REPLACE = new JTextArea();
 		TEXTAREA_REPLACE.getDocument().addDocumentListener(new FindReplaceJTextAreaDocumentListener(FindReplaceJTextAreaDocumentListener.TYPE_REPLACE));
-
+		
 		Insets insets = new Insets(1,3,1,3);
 		Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
 		
@@ -420,24 +420,24 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		TEXTAREA_FIND.setLineWrap(true);
 		TEXTAREA_FIND.setMargin(insets);
 		TEXTAREA_FIND.setRows(3);
-	
+		
 		TEXTAREA_REPLACE.setName(REPLACE);
 		TEXTAREA_REPLACE.setCursor(cursor);
 		TEXTAREA_REPLACE.setLineWrap(true);
 		TEXTAREA_REPLACE.setMargin(insets);
 		TEXTAREA_REPLACE.setRows(3);
-
+		
 		// Left Panel
 		NEW = GUITreeLoader.reg.getText("new");
 		DELETE = GUITreeLoader.reg.getText("delete");
-
+		
 		BUTTON_NEW = new JButton(NEW);
 		BUTTON_DELETE = new JButton(DELETE);
 		
 		LIST.setModel(new DefaultListModel());
 		LIST.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		LIST.addListSelectionListener(this);
-
+		
 		LIST.addMouseListener(
 			new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
@@ -451,7 +451,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		);
 		
 		jsp = new JScrollPane(LIST);
-	
+		
 		disableButtons();
 		
 		// Setup JFileChooser
@@ -459,16 +459,16 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		fileChooser.setFileHidingEnabled(false);
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		fileChooser.setApproveButtonText(SELECT);
-
+		
 		model = new FindReplaceModel();
 		findReplaceDialog = new FindReplaceDialog();
 		
 		Outliner.documents.addDocumentRepositoryListener(this);
-			
+		
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new BorderLayout());
 		rightPanel.setBorder(new CompoundBorder(new BevelBorder(BevelBorder.RAISED), new EmptyBorder(new Insets(5,5,5,5))));
-				
+		
 		// Match Options
 		JPanel matchOptionsPanel = new JPanel();
 		matchOptionsPanel.setLayout(new BorderLayout());
@@ -495,13 +495,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		scopeOptionsBox.add(CHECKBOX_WRAP_AROUND);
 		scopeOptionsBox.add(CHECKBOX_SELECTION_ONLY);
 		scopeOptionsBox.add(CHECKBOX_INCLUDE_READ_ONLY_NODES);
-
+		
 		scopeOptionsBox.add(Box.createVerticalStrut(5));
-
+		
 		Box documentScopeBox2 = Box.createHorizontalBox();
 		documentScopeBox2.add(RADIO_FILE_SYSTEM);
 		scopeOptionsBox.add(documentScopeBox2);
-
+		
 		// Define Box for File System Search
 		Box fileSystemSearch = Box.createVerticalBox();
 			Box fileSystemPathBox = Box.createHorizontalBox();
@@ -523,17 +523,17 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 				filterPanel.add(LABEL_FILE_FILTER_INCLUDE);
 				filterPanel.add(TEXTFIELD_FILE_FILTER_INCLUDE);
 				filterPanel.add(CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE);
-
+				
 				filterPanel.add(new JLabel(""));
 				filterPanel.add(LABEL_FILE_FILTER_EXCLUDE);
 				filterPanel.add(TEXTFIELD_FILE_FILTER_EXCLUDE);
 				filterPanel.add(CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE);
-
+				
 				filterPanel.add(LABEL_DIR_FILTER);
 				filterPanel.add(LABEL_DIR_FILTER_INCLUDE);
 				filterPanel.add(TEXTFIELD_DIR_FILTER_INCLUDE);
 				filterPanel.add(CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE);
-
+				
 				filterPanel.add(new JLabel(""));
 				filterPanel.add(LABEL_DIR_FILTER_EXCLUDE);
 				filterPanel.add(TEXTFIELD_DIR_FILTER_EXCLUDE);
@@ -548,7 +548,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		BUTTON_FIND_ALL.addActionListener(this);
 		BUTTON_REPLACE.addActionListener(this);
 		BUTTON_REPLACE_ALL.addActionListener(this);
-
+		
 		Box buttonBox = Box.createHorizontalBox();
 		
 		buttonBox.add(BUTTON_FIND);
@@ -558,10 +558,10 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		buttonBox.add(BUTTON_REPLACE);
 		buttonBox.add(Box.createHorizontalStrut(5));
 		buttonBox.add(BUTTON_REPLACE_ALL);
-
+		
 		// Set the default button.
 		getRootPane().setDefaultButton(BUTTON_FIND);
-
+		
 		// Define FindReplace Box
 		TEXTAREA_FIND.addKeyListener(this);
 		TEXTAREA_REPLACE.addKeyListener(this);
@@ -592,17 +592,17 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new BorderLayout());
 		leftPanel.setBorder(new CompoundBorder(new BevelBorder(BevelBorder.RAISED), new EmptyBorder(new Insets(5,5,5,5))));
-
+		
 		BUTTON_NEW.addActionListener(this);
 		BUTTON_DELETE.addActionListener(this);
-
+		
 		leftPanel.add(jsp, BorderLayout.CENTER);
 		Box listBox = Box.createHorizontalBox();
 		listBox.add(BUTTON_NEW);
 		listBox.add(Box.createHorizontalStrut(5));
 		listBox.add(BUTTON_DELETE);
 		leftPanel.add(listBox, BorderLayout.NORTH);
-
+		
 		getContentPane().add(leftPanel, BorderLayout.EAST);
 		
 		LIST.setSelectedIndex(0);
@@ -610,7 +610,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		syncToModel();
 		
 		pack();
-
+		
 		if (Outliner.documents.openDocumentCount() <= 0) {
 			disableButtons();
 		} else {
@@ -634,8 +634,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		TEXTAREA_FIND.requestFocus();
 		super.show();
 	}
-
-
+	
+	
 	// DocumentRepositoryListener Interface
 	public void documentAdded(DocumentRepositoryEvent e) {}
 	
@@ -646,10 +646,10 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 			disableButtons();
 		} else {
 			enableButtons();
-		}		
+		}
 	}
-
-
+	
+	
 	// ListSelectionListenerInterface
 	protected int currentIndex = -1;
 	
@@ -680,20 +680,28 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 			JTextArea text = (JTextArea) e.getSource();
 			
 			if (text.getName().equals(FIND)) {
-				TEXTAREA_REPLACE.requestFocus();
+				if (e.isShiftDown()) {
+					LIST.requestFocus();
+				} else {
+					TEXTAREA_REPLACE.requestFocus();
+				}
 			} else if (text.getName().equals(REPLACE)) {
-				TEXTAREA_FIND.requestFocus();
+				if (e.isShiftDown()) {
+					TEXTAREA_FIND.requestFocus();
+				} else {
+					CHECKBOX_REGEXP.requestFocus();
+				}
 			}
 			
 			e.consume();
 			return;
 		}
 	}
-
+	
 	public void keyTyped(KeyEvent e) {}
 	public void keyReleased(KeyEvent e) {}
-
-
+	
+	
 	private void syncToModel() {
 		CHECKBOX_START_AT_TOP.setSelected(model.getStartAtTop());
 		CHECKBOX_WRAP_AROUND.setSelected(model.getWrapAround());
@@ -710,7 +718,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		TEXTFIELD_DIR_FILTER_EXCLUDE.setText(model.getDirFilterExclude());
 		CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setSelected(model.getDirFilterIncludeIgnoreCase());
 		CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setSelected(model.getDirFilterExcludeIgnoreCase());
-
+		
 		int mode = model.getSelectionMode();
 		if (mode == FindReplaceModel.MODE_CURRENT_DOCUMENT) {
 			RADIO_CURRENT_DOCUMENT.setSelected(true);
@@ -729,7 +737,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 			System.out.println("Unknown File Selection Mode: " + mode);
 		}
 	}
-
+	
 	public void hide() {
 		if (initialized) {
 			model.setPath(TEXTFIELD_PATH.getText());
@@ -756,7 +764,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 			newFindReplace();
 		} else if (e.getActionCommand().equals(DELETE)) {
 			deleteFindReplace();
-
+			
 		} else if (e.getActionCommand().equals(SELECT_DOTS)) {
 			int returnVal = fileChooser.showOpenDialog(this);
 			if(returnVal == JFileChooser.APPROVE_OPTION) {
@@ -777,20 +785,20 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 			model.setSelectionOnly(CHECKBOX_SELECTION_ONLY.isSelected());
 		} else if (e.getActionCommand().equals(INCLUDE_READ_ONLY_NODES)) {
 			model.setIncludeReadOnly(CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected());
-
+			
 		} else if (e.getActionCommand().equals(MAKE_BACKUPS)) {
 			model.setMakeBackups(CHECKBOX_MAKE_BACKUPS.isSelected());
-
+			
 		} else if (e.getActionCommand().equals(FILE_FILTER_INCLUDE_IGNORE_CASE)) {
 			model.setFileFilterIncludeIgnoreCase(CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.isSelected());
 		} else if (e.getActionCommand().equals(FILE_FILTER_EXCLUDE_IGNORE_CASE)) {
 			model.setFileFilterExcludeIgnoreCase(CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.isSelected());
-
+			
 		} else if (e.getActionCommand().equals(DIR_FILTER_INCLUDE_IGNORE_CASE)) {
 			model.setDirFilterIncludeIgnoreCase(CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.isSelected());
 		} else if (e.getActionCommand().equals(DIR_FILTER_EXCLUDE_IGNORE_CASE)) {
 			model.setDirFilterExcludeIgnoreCase(CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.isSelected());
-
+			
 		} else if (e.getActionCommand().equals(INCLUDE_SUB_DIRECTORIES)) {
 			model.setIncludeSubDirs(CHECKBOX_INCLUDE_SUB_DIRECTORIES.isSelected());
 			
@@ -801,7 +809,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 				TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(true);
 				TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(true);
 				CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(true);
-				CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(true);				
+				CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(true);
 			} else {
 				LABEL_DIR_FILTER.setEnabled(false);
 				LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
@@ -809,14 +817,14 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 				TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(false);
 				TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(false);
 				CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
-				CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);			
+				CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
 			}
 		
 		// RadioButtons
 		} else if (e.getActionCommand().equals(CURRENT_DOCUMENT)) {
 			model.setSelectionMode(FindReplaceModel.MODE_CURRENT_DOCUMENT);
 			updateForCurrentDocumentRadio();
-
+			
 		} else if (e.getActionCommand().equals(ALL_OPEN_DOCUMENTS)) {
 			model.setSelectionMode(FindReplaceModel.MODE_ALL_OPEN_DOCUMENTS);
 			updateForAllOpenDocumentsRadio();
@@ -826,7 +834,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 			updateForSelectFileSystemRadio();
 		}
 	}
-
+	
 	private void updateForCurrentDocumentRadio() {
 		BUTTON_FIND.setEnabled(true);
 		BUTTON_FIND_ALL.setEnabled(true);
@@ -915,7 +923,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 			TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(true);
 			TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(true);
 			CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(true);
-			CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(true);				
+			CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(true);
 		} else {
 			LABEL_DIR_FILTER.setEnabled(false);
 			LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
@@ -923,7 +931,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 			TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(false);
 			TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(false);
 			CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
-			CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);			
+			CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
 		}
 	}
 	
@@ -997,7 +1005,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 				break;
 		}
 	}
-
+	
 	private static FindReplaceResultsModel results = null;
 	protected static com.organic.maynard.swing.ProgressMonitor monitor = null;
 	
@@ -1039,7 +1047,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 				break;
 			
 			case FindReplaceModel.MODE_FILE_SYSTEM:
-				Thread t = new Thread(new Runnable() { 
+				Thread t = new Thread(new Runnable() {
 					public void run() {
 						//System.out.println("Thread started.");
 						findAllFileSystem(
@@ -1059,7 +1067,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 							CHECKBOX_REGEXP.isSelected()
 						);
 						//System.out.println("Thread ended.");
-					} 
+					}
 				});
 				monitor.setCanceled(false);
 				t.start();
@@ -1071,21 +1079,21 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 				System.out.println("ERROR: Unknown Find/Replace mode.");
 				break;
 		}
-
+		
 		if (results.size() == 0) {
 			// Beep to alert user no result found.
 			Outliner.outliner.getToolkit().beep();
 			results = null; // cleanup.
 			return;
 		}
-
+		
 		Outliner.findReplaceResultsDialog.show(results);
 		results = null; // cleanup.
 	}
 	
 	private static void replace(OutlinerDocument doc) {
 		int mode = getFindReplaceMode();
-
+		
 		switch (mode) {
 			case FindReplaceModel.MODE_CURRENT_DOCUMENT:
 				replace(
@@ -1119,7 +1127,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 				break;
 		}
 	}
-
+	
 	private static void replace_all(OutlinerDocument doc) {
 		int mode = getFindReplaceMode();
 		
@@ -1180,7 +1188,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 							CHECKBOX_MAKE_BACKUPS.isSelected(), 
 							CHECKBOX_REGEXP.isSelected()
 						);
-					} 
+					}
 				});
 				monitor.setCanceled(false);
 				t.start();
@@ -1192,17 +1200,17 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 				System.out.println("ERROR: Unknown Find/Replace mode.");
 				break;
 		}
-
+		
 		if (results.size() == 0) {
 			// Beep to alert user no result found.
 			Outliner.outliner.getToolkit().beep();
 			return;
 		}
-
+		
 		Outliner.findReplaceResultsDialog.show(results);
 		results = null; // cleanup.
 	}
-		
+	
 	// This method is public and should have no direct dependancy on 
 	// find/replace GUI so that it can be called from other classes.
 	public static void find(
@@ -1235,7 +1243,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		} else {
 			// Shorthand
 			JoeTree tree = doc.tree;
-
+			
 			// Insert the node into the visible nodes and clear the selection.
 			tree.insertNode(location.node);
 			tree.clearSelection();
@@ -1259,12 +1267,12 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 			} catch (java.beans.PropertyVetoException pve) {
 				pve.printStackTrace();
 			}
-
+			
 			// Redraw and Set Focus
 			doc.panel.layout.draw(location.node,OutlineLayoutManager.TEXT);
 		}
 	}
-
+	
 	private static FileSystemFind fileSystemFind = null;
 	private static FileSystemReplace fileSystemReplace = null;
 	
@@ -1314,7 +1322,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		} else {
 			dirFilter = new NoSubDirectoryFilter();
 		}
-
+		
 		// Do it
 		fileSystemFind.find(model, fileFilter, dirFilter, startingPath, sFind, isRegexp, ignoreCase, includeSubDirectories);
 	}
@@ -1351,7 +1359,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 				return;
 			}
 		}
-
+		
 		// Prepare Filters
 		com.organic.maynard.util.crawler.FileFilter fileFilter = new TypeGlobFileFilter(fileFilterInclude, fileFilterIncludeIgnoreCase, fileFilterExclude, fileFilterExcludeIgnoreCase);
 		com.organic.maynard.util.crawler.FileFilter dirFilter = null;
@@ -1360,11 +1368,11 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		} else {
 			dirFilter = new NoSubDirectoryFilter();
 		}
-
+		
 		// Do it
 		fileSystemReplace.replace(model, fileFilter, dirFilter, startingPath, sFind, sReplace, isRegexp, ignoreCase, makeBackups, includeSubDirectories);
 	}
-
+	
 	// This method is public and should have no direct dependancy on 
 	// find/replace GUI so that it can be called from other classes.
 	public static void findAllOpenDocuments(
@@ -1419,13 +1427,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 					isRegexp
 				);
 			}
-
+			
 			if (location == null) {
 				
 			} else {
 				// Shorthand
 				JoeTree tree = doc.tree;
-	
+				
 				// Insert the node into the visible nodes and clear the selection.
 				tree.insertNode(location.node);
 				tree.clearSelection();
@@ -1466,7 +1474,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 			);
 		}
 	}
-
+	
 	public static void findAllAllOpenDocuments(
 		FindReplaceResultsModel results,
 		String sFind,
@@ -1511,13 +1519,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		boolean isRegexp
 	) {
 		int count = 0;
-
+		
 		String replacement = sReplace;
 		String textToMatch = sFind;
 		if (textToMatch.equals("")) {
 			// Beep to alert user no result found.
 			Outliner.outliner.getToolkit().beep();
-
+			
 			return;
 		}
 		
@@ -1529,12 +1537,12 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 				} else {
 					int cursor = doc.tree.getCursorPosition();
 					int mark = doc.tree.getCursorMarkPosition();
-
+					
 					Node nodeStart = doc.tree.getEditingNode();
 					int cursorStart = Math.min(cursor,mark);
 					Node nodeEnd = doc.tree.getEditingNode();
-					int cursorEnd = Math.max(cursor,mark);			
-		
+					int cursorEnd = Math.max(cursor,mark);
+					
 					while (true) {
 						//System.out.println("range: " + cursorStart + " : " + cursorEnd);
 						if ((nodeStart == nodeEnd) && (cursorStart == cursorEnd)) {break;}
@@ -1578,7 +1586,6 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 					// Adjust cursor and mark for new selection.
 					doc.tree.setCursorPosition(cursorEnd);
 					doc.tree.setCursorMarkPosition(Math.min(cursor,mark));
-						
 				}
 			} else {
 				for (int i = 0; i < doc.tree.getSelectedNodes().size(); i++) {					
@@ -1586,7 +1593,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 					int cursorStart = 0;
 					Node nodeEnd = nodeStart.getLastDecendent();
 					int cursorEnd = nodeEnd.getValue().length();
-		
+					
 					while (true) {
 						//System.out.println("range: " + cursorStart + " : " + cursorEnd);
 						if ((nodeStart == nodeEnd) && (cursorStart == cursorEnd)) {break;}
@@ -1623,16 +1630,16 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 						cursorStart = location.endIndex;
 						
 						count++;
-					}					
+					}
 					
 				}
-			}	
+			}
 		} else {
 			Node nodeStart = doc.tree.getRootNode().getFirstChild();
 			int cursorStart = 0;
 			Node nodeEnd = doc.tree.getRootNode().getLastDecendent();
-			int cursorEnd = nodeEnd.getValue().length();			
-
+			int cursorEnd = nodeEnd.getValue().length();
+			
 			while (true) {
 				//System.out.println("range: " + cursorStart + " : " + cursorEnd);
 				NodeRangePair location = findText(
@@ -1669,7 +1676,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 				}
 				FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, "", false);
 				results.addResult(result);
-
+				
 				nodeStart = location.node;
 				cursorStart = location.endIndex;
 				
@@ -1677,10 +1684,10 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 			}
 		}
 	}
-
-
-
-
+	
+	
+	
+	
 	public static void replace(
 		OutlinerDocument doc, 
 		String sFind,
@@ -1711,24 +1718,24 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		} else {
 			// Shorthand
 			JoeTree tree = doc.tree;
-
+			
 			// Create the undoable
 			int difference = sReplace.length() - (location.endIndex - location.startIndex);
 			if (isRegexp) {
 				difference = FindReplaceFrame.difference;
 			}
-
+			
 			String oldText = location.node.getValue();
 			String newText = oldText.substring(0,location.startIndex) + sReplace + oldText.substring(location.endIndex,oldText.length());
-
+			
 			if (isRegexp) {
 				newText = oldText.substring(0,location.startIndex) + FindReplaceFrame.replacementText;
 			}
-										
+			
 			int oldPosition = location.endIndex;
 			int newPosition = location.endIndex + difference;
 			doc.getUndoQueue().add(new UndoableEdit(location.node,oldText,newText,oldPosition,newPosition,oldPosition,location.startIndex));
-
+			
 			// Update the model
 			location.node.setValue(newText);
 			
@@ -1747,7 +1754,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 			
 			// Freeze Undo Editing
 			UndoableEdit.freezeUndoEdit(location.node);
-
+			
 			// Bring the window to the front
 			try {
 				Outliner.outliner.requestFocus();
@@ -1760,7 +1767,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 			doc.panel.layout.draw(location.node,OutlineLayoutManager.TEXT);
 		}
 	}
-
+	
 	// This method is public and should have no direct dependancy on 
 	// find/replace GUI so that it can be called from other classes.
 	public static void replaceAllOpenDocuments(
@@ -1815,30 +1822,30 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 					isRegexp
 				);
 			}
-
+			
 			if (location == null) {
-				
+				// Do Nothing
 			} else {
 				// Shorthand
 				JoeTree tree = doc.tree;
-	
+				
 				// Create the undoable
 				int difference = sReplace.length() - (location.endIndex - location.startIndex);
 				if (isRegexp) {
 					difference = FindReplaceFrame.difference;
 				}
-	
+				
 				String oldText = location.node.getValue();
 				String newText = oldText.substring(0,location.startIndex) + sReplace + oldText.substring(location.endIndex,oldText.length());
-	
+				
 				if (isRegexp) {
 					newText = oldText.substring(0,location.startIndex) + FindReplaceFrame.replacementText;
 				}
-											
+				
 				int oldPosition = location.endIndex;
 				int newPosition = location.endIndex + difference;
 				doc.getUndoQueue().add(new UndoableEdit(location.node,oldText,newText,oldPosition,newPosition,oldPosition,location.startIndex));
-	
+				
 				// Update the model
 				location.node.setValue(newText);
 				
@@ -1857,7 +1864,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 				
 				// Freeze Undo Editing
 				UndoableEdit.freezeUndoEdit(location.node);
-	
+				
 				// Bring the window to the front
 				Outliner.outliner.requestFocus();
 				WindowMenu.changeToWindow(doc);
@@ -1882,7 +1889,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 			);
 		}
 	}
-
+	
 	public static void replaceAllAllOpenDocuments(
 		FindReplaceResultsModel results,
 		String sFind,
@@ -1927,13 +1934,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		boolean isRegexp
 	) {
 		int count = 0;
-
+		
 		String replacement = sReplace;
 		String textToMatch = sFind;
 		if (textToMatch.equals("")) {
 			// Beep to alert user no result found.
 			Outliner.outliner.getToolkit().beep();
-
+			
 			return;
 		}
 		
@@ -1948,12 +1955,12 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 				} else {
 					int cursor = doc.tree.getCursorPosition();
 					int mark = doc.tree.getCursorMarkPosition();
-
+					
 					Node nodeStart = doc.tree.getEditingNode();
 					int cursorStart = Math.min(cursor,mark);
 					Node nodeEnd = doc.tree.getEditingNode();
-					int cursorEnd = Math.max(cursor,mark);			
-		
+					int cursorEnd = Math.max(cursor,mark);
+					
 					while (true) {
 						//System.out.println("range: " + cursorStart + " : " + cursorEnd);
 						if ((nodeStart == nodeEnd) && (cursorStart == cursorEnd)) {break;}
@@ -2013,8 +2020,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 						if (isRegexp) {
 							difference = FindReplaceFrame.difference;
 						}
-
-		
+						
 						if (nodeEnd == location.node) {
 							cursorEnd += difference;
 						}
@@ -2027,15 +2033,14 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 					// Adjust cursor and mark for new selection.
 					doc.tree.setCursorPosition(cursorEnd);
 					doc.tree.setCursorMarkPosition(Math.min(cursor,mark));
-						
 				}
 			} else {
-				for (int i = 0; i < doc.tree.getSelectedNodes().size(); i++) {					
+				for (int i = 0; i < doc.tree.getSelectedNodes().size(); i++) {
 					Node nodeStart = doc.tree.getSelectedNodes().get(i);
 					int cursorStart = 0;
 					Node nodeEnd = nodeStart.getLastDecendent();
 					int cursorEnd = nodeEnd.getValue().length();
-		
+					
 					while (true) {
 						//System.out.println("range: " + cursorStart + " : " + cursorEnd);
 						if ((nodeStart == nodeEnd) && (cursorStart == cursorEnd)) {break;}
@@ -2075,7 +2080,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 						
 						// Add the primitive undoable
 						undoable.addPrimitive(new PrimitiveUndoableEdit(location.node,oldText,newText));
-
+						
 						// Add the Result
 						String match = oldText.substring(location.startIndex, location.endIndex);
 						String replacementTemp = sReplace;
@@ -2085,13 +2090,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 						}
 						FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, replacementTemp, true);
 						results.addResult(result);
-
+						
 						// Setup for next replacement
 						int difference = sReplace.length() - (location.endIndex - location.startIndex);
 						if (isRegexp) {
 							difference = FindReplaceFrame.difference;
 						}
-		
+						
 						if (nodeEnd == location.node) {
 							cursorEnd += difference;
 						}
@@ -2099,16 +2104,16 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 						cursorStart = location.endIndex + difference;
 						
 						count++;
-					}					
+					}
 					
 				}
-			}	
+			}
 		} else {
 			Node nodeStart = doc.tree.getRootNode().getFirstChild();
 			int cursorStart = 0;
 			Node nodeEnd = doc.tree.getRootNode().getLastDecendent();
-			int cursorEnd = nodeEnd.getValue().length();			
-
+			int cursorEnd = nodeEnd.getValue().length();
+			
 			while (true) {
 				//System.out.println("range: " + cursorStart + " : " + cursorEnd);
 				NodeRangePair location = findText(
@@ -2151,7 +2156,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 				
 				// Add the primitive undoable
 				undoable.addPrimitive(new PrimitiveUndoableEdit(location.node,oldText,newText));
-
+				
 				// Add the Result
 				String match = oldText.substring(location.startIndex, location.endIndex);
 				String replacementTemp = sReplace;
@@ -2161,13 +2166,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 				}
 				FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, replacementTemp, true);
 				results.addResult(result);
-
+				
 				// Setup for next replacement
 				int difference = sReplace.length() - (location.endIndex - location.startIndex);
 				if (isRegexp) {
 					difference = FindReplaceFrame.difference;
 				}
-
+				
 				if (nodeEnd == location.node) {
 					cursorEnd += difference;
 				}
@@ -2196,7 +2201,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		if (textToMatch.equals("")) {
 			return null;
 		}
-
+		
 		if (selectionOnly) {
 			if (doc.tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
 				if (doc.tree.getCursorPosition() == doc.tree.getCursorMarkPosition()) {
@@ -2228,11 +2233,11 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 			// End Values
 			Node nodeEnd = doc.tree.getEditingNode();
 			int cursorEnd = doc.tree.getCursorPosition();
-
+			
 			// Start Values
 			Node nodeStart = null;
 			int cursorStart = 0;
-	
+			
 			if (startAtTop) {
 				nodeStart = doc.tree.getRootNode().getFirstChild();
 				nodeEnd = doc.tree.getRootNode().getLastDecendent();
@@ -2274,7 +2279,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 			|| endNode == null
 			|| match == null
 			|| replacement == null) { return null; }
-				
+		
 		String text = startNode.getValue();
 		
 		// Find the match
@@ -2289,8 +2294,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		} else {
 			matchStart = matchText(text.substring(start,text.length()), match, replacement, ignoreCase, isRegexp, isReplace);
 		}
-				
-		// Match Found		
+		
+		// Match Found
 		if (matchStart != -1) {
 			// Deal with read-only nodes for replace
 			if (isReplace && !includeReadOnlyNodes && !startNode.isEditable()) {
@@ -2311,7 +2316,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		if (done) {
 			return null;
 		}
-				
+		
 		// No match found, so move on to the next node.
 		Node nextNodeToSearch = startNode.nextNode();
 		if (nextNodeToSearch.isRoot()) {
@@ -2326,12 +2331,12 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		if (endNode == nextNodeToSearch) {
 			done = true;
 		}
-
+		
 		// Try it again
 		return findText(nextNodeToSearch, 0, endNode, end, match, replacement, loopedOver, done, isReplace, ignoreCase, includeReadOnlyNodes, wrapAround, isRegexp);
 	}
-
-
+	
+	
 	private static int matchLength = 0;
 	private static int difference = 0;
 	private static String replacementText = null;
@@ -2358,9 +2363,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 				retVal.append(REGEX_MATCH_END_IGNORE_CASE);
 			} else {
 				retVal.append(REGEX_MATCH_END);
-			}		
+			}
 		}
-
+		
 		// Compile the Regex to check for syntax errors
 		try {
 			compiler.compile(retVal.toString());
@@ -2383,21 +2388,21 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		if (isRegexp) {
 			// Prepare input
 			input = new PatternMatcherInput(text);
-
+			
 			// Prepare the regex
 			String regex = prepareRegEx(false, ignoreCase, match, replacement);
 			if (regex == null) {
 				// An Error Occurred so abort.
 				return -1;
 			}
-							
+			
 			if (isReplace) {
 				// Prepare the replacement regex
 				String subRegex = prepareRegEx(isReplace, ignoreCase, match, replacement);
 				if (subRegex == null) {
 					// An Error Occurred so abort.
 					return -1;
-				}								
+				}
 				// Do the regex find and return result
 				try {
 					if (util.match(regex, input)) {
@@ -2432,7 +2437,6 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 				}
 				return -1;
 			}
-
 		} else {
 			if (ignoreCase) {
 				text = text.toLowerCase();
@@ -2446,11 +2450,11 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 }
 
 class FindReplaceDialog extends JDialog implements ActionListener {
-
+	
 	// Constants
 	public static final int MODE_NEW = 0;
 	public static final int MODE_RENAME = 1;
-
+	
 	private int currentMode = -1;
 	
 	private static String OK = null;
@@ -2458,16 +2462,16 @@ class FindReplaceDialog extends JDialog implements ActionListener {
 	private static String NEW_FIND_REPLACE = null;
 	private static String RENAME_FIND_REPLACE = null;
 	private static String NAME = null;
-
+	
 	private static String ERROR_EXISTANCE = null;
-
-
+	
+	
 	// GUI Elements
 	private JButton buttonOK = null;
 	private JButton buttonCancel = null;
 	private JTextField nameField = null;
 	private JLabel errorLabel = null;
-
+	
 	// Constructors	
 	public FindReplaceDialog() {
 		super(Outliner.findReplace, "", true);
@@ -2478,7 +2482,7 @@ class FindReplaceDialog extends JDialog implements ActionListener {
 		RENAME_FIND_REPLACE = GUITreeLoader.reg.getText("rename_find_replace");
 		NAME = GUITreeLoader.reg.getText("name");
 		ERROR_EXISTANCE = GUITreeLoader.reg.getText("error_name_existance");
-
+		
 		buttonOK = new JButton(OK);
 		buttonCancel = new JButton(CANCEL);
 		nameField = new JTextField(20);
@@ -2496,32 +2500,32 @@ class FindReplaceDialog extends JDialog implements ActionListener {
 				}
 			}
 		);
-
+		
 		// Define the Bottom Panel
 		JPanel bottomPanel = new JPanel();
-
+		
 		bottomPanel.setLayout(new FlowLayout());
 		
 		buttonOK.addActionListener(this);
 		bottomPanel.add(buttonOK);
-
+		
 		buttonCancel.addActionListener(this);
 		bottomPanel.add(buttonCancel);
-
+		
 		getContentPane().add(bottomPanel,BorderLayout.SOUTH);
-
+		
 		// Define the Center Panel
 		Box box = Box.createVerticalBox();
-
+		
 		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(NAME), box);
 		AbstractPreferencesPanel.addSingleItemCentered(nameField, box);
-
+		
 		box.add(Box.createVerticalStrut(5));
-
+		
 		AbstractPreferencesPanel.addSingleItemCentered(errorLabel, box);
-
+		
 		getContentPane().add(box,BorderLayout.CENTER);
-
+		
 		// Set the default button
 		getRootPane().setDefaultButton(buttonOK);
 		
@@ -2544,13 +2548,13 @@ class FindReplaceDialog extends JDialog implements ActionListener {
 		errorLabel.setText(" ");
 		
 		nameField.requestFocus();
-
+		
 		Rectangle r = Outliner.outliner.getBounds();
 		setLocation((int) (r.getCenterX() - getWidth()/2), (int) (r.getCenterY() - getHeight()/2));
 		
 		super.show();
 	}
-		
+	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(OK)) {
@@ -2559,7 +2563,7 @@ class FindReplaceDialog extends JDialog implements ActionListener {
 			cancel();
 		}
 	}
-
+	
 	private void ok() {
 		String name = nameField.getText();
 		
@@ -2571,7 +2575,7 @@ class FindReplaceDialog extends JDialog implements ActionListener {
 		
 		// All is good so lets make the change
 		FindReplaceModel model = Outliner.findReplace.model;
-
+		
 		JList list = Outliner.findReplace.LIST;
 		
 		if (currentMode == MODE_NEW) {
@@ -2585,7 +2589,7 @@ class FindReplaceDialog extends JDialog implements ActionListener {
 		
 		this.hide();
 	}
-
+	
 	private void cancel() {
 		hide();
 	}
@@ -2595,11 +2599,11 @@ class FindReplaceJTextAreaDocumentListener implements DocumentListener {
 	public static final int TYPE_FIND = 0;
 	public static final int TYPE_REPLACE = 1;
 	
-	private int type = -1;	
+	private int type = -1;
 	public FindReplaceJTextAreaDocumentListener(int type) {
 		this.type = type;
 	}
-
+	
 	public void changedUpdate(DocumentEvent e) {update(e);}
 	public void insertUpdate(DocumentEvent e) {update(e);}
 	public void removeUpdate(DocumentEvent e) {update(e);}
