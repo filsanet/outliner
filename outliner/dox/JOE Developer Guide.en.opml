@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide.en.opml</title>
 <dateCreated>Thu, 1 Nov 2001 12:22:52 GMT</dateCreated>
-<dateModified>Wed, 23 Jan 2002 09:11:47 GMT</dateModified>
+<dateModified>Thu, 24 Jan 2002 09:26:20 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>44</windowTop>
-<windowLeft>130</windowLeft>
-<windowBottom>477</windowBottom>
-<windowRight>571</windowRight>
+<windowTop>7</windowTop>
+<windowLeft>47</windowLeft>
+<windowBottom>363</windowBottom>
+<windowRight>489</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -1121,7 +1121,8 @@
 </outline>
 <outline text="Beta Dox">
 	<outline text="What Are Beta Dox ?">
-		<outline text="Documentation that's still under development."/>
+		<outline text="Documentation that's still under research and development"/>
+		<outline text="Take it with a large dose of salt"/>
 		<outline text="We invite your review, and solicit your feedback"/>
 		<outline text="Feedback site: http://JavaOutlineEditor.org/feedback/dox"/>
 	</outline>
@@ -1147,10 +1148,26 @@
 			<outline text="That lets the translators discover they've got work to do"/>
 		</outline>
 	</outline>
+	<outline text="Adding a Menu Item">
+		<outline text="Example: Window:Maximize:Horizontally/Vertically">
+			<outline text="Added items to gui_tree.en.xml">
+				<outline text="&lt;menuitem id=&quot;maximize_submenu&quot; class=&quot;com.organic.maynard.outliner.OutlinerSubMenuItem&quot; text=&quot;Maximize&quot;&gt;">
+					<outline text="&lt;menuitem id=&quot;maximize_vertically&quot; class=&quot;com.organic.maynard.outliner.MaximizeVerticallyMenuItem&quot; text=&quot;Vertically&quot;/&gt;"/>
+					<outline text="&lt;menuitem id=&quot;maximize_horizontally&quot; class=&quot;com.organic.maynard.outliner.MaximizeHorizontallyMenuItem&quot; text=&quot;Horizontally&quot;/&gt;"/>
+				</outline>
+				<outline text="&lt;/menuitem&gt;"/>
+			</outline>
+			<outline text="Added classes MaximizeHorizontallyMenuItem and MaximizeVerticallyMenuItem">
+				<outline text="MaximizeHorizontallyMenuItem"/>
+				<outline text="MaximizeVerticallyMenuItem"/>
+			</outline>
+		</outline>
+	</outline>
 </outline>
 <outline text="Stuff from our Attics">
 	<outline text="Stan's Batch Files">
 		<outline text="I find the following DOS/Windows batch files useful in my JOE develpment work"/>
+		<outline text="&lt;forthcoming&gt;&lt;scrubbing&gt;"/>
 	</outline>
 </outline>
 </body>
