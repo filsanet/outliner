@@ -50,10 +50,7 @@ import java.awt.datatransfer.*;
 public class TextKeyListener implements KeyListener, MouseListener, FocusListener {
 	
 	private OutlinerCellRendererImpl textArea = null;
-	
-	private boolean inlinePaste = true;
-	private boolean backspaceMerge = false;
-	private boolean deleteMerge = false;
+
 
 	// The Constructors
 	public TextKeyListener() {}
@@ -230,21 +227,6 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 				UndoableEdit.freezeUndoEdit(currentNode);
 
 				return;
-
-			case KeyEvent.VK_V:
-				if (e.isControlDown()) {
-					// Abort if node is not editable
-					if (!currentNode.isEditable()) {
-						e.consume();
-						return;
-					}
-				
-					paste(tree,layout);
-					if (!inlinePaste) {
-						e.consume();
-					}
-				}
-				return;
 				
 			default:
 				// If we're read-only then abort
@@ -285,21 +267,10 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 		// If we're read-only then abort
 		if (!currentNode.isEditable()) {
 			return;
-		}		
-		
-		// Let control-x and control-v slip through so that cut and paste will be recorded as undoable.
-		if (e.isControlDown()) {
-			if (e.isShiftDown()) {
-				return;
-			} else if ((keyCode == KeyEvent.VK_X) || ((keyCode == KeyEvent.VK_V) && inlinePaste)) {
-				// Do Nothing
-			} else {
-				return;
-			}
 		}
 		
 		// Keep any meta keys from effecting undoability.
-		if (e.isAltDown() || e.isAltGraphDown() || e.isMetaDown()) {
+		if (e.isControlDown() || e.isAltDown() || e.isAltGraphDown() || e.isMetaDown()) {
 			return;
 		}
 		
@@ -373,13 +344,9 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 			// Put the Undoable onto the UndoQueue
 			UndoableEdit undoable = tree.getDocument().undoQueue.getIfEdit();
 			if ((undoable != null) && (undoable.getNode() == currentNode) && (!undoable.isFrozen())) {
-				if (e.isControlDown() && ((keyCode == KeyEvent.VK_X) || (keyCode == KeyEvent.VK_V))) {
-					tree.getDocument().undoQueue.add(new UndoableEdit(currentNode, oldText, newText, tree.getCursorPosition(), caretPosition, tree.getCursorMarkPosition(), caretPosition));
-				} else {
-					undoable.setNewText(newText);
-					undoable.setNewPosition(caretPosition);
-					undoable.setNewMarkPosition(caretPosition);
-				}
+				undoable.setNewText(newText);
+				undoable.setNewPosition(caretPosition);
+				undoable.setNewMarkPosition(caretPosition);
 			} else {
 				tree.getDocument().undoQueue.add(new UndoableEdit(currentNode, oldText, newText, tree.getCursorPosition(), caretPosition, tree.getCursorMarkPosition(), caretPosition));
 			}
@@ -543,101 +510,6 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 		} else {
 			layout.draw(nextNode,OutlineLayoutManager.TEXT);
 		}
-	}
-
-	private void paste(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-
-		inlinePaste = true;
-		
-		// Get the text from the clipboard and turn it into a tree
-		boolean isNodeSet = false;
-		String text = "";
-		NodeSet nodeSet = new NodeSet();
-		try {
-			Transferable selection = (Transferable) Outliner.clipboard.getContents(this);
-			if (selection != null) {
-				if (selection instanceof NodeSetTransferable) {
-					nodeSet = (NodeSet) selection.getTransferData(NodeSetTransferable.nsFlavor);
-					inlinePaste = false;
-					isNodeSet = true;
-				} else {
-					text = (String) selection.getTransferData(DataFlavor.stringFlavor);
-					
-					// Need to make a check for inline pastes
-					if ((text.indexOf(Preferences.LINE_END_STRING) == -1) && (text.indexOf(Preferences.DEPTH_PAD_STRING) == -1)) {
-						return;
-					} else {
-						inlinePaste = false;
-					}
-				}
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		
-		// We're not doing an inline paste.
-
-		// Figure out where to do the insert
-		Node parentForNewNode = null;
-		int indexForNewNode = 0;
-		int depth = 0;
-
-		if ((!currentNode.isLeaf()) && (currentNode.isExpanded())) {
-			parentForNewNode = currentNode;
-			depth = parentForNewNode.getDepth() + 1;
-			indexForNewNode = 0;
-		} else {
-			parentForNewNode = currentNode.getParent();
-			depth = currentNode.getDepth();
-			indexForNewNode = currentNode.currentIndex() + 1;
-		}
-
-		tree.setSelectedNodesParent(parentForNewNode);
-
-		// Put the Undoable onto the UndoQueue
-		CompoundUndoableInsert undoable = new CompoundUndoableInsert(parentForNewNode);
-		tree.getDocument().undoQueue.add(undoable);
-
-		if (isNodeSet) {
-			for (int i = nodeSet.getSize() - 1; i >= 0; i--) {
-				Node node = nodeSet.getNode(i);
-				node.setTree(tree, true);
-				parentForNewNode.insertChild(node, indexForNewNode);
-				node.setDepthRecursively(depth);
-				tree.insertNode(node);
-
-				// Record the Insert in the undoable
-				int index = node.currentIndex() + i;
-				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode, node, index));
-
-				tree.addNodeToSelection(node);
-			}
-		} else {
-			Node tempRoot = PadSelection.pad(text, tree, depth, Preferences.LINE_END_STRING);
-		
-			for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
-				Node node = tempRoot.getChild(i);
-				parentForNewNode.insertChild(node, indexForNewNode);
-				tree.insertNode(node);
-
-				// Record the Insert in the undoable
-				int index = node.currentIndex() + i;
-				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode, node, index));
-
-				tree.addNodeToSelection(node);
-			}
-		}
-			
-		Node nodeThatMustBeVisible = tree.getYoungestInSelection();
-
-		// Record the EditingNode and CursorPosition and ComponentFocus
-		tree.setEditingNode(nodeThatMustBeVisible);
-		tree.setCursorPosition(0);
-		tree.setComponentFocus(OutlineLayoutManager.ICON);
-
-		// Redraw and Set Focus
-		layout.draw(nodeThatMustBeVisible,OutlineLayoutManager.ICON);
 	}
 
 	// Additional Outline Methods

@@ -39,6 +39,11 @@ import java.util.*;
 import java.io.*;
 import java.awt.datatransfer.*;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
 public class NodeSet implements Cloneable {
 
 	// Good Info: http://developer.java.sun.com/developer/bugParade/bugs/4066902.html
@@ -109,59 +114,5 @@ public class NodeSet implements Cloneable {
 			node.depthPaddedValue(buf,  Preferences.LINE_END_STRING);
 		}
 		return buf.toString();
-	}
-}
-
-// non-public class for transferring node sets
-class NodeSetTransferable extends StringSelection implements Transferable {
-	
-	private NodeSet nodeSet = null;
-	
-	public static DataFlavor nsFlavor;
-	
-	static {
-		try {
-			nsFlavor = new DataFlavor(Class.forName("com.organic.maynard.outliner.NodeSet"), "NodeSet");
-		} catch (ClassNotFoundException ex) {}
-	}
-	
-	private static final int STRING = 0;
-	private static final int NODESET = 1;
-	
-	private DataFlavor[] flavors = {
-		DataFlavor.stringFlavor,
-		nsFlavor
-	};
-	
-	
-	// The Constructors
-	public NodeSetTransferable(NodeSet nodeSet) {
-		super(nodeSet.toString());
-		this.nodeSet = nodeSet;
-	}
-
-
-	// Transferable Interface
-	public synchronized DataFlavor[] getTransferDataFlavors() {
-		return flavors;
-	}
-
-	public boolean isDataFlavorSupported(DataFlavor flavor) {
-		return (
-			flavor.equals(flavors[STRING]) || 
-			flavor.equals(flavors[NODESET])
-		);    
-	}
-    
-	public synchronized Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-		if (flavor.equals(flavors[STRING])) {
-			return nodeSet.toString();
-			
-		} else if (flavor.equals(flavors[NODESET])) {
-			return nodeSet.clone();
-			
-		} else {
-			throw new UnsupportedFlavorException(flavor);
-		}
 	}
 }

@@ -111,6 +111,11 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	private static final SelectInverseAction selectInverseAction = new SelectInverseAction();
 	private static final DeleteAction deleteAction = new DeleteAction();
 	private static final BackspaceAction backspaceAction = new BackspaceAction();
+	private static final HomeAction homeAction = new HomeAction();
+	private static final EndAction endAction = new EndAction();
+	private static final CopyAction copyAction = new CopyAction();
+	private static final PasteAction pasteAction = new PasteAction();
+	private static final CutAction cutAction = new CutAction();
 	
 	// The Constructors
 	public OutlinerCellRendererImpl() {
@@ -139,6 +144,21 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	}
 	
 	private void setupMaps(InputMap input_map, ActionMap action_map) {
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, Event.CTRL_MASK, false), "cut");
+		action_map.put("cut", cutAction);
+
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, Event.CTRL_MASK, false), "paste");
+		action_map.put("paste", pasteAction);
+
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, Event.CTRL_MASK, false), "copy");
+		action_map.put("copy", copyAction);
+
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, 0, false), "end");
+		action_map.put("end", endAction);
+
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0, false), "home");
+		action_map.put("home", homeAction);
+
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0, false), "delete");
 		action_map.put("delete", deleteAction);
 

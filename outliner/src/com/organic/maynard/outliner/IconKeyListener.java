@@ -299,46 +299,6 @@ public class IconKeyListener implements KeyListener, MouseListener, FocusListene
 				}
 				break;
 
-			case KeyEvent.VK_HOME:
-				if (tree.getSelectedNodes().size() > 1) {
-					changeSelectionToNode(tree, layout, POSITION_FIRST);
-				} else {
-					changeFocusToTextArea(tree, layout, POSITION_FIRST);
-				}
-				break;
-
-			case KeyEvent.VK_END:
-				if (tree.getSelectedNodes().size() > 1) {
-					changeSelectionToNode(tree, layout, POSITION_LAST);
-				} else {
-					changeFocusToTextArea(tree, layout, POSITION_LAST);
-				}
-				break;
-
-			case KeyEvent.VK_C:
-				if (e.isControlDown()) {
-					copy(tree,layout);
-					break;
-				} else {
-					return;
-				}
-
-			case KeyEvent.VK_X:
-				if (e.isControlDown()) {
-					cut(tree,layout);
-					break;
-				} else {
-					return;
-				}
-
-			case KeyEvent.VK_V:
-				if (e.isControlDown()) {
-					paste(tree,layout);
-					break;
-				} else {
-					return;
-				}
-
 			default:
 				return;
 		}
@@ -403,45 +363,6 @@ public class IconKeyListener implements KeyListener, MouseListener, FocusListene
 
 
 	// Key Handlers
-	private void changeFocusToTextArea(JoeTree tree, OutlineLayoutManager layout, int positionType) {
-		Node currentNode = textArea.node;
-		
-		if (positionType == POSITION_FIRST) {
-			tree.setCursorPosition(0);
-			tree.getDocument().setPreferredCaretPosition(0);
-		} else if (positionType == POSITION_LAST) {
-			int index = textArea.getText().length();
-			tree.setCursorPosition(index);
-			tree.getDocument().setPreferredCaretPosition(index);		
-		}
-		
-		tree.setComponentFocus(OutlineLayoutManager.TEXT);
-		tree.clearSelection();
-		layout.draw(currentNode,OutlineLayoutManager.TEXT);
-	}
-
-	private void changeSelectionToNode(JoeTree tree, OutlineLayoutManager layout, int positionType) {
-		Node selectedNode = null;
-		
-		if (positionType == POSITION_FIRST) {
-			selectedNode = tree.getYoungestInSelection();
-		} else if (positionType == POSITION_LAST) {
-			selectedNode = tree.getOldestInSelection();
-		}
-		
-		// Update Selection
-		tree.clearSelection();
-		tree.addNodeToSelection(selectedNode);
-
-		// Record State
-		tree.setEditingNode(selectedNode);
-		tree.setCursorPosition(0);
-		tree.getDocument().setPreferredCaretPosition(0);
-		
-		// Redraw and Set Focus	
-		layout.draw(selectedNode, OutlineLayoutManager.ICON);
-	}
-
 	private void moveUp(JoeTree tree, OutlineLayoutManager layout) {
 		Node youngestNode = tree.getYoungestInSelection();
 		Node node = youngestNode.prevSibling();
@@ -589,131 +510,6 @@ public class IconKeyListener implements KeyListener, MouseListener, FocusListene
 			undoable.redo();
 		}
 	}
-
-	private void copy(JoeTree tree, OutlineLayoutManager layout) {
-		NodeSet nodeSet = new NodeSet();
-		JoeNodeList nodeList = tree.getSelectedNodes();
-		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
-			Node node = nodeList.get(i).cloneClean();
-			node.setDepthRecursively(0);
-			nodeSet.addNode(node);
-		}
-		
-		// [md] This conditional is here since StringSelection subclassing seems to be broken in Java 1.3.1.
-		if (PlatformCompatibility.isJava1_3_1()) {
-			java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(nodeSet.toString()), null);
-		} else {
-			Outliner.clipboard.setContents(new NodeSetTransferable(nodeSet), Outliner.outliner);
-		}
-	}
-
-	private void cut(JoeTree tree, OutlineLayoutManager layout) {
-		NodeSet nodeSet = new NodeSet();
-		JoeNodeList nodeList = tree.getSelectedNodes();
-		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
-			Node node = nodeList.get(i);
-			
-			// Abort if node is not editable
-			if (!node.isEditable()) {
-				continue;
-			}
-			
-			Node newNode = node.cloneClean();
-			newNode.setDepthRecursively(0);	
-			nodeSet.addNode(newNode);
-		}
-		
-		if (!nodeSet.isEmpty()) {
-			// [md] This conditional is here since StringSelection subclassing seems to be broken in Java 1.3.1.
-			if (PlatformCompatibility.isJava1_3_1()) {
-				java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(nodeSet.toString()), null);
-			} else {
-				Outliner.clipboard.setContents(new NodeSetTransferable(nodeSet), Outliner.outliner);
-			}
-		}
-		
-		// Delete selection
-		delete(tree,layout,false);
-	}
-
-	private void paste(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-
-		// Abort if node is not editable
-		if (!tree.getOldestInSelection().isEditable()) {
-			return;
-		}
-			
-		// Get the text from the clipboard and turn it into a tree
-		boolean isNodeSet = false;
-		String text = "";
-		NodeSet nodeSet = new NodeSet();
-		try {
-			Transferable selection = (Transferable) Outliner.clipboard.getContents(this);
-			if (selection != null) {
-				if (selection instanceof NodeSetTransferable) {
-					nodeSet = (NodeSet) selection.getTransferData(NodeSetTransferable.nsFlavor);
-					isNodeSet = true;
-				} else {
-					text = (String) selection.getTransferData(DataFlavor.stringFlavor);
-				}
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		// Figure out where to do the insert
-		Node oldestNode = tree.getOldestInSelection();
-		Node parentForNewNode = oldestNode.getParent();
-		int indexForNewNode = oldestNode.currentIndex() + 1;
-		int depth = oldestNode.getDepth();
-
-		tree.clearSelection();
-		tree.setSelectedNodesParent(parentForNewNode);
-
-		// Put the Undoable onto the UndoQueue
-		CompoundUndoableInsert undoable = new CompoundUndoableInsert(parentForNewNode);
-		
-		if (isNodeSet) {
-			for (int i = nodeSet.getSize() - 1; i >= 0; i--) {
-				Node node = nodeSet.getNode(i);
-				node.setTree(tree, true);
-				parentForNewNode.insertChild(node, indexForNewNode);
-				node.setDepthRecursively(depth);
-				tree.insertNode(node);
-
-				// Record the Insert in the undoable
-				int index = node.currentIndex() + i;
-				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode, node, index));
-
-				tree.addNodeToSelection(node);
-			}
-		} else {
-			Node tempRoot = PadSelection.pad(text, tree, depth, Preferences.LINE_END_STRING);
-		
-			for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
-				Node node = tempRoot.getChild(i);
-				parentForNewNode.insertChild(node, indexForNewNode);
-				tree.insertNode(node);
-
-				// Record the Insert in the undoable
-				int index = node.currentIndex() + i;
-				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode, node, index));
-
-				tree.addNodeToSelection(node);
-			}
-		}
-
-		tree.getDocument().undoQueue.add(undoable);
-
-		Node nodeThatMustBeVisible = tree.getYoungestInSelection();
-
-		// Record the EditingNode and CursorPosition and ComponentFocus
-		tree.setEditingNode(nodeThatMustBeVisible);
-
-		// Redraw and Set Focus
-		layout.draw(nodeThatMustBeVisible, OutlineLayoutManager.ICON);
-	}
 	
 	private static final int UP = 1;
 	private static final int DOWN = 2;
@@ -857,47 +653,6 @@ public class IconKeyListener implements KeyListener, MouseListener, FocusListene
 
 		// Redraw and Set Focus
 		layout.draw(node,OutlineLayoutManager.ICON);
-	}
-	
-	private void delete (JoeTree tree, OutlineLayoutManager layout, boolean deleteMode) {
-		Node youngestNode = tree.getYoungestInSelection();
-		Node parent = youngestNode.getParent();
-		CompoundUndoableReplace undoable = new CompoundUndoableReplace(parent, deleteMode);
-
-		int startDeleting = 0;
-		if (tree.isWholeDocumentSelected()) {
-			// Abort if the doc is empty.
-			if (tree.isDocumentEmpty()) {
-				return;
-			}
-			
-			// Swap in a new node for the first node since a doc always has at least one child of root.
-			Node newNode = new NodeImpl(tree,"");
-			newNode.setDepth(0);
-			undoable.addPrimitive(new PrimitiveUndoableReplace(parent, youngestNode, newNode));
-			
-			startDeleting++;
-		}
-
-		// Iterate over the remaining selected nodes deleting each one
-		JoeNodeList nodeList = tree.getSelectedNodes();
-		for (int i = startDeleting, limit = nodeList.size(); i < limit; i++) {
-			Node node = nodeList.get(i);
-
-			// Abort if node is not editable
-			if (!node.isEditable()) {
-				continue;
-			}
-			
-			undoable.addPrimitive(new PrimitiveUndoableReplace(parent, node, null));
-		}
-
-		if (!undoable.isEmpty()) {
-			tree.getDocument().undoQueue.add(undoable);
-			undoable.redo();
-		}
-		
-		return;
 	}
 
 
