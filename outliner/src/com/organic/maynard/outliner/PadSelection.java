@@ -40,15 +40,11 @@ import java.awt.*;
 
 import com.organic.maynard.util.string.*;
 
-public class PadSelection {
-	
-	// Constants
-	public static final int FAILURE = 0;
-	public static final int SUCCESS = 1;
-	public static final int SUCCESS_MODIFIED = 2;
+public class PadSelection implements JoeReturnCodes {
 	
 	// The Constructors
 	public PadSelection() {}
+
 
 	// This method provides backwards compatibility but is now depricated.
 	public static Node pad(String text, JoeTree tree, int targetDepth, String lineEndString) {
@@ -69,7 +65,7 @@ public class PadSelection {
 		tempRoot.setDepth(targetDepth - 1);
 		
 		// Break the text up into lines
-		ArrayList nodes = new ArrayList(500);
+		NodeList nodes = new NodeList();
 		int shallowest = -1;
 		
 		StringSplitter splitter = new StringSplitter(text,lineEndString);
@@ -87,43 +83,49 @@ public class PadSelection {
 			nodes.add(node);
 		}
 		
+		// Abort if we've got an empty node list.
+		if (nodes.size() <= 1) {
+			return padRetVal;
+		}
+		
 		// Normalize depths to the target depth based on shallowest
-		for (int i = 0; i < nodes.size(); i++) {
-			Node node = (Node) nodes.get(i);
+		for (int i = 0, limit = nodes.size(); i < limit; i++) {
+			Node node = nodes.get(i);
 			node.setDepth((node.getDepth() - shallowest) + targetDepth);
 		}
 		
 		// Pad based on targetDepth and the preceeding line
 		// and build the tree as we go.
 		int previousDepth = targetDepth;
-		Node previousNode = null;
+		Node previousNode = nodes.get(0);
 		
-		for (int i = 0; i < nodes.size(); i++) {
-			Node node = (Node) nodes.get(i);
+		//tempRoot.appendChild(previousNode);
+		appendChildPaddedForDepth(tempRoot, previousNode, tree, tempRoot);
+		
+		for (int i = 1, limit = nodes.size(); i < limit; i++) {
+			Node node = nodes.get(i);
 			if (node.getDepth() == previousDepth) {
-				if (previousNode != null) {
-					previousNode.getParent().appendChild(node);
-				} else {
-					tempRoot.appendChild(node);
-				}
+				previousNode.getParent().appendChild(node);
 			} else if (node.getDepth() < previousDepth) {
 				Node parent = getParentNodeOfDepth(previousNode,node.getDepth()).getParent();
 				parent.appendChild(node);			
-			} else if (node.getDepth() > previousDepth) {
+			} else { // node.getDepth() > previousDepth
 				appendChildPaddedForDepth(previousNode,node,tree,tempRoot);				
 			}
 			previousDepth = node.getDepth();
 			previousNode = node;				
 		}
-		
+
 		return padRetVal;
 	}
 	
 	private static Node getParentNodeOfDepth(Node node, int depth) {
-		if (node.getDepth() == depth) {return node;}
-		
-		Node parentNode = node.getParent();
-		return getParentNodeOfDepth(parentNode,depth);
+		while (true) {
+			if (node.getDepth() == depth) {
+				return node;
+			}
+			node = node.getParent();		
+		}
 	}
 	
 	private static void appendChildPaddedForDepth(Node parentNode, Node childNode, JoeTree tree, Node tempRoot) {
@@ -131,7 +133,7 @@ public class PadSelection {
 			Node newNode = new NodeImpl(tree,"");
 			newNode.setDepth(0);
 			tempRoot.appendChild(newNode);
-			appendChildPaddedForDepth(newNode,childNode,tree,tempRoot);
+			appendChildPaddedForDepth(newNode, childNode, tree, tempRoot);
 			return;
 		} else if ((parentNode.getDepth() + 1) == childNode.getDepth()) {
 			parentNode.appendChild(childNode);
@@ -140,7 +142,7 @@ public class PadSelection {
 			Node newNode = new NodeImpl(tree,"");
 			newNode.setDepth(parentNode.getDepth() + 1);
 			parentNode.appendChild(newNode);
-			appendChildPaddedForDepth(newNode,childNode,tree,tempRoot);
+			appendChildPaddedForDepth(newNode, childNode, tree, tempRoot);
 			padRetVal = SUCCESS_MODIFIED;
 			return;
 		}
