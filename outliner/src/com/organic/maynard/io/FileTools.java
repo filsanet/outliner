@@ -47,6 +47,102 @@ public class FileTools {
 
 
 	// Class Methods
+	public static final char EOF = (char) -1;
+	
+	public static void dumpArrayOfLinesToFile(File file, String encoding, ArrayList lines, ArrayList lineEndings) {
+		try {
+			// Create Parent Directories
+			File parent = new File(file.getParent());
+			parent.mkdirs();
+			
+			// Write the File
+			Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), encoding));
+			for (int i = 0; i < lines.size(); i++) {
+				String line = (String) lines.get(i);
+				String lineEnding = (String) lineEndings.get(i);
+				if (line != null) {
+					out.write(line);
+				}
+				if (lineEnding != null) {
+					out.write(lineEnding);
+				}
+			}
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+	}
+	
+	public static void readFileToArrayOfLines(File file, String encoding, ArrayList lines, ArrayList lineEndings) {
+		try {
+			FileInputStream fileInputStream = new FileInputStream(file);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream, encoding));
+			
+			StringBuffer lineBuf = new StringBuffer();
+			
+			boolean done = false;
+			while (!done) {
+				char c = (char) reader.read();
+				
+				switch (c) {
+					case EOF:
+						lines.add(lineBuf.toString());
+						lineBuf.setLength(0);
+						lineEndings.add(null);
+						done = true;
+						break;
+						
+					case '\r':
+						lines.add(lineBuf.toString());
+						lineBuf.setLength(0);
+						
+						char lookahead = (char) reader.read();
+						switch (lookahead) {
+							case EOF:
+								lineEndings.add("\r");
+								done = true;
+								break;
+							
+							case '\r':
+								lineEndings.add("\r");
+								lines.add("");
+								lineEndings.add("\r");
+								break;
+							
+							case '\n':
+								lineEndings.add("\r\n");
+								break;
+							
+							default:
+								lineEndings.add("\r");
+								lineBuf.append(lookahead);
+								break;
+						}
+						
+						break;
+						
+					
+					case '\n':
+						lines.add(lineBuf.toString());
+						lineBuf.setLength(0);
+						lineEndings.add("\n");
+						break;
+					
+					default:
+						lineBuf.append(c);
+						break;
+				}
+			}
+			
+			fileInputStream.close();
+		} catch (FileNotFoundException fnfe) {
+			fnfe.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static String readFileToString(File file) {
 		return readFileToString(file, DEFAULT_ENCODING, LINE_ENDING_UNIX);
 	}
@@ -54,7 +150,7 @@ public class FileTools {
 	public static String readFileToString(File file, String lineEnding) {
 		return readFileToString(file, DEFAULT_ENCODING, lineEnding);
 	}
-	
+
 	public static String readFileToString(File file, String encoding, String lineEnding) {
 		StringBuffer text = new StringBuffer("");
 		
@@ -95,10 +191,10 @@ public class FileTools {
 			parent.mkdirs();
 			
 			// Write the File
-			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(file), encoding);
-			outputStreamWriter.write(text);
-			outputStreamWriter.flush();
-			outputStreamWriter.close();
+			Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), encoding));
+			out.write(text);
+			out.flush();
+			out.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
