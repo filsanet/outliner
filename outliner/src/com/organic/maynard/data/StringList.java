@@ -37,7 +37,7 @@ package com.organic.maynard.data;
 import java.util.*;
 import java.io.Serializable;
 
-public class StringList implements Serializable {
+public class StringList implements Serializable, Cloneable {
 
 	// Fields
 	private String data[];
@@ -55,6 +55,17 @@ public class StringList implements Serializable {
 		this.data = new String[initialCapacity];
 	}
 
+
+	// Cloneable Interface
+	public Object clone() {
+		StringList newList = new StringList();
+		
+		for (int i = 0; i < this.size(); i++) {
+			newList.add(this.get(i));
+		}
+		
+		return newList;
+	}
 
 	// Accessors
 	public int size() {
