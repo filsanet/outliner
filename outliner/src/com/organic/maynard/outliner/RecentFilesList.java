@@ -61,6 +61,8 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	// Constants
 	private static final String A_TEXT = "text";
 	
+	private static final String TRUNC_STRING = GUITreeLoader.reg.getText("trunc_string");
+	
 	// display mode constants [srk]
 	// ordering
 	private static final int CHRONO_ORDER = 0 ;
@@ -221,7 +223,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 			case TRUNC_PATHNAME:
 				// package the docInfo up with a truncated pathname
 				strungDocInfo= new StrungDocumentInfo(
-					StanStringTools.getTruncatedPathName(docInfo.getPath()),
+					StanStringTools.getTruncatedPathName(docInfo.getPath(),TRUNC_STRING),
 					docInfo) ; 
 				break ;
 				
@@ -312,7 +314,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		case TRUNC_PATHNAME:
 			// create a menu item
 			menuItem = new RecentFilesListItem(
-				StanStringTools.getTruncatedPathName(docInfo.getPath()), 
+				StanStringTools.getTruncatedPathName(docInfo.getPath(),TRUNC_STRING), 
 				docInfo);
 			break ;
 		
@@ -431,7 +433,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 				case TRUNC_PATHNAME:
 					// package the docInfo up with a truncated pathname
 					strungDocInfo= new StrungDocumentInfo(
-						StanStringTools.getTruncatedPathName(docInfo.getPath()),
+						StanStringTools.getTruncatedPathName(docInfo.getPath(),TRUNC_STRING),
 						docInfo) ; 
 					break ;
 					
@@ -494,7 +496,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 				case TRUNC_PATHNAME:
 					// package the docInfo up with a truncated pathname
 					strungDocInfo= new StrungDocumentInfo(
-						StanStringTools.getTruncatedPathName(docInfo.getPath()),
+						StanStringTools.getTruncatedPathName(docInfo.getPath(),TRUNC_STRING),
 						docInfo) ; 
 					break ;
 					
@@ -649,7 +651,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 				case TRUNC_PATHNAME:
 					// package the docInfo up with a truncated pathname
 					strungDocInfo= new StrungDocumentInfo(
-						StanStringTools.getTruncatedPathName(docInfo.getPath()),
+						StanStringTools.getTruncatedPathName(docInfo.getPath(),TRUNC_STRING),
 						docInfo) ; 
 					break ;
 					
