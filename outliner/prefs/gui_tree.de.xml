@@ -23,7 +23,7 @@
 		<asset type="text" key="confirm_open" value="Öffnen bestätigen"/>
 		<asset type="text" key="confirm_replacement" value="Ersetzen bestätigen"/>
 		<asset type="text" key="confirm_save" value="Speichern bestätigen"/>
-		<asset type="text" key="confirmation_inconsistent_heirarchy" value="The file {$value_1} has an inconsistent heirarchy.\nEmpty nodes will need to be inserted to open it.\nDo you want to open it anyway?"/>
+		<asset type="text" key="confirmation_inconsistent_hierarchy" value="The file {$value_1} has an inconsistent heirarchy.\nEmpty nodes will need to be inserted to open it.\nDo you want to open it anyway?"/>
 		<asset type="text" key="confirmation_operation_not_undoable" value="This operation is not undoable.\nProceed anyway?"/>
 		<asset type="text" key="confirmation_replace_file" value="The file {$value_1} already exists.\nDo you want to replace it?"/>
 		<asset type="text" key="confirmation_revert_file" value="Revert File? All Changes will be lost."/>
