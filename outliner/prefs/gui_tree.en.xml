@@ -328,16 +328,16 @@
 						<preferencepanel id="preferences_panel_recent_files" class="com.organic.maynard.outliner.PreferencesPanelRecentFiles" title="Recent Files List">
 							<preference id="recent_files_list_size" class="com.organic.maynard.outliner.PreferenceInt" default="10">
 								<validator id="recent_files_list_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="10"/>
-								<preference_component id="recent_files_list_size_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Size" size="4" style="single_centered" />
+								<preference_component id="recent_files_list_size_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Size" size="4" />
 							</preference>
 							<preference id="recent_files_ordering" class="com.organic.maynard.outliner.PreferenceString" default="Chronological">
-								<preference_component id="recent_files_ordering_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Ordering" style="single_centered"/>
+								<preference_component id="recent_files_ordering_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Ordering" />
 							</preference>
 							<preference id="recent_files_direction" class="com.organic.maynard.outliner.PreferenceString" default="Top to Bottom">
-								<preference_component id="recent_files_direction_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Direction" style="single_centered"/>
+								<preference_component id="recent_files_direction_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Direction" />
 							</preference>
 							<preference id="recent_files_name_form" class="com.organic.maynard.outliner.PreferenceString" default="Full Pathname">
-								<preference_component id="recent_files_name_form_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Name Form" style="single_centered"/>
+								<preference_component id="recent_files_name_form_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Name Form" />
 							</preference>
 						</preferencepanel>
 					</preferencepanel>
