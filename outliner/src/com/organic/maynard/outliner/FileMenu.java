@@ -35,6 +35,7 @@
 
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.data.IntList;
 import com.organic.maynard.outliner.io.*;
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.util.preferences.*;
@@ -705,9 +706,9 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		Outliner.menuBar.windowMenu.updateWindow(doc);
 		
 		// Expand Nodes
-		ArrayList expandedNodes = docInfo.getExpandedNodes();
+		IntList expandedNodes = docInfo.getExpandedNodes();
 		for (int i = 0, limit = expandedNodes.size(); i < limit; i++) {
-			int nodeNum = ((Integer) expandedNodes.get(i)).intValue();
+			int nodeNum = expandedNodes.get(i);
 			try {
 				Node node = doc.tree.getVisibleNodes().get(nodeNum);
 				node.setExpanded(true);

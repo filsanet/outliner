@@ -37,22 +37,27 @@ package com.organic.maynard.data;
 import java.util.*;
 import java.io.Serializable;
 
-public class StringList implements Serializable {
+public class IntList implements Serializable {
+
+	// Constants
+	private static final int DEFAULT_SIZE = 10;
+
 
 	// Fields
-	private String data[];
+	private int data[];
 	private int size;
 
+
 	// Constructors
-	public StringList() {
-		this(10);
+	public IntList() {
+		this(DEFAULT_SIZE);
 	}
    
-	public StringList(int initialCapacity) {
+	public IntList(int initialCapacity) {
 		if (initialCapacity < 0) {
 			throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
 		}
-		this.data = new String[initialCapacity];
+		this.data = new int[initialCapacity];
 	}
 
 
@@ -65,22 +70,22 @@ public class StringList implements Serializable {
 		return size == 0;
 	}
 
-	public String get(int index) {
+	public int get(int index) {
 		RangeCheck(index);
 		return data[index];
 	}
 
-	public void set(int index, String datum) {
+	public void set(int index, int datum) {
 		RangeCheck(index);
 		data[index] = datum;
 	}
 
-	public void add(String datum) {
+	public void add(int datum) {
 		ensureCapacity(size + 1);
 		data[size++] = datum;
 	}
 	
-	public void add(int index, String datum) {
+	public void add(int index, int datum) {
 		if (index > size || index < 0) {
 			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
 		}
@@ -98,37 +103,31 @@ public class StringList implements Serializable {
 		if (numMoved > 0) {
 			System.arraycopy(data, index + 1, data, index, numMoved);
 		}
-		data[--size] = null; 
+		--size; 
 	}
 
 	public void removeRange(int fromIndex, int toIndex) {
 		int numMoved = size - toIndex;
 		System.arraycopy(data, toIndex, data, fromIndex, numMoved);
 
-		int newSize = size - (toIndex - fromIndex);
-		while (size != newSize) {
-			data[--size] = null;
-		}
+		size = size - (toIndex - fromIndex);
 	}
 
 	public void clear() {
-		for (int i = 0; i < size; i++) {
-			data[i] = null;
-		}
-
+		this.data = new int[DEFAULT_SIZE];
 		size = 0;
 	}
 
 	// Index Of
-	public boolean contains(String datum) {
+	public boolean contains(int datum) {
 		return indexOf(datum) >= 0;
 	}
 
-	public int indexOf(String datum) {
+	public int indexOf(int datum) {
 		return firstIndexOf(datum);
 	}
 
-	public int firstIndexOf(String datum) {
+	public int firstIndexOf(int datum) {
 		for (int i = 0; i < size; i++) {
 			if (data[i] == datum) {
 				return i;
@@ -138,7 +137,7 @@ public class StringList implements Serializable {
 		return -1;
 	}
 
-	public int lastIndexOf(String datum) {
+	public int lastIndexOf(int datum) {
 		for (int i = size - 1; i >= 0; i--) {
 			if (data[i] == datum) {
 				return i;
@@ -148,7 +147,7 @@ public class StringList implements Serializable {
 		return -1;
 	}
 	
-	public int indexOf(String datum, int start, int end) {
+	public int indexOf(int datum, int start, int end) {
 		RangeCheck(start);
 		RangeCheck(end);
 		
@@ -162,8 +161,8 @@ public class StringList implements Serializable {
 	}
 	
 	// Data Conversion
-	public String[] toArray() {
-		String[] result = new String[size];
+	public int[] toArray() {
+		int[] result = new int[size];
 		System.arraycopy(data, 0, result, 0, size);
 		return result;
 	}
@@ -180,12 +179,12 @@ public class StringList implements Serializable {
 		int oldCapacity = data.length;
 		
 		if (minCapacity > oldCapacity) {
-			String oldData[] = data;
+			int oldData[] = data;
 			int newCapacity = (oldCapacity * 3)/2 + 1;
 			if (newCapacity < minCapacity) {
 				newCapacity = minCapacity;
 			}
-			data = new String[newCapacity];
+			data = new int[newCapacity];
 			System.arraycopy(oldData, 0, data, 0, size);
 		}
 	}

@@ -40,6 +40,7 @@
 
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.data.IntList;
 import com.organic.maynard.outliner.util.preferences.*;
 import com.organic.maynard.util.string.StringTools;
 import com.organic.maynard.util.string.StringSplitter;
@@ -73,7 +74,7 @@ public class DocumentInfo implements Serializable, Cloneable {
 	private int windowLeft = 0;
 	private int windowBottom = 0;
 	private int windowRight = 0;
-	private ArrayList expandedNodes = new ArrayList(); // Should only store Integers
+	private IntList expandedNodes = new IntList();
 	private boolean applyFontStyleForComments = true;
 	private boolean applyFontStyleForEditability = true;
 	private boolean applyFontStyleForMoveability = true;
@@ -317,20 +318,12 @@ public class DocumentInfo implements Serializable, Cloneable {
 	public void setProtocolName(String protocolName) { this.protocolName = protocolName;}
 	
 	// Expanded Nodes
-	public ArrayList getExpandedNodes() {
+	public IntList getExpandedNodes() {
 		return this.expandedNodes;
 	}
 	
-	public boolean setExpandedNodes(ArrayList expandedNodes) {
-		// Make sure all values are Integers
-		for (int i = 0, limit = expandedNodes.size(); i < limit; i++) {
-			try {
-				Integer temp = (Integer) expandedNodes.get(i);
-			} catch (ClassCastException e) {
-				return false;
-			}
-		}
-		
+	// TBD: get rid of return type.
+	public boolean setExpandedNodes(IntList expandedNodes) {
 		this.expandedNodes = expandedNodes;
 		return true;
 	}
@@ -342,8 +335,8 @@ public class DocumentInfo implements Serializable, Cloneable {
 	public String getExpandedNodesStringShifted(int shift) {
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0, limit = expandedNodes.size(); i < limit; i++) {
-			buf.append("").append(((Integer) expandedNodes.get(i)).intValue() + shift);
-			if (i < expandedNodes.size() - 1) {
+			buf.append("").append(expandedNodes.get(i) + shift);
+			if (i < limit - 1) {
 				buf.append(EXPANDED_NODE_SEPERATOR);
 			}
 		}
@@ -380,10 +373,10 @@ public class DocumentInfo implements Serializable, Cloneable {
 	public boolean addExpandedNodeNum(int nodeNum) {
 		int lastIntOnList = -1;
 		try {
-			lastIntOnList = ((Integer) expandedNodes.get(expandedNodes.size() - 1)).intValue();
+			lastIntOnList = expandedNodes.get(expandedNodes.size() - 1);
 		} catch (IndexOutOfBoundsException e) {}
 		if (nodeNum > lastIntOnList) {
-			expandedNodes.add(new Integer(nodeNum));
+			expandedNodes.add(nodeNum);
 			return true;
 		}
 		return false;
@@ -391,8 +384,13 @@ public class DocumentInfo implements Serializable, Cloneable {
 
 
 	// Additional Accessors
-	public int getWidth() {return getWindowRight() - getWindowLeft();}
-	public int getHeight() {return getWindowBottom() - getWindowTop();}
+	public int getWidth() {
+		return getWindowRight() - getWindowLeft();
+	}
+	
+	public int getHeight() {
+		return getWindowBottom() - getWindowTop();
+	}
 	
 	// Utility Methods
 	public static String getCurrentDateTimeString() {
@@ -441,12 +439,13 @@ public class DocumentInfo implements Serializable, Cloneable {
 		setWindowBottom(r.y + r.height);
 		setWindowRight(r.x + r.width);
 		
-		int index = document.tree.getVisibleNodes().indexOf(document.panel.layout.getNodeToDrawFrom()) + 1;
-		setVerticalScrollState(index);
+		JoeNodeList nodes = document.tree.getVisibleNodes();
+		
+		setVerticalScrollState(nodes.indexOf(document.panel.layout.getNodeToDrawFrom()) + 1);
 		
 		getExpandedNodes().clear();
-		for (int i = 0, limit = document.tree.getVisibleNodes().size(); i < limit; i++) {
-			Node node = document.tree.getVisibleNodes().get(i);
+		for (int i = 0, limit = nodes.size(); i < limit; i++) {
+			Node node = nodes.get(i);
 			if (node.isExpanded()) {
 				addExpandedNodeNum(i);
 			}
