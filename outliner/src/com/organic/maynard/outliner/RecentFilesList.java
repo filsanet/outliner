@@ -238,7 +238,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		}
 
 		// Open or Import the file, as is appropriate
-		if (! docInfo.getImported()) {
+		if (! docInfo.isImported()) {
 			FileMenu.openFile(docInfo, protocol);
 		} else {
 			FileMenu.importFile(docInfo,protocol);

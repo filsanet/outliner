@@ -63,7 +63,7 @@ public class SaveAllFileMenuItem extends AbstractOutlinerMenuItem implements Act
 			OutlinerDocument doc = Outliner.getDocument(i);
 			
 			// if it wasn't imported ...
-			if (! doc.getDocumentInfo().getImported()) {
+			if (! doc.getDocumentInfo().isImported()) {
 				
 				// if it's changed ...
 				if (doc.isFileModified()) {

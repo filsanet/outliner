@@ -560,7 +560,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		FileProtocol protocol = Outliner.fileProtocolManager.getProtocol(docInfo.getProtocolName());
 
 		// set mode based on whether we were OPENed or IMPORTed
-		int mode = docInfo.getImported()?MODE_IMPORT:MODE_OPEN;
+		int mode = docInfo.isImported()?MODE_IMPORT:MODE_OPEN;
 		
 		// try to open/import the file and put its outline into a tree
 		TreeContext tree = new TreeContext();
@@ -727,7 +727,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			closeAllItem.setEnabled(true);
 		// else if it has a name, thus it's not a new doc, and it's been modified
 		} else if (topmostDoc.isFileModified()) {
-			saveItem.setEnabled(! topmostDoc.getDocumentInfo().getImported());
+			saveItem.setEnabled(! topmostDoc.getDocumentInfo().isImported());
 			saveAsItem.setEnabled(true);
 			revertItem.setEnabled(true);
 			exportItem.setEnabled(true);
@@ -757,7 +757,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			OutlinerDocument doc = Outliner.getDocument(i);
 			
 			// if it wasn't imported ....
-			if (! doc.getDocumentInfo().getImported()) {
+			if (! doc.getDocumentInfo().isImported()) {
 				
 				// if it's been modified or it's a new and unsaved doc
 				if (doc.isFileModified() || doc.getFileName().equals("")) {

@@ -75,7 +75,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 				}
 				
 			// else if it's not imported, do a Save
-			} else if (! doc.getDocumentInfo().getImported()) {
+			} else if (! doc.getDocumentInfo().isImported()) {
 				msg = GUITreeLoader.reg.getText("error_window_monitor_untitled_save_changes");
 				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, doc.getFileName());
 	

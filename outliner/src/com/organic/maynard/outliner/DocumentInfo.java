@@ -176,7 +176,7 @@ public class DocumentInfo implements Serializable {
 	public String getFileFormat() {return this.fileFormat;}
 	public void setFileFormat(String fileFormat) {this.fileFormat = fileFormat;}
 
-	public boolean getImported() {return this.imported;}
+	public boolean isImported() {return this.imported;}
 	public void setImported(boolean imported) {this.imported = imported;}
 
 	public String getEncodingType() {return this.encodingType;}
