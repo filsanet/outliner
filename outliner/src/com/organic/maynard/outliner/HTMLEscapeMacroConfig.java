@@ -28,16 +28,20 @@ import javax.swing.*;
  
 public class HTMLEscapeMacroConfig extends MacroConfigImpl {
 	
-	private JLabel nameLabel = new JLabel(NAME);
+	private JLabel nameLabel = null;
 	private JTextField nameField = new JTextField();
 	private ButtonGroup buttonGroup = new ButtonGroup();
-	private JRadioButton escapeRadio = new JRadioButton("Escape");
-	private JRadioButton unescapeRadio = new JRadioButton("Un-Escape");
+	private JRadioButton escapeRadio = null;
+	private JRadioButton unescapeRadio = null;
 
 
 	// The Constructor
 	public HTMLEscapeMacroConfig() {
 		super();
+
+		nameLabel = new JLabel(NAME);
+		escapeRadio = new JRadioButton(GUITreeLoader.reg.getText("escape"));
+		unescapeRadio = new JRadioButton(GUITreeLoader.reg.getText("unescape"));
 		
 		// Create the layout
 		this.setLayout(new BorderLayout());

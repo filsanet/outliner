@@ -27,9 +27,9 @@ import org.xml.sax.*;
 
 public class WindowMenu extends AbstractOutlinerMenu implements ActionListener, GUITreeComponent {
 	
-	public static int WINDOW_LIST_START = -1;
-
-	public static int indexOfOldSelection = -1;
+	// Class Fields
+	protected static int WINDOW_LIST_START = -1;
+	protected static int indexOfOldSelection = -1;
 
 
 	// The Constructors

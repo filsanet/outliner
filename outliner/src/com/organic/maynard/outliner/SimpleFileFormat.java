@@ -21,6 +21,7 @@ package com.organic.maynard.outliner;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
+import com.organic.maynard.util.string.Replace;
 
 public class SimpleFileFormat 
 
@@ -85,11 +86,17 @@ public class SimpleFileFormat
 					break;
 					
 				case PadSelection.SUCCESS_MODIFIED:
+					String yes = GUITreeLoader.reg.getText("yes");
+					String no = GUITreeLoader.reg.getText("no");
+					String confirm_open = GUITreeLoader.reg.getText("confirm_open");
+					String msg = GUITreeLoader.reg.getText("confirmation_inconsistent_heirarchy");
+					msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
 
-					Object[] options = {"Yes","No"};
+
+					Object[] options = {yes, no};
 					int result = JOptionPane.showOptionDialog(Outliner.outliner,
-						"The file " + docInfo.getPath() + " has an inconsistent heirarchy.\nEmpty nodes will need to be inserted to open it.\nDo you want to open it anyway?",
-						"Confirm Open",
+						msg,
+						confirm_open,
 						JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE,
 						null,
@@ -157,5 +164,4 @@ public class SimpleFileFormat
 		
 		return false;
 	}
-
 }

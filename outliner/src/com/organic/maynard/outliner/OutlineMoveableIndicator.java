@@ -28,8 +28,6 @@ import java.awt.geom.*;
 public class OutlineMoveableIndicator extends AbstractOutlineIndicator {
 
 	// Class Fields
-	public static String TOOL_TIP_TEXT = "Click to Toggle Moveability Mode";
-
 	public static final ImageIcon ICON_IS_NOT_PROPERTY = new ImageIcon(Outliner.GRAPHICS_DIR + "is_not_moveable.gif");
 	public static ImageIcon ICON_IS_PROPERTY = new ImageIcon(Outliner.GRAPHICS_DIR + "is_moveable.gif");
 	public static ImageIcon ICON_IS_PROPERTY_INHERITED = null;
@@ -44,7 +42,7 @@ public class OutlineMoveableIndicator extends AbstractOutlineIndicator {
 	
 	// The Constructor
 	public OutlineMoveableIndicator(OutlinerCellRendererImpl renderer) {
-		super(renderer, TOOL_TIP_TEXT);
+		super(renderer, GUITreeLoader.reg.getText("tooltip_toggle_moveability"));
 	}
 
 	// Misc Methods

@@ -21,7 +21,7 @@ package com.organic.maynard.outliner;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.Rectangle;
-
+import com.organic.maynard.util.string.Replace;
 
 public class OutlinerWindowMonitor extends InternalFrameAdapter {
 	
@@ -33,8 +33,11 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 		// Confirm Close when the document is not saved.
 		OutlinerDocument doc = (OutlinerDocument) w;
 		
+		String msg = null;
 		if (doc.getFileName().equals("") && doc.isFileModified()) {
-			int result = JOptionPane.showConfirmDialog(doc, "The text in the Untitled file has changed.\nDo you want to save the changes?");
+			msg = GUITreeLoader.reg.getText("error_window_monitor_untitled_save_changes");
+
+			int result = JOptionPane.showConfirmDialog(doc, msg);
 			if (result == JOptionPane.YES_OPTION) {
 				SaveAsFileMenuItem item = (SaveAsFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
 				item.saveAsOutlinerDocument(doc);
@@ -44,7 +47,10 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 				return false;
 			}
 		} else if (doc.isFileModified()) {
-			int result = JOptionPane.showConfirmDialog(doc, "The text in the " + doc.getFileName() + " file has changed.\nDo you want to save the changes?");
+			msg = GUITreeLoader.reg.getText("error_window_monitor_untitled_save_changes");
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, doc.getFileName());
+
+			int result = JOptionPane.showConfirmDialog(doc, msg);
 			if (result == JOptionPane.YES_OPTION) {
 				SaveFileMenuItem item = (SaveFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_MENU_ITEM);
 				item.saveOutlinerDocument(doc);

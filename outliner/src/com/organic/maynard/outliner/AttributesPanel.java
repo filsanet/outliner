@@ -333,22 +333,22 @@ class RemoveColumnHeaderRenderer extends JButton implements TableCellRenderer {
 class NewAttributeDialog extends JDialog implements ActionListener {
 
 	// Constants
-	private static final String OK = "OK";
-	private static final String CANCEL = "Cancel";
-	private static final String NEW_ATTRIBUTE = "New Attribute";
-	private static final String ATTRIBUTE = "Attribute";
-	private static final String VALUE = "Value";
+	private static String OK = null;
+	private static String CANCEL = null;
+	private static String NEW_ATTRIBUTE = null;
+	private static String ATTRIBUTE = null;
+	private static String VALUE = null;
 
-	private static final String ERROR_EXISTANCE = "Error: key cannot be empty.";
-	private static final String ERROR_UNIQUENESS = "Error: key must be unique.";
-	private static final String ERROR_ALPHA_NUMERIC = "Error: key must be alpha-numeric.";
+	private static String ERROR_EXISTANCE = null;
+	private static String ERROR_UNIQUENESS = null;
+	private static String ERROR_ALPHA_NUMERIC = null;
 
 	// GUI Elements
-	private JButton buttonOK = new JButton(OK);
-	private JButton buttonCancel = new JButton(CANCEL);
-	private JTextField attributeField = new JTextField(20);
-	private JTextField valueField = new JTextField(20);
-	private JLabel errorLabel = new JLabel(" ");
+	private JButton buttonOK = null;
+	private JButton buttonCancel = null;
+	private JTextField attributeField = null;
+	private JTextField valueField = null;
+	private JLabel errorLabel = null;
 
 	// Context
 	private AbstractAttributesPanel panel = null;
@@ -356,6 +356,21 @@ class NewAttributeDialog extends JDialog implements ActionListener {
 	// Constructors	
 	public NewAttributeDialog() {
 		super(Outliner.outliner, NEW_ATTRIBUTE, true);
+		
+		OK = GUITreeLoader.reg.getText("ok");
+		CANCEL = GUITreeLoader.reg.getText("cancel");
+		NEW_ATTRIBUTE = GUITreeLoader.reg.getText("new_attribute");
+		ATTRIBUTE = GUITreeLoader.reg.getText("attribute");
+		VALUE = GUITreeLoader.reg.getText("value");
+		ERROR_EXISTANCE = GUITreeLoader.reg.getText("error_att_key_existance");
+		ERROR_UNIQUENESS = GUITreeLoader.reg.getText("error_att_key_uniqueness");
+		ERROR_ALPHA_NUMERIC = GUITreeLoader.reg.getText("error_att_key_alpha");
+
+		buttonOK = new JButton(OK);
+		buttonCancel = new JButton(CANCEL);
+		attributeField = new JTextField(20);
+		valueField = new JTextField(20);
+		errorLabel = new JLabel(" ");
 		
 		// Create the Layout
 		setSize(250,180);

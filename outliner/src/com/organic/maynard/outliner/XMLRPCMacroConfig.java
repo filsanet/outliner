@@ -28,27 +28,40 @@ import javax.swing.*;
 
 public class XMLRPCMacroConfig extends MacroConfigImpl {
 	
-	private static final String URL = "URL";
-	private static final String DO_REPLACEMENT = "Do Replacement";
-	private static final String CALL = "XML-RPC Call";
+	private static String URL = null;
+	private static String DO_REPLACEMENT = null;
+	private static String CALL = null;
 	
-	private JLabel nameLabel = new JLabel(NAME);
-	private JLabel urlLabel = new JLabel(URL);
-	private JLabel doReplacementLabel = new JLabel(DO_REPLACEMENT);
-	private JLabel callLabel = new JLabel(CALL);
+	private JLabel nameLabel = null;
+	private JLabel urlLabel = null;
+	private JLabel doReplacementLabel = null;
+	private JLabel callLabel = null;
 
 	private JTextField nameField = new JTextField();
 	private JTextField urlField = new JTextField();
 	private JTextArea callTextArea = new JTextArea();
 
 	private ButtonGroup buttonGroup = new ButtonGroup();
-	private JRadioButton yesRadio = new JRadioButton("Yes");
-	private JRadioButton noRadio = new JRadioButton("No");
+	private JRadioButton yesRadio = null;
+	private JRadioButton noRadio = null;
 
 
 	// The Constructor
 	public XMLRPCMacroConfig() {
 		super();
+
+		URL = GUITreeLoader.reg.getText("url");
+		DO_REPLACEMENT = GUITreeLoader.reg.getText("do_replacement");
+		CALL = GUITreeLoader.reg.getText("xmlrpc_call");
+		
+		nameLabel = new JLabel(NAME);
+		urlLabel = new JLabel(URL);
+		doReplacementLabel = new JLabel(DO_REPLACEMENT);
+		callLabel = new JLabel(CALL);
+
+		yesRadio = new JRadioButton(GUITreeLoader.reg.getText("yes"));
+		noRadio = new JRadioButton(GUITreeLoader.reg.getText("no"));
+
 		
 		// Create the layout
 		this.setLayout(new BorderLayout());

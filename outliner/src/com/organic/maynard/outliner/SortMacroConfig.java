@@ -28,15 +28,19 @@ import javax.swing.*;
 
 public class SortMacroConfig extends MacroConfigImpl {
 	
-	private static final String COMPARATOR = "Comparator";
-	private JLabel nameLabel = new JLabel(NAME);
-	private JLabel comparatorLabel = new JLabel(COMPARATOR);
+	private static String COMPARATOR = null;
+	private JLabel nameLabel = null;
+	private JLabel comparatorLabel = null;
 	private JTextField nameField = new JTextField();
 	private JTextArea comparatorTextArea = new JTextArea();
 
 	// The Constructor
 	public SortMacroConfig() {
 		super();
+
+		COMPARATOR = GUITreeLoader.reg.getText("comparator");
+		nameLabel = new JLabel(NAME);
+		comparatorLabel = new JLabel(COMPARATOR);
 		
 		// Create the layout
 		this.setLayout(new BorderLayout());

@@ -30,11 +30,11 @@ import com.organic.maynard.util.string.*;
 
 public class TextMacroConfig extends MacroConfigImpl implements KeyListener {
 	
-	private static final String PATTERN = "Pattern";
+	private static String PATTERN = null;
 	
-	private JLabel nameLabel = new JLabel(NAME);
-	private JLabel patternLabel = new JLabel(PATTERN);
-
+	private JLabel nameLabel = null;
+	private JLabel patternLabel = null;
+	
 	private JTextField nameField = new JTextField();
 	private JTextArea patternTextArea = new JTextArea();
 
@@ -42,6 +42,11 @@ public class TextMacroConfig extends MacroConfigImpl implements KeyListener {
 	// The Constructor
 	public TextMacroConfig() {
 		super();
+
+		PATTERN = GUITreeLoader.reg.getText("pattern");
+	
+		nameLabel = new JLabel(NAME);
+		patternLabel = new JLabel(PATTERN);
 		
 		// Create the layout
 		this.setLayout(new BorderLayout());

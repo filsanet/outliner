@@ -37,19 +37,23 @@ public class DocumentStatistics extends AbstractGUITreeJDialog {
 	
 	
 	// GUI Components
-	private static JLabel documentTitleName = new JLabel("Document: ");
+	private static JLabel documentTitleName = null;
 	private static JLabel documentTitleValue = new JLabel("");
 
-	private static JLabel lineCountName = new JLabel("Lines: ");
+	private static JLabel lineCountName = null;
 	private static JLabel lineCountValue = new JLabel("");
 
-	private static JLabel charCountName = new JLabel("Characters: ");
+	private static JLabel charCountName = null;
 	private static JLabel charCountValue = new JLabel("");
 	
 	
 	// The Constructors
 	public DocumentStatistics() {
 		super(true, true, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+
+		documentTitleName = new JLabel(GUITreeLoader.reg.getText("document") + " ");
+		lineCountName = new JLabel(GUITreeLoader.reg.getText("lines") + " ");
+		charCountName = new JLabel(GUITreeLoader.reg.getText("characters") + " ");
 		
 		// Create the Layout
 		Box vBox = Box.createVerticalBox();

@@ -32,8 +32,8 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 	private static final int MINIMUM_WIDTH = 250;
 	private static final int MINIMUM_HEIGHT = 300;
 
-	protected static final String OK = "OK";
-	protected static final String CANCEL = "Cancel";
+	protected static String OK = null;
+	protected static String CANCEL = null;
 
 
 	// GUI Elements
@@ -41,8 +41,8 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 	
 	protected DocumentAttributesPanel attPanel = null;
 
-	protected JButton buttonOK = new JButton(OK);
-	protected JButton buttonCancel = new JButton(CANCEL);
+	protected JButton buttonOK = null;
+	protected JButton buttonCancel = null;
 
 
 	// The Constructors
@@ -53,6 +53,13 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
+
+		OK = GUITreeLoader.reg.getText("ok");
+		CANCEL = GUITreeLoader.reg.getText("cancel");
+		
+		buttonOK= new JButton(OK);
+		buttonCancel = new JButton(CANCEL);
+
 		
 		Outliner.documentAttributes = this;
 		

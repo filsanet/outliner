@@ -39,26 +39,24 @@ public class GoToDialog extends AbstractGUITreeJDialog implements ActionListener
  	private static final int MINIMUM_WIDTH = 300;
 	private static final int MINIMUM_HEIGHT = 150;
 	
-	private static final String GO = "Go";
-	private static final String GOTO_LINE_AND_COLUMN = "Go to Line and Column";
-	private static final String CANCEL = "Cancel";
+	private static String GO = null;
+	private static String GOTO_LINE_AND_COLUMN = null;
+	private static String CANCEL = null;
+	
+	// GUI ELements
+	private static JTextField lineNumberTextField = null;
+	private static JTextField columnNumberTextField = null;
+	private static JCheckBox countDepthCheckBox = null;
+	private static JButton goButton = null;
+	private static JButton gotoLineAndColumnButton = null;
+	private static JButton cancelButton = null;
 
-	private static final String LINE_NUMBER = "Enter a line number.";
-	private static final String COLUMN_NUMBER = "Enter a column number.";
-	private static final String COUNT_DEPTH = "Count indents for column number.";
-	
-	private static JTextField lineNumberTextField = new JTextField(10);
-	private static JTextField columnNumberTextField = new JTextField(10);
-	private static JCheckBox countDepthCheckBox = new JCheckBox(COUNT_DEPTH);
-	
-	private static JButton goButton = new JButton(GO);
-	private static JButton gotoLineAndColumnButton = new JButton(GOTO_LINE_AND_COLUMN);
-	private static JButton cancelButton = new JButton(CANCEL);
 	
 	// Fields
 	private static OutlinerDocument doc = null;
 	private static GoToDialog dialog = null;
-	
+
+
 	// The Constructor
 	public GoToDialog() {
 		super(false, true, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
@@ -66,12 +64,21 @@ public class GoToDialog extends AbstractGUITreeJDialog implements ActionListener
 
 
 	// GUITreeComponentInterface
-	public void startSetup(AttributeList atts) {
-		super.startSetup(atts);
-		
+	public void endSetup(AttributeList atts) {
+		GO = GUITreeLoader.reg.getText("goto_dialog_go");
+		GOTO_LINE_AND_COLUMN = GUITreeLoader.reg.getText("goto_dialog_line_and_column");
+		CANCEL = GUITreeLoader.reg.getText("cancel");
+			
+		lineNumberTextField = new JTextField(10);
+		columnNumberTextField = new JTextField(10);
+		countDepthCheckBox = new JCheckBox(GUITreeLoader.reg.getText("goto_dialog_count_indents"));
+		goButton = new JButton(GO);
+		gotoLineAndColumnButton = new JButton(GOTO_LINE_AND_COLUMN);
+		cancelButton = new JButton(CANCEL);
+
+		// Create the layout
 		setResizable(false);
 		
-		// Create the layout
 		this.getContentPane().setLayout(new BorderLayout());
 
 		goButton.addActionListener(this);
@@ -80,13 +87,13 @@ public class GoToDialog extends AbstractGUITreeJDialog implements ActionListener
 		
 		Box vBox = Box.createVerticalBox();
 		
-		vBox.add(new JLabel(COLUMN_NUMBER));
+		vBox.add(new JLabel(GUITreeLoader.reg.getText("goto_dialog_enter_column")));
 		vBox.add(columnNumberTextField);
 		vBox.add(countDepthCheckBox);
 		
 		vBox.add(Box.createVerticalStrut(5));
 		
-		vBox.add(new JLabel(LINE_NUMBER));
+		vBox.add(new JLabel(GUITreeLoader.reg.getText("goto_dialog_enter_line")));
 		vBox.add(lineNumberTextField);
 
 		vBox.add(Box.createVerticalStrut(5));
@@ -120,6 +127,8 @@ public class GoToDialog extends AbstractGUITreeJDialog implements ActionListener
 		});
 
 		dialog.pack();
+
+		super.endSetup(atts);
 	}
 
 

@@ -95,6 +95,7 @@ public class GUITreeLoader extends HandlerBase implements JoeXMLConstants {
 				return;		
 			}
 		} catch (Exception e) {
+			System.out.println("Exception: Something went wrong during special handling in the GUITreeLoader.java.");
 			e.printStackTrace();
 			return;
 		}
@@ -124,6 +125,7 @@ public class GUITreeLoader extends HandlerBase implements JoeXMLConstants {
 		} catch (ClassNotFoundException cnfe) {
 			System.out.println("Exception: " + className + " " + cnfe);
 		} catch (Exception e) {
+			System.out.println("Exception: Something went wrong during processing in the GUITreeLoader.java.");
 			System.out.println(e);
 		}
 		

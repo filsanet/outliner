@@ -38,7 +38,7 @@ public class MacroManagerFrame extends AbstractGUITreeJDialog implements ActionL
  	private static final int MINIMUM_WIDTH = 275;
 	private static final int MINIMUM_HEIGHT = 200;
        	
-	private static final String NEW = "New";
+	private static String NEW = null;
 
 
 	// Define Fields and Buttons
@@ -49,19 +49,25 @@ public class MacroManagerFrame extends AbstractGUITreeJDialog implements ActionL
 	
 	protected ArrayList macroClassNames = new ArrayList();
 
-	private JButton newButton = new JButton(NEW);
+	private JButton newButton = null;
 	protected JComboBox macroType = new JComboBox();	
 
-	private JLabel macroLabel = new JLabel("Macros");
+	private JLabel macroLabel = null;
 	protected JList macroList = new JList();
 
-	private JLabel sortMacroLabel = new JLabel("Sort Macros");
+	private JLabel sortMacroLabel = null;
 	protected JList sortMacroList = new JList();
 
 
 	// The Constructor
 	public MacroManagerFrame() {
 		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+		
+		NEW = GUITreeLoader.reg.getText("new");
+
+		newButton = new JButton(NEW);
+		macroLabel = new JLabel(GUITreeLoader.reg.getText("macros"));
+		sortMacroLabel = new JLabel(GUITreeLoader.reg.getText("sort_macros"));
 	}
 	
 	

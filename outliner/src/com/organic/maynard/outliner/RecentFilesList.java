@@ -23,10 +23,9 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
-
 import org.xml.sax.*;
-
 import com.organic.maynard.util.string.StringTools;
+import com.organic.maynard.util.string.Replace;
 
 public class RecentFilesList extends JMenu implements ActionListener, GUITreeComponent, JoeReturnCodes {
 
@@ -185,7 +184,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 			fw.write(prepareConfigFile());
 			fw.close();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Could not save recent files config file because of: " + e);
+			JOptionPane.showMessageDialog(null, GUITreeLoader.reg.getText("message_could_not_save_recent_files_config") + ": " + e);
 		}
 	}
 	
@@ -217,7 +216,10 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		DocumentInfo docInfo = ((RecentFilesListItem) e.getSource()).getDocumentInfo();
 		String filename = docInfo.getPath();
 		if (!Outliner.isFileNameUnique(filename)) {
-			JOptionPane.showMessageDialog(Outliner.outliner, "The file: " + filename + " is already open.");
+			String msg = GUITreeLoader.reg.getText("message_file_already_open");
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
+			
+			JOptionPane.showMessageDialog(Outliner.outliner, msg);
 			return;
 		}
 

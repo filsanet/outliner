@@ -90,7 +90,9 @@ public class HoistStack {
 
 			// Clear the undoQueue
 			if (!doc.undoQueue.isEmpty()) {
-				int result = JOptionPane.showConfirmDialog(doc, "Hoisting requires that the undo queue be cleared.\nProceed anyway?","",JOptionPane.OK_CANCEL_OPTION);
+				String msg = GUITreeLoader.reg.getText("confirm_hoist");
+
+				int result = JOptionPane.showConfirmDialog(doc, msg,"",JOptionPane.OK_CANCEL_OPTION);
 				if (result == JOptionPane.YES_OPTION) {
 					doc.undoQueue.clear();
 				} else if (result == JOptionPane.CANCEL_OPTION) {
@@ -137,7 +139,9 @@ public class HoistStack {
 
 			// Clear the undoQueue
 			if (!doc.undoQueue.isEmpty()) {
-				int result = JOptionPane.showConfirmDialog(doc, "De-Hoisting requires that the undo queue be cleared.\nProceed anyway?","",JOptionPane.OK_CANCEL_OPTION);
+				String msg = GUITreeLoader.reg.getText("confirm_dehoist");
+
+				int result = JOptionPane.showConfirmDialog(doc, msg,"",JOptionPane.OK_CANCEL_OPTION);
 				if (result == JOptionPane.YES_OPTION) {
 					doc.undoQueue.clear();
 				} else if (result == JOptionPane.CANCEL_OPTION) {
@@ -182,7 +186,9 @@ public class HoistStack {
 
 			// Clear the undoQueue
 			if (!doc.undoQueue.isEmpty()) {
-				int result = JOptionPane.showConfirmDialog(doc, "De-Hoisting requires that the undo queue be cleared.\nProceed anyway?","",JOptionPane.OK_CANCEL_OPTION);
+				String msg = GUITreeLoader.reg.getText("confirm_dehoist");
+
+				int result = JOptionPane.showConfirmDialog(doc, msg,"",JOptionPane.OK_CANCEL_OPTION);
 				if (result == JOptionPane.YES_OPTION) {
 					doc.undoQueue.clear();
 				} else if (result == JOptionPane.CANCEL_OPTION) {

@@ -39,28 +39,30 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
  	private static final int MINIMUM_WIDTH = 350;
 	private static final int MINIMUM_HEIGHT = 300;
 	
-	private static final String CREATE = "Create";
-	private static final String UPDATE = "Update";
-	private static final String CANCEL = "Cancel";
-	private static final String DELETE = "Delete";
+	private static String CREATE = null;
+	private static String UPDATE = null;
+	private static String CANCEL = null;
+	private static String DELETE = null;
+	
+	private static String MACRO_TYPE = null;
 	
 	private Box createButtonBox = Box.createHorizontalBox();
 	private Box updateButtonBox = Box.createHorizontalBox();
 
 	private JLabel macroTypeName = new JLabel();
 	
-	private JButton createButton = new JButton(CREATE);
-	private JButton updateButton = new JButton(UPDATE);
-	private JButton deleteButton = new JButton(DELETE);
-	private JButton cancelCreateButton = new JButton(CANCEL);
-	private JButton cancelUpdateButton = new JButton(CANCEL);
+	private JButton createButton = null;
+	private JButton updateButton = null;
+	private JButton deleteButton = null;
+	private JButton cancelCreateButton = null;
+	private JButton cancelUpdateButton = null;
 
 	private MacroConfig macroConfig = null;
 	private MacroManagerFrame frame = null;
 	
 	// Button Mode
-	private static final String BUTTON_MODE_CREATE_TITLE = "New Macro";
-	private static final String BUTTON_MODE_UPDATE_TITLE = "Update Macro";
+	private static String BUTTON_MODE_CREATE_TITLE = null;
+	private static String BUTTON_MODE_UPDATE_TITLE = null;
 
 	public static final int BUTTON_MODE_CREATE = 0;
 	public static final int BUTTON_MODE_UPDATE = 1;
@@ -69,6 +71,23 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 	// The Constructor
 	public MacroEditor() {
 		super(false, false, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+
+		BUTTON_MODE_CREATE_TITLE = GUITreeLoader.reg.getText("new_macro");
+		BUTTON_MODE_UPDATE_TITLE = GUITreeLoader.reg.getText("update_macro");
+
+		CREATE = GUITreeLoader.reg.getText("create");
+		UPDATE = GUITreeLoader.reg.getText("update");
+		CANCEL = GUITreeLoader.reg.getText("cancel");
+		DELETE = GUITreeLoader.reg.getText("delete");
+
+		MACRO_TYPE = GUITreeLoader.reg.getText("macro_type");
+
+		createButton = new JButton(CREATE);
+		updateButton = new JButton(UPDATE);
+		deleteButton = new JButton(DELETE);
+		cancelCreateButton = new JButton(CANCEL);
+		cancelUpdateButton = new JButton(CANCEL);
+
 	}
 
 
@@ -132,7 +151,7 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 		}
 		
 		// Update the macroTypeName text with the name of the class of the macroConfig.
-		this.macroTypeName.setText("Macro Type: " + Outliner.macroManager.getMacroTypeNameFromClassName(macroConfig.getMacro().getClass().getName()));
+		this.macroTypeName.setText(MACRO_TYPE + ": " + Outliner.macroManager.getMacroTypeNameFromClassName(macroConfig.getMacro().getClass().getName()));
 
 		show();
 	}
@@ -168,7 +187,7 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 			// Save it to disk as a serialized object.
 			saveMacro(macro);
 		} else {
-			JOptionPane.showMessageDialog(this,"An Error Occurred.");
+			JOptionPane.showMessageDialog(this, GUITreeLoader.reg.getText("message_an_error_occurred"));
 		}
 		
 		hide();
@@ -200,14 +219,14 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 			saveMacro(macro);
 			
 		} else {
-			JOptionPane.showMessageDialog(this,"An Error Occurred.");
+			JOptionPane.showMessageDialog(this, GUITreeLoader.reg.getText("message_an_error_occurred"));
 		}
 		
 		hide();
 	}
 
 	private void delete() {
-		if (USER_ABORTED == promptUser("Do you really want to delete this macro?")) {
+		if (USER_ABORTED == promptUser(GUITreeLoader.reg.getText("message_do_you_really_want_to_delete_this_macro"))) {
 			return;
 		}
 
@@ -227,7 +246,7 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 			// Remove it from disk
 			deleteMacro(new File(Outliner.MACROS_DIR + macro.getFileName()));
 		} else {
-			JOptionPane.showMessageDialog(this,"An Error Occurred.");
+			JOptionPane.showMessageDialog(this, GUITreeLoader.reg.getText("message_an_error_occurred"));
 		}
 		
 		hide();
@@ -235,7 +254,7 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 	
 	private void cancel() {
 		if (!macroConfig.cancel()) {
-			JOptionPane.showMessageDialog(this,"Uh Oh, something has gone wrong.");
+			JOptionPane.showMessageDialog(this, GUITreeLoader.reg.getText("message_uh_oh"));
 		}
 		
 		hide();
@@ -256,10 +275,14 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 
 	// Utility Methods
 	private static int promptUser(String msg) {
-		Object[] options = {"Yes","No"};
+		String yes = GUITreeLoader.reg.getText("yes");
+		String no = GUITreeLoader.reg.getText("no");
+		String confirm_delete = GUITreeLoader.reg.getText("confirm_delete");
+
+		Object[] options = {yes, no};
 		int result = JOptionPane.showOptionDialog(Outliner.macroManager.macroEditor,
 			msg,
-			"Confirm Delete",
+			confirm_delete,
 			JOptionPane.YES_NO_OPTION,
 			JOptionPane.QUESTION_MESSAGE,
 			null,

@@ -20,11 +20,10 @@ package com.organic.maynard.outliner;
 
 import java.io.*;
 import java.util.*;
-
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
+import com.organic.maynard.util.string.Replace;
 
 // WebFile
 import com.yearahead.io.*;
@@ -67,17 +66,17 @@ public class OutlinerFileChooser extends JFileChooser {
 		// Layout save panel
 		Box box = Box.createVerticalBox();
 
-		addSingleItemCentered(new JLabel("Line Terminator"), box);
+		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("line_terminator")), box);
 		addSingleItemCentered(lineEndComboBox, box);
 
 		box.add(Box.createVerticalStrut(5));
 
-		addSingleItemCentered(new JLabel("File Encoding"), box);
+		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_encoding")), box);
 		addSingleItemCentered(saveEncodingComboBox, box);
 
 		box.add(Box.createVerticalStrut(5));
 
-		addSingleItemCentered(new JLabel("File Format"), box);
+		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_format")), box);
 		addSingleItemCentered(saveFormatComboBox, box);
 
 		saveAccessory.add(box,BorderLayout.CENTER);
@@ -85,12 +84,12 @@ public class OutlinerFileChooser extends JFileChooser {
 		// Layout open panel
 		Box box2 = Box.createVerticalBox();
 
-		addSingleItemCentered(new JLabel("File Encoding"), box2);
+		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_encoding")), box2);
 		addSingleItemCentered(openEncodingComboBox, box2);
 
 		box2.add(Box.createVerticalStrut(5));
 
-		addSingleItemCentered(new JLabel("File Format"), box2);
+		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_format")), box2);
 		addSingleItemCentered(openFormatComboBox, box2);
 
 		openAccessory.add(box2,BorderLayout.CENTER);
@@ -159,17 +158,26 @@ public class OutlinerFileChooser extends JFileChooser {
 		if (getDialogType() == JFileChooser.OPEN_DIALOG) {
 			// Alert if file does not exist.
 			if (!file.exists()) {
-				JOptionPane.showMessageDialog(this, "The file: " + file.getPath() + " does not exist.");
+				String msg = GUITreeLoader.reg.getText("error_file_not_Found");
+				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, file.getPath());
+
+				JOptionPane.showMessageDialog(this, msg);
 				return;
 			}
 		} else if (getDialogType() == JFileChooser.SAVE_DIALOG) {
 			// Alert if file exists.
 			if (file.exists()) {
 				//Custom button text
-				Object[] options = {"Yes","No"};
+				String yes = GUITreeLoader.reg.getText("yes");
+				String no = GUITreeLoader.reg.getText("no");
+				String confirm_replacement = GUITreeLoader.reg.getText("confirm_replacement");
+				String msg = GUITreeLoader.reg.getText("confirmation_replace_file");
+				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, file.getPath());
+
+				Object[] options = {yes, no};
 				int result = JOptionPane.showOptionDialog(this,
-					"The file " + file.getPath() + " already exists.\nDo you want to replace it?",
-					"Confirm Replacement",
+					msg,
+					confirm_replacement,
 					JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE,
 					null,

@@ -22,6 +22,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import org.xml.sax.*;
+import com.organic.maynard.util.string.Replace;
 
 /**
  * @author  $Author$
@@ -38,49 +39,33 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	
         	
 	// Button Text and Other Copy
-	private static final String FIND = "Find";
-	private static final String REPLACE = "Replace";
-	private static final String REPLACE_ALL = "Replace All";
+	private static String FIND = null;
+	private static String REPLACE = null;
+	private static String REPLACE_ALL = null;
 
-	private static final String START_AT_TOP = "Start at top";
-	private static final String WRAP_ARROUND = "Wrap around";
-	private static final String SELECTION_ONLY = "Selection only";
-	private static final String IGNORE_CASE = "Ignore case";
-	private static final String INCLUDE_READ_ONLY_NODES = "Include read-only nodes for replace";	
+	private static String START_AT_TOP = null;
+	private static String WRAP_ARROUND = null;
+	private static String SELECTION_ONLY = null;
+	private static String IGNORE_CASE = null;
+	private static String INCLUDE_READ_ONLY_NODES = null;
 
 	// Define Fields and Buttons
-	private static final JCheckBox CHECKBOX_START_AT_TOP = new JCheckBox(START_AT_TOP);
-	private static final JCheckBox CHECKBOX_WRAP_AROUND = new JCheckBox(WRAP_ARROUND);
-	private static final JCheckBox CHECKBOX_SELECTION_ONLY = new JCheckBox(SELECTION_ONLY);
-	private static final JCheckBox CHECKBOX_IGNORE_CASE = new JCheckBox(IGNORE_CASE);
-	private static final JCheckBox CHECKBOX_INCLUDE_READ_ONLY_NODES = new JCheckBox(INCLUDE_READ_ONLY_NODES);
+	private static JCheckBox CHECKBOX_START_AT_TOP = null;
+	private static JCheckBox CHECKBOX_WRAP_AROUND = null;
+	private static JCheckBox CHECKBOX_SELECTION_ONLY = null;
+	private static JCheckBox CHECKBOX_IGNORE_CASE = null;
+	private static JCheckBox CHECKBOX_INCLUDE_READ_ONLY_NODES = null;
 	
-	private static final JButton BUTTON_FIND = new JButton(FIND);
-	private static final JButton BUTTON_REPLACE = new JButton(REPLACE);
-	private static final JButton BUTTON_REPLACE_ALL = new JButton(REPLACE_ALL);
+	private static JButton BUTTON_FIND = null;
+	private static JButton BUTTON_REPLACE = null;
+	private static JButton BUTTON_REPLACE_ALL = null;
 
-	private static final JLabel LABEL_FIND = new JLabel(FIND);
-	private static final JTextArea TEXTAREA_FIND = new JTextArea();
+	private static JLabel LABEL_FIND = null;
+	private static JTextArea TEXTAREA_FIND = null;
 
-	private static final JLabel LABEL_REPLACE = new JLabel(REPLACE);
-	private static final JTextArea TEXTAREA_REPLACE = new JTextArea();
+	private static JLabel LABEL_REPLACE = null;
+	private static JTextArea TEXTAREA_REPLACE = null;
 	
-	static {
-		Insets insets = new Insets(1,3,1,3);
-		Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
-		
-		TEXTAREA_FIND.setName(FIND);
-		TEXTAREA_FIND.setCursor(cursor);
-		TEXTAREA_FIND.setLineWrap(true);
-		TEXTAREA_FIND.setMargin(insets);
-	
-		TEXTAREA_REPLACE.setName(REPLACE);
-		TEXTAREA_REPLACE.setCursor(cursor);
-		TEXTAREA_REPLACE.setLineWrap(true);
-		TEXTAREA_REPLACE.setMargin(insets);
-		
-		disableButtons();
-	}
 	
 	// Static Methods
 	public static void enableButtons() {
@@ -98,6 +83,47 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	// The Constructor
 	public FindReplaceFrame() {
 		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+
+		FIND = GUITreeLoader.reg.getText("find");
+		REPLACE = GUITreeLoader.reg.getText("replace");
+		REPLACE_ALL = GUITreeLoader.reg.getText("replace_all");
+
+		START_AT_TOP = GUITreeLoader.reg.getText("start_at_top");
+		WRAP_ARROUND = GUITreeLoader.reg.getText("wrap_around");
+		SELECTION_ONLY = GUITreeLoader.reg.getText("selection_only");
+		IGNORE_CASE = GUITreeLoader.reg.getText("ignore_case");
+		INCLUDE_READ_ONLY_NODES = GUITreeLoader.reg.getText("include_read_only_nodes");	
+
+		CHECKBOX_START_AT_TOP = new JCheckBox(START_AT_TOP);
+		CHECKBOX_WRAP_AROUND = new JCheckBox(WRAP_ARROUND);
+		CHECKBOX_SELECTION_ONLY = new JCheckBox(SELECTION_ONLY);
+		CHECKBOX_IGNORE_CASE = new JCheckBox(IGNORE_CASE);
+		CHECKBOX_INCLUDE_READ_ONLY_NODES = new JCheckBox(INCLUDE_READ_ONLY_NODES);
+		
+		BUTTON_FIND = new JButton(FIND);
+		BUTTON_REPLACE = new JButton(REPLACE);
+		BUTTON_REPLACE_ALL = new JButton(REPLACE_ALL);
+
+		LABEL_FIND = new JLabel(FIND);
+		TEXTAREA_FIND = new JTextArea();
+
+		LABEL_REPLACE = new JLabel(REPLACE);
+		TEXTAREA_REPLACE = new JTextArea();
+
+		Insets insets = new Insets(1,3,1,3);
+		Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
+		
+		TEXTAREA_FIND.setName(FIND);
+		TEXTAREA_FIND.setCursor(cursor);
+		TEXTAREA_FIND.setLineWrap(true);
+		TEXTAREA_FIND.setMargin(insets);
+	
+		TEXTAREA_REPLACE.setName(REPLACE);
+		TEXTAREA_REPLACE.setCursor(cursor);
+		TEXTAREA_REPLACE.setLineWrap(true);
+		TEXTAREA_REPLACE.setMargin(insets);
+		
+		disableButtons();
 	}
 	
 	public void show() {
@@ -465,11 +491,15 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		doc.panel.layout.draw(doc.tree.getEditingNode(),doc.tree.getComponentFocus());
 		
 		// Popup a dialogue with the replacement count.
-		String replacementText = "replacements";
+		String replacementText = GUITreeLoader.reg.getText("replacements");
 		if (count == 1) {
-			replacementText = "replacement";
+			replacementText = GUITreeLoader.reg.getText("replacement");
 		}
-		JOptionPane.showMessageDialog(doc, "" + count + " " + replacementText + " made.");
+		String msg = GUITreeLoader.reg.getText("replacements_made");
+		msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, "" + count);
+		msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_2, replacementText);
+
+		JOptionPane.showMessageDialog(doc, msg);
 	}
 	
 	

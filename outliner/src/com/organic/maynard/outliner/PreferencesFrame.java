@@ -50,20 +50,31 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 	public static final JPanel BOTTOM_PANEL = new JPanel();
 		
 	// Button Text and Other Copy
-	public static final String OK = "OK";
-	public static final String CANCEL = "Cancel";
-	public static final String APPLY = "Apply";
-	public static final String RESTORE_DEFAULTS = "Restore Defaults";
+	public static String OK = null;
+	public static String CANCEL = null;
+	public static String APPLY = null;
+	public static String RESTORE_DEFAULTS = null;
 
 	// Define Fields and Buttons
-	public static final JButton BOTTOM_OK = new JButton(OK);
-	public static final JButton BOTTOM_CANCEL = new JButton(CANCEL);
-	public static final JButton BOTTOM_APPLY = new JButton(APPLY);
+	public static JButton BOTTOM_OK = null;
+	public static JButton BOTTOM_CANCEL = null;
+	public static JButton BOTTOM_APPLY = null;
 
 
 	// The Constructor
 	public PreferencesFrame() {
 		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+
+		// Button Text and Other Copy
+		OK = GUITreeLoader.reg.getText("ok");
+		CANCEL = GUITreeLoader.reg.getText("cancel");
+		APPLY = GUITreeLoader.reg.getText("apply");
+		RESTORE_DEFAULTS = GUITreeLoader.reg.getText("restore_defaults");
+
+		// Define Fields and Buttons
+		BOTTOM_OK = new JButton(OK);
+		BOTTOM_CANCEL = new JButton(CANCEL);
+		BOTTOM_APPLY = new JButton(APPLY);
 	}
 
 

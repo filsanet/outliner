@@ -28,8 +28,6 @@ import java.awt.geom.*;
 public class OutlineEditableIndicator extends AbstractOutlineIndicator {
 
 	// Class Fields
-	public static String TOOL_TIP_TEXT = "Click to Toggle Read-Only Mode";
-
 	public static final ImageIcon ICON_IS_NOT_PROPERTY = new ImageIcon(Outliner.GRAPHICS_DIR + "is_not_editable.gif");
 	public static ImageIcon ICON_IS_PROPERTY = new ImageIcon(Outliner.GRAPHICS_DIR + "is_editable.gif");
 	public static ImageIcon ICON_IS_PROPERTY_INHERITED = null;
@@ -44,7 +42,7 @@ public class OutlineEditableIndicator extends AbstractOutlineIndicator {
 	
 	// The Constructor
 	public OutlineEditableIndicator(OutlinerCellRendererImpl renderer) {
-		super(renderer, TOOL_TIP_TEXT);
+		super(renderer, GUITreeLoader.reg.getText("tooltip_toggle_editability"));
 	}
 
 	// Misc Methods

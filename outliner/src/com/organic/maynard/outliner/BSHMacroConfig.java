@@ -28,10 +28,10 @@ import javax.swing.*;
 
 public class BSHMacroConfig extends MacroConfigImpl {
 	
-	private static final String PATTERN = "BeanShell Code";
+	private static String PATTERN = null;
 	
-	private JLabel nameLabel = new JLabel(NAME);
-	private JLabel patternLabel = new JLabel(PATTERN);
+	private JLabel nameLabel = null;
+	private JLabel patternLabel = null;
 
 	private JTextField nameField = new JTextField();
 	private JTextArea patternTextArea = new JTextArea();
@@ -40,6 +40,11 @@ public class BSHMacroConfig extends MacroConfigImpl {
 	// The Constructor
 	public BSHMacroConfig() {
 		super();
+
+		PATTERN = GUITreeLoader.reg.getText("bean_shell_code");
+	
+		nameLabel = new JLabel(NAME);
+		patternLabel = new JLabel(PATTERN);
 		
 		// Create the layout
 		this.setLayout(new BorderLayout());

@@ -36,18 +36,13 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 	private static final int LOWER_BUFFER_SIZE = 50;
 	
 	// Sort Menu
-	private static final String SORT = "Sort";
-	private static final String SORT_SHALLOW = "Shallow";
-	private static final String SORT_DEEP = "Deep";
+	private static String SORT = null;
+	private static String SORT_SHALLOW = null;
+	private static String SORT_DEEP = null;
 	
-	private static final JMenu SORT_MENU = new JMenu(SORT);
-	private static final JMenu SORT_SHALLOW_MENU = new JMenu(SORT_SHALLOW);
-	private static final JMenu SORT_DEEP_MENU = new JMenu(SORT_DEEP);
-	
-	static {
-		SORT_MENU.insert(SORT_SHALLOW_MENU, 0);
-		SORT_MENU.insert(SORT_DEEP_MENU, 1);
-	}
+	private static JMenu SORT_MENU = null;
+	private static JMenu SORT_SHALLOW_MENU = null;
+	private static JMenu SORT_DEEP_MENU = null;
 
 
 	// Class Fields
@@ -59,6 +54,17 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 	// The Constructors
 	public MacroPopupMenu() {
 		super();
+
+		SORT = GUITreeLoader.reg.getText("sort");
+		SORT_SHALLOW = GUITreeLoader.reg.getText("sort_shallow");
+		SORT_DEEP = GUITreeLoader.reg.getText("sort_deep");
+
+		SORT_MENU = new JMenu(SORT);
+		SORT_SHALLOW_MENU = new JMenu(SORT_SHALLOW);
+		SORT_DEEP_MENU = new JMenu(SORT_DEEP);
+		
+		SORT_MENU.insert(SORT_SHALLOW_MENU, 0);
+		SORT_MENU.insert(SORT_DEEP_MENU, 1);
 		
 		this.insert(SORT_MENU, 0);
 		this.insert(new JPopupMenu.Separator(), 1);
@@ -256,7 +262,9 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		
 		// Handle Undoability Confirmation
 		if (!macro.isUndoable()) {
-			int result = JOptionPane.showConfirmDialog(document, "This operation is not undoable.\nProceed anyway?","",JOptionPane.OK_CANCEL_OPTION);
+			String msg = GUITreeLoader.reg.getText("confirmation_operation_not_undoable");
+
+			int result = JOptionPane.showConfirmDialog(document, msg,"",JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.YES_OPTION) {
 				// Proceed, do nothing
 			} else if (result == JOptionPane.CANCEL_OPTION) {

@@ -27,11 +27,11 @@ import javax.swing.*;
 
 public abstract class MacroConfigImpl extends JPanel implements MacroConfig {
 	
-	public static final String NAME = "Macro Name";
+	public static String NAME = null;
 	
 	// The Constructor
 	public MacroConfigImpl() {
-
+		NAME = GUITreeLoader.reg.getText("macro_name");
 	}
 
 	

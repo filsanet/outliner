@@ -41,14 +41,14 @@ public class Preferences implements GUITreeComponent {
 	public static final String LINE_END_DEFAULT = System.getProperty("line.separator");
 	
 
-	public static final String PLATFORM_MAC = "Mac";
-	public static final String PLATFORM_WIN = "Windows";
-	public static final String PLATFORM_UNIX = "Unix";
+	public static String PLATFORM_MAC = null;
+	public static String PLATFORM_WIN = null;
+	public static String PLATFORM_UNIX = null;
 	
-	public static final String[] PLATFORM_IDENTIFIERS = {PLATFORM_MAC,PLATFORM_WIN,PLATFORM_UNIX};
+	public static String[] PLATFORM_IDENTIFIERS = new String[3];
 
-	public static final String TXT_WORDS = "words";
-	public static final String TXT_CHARACTERS = "characters";
+	public static String TXT_WORDS = null;
+	public static String TXT_CHARACTERS = null;
 
 	public static final Vector ENCODINGS = new Vector();
 	public static final Vector FILE_FORMATS_OPEN = new Vector();
@@ -134,7 +134,18 @@ public class Preferences implements GUITreeComponent {
 
 
 	// The Constructors
-	public Preferences() {}
+	public Preferences() {
+		PLATFORM_MAC = GUITreeLoader.reg.getText("mac");
+		PLATFORM_WIN = GUITreeLoader.reg.getText("windows");
+		PLATFORM_UNIX = GUITreeLoader.reg.getText("unix");
+		
+		PLATFORM_IDENTIFIERS[0] = PLATFORM_MAC;
+		PLATFORM_IDENTIFIERS[1] = PLATFORM_WIN;
+		PLATFORM_IDENTIFIERS[2] = PLATFORM_UNIX;
+
+		TXT_WORDS = GUITreeLoader.reg.getText("wrap_words");
+		TXT_CHARACTERS = GUITreeLoader.reg.getText("wrap_characters");
+	}
 	
 
 	// GUITreeComponent interface
@@ -284,7 +295,7 @@ public class Preferences implements GUITreeComponent {
 			fw.write(prepareConfigFile());
 			fw.close();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Could not save preferences because of: " + e);
+			JOptionPane.showMessageDialog(null, GUITreeLoader.reg.getText("message_could_not_save_preferences") + ": " + e);
 		}
 	}
 

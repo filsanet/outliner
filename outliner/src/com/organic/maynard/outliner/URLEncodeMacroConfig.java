@@ -28,16 +28,20 @@ import javax.swing.*;
 
 public class URLEncodeMacroConfig extends MacroConfigImpl {
 		
-	private JLabel nameLabel = new JLabel(NAME);
+	private JLabel nameLabel = null;
 	private JTextField nameField = new JTextField();
 	private ButtonGroup buttonGroup = new ButtonGroup();
-	private JRadioButton encodeRadio = new JRadioButton("Encode");
-	private JRadioButton decodeRadio = new JRadioButton("Decode");
+	private JRadioButton encodeRadio = null;
+	private JRadioButton decodeRadio = null;
 	
 
 	// The Constructor
 	public URLEncodeMacroConfig() {
 		super();
+
+		nameLabel = new JLabel(NAME);
+		encodeRadio = new JRadioButton(GUITreeLoader.reg.getText("encode"));
+		decodeRadio = new JRadioButton(GUITreeLoader.reg.getText("decode"));
 		
 		// Create the layout
 		this.setLayout(new BorderLayout());

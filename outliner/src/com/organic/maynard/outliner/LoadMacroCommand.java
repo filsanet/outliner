@@ -85,7 +85,7 @@ public class LoadMacroCommand extends Command {
 			fw.write(prepareConfigFile());
 			fw.close();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Could not save macros config file because of: " + e);
+			JOptionPane.showMessageDialog(null, GUITreeLoader.reg.getText("message_could_not_save_macros_config") + ": " + e);
 		}
 	}
 	

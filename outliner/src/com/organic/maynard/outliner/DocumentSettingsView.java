@@ -32,58 +32,102 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 	private static final int MINIMUM_WIDTH = 250;
 	private static final int MINIMUM_HEIGHT = 300;
 
-	protected static final String OK = "OK";
-	protected static final String CANCEL = "Cancel";
-	protected static final String RESTORE_TO_GLOBAL = "Restore to Application Preferences";
+	protected static String OK = null;
+	protected static String CANCEL = null;
+	protected static String RESTORE_TO_GLOBAL = null;
 	
-	private static final String LINE_TERMINATOR = "Line Terminator";
-	private static final String ENCODING_WHEN_SAVING = "Encoding when saving.";
-	private static final String FORMAT_WHEN_SAVING = "Format when saving.";
-	private static final String OWNER_NAME = "Owner Name";
-	private static final String OWNER_EMAIL = "Owner Email";
-	private static final String APPLY_FONT_STYLE_FOR_COMMENTS = "Apply Font Style for Comments";
-	private static final String APPLY_FONT_STYLE_FOR_EDITABILITY = "Apply Font Style for Editability";
-	private static final String APPLY_FONT_STYLE_FOR_MOVEABILITY = "Apply Font Style for Moveability";
-	private static final String CREATION_DATE = "Creation Date:";
-	private static final String MODIFICATION_DATE = "Modification Date:";
+	private static String LINE_TERMINATOR = null;
+	private static String ENCODING_WHEN_SAVING = null;
+	private static String FORMAT_WHEN_SAVING = null;
+	private static String OWNER_NAME = null;
+	private static String OWNER_EMAIL = null;
+	private static String APPLY_FONT_STYLE_FOR_COMMENTS = null;
+	private static String APPLY_FONT_STYLE_FOR_EDITABILITY = null;
+	private static String APPLY_FONT_STYLE_FOR_MOVEABILITY = null;
+	private static String CREATION_DATE = null;
+	private static String MODIFICATION_DATE = null;
 	
-	private static final String IS_USING_APPLICATION_PREFS = "Currently Using Application Preferences";
-	private static final String IS_USING_DOCUMENT_PREFS = "Currently Using Document Preferences";
+	private static String IS_USING_APPLICATION_PREFS = null;
+	private static String IS_USING_DOCUMENT_PREFS = null;
 
 
 	// GUI Elements
 	protected Box box = Box.createVerticalBox();
 
-	protected JButton buttonOK = new JButton(OK);
-	protected JButton buttonCancel = new JButton(CANCEL);
-	protected JButton buttonRestoreToGlobal = new JButton(RESTORE_TO_GLOBAL);
+	protected JButton buttonOK = null;
+	protected JButton buttonCancel = null;
+	protected JButton buttonRestoreToGlobal = null;
 	
-	protected JComboBox lineEndComboBox = new JComboBox(Preferences.PLATFORM_IDENTIFIERS);
-	protected JComboBox saveEncodingComboBox = new JComboBox();
-	protected JComboBox saveFormatComboBox = new JComboBox();
-	protected JTextField ownerNameField = new JTextField(10);
-	protected JTextField ownerEmailField = new JTextField(10);
-	protected JCheckBox applyFontStyleForCommentsCheckBox = new JCheckBox();
-	protected JCheckBox applyFontStyleForEditabilityCheckBox = new JCheckBox();
-	protected JCheckBox applyFontStyleForMoveabilityCheckBox = new JCheckBox();
+	protected JComboBox lineEndComboBox = null;
+	protected JComboBox saveEncodingComboBox = null;
+	protected JComboBox saveFormatComboBox = null;
+	protected JTextField ownerNameField = null;
+	protected JTextField ownerEmailField = null;
+	protected JCheckBox applyFontStyleForCommentsCheckBox = null;
+	protected JCheckBox applyFontStyleForEditabilityCheckBox = null;
+	protected JCheckBox applyFontStyleForMoveabilityCheckBox = null;
 	
-	protected JLabel creationDateLabel = new JLabel(" ");
-	protected JLabel modificationDateLabel = new JLabel(" ");
-	protected JLabel isInheritingPrefsLabel = new JLabel(" ");
+	protected JLabel creationDateLabel = null;
+	protected JLabel modificationDateLabel = null;
+	protected JLabel isInheritingPrefsLabel = null;
 	
-	protected ComboBoxListener lineEndComboBoxListener = new ComboBoxListener(lineEndComboBox, null);
-	protected ComboBoxListener saveEncodingComboBoxListener = new ComboBoxListener(saveEncodingComboBox, null);
-	protected ComboBoxListener saveFormatComboBoxListener = new ComboBoxListener(saveFormatComboBox, null);	
-	protected TextFieldListener ownerNameTextFieldListener = new TextFieldListener(ownerNameField, null);	
-	protected TextFieldListener ownerEmailTextFieldListener = new TextFieldListener(ownerEmailField, null);	
-	protected CheckboxListener applyFontStyleForCommentsCheckBoxListener = new CheckboxListener(applyFontStyleForCommentsCheckBox, null);	
-	protected CheckboxListener applyFontStyleForEditabilityCheckBoxListener = new CheckboxListener(applyFontStyleForEditabilityCheckBox, null);	
-	protected CheckboxListener applyFontStyleForMoveabilityCheckBoxListener = new CheckboxListener(applyFontStyleForMoveabilityCheckBox, null);	
+	protected ComboBoxListener lineEndComboBoxListener = null;
+	protected ComboBoxListener saveEncodingComboBoxListener = null;
+	protected ComboBoxListener saveFormatComboBoxListener = null;
+	protected TextFieldListener ownerNameTextFieldListener = null;
+	protected TextFieldListener ownerEmailTextFieldListener = null;
+	protected CheckboxListener applyFontStyleForCommentsCheckBoxListener = null;
+	protected CheckboxListener applyFontStyleForEditabilityCheckBoxListener = null;
+	protected CheckboxListener applyFontStyleForMoveabilityCheckBoxListener = null;
 
 
 	// The Constructors
 	public DocumentSettingsView() {
 		super(false, false, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+
+		OK = GUITreeLoader.reg.getText("ok");
+		CANCEL = GUITreeLoader.reg.getText("cancel");
+		RESTORE_TO_GLOBAL = GUITreeLoader.reg.getText("restore_to_application_preferences");
+		
+		LINE_TERMINATOR = GUITreeLoader.reg.getText("line_terminator");
+		ENCODING_WHEN_SAVING = GUITreeLoader.reg.getText("encoding_when_saving");
+		FORMAT_WHEN_SAVING = GUITreeLoader.reg.getText("format_when_saving");
+		OWNER_NAME = GUITreeLoader.reg.getText("owner_name");
+		OWNER_EMAIL = GUITreeLoader.reg.getText("owner_email");
+		APPLY_FONT_STYLE_FOR_COMMENTS = GUITreeLoader.reg.getText("apply_font_style_for_comments");
+		APPLY_FONT_STYLE_FOR_EDITABILITY = GUITreeLoader.reg.getText("apply_font_style_for_editability");
+		APPLY_FONT_STYLE_FOR_MOVEABILITY = GUITreeLoader.reg.getText("apply_font_style_for_moveability");
+		CREATION_DATE = GUITreeLoader.reg.getText("creation_date");
+		MODIFICATION_DATE = GUITreeLoader.reg.getText("modification_date");
+		
+		IS_USING_APPLICATION_PREFS = GUITreeLoader.reg.getText("is_using_application_prefs");
+		IS_USING_DOCUMENT_PREFS = GUITreeLoader.reg.getText("is_using_document_prefs");
+
+		buttonOK = new JButton(OK);
+		buttonCancel = new JButton(CANCEL);
+		buttonRestoreToGlobal = new JButton(RESTORE_TO_GLOBAL);
+		
+		lineEndComboBox = new JComboBox(Preferences.PLATFORM_IDENTIFIERS);
+		saveEncodingComboBox = new JComboBox();
+		saveFormatComboBox = new JComboBox();
+		ownerNameField = new JTextField(10);
+		ownerEmailField = new JTextField(10);
+		applyFontStyleForCommentsCheckBox = new JCheckBox();
+		applyFontStyleForEditabilityCheckBox = new JCheckBox();
+		applyFontStyleForMoveabilityCheckBox = new JCheckBox();
+		
+		creationDateLabel = new JLabel(" ");
+		modificationDateLabel = new JLabel(" ");
+		isInheritingPrefsLabel = new JLabel(" ");
+		
+		lineEndComboBoxListener = new ComboBoxListener(lineEndComboBox, null);
+		saveEncodingComboBoxListener = new ComboBoxListener(saveEncodingComboBox, null);
+		saveFormatComboBoxListener = new ComboBoxListener(saveFormatComboBox, null);
+		ownerNameTextFieldListener = new TextFieldListener(ownerNameField, null);
+		ownerEmailTextFieldListener = new TextFieldListener(ownerEmailField, null);
+		applyFontStyleForCommentsCheckBoxListener = new CheckboxListener(applyFontStyleForCommentsCheckBox, null);
+		applyFontStyleForEditabilityCheckBoxListener = new CheckboxListener(applyFontStyleForEditabilityCheckBox, null);
+		applyFontStyleForMoveabilityCheckBoxListener = new CheckboxListener(applyFontStyleForMoveabilityCheckBox, null);
 	}
 
 	// GUITreeComponent interface
@@ -110,7 +154,7 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		buttonOK.addActionListener(this);
 		buttonCancel.addActionListener(this);
 		buttonRestoreToGlobal.addActionListener(this);
-		buttonRestoreToGlobal.setToolTipText("Sets this document's preferences to the current application preference values.");
+		buttonRestoreToGlobal.setToolTipText(GUITreeLoader.reg.getText("tooltip_restore_to_global"));
 
 		lineEndComboBox.addItemListener(lineEndComboBoxListener);
 		saveEncodingComboBox.addItemListener(saveEncodingComboBoxListener);		

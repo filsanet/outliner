@@ -33,7 +33,7 @@ import java.beans.*;
 public class OutlinerDocument extends JInternalFrame implements ComponentListener, PropertyChangeListener {
 
 	// Constants
-	public static final String UNTITLED_DOCUMENT_NAME = "Untitled";
+	//public static final String UNTITLED_DOCUMENT_NAME = "Untitled";
 	private static final ImageIcon ICON_DOCUMENT_SAVED = new ImageIcon(Outliner.GRAPHICS_DIR + "document_saved.gif");
 	private static final ImageIcon ICON_DOCUMENT_UNSAVED = new ImageIcon(Outliner.GRAPHICS_DIR + "document_unsaved.gif");
 	
@@ -72,7 +72,7 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		// Set the window title
 		if (title.equals("")) {
 			untitledDocumentCount++;
-			setTitle(UNTITLED_DOCUMENT_NAME + " " + untitledDocumentCount);
+			setTitle(GUITreeLoader.reg.getText("untitled") + " " + untitledDocumentCount);
 		} else {
 			setTitle(title);
 		}
