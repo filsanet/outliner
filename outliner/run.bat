@@ -14,4 +14,5 @@ set CP=%CP%;%root_path%jmousewheel.jar
 
 @echo on
 REM java -cp %CP% -Duser.language=ja -Duser.region=JP -Xincgc com.organic.maynard.outliner.Outliner ja
+REM java -cp %CP% -Duser.language=de -Duser.region=JP -Xincgc com.organic.maynard.outliner.Outliner de
 java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner en
