@@ -1,7 +1,7 @@
 /**
- * PdbBFImportFileFormat class
+ * PdbSPImportFileFormat class
  * 
- * Reads in Palm Pilot pdb files created by Brain Forest
+ * Reads in Palm Pilot pdb files created by ShadowPlan
  * 
  * extends PdbFileFormat 
  * 
@@ -55,8 +55,8 @@
 // we're part of this
 package com.organic.maynard.outliner;
 
-// we read Palm pdb files created by Brain Forest 
-public class PdbBFImportFileFormat 
+// we read Palm pdb files created by Shadow Plan 
+public class PdbSPImportFileFormat 
 	
 	extends PdbImportFileFormat { 
 
@@ -74,7 +74,7 @@ public class PdbBFImportFileFormat
 		throws JoeException {
 	
 		// try to create an appropriate reader-writer
-		ourReaderWriter = new PdbBFReaderWriter() ;
+		ourReaderWriter = new PdbSPReaderWriter() ;
 		
 		// if we fail ...
 		if (ourReaderWriter == null) {
@@ -85,5 +85,5 @@ public class PdbBFImportFileFormat
 		
 		} // end protected method createReaderWriter
 	
-	} // end class PdbBFImportFileFormat
+	} // end class PdbSPImportFileFormat
 	

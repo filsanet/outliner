@@ -1,7 +1,7 @@
 /**
- * PdbBFImportFileFormat class
+ * PdbTMImportFileFormat class
  * 
- * Reads in Palm Pilot pdb files created by Brain Forest
+ * Reads Palm Pilot pdb files created by Thought Manager
  * 
  * extends PdbFileFormat 
  * 
@@ -15,7 +15,7 @@
  *
  *		
  * Copyright (C) 2001 Stan Krute <Stan@StanKrute.com>
- * Last Touched: 1/6/02 2:14 AM PST
+ * Last Touched: 12/23/01 4:56PM
  *
  * Redistribution and use in source and binary forms, with or 
  * without modification, are permitted provided that the 
@@ -55,8 +55,8 @@
 // we're part of this
 package com.organic.maynard.outliner;
 
-// we read Palm pdb files created by Brain Forest 
-public class PdbBFImportFileFormat 
+// we read Palm pdb files created by Thought Manager 
+public class PdbTMImportFileFormat 
 	
 	extends PdbImportFileFormat { 
 
@@ -74,7 +74,7 @@ public class PdbBFImportFileFormat
 		throws JoeException {
 	
 		// try to create an appropriate reader-writer
-		ourReaderWriter = new PdbBFReaderWriter() ;
+		ourReaderWriter = new PdbTMReaderWriter() ;
 		
 		// if we fail ...
 		if (ourReaderWriter == null) {
@@ -85,5 +85,5 @@ public class PdbBFImportFileFormat
 		
 		} // end protected method createReaderWriter
 	
-	} // end class PdbBFImportFileFormat
+	} // end class PdbTMImportFileFormat
 	
