@@ -71,7 +71,7 @@ public class TileGridMenuItem
 	private static final int TOP_HEAVY = 2 ;
 	private static final int HOUR_GLASS = 3 ;
 	private static final int BLIMP = 4 ;
-	private static int TILE_STYLE = BOTTOM_HEAVY ;
+	private static int tileStyle = BOTTOM_HEAVY ;
 	
 	// calculate a tiling pattern for a spec'd # of windows
 	private int [] calcTilePattern (int numWindows) {
@@ -131,6 +131,7 @@ public class TileGridMenuItem
 	
 	// we've been clicked - deal with it
 	public void actionPerformed(ActionEvent e) {
+		
 		// determine how many documents are open
 		int openDocCount = Outliner.openDocumentCount() ;
 
@@ -207,14 +208,15 @@ public class TileGridMenuItem
 		int actualMaxColumns = 0 ;
 		
 		// obtain a tiling pattern
+		// it contains the number of columns for each row
 		int [] pattern = calcTilePattern(openNotIconifiedDocCount) ;
 		
 		// determine pattern's number of rows
 		int patternRowCount = pattern.length - 2 ;
 		
-		// grab data tail from pattern donkey
+		// grab data tail from pattern donkey:
 		
-		// determine pattern's regular number of columns
+		// determine the number of columns in regular and fat rows
 		int patternRegRowColumnCount = pattern [patternRowCount] ;
 		int patternFatRowColumnCount = patternRegRowColumnCount + 1 ;
 		
@@ -222,6 +224,8 @@ public class TileGridMenuItem
 		int fatRowCount = pattern[patternRowCount + 1] ;
 		int regRowCount = patternRowCount - fatRowCount ;
 
+		// end gdtfpd
+		
 		// how many cells in the whole pattern
 		int patternTotalCellCount = patternRegRowColumnCount * regRowCount
 					+ patternFatRowColumnCount * fatRowCount ;
@@ -231,7 +235,9 @@ public class TileGridMenuItem
 		boolean plentyOfColumnRoom = patternFatRowColumnCount <= maxColumns ;
 		boolean plentyOfRoom = plentyOfRowRoom && plentyOfColumnRoom ;
 
-// don't need these, cuz we fork below		
+// don't need these, cuz we fork below
+// nuke 'em once everything's workin'
+//		
 //		// determine actual max number of columns we'll need
 //		actualMaxColumns = plentyOfColumnRoom
 //			? patternFatRowColumnCount 
@@ -243,20 +249,29 @@ public class TileGridMenuItem
 //			: maxRows ;
 			
 		// some row and column arrays
+		// [srk] may not need these - check once all's working
 		int [] columnWidths = null;
 		int [] columnPositions = null;
 		int [] rowHeights = null;
 		int [] rowPositions = null;
 
+		// some vars for window size and location info
+		Point ptLocation = new Point();
+		Dimension dimSize = new Dimension();
+		
+
 		// if we have plenty of room
 		if (plentyOfRoom) {
-			// a useful number
-			int docLimit = patternTotalCellCount - 1 ;
+			// block local vars
+			int docLimit = patternTotalCellCount ;
+			int docCounter = 0 ;
+			int rowsColumnCount = 0 ;
+			boolean isFatRow = false ;
+			int widthStd = 0 ;
+			int widthAdj = 0 ;
+			int rowY = 0 ;
+			int rowHeight = 0 ;
 
-			// create arrays to store size and position constants
-			rowHeights = new int[patternRowCount] ;
-			rowPositions = new int [patternRowCount] ;
-			
 			// determine column widths
 			
 			// in a regular row
@@ -269,23 +284,78 @@ public class TileGridMenuItem
 			int fatRowColumnWidthAdj = (int) availWidth -
 						patternFatRowColumnCount * fatRowColumnWidthStd ;
 					
-			int foo = 0 ;
+			// determine row heights
+			int rowHeightStd = (int) (availHeight/patternRowCount) ;
+			int rowHeightAdj = (int) availHeight -
+						patternRowCount * rowHeightStd ;
 			
 			// for each row in the pattern
+			for (int row = 0; row < patternRowCount; row++) {
 				
+				// determine the row's y-axis location
+				rowY = row * rowHeightStd ;
 				
-				// for each column in the row
+				// determine the row's height
+				rowHeight = rowHeightStd ;
 				
-//			// set up all but the last column
-//			for (int column = 0; column < limit; column++) {
-//				columnWidths[column] = regularColumnWidth ;
-//				columnPositions[column] = column * regularColumnWidth ;
-//			} // end for all but the last column
-//			
-//			// set up the last column
-//			columnWidths[limit] = finalColumnWidth ;
-//			columnPositions[limit] = (int)availWidth - finalColumnWidth ;
-		} // end if
+				// adjust bottom row's height
+				if (row == (patternRowCount - 1)) {
+					rowHeight = rowHeight + rowHeightAdj ;
+				} // end if
+				
+				// grab the row's number of columns
+				// switch on tile style
+				switch(tileStyle) {
+				
+				case BOTTOM_HEAVY:
+					rowsColumnCount = pattern[patternRowCount - 1 - row] ;
+					break ;
+					
+				case TOP_HEAVY:
+					rowsColumnCount = pattern[row] ;
+					break ;
+					
+				case HOUR_GLASS:  // TBD
+				case BLIMP:  // TBD
+				default: // TBD
+					rowsColumnCount = pattern[row] ;
+					break ;
+					
+				} // end switch 
+				
+				// set up width info based on fat/reg
+				if (rowsColumnCount == patternRegRowColumnCount) {
+					widthStd = regRowColumnWidthStd ;
+					widthAdj = regRowColumnWidthAdj ;
+				} else {
+					widthStd = fatRowColumnWidthStd ;
+					widthAdj = fatRowColumnWidthAdj ;
+				} // end if-else
+						
+				// for each column in the row 
+				for (int column = 0; column < rowsColumnCount; column ++) {
+					
+					// grab the next document
+					doc = Outliner.getDocument(docCounter++) ;
+					
+					// set up location
+					ptLocation.setLocation(column * widthStd,rowY) ;
+					
+					// set up size
+					if (column < (rowsColumnCount - 1)) {
+						dimSize.setSize(widthStd,rowHeight) ;
+					} else {
+						dimSize.setSize(widthStd+widthAdj,rowHeight) ;
+					} // end if-else
+					
+					// set the doc's new location and size
+					doc.setLocation(ptLocation) ;
+					doc.setSize(dimSize) ;
+				} // end for each column in the row but the last
+				
+			} // end for each row in the pattern
+			
+		} // end if we have plenty of room
 		
 		// else we don't have enuf room, and must limit
 		// ourselves to the size of the pattern
@@ -300,97 +370,10 @@ public class TileGridMenuItem
 			
 		} // end else we must squeeze extras on bottom rows
 		
-		// okay, everything's figured
-		
-		// [srk] growth bud detour
-		if (true) {
-			return ;
-		}
-		
-		// some vars for window size and location info
-		Point pLocation = new Point();
-		Dimension dSize = new Dimension();
-		
-		// for each open doc
-		for (int counter = 0; counter < openDocCount; counter++) {
-			// TBD [srk] make this a bit slicker
-			// tile em in z order
-			// right now we just use chrono order
-			
-			// grab the doc ref
-			doc = Outliner.getDocument(counter) ;
-			
-			// set up location
-			pLocation.setLocation(columnPositions[counter],0) ;
-			
-			// set up size
-			dSize.setSize(columnWidths[counter],(int)availHeight) ;
-			
-			// set the doc's new location and size
-			doc.setLocation(pLocation) ;
-			doc.setSize(dSize) ;
-			
-			
-		} // end for each open doc
-		
-		// clean up the horizontal scrollbar's area
+		// clean up the scrollbars' areas
 		Outliner.jsp.getHorizontalScrollBar().revalidate();
+		Outliner.jsp.getVerticalScrollBar().revalidate();
 		
-		
-		
-		
-		// if it's greater than the number of rows, the leftovers
-		// go in the bottom row, at minimum width, and if more leftovers,
-		// spill up to next row, etc.\
-		// determine row height
-		// determine row y positions
-		// for a one-doc row
-		//	set width to max
-		//	set height 
-		// for a multi-doc row
-		//	determine # of docs to be shown
-		//	divide up space
-		//	set widths
-		//	set height
-		// set one row at a time, top to bottom
-		// order is same as document z-ordering
-		
-		
-		
-		
-//		// if we're not in a totally-maximized state 
-//		// [which would make this all pointless] ...
-//		if (!Outliner.desktop.desktopManager.isMaximized()) {
-//			
-//			// grabaholda the topmost doc
-//			OutlinerDocument doc = Outliner.getMostRecentDocumentTouched();
-//			
-			// tell it to leave maximized state
-			
-			
-			
-//			// see how wide we can get
-//			Dimension curAvailSpace = Outliner.desktop.getCurrentAvailableSpace() ; 
-//			double maxWidth = curAvailSpace.getWidth() ;
-//			
-//			// get the doc's current location
-//			Point pLocation = doc.getLocation() ;
-//			
-//			// set its left point to the left edge of the content area
-//			pLocation.setLocation(0, pLocation.getY()) ;
-//			
-//			// get the doc's current size
-//			Dimension dSize = new Dimension() ;
-//			dSize.setSize((int)maxWidth, (int)doc.getSize().getHeight()) ;
-//			
-//			// set the doc's new location and size
-//			doc.setLocation(pLocation) ;
-//			doc.setSize(dSize) ;
-//			
-//			// let the vertical scroll bar adjust for our new size
-//			Outliner.jsp.getVerticalScrollBar().revalidate();
-//			
-//		} // end if we're not totally maximized
 		
 	} // end method actionPerformed
 	
