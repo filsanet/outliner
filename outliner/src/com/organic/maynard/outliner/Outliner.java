@@ -331,21 +331,49 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	public void endSetup(AttributeList atts) {
 
 		// Setup the Desktop
+		
+		// Set the Window Location.
 			// Get Main Window Dimension out of the prefs.
 			PreferenceInt pWidth = Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_W);
 			PreferenceInt pHeight = Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_H);
+			PreferenceInt pInitialPositionX = Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_X);
+			PreferenceInt pInitialPositionY = Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_Y);
+
 			IntRangeValidator vWidth = (IntRangeValidator) pWidth.getValidator();
 			IntRangeValidator vHeight = (IntRangeValidator) pHeight.getValidator();
+			IntRangeValidator vInitialPositionX = (IntRangeValidator) pInitialPositionX.getValidator();
+			IntRangeValidator vInitialPositionY = (IntRangeValidator) pInitialPositionY.getValidator();
 			
 			int minimumWidth = vWidth.getMin();
 			int minimumHeight = vHeight.getMin();
 			
 			int initialWidth = pWidth.cur;
 			int initialHeight = pHeight.cur;
-			int initialPositionX = Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_X).cur;
-			int initialPositionY = Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_Y).cur;
+			int initialPositionX = pInitialPositionX.cur;
+			int initialPositionY = pInitialPositionY.cur;
 		
-		setLocation(initialPositionX, initialPositionY);
+			// Make sure initial position isn't off screen, or even really close to the edge.
+			int bottom_left_inset = 100;
+			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+			
+			if (initialPositionX < vInitialPositionX.getMin()) {
+				initialPositionX = vInitialPositionX.getMin();
+			}
+			
+			if (initialPositionX > (screenSize.width - bottom_left_inset)) {
+				initialPositionX = screenSize.width - bottom_left_inset;
+			}
+
+			if (initialPositionY < vInitialPositionY.getMin()) {
+				initialPositionY = vInitialPositionY.getMin();
+			}
+			
+			if (initialPositionY > (screenSize.height - bottom_left_inset)) {
+				initialPositionY = screenSize.height - bottom_left_inset;
+			}
+						
+			setLocation(initialPositionX, initialPositionY);
+
 
 		addComponentListener(new WindowSizeManager(initialWidth, initialHeight, minimumWidth, minimumHeight));
 		addWindowListener(
