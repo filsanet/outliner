@@ -3,10 +3,10 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide - English.opml</title>
 <dateCreated>Tue, 17 Jul 2001 02:49:03 GMT</dateCreated>
-<dateModified>Tue, 24 Jul 2001 07:54:48 GMT</dateModified>
+<dateModified>Wed, 25 Jul 2001 02:16:31 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
-<expansionState></expansionState>
+<expansionState>1</expansionState>
 <vertScrollState>1</vertScrollState>
 <windowTop>59</windowTop>
 <windowLeft>40</windowLeft>
@@ -14,6 +14,8 @@
 <windowRight>525</windowRight>
 </head>
 <body>
+<outline text="Linux/Unix"/>
+<outline text="Windows">
 <outline text="Setting Up the JOE Open Source Project on a Windows System">
 <outline text="a Step-by-Simple-Step Guide"/>
 <outline text="Front Matter">
@@ -331,8 +333,9 @@
 <outline text="Updating specific project files"/>
 </outline>
 <outline text="checking in your changes to files">
-<outline text="Checking in a source file"/>
-<outline text="Checking-in your changes to a source file"/>
+<outline text="Checking in a source file that you've changed">
+<outline text="cvs commit -m &quot;brief change summary note&quot; filename"/>
+</outline>
 </outline>
 <outline text="adding files to the project">
 <outline text="go to the directory containing the file[s]"/>
@@ -352,8 +355,10 @@
 <outline text="Removing a file from the project"/>
 <outline text="Removing a directory from the project"/>
 </outline>
+</outline>
+<outline text="Macintosh"/>
 <outline text="CVS Survival">
-<outline text="CVS Update Result Codes">
+<outline text="CVS Update and Commit Result Codes">
 <outline text="?">
 <outline text="The file is unknown to CVS"/>
 </outline>
@@ -363,7 +368,9 @@
 <outline text="C">
 <outline text="There's a conflict."/>
 </outline>
-<outline text="M"/>
+<outline text="M">
+<outline text="The local copy is different from what's in the repository"/>
+</outline>
 <outline text="P">
 <outline text="Like U, but CVS has sent a patch for the file."/>
 </outline>
@@ -373,6 +380,11 @@
 <outline text="U">
 <outline text="The file's been Updated with what's in the repository."/>
 </outline>
+</outline>
+<outline text="Links">
+<outline text="further info on CVS that I found useful"/>
+<outline text="please send changes/additions/deletions to Stan@StanKrute.com"/>
+<outline text=""/>
 </outline>
 </outline>
 </body>
