@@ -111,12 +111,7 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 			OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getDocument(i);
 
 			// Update the undo queue for all the documents immediatly if it is being downsized.
-			if (doc.getUndoQueue().getSize() > pUndoQueueSize.cur) {
-				doc.getUndoQueue().trim();
-			} else {
-				// Send an event since trim would normally do this, but we skipped it.
-				Outliner.documents.fireUndoQueueEvent(doc, UndoQueueEvent.TRIM);
-			}
+			doc.getUndoQueue().prefsTrim();
 
 			for (int j = 0; j < OutlineLayoutManager.CACHE_SIZE; j++) {
 				OutlinerCellRendererImpl renderer = doc.panel.layout.textAreas[j];

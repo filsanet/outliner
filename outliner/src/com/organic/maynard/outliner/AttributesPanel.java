@@ -46,9 +46,16 @@ import javax.swing.table.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
 public class AttributesPanel extends AbstractAttributesPanel {
 
+	// Instance Fields
 	protected OutlinerDocument doc = null;
+
 
 	// The Constructor
 	public AttributesPanel(OutlinerDocument doc) {
@@ -98,6 +105,7 @@ public class AttributesPanel extends AbstractAttributesPanel {
 
 		// undo
 		CompoundUndoable undoable = new CompoundUndoablePropertyChange(doc.tree);
+		undoable.setName("New Node Attribute");
 		Undoable primitive = new PrimitiveUndoableAttributeChange(node, null, null, false, key, value, isReadOnly);
 		undoable.addPrimitive(primitive);
 		doc.getUndoQueue().add(undoable);
@@ -121,6 +129,7 @@ public class AttributesPanel extends AbstractAttributesPanel {
 
 		// undo
 		CompoundUndoable undoable = new CompoundUndoablePropertyChange(doc.tree);
+		undoable.setName("Delete Node Attribute");
 		Undoable primitive = new PrimitiveUndoableAttributeChange(node, key, oldValue, oldReadOnly, null, null, false);
 		undoable.addPrimitive(primitive);
 		doc.getUndoQueue().add(undoable);
@@ -145,6 +154,7 @@ public class AttributesPanel extends AbstractAttributesPanel {
 
 		// undo
 		CompoundUndoable undoable = new CompoundUndoablePropertyChange(doc.tree);
+		undoable.setName("Toggle Node Attribute Editability");
 		Undoable primitive = new PrimitiveUndoableAttributeChange(node, key, oldAndNewValue, oldReadOnly, key, oldAndNewValue, readOnly);
 		undoable.addPrimitive(primitive);
 		doc.getUndoQueue().add(undoable);
@@ -157,8 +167,7 @@ public class AttributesPanel extends AbstractAttributesPanel {
     	Node node = doc.tree.getEditingNode();
 		String key = (String) model.keys.get(row);
 
-		boolean oldReadOnly = node.isReadOnly(key);
-		boolean readOnly = !oldReadOnly;
+		boolean readOnly = node.isReadOnly(key);
 
 		Object oldValue = node.getAttribute(key);
 		node.setAttribute(key, value);
@@ -170,7 +179,8 @@ public class AttributesPanel extends AbstractAttributesPanel {
 
 		// undo
 		CompoundUndoable undoable = new CompoundUndoablePropertyChange(doc.tree);
-		Undoable primitive = new PrimitiveUndoableAttributeChange(node, key, oldValue, oldReadOnly, key, value, readOnly);
+		undoable.setName("Edit Node Attribute");
+		Undoable primitive = new PrimitiveUndoableAttributeChange(node, key, oldValue, readOnly, key, value, readOnly);
 		undoable.addPrimitive(primitive);
 		doc.getUndoQueue().add(undoable);
 

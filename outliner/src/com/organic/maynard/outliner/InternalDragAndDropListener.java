@@ -41,19 +41,28 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
 public class InternalDragAndDropListener implements MouseListener {
 
+	// Constants
 	private static final int ICON = 0;
 	private static final int TEXT = 1;
 	private static final int OTHER = -1;
 	
+	
+	// Instance Fields
 	protected boolean isDragging = false;
 	protected Node targetNode = null;
 	protected int componentType = OTHER;
 	
 	protected OutlinerCellRendererImpl currentRenderer = null;
 	protected OutlinerCellRendererImpl prevRenderer = null;
-	
+
+
 	// The Constructor
 	public InternalDragAndDropListener() {}
 	
@@ -199,6 +208,11 @@ public class InternalDragAndDropListener implements MouseListener {
 		}
 		
 		if (!undoable.isEmpty()) {
+			if (undoable.getPrimitiveCount() == 1) {
+				undoable.setName("Move Node");
+			} else {
+				undoable.setName(new StringBuffer().append("Move ").append(undoable.getPrimitiveCount()).append(" Nodes").toString());
+			}
 			tree.getDocument().undoQueue.add(undoable);
 			undoable.redo();
 		}
@@ -230,6 +244,11 @@ public class InternalDragAndDropListener implements MouseListener {
 		}
 		
 		if (!undoable.isEmpty()) {
+			if (undoable.getPrimitiveCount() == 1) {
+				undoable.setName("Move Node");
+			} else {
+				undoable.setName(new StringBuffer().append("Move ").append(undoable.getPrimitiveCount()).append(" Nodes").toString());
+			}
 			tree.getDocument().undoQueue.add(undoable);
 			undoable.redo();
 		}

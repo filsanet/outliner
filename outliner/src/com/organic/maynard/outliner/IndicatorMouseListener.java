@@ -158,6 +158,7 @@ public class IndicatorMouseListener implements MouseListener {
 		ToggleCommentAction.clearCommentForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Clear Comment for Node");
 			tree.getDocument().undoQueue.add(undoable);
 		}
 	}
@@ -168,6 +169,7 @@ public class IndicatorMouseListener implements MouseListener {
 		ToggleCommentAction.toggleCommentAndClearForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Toggle Comment and Clear Decendants for Node");
 			tree.getDocument().undoQueue.add(undoable);
 		}
 	}
@@ -178,6 +180,7 @@ public class IndicatorMouseListener implements MouseListener {
 		ToggleCommentAction.toggleCommentForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Toggle Comment for Node");
 			tree.getDocument().undoQueue.add(undoable);
 		}
 	}
@@ -188,6 +191,7 @@ public class IndicatorMouseListener implements MouseListener {
 		ToggleCommentAction.toggleCommentInheritanceForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Toggle Comment Inheritance for Node");
 			tree.getDocument().undoQueue.add(undoable);
 		}
 	}
@@ -199,6 +203,7 @@ public class IndicatorMouseListener implements MouseListener {
 		ToggleEditableAction.clearEditableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Clear Editability for Node");
 			tree.getDocument().undoQueue.add(undoable);
 		}
 		
@@ -211,6 +216,7 @@ public class IndicatorMouseListener implements MouseListener {
 		ToggleEditableAction.toggleEditableAndClearForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Toggle Editability and Clear Decendants for Node");
 			tree.getDocument().undoQueue.add(undoable);
 		}
 		
@@ -223,6 +229,7 @@ public class IndicatorMouseListener implements MouseListener {
 		ToggleEditableAction.toggleEditableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Toggle Editability for Node");
 			tree.getDocument().undoQueue.add(undoable);
 		}
 		
@@ -235,6 +242,7 @@ public class IndicatorMouseListener implements MouseListener {
 		ToggleEditableAction.toggleEditableInheritanceForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Toggle Editability Inheritance for Node");
 			tree.getDocument().undoQueue.add(undoable);
 		}
 		
@@ -248,6 +256,7 @@ public class IndicatorMouseListener implements MouseListener {
 		ToggleMoveableAction.clearMoveableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Clear Moveability for Node");
 			tree.getDocument().undoQueue.add(undoable);
 		}
 	}
@@ -258,6 +267,7 @@ public class IndicatorMouseListener implements MouseListener {
 		ToggleMoveableAction.toggleMoveableAndClearForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Toggle Moveability and Clear Decendants for Node");
 			tree.getDocument().undoQueue.add(undoable);
 		}
 	}
@@ -268,6 +278,7 @@ public class IndicatorMouseListener implements MouseListener {
 		ToggleMoveableAction.toggleMoveableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Toggle Moveability for Node");
 			tree.getDocument().undoQueue.add(undoable);
 		}
 	}
@@ -278,6 +289,7 @@ public class IndicatorMouseListener implements MouseListener {
 		ToggleMoveableAction.toggleMoveableInheritanceForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Toggle Moveability Inheritance for Node");
 			tree.getDocument().undoQueue.add(undoable);
 		}
 	}

@@ -151,11 +151,39 @@ public class UndoQueue implements com.organic.maynard.outliner.util.Destructible
 	}
 
 	/**
+	 * Trim specifically for resizing after MAX_QUEUE_SIZE
+	 * has been changed. This is called from PreferencesPanelEditor.
+	 */	
+	public void prefsTrim() {
+		int difference = MAX_QUEUE_SIZE - queue.size();
+		if (difference >= 0) {
+			// Do Nothing since we're still under or at the limit.
+		} else {
+			// First trim off any redoables
+			if (MAX_QUEUE_SIZE > cursor + 1) {
+				queue.trim(MAX_QUEUE_SIZE);
+			} else {
+				queue.trim(cursor + 1);
+			}
+			
+			// Next, trim undoables.
+			int range = queue.size() - MAX_QUEUE_SIZE;
+			if (range > 0) {
+				queue.removeRange(0, range);
+				cursor -= range;
+			}
+		}
+
+		// Fire Event
+		Outliner.documents.fireUndoQueueEvent(doc, UndoQueueEvent.TRIM);
+	}
+	
+	/**
 	 * Trims the undo queue to the current size of the UNDO_QUEUE_SIZE Preference.
 	 * Starts by trimming ALL redoables then trims undoables if neccessary. An
 	 * UndoQueueEvent is fired.
 	 */	
-	public void trim() {
+	private void trim() {
 		// First trim off any redoables
 		queue.trim(cursor + 1);
 		
