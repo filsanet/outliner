@@ -35,6 +35,7 @@
 package com.organic.maynard.outliner.util.find;
 
 import com.organic.maynard.outliner.util.ProgressDialog;
+import com.organic.maynard.swing.ProgressMonitor;
 
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.util.crawler.*;
@@ -958,7 +959,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	}
 
 	private static FindReplaceResultsModel results = null;
-	protected static ProgressDialog monitor = new ProgressDialog();
+	protected static com.organic.maynard.swing.ProgressMonitor monitor = new ProgressDialog();
 	
 	private static void find_all(OutlinerDocument doc) {
 		int mode = getFindReplaceMode();
