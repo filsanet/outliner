@@ -415,17 +415,17 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	
 	// ErrorHandler Interface
 	public void error(SAXParseException e) {
-		System.out.println("SAXParserException Error: " + e);
+		System.out.println("SAXParserException Error: " + e.getMessage());
 		this.errorOccurred = true;
 	}
 
 	public void fatalError(SAXParseException e) {
-		System.out.println("SAXParserException Fatal Error: " + e);
+		System.out.println("SAXParserException Fatal Error: " + e.getMessage());
 		this.errorOccurred = true;
 	}
 
 	public void warning(SAXParseException e) {
-		System.out.println("SAXParserException Warning: " + e);
+		System.out.println("SAXParserException Warning: " + e.getMessage());
 		this.errorOccurred = true;
 	}
 

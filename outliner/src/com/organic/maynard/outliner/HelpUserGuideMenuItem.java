@@ -51,7 +51,7 @@ import org.xml.sax.*;
 public class HelpUserGuideMenuItem 
 
 	extends AbstractOutlinerMenuItem 
-	implements ActionListener, GUITreeComponent {
+	implements ActionListener, GUITreeComponent, JoeReturnCodes {
 
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
@@ -102,7 +102,7 @@ public class HelpUserGuideMenuItem
 		// return (FileMenu.openFile(docInfo);
 		// we be tres fakey for now
 		FileMenu.openFile(docInfo);
-		return jrc.SUCCESS ;
+		return SUCCESS ;
 
 		} // end openHelpUserGuideDocument
 

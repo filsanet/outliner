@@ -28,7 +28,7 @@ import org.xml.sax.*;
 
 import com.organic.maynard.util.string.StringTools;
 
-public class RecentFilesList extends JMenu implements ActionListener, GUITreeComponent {
+public class RecentFilesList extends JMenu implements ActionListener, GUITreeComponent, JoeReturnCodes {
 
 	// Constants
 	public static final String A_TEXT = "text";
@@ -88,7 +88,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		if (Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur == 0) {return;}
 		
 		// if it's a Help system file ... 		[srk] 8/12/01 12:26AM
-		if (Outliner.helpDoxMgr.isThisOneOfOurs(filename) != jrc.DOCUMENT_NOT_FOUND){
+		if (Outliner.helpDoxMgr.isThisOneOfOurs(filename) != DOCUMENT_NOT_FOUND){
 			
 			// fuhgedabowdit
 			return ;

@@ -50,7 +50,7 @@ import org.xml.sax.*;
 public class HelpTutorialsMenuItem 
 
 	extends AbstractOutlinerMenuItem 
-	implements ActionListener, GUITreeComponent {
+	implements ActionListener, GUITreeComponent, JoeReturnCodes {
 
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
@@ -100,7 +100,7 @@ public class HelpTutorialsMenuItem
 		// return (FileMenu.openFile(docInfo);
 		// we be tres fakey for now
 		FileMenu.openFile(docInfo);
-		return jrc.SUCCESS ;
+		return SUCCESS ;
 
 		} // end openHelpTutorialsDocument
 

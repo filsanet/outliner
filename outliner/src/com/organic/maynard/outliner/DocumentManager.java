@@ -58,7 +58,7 @@ package com.organic.maynard.outliner;
 // we manage a set of documents
 public class DocumentManager 
 
-	extends Object {
+	extends Object implements JoeReturnCodes {
 	
 	// protected instance vars
 	protected boolean [] docOpenStates ;
@@ -124,7 +124,7 @@ public class DocumentManager
 			} // end for
 		
 		// if we get this far, it's not one of ours
-		return jrc.DOCUMENT_NOT_FOUND ;
+		return DOCUMENT_NOT_FOUND ;
 		
 		} // end method isThisOneOfOurs
 
@@ -134,7 +134,7 @@ public class DocumentManager
 		
 		// make sure we're in bounds
 		if ((docSelector < 0) || (docSelector > docPaths.length)) {
-			return jrc.ARRAY_SELECTOR_OUT_OF_BOUNDS ;
+			return ARRAY_SELECTOR_OUT_OF_BOUNDS ;
 			} // end if
 		
 		// we're in bounds. 
@@ -151,7 +151,7 @@ public class DocumentManager
 		docPaths[docSelector] = docPathName ;
 		
 		// exit triumphant
-		return jrc.SUCCESS;
+		return SUCCESS;
 		
 		} // end method setDocPath
 
