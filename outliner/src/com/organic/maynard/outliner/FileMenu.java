@@ -99,7 +99,7 @@ import com.organic.maynard.util.string.Replace;
 // this class implements the meat of several File Menu commands: New, Open, Import, Save, Revert, Close
 public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, JoeReturnCodes {
 	
-	// private class constants 
+	// public class constants 
 	private static final int MODE_SAVE = 0;
 	private static final int MODE_EXPORT = 1;
 	private static final int MODE_OPEN = 0;
@@ -530,22 +530,24 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 		newDoc.settings.useDocumentSettings = true;
 
-		// make some modal adjustments
+		// make any final modal adjustments
 		switch (mode) {
-			
-		case MODE_IMPORT: 
-			// we were imported
-			docInfo.setImported(true) ;
-			break ;
-			
-		case MODE_OPEN:
-			
-			// Move it to the bottom of the recent files list
-			RecentFilesList.updateFileNameInList(docInfo.getPath(), docInfo);
-			
+			case MODE_IMPORT: 
+				// we were imported
+				docInfo.setImported(true) ;
+				break ;
+				
+			case MODE_OPEN:
+				break ;
+				
+			default:
+				break ;
 		} // end switch
 		
-		// okay, do final setup and draw the suckah
+		// add/move file to the bottom of the recent files list
+		RecentFilesList.updateFileNameInList(docInfo.getPath(), docInfo);
+
+		// perform final setup and draw the suckah
 		setupAndDraw(docInfo, newDoc, openOrImportResult);
 	
 	} // end method openFile

@@ -55,12 +55,25 @@ public class SaveAllFileMenuItem extends AbstractOutlinerMenuItem implements Act
 		saveAllOutlinerDocuments();
 	}
 
+	// save all changed and non-imported documents
 	protected static void saveAllOutlinerDocuments() {
+		
+		// for each open document ...
 		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
 			OutlinerDocument doc = Outliner.getDocument(i);
-			if (doc.isFileModified()) {
-				SaveFileMenuItem.saveOutlinerDocument(doc);
-			}
-		}
-	}
-}
+			
+			// if it wasn't imported ...
+			if (! doc.getDocumentInfo().getImported()) {
+				
+				// if it's changed ...
+				if (doc.isFileModified()) {
+					SaveFileMenuItem.saveOutlinerDocument(doc);
+				} // end if
+			
+			} // end if
+		
+		} // end for
+		
+	} // end method saveAllOutlinerDocuments
+
+} // end class SaveAllFileMenuItem

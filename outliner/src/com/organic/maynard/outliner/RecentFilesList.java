@@ -237,7 +237,13 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 			protocol = Outliner.fileProtocolManager.getProtocol(protocolName);
 		}
 
-		FileMenu.openFile(docInfo, protocol);
+		// Open or Import the file, as is appropriate
+		if (! docInfo.getImported()) {
+			FileMenu.openFile(docInfo, protocol);
+		} else {
+			FileMenu.importFile(docInfo,protocol);
+		} // end if-else
+		
 	}
 	
 	
