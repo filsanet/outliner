@@ -1,63 +1,63 @@
-A couple of notes about installation.
+JOE 1.8.7
+Installation Notes
 
 General
+-------
+1) When you first start up JOE, you may want to examine and set JOE's application preferences.
+	Give the Edit:Application Preferences menu command. 
+	The Application Preferences dialog appears. 
+	Go through the preference panels, and set the items as desired.
 
-1) When you first start up JOE, you may want to examine and set JOE's application preferences
-   To do so, give the Edit:Application Preferences menu command. The Application Preferences
-   dialog appears. Go through the preference panels, and set the items as desired.
+Windows
+-------
+1) Ensure that your system has an appropriate Java 2 Runtime Environment (JRE) installed. 
+	That means at least version 1.3. The latest 1.4 beta should also work, although we have not tested it.
+	To determine what JRE, if any, is installed on your system:
+		Give the Start:Settings:Control Panel menu command. 
+		Run the Add/Remove Programs applet. 
+		Look for entries in the list of installed software with Java in their names, such as Java 2 Runtime or Java 2 SDK.
+	You can download JREs and Java 2 SDKs (which include JREs)as follows: 
+		JRE 1.3.1_02:
+			http://java.sun.com/j2se/1.3/jre/download-windows.html
+		Java 2 SDK 1.3.1_02:
+			http://java.sun.com/j2se/1.3/download-windows.html
+
+2) If you've got more than one JRE or Java 2 SDK installed, edit the Outliner directory's run.bat file to invoke the correct version of Java.
+	Determine the pathname for the java runtime .exe file you want to run.
+		One way to do this: give the following command from the root directory of the drive you are examining in an MS-DOS command line window:
+			dir java.exe /s
+	There's a line near the end of run.bat that invokes the Java runtime. It looks like this:
+		java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner en
+	Edit that line so that it uses the pathname determined above.
+		Example:
+			C:\Program Files\JavaSoft\JRE\1.3.1_02\bin\java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner en
+
+3) Execute the Outliner directory's run.bat file to start JOE. 
+	Run.bat opens in an MS-DOS window whose environment space is set to a default value of 256 bytes. 
+	On non-trivial Windows systems, that will not be enough environment space for running JOE.
+	The fix: create a pif file, RUN.pif, that executes run.bat with 2k of environment space:
+		[1] Right-click run.bat. 
+		[2] A popup menu appears. 
+		[3] Click the Properties menu item. 
+		[4] A window titled "run.bat Properties" appears. 
+		[5] Select the Memory tab. 
+		[6] Set Initial Environment -- AKA environment space -- to 2048. 
+		[7] Click the OK button.
+		[8] Windows creates the file RUN.pif in the Outliner directory
+
+4) If you want to setup Windows "sendto" then use the sendto.bat file. 
+	In sendto.bat, change the path for cd to the directory you installed JOE into.
 
 
-Windows Installation:
-
-1) You should be running an appropriate Java 2 Runtime Environment (JRE). 
-   That means at least version 1.3. The latest 1.4 beta should be OK too.
-   
-   To determine what JRE, if any, is installed on your system:
-    Give the Start:Settings:Control Panel menu command. Then run the
-    Add/Remove Programs applet. Look for entries for Java 2 Runtime andor Java 2 SDK.
-     
-...You can download JREs and Java 2 SDKs (which include JREs) as follows: 
-    Java 2 SDK 1.3.1_02: http://java.sun.com/j2se/1.3/download-windows.html		
-    JRE 1.3.1_02: http://java.sun.com/j2se/1.3/jre/download-windows.html
-
-2) If you've got more than one JRE or Java 2 SDK installed, you may need to 
-   edit the Outliner directory's run.bat file to call the correct version of Java. 
-   
-   The Java invocation line of run.bat should look something like this:
-     c:\jdk1.3\bin\java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner
-
-3) On the Windows platform, execute the Outliner directory's run.bat file to get JOE going. 
-
-   Run.bat opens in an MS-DOS window whose environment space is set to a 
-   default value of 256 bytes. 
-
-   On non-trivial Windows systems, that may not be enough. Without enough 
-   environment space, JOE won't run, because the SET statements in run.bat 
-   will fail.  
-
-   The fix: set run.bat so that it has lots of environment space: 
-
-    [1] Right-click run.bat. 
-    [2] A popup menu appears. 
-    [3] Click the Properties menu item. 
-    [4] A window titled "run.bat Properties" appears. 
-    [5] Select the Memory tab. 
-    [6] Set Initial Environment -- AKA environment space -- to 2048. 
-
-4) If you want to setup Windows "sendto" then use the sendto.bat file. In
-   the batch file you need to change the path for cd to the directory you
-   installed JOE into.
-
-
-UNIX Installation:
+UNIX/Linux/Solaris:
+-------------------
 
 1) Edit run_joe.sh so that INSTALL_DIR points to the directory you installed JOE into.
-   Make sure to make it executable and put it somewhere in your PATH. 
-
-   One thing to note is, things like 
-
-   run_joe ../../file.opml 
-
-   won't work. because it needs to change in to the JOE directory to run it, the script 
-   cuts off any path info, and then adds on the current directory, so it always passes 
-   $CWD/filename.opml to JOE. 
+	Make sure to make it executable and put it somewhere in your PATH. 
+	
+	Note: something like this
+	
+	   run_joe ../../file.opml 
+	
+	won't work. Because it needs to change in to the JOE directory to run it, the script 
+	cuts off any path info, and then adds on the current directory, so it always passes $CWD/filename.opml to JOE. 
