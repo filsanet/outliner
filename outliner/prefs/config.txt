@@ -15,8 +15,10 @@ set|selected_child_color|255,255,153
 set|font_size|13
 set|font_face|Courier New
 set|line_end|Windows
-set|open_encoding|ISO-8859-1
-set|save_encoding|ISO-8859-1
+set|open_encoding|ISO-8859-2
+set|save_encoding|ISO-8859-3
 set|line_wrap|words
 set|new_doc_on_startup|false
 set|is_maximized|true
+set|open_format|Alternate Open
+set|save_format|Alternate Save
