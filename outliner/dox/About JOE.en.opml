@@ -3,24 +3,24 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\About JOE.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Sat, 19 Jan 2002 12:37:23 GMT</dateModified>
+<dateModified>Fri, 25 Jan 2002 05:44:56 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
 <windowTop>5</windowTop>
 <windowLeft>5</windowLeft>
-<windowBottom>455</windowBottom>
-<windowRight>455</windowRight>
+<windowBottom>376</windowBottom>
+<windowRight>392</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
 </head>
 <body>
 <outline isEditable="true" isMoveable="true" text="About JOE" isMoveableInherited="true" isEditableInherited="true">
-	<outline text="http://JavaOutlineEditor.org/About_JOE.en.opml"/>
-	<outline text="http://JavaOutlineEditor.org/About_JOE.en.txt"/>
-	<outline text="http://JavaOutlineEditor.org/About_JOE.en.html"/>
+	<outline text="http://JavaOutlineEditor.org/dox/About_JOE.en.opml"/>
+	<outline text="http://JavaOutlineEditor.org/dox/About_JOE.en.txt"/>
+	<outline text="http://JavaOutlineEditor.org/dox/About_JOE.en.html"/>
 </outline>
 <outline isEditable="true" isMoveable="true" text="------------" isMoveableInherited="true" isEditableInherited="true"/>
 <outline isEditable="true" isMoveable="true" text="Version" isMoveableInherited="true" isEditableInherited="true">
@@ -288,14 +288,14 @@
 </outline>
 <outline text="------------"/>
 <outline text="User Guide">
-	<outline text="http://JavaOutlineEditor.org/JOE_Developer_Guide.en.opml"/>
-	<outline text="http://JavaOutlineEditor.org/JOE_Developer_Guide.en.txt"/>
-	<outline text="http://JavaOutlineEditor.org/JOE_Developer_Guide.en.html"/>
+	<outline text="http://JavaOutlineEditor.org/dox/JOE_User_Guide.en.opml"/>
+	<outline text="http://JavaOutlineEditor.org/dox/JOE_User_Guide.en.txt"/>
+	<outline text="http://JavaOutlineEditor.org/dox/JOE_User_Guide.en.html"/>
 </outline>
 <outline text="Developer Guide">
-	<outline text="http://JavaOutlineEditor.org/JOE_User_Guide.en.opml"/>
-	<outline text="http://JavaOutlineEditor.org/JOE_User_Guide.en.txt"/>
-	<outline text="http://JavaOutlineEditor.org/JOE_User_Guide.en.html"/>
+	<outline text="http://JavaOutlineEditor.org/dev/JOE_User_Guide.en.opml"/>
+	<outline text="http://JavaOutlineEditor.org/dev/JOE_User_Guide.en.txt"/>
+	<outline text="http://JavaOutlineEditor.org/dev/JOE_User_Guide.en.html"/>
 </outline>
 <outline text="------------"/>
 <outline isEditable="true" isMoveable="true" text="Feedback" isMoveableInherited="true" isEditableInherited="true">
