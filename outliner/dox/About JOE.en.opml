@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\About JOE.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Thu, 27 Dec 2001 06:20:55 GMT</dateModified>
+<dateModified>Mon, 14 Jan 2002 02:18:35 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
-<expansionState></expansionState>
+<expansionState>8,10</expansionState>
 <vertScrollState>1</vertScrollState>
 <windowTop>5</windowTop>
 <windowLeft>5</windowLeft>
-<windowBottom>561</windowBottom>
-<windowRight>563</windowRight>
+<windowBottom>455</windowBottom>
+<windowRight>455</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -240,7 +240,9 @@
 		<outline text="website">
 			<outline text="http://jakarta.apache.org/oro"/>
 		</outline>
-		<outline text="Apache Software License"/>
+		<outline text="license">
+			<outline text="Apache Software License"/>
+		</outline>
 	</outline>
 	<outline text="XP - an XML Parser in Java">
 		<outline text="website">
