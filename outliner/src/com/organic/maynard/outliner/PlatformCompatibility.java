@@ -61,11 +61,15 @@ public class PlatformCompatibility {
 	static {
 		String javaVersion = System.getProperty("java.version");
 
-		StringTokenizer tokenizer = new StringTokenizer(javaVersion,".");
+		StringTokenizer tokenizer = new StringTokenizer(javaVersion,"._");
 		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken();
-			Integer value = new Integer(token);
-			JAVA_VERSION_ARRAY.add(value);
+			try {
+				Integer value = new Integer(token);
+				JAVA_VERSION_ARRAY.add(value);
+			} catch (NumberFormatException e) {
+				System.out.println("Java Version not a number: " + javaVersion);
+			}
 		}
 	}
 
