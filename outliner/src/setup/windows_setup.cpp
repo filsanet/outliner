@@ -46,7 +46,7 @@
 #include <windows.h>
 #include <shlwapi.h>
 #include "windows_setup.h"
-#include "resource.h"
+#include "windows_setup_resource.h"
 
 // installs a Java 2 application on a Windows system
 // returns 1 if all goes well, 0 if it doesn't
@@ -82,7 +82,7 @@ PSTR szCmdLine, int iCmdShow) {
 		// if the system needs a reboot to run the app
 		if (rebootRequired(g_Windows_Version))
 			// mention that in success message
-			reboot = successFeedbackReboot();
+			reboot = successFeedbackReboot(&startApp);
 			
 		// else the system does not need a reboot to run the app	
 		else
@@ -98,6 +98,15 @@ PSTR szCmdLine, int iCmdShow) {
 	// if we're rebooting
 	if (reboot) {
 		
+		// if the user chose to start JOE after a reboot
+		if (startApp) {
+			// copy JOE shortcut to Startup folder
+			// set Software\JOE\deleteStartupShortcut to 1
+		} // end if
+		// note: JOE .exe will check that registry value
+		// 	and, if it's set, will clear it and delete 
+		//	the JOE shortcut from the Startup folder
+		
 		ExitWindowsEx(EWX_REBOOT, 0 ) ; 
 			// TBD -- get reason.h file,
 			// then use these instead of 0
@@ -106,7 +115,7 @@ PSTR szCmdLine, int iCmdShow) {
 	// else if we're starting up the app
 	} else if (startApp) {
 		
-
+		
 		
 	} // end else-if
 	
@@ -126,9 +135,10 @@ int welcome () {
 	// build up the string
 	strcpy(welcomeString, WELCOME_STRING_0) ;
 	strcat(welcomeString, WELCOME_STRING_1) ;
+	// strcat(welcomeString, WELCOME_STRING_21) ;
 	
 	// run the dialog
-	return DisplayInfoContCancel (welcomeString) ;
+	return DisplayInfoNextCancel (welcomeString) ;
 	
 } // end function welcome
 
@@ -263,7 +273,7 @@ int wePlugIntoSystem () {
 
 
 // returns 1 for a Reboot Now, 0 for a Reboot Later
-int successFeedbackReboot () {
+int successFeedbackReboot (int * startApp) {
 	char feedbackString [MAX_LINE] ;
 	
 	// start to build feedback string
@@ -274,7 +284,7 @@ int successFeedbackReboot () {
 	strcat (feedbackString, REBOOT_SUGGESTION) ;
 	
 	// return the dialog result
-	return DisplayInfoReboot (feedbackString) ;
+	return DisplayInfoReboot (feedbackString, startApp) ;
 	
 } // end function successFeedbackReboot
 
@@ -506,7 +516,7 @@ int java2available (windows_version windowsVersion) {
 			strcat (feedbackString, "\n\n") ;
 
 			// print the feedback string
-			DisplayInfoContCancel (feedbackString) ;
+			DisplayInfoNextCancel (feedbackString) ;
 						
 			break ;
 			
@@ -1320,13 +1330,13 @@ int osFeedback (windows_version windowsVersion) {
 	strcat (feedbackString, "\n\n") ;
 
 	// print the feedback string
-	return DisplayInfoContCancel (feedbackString) ;
+	return DisplayInfoNextCancel (feedbackString) ;
 
 } // end function osFeedback 
 
 
 // provide some feedback RE setting an environment variable
-// returns 1 if user chooses to Continue, 0 if user chooses to Cancel
+// returns 1 if user chooses to go to the Next frame, 0 if user chooses to Cancel
 int sevFeedback (int result, char * varName, char * varValue) {
 	
 	char feedbackString [MAX_LINE] ;
@@ -1342,7 +1352,7 @@ int sevFeedback (int result, char * varName, char * varValue) {
 	strcat (feedbackString, SEV_FEEDBACK_STRING_3) ;
 	strcat (feedbackString, varValue) ;
 	strcat (feedbackString, "\n\n") ;
-	return DisplayInfoContCancel (feedbackString) ;
+	return DisplayInfoNextCancel (feedbackString) ;
 	
 } // end sevFeedback
 
@@ -1451,7 +1461,7 @@ int shortcutToProgramsMenu() {
 	strcat(feedbackString, SHORTCUT_TO_PROG_MENU) ;
 	strcat(feedbackString, "\n") ;
 	
-	return (result & DisplayInfoContCancel (feedbackString)) ;
+	return (result & DisplayInfoNextCancel (feedbackString)) ;
 		
 } // end function shortCutToProgramsMenu
 
@@ -1492,7 +1502,7 @@ int shortcutToStartMenu() {
 	strcat(feedbackString, SHORTCUT_TO_START_MENU) ;
 	strcat(feedbackString, "\n") ;
 	
-	return (result & DisplayInfoContCancel (feedbackString)) ;
+	return (result & DisplayInfoNextCancel (feedbackString)) ;
 	
 } // end function shortcutToStartMenu
 
@@ -1533,7 +1543,7 @@ int shortcutToDesktop() {
 	strcat(feedbackString, SHORTCUT_TO_DESKTOP) ;
 	strcat(feedbackString, "\n") ;
 
-	return (result & DisplayInfoContCancel (feedbackString)) ;
+	return (result & DisplayInfoNextCancel (feedbackString)) ;
 	
 } // end function shortcutToDesktop
 
@@ -1690,7 +1700,7 @@ int hookupDocType(doc_type_info * ptr2DocTypeInfo) {
 	strcat(feedbackString, ".") ;
 	strcat(feedbackString, "\n") ;
 	
-	return result & DisplayInfoContCancel (feedbackString) ;
+	return result & DisplayInfoNextCancel (feedbackString) ;
 	
 	// done
 } // end function hookupDocType
@@ -2014,29 +2024,43 @@ int javaRegEntriesCool() {
 //
 
 
-int DisplayInfoContCancel(LPSTR info)
+int DisplayInfoNextCancel(LPSTR info)
 {
 	// copy the string into global holding area	
 	strcpy(g_Current_Display_Message, info) ;
 	
 	// run the dialog box 
-	// returns 1 on Continue, 0 on Cancel
+	// returns 1 on Next, 0 on Cancel
 	// WM_INITDIALOG handler will center it and pick up the string
-	return DialogBox (GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_CONT_CANCEL), 
+	return DialogBox (GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NEXT_CANCEL), 
 			NULL, DisplayMyMessageDlgProc) ;
 
-} // end function DisplayInfoContCancel
+} // end function DisplayInfoNextCancel
 
 
-int DisplayInfoReboot(LPSTR info){
+int DisplayInfoReboot(LPSTR info, int * startApp){
+	// local vars
+	int result ;
+	
 	// copy the string into global holding area	
 	strcpy(g_Current_Display_Message, info) ;
 	
 	// run the dialog box
 	// returns 1 for a Reboot Now, 0 for a Reboot Later
+	// returns 2 for Starting App after reboot, 0 for not
+	// so a returns 3, 1, or 0
 	// WM_INITDIALOG handler will center it and pick up the string
-	return DialogBox (GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_REBOOT_LATER_NOW), 
+	result =  DialogBox (GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_REBOOT_LATER_NOW), 
 			NULL, DisplayMyMessageDlgProc) ;
+	
+	// start the app after a reboot ?
+	if (result & START_AFTER_REBOOT_FLAG) 
+		*startApp = 1 ;
+	else
+		*startApp = 0 ;
+	
+	// done	
+	return (result & REBOOT_FLAG) ;
 
 } // end function DisplayInfoReboot
 
@@ -2069,7 +2093,10 @@ int DisplayInfoExit(LPSTR info){
 
 BOOL CALLBACK DisplayMyMessageDlgProc 
 	(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam){
-		
+	
+	// local vars
+	int scratchInt ;
+	
 	// case out on the message
 	switch (message) {
 
@@ -2086,7 +2113,7 @@ BOOL CALLBACK DisplayMyMessageDlgProc
 		// TBD: make these real
 		switch (LOWORD (wParam)){
 		
-		case ID_CONTINUE :
+		case ID_NEXT :
 			EndDialog (hDlg, 1) ;
 			return TRUE ;
 			
@@ -2100,7 +2127,12 @@ BOOL CALLBACK DisplayMyMessageDlgProc
 			
 			
 		case ID_REBOOT_NOW :
-			EndDialog (hDlg, 1) ;
+			// if user chose to start app on reboot
+				// scratchInt = 3
+			// else
+				scratchInt = 1 ;
+			
+			EndDialog (hDlg, scratchInt) ;
 			return TRUE ;
 
 		case ID_EXIT_SETUP :
