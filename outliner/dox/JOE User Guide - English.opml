@@ -3,15 +3,15 @@
 <head>
 <title>e:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Thu, 26 Jul 2001 08:11:19 GMT</dateModified>
+<dateModified>Thu, 26 Jul 2001 08:43:23 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>17</windowTop>
-<windowLeft>36</windowLeft>
-<windowBottom>553</windowBottom>
-<windowRight>460</windowRight>
+<windowTop>9</windowTop>
+<windowLeft>65</windowLeft>
+<windowBottom>468</windowBottom>
+<windowRight>498</windowRight>
 </head>
 <body>
 <outline text="&lt;this is a work in perpetual progress&gt;">
@@ -20,7 +20,9 @@
 <outline text="Front End">
 <outline text="About JOE"/>
 <outline text="Using This Guide"/>
-<outline text="Authors"/>
+<outline text="Authors">
+<outline text="Stan Krute"/>
+</outline>
 <outline text="JOE People">
 <outline text="Maynard Demmon"/>
 <outline text="Philip Suh"/>
@@ -95,8 +97,10 @@
 <outline text="Collapsing a Node"/>
 </outline>
 <outline text="Saving Outlines"/>
+<outline text="Printing Outlines"/>
 <outline text="Opening Outlines"/>
 <outline text="Sharing Outlines"/>
+<outline text="Custom JOE"/>
 <outline text="Macros"/>
 <outline text="XML-RPC"/>
 <outline text="Menu Commands Reference">
@@ -180,7 +184,7 @@
 <outline text="Window"/>
 <outline text="Help"/>
 </outline>
-<outline text="Keystroke Shortcuts Reference"/>
+<outline text="Keystroke Commands Reference"/>
 <outline text="Outline Formats">
 <outline text="tabbed text"/>
 <outline text="OPML 1.0">
