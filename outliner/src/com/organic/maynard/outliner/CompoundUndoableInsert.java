@@ -24,7 +24,11 @@ public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 	
 	// The Constructors
 	public CompoundUndoableInsert(Node parent) {
-		super();
+		this(true, parent);
+	}
+	
+	public CompoundUndoableInsert(boolean isUpdatingGui, Node parent) {
+		super(isUpdatingGui);
 		this.parent = parent;
 	}
 	

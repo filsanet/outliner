@@ -31,7 +31,11 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 	}
 
 	public CompoundUndoableReplace(Node parent, boolean deleteMode) {
-		super();
+		this(true, parent, deleteMode);
+	}
+
+	public CompoundUndoableReplace(boolean isUpdatingGui, Node parent, boolean deleteMode) {
+		super(isUpdatingGui);
 		this.parent = parent;
 		this.deleteMode = deleteMode;
 	}

@@ -21,4 +21,10 @@ package com.organic.maynard.outliner;
 public interface CompoundUndoable extends Undoable {
 	public void addPrimitive(Undoable primitive);
 	public boolean isEmpty();
+	
+	 // Indicates that this undoable may make modifications/updates to
+	 // the GUI. For performance, if you are grouping a bunch of compound
+	 // undoables into one, you probably only want 1 of them to update
+	 // the GUI.
+	public boolean isUpdatingGui();
 }

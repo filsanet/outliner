@@ -32,11 +32,14 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 	
 	// The Constructors
 	public CompoundUndoableMove(Node parent, Node targetParent) {
-		super();
+		this(true, parent, targetParent);
+	}
+
+	public CompoundUndoableMove(boolean isUpdatingGui, Node parent, Node targetParent) {
+		super(isUpdatingGui);
 		this.parent = parent;
 		this.targetParent = targetParent;
 	}
-
 		
 	// Accessors
 	public Node getParent() {return parent;}
@@ -51,114 +54,154 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 	}
 
 	public void undo() {
+		// Shorthand
 		Node youngestNode = ((PrimitiveUndoableMove) primitives.get(0)).getNode();
 		TreeContext tree = youngestNode.getTree();
 
-		// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
-		OutlineLayoutManager layout = tree.doc.panel.layout;
-		Node nodeToDrawFromTmp = layout.getNodeToDrawFrom().nextUnSelectedNode();
+		if (isUpdatingGui()) {
+			// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
+			OutlineLayoutManager layout = tree.doc.panel.layout;
+			Node nodeToDrawFromTmp = layout.getNodeToDrawFrom().nextUnSelectedNode();
 
-		// Do all the Inserts
-		tree.setSelectedNodesParent(parent);
+			// Do all the Inserts
+			tree.setSelectedNodesParent(parent);
 
-		for (int i = primitives.size() - 1; i >= 0; i--) {
-			primitiveUndo((PrimitiveUndoableMove) primitives.get(i));
-		}
+			for (int i = primitives.size() - 1; i >= 0; i--) {
+				PrimitiveUndoableMove primitive = (PrimitiveUndoableMove) primitives.get(i);
+				
+				// ShortHand
+				Node node = primitive.getNode();
+				
+				// Remove the Node
+				tree.removeNode(node);
+				targetParent.removeChild(node);
 
-		// Record the EditingNode
-		tree.setEditingNode(youngestNode);
-		tree.setComponentFocus(OutlineLayoutManager.ICON);
+				// Insert the Node
+				parent.insertChild(node, primitive.getIndex());
+				tree.insertNode(node);
+				
+				// Set depth if neccessary.
+				if (targetParent.getDepth() != parent.getDepth()) {
+					node.setDepthRecursively(parent.getDepth() + 1);
+				}
 
-		// Redraw and Set Focus
-		if (layout.getNodeToDrawFrom().isAncestorSelected()) { // Makes sure we dont' stick at the top when multiple nodes are selected.
-			Node visNode = layout.getNodeToDrawFrom().prev();
-			int ioVisNode = tree.visibleNodes.indexOf(visNode);
-			int ioNodeToDrawFromTmp = tree.visibleNodes.indexOf(nodeToDrawFromTmp);
-			if (ioVisNode < ioNodeToDrawFromTmp) {
-				layout.setNodeToDrawFrom(visNode, ioVisNode);
-			} else {
-				layout.setNodeToDrawFrom(nodeToDrawFromTmp, ioNodeToDrawFromTmp);
+				// Update selection
+				tree.addNodeToSelection(node);
 			}
-		}
-		
-		layout.draw(tree.getYoungestInSelection(), OutlineLayoutManager.ICON);
-	}
-	
-	private void primitiveUndo(PrimitiveUndoableMove primitive) {
-		// ShortHand
-		Node node = primitive.getNode();
-		TreeContext tree = node.getTree();
-		
-		// Remove the Node
-		tree.removeNode(node);
-		targetParent.removeChild(node);
 
-		// Insert the Node
-		parent.insertChild(node, primitive.getIndex());
-		tree.insertNode(node);
-		
-		// Set depth if neccessary.
-		if (targetParent.getDepth() != parent.getDepth()) {
-			node.setDepthRecursively(parent.getDepth() + 1);
-		}
+			// Record the EditingNode
+			tree.setEditingNode(youngestNode);
+			tree.setComponentFocus(OutlineLayoutManager.ICON);
 
-		// Update selection
-		tree.addNodeToSelection(node);
+			// Redraw and Set Focus
+			if (layout.getNodeToDrawFrom().isAncestorSelected()) { // Makes sure we dont' stick at the top when multiple nodes are selected.
+				Node visNode = layout.getNodeToDrawFrom().prev();
+				int ioVisNode = tree.visibleNodes.indexOf(visNode);
+				int ioNodeToDrawFromTmp = tree.visibleNodes.indexOf(nodeToDrawFromTmp);
+				if (ioVisNode < ioNodeToDrawFromTmp) {
+					layout.setNodeToDrawFrom(visNode, ioVisNode);
+				} else {
+					layout.setNodeToDrawFrom(nodeToDrawFromTmp, ioNodeToDrawFromTmp);
+				}
+			}
+			
+			layout.draw(tree.getYoungestInSelection(), OutlineLayoutManager.ICON);		
+		} else {
+			for (int i = primitives.size() - 1; i >= 0; i--) {
+				PrimitiveUndoableMove primitive = (PrimitiveUndoableMove) primitives.get(i);
+				
+				// ShortHand
+				Node node = primitive.getNode();
+				
+				// Remove the Node
+				tree.removeNode(node);
+				targetParent.removeChild(node);
+
+				// Insert the Node
+				parent.insertChild(node, primitive.getIndex());
+				tree.insertNode(node);
+				
+				// Set depth if neccessary.
+				if (targetParent.getDepth() != parent.getDepth()) {
+					node.setDepthRecursively(parent.getDepth() + 1);
+				}
+			}		
+		}
 	}
 	
 	public void redo() {
+		// Shorthand
 		Node youngestNode = ((PrimitiveUndoableMove) primitives.get(0)).getNode();
 		TreeContext tree = youngestNode.getTree();
 
-		// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
-		OutlineLayoutManager layout = tree.doc.panel.layout;
-		Node nodeToDrawFromTmp = layout.getNodeToDrawFrom().nextUnSelectedNode();
+		if (isUpdatingGui()) {
+			// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
+			OutlineLayoutManager layout = tree.doc.panel.layout;
+			Node nodeToDrawFromTmp = layout.getNodeToDrawFrom().nextUnSelectedNode();
 
-		// Do all the Inserts
-		tree.setSelectedNodesParent(targetParent);
-		
-		for (int i = 0; i < primitives.size(); i++) {
-			primitiveRedo((PrimitiveUndoableMove) primitives.get(i));
-		}
+			// Do all the Inserts
+			tree.setSelectedNodesParent(targetParent);
+			
+			for (int i = 0; i < primitives.size(); i++) {
+				PrimitiveUndoableMove primitive = (PrimitiveUndoableMove) primitives.get(i);
 
-		// Record the EditingNode
-		tree.setEditingNode(youngestNode);
-		tree.setComponentFocus(OutlineLayoutManager.ICON);
+				// ShortHand
+				Node node = primitive.getNode();
 
-		// Redraw and Set Focus
-		if (layout.getNodeToDrawFrom().isAncestorSelected()) { // Makes sure we dont' stick at the top when multiple nodes are selected.
-			Node visNode = layout.getNodeToDrawFrom().prev();
-			int ioVisNode = tree.visibleNodes.indexOf(visNode);
-			int ioNodeToDrawFromTmp = tree.visibleNodes.indexOf(nodeToDrawFromTmp);
-			if (ioVisNode < ioNodeToDrawFromTmp) {
-				layout.setNodeToDrawFrom(visNode, ioVisNode);
-			} else {
-				layout.setNodeToDrawFrom(nodeToDrawFromTmp, ioNodeToDrawFromTmp);
+				// Remove the Node
+				tree.removeNode(node);
+				parent.removeChild(node);
+
+				// Insert the Node
+				targetParent.insertChild(node, primitive.getTargetIndex());
+				tree.insertNode(node);
+
+				// Set depth if neccessary.
+				if (targetParent.getDepth() != parent.getDepth()) {
+					node.setDepthRecursively(targetParent.getDepth() + 1);
+				}
+				
+				// Update selection
+				tree.addNodeToSelection(node);
 			}
+
+			// Record the EditingNode
+			tree.setEditingNode(youngestNode);
+			tree.setComponentFocus(OutlineLayoutManager.ICON);
+
+			// Redraw and Set Focus
+			if (layout.getNodeToDrawFrom().isAncestorSelected()) { // Makes sure we dont' stick at the top when multiple nodes are selected.
+				Node visNode = layout.getNodeToDrawFrom().prev();
+				int ioVisNode = tree.visibleNodes.indexOf(visNode);
+				int ioNodeToDrawFromTmp = tree.visibleNodes.indexOf(nodeToDrawFromTmp);
+				if (ioVisNode < ioNodeToDrawFromTmp) {
+					layout.setNodeToDrawFrom(visNode, ioVisNode);
+				} else {
+					layout.setNodeToDrawFrom(nodeToDrawFromTmp, ioNodeToDrawFromTmp);
+				}
+			}
+			
+			layout.draw(tree.getYoungestInSelection(), OutlineLayoutManager.ICON);		
+		} else {
+			for (int i = 0; i < primitives.size(); i++) {
+				PrimitiveUndoableMove primitive = (PrimitiveUndoableMove) primitives.get(i);
+
+				// ShortHand
+				Node node = primitive.getNode();
+
+				// Remove the Node
+				tree.removeNode(node);
+				parent.removeChild(node);
+
+				// Insert the Node
+				targetParent.insertChild(node, primitive.getTargetIndex());
+				tree.insertNode(node);
+
+				// Set depth if neccessary.
+				if (targetParent.getDepth() != parent.getDepth()) {
+					node.setDepthRecursively(targetParent.getDepth() + 1);
+				}
+			}		
 		}
-		
-		layout.draw(tree.getYoungestInSelection(), OutlineLayoutManager.ICON);
-	}
-	
-	private void primitiveRedo(PrimitiveUndoableMove primitive) {
-		// ShortHand
-		Node node = primitive.getNode();
-		TreeContext tree = node.getTree();
-
-		// Remove the Node
-		tree.removeNode(node);
-		parent.removeChild(node);
-
-		// Insert the Node
-		targetParent.insertChild(node, primitive.getTargetIndex());
-		tree.insertNode(node);
-
-		// Set depth if neccessary.
-		if (targetParent.getDepth() != parent.getDepth()) {
-			node.setDepthRecursively(targetParent.getDepth() + 1);
-		}
-		
-		// Update selection
-		tree.addNodeToSelection(node);
 	}
 }

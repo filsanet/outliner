@@ -24,7 +24,11 @@ public class CompoundUndoableEdit extends AbstractCompoundUndoable {
 	
 	// The Constructors
 	public CompoundUndoableEdit(TreeContext tree) {
-		super();
+		this(true, tree);
+	}
+
+	public CompoundUndoableEdit(boolean isUpdatingGui, TreeContext tree) {
+		super(isUpdatingGui);
 		this.tree = tree;
 	}
 

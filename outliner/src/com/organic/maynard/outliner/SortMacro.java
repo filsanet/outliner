@@ -91,10 +91,33 @@ public class SortMacro extends MacroImpl implements RawMacro {
 		}
 
 		// Instantiate the Undoable
-		CompoundUndoableImpl undoable = new CompoundUndoableImpl();
+		CompoundUndoableImpl undoable = new CompoundUndoableImpl(true);
 
 		// Create the Comparator using BSH
-		BSHComparator comparator = new BSHComparator(this);
+		Comparator comparator = null; 
+
+		try {
+			Interpreter bsh = new Interpreter();
+			NameSpace nameSpace = new NameSpace("outliner");
+			nameSpace.importPackage("com.organic.maynard.outliner");
+			bsh.setNameSpace(nameSpace);
+
+			StringBuffer textForEval = new StringBuffer();
+			textForEval.append("Comparator c = new Comparator() {");
+			textForEval.append("	int compare(Object objA, Object objB) {");
+			textForEval.append("		Node nodeA = (Node) objA;");
+			textForEval.append("		Node nodeB = (Node) objB;");
+			textForEval.append(getComparator());
+			textForEval.append("		return retVal;"); // this can be changed to make ascending/decending.
+			textForEval.append("	}");
+			textForEval.append("};");
+			textForEval.append("return this.c;");
+
+			comparator = (Comparator) bsh.eval(textForEval.toString());
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(Outliner.outliner, "BSH Exception: " + e.getMessage());
+			return;
+		}
 
 		ArrayList parentNodes = new ArrayList();
 		parentNodes.add(tree.getEditingNode().getParent());
@@ -102,7 +125,12 @@ public class SortMacro extends MacroImpl implements RawMacro {
 		for (int i = 0; i < parentNodes.size(); i++) {
 			// Instantiate the Undoable
 			Node parent = (Node) parentNodes.get(i);
-			CompoundUndoableMove undoableMove = new CompoundUndoableMove(parent, parent);
+			CompoundUndoableMove undoableMove;
+			if (i == 0) {
+				undoableMove = new CompoundUndoableMove(true, parent, parent);
+			} else {
+				undoableMove = new CompoundUndoableMove(false, parent, parent);
+			}
 
 			// Store the Before State
 			Object[] sortedNodes;
@@ -127,7 +155,12 @@ public class SortMacro extends MacroImpl implements RawMacro {
 			}
 			
 			// Sort them
-			Arrays.sort(sortedNodes, comparator);
+			try {
+				Arrays.sort(sortedNodes, comparator);
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(Outliner.outliner, "Exception: " + e.getMessage());
+				return;
+			}
 			
 			if (i == 0) { // Only do this for the top level nodeset
 				tree.clearSelection();
@@ -173,35 +206,6 @@ public class SortMacro extends MacroImpl implements RawMacro {
 	protected void handleCharacters(String elementName, String text) {
 		if (elementName.equals(E_COMPARATOR)) {
 			setComparator(text);
-		}
-	}
-}
-
-// This is not ideal, we should be able to implement the Comparator in BSH and only have to eval once, but for now we
-// have this.
-class BSHComparator implements Comparator {
-	private SortMacro macro = null;
-	
-	public BSHComparator(SortMacro macro) {
-		this.macro = macro;
-	}
-	
-	public int compare(Object objA, Object objB) throws ClassCastException {
-		try {
-			Node nodeA = (Node) objA;
-			Node nodeB = (Node) objB;
-			
-			Interpreter bsh = new Interpreter();
-			NameSpace nameSpace = new NameSpace("outliner");
-			nameSpace.importPackage("com.organic.maynard.outliner");
-			bsh.setNameSpace(nameSpace);
-			bsh.set("nodeA", nodeA);
-			bsh.set("nodeB", nodeB);
-			return ((Integer) bsh.eval(macro.getComparator())).intValue();
-		} catch (Exception e) {
-			System.out.println("BSH Exception: " + e.getMessage());
-			//JOptionPane.showMessageDialog(Outliner.outliner, "BSH Exception: " + e.getMessage());
-			return 0;
 		}
 	}
 }

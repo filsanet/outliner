@@ -23,13 +23,20 @@ import java.util.*;
 public abstract class AbstractCompoundUndoable implements CompoundUndoable {
 
 	protected ArrayList primitives = new ArrayList(5);
+	private boolean isUpdatingGui = true;
 	
 	// The Constructors
-	public AbstractCompoundUndoable() {}
+	public AbstractCompoundUndoable(boolean isUpdatingGui) {
+		this.isUpdatingGui = isUpdatingGui;
+	}
 	
 	// Accessors
 	public void addPrimitive(Undoable primitive) {
 		primitives.add(primitive);
+	}
+	
+	public boolean isUpdatingGui() {
+		return isUpdatingGui;
 	}
 	
 	public boolean isEmpty() {

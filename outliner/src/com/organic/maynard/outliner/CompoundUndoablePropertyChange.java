@@ -26,7 +26,11 @@ public class CompoundUndoablePropertyChange extends AbstractCompoundUndoable {
 	
 	// The Constructors
 	public CompoundUndoablePropertyChange(TreeContext tree) {
-		super();
+		this(true, tree);
+	}
+
+	public CompoundUndoablePropertyChange(boolean isUpdatingGui, TreeContext tree) {
+		super(isUpdatingGui);
 		this.tree = tree;
 	}
 	

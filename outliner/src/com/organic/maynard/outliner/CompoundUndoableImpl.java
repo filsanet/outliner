@@ -19,6 +19,11 @@
 package com.organic.maynard.outliner;
 
 public class CompoundUndoableImpl extends AbstractCompoundUndoable {
+
+	// The Constructors
+	public CompoundUndoableImpl(boolean isUpdatingGui) {
+		super(isUpdatingGui);
+	}
 	
 	// Undoable Interface
 	public void undo() {
