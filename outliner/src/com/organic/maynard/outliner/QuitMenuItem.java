@@ -64,6 +64,7 @@ public class QuitMenuItem extends AbstractOutlinerMenuItem implements ActionList
 		// Save config and quit
 		Preferences.saveConfigFile(Outliner.CONFIG_FILE);
 		RecentFilesList.saveConfigFile(Outliner.RECENT_FILES_FILE);
+		Outliner.findReplace.model.saveConfigFile();
 
 		System.exit(0);
 	}

@@ -21,6 +21,8 @@ package com.organic.maynard.outliner;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.border.*;
 import org.xml.sax.*;
 import com.organic.maynard.util.string.Replace;
 
@@ -34,12 +36,12 @@ import org.apache.oro.text.regex.MatchResult;
  * @version $Revision$, $Date$
  */
 
-public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionListener, KeyListener {
+public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionListener, KeyListener, ListSelectionListener {
 
 	// Constants
-	private static final int MINIMUM_WIDTH = 350;
+	private static final int MINIMUM_WIDTH = 500;
 	private static final int MINIMUM_HEIGHT = 400;
- 	private static final int INITIAL_WIDTH = 350;
+ 	private static final int INITIAL_WIDTH = 500;
 	private static final int INITIAL_HEIGHT = 400;
 
 	private static final String REGEX_MATCH_START = "m/";
@@ -62,6 +64,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	private static String FIND = null;
 	private static String REPLACE = null;
 	private static String REPLACE_ALL = null;
+
+	private static String NEW = null;
+	private static String DELETE = null;
 
 	private static String START_AT_TOP = null;
 	private static String WRAP_ARROUND = null;
@@ -88,6 +93,18 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	private static JLabel LABEL_REPLACE = null;
 	private static JTextArea TEXTAREA_REPLACE = null;
 	
+	// Define the left panel
+	protected static JList LIST = new JList();
+	private static JScrollPane jsp = null;
+
+	private static JButton BUTTON_NEW = null;
+	private static JButton BUTTON_DELETE = null;
+
+	
+	// Model
+	public static FindReplaceModel model = null;
+	
+	private static FindReplaceDialog findReplaceDialog = null;
 	
 	// Static Methods
 	public static void enableButtons() {
@@ -114,25 +131,33 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		WRAP_ARROUND = GUITreeLoader.reg.getText("wrap_around");
 		SELECTION_ONLY = GUITreeLoader.reg.getText("selection_only");
 		IGNORE_CASE = GUITreeLoader.reg.getText("ignore_case");
-		INCLUDE_READ_ONLY_NODES = GUITreeLoader.reg.getText("include_read_only_nodes");	
-		REGEXP = "Regexp";	
+		INCLUDE_READ_ONLY_NODES = GUITreeLoader.reg.getText("include_read_only_nodes");
+		REGEXP = GUITreeLoader.reg.getText("regexp");
 
 		CHECKBOX_REGEXP = new JCheckBox(REGEXP);
+		CHECKBOX_REGEXP.addActionListener(this);
 		CHECKBOX_START_AT_TOP = new JCheckBox(START_AT_TOP);
+		CHECKBOX_START_AT_TOP.addActionListener(this);
 		CHECKBOX_WRAP_AROUND = new JCheckBox(WRAP_ARROUND);
+		CHECKBOX_WRAP_AROUND.addActionListener(this);
 		CHECKBOX_SELECTION_ONLY = new JCheckBox(SELECTION_ONLY);
+		CHECKBOX_SELECTION_ONLY.addActionListener(this);
 		CHECKBOX_IGNORE_CASE = new JCheckBox(IGNORE_CASE);
+		CHECKBOX_IGNORE_CASE.addActionListener(this);
 		CHECKBOX_INCLUDE_READ_ONLY_NODES = new JCheckBox(INCLUDE_READ_ONLY_NODES);
+		CHECKBOX_INCLUDE_READ_ONLY_NODES.addActionListener(this);
 		
 		BUTTON_FIND = new JButton(FIND);
 		BUTTON_REPLACE = new JButton(REPLACE);
 		BUTTON_REPLACE_ALL = new JButton(REPLACE_ALL);
-
+		
 		LABEL_FIND = new JLabel(FIND);
 		TEXTAREA_FIND = new JTextArea();
+		TEXTAREA_FIND.getDocument().addDocumentListener(new FindReplaceJTextAreaDocumentListener(FindReplaceJTextAreaDocumentListener.TYPE_FIND));
 
 		LABEL_REPLACE = new JLabel(REPLACE);
 		TEXTAREA_REPLACE = new JTextArea();
+		TEXTAREA_REPLACE.getDocument().addDocumentListener(new FindReplaceJTextAreaDocumentListener(FindReplaceJTextAreaDocumentListener.TYPE_REPLACE));
 
 		Insets insets = new Insets(1,3,1,3);
 		Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
@@ -146,7 +171,33 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		TEXTAREA_REPLACE.setCursor(cursor);
 		TEXTAREA_REPLACE.setLineWrap(true);
 		TEXTAREA_REPLACE.setMargin(insets);
+
+		// Left Panel
+		NEW = GUITreeLoader.reg.getText("new");
+		DELETE = GUITreeLoader.reg.getText("delete");
+
+		BUTTON_NEW = new JButton(NEW);
+		BUTTON_DELETE = new JButton(DELETE);
 		
+		LIST.setModel(new DefaultListModel());
+		LIST.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		LIST.addListSelectionListener(this);
+		//LIST.setSelectedIndex(0);
+
+		LIST.addMouseListener(
+			new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					if (e.getClickCount() == 2) {
+						int index = LIST.locationToIndex(e.getPoint());
+						DefaultListModel model = (DefaultListModel) LIST.getModel();
+						findReplaceDialog.show(FindReplaceDialog.MODE_RENAME);
+					}
+				}
+			}
+		);
+		
+		jsp = new JScrollPane(LIST);
+	
 		disableButtons();
 	}
 	
@@ -161,7 +212,14 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		super.startSetup(atts);
 		
 		Outliner.findReplace = this;
-		
+
+		model = new FindReplaceModel();
+		findReplaceDialog = new FindReplaceDialog();
+			
+		JPanel rightPanel = new JPanel();
+		rightPanel.setLayout(new BorderLayout());
+		rightPanel.setBorder(new CompoundBorder(new BevelBorder(BevelBorder.RAISED), new EmptyBorder(new Insets(5,5,5,5))));
+				
 		// Define the options Box
 		Box optionsBox = Box.createHorizontalBox();
 			
@@ -215,9 +273,51 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		
 		findReplaceBox.add(optionsBox);
 		
-		getContentPane().add(findReplaceBox, BorderLayout.CENTER);		
+		rightPanel.add(findReplaceBox, BorderLayout.CENTER);
+		
+		getContentPane().add(rightPanel, BorderLayout.CENTER);
+		
+		// Define Left Panel
+		JPanel leftPanel = new JPanel();
+		leftPanel.setLayout(new BorderLayout());
+		leftPanel.setBorder(new CompoundBorder(new BevelBorder(BevelBorder.RAISED), new EmptyBorder(new Insets(5,5,5,5))));
+
+		BUTTON_NEW.addActionListener(this);
+		BUTTON_DELETE.addActionListener(this);
+
+		leftPanel.add(jsp, BorderLayout.CENTER);
+		Box listBox = Box.createHorizontalBox();
+		listBox.add(BUTTON_NEW);
+		listBox.add(Box.createHorizontalStrut(5));
+		listBox.add(BUTTON_DELETE);
+		leftPanel.add(listBox, BorderLayout.NORTH);
+
+		getContentPane().add(leftPanel, BorderLayout.EAST);
+		
+		LIST.setSelectedIndex(0);
+		
+		pack();
 	}
+
+
+	// ListSelectionListenerInterface
+	protected int currentIndex = -1;
 	
+	public void valueChanged(ListSelectionEvent e) {
+		this.currentIndex = LIST.getSelectedIndex();
+		
+		// Sync View to Model for new index
+		if ((currentIndex >= 0) && (currentIndex < model.getSize())) {
+			CHECKBOX_START_AT_TOP.setSelected(model.getStartAtTop(currentIndex));
+			CHECKBOX_WRAP_AROUND.setSelected(model.getWrapAround(currentIndex));
+			CHECKBOX_SELECTION_ONLY.setSelected(model.getSelectionOnly(currentIndex));
+			CHECKBOX_IGNORE_CASE.setSelected(model.getIgnoreCase(currentIndex));
+			CHECKBOX_INCLUDE_READ_ONLY_NODES.setSelected(model.getIncludeReadOnly(currentIndex));
+			CHECKBOX_REGEXP.setSelected(model.getRegExp(currentIndex));
+			TEXTAREA_FIND.setText(model.getFind(currentIndex));
+			TEXTAREA_REPLACE.setText(model.getReplace(currentIndex));
+		}
+	}
 	
 	// KeyListener Interface
 	public void keyPressed(KeyEvent e) {
@@ -257,6 +357,46 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			replace(Outliner.getMostRecentDocumentTouched());
 		} else if (e.getActionCommand().equals(REPLACE_ALL)) {
 			replace_all(Outliner.getMostRecentDocumentTouched());
+		} else if (e.getActionCommand().equals(NEW)) {
+			newFindReplace();
+		} else if (e.getActionCommand().equals(DELETE)) {
+			deleteFindReplace();
+		
+		// CheckBoxes
+		} else if (e.getActionCommand().equals(START_AT_TOP)) {
+			model.setStartAtTop(currentIndex, CHECKBOX_START_AT_TOP.isSelected());
+		} else if (e.getActionCommand().equals(WRAP_ARROUND)) {
+			model.setWrapAround(currentIndex, CHECKBOX_WRAP_AROUND.isSelected());
+		} else if (e.getActionCommand().equals(SELECTION_ONLY)) {
+			model.setSelectionOnly(currentIndex, CHECKBOX_SELECTION_ONLY.isSelected());
+		} else if (e.getActionCommand().equals(IGNORE_CASE)) {
+			model.setIgnoreCase(currentIndex, CHECKBOX_IGNORE_CASE.isSelected());
+		} else if (e.getActionCommand().equals(INCLUDE_READ_ONLY_NODES)) {
+			model.setIncludeReadOnly(currentIndex, CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected());
+		} else if (e.getActionCommand().equals(REGEXP)) {
+			model.setRegExp(currentIndex, CHECKBOX_REGEXP.isSelected());
+		}
+	}
+	
+	private void newFindReplace() {
+		findReplaceDialog.show(FindReplaceDialog.MODE_NEW);
+	}
+	
+	private void deleteFindReplace() {
+		int selectedIndex = LIST.getSelectedIndex();
+		
+		if (selectedIndex != -1) { // Don't delete if there's no selection.
+			if (selectedIndex != 0) { // Never delete the default.
+				String confirm_delete = GUITreeLoader.reg.getText("confirm_delete");
+				String msg = GUITreeLoader.reg.getText("do_you_want_to_delete");
+				// Confirm Delete
+				int result = JOptionPane.showConfirmDialog(Outliner.findReplace, msg, confirm_delete, JOptionPane.OK_CANCEL_OPTION);
+				if (result == JOptionPane.OK_OPTION) {
+					model.remove(selectedIndex);
+					LIST.setSelectedIndex(selectedIndex - 1);
+					LIST.requestFocus();
+				}
+			}
 		}
 	}
 	
@@ -917,6 +1057,185 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			} else {
 				return text.indexOf(match);
 			}
+		}
+	}
+}
+
+class FindReplaceDialog extends JDialog implements ActionListener {
+
+	// Constants
+	public static final int MODE_NEW = 0;
+	public static final int MODE_RENAME = 1;
+
+	private int currentMode = -1;
+	
+	private static String OK = null;
+	private static String CANCEL = null;
+	private static String NEW_FIND_REPLACE = null;
+	private static String RENAME_FIND_REPLACE = null;
+	private static String NAME = null;
+
+	private static String ERROR_EXISTANCE = null;
+
+
+	// GUI Elements
+	private JButton buttonOK = null;
+	private JButton buttonCancel = null;
+	private JTextField nameField = null;
+	private JLabel errorLabel = null;
+
+	// Constructors	
+	public FindReplaceDialog() {
+		super(Outliner.findReplace, "", true);
+		
+		OK = GUITreeLoader.reg.getText("ok");
+		CANCEL = GUITreeLoader.reg.getText("cancel");
+		NEW_FIND_REPLACE = GUITreeLoader.reg.getText("new_find_replace");
+		RENAME_FIND_REPLACE = GUITreeLoader.reg.getText("rename_find_replace");
+		NAME = GUITreeLoader.reg.getText("name");
+		ERROR_EXISTANCE = GUITreeLoader.reg.getText("error_name_existance");
+
+		buttonOK = new JButton(OK);
+		buttonCancel = new JButton(CANCEL);
+		nameField = new JTextField(20);
+		errorLabel = new JLabel(" ");
+		
+		// Create the Layout
+		setResizable(false);
+		
+		// Adding window adapter to fix problem where initial focus won't go to the textfield.
+		// Solution found at: http://forums.java.sun.com/thread.jsp?forum=57&thread=124417&start=15&range=15;
+		addWindowListener(
+			new WindowAdapter() {
+				public void windowOpened(WindowEvent e) {
+					nameField.requestFocus();
+				}
+			}
+		);
+
+		// Define the Bottom Panel
+		JPanel bottomPanel = new JPanel();
+
+		bottomPanel.setLayout(new FlowLayout());
+		
+		buttonOK.addActionListener(this);
+		bottomPanel.add(buttonOK);
+
+		buttonCancel.addActionListener(this);
+		bottomPanel.add(buttonCancel);
+
+		getContentPane().add(bottomPanel,BorderLayout.SOUTH);
+
+		// Define the Center Panel
+		Box box = Box.createVerticalBox();
+
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(NAME), box);
+		AbstractPreferencesPanel.addSingleItemCentered(nameField, box);
+
+		box.add(Box.createVerticalStrut(5));
+
+		AbstractPreferencesPanel.addSingleItemCentered(errorLabel, box);
+
+		getContentPane().add(box,BorderLayout.CENTER);
+
+		// Set the default button
+		getRootPane().setDefaultButton(buttonOK);
+		
+		pack();
+	}
+	
+	public void show(int mode) {
+		this.currentMode = mode;
+		
+		if (mode == MODE_NEW) {
+			setTitle(NEW_FIND_REPLACE);
+			nameField.setText("");
+		} else if (mode == MODE_RENAME) {
+			setTitle(RENAME_FIND_REPLACE);
+			FindReplaceModel model = Outliner.findReplace.model;
+			String name = model.getName(Outliner.findReplace.LIST.getSelectedIndex());
+			nameField.setText(name);
+		}
+		
+		errorLabel.setText(" ");
+		
+		nameField.requestFocus();
+
+		Rectangle r = Outliner.outliner.getBounds();
+		setLocation((int) (r.getCenterX() - getWidth()/2), (int) (r.getCenterY() - getHeight()/2));
+		
+		super.show();
+	}
+		
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		if (e.getActionCommand().equals(OK)) {
+			ok();
+		} else if (e.getActionCommand().equals(CANCEL)) {
+			cancel();
+		}
+	}
+
+	private void ok() {
+		String name = nameField.getText();
+		
+		// Validate Existence
+		if ((name == null) || name.equals("")) {
+			errorLabel.setText(ERROR_EXISTANCE);
+			return;
+		}
+		
+		// All is good so lets make the change
+		FindReplaceModel model = Outliner.findReplace.model;
+
+		JList list = Outliner.findReplace.LIST;
+		
+		if (currentMode == MODE_NEW) {
+			model.add(model.getSize(), name, "", "", false, false, false, false, false, false);
+			list.setSelectedIndex(model.getSize() - 1);
+		} else if (currentMode == MODE_RENAME) {
+			model.setName(Outliner.findReplace.LIST.getSelectedIndex(), name);
+		}
+		
+		list.requestFocus();
+		
+		this.hide();
+	}
+
+	private void cancel() {
+		hide();
+	}
+}
+
+
+class FindReplaceJTextAreaDocumentListener implements DocumentListener {
+	public static final int TYPE_FIND = 0;
+	public static final int TYPE_REPLACE = 1;
+	
+	private int type = -1;	
+	public FindReplaceJTextAreaDocumentListener(int type) {
+		this.type = type;
+	}
+
+	public void changedUpdate(DocumentEvent e) {update(e);}
+	public void insertUpdate(DocumentEvent e) {update(e);}
+	public void removeUpdate(DocumentEvent e) {update(e);}
+	
+	private void update(DocumentEvent e) {
+		javax.swing.text.Document doc = e.getDocument();
+		
+		int currentIndex = Outliner.findReplace.currentIndex;
+		String text = "";
+		try {
+			text = doc.getText(0, doc.getLength());
+		} catch (javax.swing.text.BadLocationException ble) {
+			ble.printStackTrace();
+		}
+		
+		if (type == TYPE_FIND) {
+			Outliner.findReplace.model.setFind(currentIndex, text);
+		} else if (type == TYPE_REPLACE) {
+			Outliner.findReplace.model.setReplace(currentIndex, text);
 		}
 	}
 }

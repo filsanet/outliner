@@ -67,6 +67,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	// they should be under the apps prefs dir.
 	public static String MACROS_DIR = USER_PREFS_DIR + "macros" + System.getProperty("file.separator");
 	public static String MACROS_FILE = USER_PREFS_DIR + "macros.txt";
+	public static String FIND_REPLACE_FILE = USER_PREFS_DIR + "find_replace.xml";
 	public static String CONFIG_FILE = USER_PREFS_DIR + "config.txt";
 	public static String RECENT_FILES_FILE = USER_PREFS_DIR + "recent_files.txt";
 
@@ -108,14 +109,28 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 				e.printStackTrace();
 			}
 		}
+
+		// Copy over find_replace.xml from installation directory if it doesn't exist in the user's home directory.
+		File userFindReplaceFile = new File(FIND_REPLACE_FILE);
+		if (!userFindReplaceFile.exists()) {
+			System.out.println("Copying over find_replace config file: " + userFindReplaceFile.getPath());
+			try {
+				FileTools.copy(new File(PREFS_DIR + "find_replace.xml"), userFindReplaceFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
-	// These dirs should always be under the apps prefs dir.
+	// These dirs/files should always be under the apps prefs dir.
 	public static String MACRO_CLASSES_FILE = PREFS_DIR + "macro_classes.txt";
 	public static String ENCODINGS_FILE = PREFS_DIR + "encodings.txt";
 	public static String FILE_FORMATS_FILE = PREFS_DIR + "file_formats.txt";
 	public static String GUI_TREE_FILE = PREFS_DIR + "gui_tree" + LANGUAGE + ".xml";
-	
+
+
+	// XML Parser
+    public static final Parser XML_PARSER = new com.jclark.xml.sax.Driver();	
 	
 	// Command Parser
 	public static final String COMMAND_PARSER_SEPARATOR = "|";
