@@ -149,9 +149,11 @@ public class InternalDragAndDropListener implements MouseListener {
 			Node nodeToMove = (Node) tree.selectedNodes.get(i);
 			int currentIndex = nodeToMove.currentIndex();
 			int targetIndex = targetNode.currentIndex();
-			if (currentIndex > targetIndex) {
+
+			if ((currentIndex > targetIndex) || (nodeToMove.getParent() != targetNode.getParent())) {
 				targetIndex++;
 			}
+
 			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, currentIndex, targetIndex));
 			tree.moveNodeBelowAsSibling(nodeToMove,targetNode);
 		}
