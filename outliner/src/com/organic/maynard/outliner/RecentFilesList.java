@@ -53,9 +53,6 @@ import com.organic.maynard.util.string.Replace;
 import com.organic.maynard.util.string.StanStringTools ;
 import com.organic.maynard.util.vector.StanVectorTools ;
 
-/* NOTICE  [srk] Currently undergoing as-gentle-as-possible minor decoupling 
-/* of frameInfoList AKA docInfoList from menu -- due to complete  * 2-1-02
-*/
 
 public class RecentFilesList extends JMenu implements ActionListener, GUITreeComponent, JoeReturnCodes {
 
