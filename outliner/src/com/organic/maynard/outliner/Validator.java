@@ -18,44 +18,8 @@
  
 package com.organic.maynard.outliner;
 
-import javax.swing.*;
-import java.awt.event.*;
+public interface Validator {
 
-public class OutlinerPanel extends JPanel {
-
-
-	// GUI Fields
-	public OutlinerDocument doc = null;
-	public OutlineLayoutManager layout = new OutlineLayoutManager(this);
-
-
-	// The Constructor
-	public OutlinerPanel(OutlinerDocument doc) {
-		this.doc = doc;
-		setBackground(Preferences.getPreferenceColor(Preferences.PANEL_BACKGROUND_COLOR).cur);
-		setLayout(layout);
-		
-		//addMouseMotionListener(new TestMouseMotionListener());
-	}
-	
-	public void destroy() {
-		removeNotify();
-		doc = null;
-		
-		setLayout(null);
-		layout.destroy();
-		layout = null;
-		
-		removeAll();
-	}
-}
-
-/*
-public class TestMouseMotionListener extends MouseMotionAdapter {
-
-	public void mouseMoved(MouseEvent e) {
-		System.out.println("[" + e.getX() + "," + e.getY() + "]");
-	}
+	public Object getValidValue(Object value);
 
 }
-*/

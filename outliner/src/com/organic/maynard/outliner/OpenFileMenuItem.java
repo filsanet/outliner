@@ -49,13 +49,13 @@ public class OpenFileMenuItem extends AbstractOutlinerMenuItem implements Action
 
 	protected static void openOutlinerDocument() {
 		// Setup the File Chooser
-		Outliner.chooser.configureForOpen(null, Preferences.OPEN_ENCODING.cur, Preferences.OPEN_FORMAT.cur);
+		Outliner.chooser.configureForOpen(null, Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur, Preferences.getPreferenceString(Preferences.OPEN_FORMAT).cur);
 		
 		int option = Outliner.chooser.showOpenDialog(Outliner.outliner);
 
 		// Update the most recent save dir preference
-		Preferences.MOST_RECENT_OPEN_DIR.cur = Outliner.chooser.getCurrentDirectory().getPath();
-		Preferences.MOST_RECENT_OPEN_DIR.restoreTemporaryToCurrent();
+		Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur = Outliner.chooser.getCurrentDirectory().getPath();
+		Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).restoreTemporaryToCurrent();
 
 		// Handle User Input
 		if (option == JFileChooser.APPROVE_OPTION) {

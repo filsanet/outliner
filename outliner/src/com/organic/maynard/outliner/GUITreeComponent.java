@@ -34,5 +34,5 @@ public interface GUITreeComponent {
 	public void setGUITreeComponentID(String id);
 	
 	public void startSetup(AttributeList atts);
-	public void endSetup();
+	public void endSetup(AttributeList atts);
 }

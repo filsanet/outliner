@@ -18,22 +18,27 @@
  
 package com.organic.maynard.outliner;
 
-public class PreferenceBoolean extends AbstractPreference {
+import org.xml.sax.*;
+
+public class PreferenceBoolean extends AbstractPreference implements GUITreeComponent {
 	
 	public boolean def = false;
 	public boolean cur = false;
 	public boolean tmp = false;
 
-	public BooleanValidator validator = new BooleanValidator();
 	
 	// Constructors
+	public PreferenceBoolean() {
+	
+	}
+	
 	public PreferenceBoolean(boolean def, String command) {
 		this(def,false,command);
 	}
 
 	public PreferenceBoolean(boolean def, boolean cur, String command, BooleanValidator validator) {
 		this(def,cur,command);
-		this.validator = validator;
+		setValidator(validator);
 	}
 
 	public PreferenceBoolean(boolean def, boolean cur, String command) {
@@ -43,21 +48,32 @@ public class PreferenceBoolean extends AbstractPreference {
 		setCommand(command);
 	}
 
-	public String toString() {
-		return String.valueOf(cur);
-	}
+
+	// GUITreeComponent Interface
+	public void endSetup(AttributeList atts) {
+		super.endSetup(atts);
+		String def = atts.getValue(AbstractPreference.A_DEFAULT);
+				
+		setDef(def);
+		setCur(def);
+		setTmp(def);
+	}	
+
 
 	// Setters with Validation
-	public void setValidator(BooleanValidator validator) {this.validator = validator;}
-	
-	public void setDef(String value) {this.def = validator.getValidValue(value);}
+	public void setDef(String value) {this.def = ((Boolean) getValidator().getValidValue(value)).booleanValue();}
 	public void setDef(boolean value) {this.def = value;}
 
-	public void setCur(String value) {this.cur = validator.getValidValue(value);}
+	public void setCur(String value) {this.cur = ((Boolean) getValidator().getValidValue(value)).booleanValue();}
 	public void setCur(boolean value) {this.cur = value;}
 
-	public void setTmp(String value) {this.tmp = validator.getValidValue(value);}
+	public void setTmp(String value) {this.tmp = ((Boolean) getValidator().getValidValue(value)).booleanValue();}
 	public void setTmp(boolean value) {this.tmp = value;}
+
+
+	// Misc Methods
+	public String toString() {return String.valueOf(cur);}
+
 	
 	// Preference Interface
 	public void restoreCurrentToDefault() {cur = def;}

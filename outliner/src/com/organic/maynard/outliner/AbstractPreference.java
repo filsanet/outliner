@@ -18,14 +18,51 @@
  
 package com.organic.maynard.outliner;
 
-public abstract class AbstractPreference implements Preference {
-		
-	protected String command = null;
-		
-	public abstract void restoreCurrentToDefault();
-	public abstract void restoreTemporaryToDefault();
+import org.xml.sax.*;
+
+public abstract class AbstractPreference implements Preference, GUITreeComponent {
 	
+	// Constants
+	public static final String A_ID = "id";
+	public static final String A_DEFAULT = "default";
+	
+	
+	// GUITreeComponent Interface
+	private String id = null;
+	public String getGUITreeComponentID() {return this.id;}
+	public void setGUITreeComponentID(String id) {this.id = id;}
+	
+	public void startSetup(AttributeList atts) {
+		String id = atts.getValue(A_ID);
+
+		setCommand(id);
+
+		// Add this menuItem to the parent menu.
+		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
+		prefs.addPreference(id, this);
+	}
+	
+	public void endSetup(AttributeList atts) {}	
+	
+	
+	// Preference Interface
+	private String command = null;
+	private Validator validator = null;
+		
+	// Command Parser
 	public String getCommand() {return this.command;}
 	public void setCommand(String command) {this.command = command;}
+
+	// Validation
+	public void setValidator(Validator v) {this.validator = v;}
+	public Validator getValidator() {return this.validator;}
+
+	// Abstract methods
+	public abstract void restoreCurrentToDefault();
+	public abstract void restoreTemporaryToDefault();
+
+	public abstract void setCur(String s);
+	public abstract void setDef(String s);
+	public abstract void setTmp(String s);
 
 }

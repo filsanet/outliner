@@ -18,22 +18,27 @@
  
 package com.organic.maynard.outliner;
 
-public class PreferenceInt extends AbstractPreference {
+import org.xml.sax.*;
+
+public class PreferenceInt extends AbstractPreference implements GUITreeComponent {
 	
 	public int def = 0;
 	public int cur = 0;
 	public int tmp = 0;
-	
-	public IntRangeValidator validator = new IntRangeValidator(0,0,0);
+
 	
 	// Constructors
+	public PreferenceInt() {
+	
+	}
+	
 	public PreferenceInt(int def, String command) {
 		this(def,0,command);
 	}
 
 	public PreferenceInt(int def, int cur, String command, IntRangeValidator validator) {
 		this(def,cur,command);
-		this.validator = validator;
+		setValidator(validator);
 	}
 
 	public PreferenceInt(int def, int cur, String command) {
@@ -43,26 +48,40 @@ public class PreferenceInt extends AbstractPreference {
 		setCommand(command);
 	}
 
-	public String toString() {return String.valueOf(cur);}
 
-	// Setters with Validation
-	public void setValidator(IntRangeValidator validator) {this.validator = validator;}
-	
-	public void setDef(String value) {this.def = validator.getValidValue(value).intValue();}
-	public void setDef(int value) {this.def = validator.getValidValue(value).intValue();}
+	// GUITreeComponent Interface
+	public void endSetup(AttributeList atts) {
+		super.endSetup(atts);
 
-	public void setCur(String value) {this.cur = validator.getValidValue(value).intValue();}
-	public void setCur(int value) {this.cur = validator.getValidValue(value).intValue();}
+		String def = atts.getValue(AbstractPreference.A_DEFAULT);
+				
+		setDef(def);
+		setCur(def);
+		setTmp(def);
+	}	
+
+
+	// Setters with Validation	
+	public void setDef(String value) {this.def = ((Integer) getValidator().getValidValue(value)).intValue();}
+	public void setDef(int value) {this.def = ((Integer) getValidator().getValidValue(new Integer(value))).intValue();}
+
+	public void setCur(String value) {this.cur = ((Integer) getValidator().getValidValue(value)).intValue();}
+	public void setCur(int value) {this.cur = ((Integer) getValidator().getValidValue(new Integer(value))).intValue();}
 
 	public void setTmp(String value) {
-		if (validator == null) {System.out.println("Validator is null");}
-		this.tmp = validator.getValidValue(value).intValue();
+		if (getValidator() == null) {System.out.println("Validator is null");}
+		this.tmp = ((Integer) getValidator().getValidValue(value)).intValue();
 	}
 	public void setTmp(int value) {
-		if (validator == null) {System.out.println("Validator is null");}
-		this.tmp = validator.getValidValue(value).intValue();
+		if (getValidator() == null) {System.out.println("Validator is null");}
+		this.tmp = ((Integer) getValidator().getValidValue(new Integer(value))).intValue();
 	}
-	
+
+
+	// Misc Methods
+	public String toString() {return String.valueOf(cur);}
+
+
 	// Preference Interface
 	public void restoreCurrentToDefault() {cur = def;}
 	public void restoreTemporaryToDefault() {tmp = def;}

@@ -124,38 +124,6 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		return screenSize.height - LOWER_BUFFER_SIZE;
 	}
 
-	
-	// Initialization at Startup
-	/*public void init() {
-		// Code to load the menu up with macros from disk.
-		File macroDir = new File(Outliner.MACROS_DIR);
-		File[] filelist = macroDir.listFiles();
-		
-		System.out.println("Loading Macros...");
-		for (int i = 0; i < filelist.length; i++) {
-			if (filelist[i].isFile() && filelist[i].getName().endsWith(".ser")) {
-				loadMacro(Outliner.MACROS_DIR + filelist[i].getName());
-			}
-		}
-		System.out.println("Done Loading Macros.");
-	}
-	
-	private void loadMacro(String filename) {
-		System.out.println("\tMacro: " + filename);
-		Macro macro = Outliner.macroManager.loadMacro(filename);
-		
-		// Make sure the macro got loaded
-		if (macro == null) {
-			return;
-		}
-		
-		// Add it to the Popup Menu
-		int i = addMacro(macro);
-		
-		// Add it to the list in the MacroManager
-		((DefaultListModel) Outliner.macroManager.macroList.getModel()).insertElementAt(macro.getName(),i);
-	}*/
-
 	public boolean isNameUnique(String name) {
 		for (int i = 0; i < macros.size(); i++) {
 			Macro macro = getMacro(i);

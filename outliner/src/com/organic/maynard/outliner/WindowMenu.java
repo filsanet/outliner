@@ -46,7 +46,7 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener, 
 		setEnabled(false);
 	}
 	
-	public void endSetup() {
+	public void endSetup(AttributeList atts) {
 		WINDOW_LIST_START = getItemCount();
 	}
 	

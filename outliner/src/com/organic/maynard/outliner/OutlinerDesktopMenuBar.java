@@ -45,5 +45,5 @@ public class OutlinerDesktopMenuBar extends JMenuBar implements GUITreeComponent
 		Outliner.outliner.setJMenuBar(this);
 	}
 	
-	public void endSetup() {}
+	public void endSetup(AttributeList atts) {}
 }

@@ -25,7 +25,7 @@ import javax.swing.event.*;
 
 import org.xml.sax.*;
 
-public class PreferencesPanelEditor extends AbstractPreferencesPanel implements ActionListener, GUITreeComponent {
+public class PreferencesPanelEditor extends AbstractPreferencesPanel implements PreferencesPanel, ActionListener, GUITreeComponent {
 	
 	// Constants
 	public static final String SHOW_LINE_NUMBERS = "Show Line Numbers";
@@ -49,16 +49,14 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 
 
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void endSetup(AttributeList atts) {
 		
 		RESTORE_DEFAULT_EDITOR_BUTTON.addActionListener(this);		
-		UNDO_QUEUE_SIZE_FIELD.addFocusListener(new TextFieldListener(UNDO_QUEUE_SIZE_FIELD, Preferences.UNDO_QUEUE_SIZE));
-		FONT_SIZE_FIELD.addFocusListener(new TextFieldListener(FONT_SIZE_FIELD, Preferences.FONT_SIZE));
-		FONT_FACE_COMBOBOX.addItemListener(new ComboBoxListener(FONT_FACE_COMBOBOX, Preferences.FONT_FACE));
-		LINE_WRAP_COMBOBOX.addItemListener(new ComboBoxListener(LINE_WRAP_COMBOBOX, Preferences.LINE_WRAP));
-		SHOW_LINE_NUMBERS_CHECKBOX.addActionListener(new CheckboxListener(SHOW_LINE_NUMBERS_CHECKBOX, Preferences.SHOW_LINE_NUMBERS));
-
-		setToCurrent();
+		UNDO_QUEUE_SIZE_FIELD.addFocusListener(new TextFieldListener(UNDO_QUEUE_SIZE_FIELD, Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE)));
+		FONT_SIZE_FIELD.addFocusListener(new TextFieldListener(FONT_SIZE_FIELD, Preferences.getPreferenceInt(Preferences.FONT_SIZE)));
+		FONT_FACE_COMBOBOX.addItemListener(new ComboBoxListener(FONT_FACE_COMBOBOX, Preferences.getPreferenceString(Preferences.FONT_FACE)));
+		LINE_WRAP_COMBOBOX.addItemListener(new ComboBoxListener(LINE_WRAP_COMBOBOX, Preferences.getPreferenceString(Preferences.LINE_WRAP)));
+		SHOW_LINE_NUMBERS_CHECKBOX.addActionListener(new CheckboxListener(SHOW_LINE_NUMBERS_CHECKBOX, Preferences.getPreferenceBoolean(Preferences.SHOW_LINE_NUMBERS)));
 
 		Box editorBox = Box.createVerticalBox();
 
@@ -88,26 +86,26 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		
 		add(editorBox);
 
-		super.startSetup(atts);
+		super.endSetup(atts);
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(PreferencesFrame.RESTORE_DEFAULTS)) {
 			try {
-				UNDO_QUEUE_SIZE_FIELD.setText(String.valueOf(Preferences.UNDO_QUEUE_SIZE.def));
-				Preferences.UNDO_QUEUE_SIZE.restoreTemporaryToDefault();
+				UNDO_QUEUE_SIZE_FIELD.setText(String.valueOf(Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).def));
+				Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).restoreTemporaryToDefault();
 
-				FONT_SIZE_FIELD.setText(String.valueOf(Preferences.FONT_SIZE.def));
-				Preferences.FONT_SIZE.restoreTemporaryToDefault();
+				FONT_SIZE_FIELD.setText(String.valueOf(Preferences.getPreferenceInt(Preferences.FONT_SIZE).def));
+				Preferences.getPreferenceInt(Preferences.FONT_SIZE).restoreTemporaryToDefault();
 
-				FONT_FACE_COMBOBOX.setSelectedItem(Preferences.FONT_FACE.def);
-				Preferences.FONT_FACE.restoreTemporaryToDefault();
+				FONT_FACE_COMBOBOX.setSelectedItem(Preferences.getPreferenceString(Preferences.FONT_FACE).def);
+				Preferences.getPreferenceString(Preferences.FONT_FACE).restoreTemporaryToDefault();
 
-				LINE_WRAP_COMBOBOX.setSelectedItem(Preferences.LINE_WRAP.def);
-				Preferences.LINE_WRAP.restoreTemporaryToDefault();
+				LINE_WRAP_COMBOBOX.setSelectedItem(Preferences.getPreferenceString(Preferences.LINE_WRAP).def);
+				Preferences.getPreferenceString(Preferences.LINE_WRAP).restoreTemporaryToDefault();
 
-				SHOW_LINE_NUMBERS_CHECKBOX.setSelected(Preferences.SHOW_LINE_NUMBERS.def);
-				Preferences.SHOW_LINE_NUMBERS.restoreTemporaryToDefault();
+				SHOW_LINE_NUMBERS_CHECKBOX.setSelected(Preferences.getPreferenceBoolean(Preferences.SHOW_LINE_NUMBERS).def);
+				Preferences.getPreferenceBoolean(Preferences.SHOW_LINE_NUMBERS).restoreTemporaryToDefault();
 			} catch (Exception ex) {
 				System.out.println("Exception: " + ex);
 			}
@@ -115,10 +113,56 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 	}
 	
 	public void setToCurrent() {
-		UNDO_QUEUE_SIZE_FIELD.setText(String.valueOf(Preferences.UNDO_QUEUE_SIZE.cur));
-		FONT_SIZE_FIELD.setText(String.valueOf(Preferences.FONT_SIZE.cur));
-		FONT_FACE_COMBOBOX.setSelectedItem(Preferences.FONT_FACE.cur);
-		LINE_WRAP_COMBOBOX.setSelectedItem(Preferences.LINE_WRAP.cur);
-		SHOW_LINE_NUMBERS_CHECKBOX.setSelected(Preferences.SHOW_LINE_NUMBERS.cur);
+		UNDO_QUEUE_SIZE_FIELD.setText(String.valueOf(Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).cur));
+		FONT_SIZE_FIELD.setText(String.valueOf(Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur));
+		FONT_FACE_COMBOBOX.setSelectedItem(Preferences.getPreferenceString(Preferences.FONT_FACE).cur);
+		LINE_WRAP_COMBOBOX.setSelectedItem(Preferences.getPreferenceString(Preferences.LINE_WRAP).cur);
+		SHOW_LINE_NUMBERS_CHECKBOX.setSelected(Preferences.getPreferenceBoolean(Preferences.SHOW_LINE_NUMBERS).cur);
+	}
+
+	public void applyTemporaryToCurrent() {
+		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
+		
+		PreferenceInt pUndoQueueSize = (PreferenceInt) prefs.getPreference(Preferences.UNDO_QUEUE_SIZE);
+		PreferenceBoolean pShowLineNumbers = (PreferenceBoolean) prefs.getPreference(Preferences.SHOW_LINE_NUMBERS);
+		PreferenceString pFontFace = (PreferenceString) prefs.getPreference(Preferences.FONT_FACE);
+		PreferenceInt pFontSize = (PreferenceInt) prefs.getPreference(Preferences.FONT_SIZE);
+		PreferenceString pLineWrap = (PreferenceString) prefs.getPreference(Preferences.LINE_WRAP);
+	
+		// Update the undo queue for all the documents immediatly if it is being downsized.
+		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
+			Outliner.getDocument(i).undoQueue.trim();
+		}
+		UndoQueue.updateMenuBar(Outliner.getMostRecentDocumentTouched());
+
+		// Update the line numbers
+		if (pShowLineNumbers.cur) {
+			OutlineLineNumber.LINE_NUMBER_WIDTH = OutlineLineNumber.LINE_NUMBER_WIDTH_DEFAULT;
+		} else {
+			OutlineLineNumber.LINE_NUMBER_WIDTH = OutlineLineNumber.LINE_NUMBER_WIDTH_MIN;
+		}
+
+		// Update the cellRenderers
+		boolean line_wrap = true;
+		if (pLineWrap.cur.equals(Preferences.TXT_CHARACTERS)) {
+			line_wrap = false;
+		}
+
+		Font font = new Font(pFontFace.cur, Font.PLAIN, pFontSize.cur);
+
+		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
+			OutlinerDocument doc = Outliner.getDocument(i);
+			for (int j = 0; j < OutlineLayoutManager.CACHE_SIZE; j++) {
+				doc.panel.layout.textAreas[j].setFont(font);
+				doc.panel.layout.textAreas[j].setWrapStyleWord(line_wrap);
+				
+				// Updated line number visibility
+				if (pShowLineNumbers.cur) {
+					doc.panel.layout.textAreas[j].lineNumber.setOpaque(true);
+				} else {
+					doc.panel.layout.textAreas[j].lineNumber.setOpaque(false);
+				}
+			}
+		}
 	}
 }

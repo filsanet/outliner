@@ -56,8 +56,8 @@ public class SaveAsFileMenuItem extends AbstractOutlinerMenuItem implements Acti
 		int option = Outliner.chooser.showSaveDialog(Outliner.outliner);
 		
 		// Update the most recent save dir preference
-		Preferences.MOST_RECENT_SAVE_DIR.cur = Outliner.chooser.getCurrentDirectory().getPath();
-		Preferences.MOST_RECENT_SAVE_DIR.restoreTemporaryToCurrent();
+		Preferences.getPreferenceString(Preferences.MOST_RECENT_SAVE_DIR).cur = Outliner.chooser.getCurrentDirectory().getPath();
+		Preferences.getPreferenceString(Preferences.MOST_RECENT_SAVE_DIR).restoreTemporaryToCurrent();
 				
 		// Handle User Input
 		if (option == JFileChooser.APPROVE_OPTION) {

@@ -120,8 +120,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 		docInfo.setOwnerEmail(document.settings.ownerEmail.cur);
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z");
-		if (!Preferences.TIME_ZONE_FOR_SAVING_DATES.cur.equals("")) {
-			dateFormat.setTimeZone(TimeZone.getTimeZone(Preferences.TIME_ZONE_FOR_SAVING_DATES.cur));
+		if (!Preferences.getPreferenceString(Preferences.TIME_ZONE_FOR_SAVING_DATES).cur.equals("")) {
+			dateFormat.setTimeZone(TimeZone.getTimeZone(Preferences.getPreferenceString(Preferences.TIME_ZONE_FOR_SAVING_DATES).cur));
 		}
 		String currentDateString = dateFormat.format(new Date());
 		if(saveAs) {
@@ -139,9 +139,9 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 			// WebFile
 			boolean success = false;
 			byte[] bytes = saveFileFormat.save(document.tree, docInfo);
-			if (Preferences.WEB_FILE_SYSTEM.cur) {
+			if (Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
 				try {
-					success = WebFile.save(Preferences.WEB_FILE_URL.cur, docInfo.getPath(), bytes);
+					success = WebFile.save(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur, docInfo.getPath(), bytes);
 				} catch(IOException x) {
 					x.printStackTrace();
 					success = false;
@@ -163,9 +163,9 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 			// WebFile
 			boolean success = false;
 			byte[] bytes = saveFileFormat.save(document.tree, docInfo);
-			if (Preferences.WEB_FILE_SYSTEM.cur) {
+			if (Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
 				try {
-					success = WebFile.save(Preferences.WEB_FILE_URL.cur, docInfo.getPath(), bytes);
+					success = WebFile.save(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur, docInfo.getPath(), bytes);
 				} catch(IOException x) {
 					x.printStackTrace();
 					success = false;
@@ -214,9 +214,9 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 		// Load the file
 		TreeContext tree = new TreeContext();
 		InputStream stream = null;
-		if (Preferences.WEB_FILE_SYSTEM.cur) {
+		if (Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
 			try {
-				stream = WebFile.open(Preferences.WEB_FILE_URL.cur, filename);
+				stream = WebFile.open(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur, filename);
 			} catch(IOException e) {
 				JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. Could not open file: " + filename);
 				RecentFilesList.removeFileNameFromList(filename);
@@ -307,9 +307,9 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 		docInfo.setEncodingType(document.settings.saveEncoding.cur);
 
 		InputStream stream = null;
-		if (Preferences.WEB_FILE_SYSTEM.cur) {
+		if (Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
 			try {
-				stream = WebFile.open(Preferences.WEB_FILE_URL.cur, filename);
+				stream = WebFile.open(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur, filename);
 			} catch(IOException e) {
 				JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. Could not open file: " + filename);
 				RecentFilesList.removeFileNameFromList(filename);

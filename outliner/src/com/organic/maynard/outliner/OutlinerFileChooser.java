@@ -120,8 +120,8 @@ public class OutlinerFileChooser extends JFileChooser {
 			setSelectedFile(new File(currentFileName));
 		} else {
 			// WebFile
-			if (!Preferences.WEB_FILE_SYSTEM.cur) {
-				setCurrentDirectory(new File(Preferences.MOST_RECENT_SAVE_DIR.cur));
+			if (!Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
+				setCurrentDirectory(new File(Preferences.getPreferenceString(Preferences.MOST_RECENT_SAVE_DIR).cur));
 				setSelectedFile(null);
 			}
 		}
@@ -136,9 +136,9 @@ public class OutlinerFileChooser extends JFileChooser {
 		openFormatComboBox.setSelectedItem(format);
 
 		// WebFile
-		if (!Preferences.WEB_FILE_SYSTEM.cur) {
+		if (!Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
 			// Set the current directory location and selected file.
-			setCurrentDirectory(new File(Preferences.MOST_RECENT_OPEN_DIR.cur));
+			setCurrentDirectory(new File(Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur));
 			setSelectedFile(null);
 		}
 	}

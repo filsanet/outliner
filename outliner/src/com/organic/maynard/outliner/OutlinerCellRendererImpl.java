@@ -24,7 +24,7 @@ import javax.swing.*;
 
 public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellRenderer {
 
-	private static Font font = new Font(Preferences.FONT_FACE.cur,Font.PLAIN,Preferences.FONT_SIZE.cur);	
+	private static Font font = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.PLAIN, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);	
 	private static Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
 	private static Insets marginInsets = new Insets(1,3,1,3);
 	
@@ -42,13 +42,13 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 
 		setFont(font);
 		setCursor(cursor);
-		setCaretColor(Preferences.SELECTED_CHILD_COLOR.cur);
+		setCaretColor(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur);
 		setMargin(marginInsets);
-		setSelectionColor(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
-		setSelectedTextColor(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
+		setSelectionColor(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
+		setSelectedTextColor(Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).cur);
 		setLineWrap(true);
 
-		if (Preferences.LINE_WRAP.cur.equals(Preferences.TXT_CHARACTERS)) {
+		if (Preferences.getPreferenceString(Preferences.LINE_WRAP).cur.equals(Preferences.TXT_CHARACTERS)) {
 			setWrapStyleWord(false);
 		} else {
 			setWrapStyleWord(true);
@@ -111,20 +111,20 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		// Draw the TextArea
 		setText(node.getValue());
 		
-		int indent = node.getDepth() * Preferences.INDENT.cur;
+		int indent = node.getDepth() * Preferences.getPreferenceInt(Preferences.INDENT).cur;
 		int width = textAreaWidth - indent;
 		
 		// Size needs to be set twice. The first time forces the lines to flow. The second then sets the correct height.
 		setSize(width,32);
 		height = getBestHeight();
-		p.y -= (height + Preferences.VERTICAL_SPACING.cur);
+		p.y -= (height + Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).cur);
 		setBounds(p.x + indent + OutlineButton.BUTTON_WIDTH, p.y, width, height);
 		
 		// Draw the Button
 		button.setBounds(p.x + indent, p.y, OutlineButton.BUTTON_WIDTH, height);
 		
 		// Draw the LineNumber
-		if (Preferences.SHOW_LINE_NUMBERS.cur) {
+		if (Preferences.getPreferenceBoolean(Preferences.SHOW_LINE_NUMBERS).cur) {
 			if (node.getTree().doc.hoistStack.isHoisted()) {
 				// TODO: This value should be pre-calculated.
 				int offset = node.getTree().doc.hoistStack.getLineCountOffset()  + node.getLineNumber(node.getTree().getLineCountKey());
@@ -135,7 +135,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		} else {
 			lineNumber.setText("");
 		}
-		lineNumber.setBounds(Preferences.LEFT_MARGIN.cur, p.y, OutlineLineNumber.LINE_NUMBER_WIDTH + indent, height);
+		lineNumber.setBounds(Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur, p.y, OutlineLineNumber.LINE_NUMBER_WIDTH + indent, height);
 	}
 		
 	public void drawDown(Point p, Node node) {
@@ -147,7 +147,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		// Draw the TextArea
 		setText(node.getValue());
 		
-		int indent = node.getDepth() * Preferences.INDENT.cur;
+		int indent = node.getDepth() * Preferences.getPreferenceInt(Preferences.INDENT).cur;
 		int width = textAreaWidth - indent;
 		
 		// Size needs to be set twice. The first time forces the lines to flow. The second then sets the correct height.
@@ -159,7 +159,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		button.setBounds(p.x + indent, p.y, OutlineButton.BUTTON_WIDTH, height);
 
 		// Draw the LineNumber
-		if (Preferences.SHOW_LINE_NUMBERS.cur) {
+		if (Preferences.getPreferenceBoolean(Preferences.SHOW_LINE_NUMBERS).cur) {
 			if (node.getTree().doc.hoistStack.isHoisted()) {
 				// TODO: This value should be pre-calculated.
 				int offset = node.getTree().doc.hoistStack.getLineCountOffset()  + node.getLineNumber(node.getTree().getLineCountKey());
@@ -170,9 +170,9 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		} else {
 			lineNumber.setText("");
 		}
-		lineNumber.setBounds(Preferences.LEFT_MARGIN.cur, p.y, OutlineLineNumber.LINE_NUMBER_WIDTH + indent, height);
+		lineNumber.setBounds(Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur, p.y, OutlineLineNumber.LINE_NUMBER_WIDTH + indent, height);
 		
-		p.y += height + Preferences.VERTICAL_SPACING.cur;	
+		p.y += height + Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).cur;	
 		
 		// Adjust color when we are selected
 		updateColors();
@@ -181,24 +181,24 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	private void updateColors() {
 		if (node.isAncestorSelected()) {
 			if (node.isSelected()) {
-				setForeground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
-				setBackground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
-				lineNumber.setForeground(Preferences.SELECTED_CHILD_COLOR.cur);
-				lineNumber.setBackground(Preferences.LINE_NUMBER_SELECTED_COLOR.cur);
-				button.setBackground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
+				setForeground(Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).cur);
+				setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
+				lineNumber.setForeground(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur);
+				lineNumber.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR).cur);
+				button.setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
 			} else {
-				setForeground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
-				setBackground(Preferences.SELECTED_CHILD_COLOR.cur);
-				lineNumber.setForeground(Preferences.SELECTED_CHILD_COLOR.cur);
-				lineNumber.setBackground(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR.cur);
-				button.setBackground(Preferences.SELECTED_CHILD_COLOR.cur);
+				setForeground(Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).cur);
+				setBackground(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur);
+				lineNumber.setForeground(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur);
+				lineNumber.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR).cur);
+				button.setBackground(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur);
 			}
 		} else {
-			setForeground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
-			setBackground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
-			lineNumber.setForeground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
-			lineNumber.setBackground(Preferences.LINE_NUMBER_COLOR.cur);
-			button.setBackground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
+			setForeground(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
+			setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).cur);
+			lineNumber.setForeground(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
+			lineNumber.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_COLOR).cur);
+			button.setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).cur);
 		}	
 	}
 	

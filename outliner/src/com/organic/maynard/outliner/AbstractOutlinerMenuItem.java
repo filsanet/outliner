@@ -101,5 +101,5 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 		menu.add(this);
 	}
 	
-	public void endSetup() {}
+	public void endSetup(AttributeList atts) {}
 }

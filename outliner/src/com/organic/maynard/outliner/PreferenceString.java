@@ -18,13 +18,20 @@
  
 package com.organic.maynard.outliner;
 
-public class PreferenceString extends AbstractPreference {
+import org.xml.sax.*;
+
+public class PreferenceString extends AbstractPreference implements GUITreeComponent {
 	
 	public String def = "";
 	public String cur = "";
 	public String tmp = "";
-	
+
+
 	// Constructors
+	public PreferenceString() {
+	
+	}
+	
 	public PreferenceString(String def, String command) {
 		this(def,"",command);
 	}
@@ -36,14 +43,29 @@ public class PreferenceString extends AbstractPreference {
 		setCommand(command);
 	}
 
-	public String toString() {return cur;}
 
+	// GUITreeComponent Interface
+	public void endSetup(AttributeList atts) {
+		super.endSetup(atts);
+
+		String def = atts.getValue(AbstractPreference.A_DEFAULT);
+				
+		setDef(def);
+		setCur(def);
+		setTmp(def);
+	}	
+
+
+	// Setters	
 	public void setDef(String value) {this.def = value;}
-
 	public void setCur(String value) {this.cur = value;}
-
 	public void setTmp(String value) {this.tmp = value;}
-	
+
+
+	// Misc Methods
+	public String toString() {return String.valueOf(cur);}
+
+
 	// Preference Interface
 	public void restoreCurrentToDefault() {cur = def;}
 	public void restoreTemporaryToDefault() {tmp = def;}

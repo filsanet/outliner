@@ -19,14 +19,20 @@
 package com.organic.maynard.outliner;
 
 import java.awt.*;
+import org.xml.sax.*;
 
-public class PreferenceColor extends AbstractPreference {
+public class PreferenceColor extends AbstractPreference implements GUITreeComponent {
 	
 	public Color def = new Color(255,255,255);
 	public Color cur = new Color(255,255,255);
 	public Color tmp = new Color(255,255,255);
-	
+
+
 	// Constructors
+	public PreferenceColor() {
+	
+	}
+	
 	public PreferenceColor(Color def, String command) {
 		this(def,new Color(255,255,255),command);
 	}
@@ -38,26 +44,34 @@ public class PreferenceColor extends AbstractPreference {
 		setCommand(command);
 	}
 
-	public String toString() {
-		return ("" + cur.getRGB());
-	}
+
+	// GUITreeComponent Interface
+	public void endSetup(AttributeList atts) {
+		super.endSetup(atts);
+
+		String def = atts.getValue(AbstractPreference.A_DEFAULT);
+				
+		setDef(def);
+		setCur(def);
+		setTmp(def);
+	}	
+
+
+	// Setters with Validation	
+	public void setDef(String value) {this.def = parseColor(value);}
+	public void setCur(String value) {this.cur = parseColor(value);}
+	public void setTmp(String value) {this.tmp = parseColor(value);}
+
 	
+	// Misc Methods
+	public String toString() {return ("" + cur.getRGB());}
+
+
 	// Preference Interface
-	public void restoreCurrentToDefault() {
-		cur = new Color(def.getRGB());
-	}
-	
-	public void restoreTemporaryToDefault(){
-		tmp = new Color(def.getRGB());
-	}
-
-	public void restoreTemporaryToCurrent(){
-		tmp = new Color(cur.getRGB());
-	}
-
-	public void applyTemporaryToCurrent(){
-		cur = new Color(tmp.getRGB());
-	}
+	public void restoreCurrentToDefault() {cur = new Color(def.getRGB());}
+	public void restoreTemporaryToDefault(){tmp = new Color(def.getRGB());}
+	public void restoreTemporaryToCurrent(){tmp = new Color(cur.getRGB());}
+	public void applyTemporaryToCurrent(){cur = new Color(tmp.getRGB());}
 
 
 	// Class Methods

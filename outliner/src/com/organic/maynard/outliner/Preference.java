@@ -27,5 +27,12 @@ public interface Preference {
 	
 	public String getCommand();
 	public void setCommand(String command);
+	
+	public void setValidator(Validator v);
+	public Validator getValidator();
+	
+	public void setCur(String s);
+	public void setDef(String s);
+	public void setTmp(String s);
 
 }

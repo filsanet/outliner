@@ -65,7 +65,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		}
 	}
 	
-	public void endSetup() {}
+	public void endSetup(AttributeList atts) {}
 
 	private void addFileName(DocumentInfo docInfo) {
 		RecentFilesListItem item = new RecentFilesListItem(docInfo.getPath(), docInfo);
@@ -78,18 +78,18 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	public static void addFileNameToList(DocumentInfo docInfo) {
 		// WebFile
 		// Let's turn off the recent file list for remote files since it isn't designed to handle remote files yet.
-		if (Preferences.WEB_FILE_SYSTEM.cur) {
+		if (Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
 			return;
 		}
 	
 		String filename = docInfo.getPath();
 		
 		// Short Circuit if undo is disabled.
-		if (Preferences.RECENT_FILES_LIST_SIZE.cur == 0) {return;}
+		if (Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur == 0) {return;}
 
 		if (isFileNameUnique(filename)) {
 			RecentFilesList menu = (RecentFilesList) GUITreeLoader.reg.get(GUITreeComponentRegistry.RECENT_FILE_MENU);
-			if (docInfoList.size() >= Preferences.RECENT_FILES_LIST_SIZE.cur) {
+			if (docInfoList.size() >= Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur) {
 				// Remove from the lists
 				docInfoList.removeElementAt(0);
 				
@@ -107,7 +107,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	public static void trim() {
 		RecentFilesList menu = (RecentFilesList) GUITreeLoader.reg.get(GUITreeComponentRegistry.RECENT_FILE_MENU);
 		
-		while (docInfoList.size() > Preferences.RECENT_FILES_LIST_SIZE.cur) {
+		while (docInfoList.size() > Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur) {
 			// Trim lists
 			docInfoList.removeElementAt(0);
 
@@ -202,7 +202,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	public void actionPerformed(ActionEvent e) {
 		// WebFile
 		// Let's turn off the recent file list for remote files since it isn't designed to handle remote files yet.
-		if (Preferences.WEB_FILE_SYSTEM.cur) {
+		if (Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
 			return;
 		}
 

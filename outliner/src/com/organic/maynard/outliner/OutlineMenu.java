@@ -42,8 +42,8 @@ public class OutlineMenu extends AbstractOutlinerMenu implements GUITreeComponen
 		setEnabled(false);
 	}
 	
-	public void endSetup() {
-		super.endSetup();
+	public void endSetup(AttributeList atts) {
+		super.endSetup(atts);
 		JMenuItem hoistItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.OUTLINE_HOIST_MENU_ITEM);
 		OUTLINE_HOIST = hoistItem.getText();
 	}

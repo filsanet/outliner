@@ -18,18 +18,8 @@
  
 package com.organic.maynard.outliner;
 
-import java.awt.*;
 import java.awt.event.*;
-import java.awt.Window;
-
-import java.io.*;
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
-
-import org.xml.sax.*;
 
 public class ComboBoxListener implements ItemListener {
 	private JComboBox box = null;
@@ -47,9 +37,9 @@ public class ComboBoxListener implements ItemListener {
 		
 	private void handleUpdate() {
 		if (pref instanceof PreferenceString) {
-			PreferenceString prefString = (PreferenceString) pref;
-			prefString.setTmp((String) box.getSelectedItem());
-			box.setSelectedItem(prefString.tmp);
+			((PreferenceString) pref).setTmp((String) box.getSelectedItem());
+		} else if (pref instanceof PreferenceLineEnding) {
+			((PreferenceLineEnding) pref).setTmp((String) box.getSelectedItem());
 		}	
 	}
 }

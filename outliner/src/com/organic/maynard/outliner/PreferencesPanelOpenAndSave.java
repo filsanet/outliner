@@ -25,7 +25,7 @@ import javax.swing.event.*;
 
 import org.xml.sax.*;
 
-public class PreferencesPanelOpenAndSave extends AbstractPreferencesPanel implements ActionListener, GUITreeComponent {
+public class PreferencesPanelOpenAndSave extends AbstractPreferencesPanel implements PreferencesPanel, ActionListener, GUITreeComponent {
 	
 	// Constants
 	public static final String DEFAULT_LINE_TERMINATOR = "Default Line Terminator";
@@ -50,10 +50,10 @@ public class PreferencesPanelOpenAndSave extends AbstractPreferencesPanel implem
 
 
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void endSetup(AttributeList atts) {
 		
 		RESTORE_DEFAULT_OPEN_AND_SAVE_BUTTON.addActionListener(this);		
-		LINE_END_COMBOBOX.addItemListener(new ComboBoxListener(LINE_END_COMBOBOX, Preferences.LINE_END));
+		LINE_END_COMBOBOX.addItemListener(new ComboBoxListener(LINE_END_COMBOBOX, Preferences.getPreferenceLineEnding(Preferences.LINE_END)));
 		
 		for (int i = 0; i < Preferences.ENCODINGS.size(); i++) {
 			String encoding = (String) Preferences.ENCODINGS.elementAt(i);
@@ -61,8 +61,8 @@ public class PreferencesPanelOpenAndSave extends AbstractPreferencesPanel implem
 			SAVE_ENCODING_COMBOBOX.addItem(encoding);
 		}
 		
-		OPEN_ENCODING_COMBOBOX.addItemListener(new ComboBoxListener(OPEN_ENCODING_COMBOBOX, Preferences.OPEN_ENCODING));
-		SAVE_ENCODING_COMBOBOX.addItemListener(new ComboBoxListener(SAVE_ENCODING_COMBOBOX, Preferences.SAVE_ENCODING));
+		OPEN_ENCODING_COMBOBOX.addItemListener(new ComboBoxListener(OPEN_ENCODING_COMBOBOX, Preferences.getPreferenceString(Preferences.OPEN_ENCODING)));
+		SAVE_ENCODING_COMBOBOX.addItemListener(new ComboBoxListener(SAVE_ENCODING_COMBOBOX, Preferences.getPreferenceString(Preferences.SAVE_ENCODING)));
 
 		for (int i = 0; i < Preferences.FILE_FORMATS_OPEN.size(); i++) {
 			OPEN_FORMAT_COMBOBOX.addItem((String) Preferences.FILE_FORMATS_OPEN.elementAt(i));
@@ -72,10 +72,8 @@ public class PreferencesPanelOpenAndSave extends AbstractPreferencesPanel implem
 			SAVE_FORMAT_COMBOBOX.addItem((String) Preferences.FILE_FORMATS_SAVE.elementAt(i));
 		}
 
-		OPEN_FORMAT_COMBOBOX.addItemListener(new ComboBoxListener(OPEN_FORMAT_COMBOBOX, Preferences.OPEN_FORMAT));
-		SAVE_FORMAT_COMBOBOX.addItemListener(new ComboBoxListener(SAVE_FORMAT_COMBOBOX, Preferences.SAVE_FORMAT));
-
-		setToCurrent();
+		OPEN_FORMAT_COMBOBOX.addItemListener(new ComboBoxListener(OPEN_FORMAT_COMBOBOX, Preferences.getPreferenceString(Preferences.OPEN_FORMAT)));
+		SAVE_FORMAT_COMBOBOX.addItemListener(new ComboBoxListener(SAVE_FORMAT_COMBOBOX, Preferences.getPreferenceString(Preferences.SAVE_FORMAT)));
 
 		Box openAndSaveBox = Box.createVerticalBox();
 
@@ -113,26 +111,26 @@ public class PreferencesPanelOpenAndSave extends AbstractPreferencesPanel implem
 		
 		add(openAndSaveBox);
 
-		super.startSetup(atts);
+		super.endSetup(atts);
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(PreferencesFrame.RESTORE_DEFAULTS)) {
 			try {
-				LINE_END_COMBOBOX.setSelectedItem(Preferences.LINE_END.def);
-				Preferences.LINE_END.restoreTemporaryToDefault();
+				LINE_END_COMBOBOX.setSelectedItem(Preferences.getPreferenceLineEnding(Preferences.LINE_END).def);
+				Preferences.getPreferenceLineEnding(Preferences.LINE_END).restoreTemporaryToDefault();
 
-				OPEN_ENCODING_COMBOBOX.setSelectedItem(Preferences.OPEN_ENCODING.def);
-				Preferences.OPEN_ENCODING.restoreTemporaryToDefault();
+				OPEN_ENCODING_COMBOBOX.setSelectedItem(Preferences.getPreferenceString(Preferences.OPEN_ENCODING).def);
+				Preferences.getPreferenceString(Preferences.OPEN_ENCODING).restoreTemporaryToDefault();
 
-				SAVE_ENCODING_COMBOBOX.setSelectedItem(Preferences.SAVE_ENCODING.def);
-				Preferences.SAVE_ENCODING.restoreTemporaryToDefault();
+				SAVE_ENCODING_COMBOBOX.setSelectedItem(Preferences.getPreferenceString(Preferences.SAVE_ENCODING).def);
+				Preferences.getPreferenceString(Preferences.SAVE_ENCODING).restoreTemporaryToDefault();
 
-				OPEN_FORMAT_COMBOBOX.setSelectedItem(Preferences.OPEN_FORMAT.def);
-				Preferences.OPEN_FORMAT.restoreTemporaryToDefault();
+				OPEN_FORMAT_COMBOBOX.setSelectedItem(Preferences.getPreferenceString(Preferences.OPEN_FORMAT).def);
+				Preferences.getPreferenceString(Preferences.OPEN_FORMAT).restoreTemporaryToDefault();
 
-				SAVE_FORMAT_COMBOBOX.setSelectedItem(Preferences.SAVE_FORMAT.def);
-				Preferences.SAVE_FORMAT.restoreTemporaryToDefault();
+				SAVE_FORMAT_COMBOBOX.setSelectedItem(Preferences.getPreferenceString(Preferences.SAVE_FORMAT).def);
+				Preferences.getPreferenceString(Preferences.SAVE_FORMAT).restoreTemporaryToDefault();
 			} catch (Exception ex) {
 				System.out.println("Exception: " + ex);
 			}
@@ -140,10 +138,36 @@ public class PreferencesPanelOpenAndSave extends AbstractPreferencesPanel implem
 	}
 	
 	public void setToCurrent() {
-		LINE_END_COMBOBOX.setSelectedItem(Preferences.LINE_END.cur);
-		OPEN_ENCODING_COMBOBOX.setSelectedItem(Preferences.OPEN_ENCODING.cur);
-		SAVE_ENCODING_COMBOBOX.setSelectedItem(Preferences.SAVE_ENCODING.cur);
-		OPEN_FORMAT_COMBOBOX.setSelectedItem(Preferences.OPEN_FORMAT.cur);
-		SAVE_FORMAT_COMBOBOX.setSelectedItem(Preferences.SAVE_FORMAT.cur);
+		LINE_END_COMBOBOX.setSelectedItem(Preferences.getPreferenceLineEnding(Preferences.LINE_END).cur);
+		OPEN_ENCODING_COMBOBOX.setSelectedItem(Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur);
+		SAVE_ENCODING_COMBOBOX.setSelectedItem(Preferences.getPreferenceString(Preferences.SAVE_ENCODING).cur);
+		OPEN_FORMAT_COMBOBOX.setSelectedItem(Preferences.getPreferenceString(Preferences.OPEN_FORMAT).cur);
+		SAVE_FORMAT_COMBOBOX.setSelectedItem(Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur);
+	}
+
+	public void applyTemporaryToCurrent() {
+		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
+		PreferenceLineEnding pLineEnd = (PreferenceLineEnding) prefs.getPreference(Preferences.LINE_END);
+		PreferenceString pSaveEncoding = (PreferenceString) prefs.getPreference(Preferences.SAVE_ENCODING);
+		PreferenceString pSaveFormat = (PreferenceString) prefs.getPreference(Preferences.SAVE_FORMAT);
+
+		// Update Document Settings
+		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
+			OutlinerDocument doc = Outliner.getDocument(i);
+			
+			// Only update files that do not have overriding document settings.
+			if (!doc.settings.useDocumentSettings) {
+				doc.settings.lineEnd.def = pLineEnd.tmp;
+				doc.settings.lineEnd.cur = pLineEnd.tmp;
+				doc.settings.lineEnd.tmp = pLineEnd.tmp;
+				doc.settings.saveEncoding.def = pSaveEncoding.tmp;
+				doc.settings.saveEncoding.cur = pSaveEncoding.tmp;
+				doc.settings.saveEncoding.tmp = pSaveEncoding.tmp;
+				doc.settings.saveFormat.def = pSaveFormat.tmp;
+				doc.settings.saveFormat.cur = pSaveFormat.tmp;
+				doc.settings.saveFormat.tmp = pSaveFormat.tmp;
+				//doc.setFileModified(true);
+			}
+		}
 	}
 }

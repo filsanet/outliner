@@ -27,6 +27,7 @@ import java.lang.reflect.*;
 import javax.swing.*;
 
 import org.xml.sax.*;
+import org.xml.sax.helpers.*;
 
 public class GUITreeLoader extends HandlerBase {
 
@@ -44,7 +45,7 @@ public class GUITreeLoader extends HandlerBase {
 
 	public static GUITreeComponentRegistry reg = new GUITreeComponentRegistry();
 	public static ArrayList elementStack = new ArrayList();
-
+	public static ArrayList attributesStack = new ArrayList();
 	
 	
 	// Constructors
@@ -82,6 +83,7 @@ public class GUITreeLoader extends HandlerBase {
 	public void endDocument () {}
 
 	public void startElement (String name, AttributeList atts) {
+		
 		// Special Handling for elements that are not GUITreeComponents
 		if (name.equals(E_SEPARATOR)) {
 			try {
@@ -107,6 +109,7 @@ public class GUITreeLoader extends HandlerBase {
 
 			// Update Stack
 			elementStack.add(obj);
+			attributesStack.add(new AttributeListImpl(atts));
 			
 			// Add it to the registry
 			reg.add(obj);
@@ -135,10 +138,12 @@ public class GUITreeLoader extends HandlerBase {
 		GUITreeComponent obj = (GUITreeComponent) elementStack.get(elementStack.size() - 1);
 		
 		// Call endSetup
-		obj.endSetup();
+		AttributeList atts = (AttributeList) attributesStack.get(attributesStack.size() - 1);
+		obj.endSetup(atts);
 		
 		// Update Stack
 		elementStack.remove(elementStack.size() - 1);
+		attributesStack.remove(attributesStack.size() - 1);
 	}
 	
 	public void characters(char ch[], int start, int length) throws SAXException {

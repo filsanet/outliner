@@ -24,7 +24,7 @@ import javax.swing.*;
 public class UndoQueue {
 	private OutlinerDocument doc = null;
 	
-	private Vector queue = new Vector(Preferences.UNDO_QUEUE_SIZE.cur);
+	private Vector queue = new Vector(Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).cur);
 	private int cursor = -1;
 	
 	// The Constructors
@@ -43,13 +43,13 @@ public class UndoQueue {
 	
 	public void add(Undoable undoable) {
 		// Short Circuit if undo is disabled.
-		if (Preferences.UNDO_QUEUE_SIZE.cur == 0) {
+		if (Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).cur == 0) {
 			return;
 		}
 		
 		trim();
 		
-		if (queue.size() < Preferences.UNDO_QUEUE_SIZE.cur) {
+		if (queue.size() < Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).cur) {
 			cursor++;
 			queue.addElement(undoable);
 		} else {
@@ -83,7 +83,7 @@ public class UndoQueue {
 		
 		// Next, trim undoables from oldest to newest until the size matches the UNDO_QUEUE_SIZE preference.
 		// This could be optimized with System.arraycopy.
-		while (queue.size() > Preferences.UNDO_QUEUE_SIZE.cur) {
+		while (queue.size() > Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).cur) {
 			queue.removeElementAt(0);
 			cursor--;
 		}

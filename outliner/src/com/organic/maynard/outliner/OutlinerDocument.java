@@ -33,8 +33,8 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 
 	// Constants
 	public static final String UNTITLED_DOCUMENT_NAME = "Untitled";
-	private static final ImageIcon ICON_DOCUMENT_SAVED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "document_saved.gif");
-	private static final ImageIcon ICON_DOCUMENT_UNSAVED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "document_unsaved.gif");
+	private static final ImageIcon ICON_DOCUMENT_SAVED = new ImageIcon(Outliner.GRAPHICS_DIR + "document_saved.gif");
+	private static final ImageIcon ICON_DOCUMENT_UNSAVED = new ImageIcon(Outliner.GRAPHICS_DIR + "document_unsaved.gif");
 	
 	public static final int MIN_WIDTH = 300;
 	public static final int MIN_HEIGHT = 100;

@@ -25,10 +25,11 @@ import javax.swing.event.*;
 
 import org.xml.sax.*;
 
-public abstract class AbstractPreferencesPanel extends JPanel implements GUITreeComponent {
+public abstract class AbstractPreferencesPanel extends JPanel implements PreferencesPanel, GUITreeComponent {
 	
 	// Constants
 	public static final String A_TITLE = "title";
+	public static final String A_ID = "id";
 
 	// The Constructor
 	public AbstractPreferencesPanel() {}
@@ -41,15 +42,20 @@ public abstract class AbstractPreferencesPanel extends JPanel implements GUITree
 
 	public void startSetup(AttributeList atts) {
 		String title = atts.getValue(A_TITLE);
+		String id = atts.getValue(A_ID);
 
 
 		// Add this panel to the PreferencesFrame.
 		PreferencesFrame.RIGHT_PANEL.add(this, title);
 		PreferencesFrame pf = (PreferencesFrame) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_FRAME);
 		pf.addPanelToTree(title);
+		
+		// Add this panel to the PreferencesPanel Registry
+		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
+		prefs.addPreferencesPanel(id, this);
 	}
 	
-	public void endSetup() {}
+	public void endSetup(AttributeList atts) {}
 	
 	protected static void addPreferenceItem(String text, JComponent field, Container container) {
 		Box box = Box.createHorizontalBox();

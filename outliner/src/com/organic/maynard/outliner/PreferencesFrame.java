@@ -98,7 +98,7 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 		RIGHT_PANEL.setLayout(CARD_LAYOUT);
 	}
 	
-	public void endSetup() {
+	public void endSetup(AttributeList atts) {
 		// Define the JTree		
 		JTree tree = new JTree(treeModel);
 		tree.addTreeSelectionListener(this);

@@ -18,44 +18,22 @@
  
 package com.organic.maynard.outliner;
 
-import javax.swing.*;
-import java.awt.event.*;
+import org.xml.sax.*;
 
-public class OutlinerPanel extends JPanel {
+public abstract class AbstractValidator implements Validator, GUITreeComponent {
+	
+	// GUITreeComponent Interface
+	private String id = null;
+	public String getGUITreeComponentID() {return this.id;}
+	public void setGUITreeComponentID(String id) {this.id = id;}
+	
+	public void startSetup(AttributeList atts) {
 
-
-	// GUI Fields
-	public OutlinerDocument doc = null;
-	public OutlineLayoutManager layout = new OutlineLayoutManager(this);
-
-
-	// The Constructor
-	public OutlinerPanel(OutlinerDocument doc) {
-		this.doc = doc;
-		setBackground(Preferences.getPreferenceColor(Preferences.PANEL_BACKGROUND_COLOR).cur);
-		setLayout(layout);
-		
-		//addMouseMotionListener(new TestMouseMotionListener());
+		// Add this menuItem to the parent menu.
+		Preference pref = (Preference) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 2);
+		pref.setValidator(this);
 	}
 	
-	public void destroy() {
-		removeNotify();
-		doc = null;
-		
-		setLayout(null);
-		layout.destroy();
-		layout = null;
-		
-		removeAll();
-	}
-}
-
-/*
-public class TestMouseMotionListener extends MouseMotionAdapter {
-
-	public void mouseMoved(MouseEvent e) {
-		System.out.println("[" + e.getX() + "," + e.getY() + "]");
-	}
+	public void endSetup(AttributeList atts) {}	
 
 }
-*/

@@ -18,7 +18,14 @@
  
 package com.organic.maynard.outliner;
 
-public class IntRangeValidator {
+import org.xml.sax.*;
+
+public class IntRangeValidator extends AbstractValidator implements Validator, GUITreeComponent {
+
+	// Constants
+	public static final String A_MIN = "min";
+	public static final String A_MAX = "max";
+	public static final String A_DEFAULT = "default";
 	
 	private int lowerBound = 0;
 	private int upperBound = 0;
@@ -27,6 +34,10 @@ public class IntRangeValidator {
 	private boolean returnNearestValue = true;
 	
 	// Constructors
+	public IntRangeValidator() {
+	
+	}
+	
 	public IntRangeValidator(int lowerBound, int upperBound, int defaultValue) {
 		this(lowerBound,upperBound,defaultValue,true);
 	}
@@ -38,10 +49,40 @@ public class IntRangeValidator {
 		this.returnNearestValue = returnNearestValue;
 	}
 
-	public Integer getValidValue(String value) {
+
+	// GUITreeComponent Interface
+	public void startSetup(AttributeList atts) {
+		String min = atts.getValue(A_MIN);
+		String max = atts.getValue(A_MAX);
+		String def = atts.getValue(A_DEFAULT);
+		
+		try {
+			this.lowerBound = Integer.parseInt(min);
+			this.upperBound = Integer.parseInt(max);
+			this.defaultValue = Integer.parseInt(def);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+
+		super.startSetup(atts);
+	}
+
+
+	// Validator Interface
+	public Object getValidValue(Object val) {
+		if (val instanceof String) {
+			return getValidValue((String) val);
+		} else if (val instanceof Integer) {
+			return getValidValue((Integer) val);
+		} else {
+			return null;
+		}
+	}
+	
+	private Integer getValidValue(String value) {
 		Integer retVal = new Integer(defaultValue);
 		try {
-			retVal = getValidValue(Integer.parseInt(value));
+			retVal = getValidValue(new Integer(value));
 		} catch (NumberFormatException nfe) {
 			if (!returnNearestValue) {return null;}
 			retVal = new Integer(defaultValue);
@@ -49,16 +90,14 @@ public class IntRangeValidator {
 		return retVal;
 	}
 
-	public Integer getValidValue(int value) {
-		Integer retVal = new Integer(value);
-		if (retVal.intValue() < lowerBound) {
+	private Integer getValidValue(Integer value) {
+		if (value.intValue() < lowerBound) {
 			if (!returnNearestValue) {return null;}
-			retVal = new Integer(lowerBound);
-		} else if (retVal.intValue() > upperBound) {
+			value = new Integer(lowerBound);
+		} else if (value.intValue() > upperBound) {
 			if (!returnNearestValue) {return null;}
-			retVal = new Integer(upperBound);
+			value = new Integer(upperBound);
 		}
-		return retVal;
+		return value;
 	}
-
 }

@@ -25,7 +25,7 @@ import javax.swing.event.*;
 
 import org.xml.sax.*;
 
-public class PreferencesPanelLookAndFeel extends AbstractPreferencesPanel implements ActionListener, GUITreeComponent {
+public class PreferencesPanelLookAndFeel extends AbstractPreferencesPanel implements PreferencesPanel, ActionListener, GUITreeComponent {
 	
 	// Constants	
 	public static final String FOREGROUND_COLOR = "Foreground Color";
@@ -60,7 +60,7 @@ public class PreferencesPanelLookAndFeel extends AbstractPreferencesPanel implem
 
 
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void endSetup(AttributeList atts) {
 		
 		DESKTOP_BACKGROUND_COLOR_BUTTON.addActionListener(this);
 		DESKTOP_BACKGROUND_COLOR_BUTTON.setActionCommand(DESKTOP_COLOR);
@@ -81,14 +81,12 @@ public class PreferencesPanelLookAndFeel extends AbstractPreferencesPanel implem
 		LINE_NUMBER_SELECTED_CHILD_COLOR_BUTTON.setActionCommand(LINE_NUMBER_SELECTED_CHILD_COLOR);
 				
 		RESTORE_DEFAULT_LOOK_AND_FEEL_BUTTON.addActionListener(this);		
-		INDENT_FIELD.addFocusListener(new TextFieldListener(INDENT_FIELD, Preferences.INDENT));
-		VERTICAL_SPACING_FIELD.addFocusListener(new TextFieldListener(VERTICAL_SPACING_FIELD, Preferences.VERTICAL_SPACING));
-		LEFT_MARGIN_FIELD.addFocusListener(new TextFieldListener(LEFT_MARGIN_FIELD, Preferences.LEFT_MARGIN));
-		RIGHT_MARGIN_FIELD.addFocusListener(new TextFieldListener(RIGHT_MARGIN_FIELD, Preferences.RIGHT_MARGIN));
-		TOP_MARGIN_FIELD.addFocusListener(new TextFieldListener(TOP_MARGIN_FIELD, Preferences.TOP_MARGIN));
-		BOTTOM_MARGIN_FIELD.addFocusListener(new TextFieldListener(BOTTOM_MARGIN_FIELD, Preferences.BOTTOM_MARGIN));
-
-		setToCurrent();
+		INDENT_FIELD.addFocusListener(new TextFieldListener(INDENT_FIELD, Preferences.getPreferenceInt(Preferences.INDENT)));
+		VERTICAL_SPACING_FIELD.addFocusListener(new TextFieldListener(VERTICAL_SPACING_FIELD, Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING)));
+		LEFT_MARGIN_FIELD.addFocusListener(new TextFieldListener(LEFT_MARGIN_FIELD, Preferences.getPreferenceInt(Preferences.LEFT_MARGIN)));
+		RIGHT_MARGIN_FIELD.addFocusListener(new TextFieldListener(RIGHT_MARGIN_FIELD, Preferences.getPreferenceInt(Preferences.RIGHT_MARGIN)));
+		TOP_MARGIN_FIELD.addFocusListener(new TextFieldListener(TOP_MARGIN_FIELD, Preferences.getPreferenceInt(Preferences.TOP_MARGIN)));
+		BOTTOM_MARGIN_FIELD.addFocusListener(new TextFieldListener(BOTTOM_MARGIN_FIELD, Preferences.getPreferenceInt(Preferences.BOTTOM_MARGIN)));
 
 		Box lookAndFeelBox = Box.createVerticalBox();
 
@@ -133,131 +131,160 @@ public class PreferencesPanelLookAndFeel extends AbstractPreferencesPanel implem
 		
 		add(lookAndFeelBox);
 		
-		super.startSetup(atts);
+		super.endSetup(atts);
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(PreferencesFrame.RESTORE_DEFAULTS)) {
 			try {
-				DESKTOP_BACKGROUND_COLOR_BUTTON.setBackground(Preferences.DESKTOP_BACKGROUND_COLOR.def);
-				Preferences.DESKTOP_BACKGROUND_COLOR.restoreTemporaryToDefault();
+				DESKTOP_BACKGROUND_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.DESKTOP_BACKGROUND_COLOR).def);
+				Preferences.getPreferenceColor(Preferences.DESKTOP_BACKGROUND_COLOR).restoreTemporaryToDefault();
 
-				PANEL_BACKGROUND_COLOR_BUTTON.setBackground(Preferences.PANEL_BACKGROUND_COLOR.def);
-				Preferences.PANEL_BACKGROUND_COLOR.restoreTemporaryToDefault();
+				PANEL_BACKGROUND_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.PANEL_BACKGROUND_COLOR).def);
+				Preferences.getPreferenceColor(Preferences.PANEL_BACKGROUND_COLOR).restoreTemporaryToDefault();
 
-				TEXTAREA_BACKGROUND_COLOR_BUTTON.setBackground(Preferences.TEXTAREA_BACKGROUND_COLOR.def);
-				Preferences.TEXTAREA_BACKGROUND_COLOR.restoreTemporaryToDefault();
+				TEXTAREA_BACKGROUND_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).def);
+				Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).restoreTemporaryToDefault();
 
-				TEXTAREA_FOREGROUND_COLOR_BUTTON.setBackground(Preferences.TEXTAREA_FOREGROUND_COLOR.def);
-				Preferences.TEXTAREA_FOREGROUND_COLOR.restoreTemporaryToDefault();
+				TEXTAREA_FOREGROUND_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).def);
+				Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).restoreTemporaryToDefault();
 
-				SELECTED_CHILD_COLOR_BUTTON.setBackground(Preferences.SELECTED_CHILD_COLOR.def);
-				Preferences.SELECTED_CHILD_COLOR.restoreTemporaryToDefault();
+				SELECTED_CHILD_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).def);
+				Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).restoreTemporaryToDefault();
 
-				LINE_NUMBER_COLOR_BUTTON.setBackground(Preferences.LINE_NUMBER_COLOR.def);
-				Preferences.LINE_NUMBER_COLOR.restoreTemporaryToDefault();
+				LINE_NUMBER_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_COLOR).def);
+				Preferences.getPreferenceColor(Preferences.LINE_NUMBER_COLOR).restoreTemporaryToDefault();
 
-				LINE_NUMBER_SELECTED_COLOR_BUTTON.setBackground(Preferences.LINE_NUMBER_SELECTED_COLOR.def);
-				Preferences.LINE_NUMBER_SELECTED_COLOR.restoreTemporaryToDefault();
+				LINE_NUMBER_SELECTED_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR).def);
+				Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR).restoreTemporaryToDefault();
 
-				LINE_NUMBER_SELECTED_CHILD_COLOR_BUTTON.setBackground(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR.def);
-				Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR.restoreTemporaryToDefault();
+				LINE_NUMBER_SELECTED_CHILD_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR).def);
+				Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR).restoreTemporaryToDefault();
 
-				INDENT_FIELD.setText(String.valueOf(Preferences.INDENT.def));
-				Preferences.INDENT.restoreTemporaryToDefault();
+				INDENT_FIELD.setText(String.valueOf(Preferences.getPreferenceInt(Preferences.INDENT).def));
+				Preferences.getPreferenceInt(Preferences.INDENT).restoreTemporaryToDefault();
 				
-				VERTICAL_SPACING_FIELD.setText(String.valueOf(Preferences.VERTICAL_SPACING.def));
-				Preferences.VERTICAL_SPACING.restoreTemporaryToDefault();
+				VERTICAL_SPACING_FIELD.setText(String.valueOf(Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).def));
+				Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).restoreTemporaryToDefault();
 				
-				LEFT_MARGIN_FIELD.setText(String.valueOf(Preferences.LEFT_MARGIN.def));
-				Preferences.LEFT_MARGIN.restoreTemporaryToDefault();
+				LEFT_MARGIN_FIELD.setText(String.valueOf(Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).def));
+				Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).restoreTemporaryToDefault();
 				
-				RIGHT_MARGIN_FIELD.setText(String.valueOf(Preferences.RIGHT_MARGIN.def));
-				Preferences.RIGHT_MARGIN.restoreTemporaryToDefault();
+				RIGHT_MARGIN_FIELD.setText(String.valueOf(Preferences.getPreferenceInt(Preferences.RIGHT_MARGIN).def));
+				Preferences.getPreferenceInt(Preferences.RIGHT_MARGIN).restoreTemporaryToDefault();
 				
-				TOP_MARGIN_FIELD.setText(String.valueOf(Preferences.TOP_MARGIN.def));
-				Preferences.TOP_MARGIN.restoreTemporaryToDefault();
+				TOP_MARGIN_FIELD.setText(String.valueOf(Preferences.getPreferenceInt(Preferences.TOP_MARGIN).def));
+				Preferences.getPreferenceInt(Preferences.TOP_MARGIN).restoreTemporaryToDefault();
 				
-				BOTTOM_MARGIN_FIELD.setText(String.valueOf(Preferences.BOTTOM_MARGIN.def));
-				Preferences.BOTTOM_MARGIN.restoreTemporaryToDefault();
+				BOTTOM_MARGIN_FIELD.setText(String.valueOf(Preferences.getPreferenceInt(Preferences.BOTTOM_MARGIN).def));
+				Preferences.getPreferenceInt(Preferences.BOTTOM_MARGIN).restoreTemporaryToDefault();
 			} catch (Exception ex) {
 				System.out.println("Exception: " + ex);
 			}
 		} else if (e.getActionCommand().equals(DESKTOP_COLOR)) {
 			PreferencesFrame pf = (PreferencesFrame) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_FRAME);
-			Color newColor = JColorChooser.showDialog(pf,"Choose Color",Preferences.DESKTOP_BACKGROUND_COLOR.tmp);
+			Color newColor = JColorChooser.showDialog(pf,"Choose Color",Preferences.getPreferenceColor(Preferences.DESKTOP_BACKGROUND_COLOR).tmp);
 			if (newColor != null) {
-				Preferences.DESKTOP_BACKGROUND_COLOR.tmp = newColor;
-				DESKTOP_BACKGROUND_COLOR_BUTTON.setBackground(Preferences.DESKTOP_BACKGROUND_COLOR.tmp);
+				Preferences.getPreferenceColor(Preferences.DESKTOP_BACKGROUND_COLOR).tmp = newColor;
+				DESKTOP_BACKGROUND_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.DESKTOP_BACKGROUND_COLOR).tmp);
 			}
 		} else if (e.getActionCommand().equals(BACKGROUND_COLOR)) {
 			PreferencesFrame pf = (PreferencesFrame) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_FRAME);
-			Color newColor = JColorChooser.showDialog(pf,"Choose Color",Preferences.PANEL_BACKGROUND_COLOR.tmp);
+			Color newColor = JColorChooser.showDialog(pf,"Choose Color",Preferences.getPreferenceColor(Preferences.PANEL_BACKGROUND_COLOR).tmp);
 			if (newColor != null) {
-				Preferences.PANEL_BACKGROUND_COLOR.tmp = newColor;
-				PANEL_BACKGROUND_COLOR_BUTTON.setBackground(Preferences.PANEL_BACKGROUND_COLOR.tmp);
+				Preferences.getPreferenceColor(Preferences.PANEL_BACKGROUND_COLOR).tmp = newColor;
+				PANEL_BACKGROUND_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.PANEL_BACKGROUND_COLOR).tmp);
 			}
 		} else if (e.getActionCommand().equals(FOREGROUND_COLOR)) {
 			PreferencesFrame pf = (PreferencesFrame) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_FRAME);
-			Color newColor = JColorChooser.showDialog(pf,"Choose Color",Preferences.TEXTAREA_BACKGROUND_COLOR.tmp);
+			Color newColor = JColorChooser.showDialog(pf,"Choose Color",Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).tmp);
 			if (newColor != null) {
-				Preferences.TEXTAREA_BACKGROUND_COLOR.tmp = newColor;
-				TEXTAREA_BACKGROUND_COLOR_BUTTON.setBackground(Preferences.TEXTAREA_BACKGROUND_COLOR.tmp);
+				Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).tmp = newColor;
+				TEXTAREA_BACKGROUND_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).tmp);
 			}
 		} else if (e.getActionCommand().equals(TEXT_COLOR)) {
 			PreferencesFrame pf = (PreferencesFrame) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_FRAME);
-			Color newColor = JColorChooser.showDialog(pf,"Choose Color",Preferences.TEXTAREA_FOREGROUND_COLOR.tmp);
+			Color newColor = JColorChooser.showDialog(pf,"Choose Color",Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).tmp);
 			if (newColor != null) {
-				Preferences.TEXTAREA_FOREGROUND_COLOR.tmp = newColor;
-				TEXTAREA_FOREGROUND_COLOR_BUTTON.setBackground(Preferences.TEXTAREA_FOREGROUND_COLOR.tmp);
+				Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).tmp = newColor;
+				TEXTAREA_FOREGROUND_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).tmp);
 			}
 		} else if (e.getActionCommand().equals(SELECTED_CHILDREN_COLOR)) {
 			PreferencesFrame pf = (PreferencesFrame) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_FRAME);
-			Color newColor = JColorChooser.showDialog(pf,"Choose Color",Preferences.SELECTED_CHILD_COLOR.tmp);
+			Color newColor = JColorChooser.showDialog(pf,"Choose Color",Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).tmp);
 			if (newColor != null) {
-				Preferences.SELECTED_CHILD_COLOR.tmp = newColor;
-				SELECTED_CHILD_COLOR_BUTTON.setBackground(Preferences.SELECTED_CHILD_COLOR.tmp);
+				Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).tmp = newColor;
+				SELECTED_CHILD_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).tmp);
 			}
 		} else if (e.getActionCommand().equals(LINE_NUMBER_COLOR)) {
 			PreferencesFrame pf = (PreferencesFrame) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_FRAME);
-			Color newColor = JColorChooser.showDialog(pf,"Choose Color",Preferences.LINE_NUMBER_COLOR.tmp);
+			Color newColor = JColorChooser.showDialog(pf,"Choose Color",Preferences.getPreferenceColor(Preferences.LINE_NUMBER_COLOR).tmp);
 			if (newColor != null) {
-				Preferences.LINE_NUMBER_COLOR.tmp = newColor;
-				LINE_NUMBER_COLOR_BUTTON.setBackground(Preferences.LINE_NUMBER_COLOR.tmp);
+				Preferences.getPreferenceColor(Preferences.LINE_NUMBER_COLOR).tmp = newColor;
+				LINE_NUMBER_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_COLOR).tmp);
 			}
 		} else if (e.getActionCommand().equals(LINE_NUMBER_SELECTED_COLOR)) {
 			PreferencesFrame pf = (PreferencesFrame) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_FRAME);
-			Color newColor = JColorChooser.showDialog(pf,"Choose Color",Preferences.LINE_NUMBER_SELECTED_COLOR.tmp);
+			Color newColor = JColorChooser.showDialog(pf,"Choose Color",Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR).tmp);
 			if (newColor != null) {
-				Preferences.LINE_NUMBER_SELECTED_COLOR.tmp = newColor;
-				LINE_NUMBER_SELECTED_COLOR_BUTTON.setBackground(Preferences.LINE_NUMBER_SELECTED_COLOR.tmp);
+				Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR).tmp = newColor;
+				LINE_NUMBER_SELECTED_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR).tmp);
 			}
 		} else if (e.getActionCommand().equals(LINE_NUMBER_SELECTED_CHILD_COLOR)) {
 			PreferencesFrame pf = (PreferencesFrame) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_FRAME);
-			Color newColor = JColorChooser.showDialog(pf,"Choose Color",Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR.tmp);
+			Color newColor = JColorChooser.showDialog(pf,"Choose Color",Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR).tmp);
 			if (newColor != null) {
-				Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR.tmp = newColor;
-				LINE_NUMBER_SELECTED_CHILD_COLOR_BUTTON.setBackground(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR.tmp);
+				Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR).tmp = newColor;
+				LINE_NUMBER_SELECTED_CHILD_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR).tmp);
 			}
 		}
 	}
 	
 	public void setToCurrent() {
-		DESKTOP_BACKGROUND_COLOR_BUTTON.setBackground(Preferences.DESKTOP_BACKGROUND_COLOR.cur);
-		PANEL_BACKGROUND_COLOR_BUTTON.setBackground(Preferences.PANEL_BACKGROUND_COLOR.cur);
-		TEXTAREA_BACKGROUND_COLOR_BUTTON.setBackground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
-		TEXTAREA_FOREGROUND_COLOR_BUTTON.setBackground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
-		SELECTED_CHILD_COLOR_BUTTON.setBackground(Preferences.SELECTED_CHILD_COLOR.cur);
+		DESKTOP_BACKGROUND_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.DESKTOP_BACKGROUND_COLOR).cur);
+		PANEL_BACKGROUND_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.PANEL_BACKGROUND_COLOR).cur);
+		TEXTAREA_BACKGROUND_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).cur);
+		TEXTAREA_FOREGROUND_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
+		SELECTED_CHILD_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur);
 
-		LINE_NUMBER_COLOR_BUTTON.setBackground(Preferences.LINE_NUMBER_COLOR.cur);
-		LINE_NUMBER_SELECTED_COLOR_BUTTON.setBackground(Preferences.LINE_NUMBER_SELECTED_COLOR.cur);
-		LINE_NUMBER_SELECTED_CHILD_COLOR_BUTTON.setBackground(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR.cur);
+		LINE_NUMBER_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_COLOR).cur);
+		LINE_NUMBER_SELECTED_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR).cur);
+		LINE_NUMBER_SELECTED_CHILD_COLOR_BUTTON.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR).cur);
 		
-		INDENT_FIELD.setText(String.valueOf(Preferences.INDENT.cur));
-		VERTICAL_SPACING_FIELD.setText(String.valueOf(Preferences.VERTICAL_SPACING.cur));
-		LEFT_MARGIN_FIELD.setText(String.valueOf(Preferences.LEFT_MARGIN.cur));
-		RIGHT_MARGIN_FIELD.setText(String.valueOf(Preferences.RIGHT_MARGIN.cur));
-		TOP_MARGIN_FIELD.setText(String.valueOf(Preferences.TOP_MARGIN.cur));
-		BOTTOM_MARGIN_FIELD.setText(String.valueOf(Preferences.BOTTOM_MARGIN.cur));
+		INDENT_FIELD.setText(String.valueOf(Preferences.getPreferenceInt(Preferences.INDENT).cur));
+		VERTICAL_SPACING_FIELD.setText(String.valueOf(Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).cur));
+		LEFT_MARGIN_FIELD.setText(String.valueOf(Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur));
+		RIGHT_MARGIN_FIELD.setText(String.valueOf(Preferences.getPreferenceInt(Preferences.RIGHT_MARGIN).cur));
+		TOP_MARGIN_FIELD.setText(String.valueOf(Preferences.getPreferenceInt(Preferences.TOP_MARGIN).cur));
+		BOTTOM_MARGIN_FIELD.setText(String.valueOf(Preferences.getPreferenceInt(Preferences.BOTTOM_MARGIN).cur));
+	}
+
+	public void applyTemporaryToCurrent() {
+		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
+
+		PreferenceColor pDesktopBackgroundColor = (PreferenceColor) prefs.getPreference(Preferences.DESKTOP_BACKGROUND_COLOR);
+		PreferenceColor pPanelBackgroundColor = (PreferenceColor) prefs.getPreference(Preferences.PANEL_BACKGROUND_COLOR);
+		PreferenceColor pTextareaForegroundColor = (PreferenceColor) prefs.getPreference(Preferences.TEXTAREA_FOREGROUND_COLOR);
+		PreferenceColor pTextareaBackgroundColor = (PreferenceColor) prefs.getPreference(Preferences.TEXTAREA_BACKGROUND_COLOR);
+		PreferenceColor pSelectedChildColor = (PreferenceColor) prefs.getPreference(Preferences.SELECTED_CHILD_COLOR);
+
+		// Set the Desktop Background color
+		Outliner.jsp.getViewport().setBackground(pDesktopBackgroundColor.cur);
+		Outliner.desktop.setBackground(pDesktopBackgroundColor.cur);
+
+		// Set the Panel Background color.
+		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
+			Outliner.getDocument(i).panel.setBackground(pPanelBackgroundColor.cur);
+		}
+
+		// Update the cellRenderers
+		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
+			OutlinerDocument doc = Outliner.getDocument(i);
+			for (int j = 0; j < OutlineLayoutManager.CACHE_SIZE; j++) {
+				doc.panel.layout.textAreas[j].setSelectionColor(pTextareaForegroundColor.cur);
+				doc.panel.layout.textAreas[j].setSelectedTextColor(pTextareaBackgroundColor.cur);
+				doc.panel.layout.textAreas[j].setCaretColor(pSelectedChildColor.cur);
+			}
+		}	
 	}
 }

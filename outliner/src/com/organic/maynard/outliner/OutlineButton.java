@@ -25,23 +25,23 @@ import javax.swing.*;
 public class OutlineButton extends JLabel {
 
 	// Class Fields
-	public static final ImageIcon ICON_OPEN_NODE = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "open_node.gif");
-	public static final ImageIcon ICON_OPEN_NODE_SELECTED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "open_node_selected.gif");
-	public static final ImageIcon ICON_CLOSED_NODE = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "closed_node.gif");
-	public static final ImageIcon ICON_CLOSED_NODE_SELECTED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "closed_node_selected.gif");
-	public static final ImageIcon ICON_LEAF = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "leaf.gif");
-	public static final ImageIcon ICON_LEAF_SELECTED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "leaf_selected.gif");
+	public static final ImageIcon ICON_OPEN_NODE = new ImageIcon(Outliner.GRAPHICS_DIR + "open_node.gif");
+	public static final ImageIcon ICON_OPEN_NODE_SELECTED = new ImageIcon(Outliner.GRAPHICS_DIR + "open_node_selected.gif");
+	public static final ImageIcon ICON_CLOSED_NODE = new ImageIcon(Outliner.GRAPHICS_DIR + "closed_node.gif");
+	public static final ImageIcon ICON_CLOSED_NODE_SELECTED = new ImageIcon(Outliner.GRAPHICS_DIR + "closed_node_selected.gif");
+	public static final ImageIcon ICON_LEAF = new ImageIcon(Outliner.GRAPHICS_DIR + "leaf.gif");
+	public static final ImageIcon ICON_LEAF_SELECTED = new ImageIcon(Outliner.GRAPHICS_DIR + "leaf_selected.gif");
 
-	public static final ImageIcon ICON_OPEN_NODE_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "open_node_commented.gif");
-	public static final ImageIcon ICON_OPEN_NODE_SELECTED_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "open_node_selected_commented.gif");
-	public static final ImageIcon ICON_CLOSED_NODE_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "closed_node_commented.gif");
-	public static final ImageIcon ICON_CLOSED_NODE_SELECTED_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "closed_node_selected_commented.gif");
-	public static final ImageIcon ICON_LEAF_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "leaf_commented.gif");
-	public static final ImageIcon ICON_LEAF_SELECTED_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "leaf_selected_commented.gif");
+	public static final ImageIcon ICON_OPEN_NODE_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + "open_node_commented.gif");
+	public static final ImageIcon ICON_OPEN_NODE_SELECTED_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + "open_node_selected_commented.gif");
+	public static final ImageIcon ICON_CLOSED_NODE_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + "closed_node_commented.gif");
+	public static final ImageIcon ICON_CLOSED_NODE_SELECTED_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + "closed_node_selected_commented.gif");
+	public static final ImageIcon ICON_LEAF_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + "leaf_commented.gif");
+	public static final ImageIcon ICON_LEAF_SELECTED_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + "leaf_selected_commented.gif");
 
-	public static final ImageIcon ICON_DOWN_ARROW = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "down_arrow.gif");
-	public static final ImageIcon ICON_SE_ARROW = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "se_arrow.gif");
-	//public static final ImageIcon ICON_RIGHT_ARROW = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "right_arrow.gif");
+	public static final ImageIcon ICON_DOWN_ARROW = new ImageIcon(Outliner.GRAPHICS_DIR + "down_arrow.gif");
+	public static final ImageIcon ICON_SE_ARROW = new ImageIcon(Outliner.GRAPHICS_DIR + "se_arrow.gif");
+	//public static final ImageIcon ICON_RIGHT_ARROW = new ImageIcon(Outliner.GRAPHICS_DIR + "right_arrow.gif");
 
 	public static int BUTTON_WIDTH = 15;
 	public static int BUTTON_HEIGHT = 15;

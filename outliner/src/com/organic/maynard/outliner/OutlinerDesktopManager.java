@@ -63,8 +63,10 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 	}
 	
 	public boolean isDragging() {return isDragging;}
-	public boolean isMaximized() {return Preferences.IS_MAXIMIZED.cur;}
-	public void setMaximized(boolean b) {Preferences.IS_MAXIMIZED.cur = b;}
+	public boolean isMaximized() {
+		return Preferences.getPreferenceBoolean(Preferences.IS_MAXIMIZED).cur;
+	}
+	public void setMaximized(boolean b) {Preferences.getPreferenceBoolean(Preferences.IS_MAXIMIZED).cur = b;}
 	
 	// DesktopManagerInterface
 	public void beginResizingFrame(JComponent f, int direction) {

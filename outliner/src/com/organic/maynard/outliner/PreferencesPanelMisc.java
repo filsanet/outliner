@@ -25,7 +25,7 @@ import javax.swing.event.*;
 
 import org.xml.sax.*;
 
-public class PreferencesPanelMisc extends AbstractPreferencesPanel implements ActionListener, GUITreeComponent {
+public class PreferencesPanelMisc extends AbstractPreferencesPanel implements PreferencesPanel, ActionListener, GUITreeComponent {
 	
 	// Constants
 	public static final String RECENT_FILES_LIST_SIZE = "Recent Files List Size";
@@ -58,22 +58,20 @@ public class PreferencesPanelMisc extends AbstractPreferencesPanel implements Ac
 
 
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void endSetup(AttributeList atts) {
 		
 		RESTORE_DEFAULT_MISC_BUTTON.addActionListener(this);		
-		RECENT_FILES_LIST_SIZE_FIELD.addFocusListener(new TextFieldListener(RECENT_FILES_LIST_SIZE_FIELD, Preferences.RECENT_FILES_LIST_SIZE));
-		PRINT_ENVIRONMENT_CHECKBOX.addActionListener(new CheckboxListener(PRINT_ENVIRONMENT_CHECKBOX, Preferences.PRINT_ENVIRONMENT));
-		NEW_DOC_ON_STARTUP_CHECKBOX.addActionListener(new CheckboxListener(NEW_DOC_ON_STARTUP_CHECKBOX, Preferences.NEW_DOC_ON_STARTUP));
-		OWNER_NAME_FIELD.addFocusListener(new TextFieldListener(OWNER_NAME_FIELD, Preferences.OWNER_NAME));
-		OWNER_EMAIL_FIELD.addFocusListener(new TextFieldListener(OWNER_EMAIL_FIELD, Preferences.OWNER_EMAIL));
+		RECENT_FILES_LIST_SIZE_FIELD.addFocusListener(new TextFieldListener(RECENT_FILES_LIST_SIZE_FIELD, Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE)));
+		PRINT_ENVIRONMENT_CHECKBOX.addActionListener(new CheckboxListener(PRINT_ENVIRONMENT_CHECKBOX, Preferences.getPreferenceBoolean(Preferences.PRINT_ENVIRONMENT)));
+		NEW_DOC_ON_STARTUP_CHECKBOX.addActionListener(new CheckboxListener(NEW_DOC_ON_STARTUP_CHECKBOX, Preferences.getPreferenceBoolean(Preferences.NEW_DOC_ON_STARTUP)));
+		OWNER_NAME_FIELD.addFocusListener(new TextFieldListener(OWNER_NAME_FIELD, Preferences.getPreferenceString(Preferences.OWNER_NAME)));
+		OWNER_EMAIL_FIELD.addFocusListener(new TextFieldListener(OWNER_EMAIL_FIELD, Preferences.getPreferenceString(Preferences.OWNER_EMAIL)));
 
 			// WebFile
-			WEB_FILE_SYSTEM_CHECKBOX.addActionListener(new CheckboxListener(WEB_FILE_SYSTEM_CHECKBOX, Preferences.WEB_FILE_SYSTEM));
-			WEB_FILE_URL_FIELD.addFocusListener(new TextFieldListener(WEB_FILE_URL_FIELD, Preferences.WEB_FILE_URL));
-			WEB_FILE_USER_FIELD.addFocusListener(new TextFieldListener(WEB_FILE_USER_FIELD, Preferences.WEB_FILE_USER));
-			WEB_FILE_PASSWORD_FIELD.addFocusListener(new TextFieldListener(WEB_FILE_PASSWORD_FIELD, Preferences.WEB_FILE_PASSWORD));
-
-		setToCurrent();
+			WEB_FILE_SYSTEM_CHECKBOX.addActionListener(new CheckboxListener(WEB_FILE_SYSTEM_CHECKBOX, Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM)));
+			WEB_FILE_URL_FIELD.addFocusListener(new TextFieldListener(WEB_FILE_URL_FIELD, Preferences.getPreferenceString(Preferences.WEB_FILE_URL)));
+			WEB_FILE_USER_FIELD.addFocusListener(new TextFieldListener(WEB_FILE_USER_FIELD, Preferences.getPreferenceString(Preferences.WEB_FILE_USER)));
+			WEB_FILE_PASSWORD_FIELD.addFocusListener(new TextFieldListener(WEB_FILE_PASSWORD_FIELD, Preferences.getPreferenceString(Preferences.WEB_FILE_PASSWORD)));
 
 		Box miscBox = Box.createVerticalBox();
 
@@ -102,39 +100,39 @@ public class PreferencesPanelMisc extends AbstractPreferencesPanel implements Ac
 		
 		add(miscBox);
 
-		super.startSetup(atts);
+		super.endSetup(atts);
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(PreferencesFrame.RESTORE_DEFAULTS)) {
 			try {
-				RECENT_FILES_LIST_SIZE_FIELD.setText(String.valueOf(Preferences.RECENT_FILES_LIST_SIZE.def));
-				Preferences.RECENT_FILES_LIST_SIZE.restoreTemporaryToDefault();
+				RECENT_FILES_LIST_SIZE_FIELD.setText(String.valueOf(Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).def));
+				Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).restoreTemporaryToDefault();
 				
-				PRINT_ENVIRONMENT_CHECKBOX.setSelected(Preferences.PRINT_ENVIRONMENT.def);
-				Preferences.PRINT_ENVIRONMENT.restoreTemporaryToDefault();
+				PRINT_ENVIRONMENT_CHECKBOX.setSelected(Preferences.getPreferenceBoolean(Preferences.PRINT_ENVIRONMENT).def);
+				Preferences.getPreferenceBoolean(Preferences.PRINT_ENVIRONMENT).restoreTemporaryToDefault();
 
-				NEW_DOC_ON_STARTUP_CHECKBOX.setSelected(Preferences.NEW_DOC_ON_STARTUP.def);
-				Preferences.NEW_DOC_ON_STARTUP.restoreTemporaryToDefault();
+				NEW_DOC_ON_STARTUP_CHECKBOX.setSelected(Preferences.getPreferenceBoolean(Preferences.NEW_DOC_ON_STARTUP).def);
+				Preferences.getPreferenceBoolean(Preferences.NEW_DOC_ON_STARTUP).restoreTemporaryToDefault();
 
-				OWNER_NAME_FIELD.setText(String.valueOf(Preferences.OWNER_NAME.def));
-				Preferences.OWNER_NAME.restoreTemporaryToDefault();
+				OWNER_NAME_FIELD.setText(String.valueOf(Preferences.getPreferenceString(Preferences.OWNER_NAME).def));
+				Preferences.getPreferenceString(Preferences.OWNER_NAME).restoreTemporaryToDefault();
 
-				OWNER_EMAIL_FIELD.setText(String.valueOf(Preferences.OWNER_EMAIL.def));
-				Preferences.OWNER_EMAIL.restoreTemporaryToDefault();
+				OWNER_EMAIL_FIELD.setText(String.valueOf(Preferences.getPreferenceString(Preferences.OWNER_EMAIL).def));
+				Preferences.getPreferenceString(Preferences.OWNER_EMAIL).restoreTemporaryToDefault();
 
 				// WebFile
-				WEB_FILE_SYSTEM_CHECKBOX.setSelected(Preferences.WEB_FILE_SYSTEM.def);
-				Preferences.WEB_FILE_SYSTEM.restoreTemporaryToDefault();
+				WEB_FILE_SYSTEM_CHECKBOX.setSelected(Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).def);
+				Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).restoreTemporaryToDefault();
 
-				WEB_FILE_URL_FIELD.setText(String.valueOf(Preferences.WEB_FILE_URL.def));
-				Preferences.WEB_FILE_URL.restoreTemporaryToDefault();
+				WEB_FILE_URL_FIELD.setText(String.valueOf(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).def));
+				Preferences.getPreferenceString(Preferences.WEB_FILE_URL).restoreTemporaryToDefault();
 
-				WEB_FILE_USER_FIELD.setText(String.valueOf(Preferences.WEB_FILE_USER.def));
-				Preferences.WEB_FILE_USER.restoreTemporaryToDefault();
+				WEB_FILE_USER_FIELD.setText(String.valueOf(Preferences.getPreferenceString(Preferences.WEB_FILE_USER).def));
+				Preferences.getPreferenceString(Preferences.WEB_FILE_USER).restoreTemporaryToDefault();
 
-				WEB_FILE_PASSWORD_FIELD.setText(String.valueOf(Preferences.WEB_FILE_PASSWORD.def));
-				Preferences.WEB_FILE_PASSWORD.restoreTemporaryToDefault();
+				WEB_FILE_PASSWORD_FIELD.setText(String.valueOf(Preferences.getPreferenceString(Preferences.WEB_FILE_PASSWORD).def));
+				Preferences.getPreferenceString(Preferences.WEB_FILE_PASSWORD).restoreTemporaryToDefault();
 			} catch (Exception ex) {
 				System.out.println("Exception: " + ex);
 			}
@@ -142,16 +140,21 @@ public class PreferencesPanelMisc extends AbstractPreferencesPanel implements Ac
 	}
 	
 	public void setToCurrent() {
-		RECENT_FILES_LIST_SIZE_FIELD.setText(String.valueOf(Preferences.RECENT_FILES_LIST_SIZE.cur));
-		PRINT_ENVIRONMENT_CHECKBOX.setSelected(Preferences.PRINT_ENVIRONMENT.cur);
-		NEW_DOC_ON_STARTUP_CHECKBOX.setSelected(Preferences.NEW_DOC_ON_STARTUP.cur);
-		OWNER_NAME_FIELD.setText(String.valueOf(Preferences.OWNER_NAME.cur));
-		OWNER_EMAIL_FIELD.setText(String.valueOf(Preferences.OWNER_EMAIL.cur));
+		RECENT_FILES_LIST_SIZE_FIELD.setText(String.valueOf(Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur));
+		PRINT_ENVIRONMENT_CHECKBOX.setSelected(Preferences.getPreferenceBoolean(Preferences.PRINT_ENVIRONMENT).cur);
+		NEW_DOC_ON_STARTUP_CHECKBOX.setSelected(Preferences.getPreferenceBoolean(Preferences.NEW_DOC_ON_STARTUP).cur);
+		OWNER_NAME_FIELD.setText(String.valueOf(Preferences.getPreferenceString(Preferences.OWNER_NAME).cur));
+		OWNER_EMAIL_FIELD.setText(String.valueOf(Preferences.getPreferenceString(Preferences.OWNER_EMAIL).cur));
 		
 		// WebFile
-		WEB_FILE_SYSTEM_CHECKBOX.setSelected(Preferences.WEB_FILE_SYSTEM.cur);
-		WEB_FILE_URL_FIELD.setText(String.valueOf(Preferences.WEB_FILE_URL.cur));
-		WEB_FILE_USER_FIELD.setText(String.valueOf(Preferences.WEB_FILE_USER.cur));
-		WEB_FILE_PASSWORD_FIELD.setText(String.valueOf(Preferences.WEB_FILE_PASSWORD.cur));
+		WEB_FILE_SYSTEM_CHECKBOX.setSelected(Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur);
+		WEB_FILE_URL_FIELD.setText(String.valueOf(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur));
+		WEB_FILE_USER_FIELD.setText(String.valueOf(Preferences.getPreferenceString(Preferences.WEB_FILE_USER).cur));
+		WEB_FILE_PASSWORD_FIELD.setText(String.valueOf(Preferences.getPreferenceString(Preferences.WEB_FILE_PASSWORD).cur));
+	}
+	
+	public void applyTemporaryToCurrent() {		
+		// Update the recent file list.
+		RecentFilesList.trim();	
 	}
 }

@@ -43,7 +43,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	public static final String USER_OUTLINER_DIR = "outliner";
 	
 	// Directory setup
-	public static String GRAPHICS_DIR = "graphics";
+	public static String GRAPHICS_DIR = "graphics" + System.getProperty("file.separator");
 	public static String PREFS_DIR = "prefs" + System.getProperty("file.separator");
 	public static String USER_PREFS_DIR = PREFS_DIR;
 
@@ -111,7 +111,6 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	
 	
 	// GUI Objects
-	//public static PreferencesFrame prefs = null;
 	public static FindReplaceFrame findReplace = null;
 	public static MacroManagerFrame macroManager = null;
 	public static MacroPopupMenu macroPopup = null;
@@ -137,10 +136,6 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		jsp.addComponentListener(new DesktopScrollPaneComponentListener());
 	}
 
-	public Outliner() {
-		super();
-	}
-
 
 	// GUITreeComponent interface	
 	private String id = null;
@@ -148,48 +143,27 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	public void setGUITreeComponentID(String id) {this.id = id;}
 
 	public void startSetup(AttributeList atts) {
-		outliner = this;
-		
+		outliner = this;	
+
+		setTitle(atts.getValue(A_TITLE));
+
 		// Load Preferences
 		PARSER.addCommand(new SetPrefCommand(COMMAND_SET,2));
 		PARSER.addCommand(new LoadMacroClassCommand(COMMAND_MACRO_CLASS,2));
 		PARSER.addCommand(new LoadMacroCommand(COMMAND_MACRO,2));
 		PARSER.addCommand(new LoadFileFormatClassCommand(COMMAND_FILE_FORMAT,2));
 
-		System.out.println("Loading Config...");
-		loadPrefsFile(PARSER,CONFIG_FILE);
-		System.out.println("Done Loading Config.");
-		
-		System.out.println("Loading Recent File List...");
-		loadPrefsFile(PARSER,RECENT_FILES_FILE);
-		System.out.println("Done Loading Recent File List.");
-		
 		System.out.println("Loading Encoding Types...");
 		loadPrefsFile(PARSER,ENCODINGS_FILE);
 		System.out.println("Done Loading Encoding Types.");
-		
+
 		// Setup the FileFormatManager
 		fileFormatManager = new FileFormatManager();
+		
 		System.out.println("Loading File Formats...");
 		loadPrefsFile(PARSER,FILE_FORMATS_FILE);
 		System.out.println("Done Loading File Formats.");
-				
-		// Now setup the Preferences Frame since we now have the prefs loaded from the config file.
-		//prefs = new PreferencesFrame();
-		
-		// Setup the FindReplace Frame
-		findReplace = new FindReplaceFrame();
-		
-		// Setup the MacroManager and the MacroPopupMenu
-		macroManager = new MacroManagerFrame();
-		loadPrefsFile(PARSER,MACRO_CLASSES_FILE);
-		
-		macroPopup = new MacroPopupMenu();
-		//macroPopup.init();
-		System.out.println("Loading Macros...");
-		loadPrefsFile(PARSER,MACROS_FILE);
-		System.out.println("Done Loading Macros.");
-		
+
 		// Setup the Desktop
 		addComponentListener(new WindowSizeManager(INITIAL_WIDTH,INITIAL_HEIGHT,MIN_WIDTH,MIN_HEIGHT));
 		addWindowListener(
@@ -202,12 +176,27 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		);
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-		setTitle(atts.getValue(A_TITLE));
 		setContentPane(jsp);
-		
+
 		// Set Frame Icon
-		ImageIcon icon = new ImageIcon(GRAPHICS_DIR + System.getProperty("file.separator") + "frame_icon.gif");
+		ImageIcon icon = new ImageIcon(GRAPHICS_DIR + "frame_icon.gif");
 		setIconImage(icon.getImage());
+	}
+	
+	public void endSetup(AttributeList atts) {
+
+		// Setup the FindReplace Frame
+		findReplace = new FindReplaceFrame();
+		
+		// Setup the MacroManager and the MacroPopupMenu
+		macroManager = new MacroManagerFrame();
+		loadPrefsFile(PARSER,MACRO_CLASSES_FILE);
+		
+		macroPopup = new MacroPopupMenu();
+		
+		System.out.println("Loading Macros...");
+		loadPrefsFile(PARSER,MACROS_FILE);
+		System.out.println("Done Loading Macros.");
 		
 		// WebFile
 		// Note the outliner will have to be restarted if user switches
@@ -216,33 +205,32 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		// work once the native file system is set, otherwise you could
 		// just call setFileSystemView() on the file chooser.
 		FileSystemView fsv = null;
-		if (Preferences.WEB_FILE_SYSTEM.cur) {
+		if (Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
 			// if you have authentication enabled on your web server,
 			// pass non-null user/password
-			fsv = new WebFileSystemView(Preferences.WEB_FILE_URL.cur,
-										Preferences.WEB_FILE_USER.cur,
-										Preferences.WEB_FILE_PASSWORD.cur);
+			fsv = new WebFileSystemView(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur,
+										Preferences.getPreferenceString(Preferences.WEB_FILE_USER).cur,
+										Preferences.getPreferenceString(Preferences.WEB_FILE_PASSWORD).cur);
 		}
 
 		// Setup the File Chooser
-		chooser = new OutlinerFileChooser(fsv);		
-	}
-	
-	public void endSetup() {
+		chooser = new OutlinerFileChooser(fsv);	
+
+
 		// Set the Desktop Color
-		jsp.getViewport().setBackground(Preferences.DESKTOP_BACKGROUND_COLOR.cur);
-		desktop.setBackground(Preferences.DESKTOP_BACKGROUND_COLOR.cur);
+		jsp.getViewport().setBackground(Preferences.getPreferenceColor(Preferences.DESKTOP_BACKGROUND_COLOR).cur);
+		desktop.setBackground(Preferences.getPreferenceColor(Preferences.DESKTOP_BACKGROUND_COLOR).cur);
 
 		setVisible(true);
 
 		// Create a Document. This must come after visiblity otherwise the window won't be activated.
-		if (Preferences.NEW_DOC_ON_STARTUP.cur) {
+		if (Preferences.getPreferenceBoolean(Preferences.NEW_DOC_ON_STARTUP).cur) {
 			new OutlinerDocument("");
 		}
 	}
 		
 	public static void main(String args[]) {
-		UIManager.put("ScrollBarUI", "com.organic.maynard.outliner.OutlinerScrollBarUI");
+		//UIManager.put("ScrollBarUI", "com.organic.maynard.outliner.OutlinerScrollBarUI");
 
 		GUITreeLoader loader = new GUITreeLoader();
 		boolean success = loader.load(Outliner.GUI_TREE_FILE);
@@ -261,18 +249,15 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	
 				DocumentInfo docInfo = new DocumentInfo();
 				docInfo.setPath(filepath);
-				docInfo.setEncodingType(Preferences.OPEN_ENCODING.cur);
+				docInfo.setEncodingType(Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur);
 				docInfo.setFileFormat(fileFormat);
 				
 				FileMenu.openFile(docInfo);
-						
 			}
-		} catch (ArrayIndexOutOfBoundsException e) {
-		
-		}
+		} catch (ArrayIndexOutOfBoundsException e) {}
 		
 		// For Debug Purposes
-		if (Preferences.PRINT_ENVIRONMENT.cur) {
+		if (Preferences.getPreferenceBoolean(Preferences.PRINT_ENVIRONMENT).cur) {
 			Properties properties = System.getProperties();
 			Enumeration names = properties.propertyNames();
 			while (names.hasMoreElements()) {
@@ -399,6 +384,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 
 
 	// File Opening and Saving
+	// This method should probably get moved into the FileMenu class if possible.
 	public static void updateSaveMenuItem() {
 		JMenuItem saveItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_MENU_ITEM);
 		JMenuItem saveAsItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
@@ -455,7 +441,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	
 	
 	// Misc Methods
-	private static void loadPrefsFile(CommandParser parser, String filename) {
+	public static void loadPrefsFile(CommandParser parser, String filename) {
 		CommandQueue commandQueue = new CommandQueue(25);
 		commandQueue.loadFromFile(filename);
 		

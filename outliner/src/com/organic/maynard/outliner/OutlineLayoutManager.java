@@ -42,7 +42,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	protected InternalDragAndDropListener dndListener = new InternalDragAndDropListener();
 		
 	// Widgit Cache
-	public static final int CACHE_SIZE = Preferences.RENDERER_WIDGIT_CACHE_SIZE.cur;
+	public static final int CACHE_SIZE = Preferences.getPreferenceInt(Preferences.RENDERER_WIDGIT_CACHE_SIZE).cur;
 	public OutlinerCellRendererImpl[] textAreas = new OutlinerCellRendererImpl[CACHE_SIZE];
 	
 	// GUI Components for handling offscreen focus events.
@@ -185,7 +185,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		numNodesDrawn = 0;
 		
 		// Compute the textArea width.
-		OutlinerCellRendererImpl.textAreaWidth = panel.getWidth() - OutlineLineNumber.LINE_NUMBER_WIDTH - OutlineButton.BUTTON_WIDTH - scrollBar.getWidth() - Preferences.LEFT_MARGIN.cur - Preferences.RIGHT_MARGIN.cur;
+		OutlinerCellRendererImpl.textAreaWidth = panel.getWidth() - OutlineLineNumber.LINE_NUMBER_WIDTH - OutlineButton.BUTTON_WIDTH - scrollBar.getWidth() - Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur - Preferences.getPreferenceInt(Preferences.RIGHT_MARGIN).cur;
 		
 		// Draw the visible components
 		switch (drawingDirection) {
@@ -218,14 +218,14 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		}
 
 		// Now Draw as many nodes as neccessary.
-		startPoint.x = Preferences.LEFT_MARGIN.cur + OutlineLineNumber.LINE_NUMBER_WIDTH;
-		startPoint.y = Preferences.TOP_MARGIN.cur;
+		startPoint.x = Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur + OutlineLineNumber.LINE_NUMBER_WIDTH;
+		startPoint.y = Preferences.getPreferenceInt(Preferences.TOP_MARGIN).cur;
 		
 		Node node = getNodeToDrawFrom();
 		int nodeIndex = ioNodeToDrawFrom;
 		
 		// Pre-compute some values
-		int effectiveBottom = bottom - Preferences.BOTTOM_MARGIN.cur;
+		int effectiveBottom = bottom - Preferences.getPreferenceInt(Preferences.BOTTOM_MARGIN).cur;
 		
 		// Increment the LineCountKey
 		node.getTree().incrementLineCountKey();
@@ -284,14 +284,14 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		}
 
 		// Now Draw as many nodes as neccessary.
-		startPoint.x = Preferences.LEFT_MARGIN.cur + OutlineLineNumber.LINE_NUMBER_WIDTH;
-		startPoint.y = this.bottom - Preferences.BOTTOM_MARGIN.cur;
+		startPoint.x = Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur + OutlineLineNumber.LINE_NUMBER_WIDTH;
+		startPoint.y = this.bottom - Preferences.getPreferenceInt(Preferences.BOTTOM_MARGIN).cur;
 
 		Node node = getNodeToDrawFrom();
 		int nodeIndex = ioNodeToDrawFrom;
 
 		// Pre-compute some values
-		int effectiveTop = top + Preferences.TOP_MARGIN.cur;
+		int effectiveTop = top + Preferences.getPreferenceInt(Preferences.TOP_MARGIN).cur;
 
 		// Increment the LineCountKey
 		node.getTree().incrementLineCountKey();
@@ -377,11 +377,11 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			return;
 		}
 		
-		startPoint.x = Preferences.LEFT_MARGIN.cur + OutlineLineNumber.LINE_NUMBER_WIDTH;
-		startPoint.y = textAreas[0].getLocation().y + textAreas[0].getBestHeight() + Preferences.VERTICAL_SPACING.cur;
+		startPoint.x = Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur + OutlineLineNumber.LINE_NUMBER_WIDTH;
+		startPoint.y = textAreas[0].getLocation().y + textAreas[0].getBestHeight() + Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).cur;
 		
 		// Pre-compute some values
-		int effectiveBottom = bottom - Preferences.BOTTOM_MARGIN.cur;
+		int effectiveBottom = bottom - Preferences.getPreferenceInt(Preferences.BOTTOM_MARGIN).cur;
 		
 		while (true) {
 			OutlinerCellRendererImpl renderer = textAreas[numNodesDrawn];

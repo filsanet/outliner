@@ -18,12 +18,28 @@
  
 package com.organic.maynard.outliner;
 
-public class BooleanValidator {
+public class BooleanValidator extends AbstractValidator implements Validator, GUITreeComponent {
 		
 	// This class is trivial, but it's here to be consistent with the use of validators for preferences.
-	public BooleanValidator() {}
+	public BooleanValidator() {
+	
+	}
 
-	public boolean getValidValue(String value) {
-		return Boolean.valueOf(value).booleanValue();
+
+	// GUITreeComponent Interface
+
+
+	// Validator Interface
+	public Object getValidValue(Object value) {
+		if (value instanceof String) {
+			return getValidValue((String) value);
+		} else {
+			return null;
+		}
+	}
+
+
+	private Boolean getValidValue(String value) {
+		return Boolean.valueOf(value);
 	}
 }

@@ -37,12 +37,18 @@ public class DocumentSettings extends JDialog implements ActionListener {
 	OutlinerDocument doc = null;
 	
 	// Editable Settings
-	public PreferenceString lineEnd = new PreferenceString(Preferences.LINE_END.cur,Preferences.LINE_END.cur,"");
-	public PreferenceString saveEncoding = new PreferenceString(Preferences.SAVE_ENCODING.cur,Preferences.SAVE_ENCODING.cur,"");
-	public PreferenceString saveFormat = new PreferenceString(Preferences.SAVE_FORMAT.cur,Preferences.SAVE_FORMAT.cur,"");
+	String sLineEnd = Preferences.getPreferenceLineEnding(Preferences.LINE_END).cur;
+	String sSaveEncoding = Preferences.getPreferenceString(Preferences.SAVE_ENCODING).cur;
+	String sSaveFormat = Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur;
+	String sOwnerName = Preferences.getPreferenceString(Preferences.OWNER_NAME).cur;
+	String sOwnerEmail = Preferences.getPreferenceString(Preferences.OWNER_EMAIL).cur;
+	
+	public PreferenceLineEnding lineEnd = new PreferenceLineEnding(sLineEnd, sLineEnd, "");
+	public PreferenceString saveEncoding = new PreferenceString(sSaveEncoding, sSaveEncoding, "");
+	public PreferenceString saveFormat = new PreferenceString(sSaveFormat, sSaveFormat, "");
 
-	public PreferenceString ownerName = new PreferenceString(Preferences.OWNER_NAME.cur,Preferences.OWNER_NAME.cur,"");
-	public PreferenceString ownerEmail = new PreferenceString(Preferences.OWNER_EMAIL.cur,Preferences.OWNER_EMAIL.cur,"");
+	public PreferenceString ownerName = new PreferenceString(sOwnerName, sOwnerName, "");
+	public PreferenceString ownerEmail = new PreferenceString(sOwnerEmail, sOwnerEmail, "");
 
 	// Hidden Settings
 	public String dateCreated = new String("");
@@ -222,11 +228,11 @@ public class DocumentSettings extends JDialog implements ActionListener {
 	}
 
 	private void restoreToGlobal() {
-		lineEnd.tmp = Preferences.LINE_END.cur;
-		saveEncoding.tmp = Preferences.SAVE_ENCODING.cur;
-		saveFormat.tmp = Preferences.SAVE_FORMAT.cur;
-		ownerName.tmp = Preferences.OWNER_NAME.cur;
-		ownerEmail.tmp = Preferences.OWNER_EMAIL.cur;
+		lineEnd.tmp = Preferences.getPreferenceLineEnding(Preferences.LINE_END).cur;
+		saveEncoding.tmp = Preferences.getPreferenceString(Preferences.SAVE_ENCODING).cur;
+		saveFormat.tmp = Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur;
+		ownerName.tmp = Preferences.getPreferenceString(Preferences.OWNER_NAME).cur;
+		ownerEmail.tmp = Preferences.getPreferenceString(Preferences.OWNER_EMAIL).cur;
 		
 		lineEndComboBox.setSelectedItem(lineEnd.tmp);
 		saveEncodingComboBox.setSelectedItem(saveEncoding.tmp);

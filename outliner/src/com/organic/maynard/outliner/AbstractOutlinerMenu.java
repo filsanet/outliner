@@ -44,7 +44,7 @@ public abstract class AbstractOutlinerMenu extends JMenu implements GUITreeCompo
 		Outliner.menuBar.add(this);
 	}
 	
-	public void endSetup() {}
+	public void endSetup(AttributeList atts) {}
 
 
 	// Fix for bug #4309156.

@@ -72,6 +72,7 @@ public class GUITreeComponentRegistry {
 	public static final String OUTLINE_DEHOIST_MENU_ITEM = "dehoist";
 	public static final String OUTLINE_DEHOIST_ALL_MENU_ITEM = "dehoist_all";
 
+	public static final String PREFERENCES = "prefs";
 	public static final String PREFERENCES_FRAME = "preferences_frame";
 	public static final String PREFERENCES_PANEL_EDITOR = "preferences_panel_editor";
 	public static final String PREFERENCES_PANEL_MISC = "preferences_panel_misc";
