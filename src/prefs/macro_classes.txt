@@ -1,0 +1,5 @@
+macro_class|com.organic.maynard.outliner.TextMacro|Text Replacement
+macro_class|com.organic.maynard.outliner.EnhancedTextMacro|Enhanced Text Replacement
+macro_class|com.organic.maynard.outliner.URLEncodeMacro|URL Encoding
+macro_class|com.organic.maynard.outliner.HTMLEscapeMacro|HTML Escaping
+macro_class|com.organic.maynard.outliner.XMLRPCMacro|XMLRPC
