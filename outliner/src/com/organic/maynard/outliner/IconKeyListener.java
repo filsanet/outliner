@@ -241,24 +241,30 @@ public class IconKeyListener implements KeyListener, MouseListener, FocusListene
  		
 		// Create some short names for convienence
 		Node currentNode = textArea.node;
-		JoeTree tree = currentNode.getTree();
-		OutlineLayoutManager layout = tree.getDocument().panel.layout;
-		Node youngestNode = tree.getYoungestInSelection();
 
 		// If we're read-only then abort
 		if (!currentNode.isEditable()) {
 			return;
 		}
-				
+
+		// Keep any meta keys from effecting undoability.
+		if (e.isControlDown() || e.isAltDown() || e.isAltGraphDown() || e.isMetaDown()) {
+			return;
+		}
+						
 		// Catch any unwanted chars that slip through
-		if (e.isControlDown() ||
-			(e.getKeyChar() == KeyEvent.VK_BACK_SPACE) ||
+		if ((e.getKeyChar() == KeyEvent.VK_BACK_SPACE) ||
 			(e.getKeyChar() == KeyEvent.VK_TAB) ||
 			(e.getKeyChar() == KeyEvent.VK_ENTER) ||
 			(e.getKeyChar() == KeyEvent.VK_INSERT)
 		) {
 			return;
 		}
+
+		// More short names
+		JoeTree tree = currentNode.getTree();
+		OutlineLayoutManager layout = tree.getDocument().panel.layout;
+		Node youngestNode = tree.getYoungestInSelection();
 
 		// Clear the selection since focus will change to the textarea.
 		tree.clearSelection();
