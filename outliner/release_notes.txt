@@ -1,16 +1,21 @@
-1.8.4 - ???
+1.8.4 - 09/04/01
 	Bug Fixes:
 		1) Fixed a bug where changing the name of a macro during an "update macro" operation would not delete the old macro from the file system.
 		2) When you had a set of nodes selected and you typed a few characters quickly they would not all get sent to the youngest node in the selection. This was a result of the youngest node not being set as the current editing node.
 		3) Added alpha-numeric validation to attribute key in the new attribute dialog. If a non XML compliant key was used it would make the OPML unparseable and thus unreadable.
+		4) Fixed a bug where doing a find/replace with start at top selected would not search over the decendants of the last child of root.
+		5) The installation code now copies macros files one by one. If an existing macros.txt file exists then lines for any new macros are now appended. Prior to this, people who were installing over old builds wouldn't get any new macros that were added unless they copied them manually.
+		6) Added validation for macro names so that a user can't create a name that would be an invalid filename. Prior to this you could get an exception and then your macros.txt file would be out of sync with the filesystem.
 	New Featurs:
-		1) Sorting
-		2) Document Attributes
+		1) Added sorting macros. These show up in the macro popup under "sort". These are implemented in BSH so you can easily roll your own.
+		2) Added document attributes. Now you can store arbitrary document level data via attributes. These will be saved/loaded when you use OPML as your file format.
+		3) Added regular expression support to Find/Replace via Apache's jakarta-oro package.
+		4) You can now save Find/Replace items.
 	Feature Enhancements:
 		1) The XML-RPC Macro now uses a single URL rather than server and port. This will allow for more flexibility in connecting to a server. However, this breaks any existing XML-RPC Macros. You will need to update any existing macros with the appropriate URL before using them.
 		2) More enhancements to the XML-RPC macro. Now you can put the body of the XML-RPC call within the macro. The current selection can be passed in and will substitute itself for {$value}. Inline replacement is improved. Return values now convey the correct heirarchy of <struct> and <array>.
-	Notes:
-		1) Note about manually moving macros for user's who are installing over an existing installation.
+		3) Finished pulling out all the text from the GUI into the gui_tree.xml file. Now it is possible to do the multiple language thing in a more comprehensive manner.
+		4) Made the macro popup menu only work if you click on a selected node or the current node you're editing. This should make it's behaviour a little more intuitive.
 1.8.3 - 08/21/01
 	Bug Fixes:
 		1) Fixed a bug where if you set the undo queue size to zero documents would no longer change their file modified state when you edited them.
