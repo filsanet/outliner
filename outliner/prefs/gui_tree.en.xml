@@ -278,6 +278,16 @@
 				<preference id="save_format" class="com.organic.maynard.outliner.PreferenceString" default="Plaintext">
 					<preference_component id="save_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format when saving." style="single_centered"/>
 				</preference>
+				<preferencepanel id="preferences_panel_justified_plaintext" class="com.organic.maynard.outliner.PreferencesPanelImpl" title="File Format: Justified Plaintext">
+					<preference id="justified_plaintext_col_width" class="com.organic.maynard.outliner.PreferenceInt" default="80">
+						<validator id="justified_plaintext_col_width_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="999" default="80"/>
+						<preference_component id="justified_plaintext_col_width_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Column Width" size="3"/>
+					</preference>
+					<preference id="justified_plaintext_draw_lines" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+						<validator id="justified_plaintext_draw_lines_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+						<preference_component id="justified_plaintext_draw_lines_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Draw Heirarchy Lines"/>
+					</preference>
+				</preferencepanel>
 			</preferencepanel>
 			<preferencepanel id="preferences_panel_misc" class="com.organic.maynard.outliner.PreferencesPanelMisc" title="Misc.">
 				<preference id="print_environment" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
@@ -331,6 +341,7 @@
 			<menuitem id="revert" class="com.organic.maynard.outliner.RevertFileMenuItem" text="Revert"/>
 			<separator/>
 			<menuitem id="export" class="com.organic.maynard.outliner.ExportFileMenuItem" text="Export..."/>
+			<menuitem id="export_selection" class="com.organic.maynard.outliner.ExportSelectionFileMenuItem" text="Export Selection..."/>
 			<separator/>
 			<menuitem id="close" class="com.organic.maynard.outliner.CloseFileMenuItem" text="Close" keybinding="W" keybindingmodifiers="control"/>
 			<menuitem id="close_all" class="com.organic.maynard.outliner.CloseAllFileMenuItem" text="Close All"/>
