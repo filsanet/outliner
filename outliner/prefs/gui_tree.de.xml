@@ -2,44 +2,44 @@
 <root id="outliner" class="com.organic.maynard.outliner.Outliner" title="JOE">
 	<!-- COMPATIBLE WITH JOE VERSION: 1.8.7 -->
 	<!-- TEXT REPOSITORY -->
-		<asset type="text" key="new_script" value="New Script"/>
-		<asset type="text" key="update_script" value="Update Script"/>
-		<asset type="text" key="script_type" value="Script Type"/>
-		<asset type="text" key="script" value="Script"/>
+		<asset type="text" key="new_script" value="Neues Skript"/>
+		<asset type="text" key="update_script" value="Skript updaten"/>
+		<asset type="text" key="script_type" value="Skript Typ"/>
+		<asset type="text" key="script" value="Skript"/>
 		<asset type="text" key="thread" value="Thread"/>
-		<asset type="text" key="script_name" value="Script Name"/>
-		<asset type="text" key="apply" value="Apply"/>
-		<asset type="text" key="apply_font_style_for_comments" value="Apply Font Style for Comments"/>
-		<asset type="text" key="apply_font_style_for_editability" value="Apply Font Style for Editability"/>
-		<asset type="text" key="apply_font_style_for_moveability" value="Apply Font Style for Moveability"/>
-		<asset type="text" key="attribute" value="Attribute"/>
+		<asset type="text" key="script_name" value="Skript Name"/>
+		<asset type="text" key="apply" value="Anwenden"/>
+		<asset type="text" key="apply_font_style_for_comments" value="Schriftstil für Kommentare anwenden"/>
+		<asset type="text" key="apply_font_style_for_editability" value="Schriftstil für Editierbarkeit"/>
+		<asset type="text" key="apply_font_style_for_moveability" value="Schriftstil für Verschiebbarkeit"/>
+		<asset type="text" key="attribute" value="Attribut"/>
 		<asset type="text" key="bean_shell_code" value="Bean Shell Code"/>
-		<asset type="text" key="cancel" value="Cancel"/>
-		<asset type="text" key="characters" value="Characters:"/>
-		<asset type="text" key="comparator" value="Comparator"/>
+		<asset type="text" key="cancel" value="Abbrechen"/>
+		<asset type="text" key="characters" value="Zeichen:"/>
+		<asset type="text" key="comparator" value="Vergleicher"/>
 		<asset type="text" key="confirm_dehoist" value="De-Hoisting requires that the undo queue be cleared.\nProceed anyway?"/>
-		<asset type="text" key="confirm_delete" value="Confirm Delete"/>
+		<asset type="text" key="confirm_delete" value="Löschen bestätigen"/>
 		<asset type="text" key="confirm_hoist" value="Hoisting requires that the undo queue be cleared.\nProceed anyway?"/>
-		<asset type="text" key="confirm_open" value="Confirm Open"/>
-		<asset type="text" key="confirm_replacement" value="Confirm Replacement"/>
-		<asset type="text" key="confirm_save" value="Confirm Save"/>
+		<asset type="text" key="confirm_open" value="Öffnen bestätigen"/>
+		<asset type="text" key="confirm_replacement" value="Ersetzen bestätigen"/>
+		<asset type="text" key="confirm_save" value="Speichern bestätigen"/>
 		<asset type="text" key="confirmation_inconsistent_heirarchy" value="The file {$value_1} has an inconsistent heirarchy.\nEmpty nodes will need to be inserted to open it.\nDo you want to open it anyway?"/>
 		<asset type="text" key="confirmation_operation_not_undoable" value="This operation is not undoable.\nProceed anyway?"/>
 		<asset type="text" key="confirmation_replace_file" value="The file {$value_1} already exists.\nDo you want to replace it?"/>
 		<asset type="text" key="confirmation_revert_file" value="Revert File? All Changes will be lost."/>
-		<asset type="text" key="create" value="Create"/>
-		<asset type="text" key="creation_date" value="Creation Date:"/>
-		<asset type="text" key="decode" value="Decode"/>
-		<asset type="text" key="delete" value="Delete"/>
-		<asset type="text" key="do_replacement" value="Do Replacement"/>
+		<asset type="text" key="create" value="Erstellen"/>
+		<asset type="text" key="creation_date" value="Erstellungsdatum:"/>
+		<asset type="text" key="decode" value="Dekodieren"/>
+		<asset type="text" key="delete" value="Löschen"/>
+		<asset type="text" key="do_replacement" value="Ersetzung durchführen"/>
 		<asset type="text" key="do_you_want_to_delete" value="Do you want to delete the item."/>
-		<asset type="text" key="document" value="Document:"/>
-		<asset type="text" key="encode" value="Encode"/>
-		<asset type="text" key="encoding_when_saving" value="Encoding when saving."/>
-		<asset type="text" key="error_att_key_alpha" value="Error: key must be alpha-numeric."/>
-		<asset type="text" key="error_att_key_existance" value="Error: key cannot be empty."/>
-		<asset type="text" key="error_name_existance" value="Error: name cannot be empty."/>
-		<asset type="text" key="error_att_key_uniqueness" value="Error: key must be unique."/>
+		<asset type="text" key="document" value="Dokument:"/>
+		<asset type="text" key="encode" value="Kodieren"/>
+		<asset type="text" key="encoding_when_saving" value="Beim Speichern kodieren."/>
+		<asset type="text" key="error_att_key_alpha" value="Fehler: Schlüssel muss alpha-numerisch sein."/>
+		<asset type="text" key="error_att_key_existance" value="Fehler: Schlüssel darf nicht leer sein."/>
+		<asset type="text" key="error_name_existance" value="Fehler: Name darf nicht leer sei.."/>
+		<asset type="text" key="error_att_key_uniqueness" value="Fehler: Schlüssel muss eindeutig sein./>
 		<asset type="text" key="error_could_not_open_file" value="An error occurred. Could not open file: {$value_1}"/>
 		<asset type="text" key="error_could_not_open_no_file_format" value="An error occurred. Could not open file: {$value_1} because I couldn't retrieve the file format: {$value_2}"/>
 		<asset type="text" key="error_could_not_revert_no_file_format" value="An error occurred. Could not revert file: {$value_1} because I couldn't retrieve the file format: {$value_2}"/>
@@ -54,26 +54,26 @@
 		<asset type="text" key="error_window_monitor_save_changes" value="The text in the {$value_1} file has changed.\nDo you want to save the changes?"/>
 		<asset type="text" key="error_window_monitor_untitled_save_changes" value="The text in the {$value_1} file has changed.\nDo you want to save the changes?"/>
 		<asset type="text" key="escape" value="Escape"/>
-		<asset type="text" key="file_encoding" value="File Encoding"/>
-		<asset type="text" key="file_format" value="File Format"/>
-		<asset type="text" key="find" value="Find"/>
-		<asset type="text" key="format_when_saving" value="Format when saving."/>
-		<asset type="text" key="goto_dialog_count_indents" value="Count indents for column number."/>
-		<asset type="text" key="goto_dialog_enter_column" value="Enter a column number."/>
-		<asset type="text" key="goto_dialog_enter_line" value="Enter a line number."/>
-		<asset type="text" key="goto_dialog_go" value="Go"/>
-		<asset type="text" key="goto_dialog_line_and_column" value="Go to Line and Column"/>
-		<asset type="text" key="ignore_case" value="Ignore case"/>
-		<asset type="text" key="include_read_only_nodes" value="Include read-only nodes for replace"/>
+		<asset type="text" key="file_encoding" value="Dateikodierung"/>
+		<asset type="text" key="file_format" value="Dateiformat"/>
+		<asset type="text" key="find" value="Suchen"/>
+		<asset type="text" key="format_when_saving" value="Bei Speichern formatieren."/>
+		<asset type="text" key="goto_dialog_count_indents" value="Einrückungen für Spaltennummer zählen."/>
+		<asset type="text" key="goto_dialog_enter_column" value="Geben Sie eine Spaltennummer ein."/>
+		<asset type="text" key="goto_dialog_enter_line" value="Geben Sie eine Zeilennummer ein."/>
+		<asset type="text" key="goto_dialog_go" value="Los"/>
+		<asset type="text" key="goto_dialog_line_and_column" value="Gehe zu Zeile und Spalte"/>
+		<asset type="text" key="ignore_case" value="Groß-/Kleinschreibung ignorieren"/>
+		<asset type="text" key="include_read_only_nodes" value="Nur-lese-Knoten in Ersetzen einschließen"/>
 		<asset type="text" key="is_using_application_prefs" value="Currently Using Application Preferences"/>
 		<asset type="text" key="is_using_document_prefs" value="Currently Using Document Preferences"/>
-		<asset type="text" key="line_terminator" value="Line Terminator"/>
-		<asset type="text" key="lines" value="Lines:"/>
+		<asset type="text" key="line_terminator" value="Zeilenende"/>
+		<asset type="text" key="lines" value="Zeilen:"/>
 		<asset type="text" key="mac" value="Macintosh"/>
-		<asset type="text" key="macro_name" value="Macro Name"/>
-		<asset type="text" key="macro_type" value="Macro Type"/>
-		<asset type="text" key="macros" value="Macros"/>
-		<asset type="text" key="message_an_error_occurred" value="An Error Occurred."/>
+		<asset type="text" key="macro_name" value="Makro Name"/>
+		<asset type="text" key="macro_type" value="Makro Type"/>
+		<asset type="text" key="macros" value="Makros"/>
+		<asset type="text" key="message_an_error_occurred" value="Ein Fehler ist aufgetreten."/>
 		<asset type="text" key="message_cannot_save_file_already_open" value="Cannot save to file: {$value_1} it is currently open."/>
 		<asset type="text" key="message_could_not_save_find_replace_config" value="Could not save find/replace config file because of"/>
 		<asset type="text" key="message_could_not_save_macros_config" value="Could not save macros config file because of"/>
@@ -83,13 +83,13 @@
 		<asset type="text" key="message_do_you_really_want_to_delete_this_script" value="Do you really want to delete this script?"/>
 		<asset type="text" key="message_file_already_open" value="The file: {$value_1} is already open."/>
 		<asset type="text" key="message_uh_oh" value="Uh Oh, something has gone wrong."/>
-		<asset type="text" key="modification_date" value="Modification Date:"/>
+		<asset type="text" key="modification_date" value="Änderungsdatum:"/>
 		<asset type="text" key="name" value="Name"/>
-		<asset type="text" key="new" value="New"/>
-		<asset type="text" key="new_attribute" value="New Attribute"/>
-		<asset type="text" key="new_find_replace" value="New Find/Replace"/>
-		<asset type="text" key="new_macro" value="New Macro"/>
-		<asset type="text" key="no" value="No"/>
+		<asset type="text" key="new" value="Neu"/>
+		<asset type="text" key="new_attribute" value="Neues Attribut"/>
+		<asset type="text" key="new_find_replace" value="Suchen/Ersetzen Neu"/>
+		<asset type="text" key="new_macro" value="Neues Makro"/>
+		<asset type="text" key="no" value="Nein"/>
 		<asset type="text" key="ok" value="OK"/>
 		<asset type="text" key="owner_email" value="Owner Email"/>
 		<asset type="text" key="owner_name" value="Owner Name"/>
