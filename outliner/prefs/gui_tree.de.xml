@@ -446,57 +446,57 @@
 					<menuitem id="clear_editables" class="com.organic.maynard.outliner.ClearEditablesMenuItem" text="Nur-lese-Modus in ausgewählten Knoten löschen" keybinding="f11" keybindingmodifiers="control shift"/>
 					<separator/>
 					<menuitem id="toggle_editable" class="com.organic.maynard.outliner.ToggleEditableMenuItem" text="Nur-lese-Modus umschalten" keybinding="f11" keybindingmodifiers="shift"/>
-					<menuitem id="toggle_editable_inheritance" class="com.organic.maynard.outliner.ToggleEditableInheritanceMenuItem" text="Toggle Read-Only State Inheritance" keybinding="f11" keybindingmodifiers="control"/>
+					<menuitem id="toggle_editable_inheritance" class="com.organic.maynard.outliner.ToggleEditableInheritanceMenuItem" text="Vererbung des Nur-lese-Modus umschalten" keybinding="f11" keybindingmodifiers="control"/>
 				</menuitem>
 				<menuitem id="moveable_submenu" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Moveable Node Settings">
-					<menuitem id="toggle_moveable_and_clear" class="com.organic.maynard.outliner.ToggleMoveableAndClearMenuItem" text="Toggle Moveable Settings and Clear Subnodes" keybinding="f12"/>
-					<menuitem id="clear_moveables" class="com.organic.maynard.outliner.ClearMoveablesMenuItem" text="Clear Moveable Settings in Selected Nodes" keybinding="f12" keybindingmodifiers="control shift"/>
+					<menuitem id="toggle_moveable_and_clear" class="com.organic.maynard.outliner.ToggleMoveableAndClearMenuItem" text="Verschiebbarkeitseinstellungen umschalten und Unterknoten löschen" keybinding="f12"/>
+					<menuitem id="clear_moveables" class="com.organic.maynard.outliner.ClearMoveablesMenuItem" text="Verschiebbarkeitseinstellung in ausgewählten Knoten löschen" keybinding="f12" keybindingmodifiers="control shift"/>
 					<separator/>
-					<menuitem id="toggle_moveable" class="com.organic.maynard.outliner.ToggleMoveableMenuItem" text="Toggle Moveable Settings" keybinding="f12" keybindingmodifiers="shift"/>
-					<menuitem id="toggle_moveable_inheritance" class="com.organic.maynard.outliner.ToggleMoveableInheritanceMenuItem" text="Toggle Moveable Settings Inheritance" keybinding="f12" keybindingmodifiers="control"/>
+					<menuitem id="toggle_moveable" class="com.organic.maynard.outliner.ToggleMoveableMenuItem" text="Verschiebbarkeitseinstellung umschalten" keybinding="f12" keybindingmodifiers="shift"/>
+					<menuitem id="toggle_moveable_inheritance" class="com.organic.maynard.outliner.ToggleMoveableInheritanceMenuItem" text="Vererbung der Verschiebbarkeitseinstellung umschalten" keybinding="f12" keybindingmodifiers="control"/>
 				</menuitem>
 				<separator/>
-				<menuitem id="toggle_expansion" class="com.organic.maynard.outliner.ToggleExpansionMenuItem" text="Toggle Expansion" keybinding="page_down"/>
+				<menuitem id="toggle_expansion" class="com.organic.maynard.outliner.ToggleExpansionMenuItem" text="Aufklappen umschalten" keybinding="page_down"/>
 				<separator/>
-				<menuitem id="expand_all_subheads" class="com.organic.maynard.outliner.ExpandAllSubheadsMenuItem" text="Expand All Subnodes"/>
-				<menuitem id="expand_everything" class="com.organic.maynard.outliner.ExpandEverythingMenuItem" text="Expand Everything"/>
+				<menuitem id="expand_all_subheads" class="com.organic.maynard.outliner.ExpandAllSubheadsMenuItem" text="Alle Unterknoten aufklappen"/>
+				<menuitem id="expand_everything" class="com.organic.maynard.outliner.ExpandEverythingMenuItem" text="Alles aufklappen"/>
 				<separator/>
-				<menuitem id="collapse_to_parent" class="com.organic.maynard.outliner.CollapseToParentMenuItem" text="Collapse To Parent"/>
-				<menuitem id="collapse_everything" class="com.organic.maynard.outliner.CollapseEverythingMenuItem" text="Collapse Everything"/>
+				<menuitem id="collapse_to_parent" class="com.organic.maynard.outliner.CollapseToParentMenuItem" text="Bis Überknoten zuklappen"/>
+				<menuitem id="collapse_everything" class="com.organic.maynard.outliner.CollapseEverythingMenuItem" text="Alles zuklappen"/>
 				<separator/>
-				<menuitem id="move_up" class="com.organic.maynard.outliner.MoveUpMenuItem" text="Move Up" keybinding="up" keybindingmodifiers="shift"/>
-				<menuitem id="move_down" class="com.organic.maynard.outliner.MoveDownMenuItem" text="Move Down" keybinding="down" keybindingmodifiers="shift"/>
-				<menuitem id="move_left" class="com.organic.maynard.outliner.MoveLeftMenuItem" text="Move Left" keybinding="left" keybindingmodifiers="shift"/>
-				<menuitem id="move_right" class="com.organic.maynard.outliner.MoveRightMenuItem" text="Move Right" keybinding="right" keybindingmodifiers="shift"/>
+				<menuitem id="move_up" class="com.organic.maynard.outliner.MoveUpMenuItem" text="Nach oben verschieben" keybinding="up" keybindingmodifiers="shift"/>
+				<menuitem id="move_down" class="com.organic.maynard.outliner.MoveDownMenuItem" text="Nach unten verschieben" keybinding="down" keybindingmodifiers="shift"/>
+				<menuitem id="move_left" class="com.organic.maynard.outliner.MoveLeftMenuItem" text="Nach links verschieben" keybinding="left" keybindingmodifiers="shift"/>
+				<menuitem id="move_right" class="com.organic.maynard.outliner.MoveRightMenuItem" text="Nach rechts verschieben" keybinding="right" keybindingmodifiers="shift"/>
 				<separator/>
 				<menuitem id="promote" class="com.organic.maynard.outliner.PromoteMenuItem" text="Promote" keybinding="tab" keybindingmodifiers="shift"/>
 				<menuitem id="demote" class="com.organic.maynard.outliner.DemoteMenuItem" text="Demote" keybinding="tab"/>
 				<separator/>
-				<menuitem id="merge" class="com.organic.maynard.outliner.MergeMenuItem" text="Merge" keybinding="M" keybindingmodifiers="control"/>
-				<menuitem id="merge_with_spaces" class="com.organic.maynard.outliner.MergeWithSpacesMenuItem" text="Merge with Spaces" keybinding="M" keybindingmodifiers="control shift"/>
+				<menuitem id="merge" class="com.organic.maynard.outliner.MergeMenuItem" text="Zusammenführen" keybinding="M" keybindingmodifiers="control"/>
+				<menuitem id="merge_with_spaces" class="com.organic.maynard.outliner.MergeWithSpacesMenuItem" text="Mit Leerzeichen zusammenführen" keybinding="M" keybindingmodifiers="control shift"/>
 				<separator/>
 				<menuitem id="hoist" class="com.organic.maynard.outliner.HoistMenuItem" text="Hoist"/>
 				<menuitem id="dehoist" class="com.organic.maynard.outliner.DehoistMenuItem" text="De-Hoist"/>
 				<menuitem id="dehoist_all" class="com.organic.maynard.outliner.DehoistAllMenuItem" text="De-Hoist All"/>
 				<separator/>
-				<menuitem id="toggle_attributes" class="com.organic.maynard.outliner.ToggleAttributesMenuItem" text="X" show="Show Attributes" hide="Hide Attributes" keybinding="T" keybindingmodifiers="control"/>
+				<menuitem id="toggle_attributes" class="com.organic.maynard.outliner.ToggleAttributesMenuItem" text="X" show="Attribute anzeigen" hide="Attribute ausblenden" keybinding="T" keybindingmodifiers="control"/>
 			</menu>
-			<menu id="search" class="com.organic.maynard.outliner.SearchMenu" text="Search">
-				<menuitem id="goto" class="com.organic.maynard.outliner.GoToMenuItem" text="Go to Line..." keybinding="G" keybindingmodifiers="control"/>
+			<menu id="search" class="com.organic.maynard.outliner.SearchMenu" text="Suchen">
+				<menuitem id="goto" class="com.organic.maynard.outliner.GoToMenuItem" text="Gehe zu Zeile..." keybinding="G" keybindingmodifiers="control"/>
 				<separator/>
-				<menuitem id="find" class="com.organic.maynard.outliner.FindMenuItem" text="Find/Replace..." keybinding="F" keybindingmodifiers="control"/>
+				<menuitem id="find" class="com.organic.maynard.outliner.FindMenuItem" text=""Suchen/Ersetzen..." keybinding="F" keybindingmodifiers="control"/>
 			</menu>
-			<menu id="script" class="com.organic.maynard.outliner.ScriptMenu" text="Script">
-				<menuitem id="macros" class="com.organic.maynard.outliner.MacrosMenuItem" text="Macro Manager..."/>
+			<menu id="script" class="com.organic.maynard.outliner.ScriptMenu" text="Skript">
+				<menuitem id="macros" class="com.organic.maynard.outliner.MacrosMenuItem" text="Makro Manager..."/>
 				<separator/>
-				<run_as_bsh_script id="run_as_bsh_script" class="com.organic.maynard.outliner.RunAsBSHScriptMenuItem" text="Run as Bean Shell Script"/>
-				<menuitem id="bsh_console" class="com.organic.maynard.outliner.BSHConsoleMenuItem" text="Bean Shell Console"/>
-				<menuitem id="scripts_manager" class="com.organic.maynard.outliner.ScriptsManagerMenuItem" text="Scripts Manager..."/>
+				<run_as_bsh_script id="run_as_bsh_script" class="com.organic.maynard.outliner.RunAsBSHScriptMenuItem" text="Als Bean Shell Skript ausführen"/>
+				<menuitem id="bsh_console" class="com.organic.maynard.outliner.BSHConsoleMenuItem" text="Bean Shell Konsole"/>
+				<menuitem id="scripts_manager" class="com.organic.maynard.outliner.ScriptsManagerMenuItem" text="Skript Manager..."/>
 			</menu>
-			<menu id="window" class="com.organic.maynard.outliner.WindowMenu" text="Window">
-				<menuitem id="statistics" class="com.organic.maynard.outliner.StatisticsMenuItem" text="Document Statistics..."/>
+			<menu id="window" class="com.organic.maynard.outliner.WindowMenu" text="Fenster">
+				<menuitem id="statistics" class="com.organic.maynard.outliner.StatisticsMenuItem" text="Dokumentstatistik..."/>
 				<separator/>
-				<menuitem id="stack" class="com.organic.maynard.outliner.StackMenuItem" text="Stack"/>
+				<menuitem id="stack" class="com.organic.maynard.outliner.StackMenuItem" text="Stapeln"/>
 				<menuitem id="maximize_submenu" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Maximize">
 					<menuitem id="maximize_horizontal" class="com.organic.maynard.outliner.MaximizeHorizontalMenuItem" text="Horizontal" keybinding="H" keybindingmodifiers="alt shift"/>
 					<menuitem id="maximize_vertical" class="com.organic.maynard.outliner.MaximizeVerticalMenuItem" text="Vertical" keybinding="V" keybindingmodifiers="alt shift"/>
@@ -507,29 +507,29 @@
 					<menuitem id="tile_gridly" class="com.organic.maynard.outliner.TileGridMenuItem" text="Grid"/>
 				</menuitem>
 				<separator/>
-				<menuitem id="next_window" class="com.organic.maynard.outliner.NextWindowMenuItem" text="Next" keybinding="S" keybindingmodifiers="control shift"/>
-				<menuitem id="prev_window" class="com.organic.maynard.outliner.PrevWindowMenuItem" text="Previous" keybinding="A" keybindingmodifiers="control shift"/>
+				<menuitem id="next_window" class="com.organic.maynard.outliner.NextWindowMenuItem" text="Nächstes" keybinding="S" keybindingmodifiers="control shift"/>
+				<menuitem id="prev_window" class="com.organic.maynard.outliner.PrevWindowMenuItem" text="Vorheriges" keybinding="A" keybindingmodifiers="control shift"/>
 				<separator/>
 			</menu>
-			<menu id="help" class="com.organic.maynard.outliner.HelpMenu" text="Help">
-				<menuitem id="userGuide" class="com.organic.maynard.outliner.HelpUserGuideMenuItem" text="User Guide"/>
-				<menuitem id="developerGuide" class="com.organic.maynard.outliner.HelpDeveloperGuideMenuItem" text="Developer Guide"/>
+			<menu id="help" class="com.organic.maynard.outliner.HelpMenu" text="Hilfe">
+				<menuitem id="userGuide" class="com.organic.maynard.outliner.HelpUserGuideMenuItem" text="Benutzerhandbuch"/>
+				<menuitem id="developerGuide" class="com.organic.maynard.outliner.HelpDeveloperGuideMenuItem" text="Entwicklerhandbuch"/>
 				<separator/>
 				<menuitem id="tutorials" class="com.organic.maynard.outliner.HelpTutorialsMenuItem" text="Tutorials"/>
 				<menuitem id="bookmarks" class="com.organic.maynard.outliner.HelpBookmarksMenuItem" text="Bookmarks"/>
 				<separator/>
-				<menuitem id="about" class="com.organic.maynard.outliner.HelpAboutMenuItem" text="About JOE"/>
+				<menuitem id="about" class="com.organic.maynard.outliner.HelpAboutMenuItem" text="Über JOE"/>
 			</menu>
 		</menubar>
 	<!-- MISC COMPONENTS -->
-		<document_settings_view id="document_settings_view" class="com.organic.maynard.outliner.DocumentSettingsView" title="Document Preferences"/>
-		<document_attributes_view id="document_attributes_view" class="com.organic.maynard.outliner.DocumentAttributesView" title="Document Attributes"/>
-		<document_statistics id="document_statistics" class="com.organic.maynard.outliner.DocumentStatistics" title="Document Statistics"/>
-		<macro_manager id="macro_manager" class="com.organic.maynard.outliner.MacroManagerFrame" title="Macro Manager"/>
-		<scripts_manager id="macro_manager" class="com.organic.maynard.outliner.ScriptsManager" title="Scripts Manager"/>
-		<macro_editor id="macro_editor" class="com.organic.maynard.outliner.MacroEditor" title="Macro Editor"/>
-		<script_editor id="script_editor" class="com.organic.maynard.outliner.ScriptEditor" title="Script Editor"/>
-		<find_replace id="find_replace" class="com.organic.maynard.outliner.FindReplaceFrame" title="Find/Replace"/>
-		<goto_dialog id="goto_dialog" class="com.organic.maynard.outliner.GoToDialog" title="Go To Line"/>
-		<bsh_console id="bsh_console" class="com.organic.maynard.outliner.BSHConsole" title="Bean Shell Console"/>
+		<document_settings_view id="document_settings_view" class="com.organic.maynard.outliner.DocumentSettingsView" title="Dokumenteinstellungen"/>
+		<document_attributes_view id="document_attributes_view" class="com.organic.maynard.outliner.DocumentAttributesView" title="Dokumentattribute"/>
+		<document_statistics id="document_statistics" class="com.organic.maynard.outliner.DocumentStatistics" title="Dokumentstatistik"/>
+		<macro_manager id="macro_manager" class="com.organic.maynard.outliner.MacroManagerFrame" title="Makro Manager"/>
+		<scripts_manager id="macro_manager" class="com.organic.maynard.outliner.ScriptsManager" title="Skript Manager"/>
+		<macro_editor id="macro_editor" class="com.organic.maynard.outliner.MacroEditor" title="Makro Editor"/>
+		<script_editor id="script_editor" class="com.organic.maynard.outliner.ScriptEditor" title="Skript Editor"/>
+		<find_replace id="find_replace" class="com.organic.maynard.outliner.FindReplaceFrame" title="Suchen/Ersetzen"/>
+		<goto_dialog id="goto_dialog" class="com.organic.maynard.outliner.GoToDialog" title="Gehe zu Zeile"/>
+		<bsh_console id="bsh_console" class="com.organic.maynard.outliner.BSHConsole" title="Bean Shell Konsole"/>
 </root>
