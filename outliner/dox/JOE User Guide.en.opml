@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE User Guide.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Mon, 21 Jan 2002 10:57:57 GMT</dateModified>
+<dateModified>Mon, 21 Jan 2002 11:14:01 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>22</windowTop>
-<windowLeft>422</windowLeft>
-<windowBottom>680</windowBottom>
-<windowRight>913</windowRight>
+<windowTop>15</windowTop>
+<windowLeft>552</windowLeft>
+<windowBottom>698</windowBottom>
+<windowRight>996</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -335,6 +335,16 @@
 	<outline text="Portal Yourself"/>
 </outline>
 <outline text="Custom JOE">
+	<outline text="Custom Help Files">
+		<outline text="JOE's help files ...">
+			<outline text="JOE User Guide.**.opml"/>
+			<outline text="About JOE.**.opml"/>
+			<outline text="JOE Tutorials.**.opml [forthcoming]"/>
+			<outline text="JOE Developer Guide.**.opml"/>
+		</outline>
+		<outline text="... are just OPML outlines."/>
+		<outline text="So you can add information to them and save them, thereby gaining custom help files."/>
+	</outline>
 	<outline text="Scripting"/>
 	<outline text="Macros" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true"/>
 	<outline text="XML-RPC" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
@@ -494,8 +504,9 @@
 							<outline text="Chronological">
 								<outline text="In chronological order as the files were opened/imported."/>
 							</outline>
-							<outline text="Alphabetical">
-								<outline text="In alphabetical order. For example:">
+							<outline text="[forthcoming] Alphabetical ">
+								<outline text="In alphabetical order. "/>
+								<outline text="For example:">
 									<outline text="A"/>
 									<outline text="a"/>
 									<outline text="b"/>
@@ -504,21 +515,74 @@
 									<outline text="c"/>
 								</outline>
 							</outline>
-							<outline text="ASCII">
-								<outline text="In ASCII order. This differs from . For example:">
+							<outline text="[forthcoming] ASCII">
+								<outline text="In ASCII order. ">
 									<outline text="A"/>
 									<outline text="a"/>
 									<outline text="b"/>
 									<outline text="B"/>
 									<outline text="C"/>
+									<outline text="c"/>
+								</outline>
+								<outline text="This differs from alphabetical order chiefly in that all lowercase characters come after all uppercase characters. "/>
+								<outline text="For example:">
+									<outline text="A"/>
+									<outline text="B"/>
+									<outline text="C"/>
+									<outline text="a"/>
+									<outline text="b"/>
 									<outline text="c"/>
 								</outline>
 							</outline>
 						</outline>
 					</outline>
-					<outline text="Direction"/>
-					<outline text="Name Form"/>
-					<outline text="Restore Defaults"/>
+					<outline text="Direction">
+						<outline text="The direction the names run on the menu."/>
+						<outline text="Permissible values are:">
+							<outline text="Top to Bottom">
+								<outline text="With chronological ordering">
+									<outline text="the oldest files are at the top, the newest at the bottom"/>
+								</outline>
+								<outline text="With alfa/ascii ordering">
+									<outline text="the A files are at the top, the Z files are at the bottom"/>
+								</outline>
+							</outline>
+							<outline text="Bottom to Top">
+								<outline text="With chronological ordering">
+									<outline text="the oldest files are at the bottom, the newest at the top"/>
+								</outline>
+								<outline text="With alfa/ascii ordering">
+									<outline text="the A files are at the bottom, the Z files are at the top"/>
+								</outline>
+							</outline>
+						</outline>
+					</outline>
+					<outline text="Name Form">
+						<outline text="The form of file designation shown in the menu"/>
+						<outline text="Permissible values are:">
+							<outline text="Full Pathname">
+								<outline text="example:">
+									<outline text="c:\my documents\fun\joe jokes.opml"/>
+								</outline>
+							</outline>
+							<outline text="[forthcoming] Truncated Pathname">
+								<outline text="example:">
+									<outline text="c:\my documents\...\joe jokes.opml"/>
+								</outline>
+							</outline>
+							<outline text="Filename Only">
+								<outline text="example:">
+									<outline text="joe jokes.opml"/>
+								</outline>
+							</outline>
+						</outline>
+					</outline>
+					<outline text="Restore Defaults">
+						<outline text="Sets Size, Ordering, Direction, and Name Form to their default values."/>
+					</outline>
+					<outline text="[forthcoming] Set Defaults">
+						<outline text="Makes the current values of Size, Ordering, Direction, and Name Form the default values."/>
+					</outline>
 				</outline>
 			</outline>
 		</outline>
