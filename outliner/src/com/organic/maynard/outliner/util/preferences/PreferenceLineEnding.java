@@ -66,12 +66,6 @@ public class PreferenceLineEnding extends AbstractPreference implements GUITreeC
 	// GUITreeComponent Interface
 	public void endSetup(AttributeList atts) {
 		super.endSetup(atts);
-
-		String def = PlatformCompatibility.lineEndingToPlatform(System.getProperty("line.separator"));
-				
-		setDef(def);
-		setCur(def);
-		setTmp(def);
 	}	
 
 

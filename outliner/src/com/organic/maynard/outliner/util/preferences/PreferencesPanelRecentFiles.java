@@ -53,34 +53,6 @@ import org.xml.sax.*;
 
 public class PreferencesPanelRecentFiles extends AbstractPreferencesPanel implements PreferencesPanel, GUITreeComponent {
 
-	// sets of choice strings for combo boxes
-	private static final String[] RECENT_FILES_ORDERINGS = {
-		GUITreeLoader.reg.getText(Preferences.RF_O_CHRONOLOGICAL), 
-		GUITreeLoader.reg.getText(Preferences.RF_O_ALPHABETICAL), 
-		GUITreeLoader.reg.getText(Preferences.RF_O_ASCII) 
-	};
-
-	private static final String[] RECENT_FILES_NAME_FORMS = {
-		GUITreeLoader.reg.getText(Preferences.RF_NF_FULL_PATHNAME), 
-		GUITreeLoader.reg.getText(Preferences.RF_NF_TRUNC_PATHNAME), 
-		GUITreeLoader.reg.getText(Preferences.RF_NF_FILENAME) 
-	};
-
-	private static final String[] RECENT_FILES_DIRECTIONS = {
-		GUITreeLoader.reg.getText(Preferences.RF_D_TOPTOBOTTOM), 
-		GUITreeLoader.reg.getText(Preferences.RF_D_BOTTOMTOTOP) 
-	};
-
-	public void endSetup(AttributeList atts) {
-		// call on the ancestors to their stuff
-		super.endSetup(atts);
-
-		// fill the combo boxes with choices
-		AbstractPreferencesPanel.addArrayToComboBox(RECENT_FILES_ORDERINGS, GUITreeComponentRegistry.COMPONENT_RECENT_FILES_ORDERING);
-		AbstractPreferencesPanel.addArrayToComboBox(RECENT_FILES_NAME_FORMS, GUITreeComponentRegistry.COMPONENT_RECENT_FILES_NAME_FORM);
-		AbstractPreferencesPanel.addArrayToComboBox(RECENT_FILES_DIRECTIONS, GUITreeComponentRegistry.COMPONENT_RECENT_FILES_DIRECTION);
-	}
-
 	public void applyCurrentToApplication() {
 		int limit = 0;
 		String currentSetting = null;
@@ -100,8 +72,8 @@ public class PreferencesPanelRecentFiles extends AbstractPreferencesPanel implem
 		PreferenceString pRF_Direction = (PreferenceString) prefs.getPreference(Preferences.RECENT_FILES_DIRECTION);
 		
 		// find the position of those strings in their arrays
-		for (ordering = 0, limit = RECENT_FILES_ORDERINGS.length, currentSetting = pRF_Ordering.getCur(); ordering < limit ; ordering++) {
-			if (currentSetting.equals(RECENT_FILES_ORDERINGS[ordering])) {
+		for (ordering = 0, limit = Preferences.RECENT_FILES_ORDERINGS.length, currentSetting = pRF_Ordering.getCur(); ordering < limit ; ordering++) {
+			if (currentSetting.equals(Preferences.RECENT_FILES_ORDERINGS[ordering])) {
 				break;
 			}
 		}
@@ -110,8 +82,8 @@ public class PreferencesPanelRecentFiles extends AbstractPreferencesPanel implem
 			coolToApply = false;
 		}
 		
-		for (nameForm = 0, limit = RECENT_FILES_NAME_FORMS.length, currentSetting = pRF_Name_Form.getCur(); nameForm < limit ; nameForm++) {
-			if (currentSetting.equals(RECENT_FILES_NAME_FORMS[nameForm])) {
+		for (nameForm = 0, limit = Preferences.RECENT_FILES_NAME_FORMS.length, currentSetting = pRF_Name_Form.getCur(); nameForm < limit ; nameForm++) {
+			if (currentSetting.equals(Preferences.RECENT_FILES_NAME_FORMS[nameForm])) {
 				break;
 			}
 		}
@@ -120,8 +92,8 @@ public class PreferencesPanelRecentFiles extends AbstractPreferencesPanel implem
 			coolToApply = false;
 		}
 		
-		for (direction = 0, limit = RECENT_FILES_DIRECTIONS.length, currentSetting = pRF_Direction.getCur(); direction < limit ; direction++) {
-			if (currentSetting.equals(RECENT_FILES_DIRECTIONS[direction])) {
+		for (direction = 0, limit = Preferences.RECENT_FILES_DIRECTIONS.length, currentSetting = pRF_Direction.getCur(); direction < limit ; direction++) {
+			if (currentSetting.equals(Preferences.RECENT_FILES_DIRECTIONS[direction])) {
 				break;
 			}
 		}

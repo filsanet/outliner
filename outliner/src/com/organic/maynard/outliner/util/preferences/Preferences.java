@@ -37,6 +37,9 @@ package com.organic.maynard.outliner.util.preferences;
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.*;
 
+import java.awt.Font;
+import java.awt.*;
+
 import java.util.*;
 import java.io.*;
 import javax.swing.*;
@@ -60,6 +63,12 @@ public class Preferences implements GUITreeComponent {
 
 	public static String TXT_WORDS = null;
 	public static String TXT_CHARACTERS = null;
+	public static String[] LINE_WRAP_OPTIONS = new String[2];
+	public static String[] FONT_FAMILY_NAMES = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+
+	public static String[] RECENT_FILES_ORDERINGS = new String[3];
+	public static String[] RECENT_FILES_NAME_FORMS = new String[3];
+	public static String[] RECENT_FILES_DIRECTIONS = new String[2];
 
 	public static final StringList ENCODINGS = new StringList();
 	public static final StringList FILE_FORMATS_OPEN = new StringList();
@@ -187,7 +196,20 @@ public class Preferences implements GUITreeComponent {
 	public Preferences() {
 		TXT_WORDS = GUITreeLoader.reg.getText("wrap_words");
 		TXT_CHARACTERS = GUITreeLoader.reg.getText("wrap_characters");
-		
+		LINE_WRAP_OPTIONS[0] = TXT_WORDS;
+		LINE_WRAP_OPTIONS[1] = TXT_CHARACTERS;
+
+		RECENT_FILES_ORDERINGS[0] = GUITreeLoader.reg.getText(RF_O_CHRONOLOGICAL); 
+		RECENT_FILES_ORDERINGS[1] = GUITreeLoader.reg.getText(RF_O_ALPHABETICAL); 
+		RECENT_FILES_ORDERINGS[2] = GUITreeLoader.reg.getText(RF_O_ASCII);
+	
+		RECENT_FILES_NAME_FORMS[0] = GUITreeLoader.reg.getText(RF_NF_FULL_PATHNAME);
+		RECENT_FILES_NAME_FORMS[1] = GUITreeLoader.reg.getText(RF_NF_TRUNC_PATHNAME); 
+		RECENT_FILES_NAME_FORMS[2] = GUITreeLoader.reg.getText(RF_NF_FILENAME);
+	
+		RECENT_FILES_DIRECTIONS[0] = GUITreeLoader.reg.getText(RF_D_TOPTOBOTTOM); 
+		RECENT_FILES_DIRECTIONS[1] = GUITreeLoader.reg.getText(RF_D_BOTTOMTOTOP);
+			
 		// Place a reference to this object in the outliner
 		Outliner.prefs = this;
 	}
@@ -198,19 +220,11 @@ public class Preferences implements GUITreeComponent {
 	public String getGUITreeComponentID() {return this.id;}
 	public void setGUITreeComponentID(String id) {this.id = id;}
 
-	public void startSetup(AttributeList atts) {}
-	
-	public void endSetup(AttributeList atts) {
-		Outliner.loadPrefsFile(Outliner.PARSER, Outliner.CONFIG_FILE);
-		
-		// Sync the GUI to the prefs
-		Iterator it = getPreferencesPanelKeys();
-		while (it.hasNext()) {
-			String key = (String) it.next();
-			PreferencesPanel panel = getPreferencesPanel(key);
-			panel.setToCurrent();
-		}
+	public void startSetup(AttributeList atts) {
+		Outliner.loadPrefsFile(Outliner.PARSER, Outliner.CONFIG_FILE);	
 	}
+	
+	public void endSetup(AttributeList atts) {}
 	
 	
 	// PreferencesPanel Registry
@@ -227,7 +241,22 @@ public class Preferences implements GUITreeComponent {
 	public Iterator getPreferencesPanelKeys() {
 		return prefsPanelReg.keySet().iterator();
 	}
+	
+	
+	// Temporary values from file loading. The pref string values from the prefs file
+	// are first stored here. Then each preference pulls its value from here as it is
+	// loaded. This allows modules which are loaded later to still use the same prefs
+	// as the rest of the application.
+	private HashMap tempValues = new HashMap();
 
+	public void addTempValue(String key, String value) {
+		tempValues.put(key, value);
+	}
+	
+	public String getTempValue(String key) {
+		return (String) tempValues.get(key);
+	}
+	
 	
 	// Preferences Registry
 	private HashMap prefsReg = new HashMap();
@@ -264,6 +293,10 @@ public class Preferences implements GUITreeComponent {
 
 	public static PreferenceLineEnding getPreferenceLineEnding(String key) {
 		return (PreferenceLineEnding) Outliner.prefs.getPreference(key);
+	}
+
+	public static PreferenceStringList getPreferenceStringList(String key) {
+		return (PreferenceStringList) Outliner.prefs.getPreference(key);
 	}
 	
 		

@@ -36,7 +36,6 @@ package com.organic.maynard.outliner.util.preferences;
 
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.*;
-import java.awt.Font;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -45,19 +44,6 @@ import javax.swing.event.*;
 import org.xml.sax.*;
 
 public class PreferencesPanelEditor extends AbstractPreferencesPanel implements PreferencesPanel, GUITreeComponent {
-	
-	// Constants
-	private final String[] LINE_WRAP_OPTIONS = {Preferences.TXT_WORDS, Preferences.TXT_CHARACTERS};
-
-
-	// GUITreeComponent Interface
-	public void endSetup(AttributeList atts) {
-		super.endSetup(atts);
-		
-		AbstractPreferencesPanel.addArrayToComboBox(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames(), GUITreeComponentRegistry.COMPONENT_FONT_FACE);
-		AbstractPreferencesPanel.addArrayToComboBox(LINE_WRAP_OPTIONS, GUITreeComponentRegistry.COMPONENT_LINE_WRAP);
-	}
-	
 	
 	// PreferencePanel Interface
 	public void applyCurrentToApplication() {

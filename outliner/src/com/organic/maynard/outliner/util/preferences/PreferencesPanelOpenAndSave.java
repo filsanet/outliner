@@ -52,21 +52,6 @@ import org.xml.sax.*;
 
 public class PreferencesPanelOpenAndSave extends AbstractPreferencesPanel implements PreferencesPanel, GUITreeComponent {
 
-	public void endSetup(AttributeList atts) {
-		super.endSetup(atts);
-
-		AbstractPreferencesPanel.addArrayToComboBox(Preferences.FILE_PROTOCOLS.toArray(), GUITreeComponentRegistry.COMPONENT_FILE_PROTOCOL);
-		AbstractPreferencesPanel.addArrayToComboBox(PlatformCompatibility.PLATFORM_IDENTIFIERS, GUITreeComponentRegistry.COMPONENT_LINE_ENDING);
-		AbstractPreferencesPanel.addArrayToComboBox(Preferences.ENCODINGS.toArray(), GUITreeComponentRegistry.COMPONENT_ENCODING_WHEN_OPENING);
-		AbstractPreferencesPanel.addArrayToComboBox(Preferences.ENCODINGS.toArray(), GUITreeComponentRegistry.COMPONENT_ENCODING_WHEN_IMPORTING);
-		AbstractPreferencesPanel.addArrayToComboBox(Preferences.ENCODINGS.toArray(), GUITreeComponentRegistry.COMPONENT_ENCODING_WHEN_SAVING);
-		AbstractPreferencesPanel.addArrayToComboBox(Preferences.ENCODINGS.toArray(), GUITreeComponentRegistry.COMPONENT_ENCODING_WHEN_EXPORTING);
-		AbstractPreferencesPanel.addArrayToComboBox(Preferences.FILE_FORMATS_OPEN.toArray(), GUITreeComponentRegistry.COMPONENT_FORMAT_WHEN_OPENING);
-		AbstractPreferencesPanel.addArrayToComboBox(Preferences.FILE_FORMATS_IMPORT.toArray(), GUITreeComponentRegistry.COMPONENT_FORMAT_WHEN_IMPORTING);
-		AbstractPreferencesPanel.addArrayToComboBox(Preferences.FILE_FORMATS_SAVE.toArray(), GUITreeComponentRegistry.COMPONENT_FORMAT_WHEN_SAVING);
-		AbstractPreferencesPanel.addArrayToComboBox(Preferences.FILE_FORMATS_EXPORT.toArray(), GUITreeComponentRegistry.COMPONENT_FORMAT_WHEN_EXPORTING);
-	}
-
 	public void applyCurrentToApplication() {
 		// Synchronize default protocol in model.
 		Outliner.fileProtocolManager.synchronizeDefault();

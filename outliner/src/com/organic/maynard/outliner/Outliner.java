@@ -61,13 +61,8 @@ import gui.*;
  */
 
 public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITreeComponent, JoeXMLConstants {
-	static {
-		System.out.println("EARLY START MEASURING TIME");
-	}
-	public static final long earlyStartTime = System.currentTimeMillis();
-	
+
 	// Constants
-	// for [temporary!] conditional debugging code	[srk] 8/04/01 7:33PM
 	public static final boolean DEBUG = false;
 	    	
 	// Language Handling
@@ -88,6 +83,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	public static String EXTRAS_DIR =         new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.extrasdir", "extras")).append(FILE_SEPARATOR).toString();
 	public static String LIB_DIR =            new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.libdir", "lib")).append(FILE_SEPARATOR).toString();
 	public static String LOGS_DIR =           new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.logsdir", "logs")).append(FILE_SEPARATOR).toString();
+	public static String MODULES_DIR =        new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.modulesdir", "modules")).append(FILE_SEPARATOR).toString();
 	
 
 	// Find out if we've got a home directory to work with for user preferences, if
@@ -116,7 +112,8 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	public static String FILE_FORMATS_FILE =   new StringBuffer().append(PREFS_DIR).append("file_formats.txt").toString();
 
 
-	// This static block should be considered "installer" functionality. At some point this could all be moved to an installer app.
+	// This static block should be considered "installer" functionality. 
+	// At some point this could all be moved to an installer app.
 	// Make the directories in case they don't exist.
 	static {
 		boolean isCreated = false;
@@ -281,7 +278,8 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	}
 
 	// XML Parser
-    public static final Parser XML_PARSER = new com.jclark.xml.sax.Driver();	
+    public static final Parser XML_PARSER = new com.jclark.xml.sax.Driver();
+    public static final GUITreeLoader GUI_TREE_LOADER = new GUITreeLoader();
 
 
 	// Command Parser
@@ -342,31 +340,40 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 
 	// Main
 	public static void main(String args[]) {
-		System.out.println("START MEASURING TIME");
-		long startTime = System.currentTimeMillis();
-		
 		// This allows scrollbars to be resized while they are being dragged.
 		UIManager.put("ScrollBarUI", PlatformCompatibility.getScrollBarUIClassName());
 
 		// See if we've got a preferred language to use. 
 		// lang should be a ISO 639 two letter lang code. 
 		// List at: http://www.ics.uci.edu/pub/ietf/http/related/iso639.txt
-		StringBuffer guiTreeFileName = new StringBuffer();
-		guiTreeFileName.append(PREFS_DIR).append("gui_tree.");
 		if (args.length > 0) {
 			String lang = args[0];
 			if (lang != null && lang.length() == 2) {
 				LANGUAGE = lang;
 			}
 		}
-		guiTreeFileName.append(LANGUAGE).append(".xml");
 		
-		// try to load the GUI
-		GUITreeLoader loader = new GUITreeLoader();
-		boolean success = loader.load(guiTreeFileName.toString());
-		if (!success) {
+		// Load the Main GUITree
+		String guiTreeFileName = new StringBuffer().append(PREFS_DIR).append("gui_tree.").append(LANGUAGE).append(".xml").toString();
+		if (!GUI_TREE_LOADER.load(guiTreeFileName)) {
 			System.out.println("GUI Loading Error: exiting.");
-			System.exit(0);
+			return;
+		}
+		
+		// Load the GUITree for any modules found
+		File modulesDir = new File(MODULES_DIR);
+		File[] modulesDirs = modulesDir.listFiles();
+		
+		if (modulesDirs != null) {
+			for (int i = 0; i < modulesDirs.length; i++) {
+				File moduleDir = modulesDirs[i];
+
+				String moduleGuiTreeFileName = new StringBuffer().append(moduleDir.getPath()).append(FILE_SEPARATOR).append("gui_tree.").append(LANGUAGE).append(".xml").toString();
+				if (!GUI_TREE_LOADER.load(moduleGuiTreeFileName)) {
+					System.out.println("GUI Loading Error. Skipping Module: " + moduleGuiTreeFileName);
+					break;
+				}			
+			}
 		}
 
 		// Run startup scripts. We're doing this just prior to opening any documents.
@@ -410,11 +417,6 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 				System.out.println(name + " : " + properties.getProperty(name));
 			}
 		}
-		
-		long endTime = System.currentTimeMillis();
-		System.out.println(" FIRST TIME: " + (startTime - earlyStartTime));
-		System.out.println("SECOND TIME: " + (endTime - startTime));
-		System.out.println(" TOTAL TIME: " + (endTime - earlyStartTime));
 	}
 	
 
@@ -540,7 +542,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	public void lostOwnership(Clipboard clipboard, Transferable contents) {}
 	
 	
-	// Misc Methods
+	// Misc Methods	
 	public static void loadPrefsFile(CommandParser parser, String filename) {
 		try {
 			BufferedReader buffer = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));

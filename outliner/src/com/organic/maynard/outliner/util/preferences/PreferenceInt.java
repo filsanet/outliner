@@ -69,12 +69,6 @@ public class PreferenceInt extends AbstractPreference implements GUITreeComponen
 	// GUITreeComponent Interface
 	public void endSetup(AttributeList atts) {
 		super.endSetup(atts);
-
-		String def = atts.getValue(AbstractPreference.A_DEFAULT);
-				
-		setDef(def);
-		setCur(def);
-		setTmp(def);
 	}	
 
 

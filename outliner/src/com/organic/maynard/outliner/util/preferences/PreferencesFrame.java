@@ -37,6 +37,8 @@ package com.organic.maynard.outliner.util.preferences;
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.*;
 
+import javax.swing.tree.TreePath;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -63,11 +65,18 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 	private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("");
 	private DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
 
+	private DefaultMutableTreeNode lastNode = rootNode;
+	private int lastNodeDepth = -1;
+
 
 	// Main Component Containers
 	public static final JPanel RIGHT_PANEL = new JPanel();
 	public static final CardLayout CARD_LAYOUT = new CardLayout();
 	public static final JPanel BOTTOM_PANEL = new JPanel();
+	
+	// Instance Fields
+	private JScrollPane jsp2 = null;
+	public JTree tree = null;
 		
 	// Button Text and Other Copy
 	public static String OK = null;
@@ -123,7 +132,7 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 	
 	public void endSetup(AttributeList atts) {
 		// Define the JTree		
-		JTree tree = new JTree(treeModel);
+		tree = new JTree(treeModel);
 		tree.addTreeSelectionListener(this);
 		tree.setRootVisible(false);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -131,7 +140,7 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 		// Put it all together
 		JScrollPane jsp = new JScrollPane(tree);
 		jsp.setMinimumSize(new Dimension(175,0));
-		JScrollPane jsp2 = new JScrollPane(RIGHT_PANEL);
+		jsp2 = new JScrollPane(RIGHT_PANEL);
 
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, jsp, jsp2);
 		splitPane.setResizeWeight(0.0);
@@ -141,9 +150,6 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 		
 		super.endSetup(atts);		
 	}
-
-	private DefaultMutableTreeNode lastNode = rootNode;
-	private int lastNodeDepth = -1;
 	
 	public void addPanelToTree(String name, int depth) {
 		DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(name);
@@ -162,6 +168,8 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 			
 			((DefaultMutableTreeNode) parent).add(newNode);
 		}
+		
+		treeModel.reload();
 
 		lastNode = newNode;
 		lastNodeDepth = depth;
@@ -171,6 +179,7 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 	public void valueChanged(TreeSelectionEvent e) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
 		CARD_LAYOUT.show(RIGHT_PANEL, (String) node.getUserObject());
+		jsp2.getVerticalScrollBar().setValue(0); // Scrolls the right panel back to the top whenever we change cards.
 	}
 
 
@@ -215,4 +224,29 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 
 		hide();
 	}
+	
+	// Misc Methods
+	// Grabbed from JDK1.4.0 JTree.getNextMatch(String,int,postion)
+	// Simplified the code since I always want to search the entire tree from the start moving forward.
+	// Also removed the uppercase code since I want to match case.
+    public static TreePath getNextMatch(JTree tree, String prefix) {
+		int max = tree.getRowCount();
+		if (prefix == null) {
+	    	throw new IllegalArgumentException();
+		}
+
+		// start search from the next/previous element froom the selected element
+		int row = 0;
+		do {
+		    TreePath path = tree.getPathForRow(row);
+		    String text = tree.convertValueToText(path.getLastPathComponent(), tree.isRowSelected(row), tree.isExpanded(row), true, row, false);
+		    
+		    if (text.startsWith(prefix)) {
+				return path;
+		    }
+		    row = (row + 1 + max) % max;
+		} while (row != 0);
+		
+		return null;
+    }
 }

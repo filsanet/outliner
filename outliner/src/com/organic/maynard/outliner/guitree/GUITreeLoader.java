@@ -54,7 +54,7 @@ public class GUITreeLoader extends HandlerBase implements JoeXMLConstants {
 	
 	
 	// Class Fields
-    private static boolean errorOccurred = false;
+    private static boolean errorOccurred = false; // Set by the SAX handler if an error occurs.
 
 	public static GUITreeComponentRegistry reg = new GUITreeComponentRegistry();
 	
@@ -114,9 +114,23 @@ public class GUITreeLoader extends HandlerBase implements JoeXMLConstants {
 	}
 
 	
-	// OpenFileFormat Interface
+	/**
+	 * Loads the file indicated by the file parameter and parses
+	 * it as a gui tree.
+	 *
+	 * @param file the file to load.
+	 *
+	 * @return true if the load was successful, false if an exception
+	 *         occurred.
+	 */
 	public boolean load(String file) {
 		try {
+			// Reset
+		    errorOccurred = false;
+			elementStack = new GUITreeComponentList();
+			attributesStack = new AttributeListList();
+			
+			// Parse
 			Outliner.XML_PARSER.parse(new InputSource(new BufferedInputStream(new FileInputStream(file))));
 			if (errorOccurred) {
 				return false;

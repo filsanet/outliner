@@ -74,13 +74,6 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	private static int untitledDocumentCount = 0;
 	private static OutlinerWindowMonitor monitor = new OutlinerWindowMonitor();
 
-
-	// sets of choice strings for combo boxes
-	private static final String [] DOCUMENT_TITLES_NAME_FORMS = {
-		GUITreeLoader.reg.getText(Preferences.RF_NF_FULL_PATHNAME), 
-		GUITreeLoader.reg.getText(Preferences.RF_NF_TRUNC_PATHNAME), 
-		GUITreeLoader.reg.getText(Preferences.RF_NF_FILENAME) 
-	};
 		
 	// document title name forms
 	private static final int FULL_PATHNAME = 0;
@@ -261,8 +254,8 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	static int getTitleNameForm() {
 		String currentSettingStrung = Preferences.getPreferenceString(Preferences.DOCUMENT_TITLES_NAME_FORM).cur;
 		int nameFormIndex = 0;
-		for (int i = DOCUMENT_TITLES_NAME_FORMS.length - 1; i >= 0; i--) {
-			if (currentSettingStrung.equals(DOCUMENT_TITLES_NAME_FORMS[i])) {
+		for (int i = Preferences.RECENT_FILES_NAME_FORMS.length - 1; i >= 0; i--) {
+			if (currentSettingStrung.equals(Preferences.RECENT_FILES_NAME_FORMS[i])) {
 				nameFormIndex = i;
 				break;
 			}
@@ -411,14 +404,6 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		}
 	}
 	
-	/**
-	 * fills document title name form choices into combo box in Look And Feel
-	 * preference panel. Currently called by preference panel endSetup methods
-	 */
-	public static void fillTitleNameFormCombo () {
-		AbstractPreferencesPanel.addArrayToComboBox(DOCUMENT_TITLES_NAME_FORMS, GUITreeComponentRegistry.COMPONENT_DOCUMENT_TITLES_NAME_FORM);
-	}
-		
 
 	/**
 	 * Syncs up the titles of all open documents to the

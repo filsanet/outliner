@@ -67,12 +67,6 @@ public class PreferenceColor extends AbstractPreference implements GUITreeCompon
 	// GUITreeComponent Interface
 	public void endSetup(AttributeList atts) {
 		super.endSetup(atts);
-
-		String def = atts.getValue(AbstractPreference.A_DEFAULT);
-				
-		setDef(def);
-		setCur(def);
-		setTmp(def);
 	}	
 
 

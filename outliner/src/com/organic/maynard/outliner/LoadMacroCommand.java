@@ -126,7 +126,7 @@ public class LoadMacroCommand extends Command {
 			buffer.append(macro.getFileName());
 			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
 			buffer.append(macro.getClass().getName());
-			buffer.append(Outliner.FILE_SEPARATOR);
+			buffer.append(System.getProperty("line.separator"));
 		}
 
 		for (int i = 0, limit = MacroPopupMenu.sortMacros.size(); i < limit; i++) {
@@ -137,7 +137,7 @@ public class LoadMacroCommand extends Command {
 			buffer.append(macro.getFileName());
 			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
 			buffer.append(macro.getClass().getName());
-			buffer.append(Outliner.FILE_SEPARATOR);
+			buffer.append(System.getProperty("line.separator"));
 		}
 		return buffer.toString();
 	}

@@ -47,16 +47,6 @@ import org.xml.sax.*;
 
 public class PreferencesPanelLookAndFeel extends AbstractPreferencesPanel implements PreferencesPanel, GUITreeComponent {
 
-
-	// GUITreeComponent Interface
-	public void endSetup(AttributeList atts) {
-		super.endSetup(atts);
-
-		// fill title name form combo box with choices
-		OutlinerDocument.fillTitleNameFormCombo();
-	}
-
-
 	// PreferencePanel Interface
 	public void applyCurrentToApplication() {
 		Preferences prefs = Outliner.prefs;

@@ -234,6 +234,9 @@ public class FileFormatManager {
 				// try to add this format to our set of Save formats
 				boolean success = addSaveFormat(formatName, defSaveFileFormat);
 
+				// also try to add it to our set of Export formats
+				addExportFormat(formatName, defSaveFileFormat);
+
 				// supply some feedback
 				// if we succeed ...
 				if (success) {

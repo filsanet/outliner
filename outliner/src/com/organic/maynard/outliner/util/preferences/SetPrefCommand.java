@@ -64,21 +64,9 @@ public class SetPrefCommand extends Command {
 			}
 			
 		} else {
-			Preference pref = Outliner.prefs.getPreference(variableName);
-
-			try {
-				pref.setCur(value);
-				pref.restoreTemporaryToCurrent();
-				if (VERBOSE) {
-					System.out.println(new StringBuffer().append("  Setting Pref: ").append(variableName).append(" : ").append(value).toString());
-				}
-				
-			} catch (ArrayIndexOutOfBoundsException e) {
-				System.out.println("Error Setting Preference, ArrayIndexOutOfBoundsException: " + e.getMessage());
-				
-			} catch (NullPointerException e) {
-				System.out.println("Error Setting Preference, NullPointerException: " + e.getMessage());
-				
+			Outliner.prefs.addTempValue(variableName, value);
+			if (VERBOSE) {
+				System.out.println(new StringBuffer().append("  Loading Pref: ").append(variableName).append(" : ").append(value).toString());
 			}
 		}
 	}

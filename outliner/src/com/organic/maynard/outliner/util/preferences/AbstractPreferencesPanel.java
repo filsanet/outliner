@@ -106,6 +106,9 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 		AbstractPreferencesPanel.addSingleItemCentered(RESTORE_DEFAULT_EDITOR_BUTTON, box);
 
 		add(box);
+		
+		// Update all the prefs.
+		setToCurrent();
 	}
 	
 	
@@ -167,6 +170,15 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 				PreferenceColor prefColor = (PreferenceColor) pref;
 				button.setBackground(prefColor.cur);
 							
+			} else if (comp instanceof PreferencesGUITreeTextAreaComponent) {
+				JTextArea list = (JTextArea) ((JScrollPane) comp.getComponent()).getViewport().getView();
+				PreferenceStringList prefStringList = (PreferenceStringList) pref;
+
+				StringBuffer buf = new StringBuffer();
+				for (int j = 0; j < prefStringList.cur.size(); j++) {
+					buf.append(prefStringList.cur.get(j)).append("\n");
+				}
+				list.setText(buf.toString());
 			}
 		}
 	}
@@ -198,6 +210,16 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 						PreferenceColor prefColor = (PreferenceColor) pref;
 						button.setBackground(prefColor.def);
 									
+					} else if (comp instanceof PreferencesGUITreeTextAreaComponent) {
+						JTextArea list = (JTextArea) ((JScrollPane) comp.getComponent()).getViewport().getView();
+						PreferenceStringList prefStringList = (PreferenceStringList) pref;
+						
+						StringBuffer buf = new StringBuffer();
+						for (int j = 0; j < prefStringList.def.size(); j++) {
+							buf.append(prefStringList.def.get(j)).append("\n");
+						}
+						list.setText(buf.toString());
+				
 					}
 					
 					pref.restoreTemporaryToDefault();

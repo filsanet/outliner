@@ -63,7 +63,19 @@ public abstract class AbstractPreference implements Preference, GUITreeComponent
 		Outliner.prefs.addPreference(id, this);
 	}
 	
-	public void endSetup(AttributeList atts) {}	
+	public void endSetup(AttributeList atts) {
+		String def = atts.getValue(AbstractPreference.A_DEFAULT);
+		String cur = Outliner.prefs.getTempValue(getCommand());
+				
+		setDef(def);
+		if (cur != null) {
+			setCur(cur);
+			setTmp(cur);
+		} else {
+			setCur(def);
+			setTmp(def);
+		}
+	}	
 	
 			
 	// Preference Interface
