@@ -339,7 +339,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		//	point with no owner name
 		// 	fix: set it to current pref
 		// if ownerName is not yet set ...
-		if (docInfo.getOwnerName).length() == 0) {
+		if (docInfo.getOwnerName().length() == 0) {
 			docInfo.setOwnerName(Preferences.getPreferenceLineEnding(Preferences.OWNER_NAME).cur);
 		} // end if
 		
@@ -347,7 +347,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		//	point with no owner email
 		// 	fix: set it to current pref
 		// if ownerEmail is not yet set ...
-		if (docInfo.getOwnerEmail).length() == 0) {
+		if (docInfo.getOwnerEmail().length() == 0) {
 			docInfo.setOwnerEmail(Preferences.getPreferenceLineEnding(Preferences.OWNER_EMAIL).cur);
 		} // end if
 		
