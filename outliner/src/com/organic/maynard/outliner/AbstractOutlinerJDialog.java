@@ -38,27 +38,40 @@ import javax.swing.*;
 import java.awt.*;
 import org.xml.sax.*;
 
+// MouseWheel
+import gui.*;
+
 /**
  * @author  $Author$
  * @version $Revision$, $Date$
  */
 
-public abstract class AbstractGUITreeJDialog extends AbstractOutlinerJDialog implements GUITreeComponent, JoeXMLConstants {
+public abstract class AbstractOutlinerJDialog extends JMouseWheelDialog {
 	
-	// The Constructor
-	public AbstractGUITreeJDialog(boolean resizeOnShow, boolean alwaysCenter, boolean modal, int initialWidth, int initialHeight, int minimumWidth, int minimumHeight) {
-		super(resizeOnShow, alwaysCenter, modal, initialWidth, initialHeight, minimumWidth, minimumHeight);
-	}
+	// Fields
+	private WindowSizeManager windowSizeManager = null;
+		
+	private boolean alwaysCenter = true;
+	private boolean hasBeenShown = false;
 	
-	// GUITreeComponent interface
-	private String id = null;
-	public String getGUITreeComponentID() {return this.id;}
-	public void setGUITreeComponentID(String id) {this.id = id;}
+	// The Constructors
+	public AbstractOutlinerJDialog(boolean resizeOnShow, boolean alwaysCenter, boolean modal, int initialWidth, int initialHeight, int minimumWidth, int minimumHeight) {
+		super(Outliner.outliner, "", modal);
+		
+		this.alwaysCenter = alwaysCenter;
 
-	public void startSetup(AttributeList atts) {
-		setTitle(atts.getValue(A_TITLE));
-		setVisible(false);
+		setSize(initialWidth, initialHeight);
+		addComponentListener(new WindowSizeManager(resizeOnShow, initialWidth, initialHeight, minimumWidth, minimumHeight));
 	}
 	
-	public void endSetup(AttributeList atts) {}
+	public void show() {
+		if (alwaysCenter || !hasBeenShown) {
+			hasBeenShown = true;
+			
+			Rectangle r = Outliner.outliner.getBounds();
+			setLocation((int) (r.getCenterX() - getWidth()/2), (int) (r.getCenterY() - getHeight()/2));
+		}
+		
+		super.show();
+	}
 }

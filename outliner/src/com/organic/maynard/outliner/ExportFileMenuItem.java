@@ -72,7 +72,7 @@ public class ExportFileMenuItem extends AbstractOutlinerMenuItem implements Acti
 		DocumentInfo oldDocInfo = document.getDocumentInfo();
 		
 		DocumentSettings newSettings = new DocumentSettings(document);
-		DocumentInfo newDocInfo = new DocumentInfo();
+		DocumentInfo newDocInfo = (DocumentInfo) oldDocInfo.clone();
 		
 		document.settings = newSettings;
 		document.setDocumentInfo(newDocInfo);

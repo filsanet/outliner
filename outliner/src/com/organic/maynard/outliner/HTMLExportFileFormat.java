@@ -34,15 +34,118 @@
  
 package com.organic.maynard.outliner;
 
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.event.*;
 import java.io.*;
 import java.util.*;
 import com.organic.maynard.util.string.StringTools;
+import com.organic.maynard.io.FileTools;
 
-public class HTMLExportFileFormat 
 
-	implements ExportFileFormat, JoeReturnCodes {
+class SelectHTMLExportStyleDialog extends AbstractOutlinerJDialog implements ActionListener {
+
+	// Constants
+	private static final int INITIAL_WIDTH = 200;
+	private static final int INITIAL_HEIGHT = 125;
+	private static final int MINIMUM_WIDTH = 200;
+	private static final int MINIMUM_HEIGHT = 125;
 	
+	// Text Assets
+	private static String OK = null;
+	private static String CANCEL = null;
+
+	// GUI Components
+	private static JButton bProceed = null;
+	private static JButton bCancel = null;
+
+	private static JComboBox styles = new JComboBox();
+	
+	// Data
+	private boolean shouldProceed = false;
+	private File styleName = null;
+	
+	// Directories
+	private static File CSS_DIR = null;
+
+	// The Constructor
+	public SelectHTMLExportStyleDialog(Frame owner, String title) {
+		super(true, true, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+
+		// Initialize
+		CSS_DIR = new File(Outliner.PREFS_DIR + System.getProperty("com.organic.maynard.outliner.Outliner.cssdir", "css") + System.getProperty("file.separator"));
+
+		OK = GUITreeLoader.reg.getText("ok");
+		CANCEL = GUITreeLoader.reg.getText("cancel");
+		
+		bProceed = new JButton(OK);
+		bCancel = new JButton(CANCEL);
+
+		bProceed.addActionListener(this);
+		bCancel.addActionListener(this);
+		
+		// Create the Layout
+		Box vBox = Box.createVerticalBox();
+
+		vBox.add(styles);
+
+		vBox.add(Box.createVerticalStrut(5));
+
+		Box buttonBox = Box.createHorizontalBox();
+		buttonBox.add(bProceed);
+		buttonBox.add(bCancel);
+		vBox.add(buttonBox);
+		
+		getContentPane().add(vBox,BorderLayout.CENTER);
+	}
+
+	public void show() {
+		// Get list of styles and populate comboBox.
+		styles.removeAllItems();
+
+		File[] fileNames = CSS_DIR.listFiles();
+		
+		for (int i = 0; i < fileNames.length; i++) {
+			styles.addItem(fileNames[i]);
+		}
+		
+		super.show();		
+	}
+	
+	// Accessors
+	public boolean shouldProceed() {
+		return this.shouldProceed;
+	}
+	
+	public String getStyle(String lineEnding) {
+		return FileTools.readFileToString(this.styleName, lineEnding);
+	}
+
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		if (e.getActionCommand().equals(OK)) {
+			ok();
+		} else if (e.getActionCommand().equals(CANCEL)) {
+			cancel();
+		}
+	}
+
+	private void ok() {
+		this.styleName = (File) styles.getSelectedItem();
+		this.shouldProceed = true;
+		hide();
+	}
+
+	private void cancel() {
+		this.shouldProceed = false;
+		hide();
+	}
+}
+
+public class HTMLExportFileFormat implements ExportFileFormat, JoeReturnCodes {
+	
+	private SelectHTMLExportStyleDialog dialog = null;
 	// Constructors
 	public HTMLExportFileFormat() {}
 
@@ -55,67 +158,149 @@ public class HTMLExportFileFormat
 	public boolean supportsDocumentAttributes() {return false;}
 	
 	public byte[] save(JoeTree tree, DocumentInfo docInfo) {
-		StringBuffer buf = prepareFile(tree, docInfo);
+		String lineEnding = PlatformCompatibility.platformToLineEnding(docInfo.getLineEnding());
+		
+		// Show dialog where use can pick a CSS or cancel. Do lazy instantiation since text assets won't be ready yet.
+		if (dialog == null) {
+			dialog = new SelectHTMLExportStyleDialog(Outliner.outliner,"Select a Style");
+		}
+		
+		dialog.show();
+		
+		if (!dialog.shouldProceed()) {
+			return null;
+		}
+		
+		// Get the CSS
+		String template = dialog.getStyle(lineEnding);
+		
+		
+		// Prepare the file
+		String merged = prepareFile(tree, docInfo, lineEnding, template);
 		
 		try {
-			return buf.toString().getBytes(docInfo.getEncodingType());
+			return merged.getBytes(docInfo.getEncodingType());
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-			return buf.toString().getBytes();
+			return merged.getBytes();
 		}
 	}
 
-	private StringBuffer prepareFile(JoeTree tree, DocumentInfo docInfo) {
-		String lineEnding = PlatformCompatibility.platformToLineEnding(docInfo.getLineEnding());
+	private String prepareFile(JoeTree tree, DocumentInfo docInfo, String lineEnding, String template) {
 		
+		// Figure out max_style_depth
+		int max_style_depth = 0;
+		String match = "{!max_style_depth:";
+		int start = template.indexOf(match);
+		if (start != -1) {
+			start += match.length();
+			int end = template.indexOf("}", start);
+			if (end != -1) {
+				try {
+					max_style_depth = Integer.parseInt(template.substring(start, end));
+					template = StringTools.replace(template, "{!max_style_depth:" + max_style_depth + "}", "");
+				} catch (Exception e) {
+					System.out.println("ERROR: Could not parse max_style_depth: " + e.getMessage());
+				}
+			}
+		}
+		
+		// Do replacements on the template.
+		template = StringTools.replace(template, "{$encoding}", escape(docInfo.getEncodingType()));
+		template = StringTools.replace(template, "{$title}", escape(docInfo.getPath()));
+		template = StringTools.replace(template, "{$date_created}", escape(docInfo.getDateCreated()));
+		template = StringTools.replace(template, "{$date_modified}", escape(docInfo.getDateModified()));
+		template = StringTools.replace(template, "{$owner_name}", escape(docInfo.getOwnerName()));
+		template = StringTools.replace(template, "{$owner_email}", escape(docInfo.getOwnerEmail()));
+		
+		// Do Font and Color Replacements
+		String fontFace = Preferences.getPreferenceString(Preferences.FONT_FACE).cur;
+		template = StringTools.replace(template, "{$font_face}", fontFace);
+		
+		String fontSize = "" + Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur;
+		template = StringTools.replace(template, "{$font_size}", fontSize);
+		
+		String desktopBackgroundColor = convertColorToWebColorValue(Preferences.getPreferenceColor(Preferences.DESKTOP_BACKGROUND_COLOR).cur);
+		template = StringTools.replace(template, "{$desktop_background_color}", desktopBackgroundColor);
+
+		String panelBackgroundColor = convertColorToWebColorValue(Preferences.getPreferenceColor(Preferences.PANEL_BACKGROUND_COLOR).cur);
+		template = StringTools.replace(template, "{$panel_background_color}", panelBackgroundColor);
+
+		String textareaBackgroundColor = convertColorToWebColorValue(Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).cur);
+		template = StringTools.replace(template, "{$textarea_background_color}", textareaBackgroundColor);
+
+		String textareaForegroundColor = convertColorToWebColorValue(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
+		template = StringTools.replace(template, "{$textarea_foreground_color}", textareaForegroundColor);
+
+		String textareaCommentColor = convertColorToWebColorValue(Preferences.getPreferenceColor(Preferences.TEXTAREA_COMMENT_COLOR).cur);
+		template = StringTools.replace(template, "{$textarea_comment_color}", textareaCommentColor);
+
+		String selectedChildColor = convertColorToWebColorValue(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur);
+		template = StringTools.replace(template, "{$selected_child_color}", selectedChildColor);
+
+		String lineNumberColor = convertColorToWebColorValue(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_COLOR).cur);
+		template = StringTools.replace(template, "{$line_number_color}", lineNumberColor);
+
+		String lineNumberSelectedColor = convertColorToWebColorValue(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR).cur);
+		template = StringTools.replace(template, "{$line_number_selected_color}", lineNumberSelectedColor);
+
+		String lineNumberSelectedChildChildColor = convertColorToWebColorValue(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR).cur);
+		template = StringTools.replace(template, "{$line_number_selected_child_color}", lineNumberSelectedChildChildColor);
+
+				
+		// Outline
 		StringBuffer buf = new StringBuffer();
-		
-		buf.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd\">").append(lineEnding);
-		buf.append("<html>").append(lineEnding);
-		buf.append("<head>").append(lineEnding);
-		buf.append("<title>").append(escape(docInfo.getPath())).append("</title>").append(lineEnding);
-		buf.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=").append(escape(docInfo.getEncodingType())).append("\">").append(lineEnding);
-
-
-		buf.append("<style type=\"text/css\">").append(lineEnding);
-		buf.append("	.indented {").append(lineEnding);
-		buf.append("		margin-left: 15pt;").append(lineEnding);
-		buf.append("		margin-top: 3pt;").append(lineEnding);
-		buf.append("		margin-bottom: 3pt;").append(lineEnding);
-		buf.append("	}").append(lineEnding);
-		buf.append("</style>").append(lineEnding);
-
-
-		buf.append("</head>").append(lineEnding);
-		
-		buf.append("<body>").append(lineEnding);
 
 		Node node = tree.getRootNode();
 		for (int i = 0; i < node.numOfChildren(); i++) {
-			buildOutlineElement(node.getChild(i), lineEnding, buf);
+			buildOutlineElement(node.getChild(i), lineEnding, buf, max_style_depth);
 		}
 
-		buf.append("<div>").append(lineEnding);
-		buf.append("Date Created: ").append(escape(docInfo.getDateCreated())).append("<br />").append(lineEnding);
-		buf.append("Date Modified: ").append(escape(docInfo.getDateModified())).append("<br />").append(lineEnding);
-		buf.append("Owner Name: ").append(escape(docInfo.getOwnerName())).append("<br />").append(lineEnding);
-		buf.append("Owner Email: ").append(escape(docInfo.getOwnerEmail())).append("<br />").append(lineEnding);
-		buf.append("</div>").append(lineEnding);
-		
-		buf.append("</body>").append(lineEnding);
-		
-		buf.append("</html>").append(lineEnding);
+		template = StringTools.replace(template, "{$outline}", buf.toString());
 
-		return buf;
+		return template;
+	}
+	
+	protected static String convertColorToWebColorValue(Color c) {
+		String red = Integer.toHexString(c.getRed());
+		if (red.length() == 1) {
+			red = "0" + red;
+		}
+		String green = Integer.toHexString(c.getGreen());
+		if (green.length() == 1) {
+			green = "0" + green;
+		}
+		String blue = Integer.toHexString(c.getBlue());
+		if (blue.length() == 1) {
+			blue = "0" + blue;
+		}		
+		return "#" + red + green + blue;
 	}
 
-	private void buildOutlineElement(Node node, String lineEnding, StringBuffer buf) {
+	private static final String CSS_BRANCH = "branch";
+	private static final String CSS_LEAF = "leaf";
+	
+	private void buildOutlineElement(Node node, String lineEnding, StringBuffer buf, int max_style_depth) {
 		indent(node, buf);
-		buf.append("<div class=\"indented\">").append(escape(node.getValue())).append(lineEnding);
+		
+		// Calculate CSS Class
+		String cssClass = "";
+		if (node.isLeaf()) {
+			cssClass = CSS_LEAF;
+		} else {
+			cssClass = CSS_BRANCH;
+		}
+		
+		if (node.getDepth() <= max_style_depth) {
+			cssClass = cssClass + node.getDepth();
+		}
+		
+		
+		buf.append("<div class=\"" + cssClass + "\">").append(escape(node.getValue())).append(lineEnding);
 		
 		if (!node.isLeaf()) {
 			for (int i = 0; i < node.numOfChildren(); i++) {
-				buildOutlineElement(node.getChild(i), lineEnding, buf);
+				buildOutlineElement(node.getChild(i), lineEnding, buf, max_style_depth);
 			}	
 		}
 		indent(node, buf);

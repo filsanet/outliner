@@ -306,21 +306,28 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// so that a hoisted doc will be completely saved.
 		if (document.hoistStack.isHoisted()) {
 			document.hoistStack.temporaryDehoistAll();
-			} //
+		} //
 
-		// ask the save/export format to send us an array of bytes to save/export
+		// ask the save/export format to send us an array of bytes to save/export. 
+		// This also gives the format a chance to display a dialog to the user.
 		byte[] bytes = saveOrExportFileFormat.save(document.tree, docInfo);
 
-		// point the doc info at that array of save/export bytes
-		docInfo.setOutputBytes(bytes);
+		int saveOrExportResult = 0; // -1 error, 0 user aborted, 1 success.
+		
+		// Make sure bytes isn't null. If it is then we need to abort since there was an error in the format.
+		if (bytes != null) {
+			// point the doc info at that array of save/export bytes
+			docInfo.setOutputBytes(bytes);
 
-		// if we're an imported file, the savee/exportee won't be
-		if (wereImported = docInfo.isImported()){
-			docInfo.setImported(false) ;
-		} // end if we're imported
+			// if we're an imported file, the savee/exportee won't be
+			if (wereImported = docInfo.isImported()){
+				docInfo.setImported(false) ;
+			} // end if we're imported
 
-		// ask the protocol to save/export the file
-		boolean saveOrExportResult = protocol.saveFile(docInfo);
+			// ask the protocol to save/export the file
+			boolean result = protocol.saveFile(docInfo);
+			if (result) {saveOrExportResult = 1;} else {saveOrExportResult = -1;}
+		}
 
 		// if we had to unhoist stuff
 		if (document.hoistStack.isHoisted()) {
@@ -329,7 +336,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		} // end if
 
 		// if we succeeded
-		if (saveOrExportResult) {
+		if (saveOrExportResult == 1) {
 			// do special stuff based on mode
 			switch (mode) {
 
@@ -397,7 +404,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 			} // end switch
 
-		} else {
+		} else if (saveOrExportResult == -1) {
 			// we failed
 
 				// if were were imported, we stay that way
@@ -408,7 +415,12 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			msg = GUITreeLoader.reg.getText("error_could_not_save_file");
 			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
 			JOptionPane.showMessageDialog(document, msg);
-		} // end else
+		} else {
+				// if were were imported, we stay that way
+				if (wereImported) {
+					docInfo.setImported(true) ;
+				} // end if		
+		}
 
 		// Get rid of the bytes now that were done so they can be GC'd.
 		docInfo.setOutputBytes(null);
