@@ -99,7 +99,7 @@ public class HelpTutorialsMenuItem
 		// TODO fix this once FileMenu returns a jrc code
 		// return (FileMenu.openFile(docInfo);
 		// we be tres fakey for now
-		FileMenu.openFile(docInfo);
+		FileMenu.openFile(docInfo, Outliner.fileProtocolManager.getDefault());
 		return SUCCESS ;
 
 		} // end openHelpTutorialsDocument

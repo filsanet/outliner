@@ -62,13 +62,21 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	public HoistStack hoistStack = new HoistStack(this);
 	public AttributesPanel attPanel = new AttributesPanel(this);
 	
+	private DocumentInfo docInfo = null; // Used for saving/reverting
+	
 	private JSplitPane splitPane = null;
 	private JScrollPane attJSP = new JScrollPane(attPanel);
 
 	
 	// The Constructor
 	public OutlinerDocument(String title) {
+		this(title, new DocumentInfo());
+	}
+	
+	public OutlinerDocument(String title, DocumentInfo docInfo) {
 		super("",true,true,true,true);
+		
+		setDocumentInfo(docInfo);
 		
 		Outliner.desktop.add(this, JLayeredPane.DEFAULT_LAYER);
 
@@ -116,6 +124,15 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		setVisible(true);
 	}
 	
+	// Accessors
+	public DocumentInfo getDocumentInfo() {
+		return this.docInfo;
+	}
+	
+	public void setDocumentInfo(DocumentInfo docInfo) {
+		this.docInfo = docInfo;
+	}
+	
 	
 	// Attributes Panel
 	private boolean isShowingAttributes = false;
@@ -154,6 +171,8 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		removeInternalFrameListener(monitor);
 		removeComponentListener(this);
 		getContentPane().remove(panel);
+		
+		docInfo = null;
 		
 		panel.destroy();
 		panel = null;

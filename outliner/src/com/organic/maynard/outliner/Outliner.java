@@ -32,10 +32,6 @@ import com.organic.maynard.util.string.*;
 // MouseWheel
 import gui.*;
 
-// WebFile
-import javax.swing.filechooser.*;
-import com.yearahead.io.*;
-
 /**
  * @author  $Author$
  * @version $Revision$, $Date$
@@ -84,7 +80,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	public static String SCRIPTS_FILE = USER_PREFS_DIR + "scripts.txt";
 	public static String FIND_REPLACE_FILE = USER_PREFS_DIR + "find_replace.xml";
 	public static String CONFIG_FILE = USER_PREFS_DIR + "config.txt";
-	public static String RECENT_FILES_FILE = USER_PREFS_DIR + "recent_files.txt";
+	public static String RECENT_FILES_FILE = USER_PREFS_DIR + "recent_files.ser";
 
 	// Make the directories in case they don't exist.
 	static {
@@ -268,6 +264,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	public static final String COMMAND_SCRIPT_CLASS = "script_class";
 	public static final String COMMAND_SCRIPT = "script";
 	public static final String COMMAND_FILE_FORMAT = "file_format";
+	public static final String COMMAND_FILE_PROTOCOL = "file_protocol";
 	public static final CommandParser PARSER = new CommandParser(COMMAND_PARSER_SEPARATOR);
 	
 	
@@ -277,6 +274,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	public static ScriptsManager scriptsManager = null;
 	public static MacroPopupMenu macroPopup = null;
 	public static FileFormatManager fileFormatManager = null;
+	public static FileProtocolManager fileProtocolManager = null;
 
 
 	// GUI Settings
@@ -284,7 +282,6 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	public static OutlinerDesktop desktop = new OutlinerDesktop();
 	public static JScrollPane jsp = null;
 	public static OutlinerDesktopMenuBar menuBar = null;
-	public static OutlinerFileChooser chooser = null;
 	public static DocumentStatistics statistics = null;
 	public static DocumentAttributesView documentAttributes = null;
 
@@ -320,19 +317,22 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		PARSER.addCommand(new LoadScriptClassCommand(COMMAND_SCRIPT_CLASS,2));
 		PARSER.addCommand(new LoadScriptCommand(COMMAND_SCRIPT,2));
 		PARSER.addCommand(new LoadFileFormatClassCommand(COMMAND_FILE_FORMAT,2));
+		PARSER.addCommand(new LoadFileProtocolClassCommand(COMMAND_FILE_PROTOCOL,2));
 
 		System.out.println("Loading Encoding Types...");
 		loadPrefsFile(PARSER,ENCODINGS_FILE);
 		System.out.println("Done Loading Encoding Types.");
 		System.out.println("");
 
-		// Setup the FileFormatManager
+		// Setup the FileFormatManager and FileProtocolManager
 		fileFormatManager = new FileFormatManager();
+		fileProtocolManager = new FileProtocolManager();
 		
 		System.out.println("Loading File Formats...");
 		loadPrefsFile(PARSER,FILE_FORMATS_FILE);
 		System.out.println("Done Loading File Formats.");
 		System.out.println("");
+
 
 		// Crank up the Help system	[srk] 8/5/01 1:30PM
 		helpDoxMgr = new HelpDocumentsManager() ;
@@ -403,6 +403,9 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		ImageIcon icon = new ImageIcon(GRAPHICS_DIR + "frame_icon.gif");
 		setIconImage(icon.getImage());
 
+		// Initialize open/save_as/export/export_selection menus.
+		fileProtocolManager.synchronizeDefault();
+		fileProtocolManager.synchronizeMenus();
 		
 		// Setup the MacroManager and the MacroPopupMenu
 		loadPrefsFile(PARSER,MACRO_CLASSES_FILE);
@@ -423,24 +426,6 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		
 		// Generate Icons
 		OutlineButton.createIcons();
-		
-		// WebFile
-		// Note the outliner will have to be restarted if user switches
-		// file system preferences since the chooser is created just once.
-		// There seems to be a bug where the WEB_FILE_SYSTEM will not
-		// work once the native file system is set, otherwise you could
-		// just call setFileSystemView() on the file chooser.
-		FileSystemView fsv = null;
-		if (Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
-			// if you have authentication enabled on your web server,
-			// pass non-null user/password
-			fsv = new WebFileSystemView(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur,
-										Preferences.getPreferenceString(Preferences.WEB_FILE_USER).cur,
-										Preferences.getPreferenceString(Preferences.WEB_FILE_PASSWORD).cur);
-		}
-
-		// Setup the File Chooser
-		chooser = new OutlinerFileChooser(fsv);	
 
 		// Apply the Preference Settings
 		Preferences.applyCurrentToApplication();
@@ -494,7 +479,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 				docInfo.setEncodingType(Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur);
 				docInfo.setFileFormat(fileFormat);
 				
-				FileMenu.openFile(docInfo);
+				FileMenu.openFile(docInfo, fileProtocolManager.getDefault());
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {}
 
@@ -550,15 +535,15 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		// Add it to the WindowMenu
 		WindowMenu.addWindow(document);
 		
-	// Update the close menu items
+		// Update the close menu items
 		CloseFileMenuItem closeItem = (CloseFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CLOSE_MENU_ITEM);
 		CloseAllFileMenuItem closeAllItem = (CloseAllFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CLOSE_ALL_MENU_ITEM);
 		
 		closeItem.setEnabled(true);
 		closeAllItem.setEnabled(true);
 
-	// Notify the Help documents manager	[srk 8/5/01 1:12PM]
-	helpDoxMgr.someDocumentJustOpened(document) ;
+		// Notify the Help documents manager	[srk 8/5/01 1:12PM]
+		helpDoxMgr.someDocumentJustOpened(document) ;
 	}
 	
 	public static OutlinerDocument getDocument(int i) {

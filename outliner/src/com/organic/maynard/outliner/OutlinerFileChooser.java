@@ -24,11 +24,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import com.organic.maynard.util.string.Replace;
-
-// WebFile
-import com.yearahead.io.*;
 import javax.swing.filechooser.*;
-
 
 public class OutlinerFileChooser extends JFileChooser {
 
@@ -47,13 +43,17 @@ public class OutlinerFileChooser extends JFileChooser {
 	private JComboBox exportEncodingComboBox = new JComboBox();
 	private JComboBox exportFormatComboBox = new JComboBox();
 
+	private boolean isInitialized = false;
 	
 	// The Constructor
-
-	// WebFile - ctr changed, requires FSV (which may be null)
 	public OutlinerFileChooser(FileSystemView fsv) {		
-		// WebFile
 		super(fsv);
+	}
+	
+	private void lazyInstantiate() {
+		if (isInitialized) {
+			return;
+		}
 		
 		for (int i = 0; i < Preferences.ENCODINGS.size(); i++) {
 			String encoding = (String) Preferences.ENCODINGS.elementAt(i);
@@ -122,6 +122,9 @@ public class OutlinerFileChooser extends JFileChooser {
 		addSingleItemCentered(openFormatComboBox, box2);
 
 		openAccessory.add(box2,BorderLayout.CENTER);
+		
+		// Set the flag
+		isInitialized = true;	
 	}
 
 	private static void addSingleItemCentered(JComponent component, Container container) {
@@ -133,8 +136,12 @@ public class OutlinerFileChooser extends JFileChooser {
 		container.add(box);
 	}
 
-	public void configureForExport(OutlinerDocument doc) {
-		setDialogTitle("Export");
+
+	// Configure Methods
+	public void configureForExport(OutlinerDocument doc, String protocolName, String currentDirectory) {
+		lazyInstantiate();
+		
+		setDialogTitle("Export: " + protocolName);
 		
 		// Set the Accessory state
 		setAccessory(exportAccessory);
@@ -149,16 +156,15 @@ public class OutlinerFileChooser extends JFileChooser {
 		if (!currentFileName.equals("")) {
 			setSelectedFile(new File(currentFileName));
 		} else {
-			// WebFile
-			if (!Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
-				setCurrentDirectory(new File(Preferences.getPreferenceString(Preferences.MOST_RECENT_SAVE_DIR).cur));
-				setSelectedFile(null);
-			}
+			setCurrentDirectory(new File(currentDirectory));
+			setSelectedFile(null);
 		}
 	}
 		
-	public void configureForSave(OutlinerDocument doc) {
-		setDialogTitle("Save");
+	public void configureForSave(OutlinerDocument doc, String protocolName, String currentDirectory) {
+		lazyInstantiate();
+
+		setDialogTitle("Save: " + protocolName);
 		
 		// Set the Accessory state
 		setAccessory(saveAccessory);
@@ -173,30 +179,26 @@ public class OutlinerFileChooser extends JFileChooser {
 		if (!currentFileName.equals("")) {
 			setSelectedFile(new File(currentFileName));
 		} else {
-			// WebFile
-			if (!Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
-				setCurrentDirectory(new File(Preferences.getPreferenceString(Preferences.MOST_RECENT_SAVE_DIR).cur));
-				setSelectedFile(null);
-			}
+			setCurrentDirectory(new File(currentDirectory));
+			setSelectedFile(null);
 		}
 	}
 
-	public void configureForOpen(String lineEnding, String encoding, String format) {
-		setDialogTitle("Open");
-		
+	public void configureForOpen(String protocolName, String currentDirectory) {
+		lazyInstantiate();
+
+		setDialogTitle("Open: " + protocolName);
+
 		// Set the Accessory state.
 		setAccessory(openAccessory);
 		
 		// Set the Accessory GUI state.
-		openEncodingComboBox.setSelectedItem(encoding);
-		openFormatComboBox.setSelectedItem(format);
+		openEncodingComboBox.setSelectedItem(Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur);
+		openFormatComboBox.setSelectedItem(Preferences.getPreferenceString(Preferences.OPEN_FORMAT).cur);
 
-		// WebFile
-		if (!Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
-			// Set the current directory location and selected file.
-			setCurrentDirectory(new File(Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur));
-			setSelectedFile(null);
-		}
+		// Set the current directory location and selected file.
+		setCurrentDirectory(new File(currentDirectory));
+		setSelectedFile(null);
 	}
 
 	
@@ -214,7 +216,7 @@ public class OutlinerFileChooser extends JFileChooser {
 	
 	// Overriden Methods of JFileChooser
     public void approveSelection() {
-    	File file = Outliner.chooser.getSelectedFile();
+    	File file = getSelectedFile();
     	
 		if (getDialogType() == JFileChooser.OPEN_DIALOG) {
 			// Alert if file does not exist.

@@ -25,103 +25,90 @@ import com.organic.maynard.util.string.Replace;
 
 public class ExportSelectionFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
 
+	private FileProtocol protocol = null;
+
+	// Constructors
+	public ExportSelectionFileMenuItem(FileProtocol protocol) {
+		setProtocol(protocol);
+		addActionListener(this);
+	}
+
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
 		
-		addActionListener(this);
+		//addActionListener(this);
 		
-		setEnabled(false);
+		//setEnabled(false);
 	}
 
+	
+	// Accessors
+	public FileProtocol getProtocol() {
+		return this.protocol;
+	}
+	
+	public void setProtocol(FileProtocol protocol) {
+		this.protocol = protocol;
+		setText(protocol.getName());
+	}
+	
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		exportOutlinerDocument(Outliner.getMostRecentDocumentTouched());
+		exportOutlinerDocument(Outliner.getMostRecentDocumentTouched(), getProtocol());
 	}
 
-	protected static void exportOutlinerDocument(OutlinerDocument document) {
-		// Setup the File Chooser
-		Outliner.chooser.configureForExport(document);
-
-		int option = Outliner.chooser.showSaveDialog(Outliner.outliner);
+	protected static void exportOutlinerDocument(OutlinerDocument document, FileProtocol protocol) {
+		// We need to swap in a new documentSettings object so that the changes don't carry over
+		// to the open document, but are conveyed to the export. We'll put the real object back
+		// when we're done.
+		DocumentSettings oldSettings = document.settings;
+		DocumentInfo oldDocInfo = document.getDocumentInfo();
 		
-		// Update the most recent save dir preference
-		Preferences.getPreferenceString(Preferences.MOST_RECENT_SAVE_DIR).cur = Outliner.chooser.getCurrentDirectory().getPath();
-		Preferences.getPreferenceString(Preferences.MOST_RECENT_SAVE_DIR).restoreTemporaryToCurrent();
-				
-		// Handle User Input
-		if (option == JFileChooser.APPROVE_OPTION) {
-			String filename = Outliner.chooser.getSelectedFile().getPath();
-			
-			if (!Outliner.isFileNameUnique(filename) && (!filename.equals(document.getFileName()))) {
-				String msg = GUITreeLoader.reg.getText("message_cannot_save_file_already_open");
-				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
+		DocumentSettings newSettings = new DocumentSettings(document);
+		DocumentInfo newDocInfo = new DocumentInfo();
+		
+		document.settings = newSettings;
+		document.setDocumentInfo(newDocInfo);
 
-				JOptionPane.showMessageDialog(Outliner.outliner, msg);
-				// We might want to move this test into the approveSelection method of the file chooser.
-				return;
+		// We also need to swap out the tree with a new tree that just contains the current selection
+		TreeContext newTree = new TreeContext();
+		TreeContext oldTree = document.tree;
+
+		if (document.tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
+			Node node = document.tree.getEditingNode();
+			
+			int cursor = document.tree.getCursorPosition();
+			int mark = document.tree.getCursorMarkPosition();
+			int startIndex = Math.min(cursor,mark);
+			int endIndex = Math.max(cursor,mark);
+			
+			String text = node.getValue().substring(startIndex, endIndex);
+			
+			newTree.getRootNode().getFirstChild().setValue(text);
+		} else {
+			Node root = newTree.getRootNode();
+			
+			root.removeChild(root.getFirstChild());
+			
+			for (int i = 0; i < document.tree.selectedNodes.size(); i++) {
+				Node node = document.tree.selectedNodes.get(i).cloneClean();
+				newTree.getRootNode().appendChild(node);				
 			}
-			
-			// Pull Preference Values from the file chooser
-			String lineEnd = Outliner.chooser.getExportLineEnding();
-			String encoding = Outliner.chooser.getExportEncoding();
-			String fileFormat = Outliner.chooser.getExportFileFormat();
-
-			// Create a new document from the current selection.
-			TreeContext newTree = new TreeContext();
-			
-			TreeContext oldTree = document.tree;
-
-
-			if (document.tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
-				Node node = document.tree.getEditingNode();
-				
-				int cursor = document.tree.getCursorPosition();
-				int mark = document.tree.getCursorMarkPosition();
-				int startIndex = Math.min(cursor,mark);
-				int endIndex = Math.max(cursor,mark);
-				
-				String text = node.getValue().substring(startIndex, endIndex);
-				
-				newTree.getRootNode().getFirstChild().setValue(text);
-			} else {
-				Node root = newTree.getRootNode();
-				
-				root.removeChild(root.getFirstChild());
-				
-				for (int i = 0; i < document.tree.selectedNodes.size(); i++) {
-					Node node = document.tree.selectedNodes.get(i).cloneClean();
-					newTree.getRootNode().appendChild(node);				
-				}
-			}
-
-			// We need to swap in a new documentSettings object so that the changes don't carry over
-			// to the open document, but are conveyed to the export. We'll put the real object back
-			// when we're done.
-			
-			// We also need to swap in the new tree which we will restore later.
-			
-			DocumentSettings oldSettings = document.settings;
-			
-			document.tree = newTree;
-			document.settings = new DocumentSettings(document);
-			
-			document.settings.lineEnd.def = lineEnd;
-			document.settings.lineEnd.cur = lineEnd;
-			document.settings.lineEnd.tmp = lineEnd;
-			document.settings.saveEncoding.def = encoding;
-			document.settings.saveEncoding.cur = encoding;
-			document.settings.saveEncoding.tmp = encoding;
-			document.settings.saveFormat.def = fileFormat;
-			document.settings.saveFormat.cur = fileFormat;
-			document.settings.saveFormat.tmp = fileFormat;
-			
-			FileMenu.exportFile(filename,document);
-			
-			// Swap it back the settings
-			document.settings = oldSettings;
-			document.tree = oldTree;
 		}
+
+		document.tree = newTree;
+
+		if (!protocol.selectFileToSave(document, FileProtocol.EXPORT)) {
+			return;
+		}
+		
+		FileMenu.exportFile(document.getDocumentInfo().getPath(), document, protocol);
+
+		// Swap it back the settings
+		document.settings = oldSettings;
+		document.setDocumentInfo(oldDocInfo);
+		document.tree = oldTree;
 	}
 }

@@ -24,7 +24,6 @@ import java.util.*;
 public class SetPrefCommand extends Command {
 	
 	// Constants
-	public static final String COMMAND_RECENT_FILE = "recent_file";
 	public static final String COMMAND_ENCODING = "encoding";
 
 
@@ -37,44 +36,7 @@ public class SetPrefCommand extends Command {
 	public synchronized void execute(Vector signature) {
 		String variableName = (String) signature.elementAt(1);
 		
-		if (variableName.equals(COMMAND_RECENT_FILE)) {
-			Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
-			PreferenceInt pRecentFilesListSize = (PreferenceInt) prefs.getPreference(Preferences.RECENT_FILES_LIST_SIZE);
-			if (RecentFilesList.docInfoList.size() < pRecentFilesListSize.cur) {
-				try {
-					// Create a new DocumentInfo object
-					DocumentInfo docInfo = new DocumentInfo(
-						(String) signature.elementAt(2),
-						(String) signature.elementAt(3),
-						(String) signature.elementAt(4),
-						(String) signature.elementAt(5),
-						(String) signature.elementAt(6),
-						(String) signature.elementAt(7),
-						(String) signature.elementAt(8),
-						(String) signature.elementAt(9),
-						(String) signature.elementAt(10),
-						(String) signature.elementAt(11),
-						
-						Integer.parseInt((String) signature.elementAt(12)),
-						Integer.parseInt((String) signature.elementAt(13)),
-						Integer.parseInt((String) signature.elementAt(14)),
-						Integer.parseInt((String) signature.elementAt(15)),
-						Integer.parseInt((String) signature.elementAt(16)),
-						
-						(String) signature.elementAt(17),
-						
-						Boolean.valueOf((String) signature.elementAt(18)).booleanValue(),
-						Boolean.valueOf((String) signature.elementAt(19)).booleanValue(),
-						Boolean.valueOf((String) signature.elementAt(20)).booleanValue()
-					);
-					RecentFilesList.docInfoList.addElement(docInfo);
-					System.out.println("  Adding recent file: " + signature.elementAt(6));
-				} catch (ArrayIndexOutOfBoundsException e) {
-					System.out.println("Error Loading Recent File List Item, ArrayIndexOutOfBoundsException: " + e.getMessage());
-				}
-			}
-
-		} else if (variableName.equals(COMMAND_ENCODING)) {
+		if (variableName.equals(COMMAND_ENCODING)) {
 			Preferences.ENCODINGS.addElement((String) signature.elementAt(2));
 			System.out.println("  Adding encoding type: " + signature.elementAt(2));
 			

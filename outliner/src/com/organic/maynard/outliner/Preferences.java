@@ -43,6 +43,8 @@ public class Preferences implements GUITreeComponent {
 	public static final Vector FILE_FORMATS_SAVE = new Vector();
 	public static final Vector FILE_FORMATS_EXPORT = new Vector();
 
+	public static final ArrayList FILE_PROTOCOLS = new ArrayList();
+
 	
 	// Start Preference Keys: All the preferences used by the core app are here. If you are adding your own
 	// preferences you don't need to put your keys here. These should probably end up in an interface since
@@ -100,6 +102,7 @@ public class Preferences implements GUITreeComponent {
 		public static final String BOTTOM_MARGIN = "bottom_margin";
 		
 		// Open & Save Panel
+		public static final String FILE_PROTOCOL = "file_protocol";
 		public static final String LINE_END = "line_end";
 		public static final String OPEN_ENCODING = "open_encoding";
 		public static final String SAVE_ENCODING = "save_encoding";
@@ -119,7 +122,6 @@ public class Preferences implements GUITreeComponent {
 		public static final String OWNER_EMAIL = "owner_email";
 
 		// WebFile
-		public static final String WEB_FILE_SYSTEM = "web_file_system";
 		public static final String WEB_FILE_URL = "web_file_url";
 		public static final String WEB_FILE_USER = "web_file_user";
 		public static final String WEB_FILE_PASSWORD = "web_file_password";
@@ -146,12 +148,6 @@ public class Preferences implements GUITreeComponent {
 		Outliner.loadPrefsFile(Outliner.PARSER, Outliner.CONFIG_FILE);
 		System.out.println("Done Loading Config.");
 		System.out.println("");
-		
-		System.out.println("Loading Recent File List...");
-		Outliner.loadPrefsFile(Outliner.PARSER, Outliner.RECENT_FILES_FILE);
-		System.out.println("Done Loading Recent File List.");
-		System.out.println("");
-
 		
 		// Sync the GUI to the prefs
 		Iterator it = getPreferencesPanelKeys();

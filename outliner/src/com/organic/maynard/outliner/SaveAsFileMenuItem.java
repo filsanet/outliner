@@ -20,66 +20,39 @@ package com.organic.maynard.outliner;
 
 import java.awt.event.*;
 import javax.swing.*;
-import org.xml.sax.*;
-import com.organic.maynard.util.string.Replace;
 
-public class SaveAsFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+public class SaveAsFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener {
 
-	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
-		super.startSetup(atts);
-		
+	private FileProtocol protocol = null;
+
+	// Constructors
+	public SaveAsFileMenuItem(FileProtocol protocol) {
+		setProtocol(protocol);
 		addActionListener(this);
-		
-		setEnabled(false);
 	}
 
+	
+	// Accessors
+	public FileProtocol getProtocol() {
+		return this.protocol;
+	}
+	
+	public void setProtocol(FileProtocol protocol) {
+		this.protocol = protocol;
+		setText(protocol.getName());
+	}
+	
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		saveAsOutlinerDocument(Outliner.getMostRecentDocumentTouched());
+		saveAsOutlinerDocument(Outliner.getMostRecentDocumentTouched(), getProtocol());
 	}
 
-	protected static void saveAsOutlinerDocument(OutlinerDocument document) {
-		// Setup the File Chooser
-		Outliner.chooser.configureForSave(document);
-
-		int option = Outliner.chooser.showSaveDialog(Outliner.outliner);
-		
-		// Update the most recent save dir preference
-		Preferences.getPreferenceString(Preferences.MOST_RECENT_SAVE_DIR).cur = Outliner.chooser.getCurrentDirectory().getPath();
-		Preferences.getPreferenceString(Preferences.MOST_RECENT_SAVE_DIR).restoreTemporaryToCurrent();
-				
-		// Handle User Input
-		if (option == JFileChooser.APPROVE_OPTION) {
-			String filename = Outliner.chooser.getSelectedFile().getPath();
-			
-			if (!Outliner.isFileNameUnique(filename) && (!filename.equals(document.getFileName()))) {
-				String msg = GUITreeLoader.reg.getText("message_cannot_save_file_already_open");
-				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
-
-				JOptionPane.showMessageDialog(Outliner.outliner, msg);
-				// We might want to move this test into the approveSelection method of the file chooser.
-				return;
-			}
-			
-			// Pull Preference Values from the file chooser
-			String lineEnd = Outliner.chooser.getLineEnding();
-			String encoding = Outliner.chooser.getSaveEncoding();
-			String fileFormat = Outliner.chooser.getSaveFileFormat();
-
-			// Update the document settings
-			document.settings.lineEnd.def = lineEnd;
-			document.settings.lineEnd.cur = lineEnd;
-			document.settings.lineEnd.tmp = lineEnd;
-			document.settings.saveEncoding.def = encoding;
-			document.settings.saveEncoding.cur = encoding;
-			document.settings.saveEncoding.tmp = encoding;
-			document.settings.saveFormat.def = fileFormat;
-			document.settings.saveFormat.cur = fileFormat;
-			document.settings.saveFormat.tmp = fileFormat;
-			
-			FileMenu.saveFile(filename,document,true);
+	protected static void saveAsOutlinerDocument(OutlinerDocument document, FileProtocol protocol) {
+		if (!protocol.selectFileToSave(document, FileProtocol.SAVE)) {
+			return;
 		}
+		
+		FileMenu.saveFile(document.getDocumentInfo().getPath(), document, protocol, true);
 	}
 }

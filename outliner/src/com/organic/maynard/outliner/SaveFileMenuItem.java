@@ -40,11 +40,17 @@ public class SaveFileMenuItem extends AbstractOutlinerMenuItem implements Action
 	}
 
 	protected static void saveOutlinerDocument(OutlinerDocument document) {
+		FileProtocol protocol = Outliner.fileProtocolManager.getProtocol(document.getDocumentInfo().getProtocolName());
+	
+		// Get the default protocol if none was found.
+		if (protocol == null) {
+			protocol = Outliner.fileProtocolManager.getDefault();
+		}
+		
 		if (!document.getFileName().equals("")) {
-			FileMenu.saveFile(document.getFileName(),document,false);
+			FileMenu.saveFile(document.getFileName(), document,  protocol, false);
 		} else {
-			SaveAsFileMenuItem.saveAsOutlinerDocument(document);
+			SaveAsFileMenuItem.saveAsOutlinerDocument(document, protocol);
 		}
 	}
-
 }

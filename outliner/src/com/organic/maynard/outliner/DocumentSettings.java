@@ -45,6 +45,10 @@ public class DocumentSettings {
 	// Hidden Settings
 	public String dateCreated = new String("");
 	public String dateModified = new String("");
+	
+	
+	private String sFileProtocol = Preferences.getPreferenceString(Preferences.FILE_PROTOCOL).cur;
+	public PreferenceString fileProtocol = new PreferenceString(sFileProtocol, sFileProtocol, "");
 
 
 	// The Constructors
@@ -61,6 +65,7 @@ public class DocumentSettings {
 		ownerEmail = null;
 		dateCreated = null;
 		dateModified = null;
+		fileProtocol = null;
 		applyFontStyleForComments = null;
 		applyFontStyleForEditability = null;
 		applyFontStyleForMoveability = null;

@@ -34,6 +34,7 @@ public class GUITreeComponentRegistry {
 	public static final String STACK_MENU_ITEM = "stack";
 	public static final String RECENT_FILE_MENU = "recent_file_list";
 	
+	public static final String OPEN_MENU_ITEM = "open";
 	public static final String SAVE_MENU_ITEM = "save";
 	public static final String SAVE_AS_MENU_ITEM = "save_as";
 	public static final String SAVE_ALL_MENU_ITEM = "save_all";
@@ -87,6 +88,7 @@ public class GUITreeComponentRegistry {
 
 	public static final String COMPONENT_FONT_FACE = "font_face_component";
 	public static final String COMPONENT_LINE_WRAP = "line_wrap_component";
+	public static final String COMPONENT_FILE_PROTOCOL = "file_protocol_component";
 	public static final String COMPONENT_LINE_ENDING = "line_end_component";
 	public static final String COMPONENT_ENCODING_WHEN_OPENING = "open_encoding_component";
 	public static final String COMPONENT_ENCODING_WHEN_SAVING = "save_encoding_component";

@@ -20,76 +20,56 @@ package com.organic.maynard.outliner;
 
 import java.awt.event.*;
 import javax.swing.*;
-import org.xml.sax.*;
-import com.organic.maynard.util.string.Replace;
 
-public class ExportFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+public class ExportFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener {
 
-	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
-		super.startSetup(atts);
-		
+	private FileProtocol protocol = null;
+
+	// Constructors
+	public ExportFileMenuItem(FileProtocol protocol) {
+		setProtocol(protocol);
 		addActionListener(this);
-		
-		setEnabled(false);
 	}
-
+	
+	
+	// Accessors
+	public FileProtocol getProtocol() {
+		return this.protocol;
+	}
+	
+	public void setProtocol(FileProtocol protocol) {
+		this.protocol = protocol;
+		setText(protocol.getName());
+	}
+	
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		exportOutlinerDocument(Outliner.getMostRecentDocumentTouched());
+		exportOutlinerDocument(Outliner.getMostRecentDocumentTouched(), getProtocol());
 	}
 
-	protected static void exportOutlinerDocument(OutlinerDocument document) {
-		// Setup the File Chooser
-		Outliner.chooser.configureForExport(document);
-
-		int option = Outliner.chooser.showSaveDialog(Outliner.outliner);
+	protected static void exportOutlinerDocument(OutlinerDocument document, FileProtocol protocol) {
+		// We need to swap in a new documentSettings object so that the changes don't carry over
+		// to the open document, but are conveyed to the export. We'll put the real object back
+		// when we're done.
+		DocumentSettings oldSettings = document.settings;
+		DocumentInfo oldDocInfo = document.getDocumentInfo();
 		
-		// Update the most recent save dir preference
-		Preferences.getPreferenceString(Preferences.MOST_RECENT_SAVE_DIR).cur = Outliner.chooser.getCurrentDirectory().getPath();
-		Preferences.getPreferenceString(Preferences.MOST_RECENT_SAVE_DIR).restoreTemporaryToCurrent();
-				
-		// Handle User Input
-		if (option == JFileChooser.APPROVE_OPTION) {
-			String filename = Outliner.chooser.getSelectedFile().getPath();
-			
-			if (!Outliner.isFileNameUnique(filename) && (!filename.equals(document.getFileName()))) {
-				String msg = GUITreeLoader.reg.getText("message_cannot_save_file_already_open");
-				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
+		DocumentSettings newSettings = new DocumentSettings(document);
+		DocumentInfo newDocInfo = new DocumentInfo();
+		
+		document.settings = newSettings;
+		document.setDocumentInfo(newDocInfo);
 
-				JOptionPane.showMessageDialog(Outliner.outliner, msg);
-				// We might want to move this test into the approveSelection method of the file chooser.
-				return;
-			}
-			
-			// Pull Preference Values from the file chooser
-			String lineEnd = Outliner.chooser.getExportLineEnding();
-			String encoding = Outliner.chooser.getExportEncoding();
-			String fileFormat = Outliner.chooser.getExportFileFormat();
 
-			// We need to swap in a new documentSettings object so that the changes don't carry over
-			// to the open document, but are conveyed to the export. We'll put the real object back
-			// when we're done.
-			
-			DocumentSettings oldSettings = document.settings;
-			
-			document.settings = new DocumentSettings(document);
-			
-			document.settings.lineEnd.def = lineEnd;
-			document.settings.lineEnd.cur = lineEnd;
-			document.settings.lineEnd.tmp = lineEnd;
-			document.settings.saveEncoding.def = encoding;
-			document.settings.saveEncoding.cur = encoding;
-			document.settings.saveEncoding.tmp = encoding;
-			document.settings.saveFormat.def = fileFormat;
-			document.settings.saveFormat.cur = fileFormat;
-			document.settings.saveFormat.tmp = fileFormat;
-			
-			FileMenu.exportFile(filename,document);
-			
-			// Swap it back the settings
-			document.settings = oldSettings;
+		if (!protocol.selectFileToSave(document, FileProtocol.EXPORT)) {
+			return;
 		}
+		
+		FileMenu.exportFile(document.getDocumentInfo().getPath(), document, protocol);
+
+		// Swap it back the settings
+		document.settings = oldSettings;
+		document.setDocumentInfo(oldDocInfo);
 	}
 }

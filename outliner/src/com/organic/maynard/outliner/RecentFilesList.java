@@ -30,18 +30,34 @@ import com.organic.maynard.util.string.Replace;
 public class RecentFilesList extends JMenu implements ActionListener, GUITreeComponent, JoeReturnCodes {
 
 	// Constants
-	public static final String A_TEXT = "text";
+	private static final String A_TEXT = "text";
 	
-	//private OutlinerDocument doc = null;
-		
-	public static Vector docInfoList = new Vector();
+	
+	// Static Fields
+	private static ArrayList docInfoList = null;
 	
 	
 	// The Constructors
-	public RecentFilesList() {
-		//super(text);
-		//this.doc = doc;
+	public RecentFilesList() {}
+	
+	
+	// Static Accessors
+	public static ArrayList getDocInfoList() {
+		return docInfoList;
 	}
+	
+	public static int getSizeOfDocInfoList() {
+		return docInfoList.size();
+	}
+	
+	public static void setDocInfoList(ArrayList list) {
+		docInfoList = list;
+	}
+	
+	public static void addDocumentInfo(DocumentInfo docInfo) {
+		docInfoList.add(docInfo);
+	}
+
 
 	// GUITreeComponent interface
 	private String id = null;
@@ -58,9 +74,15 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		JMenu menu = (JMenu) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 2);
 		menu.add(this);
 		
+		// Load recent files from disk.
+		docInfoList = (ArrayList) ReadObjectFromFile(Outliner.RECENT_FILES_FILE);
+		if (docInfoList == null) {
+			docInfoList = new ArrayList();
+		}
+		
 		// Populate the Menu with the existing filenames
 		for (int i = 0; i < docInfoList.size(); i++) {
-			addFileName((DocumentInfo) docInfoList.elementAt(i));
+			addFileName((DocumentInfo) docInfoList.get(i));
 		}
 	}
 	
@@ -72,39 +94,35 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		add(item);
 		setEnabled(true);
 	}
-	
+
+
 	// Static methods
 	public static void addFileNameToList(DocumentInfo docInfo) {
-		// WebFile
-		// Let's turn off the recent file list for remote files since it isn't designed to handle remote files yet.
-		if (Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
-			return;
-		}
-	
 		String filename = docInfo.getPath();
 		
 		// Short Circuit if undo is disabled.
-		if (Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur == 0) {return;}
+		if (Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur == 0) {
+			return;
+		}
 		
 		// if it's a Help system file ... 		[srk] 8/12/01 12:26AM
-		if (Outliner.helpDoxMgr.isThisOneOfOurs(filename) != DOCUMENT_NOT_FOUND){
-			
+		if (Outliner.helpDoxMgr.isThisOneOfOurs(filename) != DOCUMENT_NOT_FOUND) {
 			// fuhgedabowdit
-			return ;
-			
-			} // end if
+			return;
+		}
 		 
 		if (isFileNameUnique(filename)) {
 			RecentFilesList menu = (RecentFilesList) GUITreeLoader.reg.get(GUITreeComponentRegistry.RECENT_FILE_MENU);
+			
 			if (docInfoList.size() >= Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur) {
 				// Remove from the lists
-				docInfoList.removeElementAt(0);
+				docInfoList.remove(0);
 				
 				// Remove from menus
 				menu.remove(0);
 			}
 			// Add to the lists
-			docInfoList.addElement(docInfo);
+			docInfoList.add(docInfo);
 
 			// Add to menus
 			menu.addFileName(docInfo);
@@ -116,7 +134,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		
 		while (docInfoList.size() > Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur) {
 			// Trim lists
-			docInfoList.removeElementAt(0);
+			docInfoList.remove(0);
 
 			// Trim menus
 			menu.remove(0);
@@ -129,7 +147,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 
 	public static boolean isFileNameUnique(String filename) {
 		for (int i = 0; i < docInfoList.size(); i++) {
-			String text = ((DocumentInfo) docInfoList.elementAt(i)).getPath();
+			String text = ((DocumentInfo) docInfoList.get(i)).getPath();
 			if (filename.equals(text)) {
 				return false;
 			}
@@ -139,7 +157,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	
 	public static DocumentInfo getDocumentInfo(String filename) {
 		for (int i = 0; i < docInfoList.size(); i++) {
-			DocumentInfo docInfo = (DocumentInfo) docInfoList.elementAt(i);
+			DocumentInfo docInfo = (DocumentInfo) docInfoList.get(i);
 			if (filename.equals(docInfo.getPath())) {
 				return docInfo;
 			}
@@ -155,7 +173,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	public static void removeFileNameFromList(String filename) {
 		int index = -1;
 		for (int i = 0; i < docInfoList.size(); i++) {
-			String text = ((DocumentInfo) docInfoList.elementAt(i)).getPath();
+			String text = ((DocumentInfo) docInfoList.get(i)).getPath();
 			if (text.equals(filename)) {
 				index = i;
 				break;
@@ -166,7 +184,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		}
 		
 		// Remove from lists
-		docInfoList.removeElementAt(index);
+		docInfoList.remove(index);
 		
 		// Remove from menus
 		RecentFilesList menu = (RecentFilesList) GUITreeLoader.reg.get(GUITreeComponentRegistry.RECENT_FILE_MENU);
@@ -179,40 +197,11 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	
 	// Config File
 	public static void saveConfigFile(String filename) {
-		try {
-			FileWriter fw = new FileWriter(filename);
-			fw.write(prepareConfigFile());
-			fw.close();
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, GUITreeLoader.reg.getText("message_could_not_save_recent_files_config") + ": " + e);
-		}
+		writeObjectToFile(docInfoList, filename);
 	}
-	
-	// Need to fix
-	private static String prepareConfigFile() {
-		StringBuffer buffer = new StringBuffer();
-		for (int i = 0; i < docInfoList.size(); i++) {
-			buffer.append(Outliner.COMMAND_SET);
-			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-			buffer.append("recent_file");
-			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-			
-			DocumentInfo docInfo = (DocumentInfo) docInfoList.elementAt(i);
-			buffer.append(docInfo.toEncodedString(Outliner.COMMAND_PARSER_SEPARATOR, '\\'));
-			
-			buffer.append(System.getProperty("line.separator"));
-		}
-		return buffer.toString();
-	}
-	
+
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		// WebFile
-		// Let's turn off the recent file list for remote files since it isn't designed to handle remote files yet.
-		if (Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
-			return;
-		}
-
 		DocumentInfo docInfo = ((RecentFilesListItem) e.getSource()).getDocumentInfo();
 		String filename = docInfo.getPath();
 		if (!Outliner.isFileNameUnique(filename)) {
@@ -223,6 +212,58 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 			return;
 		}
 
-		FileMenu.openFile(docInfo);
+		// TEMP: get protocol from protocolName
+		String protocolName = docInfo.getProtocolName();
+		FileProtocol protocol = null;
+		if (protocolName == null || protocolName.equals("")) {
+			protocol = Outliner.fileProtocolManager.getDefault();
+		} else {
+			protocol = Outliner.fileProtocolManager.getProtocol(protocolName);
+		}
+
+		FileMenu.openFile(docInfo, protocol);
+	}
+	
+	
+	// Utility Functions
+	// TODO: these should be added to io in com.organic.maynard.jar
+	public static boolean writeObjectToFile(Object obj, String filename) {
+		try {
+			ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(filename));
+			stream.writeObject(obj);
+			stream.close();
+			return true;
+		} catch (IOException e) {
+			System.out.println("Exception: " + e.getMessage());
+			return false;
+		}
+	}
+
+	public static Object ReadObjectFromFile(String filename) {
+		Object obj = null;
+		
+		try {
+			ObjectInputStream stream = new ObjectInputStream(new FileInputStream(filename));
+			obj = stream.readObject();
+			stream.close();
+			
+		} catch (OptionalDataException ode) {
+			System.out.println("Exception: " + ode);
+			
+		} catch (ClassNotFoundException cnfe) {
+			System.out.println("Exception: " + cnfe);
+			
+		} catch (FileNotFoundException fnfe) {
+			System.out.println("Exception: " + fnfe);
+			
+		} catch (StreamCorruptedException sce) {
+			System.out.println("Exception: " + sce);
+					
+		} catch (IOException ioe) {
+			System.out.println("Exception: " + ioe);
+					
+		}
+		
+		return obj;
 	}
 }

@@ -18,30 +18,24 @@
  
 package com.organic.maynard.outliner;
 
-import java.awt.*;
-import java.awt.event.*;
-
-import java.util.*;
 import javax.swing.*;
 
 public class RecentFilesListItem extends JMenuItem {
 	
 	private DocumentInfo docInfo = null;
-	//public String filename = "";
-	//public String encoding = "";
-	//public String fileFormat = "";
 		
 	// The Constructors
 	public RecentFilesListItem(String text, DocumentInfo docInfo) {
 		super(text);
 		setDocumentInfo(docInfo);
-		//this.filename = filename;
-		//this.encoding = encoding;
-		//this.fileFormat = fileFormat;
 	}
 
 	// Accessors
-	public DocumentInfo getDocumentInfo() {return this.docInfo;}
-	public void setDocumentInfo(DocumentInfo docInfo) {this.docInfo = docInfo;}
-
+	public DocumentInfo getDocumentInfo() {
+		return this.docInfo;
+	}
+	
+	public void setDocumentInfo(DocumentInfo docInfo) {
+		this.docInfo = docInfo;
+	}
 }

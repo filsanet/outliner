@@ -40,7 +40,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 			int result = JOptionPane.showConfirmDialog(doc, msg);
 			if (result == JOptionPane.YES_OPTION) {
 				SaveAsFileMenuItem item = (SaveAsFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
-				item.saveAsOutlinerDocument(doc);
+				item.saveAsOutlinerDocument(doc, Outliner.fileProtocolManager.getDefault());
 			} else if (result == JOptionPane.NO_OPTION) {
 				// Do Nothing
 			} else if (result == JOptionPane.CANCEL_OPTION) {

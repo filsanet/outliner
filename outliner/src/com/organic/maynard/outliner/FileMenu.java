@@ -26,9 +26,6 @@ import javax.swing.*;
 import org.xml.sax.*;
 import com.organic.maynard.util.string.Replace;
 
-// WebFile
-import com.yearahead.io.*;
-
 /**
  * @author  $Author$
  * @version $Revision$, $Date$
@@ -47,23 +44,34 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		super.startSetup(atts);
 		Outliner.menuBar.fileMenu = this;
 	}
+	
+	public void endSetup(AttributeList atts) {
+		// Disable menus at startup
+		((OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM)).setEnabled(false);
+		((OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_MENU_ITEM)).setEnabled(false);
+		((OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_SELECTION_MENU_ITEM)).setEnabled(false);
+		
+		super.endSetup(atts);
+	}
 
 	
 	// Utility Methods
 	private static final int MODE_SAVE = 0;
 	private static final int MODE_EXPORT = 1;
 	
-	public static void exportFile(String filename, OutlinerDocument document) {
-		saveFile(filename, document, true, MODE_EXPORT);
+	public static void exportFile(String filename, OutlinerDocument document, FileProtocol protocol) {
+		saveFile(filename, document, protocol, true, MODE_EXPORT);
 	}
 
-	public static void saveFile(String filename, OutlinerDocument document, boolean saveAs) {
-		saveFile(filename, document, saveAs, MODE_SAVE);
+	public static void saveFile(String filename, OutlinerDocument document, FileProtocol protocol, boolean saveAs) {
+		saveFile(filename, document, protocol, saveAs, MODE_SAVE);
 	}
 	
-	public static void saveFile(String filename, OutlinerDocument document, boolean saveAs, int mode) {
+	public static void saveFile(String filename, OutlinerDocument document, FileProtocol protocol, boolean saveAs, int mode) {
+		DocumentInfo docInfo = document.getDocumentInfo();
+
 		// Get the file format object
-		String fileFormatName = document.settings.saveFormat.cur;
+		String fileFormatName = docInfo.getFileFormat();
 		SaveFileFormat saveFileFormat = null;
 		if (mode == MODE_SAVE) {
 			saveFileFormat = Outliner.fileFormatManager.getSaveFormat(fileFormatName);
@@ -72,34 +80,29 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		} else {
 			// Ack, this shouldn't happen.
 		}
-		
-		
+
 		String msg = null;
 		if (saveFileFormat == null) {
 			msg = GUITreeLoader.reg.getText("error_could_not_save_no_file_format");
-			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, Outliner.chooser.getSelectedFile().getPath());
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
 			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_2, fileFormatName);
 
 			JOptionPane.showMessageDialog(document, msg);
 			return;
 		}
-		
+
 		// Initialize DocumentInfo with current document state, prefs and document settings.
 		if (mode == MODE_SAVE) {
 			document.setFileName(filename);
-		}
-		
-		DocumentInfo docInfo = new DocumentInfo();
-		docInfo.updateDocumentInfoForDocument(document, saveAs);
-
-		if (mode == MODE_EXPORT) {
+			docInfo.updateDocumentInfoForDocument(document, saveAs); // Might not be neccessary anymore.
+		} else {
 			// Set it here since this would normally be pulled from the document's filename during
 			// updateDocumentInfoForDocument method.
 			docInfo.setPath(filename);
 		}
 				
 		document.settings.useDocumentSettings = true;
-		
+
 		// Check File Format Support
 		boolean commentExists = false;
 		boolean editableExists = false;
@@ -179,7 +182,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			}
 		}
 
-		
 		// Save the File
 		if (document.hoistStack.isHoisted()) {
 			document.hoistStack.temporaryDehoistAll(); // So that a hoisted doc will be completely saved.
@@ -188,145 +190,112 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// WebFile
 		byte[] bytes = saveFileFormat.save(document.tree, docInfo);
 
-		boolean success = false;
-		if (Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
-			try {
-				success = WebFile.save(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur, docInfo.getPath(), bytes);
-			} catch(IOException x) {
-				x.printStackTrace();
-				success = false;
-			}
-		} else {
-			success = FileFormatManager.writeFile(docInfo.getPath(), bytes);
-		}
-
-		if (!success) {
-			msg = GUITreeLoader.reg.getText("error_could_not_save_file");
-			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, Outliner.chooser.getSelectedFile().getPath());
-
-			JOptionPane.showMessageDialog(document, msg);
-			return;
-		}
+		// Write the bytes	
+		docInfo.setOutputBytes(bytes);					
+		boolean success = protocol.saveFile(docInfo);
 
 		if (document.hoistStack.isHoisted()) {
 			document.hoistStack.temporaryHoistAll(); // Now that the whole doc was saved, let's put things back the way they were.
 		}
-							
 
-		// Don't update the gui if we're an export.
-		if (mode == MODE_EXPORT) {
-			return;
-		}
-		
-		// Stop collecting text edits into the current undoable.
-		UndoableEdit.freezeUndoEdit(document.tree.getEditingNode());
-		
-		// Update the Recent File List
-		if (saveAs && !document.getFileName().equals(filename)) {
-			RecentFilesList.addFileNameToList(docInfo);
+		if (success) {
+			if (mode == MODE_SAVE) {
+				// Stop collecting text edits into the current undoable.
+				UndoableEdit.freezeUndoEdit(document.tree.getEditingNode());
+				
+				// Update the Recent File List
+				if (saveAs && !document.getFileName().equals(filename)) {
+					RecentFilesList.addFileNameToList(docInfo);
+				} else {
+					RecentFilesList.updateFileNameInList(filename, docInfo);
+				}
+
+				//document.setFileName(filename);
+				document.setTitle(filename);
+				document.setFileModified(false);
+
+				// Update the Window Menu
+				WindowMenu.updateWindow(document);
+			}
 		} else {
-			RecentFilesList.updateFileNameInList(filename, docInfo);
+			msg = GUITreeLoader.reg.getText("error_could_not_save_file");
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
+
+			JOptionPane.showMessageDialog(document, msg);
+		}
+		
+		// Get rid of the bytes now that were done so they can be GC'd.
+		docInfo.setOutputBytes(null);
+	}
+	
+	private static int openFileAndGetTree(TreeContext tree, DocumentInfo docInfo, FileProtocol protocol) {
+		// Open the file
+		if (!protocol.openFile(docInfo)) {
+			return FAILURE;
 		}
 
-		//document.setFileName(filename);
-		document.setTitle(filename);
-		document.setFileModified(false);
-
-		// Update the Window Menu
-		WindowMenu.updateWindow(document);
-	}
-		
-	protected static void openFile(DocumentInfo docInfo) {
-		String filename = docInfo.getPath();
-		String encoding = docInfo.getEncodingType();
-		String fileFormat = docInfo.getFileFormat();
-		
 		// Get the file format object
-		OpenFileFormat openFileFormat = Outliner.fileFormatManager.getOpenFormat(fileFormat);
-		
+		OpenFileFormat openFileFormat = Outliner.fileFormatManager.getOpenFormat(docInfo.getFileFormat());
+
 		String msg = null;
+		int success = FAILURE;
+		
 		if (openFileFormat == null) {
 			msg = GUITreeLoader.reg.getText("error_could_not_open_no_file_format");
-			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
-			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_2, fileFormat);
-
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_2, docInfo.getFileFormat());
 			JOptionPane.showMessageDialog(Outliner.outliner, msg);
-			return;
+		} else {
+			// Load the file
+			success = openFileFormat.open(tree, docInfo, docInfo.getInputStream());
+			
+			if (success == FAILURE) {
+				msg = GUITreeLoader.reg.getText("error_could_not_open_file");
+				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
+
+				JOptionPane.showMessageDialog(Outliner.outliner, msg);
+				RecentFilesList.removeFileNameFromList(docInfo.getPath());
+			} else if (success != FAILURE_USER_ABORTED) {
+				// Deal with a childless RootNode or an Empty or Null Tree
+				if ((tree == null) || (tree.getRootNode() == null) || (tree.getRootNode().numOfChildren() <= 0)) {
+					tree = new TreeContext();
+				}
+			}
 		}
 		
-		// Load the file
+		// Reset the input stream in the docInfo
+		docInfo.setInputStream(null);
+		
+		return success;
+	}
+	
+	protected static void openFile(DocumentInfo docInfo, FileProtocol protocol) {
+		// Get the TreeContext
 		TreeContext tree = new TreeContext();
-		InputStream stream = null;
-		if (Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
-			try {
-				stream = WebFile.open(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur, filename);
-			} catch(IOException e) {
-				msg = GUITreeLoader.reg.getText("error_could_not_open_file");
-				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
-
-				JOptionPane.showMessageDialog(Outliner.outliner, msg);
-				RecentFilesList.removeFileNameFromList(filename);
-				return;
-			}
-		} else {
-			try {
-				stream = new FileInputStream(filename);
-			} catch (FileNotFoundException fnfe) {
-				msg = GUITreeLoader.reg.getText("error_file_not_found");
-				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
-
-				JOptionPane.showMessageDialog(Outliner.outliner, msg);
-				RecentFilesList.removeFileNameFromList(filename);
-				return;
-			} catch (Exception e) {
-				msg = GUITreeLoader.reg.getText("error_could_not_open_file");
-				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
-
-				JOptionPane.showMessageDialog(Outliner.outliner, msg);
-				RecentFilesList.removeFileNameFromList(filename);
-				return;
-			}
-		}
-
-		int success = openFileFormat.open(tree, docInfo, stream);
-		if (success == FAILURE) {
-			msg = GUITreeLoader.reg.getText("error_could_not_open_file");
-			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
-
-			JOptionPane.showMessageDialog(Outliner.outliner, msg);
-			RecentFilesList.removeFileNameFromList(filename);
-			return;
-		} else if (success == FAILURE_USER_ABORTED) {
+		int success = openFileAndGetTree(tree, docInfo, protocol);
+		
+		if ((success != SUCCESS) && (success != SUCCESS_MODIFIED)) { // Might be good to have codes we can do % on.
 			return;
 		}
-		
-		// Deal with a childless RootNode or an Empty or Null Tree
-		if ((tree != null) && (tree.getRootNode() != null) && (tree.getRootNode().numOfChildren() > 0)) {
-			// Pass on through, we're OK.
-		} else {
-			tree = new TreeContext();
-		}
-		
 		
 		// Create a new document
-		OutlinerDocument newDoc = new OutlinerDocument(filename);
+		OutlinerDocument newDoc = new OutlinerDocument(docInfo.getPath(), docInfo);
+		newDoc.setDocumentInfo(docInfo);
+		
 		tree.doc = newDoc;
 		newDoc.tree = tree;
 		
-		// Set bounds
-		if (newDoc.isMaximum()) {
-			newDoc.setNormalBounds(new Rectangle(docInfo.getWindowLeft(), docInfo.getWindowTop(), docInfo.getWidth(), docInfo.getHeight()));
-		} else {
-			newDoc.setBounds(docInfo.getWindowLeft(), docInfo.getWindowTop(), docInfo.getWidth(), docInfo.getHeight());
-		}
-		
 		// Update DocumentSettings
 		//newDoc.settings.syncPrefs();
-		newDoc.settings.saveEncoding.def = encoding;
+		newDoc.settings.lineEnd.def = docInfo.getLineEnding();
+		newDoc.settings.lineEnd.restoreCurrentToDefault();
+		newDoc.settings.lineEnd.restoreTemporaryToDefault();
+
+		newDoc.settings.saveEncoding.def = docInfo.getEncodingType();
 		newDoc.settings.saveEncoding.restoreCurrentToDefault();
 		newDoc.settings.saveEncoding.restoreTemporaryToDefault();
 		
-		newDoc.settings.saveFormat.def = fileFormat;
+		newDoc.settings.saveFormat.def = docInfo.getFileFormat();
 		newDoc.settings.saveFormat.restoreCurrentToDefault();
 		newDoc.settings.saveFormat.restoreTemporaryToDefault();
 		
@@ -348,85 +317,21 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		newDoc.settings.useDocumentSettings = true;
 
 		// Move it to the bottom of the recent files list
-		RecentFilesList.updateFileNameInList(filename, docInfo);
+		RecentFilesList.updateFileNameInList(docInfo.getPath(), docInfo);
 		
-		setupAndDraw(docInfo, newDoc);
-
-		// Set document as modified if something happened on open
-		if (success == SUCCESS_MODIFIED) {
-			newDoc.setFileModified(true);
-		}
+		setupAndDraw(docInfo, newDoc, success);
 	}
 
-	protected static void revertFile(String filename, OutlinerDocument document) {
-		String fileFormat = document.settings.saveFormat.cur;
+	protected static void revertFile(OutlinerDocument document) {
+		DocumentInfo docInfo = document.getDocumentInfo();
+		FileProtocol protocol = Outliner.fileProtocolManager.getProtocol(docInfo.getProtocolName());
 
-		// Get the file format object
-		OpenFileFormat openFileFormat = Outliner.fileFormatManager.getOpenFormat(fileFormat);
-		
-		String msg = null;
-		if (openFileFormat == null) {
-			msg = GUITreeLoader.reg.getText("error_could_not_revert_no_file_format");
-			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
-			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_2, fileFormat);
-
-			JOptionPane.showMessageDialog(document, msg);
-			return;
-		}
-		
-		// Load the file
+		// Get the TreeContext
 		TreeContext tree = new TreeContext();
+		int success = openFileAndGetTree(tree, docInfo, protocol);
 		
-		DocumentInfo docInfo = new DocumentInfo();
-		docInfo.setPath(filename);
-		docInfo.setEncodingType(document.settings.saveEncoding.cur);
-
-		InputStream stream = null;
-		if (Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
-			try {
-				stream = WebFile.open(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur, filename);
-			} catch(IOException e) {
-				msg = GUITreeLoader.reg.getText("error_could_not_open_file");
-				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
-
-				JOptionPane.showMessageDialog(Outliner.outliner, msg);
-				RecentFilesList.removeFileNameFromList(filename);
-				return;
-			}
-		} else {
-			try {
-				stream = new FileInputStream(filename);
-			} catch (FileNotFoundException fnfe) {
-				msg = GUITreeLoader.reg.getText("error_file_not_found");
-				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
-
-				JOptionPane.showMessageDialog(Outliner.outliner, msg);
-				RecentFilesList.removeFileNameFromList(filename);
-				return;
-			} catch (Exception e) {
-				msg = GUITreeLoader.reg.getText("error_could_not_open_file");
-				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
-
-				JOptionPane.showMessageDialog(Outliner.outliner, msg);
-				RecentFilesList.removeFileNameFromList(filename);
-				return;
-			}
-		}
-
-
-		int success = openFileFormat.open(tree, docInfo, stream);
-		if (success == FAILURE) {
-			RecentFilesList.removeFileNameFromList(filename); // Not really sure this is appropriate.
+		if ((success != SUCCESS) && (success != SUCCESS_MODIFIED)) { // Might be good to have codes we can do % on.
 			return;
-		} else if (success == FAILURE_USER_ABORTED) {
-			return;
-		}
-
-		// Deal with a childless RootNode or an Empty or Null Tree
-		if ((tree != null) && (tree.getRootNode() != null) && (tree.getRootNode().numOfChildren() > 0)) {
-			// Pass on through, we're OK.
-		} else {
-			tree = new TreeContext();
 		}
 		
 		// Swap in the new tree
@@ -439,15 +344,10 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// Clear the HoistStack
 		document.hoistStack.clear();
 
-		setupAndDraw(docInfo, document);
-
-		// Set document as modified if something happened on open
-		if (success == SUCCESS_MODIFIED) {
-			document.setFileModified(true);
-		}
+		setupAndDraw(docInfo, document, success);
 	}
 	
-	private static void setupAndDraw(DocumentInfo docInfo, OutlinerDocument doc) {
+	private static void setupAndDraw(DocumentInfo docInfo, OutlinerDocument doc, int success) {
 		TreeContext tree = doc.tree;
 		String filename = docInfo.getPath();
 		
@@ -503,6 +403,11 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		layout.setNodeToDrawFrom(firstVisibleNode,index);
 		layout.draw();
 		layout.setFocus(firstVisibleNode, OutlineLayoutManager.TEXT);
+
+		// Set document as modified if something happened on open
+		if (success == SUCCESS_MODIFIED) {
+			doc.setFileModified(true);
+		}
 	}
 
 

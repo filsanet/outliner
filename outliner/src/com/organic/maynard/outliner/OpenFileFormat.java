@@ -52,4 +52,4 @@ public interface OpenFileFormat
 		InputStream stream
 		); 
 	
-	} // end interface OpenFileFormat
+}

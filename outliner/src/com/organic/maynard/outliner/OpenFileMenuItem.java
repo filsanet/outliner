@@ -20,58 +20,42 @@ package com.organic.maynard.outliner;
 
 import java.awt.event.*;
 import javax.swing.*;
-import org.xml.sax.*;
-import com.organic.maynard.util.string.Replace;
 
-public class OpenFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+public class OpenFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener {
 
-	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
-		super.startSetup(atts);
-		
+	private FileProtocol protocol = null;
+
+	// Constructors
+	public OpenFileMenuItem(FileProtocol protocol) {
+		setProtocol(protocol);
 		addActionListener(this);
+	}
+	
+	// Accessors
+	public FileProtocol getProtocol() {
+		return this.protocol;
+	}
+	
+	public void setProtocol(FileProtocol protocol) {
+		this.protocol = protocol;
+		setText(protocol.getName());
 	}
 
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		openOutlinerDocument();
+		openOutlinerDocument(getProtocol());
 	}
 
-	protected static void openOutlinerDocument() {
-		// Setup the File Chooser
-		Outliner.chooser.configureForOpen(null, Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur, Preferences.getPreferenceString(Preferences.OPEN_FORMAT).cur);
-		
-		int option = Outliner.chooser.showOpenDialog(Outliner.outliner);
+	protected static void openOutlinerDocument(FileProtocol protocol) {
+		DocumentInfo docInfo = new DocumentInfo();
+		docInfo.setProtocolName(protocol.getName());
 
-		// Update the most recent save dir preference
-		Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur = Outliner.chooser.getCurrentDirectory().getPath();
-		Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).restoreTemporaryToCurrent();
-
-		// Handle User Input
-		if (option == JFileChooser.APPROVE_OPTION) {
-			String filename = Outliner.chooser.getSelectedFile().getPath();
-			if (!Outliner.isFileNameUnique(filename)) {
-				String msg = GUITreeLoader.reg.getText("message_file_already_open");
-				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
-
-				JOptionPane.showMessageDialog(Outliner.outliner, msg);
-				
-				// Change to the open window.
-				Outliner.menuBar.windowMenu.changeToWindow(Outliner.getDocument(filename));
-				return;
-			}
-			
-			// Pull Preference Values from the file chooser
-			String encoding = Outliner.chooser.getOpenEncoding();
-			String fileFormat = Outliner.chooser.getOpenFileFormat();
-
-			DocumentInfo docInfo = new DocumentInfo();
-			docInfo.setPath(filename);
-			docInfo.setEncodingType(encoding);
-			docInfo.setFileFormat(fileFormat);
-			
-			FileMenu.openFile(docInfo);
+		// Select the file we are going to open.
+		if (!protocol.selectFileToOpen(docInfo)) {
+			return;
 		}
+		
+		FileMenu.openFile(docInfo, protocol);
 	}
 }

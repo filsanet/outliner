@@ -30,6 +30,7 @@ public class PreferencesPanelOpenAndSave extends AbstractPreferencesPanel implem
 	public void endSetup(AttributeList atts) {
 		super.endSetup(atts);
 		
+		AbstractPreferencesPanel.addArrayToComboBox(Preferences.FILE_PROTOCOLS.toArray(), GUITreeComponentRegistry.COMPONENT_FILE_PROTOCOL);
 		AbstractPreferencesPanel.addArrayToComboBox(PlatformCompatibility.PLATFORM_IDENTIFIERS, GUITreeComponentRegistry.COMPONENT_LINE_ENDING);
 		AbstractPreferencesPanel.addArrayToComboBox(Preferences.ENCODINGS.toArray(), GUITreeComponentRegistry.COMPONENT_ENCODING_WHEN_OPENING);
 		AbstractPreferencesPanel.addArrayToComboBox(Preferences.ENCODINGS.toArray(), GUITreeComponentRegistry.COMPONENT_ENCODING_WHEN_SAVING);
@@ -39,6 +40,7 @@ public class PreferencesPanelOpenAndSave extends AbstractPreferencesPanel implem
 	
 	public void applyCurrentToApplication() {
 		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
+		PreferenceString pFileProtocol = (PreferenceString) prefs.getPreference(Preferences.FILE_PROTOCOL);
 		PreferenceLineEnding pLineEnd = (PreferenceLineEnding) prefs.getPreference(Preferences.LINE_END);
 		PreferenceString pSaveEncoding = (PreferenceString) prefs.getPreference(Preferences.SAVE_ENCODING);
 		PreferenceString pSaveFormat = (PreferenceString) prefs.getPreference(Preferences.SAVE_FORMAT);
@@ -49,6 +51,9 @@ public class PreferencesPanelOpenAndSave extends AbstractPreferencesPanel implem
 			
 			// Only update files that do not have overriding document settings.
 			if (!doc.settings.useDocumentSettings) {
+				doc.settings.fileProtocol.def = pFileProtocol.tmp;
+				doc.settings.fileProtocol.cur = pFileProtocol.tmp;
+				doc.settings.fileProtocol.tmp = pFileProtocol.tmp;
 				doc.settings.lineEnd.def = pLineEnd.tmp;
 				doc.settings.lineEnd.cur = pLineEnd.tmp;
 				doc.settings.lineEnd.tmp = pLineEnd.tmp;
@@ -61,5 +66,11 @@ public class PreferencesPanelOpenAndSave extends AbstractPreferencesPanel implem
 				//doc.setFileModified(true);
 			}
 		}
+		
+		// Synchronize default protocol in model.
+		Outliner.fileProtocolManager.synchronizeDefault();
+		Outliner.fileProtocolManager.synchonizeDefaultMenuItem();
+		
+		
 	}
 }

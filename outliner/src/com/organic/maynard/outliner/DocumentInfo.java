@@ -22,6 +22,8 @@ import com.organic.maynard.util.string.StringTools;
 import com.organic.maynard.util.string.StringSplitter;
 import java.util.*;
 
+import java.io.*;
+
 import java.text.SimpleDateFormat;
 import java.awt.*;
 import javax.swing.*;
@@ -31,7 +33,7 @@ import javax.swing.*;
  * @version $Revision$, $Date$
  */
 
-public class DocumentInfo {
+public class DocumentInfo implements Serializable {
 	
 	// Constants
 	private static final String EXPANDED_NODE_SEPERATOR = ",";
@@ -57,6 +59,7 @@ public class DocumentInfo {
 	private boolean applyFontStyleForComments = true;
 	private boolean applyFontStyleForEditability = true;
 	private boolean applyFontStyleForMoveability = true;
+	private String protocolName = null;
 	
 	// The Constructors
 	public DocumentInfo() {
@@ -79,7 +82,8 @@ public class DocumentInfo {
 			"",
 			Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur,
 			Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur,
-			Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur
+			Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur,
+			""
 		);
 	}
 	
@@ -102,7 +106,8 @@ public class DocumentInfo {
 		String expandedNodesString,
 		boolean applyFontStyleForComments,
 		boolean applyFontStyleForEditability,
-		boolean applyFontStyleForMoveability
+		boolean applyFontStyleForMoveability,
+		String protocolName
 		) 
 	{
 		setFileFormat(fileFormat);
@@ -124,6 +129,27 @@ public class DocumentInfo {
 		setApplyFontStyleForComments(applyFontStyleForComments);
 		setApplyFontStyleForEditability(applyFontStyleForEditability);
 		setApplyFontStyleForMoveability(applyFontStyleForMoveability);
+		setProtocolName(protocolName);
+	}
+
+	// IO Data Accessors
+	private transient byte[] bytes;
+	private transient InputStream stream = null;
+
+	public byte[] getOutputBytes() {
+		return this.bytes;
+	}
+	
+	public void setOutputBytes(byte[] bytes) {
+		this.bytes = bytes;
+	}
+	
+	public InputStream getInputStream() {
+		return this.stream;
+	}
+	
+	public void setInputStream(InputStream stream) {
+		this.stream = stream;
 	}
 
 	// Accessors
@@ -211,6 +237,9 @@ public class DocumentInfo {
 	public boolean getApplyFontStyleForMoveability() {return this.applyFontStyleForMoveability;}
 	public void setApplyFontStyleForMoveability(boolean applyFontStyleForMoveability) {this.applyFontStyleForMoveability = applyFontStyleForMoveability;}
 
+	public String getProtocolName() {return this.protocolName;}
+	public void setProtocolName(String protocolName) { this.protocolName = protocolName;}
+	
 	// Expanded Nodes
 	public ArrayList getExpandedNodes() {return this.expandedNodes;}
 	public boolean setExpandedNodes(ArrayList expandedNodes) {
@@ -287,68 +316,6 @@ public class DocumentInfo {
 	public int getHeight() {return getWindowBottom() - getWindowTop();}
 	
 	// Utility Methods
-	public String toEncodedString(String seperator, char escapeChar) {
-		StringBuffer buffer = new StringBuffer();
-		
-		buffer.append(StringTools.escape(getFileFormat(), escapeChar, null));
-		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-
-		buffer.append(StringTools.escape(getEncodingType(), escapeChar, null));
-		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-
-		buffer.append(StringTools.escape(getLineEnding(), escapeChar, null));
-		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-
-		buffer.append(StringTools.escape(getPadding(), escapeChar, null));
-		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-
-		buffer.append(StringTools.escape(getPath(), escapeChar, null));
-		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-
-		buffer.append(StringTools.escape(getTitle(), escapeChar, null));
-		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-
-		buffer.append(StringTools.escape(getDateCreated(), escapeChar, null));
-		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-
-		buffer.append(StringTools.escape(getDateModified(), escapeChar, null));
-		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-
-		buffer.append(StringTools.escape(getOwnerName(), escapeChar, null));
-		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-
-		buffer.append(StringTools.escape(getOwnerEmail(), escapeChar, null));
-		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-
-		buffer.append(StringTools.escape("" + getVerticalScrollState(), escapeChar, null));
-		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-
-		buffer.append(StringTools.escape("" + getWindowTop(), escapeChar, null));
-		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-
-		buffer.append(StringTools.escape("" + getWindowLeft(), escapeChar, null));
-		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-
-		buffer.append(StringTools.escape("" + getWindowBottom(), escapeChar, null));
-		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-
-		buffer.append(StringTools.escape("" + getWindowRight(), escapeChar, null));
-		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-
-		buffer.append(StringTools.escape("" + getExpandedNodesString(), escapeChar, null));
-		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-
-		buffer.append(StringTools.escape("" + getApplyFontStyleForComments(), escapeChar, null));
-		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-
-		buffer.append(StringTools.escape("" + getApplyFontStyleForEditability(), escapeChar, null));
-		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-
-		buffer.append(StringTools.escape("" + getApplyFontStyleForMoveability(), escapeChar, null));
-		
-		return buffer.toString();
-	}
-
 	public static String getCurrentDateTimeString() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z");
 		if (!Preferences.getPreferenceString(Preferences.TIME_ZONE_FOR_SAVING_DATES).cur.equals("")) {
