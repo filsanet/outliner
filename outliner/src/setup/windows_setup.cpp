@@ -232,8 +232,8 @@ int wePlugIntoSystem () {
 	// if we succeed at any needed file copying ...
 	if (copyFilesAsNecessary(appHomeDir) 
 	
-	// and we're able to set up paths
-	&& setAllPaths(appHomeDir) 
+	// and we're able to determine all paths
+	&& determineAllPaths(appHomeDir) 
 	
 	// and we can set environment variables
 	&& setAllEnvVars() 
@@ -537,7 +537,7 @@ int machineHasNuffOomph () {
 
 
 // sets up paths that are useful to us
-int setAllPaths (char * appHomePath) {
+int determineAllPaths (char * appHomePath) {
 	// local vars
 	char shortPathBuffer[MAX_PATH] ;
 	
@@ -571,7 +571,7 @@ int setAllPaths (char * appHomePath) {
 
 	return 1 ;
 
-} // end function setAllPaths
+} // end function determineAllPaths
 
 
 // sets up all environment variables
@@ -579,7 +579,6 @@ int setAllPaths (char * appHomePath) {
 int setAllEnvVars () {
 	
 	return ( set_APP_HOME() 
-		// & set_xxx_YYY()
 		// & set_xxx_YYY()
 		// & set_xxx_YYY() 
 		) ;
@@ -593,6 +592,8 @@ int joinRegistry () {
 	// local vars
 	HKEY rootKey = APP_REGISTRY_ROOT_KEY ;
 	char appKeyPath [MAX_REG_PATH] ;
+	int result ;
+	
 	
 	HKEY appKey = NULL ;
 	DWORD createKeyDisposition = 0 ;
@@ -600,6 +601,8 @@ int joinRegistry () {
 	strcpy(appKeyPath, APP_REGISTRY_PATH) ;
 	strcat(appKeyPath, APP_REG_KEY_STRING) ;
 	
+	// set App Paths
+	result = setAppPaths() ;
 	
 	return 1 ;
 	
@@ -721,6 +724,70 @@ int set_APP_HOME () {
 } // end set_app_HOME
 
 
+// sets App Paths in the registry
+// returns 1 if it succeeds, 0 if it fails
+int setAppPaths () {
+	// local vars
+	char exePath[MAX_PATH] ;
+	char dllPath[MAX_PATH] ;
+	char keyPath[MAX_PATH] ;
+	HKEY appPathKey = NULL ;
+	DWORD createKeyDisposition = 0;
+	LONG setResult01 = 0;
+	LONG setResult02 = 0;
+	LONG closeResult = 0;
+	int result = 0 ;
+	
+	// set up a path to the exe
+	strcpy (exePath, g_App_Home_Path) ;
+	strcat (exePath, EXE_NAME) ;
+	
+	// set up a path to the DLLs
+	// dlls are stored in a dir off the home path
+	// set up a path to that dir
+	strcpy (dllPath, g_App_Home_Path) ;
+	strcat (dllPath, DLL_REL_PATH) ;
+	
+	// set up an Apps Path keypath
+	strcpy (keyPath, APP_PATHS_PATH) ;
+	strcat (keyPath, EXE_NAME) ;
+	
+	// try to open up the Apps Path key
+	// if it doesn't exist, will try to create it
+	if (RegCreateKeyEx (APP_PATHS_ROOT_KEY, keyPath, 0,
+				0,REG_OPTION_NON_VOLATILE, KEY_WRITE, 0, 
+				& appPathKey, & createKeyDisposition)== ERROR_SUCCESS) {
+	
+		// okay, we've got an Apps Path key
+		
+		// try to set its default value to the exe path
+		setResult01 = RegSetValueEx (appPathKey, NULL, 0, REG_SZ,
+				(LPBYTE)exePath, strlen(exePath) + 1) ;
+		
+		// try to set its Path value to the dll path
+		setResult02 = RegSetValueEx (appPathKey, APP_PATHS_VALUE_NAME, 
+				0, REG_SZ, (LPBYTE)dllPath, strlen(dllPath) + 1) ;
+		
+		// close the environment key
+		closeResult = RegCloseKey (appPathKey) ;
+		
+		// done
+		result =(setResult01 == ERROR_SUCCESS) &
+			(setResult02 == ERROR_SUCCESS) & 
+			(closeResult == ERROR_SUCCESS) ;
+		
+	// else we couldn't get at the Apps Path key
+	} else {
+		// sigh
+		result = 0 ;
+	} // end if-else
+
+	// feedback and return
+	return result & sapFeedback (result, EXE_NAME, exePath, dllPath) ;
+	
+} // end setAppPaths
+
+
 // get a shortpath version of the current directory
 int getShortPathCurDir (char * shortPathBuffer) {
 	// local vars
@@ -774,7 +841,8 @@ int setEnvVar (char * varName, char * varValue, char * introLines, windows_versi
 			if (! (result = setRegistryEnvVar (varName, varValue, SYSTEM)))
 				
 				// we'll set it for just the current user
-			
+				result = setRegistryEnvVar (varName, varValue, USER) ;
+				
 			// if we succeeded
 			if (result) 
 				// broadcast the news
@@ -1354,6 +1422,31 @@ int sevFeedback (int result, char * varName, char * varValue) {
 	return displayInfoNextCancel (feedbackString) ;
 	
 } // end sevFeedback
+
+
+// provide some feedback RE setting Apps Path
+// returns 1 if user chooses to go to the Next frame, 0 if user chooses to Cancel
+int sapFeedback (int result, char * exeName, char * exePath, char * dllPath) {
+	
+	char feedbackString [MAX_LINE] ;
+	
+	if (result) 
+		strcpy (feedbackString, SAP_FEEDBACK_STRING_0) ;
+	else 
+		strcpy (feedbackString, SAP_FEEDBACK_STRING_1) ;
+		
+	strcat (feedbackString, SAP_FEEDBACK_STRING_2) ;
+	strcat (feedbackString, exeName) ;
+	strcat (feedbackString, "'s\n  ") ;
+	strcat (feedbackString, SAP_FEEDBACK_STRING_3) ;
+	strcat (feedbackString, exePath) ;
+	strcat (feedbackString, "\n  ") ;
+	strcat (feedbackString, SAP_FEEDBACK_STRING_4) ;
+	strcat (feedbackString, dllPath) ;
+	strcat (feedbackString, ".\n\n") ;
+	return displayInfoNextCancel (feedbackString) ;
+
+} // end sapFeedback
 
 
 int ensureSuitableEnvironment () {

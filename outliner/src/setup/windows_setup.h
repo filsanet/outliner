@@ -50,6 +50,8 @@
 #define SHORTCUT_NAME  "JOE.lnk"
 #define SHORTCUT_PATH  "lib\\"
 
+#define DLL_REL_PATH  "lib"
+
 #define APP_NAME_STRING  "JOE"
 #define APP_REG_KEY_STRING  "JOE"
 #define APP_VERSION_STRING  "1.8.8"
@@ -98,6 +100,13 @@
 #define SEV_FEEDBACK_STRING_1  "Setup was unable to set "
 #define SEV_FEEDBACK_STRING_2  "the environment variable "
 #define SEV_FEEDBACK_STRING_3  "to the value "
+
+// Apps Path feedback vars
+#define SAP_FEEDBACK_STRING_0  "Setup set "
+#define SAP_FEEDBACK_STRING_1  "Setup was unable to set "
+#define SAP_FEEDBACK_STRING_2  "the Apps Path key "
+#define SAP_FEEDBACK_STRING_3  "(Default) value to "
+#define SAP_FEEDBACK_STRING_4  "and Path value to "
 
 // overall results
 #define SUCCESS_FEEDBACK_0  "JOE installed successfully on your system."
@@ -163,6 +172,10 @@ const char * MS_DOS_SYS_SECTION_STRINGS [] = {
 
 #define APP_REGISTRY_ROOT_KEY  HKEY_LOCAL_MACHINE
 #define APP_REGISTRY_PATH  "Software\\"
+
+#define APP_PATHS_ROOT_KEY  HKEY_LOCAL_MACHINE
+#define APP_PATHS_PATH  "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\"
+#define APP_PATHS_VALUE_NAME  "Path"
 
 #define MAX_REG_PATH 255
 
@@ -258,6 +271,7 @@ int allWin32RegDeleteKey(HKEY, char*) ;
 int centerWindowOnScreen (HWND) ;
 int copyOurFiles(char *);
 int copyFilesAsNecessary(char *);
+int determineAllPaths(char *) ;
 int determineWindowsVersion(windows_version *) ;
 int displayInfoExit(LPSTR);
 int displayInfoExitStart(LPSTR);
@@ -286,10 +300,11 @@ int rebootRequired(windows_version) ;
 int runningFromCdRom();
 int runningFromTempFolder();
 int runningLocally ();
+int sapFeedback (int, char *, char *, char *) ;
 int selectDirectory(char *);
 int set_APP_HOME() ;
 int setAllEnvVars() ;
-int setAllPaths(char *) ;
+int setAppPaths() ;
 int setAutoExecEnvVar(char *, char *, char *); 
 int setEnvVar(char *, char *, char *, windows_version);
 int setRegistryEnvVar(char *, char *, environment_target);  
