@@ -49,7 +49,7 @@
 #include "windows_setup.h"
 
 // TBD [srk] make this a very simple GUI app
-// 	that uses dialogs to communicate with the user
+// 	that uses a series of simple dialogs to communicate with the user
 
 int main(int argc, char* argv[]){
 	
@@ -182,8 +182,6 @@ int setAutoExecEnvVar (char * varName, char * varValue) {
 	// try to open that file 
 	FILE * tempFile = fopen(tempFilePathBuffer, "w") ;
 	
-	// set that onto path
-	
 	// okay, we're open
 	
 	// for each line in autoexec.bat
@@ -192,7 +190,7 @@ int setAutoExecEnvVar (char * varName, char * varValue) {
 		// make a copy of the line
 		strcpy (lineTestBuffer, lineBuffer) ;
 		
-		// convert line test buffer to uppercase for ease of comparison
+		// convert copy to uppercase for ease of comparison
 		strToUpper(lineTestBuffer) ;
 		
 		// try to get first word of line
@@ -264,27 +262,28 @@ int setAutoExecEnvVar (char * varName, char * varValue) {
 		
 		
 		// try to get fourth word of line
-		// if not able to
 		position = getWord (4, lineTestBuffer, wordBuffer);
 		
 		// fourth word is current setting of varName
-		// if it doesn't match varValue
+		// if it doesn't exist or it doesn't match varValue
 		if ((position < 0) || (strcmp(wordBuffer,varValue)!= 0)) {
 			
-			// note the change
-			madeAChange = 1 ;
-			
-			// create new setting string
-			strcpy (newSettingBuffer, "SET ") ;
-			strcat (newSettingBuffer, varName) ;
-			strcat (newSettingBuffer, "=") ;
-			strcat (newSettingBuffer, varValue) ;
-			strcat (newSettingBuffer, "\n") ;
-			
-			// replace current setting with varValue
-			
-			// write line to temp file
-			if (writeToTemp) fputs(newSettingBuffer, tempFile) ;
+			// if we're writing to the temp file
+			if (writeToTemp) {
+				
+				// create new setting string
+				strcpy (newSettingBuffer, "SET ") ;
+				strcat (newSettingBuffer, varName) ;
+				strcat (newSettingBuffer, "=") ;
+				strcat (newSettingBuffer, varValue) ;
+				strcat (newSettingBuffer, "\n") ;
+				
+				// write that to the temp file
+				fputs(newSettingBuffer, tempFile) ;
+				
+				// note that we made a change
+				madeAChange = 1 ;
+			} // end if 
 			
 			// next line
 			continue ;
