@@ -73,15 +73,13 @@ public class OPMLFileFormat
 	public static final String ATTRIBUTE_CREATED = "created";
 	public static final String ATTRIBUTE_MODIFIED = "modified";
 
+	public static final String ATTRIBUTE_IS_READ_ONLY = "readOnly"; //Another way of saying isEditable.
+	public static final String ATTRIBUTE_IS_READ_ONLY_ATTS_LIST = "readOnlyAttsList"; 
+
 	public static final String ATTRIBUTE_IS_EDITABLE = "isEditable";
-	//public static final String ATTRIBUTE_IS_EDITABLE_INHERITED = "isEditableInherited";
-
 	public static final String ATTRIBUTE_IS_MOVEABLE = "isMoveable";
-	//public static final String ATTRIBUTE_IS_MOVEABLE_INHERITED = "isMoveableInherited";
-
 	public static final String ATTRIBUTE_IS_COMMENT = "isComment";
-	//public static final String ATTRIBUTE_IS_COMMENT_INHERITED = "isCommentInherited";
-
+	
 	// Open File Settings
     private org.xml.sax.Parser parser = new com.jclark.xml.sax.Driver();
     private DocumentInfo docInfo = null;
@@ -159,9 +157,14 @@ public class OPMLFileFormat
 			while (it.hasNext()) {
 				String key = (String) it.next();
 				Object value = tree.getAttribute(key);
+				boolean isReadOnly = tree.isReadOnly(key);
+				
 				buf.append("<").append(ELEMENT_DOCUMENT_ATTRIBUTE);
-					buf.append(" ").append(ATTRIBUTE_KEY).append("=\"").append(escapeXMLAttribute(key));
-				buf.append("\">");
+				buf.append(" ").append(ATTRIBUTE_KEY).append("=\"").append(escapeXMLAttribute(key)).append("\"");
+				if (isReadOnly) {
+					buf.append(" ").append(ATTRIBUTE_IS_READ_ONLY).append("=\"true\"");
+				}
+				buf.append(">");
 				buf.append(escapeXMLText(value.toString()));
 				buf.append("</").append(ELEMENT_DOCUMENT_ATTRIBUTE).append(">").append(lineEnding);
 			}
@@ -215,12 +218,22 @@ public class OPMLFileFormat
 	
 	private void buildAttributes(Node node, StringBuffer buf) {
 		Iterator it = node.getAttributeKeys();
+		
+		StringBuffer readOnlyAtts = new StringBuffer();
 		if (it != null) {
 			while (it.hasNext()) {
 				String key = (String) it.next();
 				Object value = node.getAttribute(key);
+				boolean isReadOnly = node.isReadOnly(key);
+				if (isReadOnly) {
+					readOnlyAtts.append(key).append(" ");
+				}
 				buf.append(" ").append(key).append("=\"").append(escapeXMLAttribute(value.toString())).append("\"");
 			}
+		}
+		
+		if (readOnlyAtts.length() > 0) {
+			buf.append(" ").append(ATTRIBUTE_IS_READ_ONLY_ATTS_LIST).append("=\"").append(readOnlyAtts.toString().trim()).append("\"");
 		}
 	}
 	
@@ -296,6 +309,8 @@ public class OPMLFileFormat
 		
 		if (name.equals(ELEMENT_OUTLINE)) {
 			NodeImpl node = new NodeImpl(tree, "");
+			
+			String readOnlyAttsList = new String("");
 						
 			for (int i = 0; i < atts.getLength(); i++) {
 				String attName = atts.getName(i);
@@ -303,6 +318,11 @@ public class OPMLFileFormat
 				
 				if (attName.equals(ATTRIBUTE_TEXT)) {
 					node.setValue(attValue);
+					
+				} else if (attName.equals(ATTRIBUTE_IS_READ_ONLY_ATTS_LIST)) {
+					if (attValue != null) {
+						readOnlyAttsList = attValue;
+					}
 					
 				} else if (attName.equals(ATTRIBUTE_IS_MOVEABLE)) {
 					if (attValue != null && attValue.equals("false")) {
@@ -335,13 +355,22 @@ public class OPMLFileFormat
 					node.setAttribute(attName, attValue);
 				}
 			}
+			
+			// Set ReadOnly Property for Attributes
+			StringTokenizer tok = new StringTokenizer(readOnlyAttsList);
+			while (tok.hasMoreTokens()) {
+				String key = tok.nextToken();
+				node.setReadOnly(key, true);
+			}
 						
 			currentParent.appendChild(node);
 			currentParent = node;
 			
 		} else if (name.equals(ELEMENT_DOCUMENT_ATTRIBUTE)) {
 			String key = atts.getValue(ATTRIBUTE_KEY);
-			tree.setAttribute(key, ""); // Set here so we will catch empty document attributes.
+			boolean isReadOnly = Boolean.valueOf(atts.getValue(ATTRIBUTE_IS_READ_ONLY)).booleanValue();
+			
+			tree.setAttribute(key, "", isReadOnly);
 		}
 	}
 	
@@ -417,7 +446,8 @@ public class OPMLFileFormat
 		
 		} else if (elementName.equals(ELEMENT_DOCUMENT_ATTRIBUTE)) {
 			String key = atts.getValue(ATTRIBUTE_KEY);
-			tree.setAttribute(key, text);
+			boolean isReadOnly = tree.isReadOnly(key);
+			tree.setAttribute(key, text, isReadOnly);
 		}
 	}
 	
