@@ -39,8 +39,8 @@ public class XMLTools {
 	
 	// Constructors
 	public XMLTools() {}
-
-
+	
+	
 	// Class Methods
 	public static String escapeXMLAttribute(String text) {
 		text = StringTools.replace(text, "&", "&amp;");
@@ -48,7 +48,7 @@ public class XMLTools {
 		text = StringTools.replace(text, "\"", "&quot;");
 		return text;
 	}
-
+	
 	public static String escapeXMLText(String text) {
 		text = StringTools.replace(text, "&", "&amp;");
 		text = StringTools.replace(text, "<", "&lt;");
@@ -61,27 +61,27 @@ public class XMLTools {
 			version = DEFAULT_XML_VERSION;
 		}
 		
-		return "<?xml version=\"" + version + "\"?>";
+		return new StringBuffer().append("<?xml version=\"").append(version).append("\"?>").toString();
 	}
 	
 	public static String getElementStart(String elementName) {
-		return "<" + elementName + ">";
+		return new StringBuffer().append("<").append(elementName).append(">").toString();
 	}
-
+	
 	public static String getElementEnd(String elementName) {
-		return "</" + elementName + ">";
+		return new StringBuffer().append("</").append(elementName).append(">").toString();
 	}
-
+	
 	public static boolean isValidXMLAttributeName(String text) {
 		// Must match (Letter | '_' | ':') (Letter | Digit | '.' | '-' | '_' | ':')*
 		// XML allows CombiningChar | Extender but I'm gonna be more restrictive since it's easier.
 		// at some point we should improve this or find some code that already does this.
-
+		
 		char[] chars = text.toCharArray();
-
+		
 		for (int i = 0; i < chars.length; i++) {
 			char c = chars[i];
-
+			
 			if (i == 0) {
 				if (Character.isLetter(c) || c == '_' || c == ':') {
 					continue;
@@ -93,11 +93,28 @@ public class XMLTools {
 					continue;
 				} else {
 					return false;
-				}			
+				}
 			}
 		}
-
+		
 		return true;
 	}
+	
+	
+	// HTML Related 
+	public static String escapeHTML(String text) {
+		text = StringTools.replace(text,"&","&amp;");
+		text = StringTools.replace(text,"<","&lt;");
+		text = StringTools.replace(text,">","&gt;");
+		text = StringTools.replace(text,"\"","&quot;");
+		return text;
+	}
+	
+	public static String unescapeHTML(String text) {
+		text = StringTools.replace(text,"&amp;","&");
+		text = StringTools.replace(text,"&lt;","<");
+		text = StringTools.replace(text,"&gt;",">");
+		text = StringTools.replace(text,"&quot;","\"");
+		return text;
+	}
 }
-
