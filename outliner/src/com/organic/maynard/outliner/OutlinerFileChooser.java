@@ -2,37 +2,37 @@
  * Portions copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
  * Portions copyright (C) 2002  Stan Krute <Stan@StanKrute.com>
  * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or 
- * without modification, are permitted provided that the 
+ *
+ * Redistribution and use in source and binary forms, with or
+ * without modification, are permitted provided that the
  * following conditions are met:
- * 
- *  - Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- *  - Redistributions in binary form must reproduce the above 
- *    copyright notice, this list of conditions and the following 
- *    disclaimer in the documentation and/or other materials provided 
- *    with the distribution. 
- * 
- *  - Neither the names "Java Outline Editor", "JOE" nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ *
+ *  - Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ *  - Redistributions in binary form must reproduce the above
+ *    copyright notice, this list of conditions and the following
+ *    disclaimer in the documentation and/or other materials provided
+ *    with the distribution.
+ *
+ *  - Neither the names "Java Outline Editor", "JOE" nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package com.organic.maynard.outliner;
 
 import java.io.*;
@@ -49,7 +49,7 @@ public class OutlinerFileChooser extends JFileChooser {
 	private JPanel importAccessory = new JPanel();
 	private JPanel saveAccessory = new JPanel();
 	private JPanel exportAccessory = new JPanel();
-	
+
 	private JComboBox saveLineEndComboBox = new JComboBox(PlatformCompatibility.PLATFORM_IDENTIFIERS);
 	private JComboBox saveEncodingComboBox = new JComboBox();
 	private JComboBox saveFormatComboBox = new JComboBox();
@@ -65,17 +65,17 @@ public class OutlinerFileChooser extends JFileChooser {
 	private JComboBox exportFormatComboBox = new JComboBox();
 
 	private boolean isInitialized = false;
-	
+
 	// The Constructor
-	public OutlinerFileChooser(FileSystemView fsv) {		
+	public OutlinerFileChooser(FileSystemView fsv) {
 		super(fsv);
 	}
-	
+
 	private void lazyInstantiate() {
 		if (isInitialized) {
 			return;
 		}
-		
+
 		// TBD [srk] have different encoding prefs for each of these OPs
 		for (int i = 0; i < Preferences.ENCODINGS.size(); i++) {
 			String encoding = (String) Preferences.ENCODINGS.elementAt(i);
@@ -84,7 +84,7 @@ public class OutlinerFileChooser extends JFileChooser {
 			openEncodingComboBox.addItem(encoding);
 			importEncodingComboBox.addItem(encoding);
 		}
-		
+
 		for (int i = 0; i < Preferences.FILE_FORMATS_OPEN.size(); i++) {
 			openFormatComboBox.addItem((String) Preferences.FILE_FORMATS_OPEN.elementAt(i));
 		}
@@ -100,71 +100,71 @@ public class OutlinerFileChooser extends JFileChooser {
 		for (int i = 0; i < Preferences.FILE_FORMATS_EXPORT.size(); i++) {
 			exportFormatComboBox.addItem((String) Preferences.FILE_FORMATS_EXPORT.elementAt(i));
 		}
-		
-		// Layout save panel
-		Box box = Box.createVerticalBox();
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("line_terminator")), box);
-		addSingleItemCentered(saveLineEndComboBox, box);
+		// Lay out save panel
+		Box saveBox = Box.createVerticalBox();
 
-		box.add(Box.createVerticalStrut(5));
+		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("line_terminator")), saveBox);
+		addSingleItemCentered(saveLineEndComboBox, saveBox);
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_encoding")), box);
-		addSingleItemCentered(saveEncodingComboBox, box);
+		saveBox.add(Box.createVerticalStrut(5));
 
-		box.add(Box.createVerticalStrut(5));
+		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_encoding")), saveBox);
+		addSingleItemCentered(saveEncodingComboBox, saveBox);
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_format")), box);
-		addSingleItemCentered(saveFormatComboBox, box);
+		saveBox.add(Box.createVerticalStrut(5));
 
-		saveAccessory.add(box,BorderLayout.CENTER);
+		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_format")), saveBox);
+		addSingleItemCentered(saveFormatComboBox, saveBox);
 
-		// Layout export panel
-		Box box3 = Box.createVerticalBox();
+		saveAccessory.add(saveBox,BorderLayout.CENTER);
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("line_terminator")), box3);
-		addSingleItemCentered(exportLineEndComboBox, box3);
+		// Lay out export panel
+		Box exportBox = Box.createVerticalBox();
 
-		box3.add(Box.createVerticalStrut(5));
+		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("line_terminator")), exportBox);
+		addSingleItemCentered(exportLineEndComboBox, exportBox);
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_encoding")), box3);
-		addSingleItemCentered(exportEncodingComboBox, box3);
+		exportBox.add(Box.createVerticalStrut(5));
 
-		box3.add(Box.createVerticalStrut(5));
+		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_encoding")), exportBox);
+		addSingleItemCentered(exportEncodingComboBox, exportBox);
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_format")), box3);
-		addSingleItemCentered(exportFormatComboBox, box3);
+		exportBox.add(Box.createVerticalStrut(5));
 
-		exportAccessory.add(box3,BorderLayout.CENTER);
-		
+		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_format")), exportBox);
+		addSingleItemCentered(exportFormatComboBox, exportBox);
+
+		exportAccessory.add(exportBox,BorderLayout.CENTER);
+
 		// Layout open panel
-		Box box2 = Box.createVerticalBox();
+		Box openBox = Box.createVerticalBox();
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_encoding")), box2);
-		addSingleItemCentered(openEncodingComboBox, box2);
+		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_encoding")), openBox);
+		addSingleItemCentered(openEncodingComboBox, openBox);
 
-		box2.add(Box.createVerticalStrut(5));
+		openBox.add(Box.createVerticalStrut(5));
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_format")), box2);
-		addSingleItemCentered(openFormatComboBox, box2);
+		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_format")), openBox);
+		addSingleItemCentered(openFormatComboBox, openBox);
 
-		openAccessory.add(box2,BorderLayout.CENTER);
-		
+		openAccessory.add(openBox,BorderLayout.CENTER);
+
 		// Layout import panel
-		Box box4 = Box.createVerticalBox();
+		Box importBox = Box.createVerticalBox();
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_encoding")), box4);
-		addSingleItemCentered(importEncodingComboBox, box4);
+		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_encoding")), importBox);
+		addSingleItemCentered(importEncodingComboBox, importBox);
 
-		box4.add(Box.createVerticalStrut(5));
+		importBox.add(Box.createVerticalStrut(5));
 
-		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_format")), box4);
-		addSingleItemCentered(importFormatComboBox, box4);
+		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_format")), importBox);
+		addSingleItemCentered(importFormatComboBox, importBox);
 
-		importAccessory.add(box4,BorderLayout.CENTER);
-		
+		importAccessory.add(importBox,BorderLayout.CENTER);
+
 		// Set the flag
-		isInitialized = true;	
+		isInitialized = true;
 	}
 
 	private static void addSingleItemCentered(JComponent component, Container container) {
@@ -180,12 +180,16 @@ public class OutlinerFileChooser extends JFileChooser {
 	// Configure Methods
 	public void configureForExport(OutlinerDocument doc, String protocolName, String currentDirectory) {
 		lazyInstantiate();
-		
+
+		// adjust title
 		setDialogTitle("Export: " + protocolName);
-		
+
+					 // adjust approve button
+					 setApproveButtonText ("Export") ;
+
 		// Set the Accessory state
 		setAccessory(exportAccessory);
-		
+
 		// Set the Accessory GUI state.
 		exportLineEndComboBox.setSelectedItem(doc.settings.lineEnd.cur);
 		exportEncodingComboBox.setSelectedItem(doc.settings.saveEncoding.cur);
@@ -200,15 +204,19 @@ public class OutlinerFileChooser extends JFileChooser {
 			setSelectedFile(null);
 		}
 	}
-		
+
 	public void configureForSave(OutlinerDocument doc, String protocolName, String currentDirectory) {
 		lazyInstantiate();
 
+		// adjust title
 		setDialogTitle("Save: " + protocolName);
-		
+
+				// adjust approve button
+				setApproveButtonText ("Save") ;
+
 		// Set the Accessory state
 		setAccessory(saveAccessory);
-		
+
 		// Set the Accessory GUI state.
 		saveLineEndComboBox.setSelectedItem(doc.settings.lineEnd.cur);
 		saveEncodingComboBox.setSelectedItem(doc.settings.saveEncoding.cur);
@@ -227,11 +235,15 @@ public class OutlinerFileChooser extends JFileChooser {
 	public void configureForOpen(String protocolName, String currentDirectory) {
 		lazyInstantiate();
 
+		// adjust title
 		setDialogTitle("Open: " + protocolName);
+
+				// adjust approve button
+				setApproveButtonText ("Open") ;
 
 		// Set the Accessory state.
 		setAccessory(openAccessory);
-		
+
 		// Set the Accessory GUI state.
 		openEncodingComboBox.setSelectedItem(Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur);
 		openFormatComboBox.setSelectedItem(Preferences.getPreferenceString(Preferences.OPEN_FORMAT).cur);
@@ -245,11 +257,15 @@ public class OutlinerFileChooser extends JFileChooser {
 	public void configureForImport(String protocolName, String currentDirectory) {
 		lazyInstantiate();
 
+		// adjust title
 		setDialogTitle("Import: " + protocolName);
+		
+		// adjust approve button
+		setApproveButtonText ("Import") ;
 
 		// Set the Accessory state.
-		setAccessory(openAccessory);
-		
+		setAccessory(importAccessory);
+
 		// Set the Accessory GUI state.
 		importEncodingComboBox.setSelectedItem(Preferences.getPreferenceString(Preferences.IMPORT_ENCODING).cur);
 		importFormatComboBox.setSelectedItem(Preferences.getPreferenceString(Preferences.IMPORT_FORMAT).cur);
@@ -260,9 +276,9 @@ public class OutlinerFileChooser extends JFileChooser {
 	}
 
 
-	
+
 	// Accessors
-//	public String getLineEnding() {return (String) lineEndComboBox.getSelectedItem();}
+// public String getLineEnding() {return (String) lineEndComboBox.getSelectedItem();}
 
 	public String getOpenEncoding() {return (String) openEncodingComboBox.getSelectedItem();}
 	public String getOpenFileFormat() {return (String) openFormatComboBox.getSelectedItem();}
@@ -277,12 +293,12 @@ public class OutlinerFileChooser extends JFileChooser {
 	public String getExportLineEnding() {return (String) exportLineEndComboBox.getSelectedItem();}
 	public String getExportEncoding() {return (String) exportEncodingComboBox.getSelectedItem();}
 	public String getExportFileFormat() {return (String) exportFormatComboBox.getSelectedItem();}
-	
-	
+
+
 	// Overriden Methods of JFileChooser
-    public void approveSelection() {
-    	File file = getSelectedFile();
-    	
+				public void approveSelection() {
+					File file = getSelectedFile();
+
 		if (getDialogType() == JFileChooser.OPEN_DIALOG) {
 			// Alert if file does not exist.
 			if (!file.exists()) {
@@ -321,7 +337,7 @@ public class OutlinerFileChooser extends JFileChooser {
 				}
 			}
 		}
-		
+
 		super.approveSelection();
-    }
+				}
 }

@@ -157,14 +157,20 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				// Ack, this shouldn't happen.
 				// illegal/unknown mode specification
 				System.out.println("FileMenu:SaveFile: bad mode parameter"); 
+				return ;
+			} // end switch
 
+		// if we couldn't get a saveFileFormat
+		if (saveFileFormat == null) {
+			
 				msg = GUITreeLoader.reg.getText("error_could_not_save_no_file_format");
 				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
 				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_2, fileFormatName);
 				JOptionPane.showMessageDialog(document, msg);
 				return;
-			} // end switch
-
+			} 
+			
+			
 		// ??
 		document.settings.useDocumentSettings = true;
 
@@ -294,19 +300,39 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		docInfo.setOutputBytes(null);
 	}
 	
-	private static int openFileAndGetTree(TreeContext tree, DocumentInfo docInfo, FileProtocol protocol) {
+	// open or a file and store its outline in a tree
+	private static int openFileAndGetTree(TreeContext tree, DocumentInfo docInfo, FileProtocol protocol, int mode) {
 
 		// local vars
 		String msg = null;
 		int openResult = FAILURE;
+		OpenFileFormat openFileFormat = null ;
 		
 		// try to open the file
 		if (!protocol.openFile(docInfo)) {
 			return FAILURE;
 		}
 
-		// get the file format object
-		OpenFileFormat openFileFormat = Outliner.fileFormatManager.getOpenFormat(docInfo.getFileFormat());
+		// Get the proper file format object for the specified mode
+		// do other mode-specific stuff
+		// Filter out bad modes
+		switch (mode) {
+			
+			case MODE_OPEN:
+				openFileFormat = Outliner.fileFormatManager.getOpenFormat(docInfo.getFileFormat());
+				break ;
+				
+			case MODE_IMPORT: 
+				openFileFormat = Outliner.fileFormatManager.getImportFormat(docInfo.getFileFormat());
+				break ;
+				
+			default:
+				// Ack, this shouldn't happen.
+				// illegal/unknown mode specification
+				System.out.println("FileMenu:OpenFile: bad mode parameter"); 
+				return FAILURE;
+			} // end switch
+
 
 		if (openFileFormat == null) {
 			msg = GUITreeLoader.reg.getText("error_could_not_open_no_file_format");
@@ -342,27 +368,50 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 	// key diff is that we don't assume we can save it
 	protected static void importFile(DocumentInfo docInfo, FileProtocol protocol) {
 		
-		if (Outliner.DEBUG) { 
-			System.out.println("Stan_Debug:\tFileMenu:importFile: at the start" ); 
-		} // end if
+		openFile (docInfo, protocol, MODE_IMPORT) ;
 		
 		
 	} // end method importFile
 	
-
+	// open a file
 	protected static void openFile(DocumentInfo docInfo, FileProtocol protocol) {
-		// Get the TreeContext
-		TreeContext tree = new TreeContext();
-		int openResult = openFileAndGetTree(tree, docInfo, protocol);
 		
+		openFile (docInfo, protocol, MODE_OPEN) ;
+		
+		} // end openFile
+
+
+	// open or import a file
+	protected static void openFile(DocumentInfo docInfo, FileProtocol protocol, int mode) {
+		
+		// open the file and pour its outline into a tree
+		TreeContext tree = new TreeContext();
+		int openResult = openFileAndGetTree(tree, docInfo, protocol, mode);
+		
+		// if things didn't go well, abort the mission
 		if ((openResult != SUCCESS) && (openResult != SUCCESS_MODIFIED)) { // Might be good to have codes we can do % on.
 			return;
-		}
+		} // end if
 		
+		// if mode is invalid, abort
+		switch (mode) {
+			case MODE_OPEN:
+			case MODE_IMPORT:
+				break ;
+			default:
+				// ack, as they say
+				// we should never get here
+				System.out.println("FileMenu:OpenFile: invalid mode parameter"); 
+				return ;
+			} // end switch
+			
 		// Create a new document
 		OutlinerDocument newDoc = new OutlinerDocument(docInfo.getPath(), docInfo);
+		
+		// give it the docInfo we've got
 		newDoc.setDocumentInfo(docInfo);
 		
+		// hook the outline tree to the doc, and the doc to the outline tree
 		tree.doc = newDoc;
 		newDoc.tree = tree;
 		
@@ -421,19 +470,48 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 		newDoc.settings.useDocumentSettings = true;
 
-		// Move it to the bottom of the recent files list
-		RecentFilesList.updateFileNameInList(docInfo.getPath(), docInfo);
+		// make adjustments for each mode
+		switch (mode) {
+			
+			case MODE_IMPORT: 
+			
+				// imports imply that we don't know how to save in the format
+				// therefore, we should set up OPML as default save format
+				// thought: perhaps default save format for imports could be user settable
+				
+				// Save should be set up to act as SaveAs
+				
+				// we don't get added to the recent files list
+				break ;
+			
+			case MODE_OPEN:
+			
+				// Move it to the bottom of the recent files list
+				RecentFilesList.updateFileNameInList(docInfo.getPath(), docInfo);
+			
+			}
+		
+		
+		
 		
 		setupAndDraw(docInfo, newDoc, openResult);
 	}
 
+	// revert a file to it's previous state
+	// TBD get this to work with IMPORTs
 	protected static void revertFile(OutlinerDocument document) {
+		// get the document info and file protocol
 		DocumentInfo docInfo = document.getDocumentInfo();
 		FileProtocol protocol = Outliner.fileProtocolManager.getProtocol(docInfo.getProtocolName());
 
+		// determine whether we were OPENed or IMPORTed
+		// TBD
+		// for now, just set it to OPEN
+		int mode = MODE_OPEN;
+		
 		// Get the TreeContext
 		TreeContext tree = new TreeContext();
-		int openResult = openFileAndGetTree(tree, docInfo, protocol);
+		int openResult = openFileAndGetTree(tree, docInfo, protocol, mode);
 		
 		if ((openResult != SUCCESS) && (openResult != SUCCESS_MODIFIED)) { // Might be good to have codes we can do % on.
 			return;
@@ -449,8 +527,22 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// Clear the HoistStack
 		document.hoistStack.clear();
 
+		// make any necessary adjustments based on mode
+		// TBD make this real
+		switch (mode) {
+			case MODE_OPEN:
+				break ;
+			case MODE_IMPORT:
+				break ;
+			default:
+				break ;
+			} // end switch
+		
+			
 		setupAndDraw(docInfo, document, openResult);
-	}
+	
+		} // end method Revert
+	
 	
 	private static void setupAndDraw(DocumentInfo docInfo, OutlinerDocument doc, int openResult) {
 		TreeContext tree = doc.tree;
