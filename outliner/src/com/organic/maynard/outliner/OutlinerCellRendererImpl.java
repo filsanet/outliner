@@ -116,6 +116,10 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	private static final CopyAction copyAction = new CopyAction();
 	private static final PasteAction pasteAction = new PasteAction();
 	private static final CutAction cutAction = new CutAction();
+	private static final UpAction upAction = new UpAction();
+	private static final DownAction downAction = new DownAction();
+	private static final LeftAction leftAction = new LeftAction();
+	private static final RightAction rightAction = new RightAction();
 	
 	// The Constructors
 	public OutlinerCellRendererImpl() {
@@ -144,6 +148,30 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	}
 	
 	private void setupMaps(InputMap input_map, ActionMap action_map) {
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "left");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, Event.SHIFT_MASK, false), "left");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, Event.CTRL_MASK, false), "left");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, Event.CTRL_MASK + Event.SHIFT_MASK, false), "left");
+		action_map.put("left", leftAction);
+
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "right");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, Event.SHIFT_MASK, false), "right");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, Event.CTRL_MASK, false), "right");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, Event.CTRL_MASK + Event.SHIFT_MASK, false), "right");
+		action_map.put("right", rightAction);
+
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, false), "down");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, Event.SHIFT_MASK, false), "down");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, Event.CTRL_MASK, false), "down");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, Event.CTRL_MASK + Event.SHIFT_MASK, false), "down");
+		action_map.put("down", downAction);
+
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false), "up");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, Event.SHIFT_MASK, false), "up");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, Event.CTRL_MASK, false), "up");
+		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, Event.CTRL_MASK + Event.SHIFT_MASK, false), "up");
+		action_map.put("up", upAction);
+
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, Event.CTRL_MASK, false), "cut");
 		action_map.put("cut", cutAction);
 

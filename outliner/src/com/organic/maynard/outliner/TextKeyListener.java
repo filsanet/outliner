@@ -189,57 +189,14 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 		//System.out.println("keyPressed");
 		
 		// Shorthand
-		Node currentNode = textArea.node;
-		JoeTree tree = currentNode.getTree();
-		OutlineLayoutManager layout = tree.getDocument().panel.layout;
-		
-		switch(e.getKeyCode()) {
-			case KeyEvent.VK_UP:
-				moveUp(tree, layout);
-				break;
+		Node currentNode = textArea.node;		
 
-			case KeyEvent.VK_DOWN:
-				moveDown(tree, layout);
-				break;
-
-			case KeyEvent.VK_LEFT:
-				if (textArea.getCaretPosition() == 0) {
-					moveLeftToPrevNode(tree, layout);
-					e.consume();
-				} else {
-					moveLeft(tree, layout);
-				}
-
-				// Freeze Undo Editing
-				UndoableEdit.freezeUndoEdit(currentNode);
-
-				return;
-
-			case KeyEvent.VK_RIGHT:
-				if (textArea.getCaretPosition() == textArea.getText().length()) {
-					moveRightToNextNode(tree, layout);
-					e.consume();
-				} else {
-					moveRight(tree, layout);
-				}
-				
-				// Freeze Undo Editing
-				UndoableEdit.freezeUndoEdit(currentNode);
-
-				return;
-				
-			default:
-				// If we're read-only then abort
-				if (!currentNode.isEditable()) {
-					if (!e.isControlDown() && !e.isAltDown()) {
-						Outliner.outliner.getToolkit().beep();
-					}
-				}
-				return;
+		// If we're read-only then abort
+		if (!currentNode.isEditable()) {
+			if (!e.isControlDown() && !e.isAltDown()) {
+				Outliner.outliner.getToolkit().beep();
+			}
 		}
-		
-		e.consume();
-		return;
 	}
 	
 	public void keyTyped(KeyEvent e) {
@@ -364,153 +321,6 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 		}
 	}
 
-
-	// Key Handlers
-	private void moveUp(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-
-		// Get Prev Node
-		Node prevNode = tree.getPrevNode(currentNode);
-		if (prevNode == null) {
-			return;
-		}
-
-		// Record the EditingNode and CursorPosition
-		tree.setEditingNode(prevNode);
-		tree.setCursorPosition(OutlinerDocument.findNearestCaretPosition(textArea.getCaretPosition(), tree.getDocument().getPreferredCaretPosition(), prevNode));
-			
-		// Clear Text Selection
-		textArea.setCaretPosition(0);
-		textArea.moveCaretPosition(0);
-
-		// Freeze Undo Editing
-		UndoableEdit.freezeUndoEdit(currentNode);
-
-		// Redraw and Set Focus
-		if (prevNode.isVisible()) {
-			layout.setFocus(prevNode,OutlineLayoutManager.TEXT);
-		} else {
-			layout.draw(prevNode,OutlineLayoutManager.TEXT);
-		}
-	}
-
-	private void moveDown(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-
-		// Get Prev Node
-		Node nextNode = tree.getNextNode(currentNode);
-		if (nextNode == null) {
-			return;
-		}
-
-		// Record the EditingNode and CursorPosition
-		tree.setEditingNode(nextNode);
-		tree.setCursorPosition(OutlinerDocument.findNearestCaretPosition(textArea.getCaretPosition(), tree.getDocument().getPreferredCaretPosition(), nextNode));
-		
-		// Clear Text Selection
-		textArea.setCaretPosition(0);
-		textArea.moveCaretPosition(0);
-
-		// Freeze Undo Editing
-		UndoableEdit.freezeUndoEdit(currentNode);
-
-		// Redraw and Set Focus
-		if (nextNode.isVisible()) {
-			layout.setFocus(nextNode,OutlineLayoutManager.TEXT);
-		} else {
-			layout.draw(nextNode,OutlineLayoutManager.TEXT);
-		}
-	}
-
-	private void moveLeft(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-
-		// Update Preferred Caret Position
-		tree.getDocument().setPreferredCaretPosition(textArea.getCaretPosition() - 1);
-
-		// Record the CursorPosition only since the EditingNode should not have changed
-		tree.setCursorPosition(textArea.getCaretPosition() - 1);
-
-		// Redraw and Set Focus if this node is currently offscreen
-		if (!currentNode.isVisible()) {
-			layout.draw(currentNode,OutlineLayoutManager.TEXT);
-		}
-	}
-
-	private void moveLeftToPrevNode(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-
-		// Get Prev Node
-		Node prevNode = tree.getPrevNode(currentNode);
-		if (prevNode == null) {
-			tree.setCursorPosition(tree.getCursorPosition()); // Makes sure we reset the mark
-			return;
-		}
-		
-		// Update Preferred Caret Position
-		int newLength = prevNode.getValue().length();
-		tree.getDocument().setPreferredCaretPosition(newLength);
-
-		// Record the EditingNode and CursorPosition
-		tree.setEditingNode(prevNode);
-		tree.setCursorPosition(newLength);
-
-		// Clear Text Selection
-		textArea.setCaretPosition(0);
-		textArea.moveCaretPosition(0);
-
-		// Redraw and Set Focus
-		if (prevNode.isVisible()) {
-			layout.setFocus(prevNode,OutlineLayoutManager.TEXT);
-		} else {
-			layout.draw(prevNode,OutlineLayoutManager.TEXT);
-		}
-	}
-
-	private void moveRight(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-
-		// Update Preferred Caret Position
-		tree.getDocument().setPreferredCaretPosition(textArea.getCaretPosition() + 1);
-
-		// Record the CursorPosition only since the EditingNode should not have changed
-		tree.setCursorPosition(textArea.getCaretPosition() + 1);
-
-		// Redraw and Set Focus if this node is currently offscreen
-		if (!currentNode.isVisible()) {
-			layout.draw(currentNode,OutlineLayoutManager.TEXT);
-		}
-	}
-
-	private void moveRightToNextNode(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-
-		// Get Prev Node
-		Node nextNode = tree.getNextNode(currentNode);
-		if (nextNode == null) {
-			tree.setCursorPosition(tree.getCursorPosition()); // Makes sure we reset the mark
-			return;
-		}
-	
-		// Update Preferred Caret Position
-		int newLength = nextNode.getValue().length();
-		tree.getDocument().setPreferredCaretPosition(newLength);
-
-		// Record the EditingNode and CursorPosition
-		tree.setEditingNode(nextNode);
-		tree.setCursorPosition(0);
-
-		// Clear Text Selection
-		textArea.setCaretPosition(0);
-		textArea.moveCaretPosition(0);
-
-		// Redraw and Set Focus
-		if (nextNode.isVisible()) {
-			layout.setFocus(nextNode,OutlineLayoutManager.TEXT);
-		} else {
-			layout.draw(nextNode,OutlineLayoutManager.TEXT);
-		}
-	}
 
 	// Additional Outline Methods
 	public static void hoist(Node currentNode) {
