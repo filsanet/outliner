@@ -1,0 +1,133 @@
+1.0.7a - 07/20/01
+	Notes:
+		1) Put all the release notes into one file like they should be.
+		2) Started refering to Java Outline Editor as JOE.
+	New Features:
+		1) You can now view/edit node attributes. Prior to this, attributes were all hidden away. Still need to make new/remove work.
+	Enhanced Features:
+		1) Backspace/Delete now works "symetrically" for node selections too.
+		2) Made the open/save API deal with bytes rather than text so it can really deal with binary formats. Prior to this it still treated everything as text even though encoding was up to the format.
+	Bug Fixes:
+		1) Bug #441232 where delete was not working correctly.
+		2) Fixed a bug where the macros.txt and/or macros where not getging copied into the user's home directory if they already had an installation of JOE.
+		3) The OPML file format is more paranoid in it's escaping of XML within attributes. This is for compatibility with Radio Userland which apparently likes the > character to be escaped in attributes.
+	Other Changes:
+		1) All class definitions have been seperated into their own .java files. This is to make it possible for people to more easily compile the project.
+		2) Preferences configuration has now been mostly pulled out into the gui_tree.xml file. This makes it alot easier to add new preferences.
+		3) The Application name is now configured from the gui_tree.xml file.
+1.0.6b - 07/10/01
+	New Features:
+		1) Macros are now automatically copied to the user's profile the first time the app is run.
+		2) Macros now save themselves. The current macros no longer use .ser files, but instead use their own XML format.
+		3) The main class now accepts a command line argument for a file to open. This also makes it possible to setup sendto under windows.
+		4) File formats now have extensions mapped to them. Currently this is only used for files opened via the command line arguments.
+		5) Node can now store arbitrary Object attributes. This allows the OPML format to parse/store/save any arbitrary attributes an OPML file has.
+		6) Open and Save API now leaves encoding up to the format. This will allow support for binary formats if/when they are needed.
+	Bug Fixes:
+		1) Fixed bug #440079 where save on close was not working.
+1.0.6a - 07/02/01
+	Notes:
+		It's been a while since the last update, I've been busy with work stuff at night, so there's been no time for the outliner. Anyhow, we've got some new code and a few bug fixes. I've probably missed something in the change log since I've been bad and not been writing things down incrementally so I'm sure I've missed somthing.
+	New Features:
+		1) Feature #432794 Web File System. This is code contributed by Steven Spencer. It allows you to save/open your files from a web server (Apache) that is running an outliner.php component.
+		2) Started making the GUI configurable from an XML file. Currently the menubar/menus/menu items can be configured.
+	Bug Fixes:
+		1) Bug #436983 fixed problem where opening an empty document would cause things to explode.
+1.0.5d - 06/12/01
+	Notes:
+		1) Posted a homepage finally at http://outliner.sourceforge.net.
+		2) Added an installation.txt file.
+	New Features:
+		1) Implemented feature #430031, storing user preferences    under the user's home directory.
+	Enhanced Features:
+		1) Improved performance of new node inserting.
+		2) Improved performance of line number display.
+	Bug Fixes:
+		1) Fixed #432315, where I basically mangled build 1.0.5c.    This also includes a rewrite of run.bat.
+1.0.5c - 06/09/01
+	New Features:
+		1) Implemented feature #429692. Added a key command to select parent node. HOME and END select the first/last node in a selection. Backspace at the beginning of a leaf node will merge the node with the preceding visible node. Delete at the end of a leaf node will merge the node with the next visible node.
+	Enhanced Features:
+		1) shift-return no longer toggles between node and text selection. This is now done with the insert key.
+	Bug Fixes:
+		1) #429983 fixed, where drag and drop would not work under certain circumstances.
+		2) #429534 fixed, where start.bat renamed to run.bat, and the script now just calls java, rather than c:\java1.3\bin\java.
+1.0.5b - 06/01/01
+	Enhanced Features:
+		1) Line numbers are now relative to the document, not to the size of the hoist when hoisted.
+		2) The warning about the undoqueue being cleared during hoisting/dehoisting will now only show up if your undoqueue has an undoable in it.
+	Bug Fixes:
+		1) #429092 FIXED. Paste not working in JDK 1.4. This bug should be fixed, but I am unable to verify it since I'm not running JDK 1.4.
+		2) #429099 FIXED. When line numbers are off and the app is restarted, space was being taken up by the line numbers even though they were not shown.
+		3) #429459 FIXED. Saving a document while hoisted would only save the hoisted part of the document, not the whole thing.
+1.0.5a - 05/30/01
+	New Features:
+		1) Added feature request #424092, hoist/de-hoist.
+	Bug Fixes:
+		1) Fixed bug #428432 where focus was being left behind when switching windows in maximized mode.
+		2) Fixed bug #428433 where the cursor was being hidden when a new document when not in maximized mode.
+		3) Fixed bug #428485 where expanded nodes were being commented when a file was opened from the recent file list.
+1.0.4b - 05/29/01
+	New Features:
+		Got a few ideas from looking at tkOutliner which can be found at http://tkoutline.sourceforge.net/ The functions I added are "merge" and "split".
+		1) Added "Merge" and "Merge with Spaces" functions. "Merge" combines the text of all selected nodes and their children into the text of the first selected node. "Merge with Spaces" does the same thing, but makes sure there is at least one space character between each of the lines as it does the merge.
+		2) Added split at cursor functionality. Use ctrl-return when the cursor is in the text of a node and the line will be split at the cursor with the text after the cursor being inserted as a new line below.
+1.0.4a - 05/26/01
+	New Features:
+		1) A Warning/Confirmation dialog is now activated when a file is modified on open. This situation typically occurs when the source file has an invalid node heirarchy.
+		2) Added commenting of nodes as per feature request #426997.
+	Bug Fixes:
+		1) #426883 regarding textareas not always resizing has been fixed.
+1.0.3b - 05/23/01
+	New Features:
+		1) Added a Document Statistics dialog which shows line count and char count.
+		2) Added support for displaying line numbers.
+		3) Goto line number dialog is now pre-populated with the current line number.
+	Bug Fixes:
+		1) Fixed Bug #425858 concerning drag and drop events during deselection.
+		2) Fixed Bug #426453 concerning visual junk that shows up when pasting in full nodes.
+		3) Fixed Bug #426488 concerning incomplete redraws when using the goto line number menu item. This was fixed by enhancing the redraw so that it fills in nodes in any leftover space at the bottom of the screen during a drawUp().
+1.0.3a - 05/21/01
+	Notes:
+		This release uses an updated rendering algorithm. The new code provides a slight increase in performance, and is easier to understand and debug. However, since the changes are substantial, it is likely that new bugs have been introduced. I've tested the code fairly well, but I'll bet there's something I missed. 
+1.0.2d - 05/11/01
+	New Features:
+		1) Added an explicit destroy() for documents so that they get garbage collected much better. 
+		2) I also changed the vm settings to use incremental garbage collection -Xincgc. 
+		These two changes seem to dramatically reduce the amount of memory being leaked. From what I've been reading on the BugParade at Javasoft, Swing leaks memory pretty badly with JInternalFrames, but this should drastically reduce it.
+	Bug Fixes:
+		1) Fixed the bug with the duplicate Mneumonic where prev window and redo were in conflict.
+		2) Fixed a few minor bugs but I'm too tired to remember what they were.
+1.0.2c - 05/07/01
+	New Features:
+		1) Revert now uses the DocumentInfo if it is available, to set node exapnsion, vertical scroll location, window size, etc.
+		2) Added ownerName, ownerEmail as new Editable document settings.
+		3) Added creationDate, modificationDate as hidden document settings.
+	Bug Fixes:
+		1) The File Chooser dialog is now a child of the main window. This will prevent potential user confusion with focus changes to other applications.
+		2) Warning dialogs are now presented when you try to "Save As" over an existing document.
+		3) When you try to open a document that is already open, your focus is now updated to the open document after the dialog is closed.
+		4) Corrected element content escaping and attribute escaping for the XML used when saving an OPML document.
+1.0.2b - 05/05/01
+	Notes:
+		The openxml-1.2.jar file has been eliminated. I am now using xp.jar since it seems to have fewer bugs.
+	New Features:
+		1) Added support for opening (Outliner Processor Markup Files) OPML http://www.opml.org/spec. OPML stores the content and state of an outline as an XML document.
+		2) Files accessed from the recent file menu will now preserve the expanded state of nodes in the document.
+		3) The file chooser will now remember your last directory from session to session.
+	Bug Fixes:
+		1) Fixed bug where recent file menu was disabled at startup.
+1.0.2a - 05/03/01
+	Notes:
+		This is the first phase of the implementation of a new open/save architecture. 
+	New Features:
+		1) Window size and position, node expansion state and scrollbar position are now recorded for recent files and restored when you open the file via the recent file menu.
+	Bug Fixes:
+		1) Fixed a bug with drag and drop where dragging between different depths could cause undo/redo to increase the position of the node by one relative to it's parent.
+		2) Fixed a few bugs where document settings were not being preserved.
+		3) Fixed the enabled state of the recent file menu when it is empty.
+1.0.1 - 04/29/01
+	Notes:
+		Added back in the copyright comment into the XmlRpc client code.
+	Bug Fixes:
+		1) Fixed a bug where it was possible to drag/resize windows either up or to the left so that they would become inaccessible.
