@@ -54,7 +54,7 @@ import com.organic.maynard.util.string.StanStringTools ;
 import com.organic.maynard.util.vector.StanVectorTools ;
 
 
-public class RecentFilesList extends JMenu implements ActionListener, GUITreeComponent, JoeReturnCodes {
+public class RecentFilesList extends AbstractOutlinerMenu implements ActionListener, GUITreeComponent, JoeReturnCodes {
 
 	// Constants
 	private static final String A_TEXT = "text";
@@ -119,10 +119,6 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	}
 
 	// GUITreeComponent interface
-	private String id = null;
-	public String getGUITreeComponentID() {return this.id;}
-	public void setGUITreeComponentID(String id) {this.id = id;}
-	
 	public void startSetup(AttributeList atts) {
 		// this lets us test what we read from file
 		Vector testVector = new Vector() ;
@@ -416,11 +412,6 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		} // end switch on currentDisplayOrdering	
 		
 	} // end method syncMenuItems
-		
-
-	// in case we need to do something at the end of setup
-	public void endSetup(AttributeList atts) {}
-
 
 	// add a menu item for a file to the menu
 	private void addMenuItemForFileToMenu(DocumentInfo docInfo) {
