@@ -196,6 +196,9 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 		setMaximized(true);
 		super.maximizeFrame(f);
 		
+		// Move it to the front since under certain conditions it may not already be there.
+		f.moveToFront();
+		
 		// Disable Stack Menu Item
 		Outliner.menuBar.windowMenu.windowStackItem.setEnabled(false);
 		
