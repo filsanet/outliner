@@ -121,10 +121,16 @@ public class Preferences implements GUITreeComponent {
 		// Open & Save Panel
 		public static final String FILE_PROTOCOL = "file_protocol";
 		public static final String LINE_END = "line_end";
+		
 		public static final String OPEN_ENCODING = "open_encoding";
 		public static final String SAVE_ENCODING = "save_encoding";
+		public static final String IMPORT_ENCODING = "import_encoding";
+		public static final String EXPORT_ENCODING = "export_encoding";
+		
 		public static final String OPEN_FORMAT = "open_format";
 		public static final String SAVE_FORMAT = "save_format";
+		public static final String IMPORT_FORMAT = "import_format";
+		public static final String EXPORT_FORMAT = "export_format";
 		
 			// File Format: Justified Plaintext
 			public static final String JUSTIFIED_PLAINTEXT_COL_WIDTH = "justified_plaintext_col_width";

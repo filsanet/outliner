@@ -58,23 +58,25 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 		isInitialized = true;	
 	}
 	
-	// FileProtocol Interface
+	// select a file to save or export
 	public boolean selectFileToSave(OutlinerDocument document, int type) {
 		lazyInstantiation();
 		
-		// Setup the File Chooser
+		// Setup the File Chooser to save or export
 		if (type == FileProtocol.SAVE) {
 			chooser.configureForSave(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
 		} else if (type == FileProtocol.EXPORT) {
 			chooser.configureForExport(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
 		} else {
-			System.out.println("ERROR: invalid save type used. (" + type +")");
+			System.out.println("ERROR: invalid save/export type used. (" + type +")");
 			return false;
 		}
 
+		// run the File Chooser
 		int option = chooser.showSaveDialog(Outliner.outliner);
 		
 		// Update the most recent save dir preference
+		// TBD [srk] set up a MOST_RECENT_EXPORT_DIR, then have this code act appropriately
 		Preferences.getPreferenceString(Preferences.MOST_RECENT_SAVE_DIR).cur = chooser.getCurrentDirectory().getPath();
 		Preferences.getPreferenceString(Preferences.MOST_RECENT_SAVE_DIR).restoreTemporaryToCurrent();
 				
@@ -105,7 +107,8 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 			String fileFormat = chooser.getExportFileFormat();
 			end bug # 495512 */
 			
-			// part of proposed bug # 495512 fix    switch on type   SRK   12/25/01 2:43PM
+			// part of bug # 495512 fix    switch on type   SRK   12/25/01 2:43PM
+			// pull proper preference values from the file chooser
 			switch (type) {
 				case FileProtocol.SAVE:
 					lineEnd = chooser.getLineEnding();
@@ -118,7 +121,7 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 					fileFormat = chooser.getExportFileFormat();
 					break ;
 				default:
-					System.out.println("ERROR: invalid save type used. (" + type +")");
+					System.out.println("ERROR: invalid save/export type used. (" + type +")");
 					return false;
 				} // end switch
 				
@@ -148,25 +151,55 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 		}
 	}
 
-	
-	public boolean selectFileToOpen(DocumentInfo docInfo) {
+	// select a file to open or import
+	public boolean selectFileToOpen(DocumentInfo docInfo, int type) {
 		lazyInstantiation();
 		
-		// Setup the File Chooser
-		chooser.configureForOpen(getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
-		
+		// Setup the File Chooser to open or import
+		switch (type) {
+			case FileProtocol.OPEN:
+				chooser.configureForOpen(getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
+				break ;
+			case FileProtocol.IMPORT:
+				chooser.configureForImport(getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
+				break ;
+			default:
+				System.out.println("ERROR: invalid open/import type used. (" + type +")");
+				return false;
+			} // end switch
+			
+		// run the File Chooser
 		int option = chooser.showOpenDialog(Outliner.outliner);
 
 		// Update the most recent save dir preference
+		// TBD [srk] set up a MOST_RECENT_IMPORT_DIR, then have this code act appropriately
 		Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur = chooser.getCurrentDirectory().getPath();
 		Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).restoreTemporaryToCurrent();
 
 		// Handle User Input
 		if (option == JFileChooser.APPROVE_OPTION) {
 			String filename = chooser.getSelectedFile().getPath();
-			String encoding = chooser.getOpenEncoding();
-			String fileFormat = chooser.getOpenFileFormat();
+
+			String encoding ;
+			String fileFormat ;
+
+			// pull proper preference values from the file chooser
+			switch (type) {
+				case FileProtocol.OPEN:
+					encoding = chooser.getSaveEncoding();
+					fileFormat = chooser.getSaveFileFormat();
+					break ;
+				case FileProtocol.IMPORT:
+					encoding = chooser.getExportEncoding();
+					fileFormat = chooser.getExportFileFormat();
+					break ;
+				default:
+					System.out.println("ERROR: invalid open/import type used. (" + type +")");
+					return false;
+				} // end switch
+				
 			
+			// store data into docInfo structure
 			docInfo.setPath(filename);
 			docInfo.setEncodingType(encoding);
 			docInfo.setFileFormat(fileFormat);

@@ -37,15 +37,16 @@ package com.organic.maynard.outliner;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class OpenFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener {
+public class ImportFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener {
 
 	private FileProtocol protocol = null;
 
 	// Constructors
-	public OpenFileMenuItem(FileProtocol protocol) {
+	public ImportFileMenuItem(FileProtocol protocol) {
 		setProtocol(protocol);
 		addActionListener(this);
 	}
+	
 	
 	// Accessors
 	public FileProtocol getProtocol() {
@@ -56,22 +57,22 @@ public class OpenFileMenuItem extends AbstractOutlinerMenuItem implements Action
 		this.protocol = protocol;
 		setText(protocol.getName());
 	}
-
+	
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		openOutlinerDocument(getProtocol());
+		importOutlinerDocument(getProtocol());
 	}
 
-	protected static void openOutlinerDocument(FileProtocol protocol) {
+	protected static void importOutlinerDocument(FileProtocol protocol) {
 		DocumentInfo docInfo = new DocumentInfo();
 		docInfo.setProtocolName(protocol.getName());
 
 		// Select the file we are going to open.
-		if (!protocol.selectFileToOpen(docInfo, FileProtocol.OPEN)) {
+		if (!protocol.selectFileToOpen(docInfo, FileProtocol.IMPORT)) {
 			return;
 		}
 		
-		FileMenu.openFile(docInfo, protocol);
+		FileMenu.importFile(docInfo, protocol);
 	}
 }

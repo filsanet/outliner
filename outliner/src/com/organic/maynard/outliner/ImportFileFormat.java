@@ -1,10 +1,13 @@
 /**
+ * ImportFileFormat interface
+ * 
+ * Reads and [TBD] writes Palm Pilot pdb files created by Shadow Plan
  * Copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or 
  * without modification, are permitted provided that the 
- * following conditions are met:
+ * followi9iiiiiiing conditions are met:
  * 
  *  - Redistributions of source code must retain the above copyright 
  *    notice, this list of conditions and the following disclaimer. 
@@ -31,47 +34,16 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package com.organic.maynard.outliner;
 
-import java.awt.event.*;
-import javax.swing.*;
-
-public class OpenFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener {
-
-	private FileProtocol protocol = null;
-
-	// Constructors
-	public OpenFileMenuItem(FileProtocol protocol) {
-		setProtocol(protocol);
-		addActionListener(this);
-	}
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
+// Purely a marker interface so we can determine we are
+// doing an export rather than a save.
+public interface ImportFileFormat extends OpenFileFormat {
 	
-	// Accessors
-	public FileProtocol getProtocol() {
-		return this.protocol;
-	}
-	
-	public void setProtocol(FileProtocol protocol) {
-		this.protocol = protocol;
-		setText(protocol.getName());
-	}
-
-
-	// ActionListener Interface
-	public void actionPerformed(ActionEvent e) {
-		openOutlinerDocument(getProtocol());
-	}
-
-	protected static void openOutlinerDocument(FileProtocol protocol) {
-		DocumentInfo docInfo = new DocumentInfo();
-		docInfo.setProtocolName(protocol.getName());
-
-		// Select the file we are going to open.
-		if (!protocol.selectFileToOpen(docInfo, FileProtocol.OPEN)) {
-			return;
-		}
-		
-		FileMenu.openFile(docInfo, protocol);
-	}
 }
