@@ -1,5 +1,17 @@
 <?xml version="1.0"?>
 <root id="outliner" class="com.organic.maynard.outliner.Outliner">
+	<preferences id="preferences" class="com.organic.maynard.outliner.Preferences">
+		<preferencesframe id="preferences_frame" class="com.organic.maynard.outliner.PreferencesFrame" title="Preferences">
+			<preferencepanel id="preferences_panel_editor" class="com.organic.maynard.outliner.PreferencesPanelEditor" title="Editor">
+			</preferencepanel>
+			<preferencepanel id="preferences_panel_look_and_feel" class="com.organic.maynard.outliner.PreferencesPanelLookAndFeel" title="Look &amp; Feel">
+			</preferencepanel>
+			<preferencepanel id="preferences_panel_open_and_save" class="com.organic.maynard.outliner.PreferencesPanelOpenAndSave" title="Open &amp; Save">
+			</preferencepanel>
+			<preferencepanel id="preferences_panel_misc" class="com.organic.maynard.outliner.PreferencesPanelMisc" title="Misc.">
+			</preferencepanel>
+		</preferencesframe>
+	</preferences>
 	<menubar id="menubar" class="com.organic.maynard.outliner.OutlinerDesktopMenuBar">
 		<menu id="file" class="com.organic.maynard.outliner.FileMenu" text="File">
 			<menuitem id="new_file" class="com.organic.maynard.outliner.NewFileMenuItem" text="New" keybinding="N" keybindingmodifiers="control"/>
