@@ -1168,7 +1168,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						// Add the Result
 						String match = location.node.getValue().substring(location.startIndex, location.endIndex);
 						int lineNumber = location.node.getLineNumber();
-						FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, "");
+						FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, "", false);
 						results.addResult(result);
 						
 						nodeStart = location.node;
@@ -1218,7 +1218,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						String replacementTemp = sReplace;
 						int lineNumber = location.node.getLineNumber();
 						
-						FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, "");
+						FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, "", false);
 						results.addResult(result);
 
 						nodeStart = location.node;
@@ -1269,7 +1269,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				if (isRegexp) {
 					replacementTemp = this.replacementText.substring(0, this.matchLength + this.difference);
 				}
-				FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, "");
+				FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, "", false);
 				results.addResult(result);
 
 				nodeStart = location.node;
@@ -1607,7 +1607,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						if (isRegexp) {
 							replacementTemp = this.replacementText.substring(0, this.matchLength + this.difference);
 						}
-						FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, replacementTemp); //TBD: line needs to be real.
+						FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, replacementTemp, true);
 						results.addResult(result);
 						
 						// Setup for next replacement
@@ -1685,7 +1685,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						if (isRegexp) {
 							replacementTemp = this.replacementText.substring(0, this.matchLength + this.difference);
 						}
-						FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, replacementTemp); //TBD: line needs to be real.
+						FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, replacementTemp, true);
 						results.addResult(result);
 
 						// Setup for next replacement
@@ -1761,7 +1761,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				if (isRegexp) {
 					replacementTemp = this.replacementText.substring(0, this.matchLength + this.difference);
 				}
-				FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, replacementTemp); //TBD: line needs to be real.
+				FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, replacementTemp, true);
 				results.addResult(result);
 
 				// Setup for next replacement

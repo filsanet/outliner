@@ -95,7 +95,7 @@ public class FileSystemFindFileContentsHandler extends FileContentsInspector {
 				try {
 					while(util.match(query, input)) {
 						result = util.getMatch();
-						results.addResult(new FindReplaceResult(file, lineCount, result.beginOffset(0), result.group(0), ""));
+						results.addResult(new FindReplaceResult(file, lineCount, result.beginOffset(0), result.group(0), "", false));
 					}
 				} catch (MalformedPerl5PatternException e) {
 					System.out.println("MalformedPerl5PatternException: " + e.getMessage());
@@ -116,7 +116,7 @@ public class FileSystemFindFileContentsHandler extends FileContentsInspector {
 				while (start < end) {
 					start = searchLine.indexOf(query, start);
 					if (start != -1) {
-						results.addResult(new FindReplaceResult(file, lineCount, start, line.substring(start,start + query.length()), ""));
+						results.addResult(new FindReplaceResult(file, lineCount, start, line.substring(start,start + query.length()), "", false));
 						start = start + query.length();
 					} else {
 						start = end;

@@ -127,7 +127,7 @@ public class FileSystemReplaceFileContentsHandler extends FileContentsHandler {
 						line = line.substring(0, searchStartIndex) + replacementText;
 												
 						// Add Result
-						results.addResult(new FindReplaceResult(file, lineCount, searchStartIndex + matchStartIndex, result.group(0), replacementText.substring(matchStartIndex,replacementEndIndex)));
+						results.addResult(new FindReplaceResult(file, lineCount, searchStartIndex + matchStartIndex, result.group(0), replacementText.substring(matchStartIndex,replacementEndIndex), true));
 						
 						// Prep for next match
 						searchStartIndex += replacementEndIndex;
@@ -165,7 +165,7 @@ public class FileSystemReplaceFileContentsHandler extends FileContentsHandler {
 						searchLine = searchLine.substring(0, start) + replacement + searchLine.substring(start + query.length(), searchLine.length());
 						
 						// Add Result
-						results.addResult(new FindReplaceResult(file, lineCount, start, match, replacement));
+						results.addResult(new FindReplaceResult(file, lineCount, start, match, replacement, true));
 						
 						// Prep for next match
 						start = start + replacement.length();

@@ -130,10 +130,17 @@ public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements
 		OutlinerDocument doc = result.getDocument();
 		int line = result.getLine();
 		int start = result.getStart();
-		int end = start + result.getMatch().length();
+		int end = start;
+
+		if (result.isReplacement()) {
+			end = start + result.getReplacement().length();
+		} else {
+			end = start + result.getMatch().length();
+		}
 		
 		Outliner.outliner.requestFocus();
 		Node node = GoToDialog.goToLineAndColumn(doc, line, start, false, true);
+		doc.tree.setCursorMarkPosition(end);
 		doc.panel.layout.draw(node, OutlineLayoutManager.TEXT);
 		WindowMenu.changeToWindow(doc);
 	}

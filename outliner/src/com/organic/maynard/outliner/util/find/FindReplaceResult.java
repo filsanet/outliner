@@ -57,26 +57,29 @@ public class FindReplaceResult {
 	private int start = -1;
 	private String match = null;
 	private String replacement = null;
+	private boolean isReplacement = false;
 	
 	private OutlinerDocument doc = null;
 	private File file = null;
 
 
 	// Constructors
-	public FindReplaceResult(File file, int line, int start, String match, String replacement) {
+	public FindReplaceResult(File file, int line, int start, String match, String replacement, boolean isReplacement) {
 		setFile(file);
 		setLine(line);
 		setStart(start);
 		setMatch(match);
 		setReplacement(replacement);
+		setIsReplacement(isReplacement);
 	}
 
-	public FindReplaceResult(OutlinerDocument doc, int line, int start, String match, String replacement) {
+	public FindReplaceResult(OutlinerDocument doc, int line, int start, String match, String replacement, boolean isReplacement) {
 		setDocument(doc);
 		setLine(line);
 		setStart(start);
 		setMatch(match);
 		setReplacement(replacement);
+		setIsReplacement(isReplacement);
 	}
 
 
@@ -114,5 +117,8 @@ public class FindReplaceResult {
 	
 	public void setReplacement(String replacement) {this.replacement = replacement;}
 	public String getReplacement() {return this.replacement;}
+	
+	public void setIsReplacement(boolean isReplacement) {this.isReplacement = isReplacement;}
+	public boolean isReplacement() {return isReplacement;}
 }
 
