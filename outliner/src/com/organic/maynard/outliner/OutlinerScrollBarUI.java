@@ -27,12 +27,13 @@ import javax.swing.text.Caret;
 import javax.swing.plaf.*;
 import javax.swing.plaf.metal.*;
 
-// This class isn't being used right now.
 public class OutlinerScrollBarUI extends MetalScrollBarUI {
 	public static ComponentUI createUI(JComponent c) {
 		return new OutlinerScrollBarUI();
 	}
 
+	// This overrides the normal behaviour to allow the thumb
+	// to be resized while dragging is occurring.
 	public void layoutContainer(Container scrollbarContainer) {
 
 		JScrollBar scrollbar = (JScrollBar) scrollbarContainer;

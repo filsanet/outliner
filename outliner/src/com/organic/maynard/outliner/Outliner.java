@@ -239,7 +239,8 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	}
 		
 	public static void main(String args[]) {
-		//UIManager.put("ScrollBarUI", "com.organic.maynard.outliner.OutlinerScrollBarUI");
+		// This allows scrollbars to be resized while they are being dragged.
+		UIManager.put("ScrollBarUI", "com.organic.maynard.outliner.OutlinerScrollBarUI");
 
 		GUITreeLoader loader = new GUITreeLoader();
 		boolean success = loader.load(Outliner.GUI_TREE_FILE);
