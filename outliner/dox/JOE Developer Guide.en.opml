@@ -3,7 +3,7 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide.en.opml</title>
 <dateCreated>Thu, 1 Nov 2001 12:22:52 GMT</dateCreated>
-<dateModified>Wed, 23 Jan 2002 09:04:13 GMT</dateModified>
+<dateModified>Wed, 23 Jan 2002 09:11:47 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
@@ -1146,6 +1146,11 @@
 			<outline text="When you make changes to gui_tree.en.xml, copy it to the other language versions and cvs commit those as well"/>
 			<outline text="That lets the translators discover they've got work to do"/>
 		</outline>
+	</outline>
+</outline>
+<outline text="Stuff from our Attics">
+	<outline text="Stan's Batch Files">
+		<outline text="I find the following DOS/Windows batch files useful in my JOE develpment work"/>
 	</outline>
 </outline>
 </body>
