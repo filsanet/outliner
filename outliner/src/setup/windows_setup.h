@@ -40,18 +40,20 @@
 
 // function decls
 int determineWindowsVersion () ;
+int ensureSuitableEnvironment () ;
 int getAutoExecPath(char *);
 int getShortPathCurDir (char *) ;
 int getWord (int, char *, char *) ;
+int osFeedback () ;
 int setAutoExecEnvVar (char *, char *, char *);
 int setEnvVar (char *, char *, char *);
 int setRegistryEnvVar (char *, char *);
 int set_JOE_HOME () ;
+int sevFeedback (int, char *, char *) ;
 int strToUpper (char *) ;
 int trimFileOffPath (char *) ;
-int osFeedback () ;
-int sevFeedback (int, char *, char *) ;
-int userReport (int) ;
+void failureFeedback () ;
+void successFeedback () ;
 
 // constants
 #define MAX_LINE 1024

@@ -55,31 +55,35 @@ int main(int argc, char* argv[]){
 	// if any of these steps fail, we leave immediately, returning 0
 	// if we make it thru all the steps, we return 1
 	
-	// try to determine which version of Windows we're running under
-	if (! determineWindowsVersion()) return 0 ;
+	// determine which version of Windows we're running under
+	// and make sure it's got a Java 2 Runtime available
+	if (! determineWindowsVersion()) { failureFeedback(); return 0 ; }
 	
-	// try to make sure we've got a proper Java 2 Runtime Environment
-	// if (! ensureJ2RE()) return 0 ;
+	// make sure we're in a suitable environment
+	// (memory, processor speed)
+	if (! ensureSuitableEnvironment()) { failureFeedback(); return 0 ; }
 	
-	// try to adjust run.bat if there's more than one JRE
-	// if (! adjustRunBat()) return 0 ;
+	// make sure we've got a proper Java 2 Runtime Environment
+	// if (! ensureJ2RE()) { failureFeedback(); return 0 ; }
+	
+	// adjust run.bat if there's more than one JRE
+	// if (! adjustRunBat()) { failureFeedback(); return 0 ; }
 	
 	// set the JOE_HOME environment var
-	if (! set_JOE_HOME ()) return 0 ;
+	if (! set_JOE_HOME ()) { failureFeedback(); return 0 ; }
 	
 	// per user choice, set up JOE as the handler of OPML files
-	// if (! setJoeAsOpmlHandler()) return 0 ;
+	// if (! setJoeAsOpmlHandler()) { failureFeedback(); return 0 ; }
 	
 	// per user choice, copy JOE.pif to 0 or more of:
 	// Programs menu, Start menu top, desktop, 
 	// quickstart toolbar of taskbar, folders on desktop
-	// if (! copyJoePifPerUserPrefs()) return 0 ;
+	// if (! copyJoePifPerUserPrefs()) { failureFeedback(); return 0 ; }
 
+	// if we make it this far, all went well
 	// give user a chance to look at results
 	// suggest a reboot for systems that need one
-	if (! userReport(1)) return 0 ;
-	
-	
+	successFeedback();
 	return 1 ;
 
 } // end main
@@ -734,18 +738,58 @@ int determineWindowsVersion () {
 } // end function determineWindowsVersion
 
 
-// provide some feedback RE the OS we're installing under
+// provide some feedback RE the OS we're attempting to install under
+// returns 1 if OS is suitable, 0 if it's unsuitable
 int osFeedback () {
+	// local vars
 	char feedbackString [MAX_LINE] ;
+	int result = 1 ;
 	
-	strcpy (feedbackString, "Installing JOE on a computer system running ");
+	// start building the feedback string
+	strcpy (feedbackString, "Your computer is running the ") ;
 	strcat (feedbackString, windows_version_strings[gWindowsVersion]) ;
-	strcat (feedbackString, "\n\n") ;
+	strcat (feedbackString, " operating system.\n\n") ;
+
+	// make sure the OS supports Java 2
+	// switch out on windows version
+	switch (gWindowsVersion) {
+		case WIN_95:
+		case WIN_95_OSR2:
+		case WIN_98:
+		case WIN_98_SE:
+		case WIN_ME:
+		case WIN_XP:
+		case WIN_NT_4:
+		case WIN_2K:
+		case WIN_DOT_NET_SERVER:
+		case WIN_UNKNOWN_V4:
+		case WIN_UNKNOWN_V5:
+		case WIN_UNKNOWN_V6:
+		case WIN_UNKNOWN_V7:
+			
+			// all these are cool
+			break ;
+			
+		case WIN_NT_351:
+		case WIN_UNKNOWN_V3:
+		case WIN_VERY_UNKNOWN:
+		default:
+			// problems
+			result = 0 ;
+			
+			// build up a feedback string
+			strcat (feedbackString, "Since there's no Java 2 Runtime Environment") ;
+			strcat (feedbackString, "\nfor that OS, JOE cannot run on this system.\n\n") ;
+						
+			break ;
+			
+		} // end switch out on Windows version
+	
+	// print the feedback string
 	printf (feedbackString) ;
 	
-	return 1 ;
-	
-	// TBD have this bail if the os is unsuitable, and return 0 in that case
+	// done
+	return result;
 	
 } // end function osFeedback 
 
@@ -771,22 +815,54 @@ int sevFeedback (int result, char * varName, char * varValue) {
 } // end sevFeedback
 
 
-int userReport (int result) {
+void successFeedback () {
 	char feedbackString [MAX_LINE] ;
 	
-	if (result) 
-		strcpy (feedbackString, "All went well") ;
-	else 
-		strcpy (feedbackString, "There was a problem") ;
+	strcpy (feedbackString, "All went well.") ;
 	// TBD
 	// add a reboot suggestion to string if warranted
+	strcat (feedbackString, "\n\nPress the Enter key to finish: ") ;
 	
-	strcat (feedbackString, "\n\nPress the Enter key to finish") ;
-	
+	// print that feedback
 	printf (feedbackString) ;
 	
+	// wait for Enter keypress
 	getchar() ;
 	
-	return 1 ;
+	// done
+	return ;
 
-} // end function userReport
+} // end function successFeedback
+
+
+int ensureSuitableEnvironment () {
+	// make sure system has enough memory
+	// 48 mb is a minimum
+	// TBD
+	// fake for now
+	return 1 ;
+} // end function ensureSuitableEnvironment
+
+
+// provide some feedback RE installation failure
+void failureFeedback () {
+	// local vars
+	char feedbackString [MAX_LINE] ;
+
+	// build the feedback string
+	strcpy (feedbackString, "INSTALLATION FAILED.\n\nPress Enter key to finish: ") ;
+	
+	// print the feedback string
+	printf (feedbackString) ;
+	
+	// wait for Enter keypress
+	getchar() ;
+	
+	// done
+	return ;
+	
+} // end function failureFeedback 
+
+
+
+	
