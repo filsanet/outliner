@@ -295,7 +295,7 @@
 								<preference_component id="open_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Encoding" style="single_centered"/>
 							</preference>
 							<preference id="open_format" class="com.organic.maynard.outliner.PreferenceString" default="Plaintext">
-								<preference_component id="open_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format" style="single_centered"/>
+								<preference_component id="open_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Standardformat beim Öffnen." style="single_centered"/>
 							</preference>
 						</preference_container>
 						<preference_container id="open_and_save_importing_preference_container" class="com.organic.maynard.outliner.PreferencesGUITreeSubContainer" style="titled" label=" Importing ">
@@ -308,10 +308,10 @@
 						</preference_container>
 						<preference_container id="open_and_save_saving_preference_container" class="com.organic.maynard.outliner.PreferencesGUITreeSubContainer" style="titled" label=" Saving ">
 							<preference id="save_encoding" class="com.organic.maynard.outliner.PreferenceString" default="ISO-8859-1">
-								<preference_component id="save_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Encoding" style="single_centered"/>
+								<preference_component id="save_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Standardkodierung beim Speichern." style="single_centered"/>
 							</preference>
 							<preference id="save_format" class="com.organic.maynard.outliner.PreferenceString" default="Plaintext">
-								<preference_component id="save_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format" style="single_centered"/>
+								<preference_component id="save_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Standardformat beim Speichern." style="single_centered"/>
 							</preference>
 						</preference_container>
 						<preference_container id="open_and_save_exporting_preference_container" class="com.organic.maynard.outliner.PreferencesGUITreeSubContainer" style="titled" label=" Exporting ">
@@ -322,7 +322,7 @@
 								<preference_component id="export_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format" style="single_centered"/>
 							</preference>
 						</preference_container>
-						<preferencepanel id="preferences_panel_justified_plaintext" class="com.organic.maynard.outliner.PreferencesPanelImpl" title="File Format: Justified Plaintext">
+						<preferencepanel id="preferences_panel_justified_plaintext" class="com.organic.maynard.outliner.PreferencesPanelImpl" title="Dateiformat: Ausgerichteter Klartext">
 							<preference id="justified_plaintext_col_width" class="com.organic.maynard.outliner.PreferenceInt" default="80">
 								<validator id="justified_plaintext_col_width_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="999" default="80"/>
 								<preference_component id="justified_plaintext_col_width_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Column Width" size="3"/>
@@ -364,7 +364,7 @@
 							<vertical_strut size="20"/>
 						</preferencepanel>
 					</preferencepanel>
-					<preferencepanel id="preferences_panel_misc" class="com.organic.maynard.outliner.PreferencesPanelMisc" title="Misc.">
+					<preferencepanel id="preferences_panel_misc" class="com.organic.maynard.outliner.PreferencesPanelMisc" title="Sonstiges">
 						<preference id="print_environment" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
 							<validator id="print_environment_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
 							<preference_component id="print_environment_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Print environment to console on startup"/>
