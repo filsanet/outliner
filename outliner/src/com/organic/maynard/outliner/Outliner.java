@@ -60,6 +60,12 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	public static String PREFS_DIR = System.getProperty("com.organic.maynard.outliner.Outliner.prefsdir", "prefs") + System.getProperty("file.separator");
 	public static String USER_PREFS_DIR = PREFS_DIR;
 	public static final String APP_DIR_PATH = System.getProperty("user.dir") + System.getProperty("file.separator");
+	// [srk] 11-2-01 a few more useful directory constants
+	public static String DOX_DIR = System.getProperty("com.organic.maynard.outliner.Outliner.doxdir", "dox") + System.getProperty("file.separator");
+	public static String EXTRAS_DIR = System.getProperty("com.organic.maynard.outliner.Outliner.extrasdir", "extras") + System.getProperty("file.separator");
+	public static String LIB_DIR = System.getProperty("com.organic.maynard.outliner.Outliner.libdir", "lib") + System.getProperty("file.separator");
+	public static String LOGS_DIR = System.getProperty("com.organic.maynard.outliner.Outliner.logsdir", "logs") + System.getProperty("file.separator");
+	
 
 	// Find out if we've got a home directory to work with for user preferences, if
 	// not then we use the prefs dir as usual.
