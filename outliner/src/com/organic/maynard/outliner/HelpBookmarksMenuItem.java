@@ -5,9 +5,11 @@
  *	if the Help Bookmarks document is not open, opens it
  *	if the Help Bookmarks document is open, makes sure it's foremost
  * 
- * Descendant of DocumentManager
+ * extends AbstractOutlinerMenuItem 
+ * implements ActionListener, GUITreeComponent {
+.*
  *
- * Members
+  * Members
  *	methods
  * 		instance
  * 			public
@@ -15,7 +17,7 @@
  * 				void actionPerformed(ActionEvent)
  * 		class
  * 			protected
- * 				int openHelpTutorialsDocument()
+ * 				int openHelpBookmarksDocument()
  *
  *		
  * Portions copyright (C) 2000-2001 Maynard Demmon <maynard@organic.com>
