@@ -9,6 +9,7 @@
 		1) Dramatically sped up document closing times by doing the object destruction in a separate thread after after the window has been closed.
 		2) Moderately sped up application launch time by more pervasive use of lazy instantiation.
 		3) When changing the format in the Save or Export file system view, the file extension is automatically updated to the default for that format.
+		4) Implemented feature request #579791. Added menu mnemonics for each of the main menus. This will only work correctly under jdk 1.4.0 because of Swing bug #4309156, and the necessary work around, which exists in previous versions of the jdk.
 	Other Changes:
 		1) Updated jar for BeanShell from 1.2b1 to 1.2b6.
 		2) Updated jar for Jakarata ORO from 2.0.4 to 2.0.6.
