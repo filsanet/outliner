@@ -100,4 +100,9 @@ public class IntRangeValidator extends AbstractValidator implements Validator, G
 		}
 		return value;
 	}
+	
+	
+	// Additional Accessors
+	public int getMin() {return this.lowerBound;}
+	public int getMax() {return this.upperBound;}
 }

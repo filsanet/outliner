@@ -18,11 +18,7 @@
  
 package com.organic.maynard.outliner;
 
-import java.awt.*;
 import java.awt.event.*;
-
-import javax.swing.*;
-
 import org.xml.sax.*;
 
 public class EditDocumentSettingsMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {

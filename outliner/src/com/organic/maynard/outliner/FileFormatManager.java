@@ -52,17 +52,17 @@ public class FileFormatManager {
 				setExtensions(openFileFormat, extensions);
 				boolean success = addOpenFormat(formatName, openFileFormat);
 				if (success) {
-					System.out.println("\tOpen: " + className + " -> " + formatName);
+					System.out.println("  Open: " + className + " -> " + formatName);
 				} else {
-					System.out.println("Duplicate File Format Name: " + formatName);
+					System.out.println("  Duplicate File Format Name: " + formatName);
 				}
 			} else if (formatType.equals(FORMAT_TYPE_SAVE)) {
 				SaveFileFormat saveFileFormat = (SaveFileFormat) theClass.newInstance();
 				boolean success = addSaveFormat(formatName, saveFileFormat);
 				if (success) {
-					System.out.println("\tSave: " + className + " -> " + formatName);
+					System.out.println("  Save: " + className + " -> " + formatName);
 				} else {
-					System.out.println("Duplicate File Format Name: " + formatName);
+					System.out.println("  Duplicate File Format Name: " + formatName);
 				}
 			} else if (formatType.equals(FORMAT_TYPE_OPEN_DEFAULT)) {
 				OpenFileFormat openFileFormat = (OpenFileFormat) theClass.newInstance();
@@ -70,18 +70,18 @@ public class FileFormatManager {
 				setDefaultOpenFileFormat(openFileFormat);
 				boolean success = addOpenFormat(formatName, openFileFormat);
 				if (success) {
-					System.out.println("\tOpen: " + className + " -> " + formatName);
+					System.out.println("  Open: " + className + " -> " + formatName);
 				} else {
-					System.out.println("Duplicate File Format Name: " + formatName);
+					System.out.println("  Duplicate File Format Name: " + formatName);
 				}
 			} else if (formatType.equals(FORMAT_TYPE_SAVE_DEFAULT)) {
 				SaveFileFormat saveFileFormat = (SaveFileFormat) theClass.newInstance();
 				setDefaultSaveFileFormat(saveFileFormat);
 				boolean success = addSaveFormat(formatName, saveFileFormat);
 				if (success) {
-					System.out.println("\tSave: " + className + " -> " + formatName);
+					System.out.println("  Save: " + className + " -> " + formatName);
 				} else {
-					System.out.println("Duplicate File Format Name: " + formatName);
+					System.out.println("  Duplicate File Format Name: " + formatName);
 				}		
 			}
 		} catch (ClassNotFoundException cnfe) {

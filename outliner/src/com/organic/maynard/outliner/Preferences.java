@@ -30,8 +30,8 @@ import com.organic.maynard.util.string.*;
 public class Preferences implements GUITreeComponent {
 
 	// Constants
-	public static final String DEPTH_PAD_STRING = "\t";
-	public static final String LINE_END_STRING = "\n";
+	public static final String DEPTH_PAD_STRING = "\t"; // Specific to Outliner Docs
+	public static final String LINE_END_STRING = "\n"; // Specific to Outliner Docs
 
 	public static final String LINE_END_MAC = "\r";
 	public static final String LINE_END_WIN = "\r\n";
@@ -53,52 +53,66 @@ public class Preferences implements GUITreeComponent {
 	public static final Vector FILE_FORMATS_SAVE = new Vector();
 
 	
-	// Preference Keys
-	public static final String RENDERER_WIDGIT_CACHE_SIZE = "renderer_widgit_cache_size";
-	public static final String TIME_ZONE_FOR_SAVING_DATES = "time_zone_for_saving_dates";
-	public static final String MOST_RECENT_SAVE_DIR = "most_recent_save_dir";
-	public static final String MOST_RECENT_OPEN_DIR = "most_recent_open_dir";
-	public static final String IS_MAXIMIZED = "is_maximized";
+	// Start Preference Keys
+		// Hidden Prefs
+			// Misc
+			public static final String RENDERER_WIDGIT_CACHE_SIZE = "renderer_widgit_cache_size";
+			public static final String TIME_ZONE_FOR_SAVING_DATES = "time_zone_for_saving_dates";
+			public static final String MOST_RECENT_SAVE_DIR = "most_recent_save_dir";
+			public static final String MOST_RECENT_OPEN_DIR = "most_recent_open_dir";
+			public static final String IS_MAXIMIZED = "is_maximized";
 
-	public static final String WEB_FILE_SYSTEM = "web_file_system";
-	public static final String WEB_FILE_URL = "web_file_url";
-	public static final String WEB_FILE_USER = "web_file_user";
-	public static final String WEB_FILE_PASSWORD = "web_file_password";
+			// Main Window
+			public static final String MAIN_WINDOW_W = "main_window_width";
+			public static final String MAIN_WINDOW_H = "main_window_height";
+			public static final String MAIN_WINDOW_X = "main_window_x_offset";
+			public static final String MAIN_WINDOW_Y = "main_window_y_offset";
 
+
+		// Editor Panel
+		public static final String FONT_FACE = "font_face";
+		public static final String FONT_SIZE = "font_size";
+		public static final String LINE_WRAP = "line_wrap";
+		public static final String UNDO_QUEUE_SIZE = "undo_queue_size";
+		public static final String SHOW_LINE_NUMBERS = "show_line_numbers";
+		public static final String SHOW_ATTRIBUTES = "show_attributes";
 	
-	public static final String SHOW_ATTRIBUTES = "show_attributes";
-	public static final String SHOW_LINE_NUMBERS = "show_line_numbers";
-	public static final String PRINT_ENVIRONMENT = "print_environment";
-	public static final String NEW_DOC_ON_STARTUP = "new_doc_on_startup";
-	public static final String DESKTOP_BACKGROUND_COLOR = "desktop_background_color";
-	public static final String PANEL_BACKGROUND_COLOR = "panel_background_color";
-	public static final String TEXTAREA_BACKGROUND_COLOR = "textarea_background_color";
-	public static final String TEXTAREA_FOREGROUND_COLOR = "textarea_foreground_color";
-	public static final String SELECTED_CHILD_COLOR = "selected_child_color";
-	public static final String LINE_NUMBER_COLOR = "line_number_color";
-	public static final String LINE_NUMBER_SELECTED_COLOR = "line_number_selected_color";
-	public static final String LINE_NUMBER_SELECTED_CHILD_COLOR = "line_number_selected_child_color";
-	public static final String INDENT = "indent";
-	public static final String VERTICAL_SPACING = "vertical_spacing";
-	public static final String LEFT_MARGIN = "left_margin";
-	public static final String TOP_MARGIN = "top_margin";
-	public static final String RIGHT_MARGIN = "right_margin";
-	public static final String BOTTOM_MARGIN = "bottom_margin";
-	public static final String UNDO_QUEUE_SIZE = "undo_queue_size";
-	public static final String RECENT_FILES_LIST_SIZE = "recent_files_list_size";
-	public static final String FONT_SIZE = "font_size";
-	public static final String FONT_FACE = "font_face";
-	public static final String LINE_WRAP = "line_wrap";
+		// Look & Feel Panel
+		public static final String DESKTOP_BACKGROUND_COLOR = "desktop_background_color";
+		public static final String PANEL_BACKGROUND_COLOR = "panel_background_color";
+		public static final String TEXTAREA_BACKGROUND_COLOR = "textarea_background_color";
+		public static final String TEXTAREA_FOREGROUND_COLOR = "textarea_foreground_color";
+		public static final String SELECTED_CHILD_COLOR = "selected_child_color";
+		public static final String LINE_NUMBER_COLOR = "line_number_color";
+		public static final String LINE_NUMBER_SELECTED_COLOR = "line_number_selected_color";
+		public static final String LINE_NUMBER_SELECTED_CHILD_COLOR = "line_number_selected_child_color";
+		public static final String INDENT = "indent";
+		public static final String VERTICAL_SPACING = "vertical_spacing";
+		public static final String LEFT_MARGIN = "left_margin";
+		public static final String TOP_MARGIN = "top_margin";
+		public static final String RIGHT_MARGIN = "right_margin";
+		public static final String BOTTOM_MARGIN = "bottom_margin";
+		
+		// Open & Save Panel
+		public static final String LINE_END = "line_end";
+		public static final String OPEN_ENCODING = "open_encoding";
+		public static final String SAVE_ENCODING = "save_encoding";
+		public static final String OPEN_FORMAT = "open_format";
+		public static final String SAVE_FORMAT = "save_format";
+		
+		// Misc Panel
+		public static final String PRINT_ENVIRONMENT = "print_environment";
+		public static final String NEW_DOC_ON_STARTUP = "new_doc_on_startup";
+		public static final String RECENT_FILES_LIST_SIZE = "recent_files_list_size";
+		public static final String OWNER_NAME = "owner_name";
+		public static final String OWNER_EMAIL = "owner_email";
 
-	public static final String LINE_END = "line_end";
-	public static final String OPEN_ENCODING = "open_encoding";
-	public static final String SAVE_ENCODING = "save_encoding";
-
-	public static final String OPEN_FORMAT = "open_format";
-	public static final String SAVE_FORMAT = "save_format";
-
-	public static final String OWNER_NAME = "owner_name";
-	public static final String OWNER_EMAIL = "owner_email";
+			// WebFile
+			public static final String WEB_FILE_SYSTEM = "web_file_system";
+			public static final String WEB_FILE_URL = "web_file_url";
+			public static final String WEB_FILE_USER = "web_file_user";
+			public static final String WEB_FILE_PASSWORD = "web_file_password";
+	// End Preference Keys
 
 
 	// The Constructors
@@ -116,10 +130,12 @@ public class Preferences implements GUITreeComponent {
 		System.out.println("Loading Config...");
 		Outliner.loadPrefsFile(Outliner.PARSER, Outliner.CONFIG_FILE);
 		System.out.println("Done Loading Config.");
+		System.out.println("");
 		
 		System.out.println("Loading Recent File List...");
 		Outliner.loadPrefsFile(Outliner.PARSER, Outliner.RECENT_FILES_FILE);
 		System.out.println("Done Loading Recent File List.");
+		System.out.println("");
 
 		
 		// Sync the GUI to the prefs
@@ -157,7 +173,6 @@ public class Preferences implements GUITreeComponent {
 	private HashMap prefsReg = new HashMap();
 	
 	public void addPreference(String key, Preference pref) {
-		System.out.println("Adding Pref: " + key);
 		prefsReg.put(key, pref);
 	}
 	

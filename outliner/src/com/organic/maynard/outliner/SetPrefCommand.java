@@ -73,6 +73,7 @@ public class SetPrefCommand extends Command {
 
 		} else if (variableName.equals(COMMAND_ENCODING)) {
 			Preferences.ENCODINGS.addElement((String) signature.elementAt(2));
+			System.out.println("  Adding encoding type: " + signature.elementAt(2));
 			
 		} else {
 			Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
@@ -81,6 +82,7 @@ public class SetPrefCommand extends Command {
 			try {
 				pref.setCur((String) signature.elementAt(2));
 				pref.restoreTemporaryToCurrent();
+				System.out.println("  Setting Pref: " + variableName + " : " + signature.elementAt(2));
 			} catch (ArrayIndexOutOfBoundsException e) {
 				System.out.println("Error Setting Preference, ArrayIndexOutOfBoundsException: " + e.getMessage());
 			} catch (NullPointerException e) {

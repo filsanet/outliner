@@ -18,26 +18,15 @@
  
 package com.organic.maynard.outliner;
 
-import java.io.*;
-import java.util.*;
-import java.text.SimpleDateFormat;
-
 import java.awt.*;
 import java.awt.event.*;
-
-import javax.swing.*;
-
 import org.xml.sax.*;
-
-// WebFile
-import com.yearahead.io.*;
 
 public class QuitMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
 
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
-		
 		addActionListener(this);
 	}
 
@@ -47,10 +36,20 @@ public class QuitMenuItem extends AbstractOutlinerMenuItem implements ActionList
 		quit();
 	}
 
+	// Static Methods
 	public static void quit() {
 		if (!CloseAllFileMenuItem.closeAllOutlinerDocuments()) {
 			return;
 		}
+		
+		// Store current window position
+		Dimension size = Outliner.outliner.getSize();
+		Point location = Outliner.outliner.getLocation();
+		
+		Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_W).cur = size.width;
+		Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_H).cur = size.height;
+		Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_X).cur = location.x;
+		Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_Y).cur = location.y;
 
 		// Hide Desktop
 		Outliner.outliner.setVisible(false);
@@ -59,6 +58,7 @@ public class QuitMenuItem extends AbstractOutlinerMenuItem implements ActionList
 		// Save config and quit
 		Preferences.saveConfigFile(Outliner.CONFIG_FILE);
 		RecentFilesList.saveConfigFile(Outliner.RECENT_FILES_FILE);
+
 		System.exit(0);
 	}
 }

@@ -18,19 +18,9 @@
  
 package com.organic.maynard.outliner;
 
-import java.io.*;
-import java.util.*;
-import java.text.SimpleDateFormat;
-
-import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
-
 import org.xml.sax.*;
-
-// WebFile
-import com.yearahead.io.*;
 
 public class RevertFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
 

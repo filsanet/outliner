@@ -127,12 +127,6 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 
 
 	// GUI Settings
-	static final int MIN_WIDTH = 450;
-	static final int MIN_HEIGHT = 450;
- 
- 	static final int INITIAL_WIDTH = 600;
-	static final int INITIAL_HEIGHT = 600;
-	
 	public static Outliner outliner = null;
 	public static OutlinerDesktop desktop = new OutlinerDesktop();
 	public static JScrollPane jsp;
@@ -165,6 +159,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		System.out.println("Loading Encoding Types...");
 		loadPrefsFile(PARSER,ENCODINGS_FILE);
 		System.out.println("Done Loading Encoding Types.");
+		System.out.println("");
 
 		// Setup the FileFormatManager
 		fileFormatManager = new FileFormatManager();
@@ -172,9 +167,29 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		System.out.println("Loading File Formats...");
 		loadPrefsFile(PARSER,FILE_FORMATS_FILE);
 		System.out.println("Done Loading File Formats.");
+		System.out.println("");
+	}
+	
+	public void endSetup(AttributeList atts) {
 
 		// Setup the Desktop
-		addComponentListener(new WindowSizeManager(INITIAL_WIDTH,INITIAL_HEIGHT,MIN_WIDTH,MIN_HEIGHT));
+			// Get Main Window Dimension out of the prefs.
+			PreferenceInt pWidth = Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_W);
+			PreferenceInt pHeight = Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_H);
+			IntRangeValidator vWidth = (IntRangeValidator) pWidth.getValidator();
+			IntRangeValidator vHeight = (IntRangeValidator) pHeight.getValidator();
+			
+			int minimumWidth = vWidth.getMin();
+			int minimumHeight = vHeight.getMin();
+			
+			int initialWidth = pWidth.cur;
+			int initialHeight = pHeight.cur;
+			int initialPositionX = Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_X).cur;
+			int initialPositionY = Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_Y).cur;
+		
+		setLocation(initialPositionX, initialPositionY);
+
+		addComponentListener(new WindowSizeManager(initialWidth, initialHeight, minimumWidth, minimumHeight));
 		addWindowListener(
 			new WindowAdapter() {
 				public void windowClosing(WindowEvent e) {
@@ -183,6 +198,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 				}
 			}
 		);
+		
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 		setContentPane(jsp);
@@ -190,9 +206,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		// Set Frame Icon
 		ImageIcon icon = new ImageIcon(GRAPHICS_DIR + "frame_icon.gif");
 		setIconImage(icon.getImage());
-	}
-	
-	public void endSetup(AttributeList atts) {
+
 
 		// Setup the FindReplace Frame
 		findReplace = new FindReplaceFrame();
@@ -206,6 +220,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		System.out.println("Loading Macros...");
 		loadPrefsFile(PARSER,MACROS_FILE);
 		System.out.println("Done Loading Macros.");
+		System.out.println("");
 		
 		// WebFile
 		// Note the outliner will have to be restarted if user switches
