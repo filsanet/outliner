@@ -267,22 +267,34 @@
 						<preference_component id="file_protocol_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="File Protocol" style="single_centered"/>
 					</preference>
 					<vertical_strut size="5"/>
-					<preference id="line_end" class="com.organic.maynard.outliner.PreferenceLineEnding">
+					<preference id="save_line_end" class="com.organic.maynard.outliner.PreferenceLineEnding">
 						<preference_component id="line_end_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Line Terminator" style="single_centered"/>
 					</preference>
 					<vertical_strut size="5"/>
 					<preference id="open_encoding" class="com.organic.maynard.outliner.PreferenceString" default="ISO-8859-1">
 						<preference_component id="open_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Encoding when opening." style="single_centered"/>
 					</preference>
+					<preference id="import_encoding" class="com.organic.maynard.outliner.PreferenceString" default="ISO-8859-1">
+						<preference_component id="import_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Encoding when importing." style="single_centered"/>
+					</preference>
 					<preference id="save_encoding" class="com.organic.maynard.outliner.PreferenceString" default="ISO-8859-1">
 						<preference_component id="save_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Encoding when saving." style="single_centered"/>
+					</preference>
+					<preference id="export_encoding" class="com.organic.maynard.outliner.PreferenceString" default="ISO-8859-1">
+						<preference_component id="export_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Encoding when exporting." style="single_centered"/>
 					</preference>
 					<vertical_strut size="5"/>
 					<preference id="open_format" class="com.organic.maynard.outliner.PreferenceString" default="Plaintext">
 						<preference_component id="open_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format when opening." style="single_centered"/>
 					</preference>
+					<preference id="import_format" class="com.organic.maynard.outliner.PreferenceString" default="Plaintext">
+						<preference_component id="import_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format when importing." style="single_centered"/>
+					</preference>
 					<preference id="save_format" class="com.organic.maynard.outliner.PreferenceString" default="Plaintext">
 						<preference_component id="save_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format when saving." style="single_centered"/>
+					</preference>
+					<preference id="export_format" class="com.organic.maynard.outliner.PreferenceString" default="Plaintext">
+						<preference_component id="export_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format when exporting." style="single_centered"/>
 					</preference>
 					<preferencepanel id="preferences_panel_justified_plaintext" class="com.organic.maynard.outliner.PreferencesPanelImpl" title="File Format: Justified Plaintext">
 						<preference id="justified_plaintext_col_width" class="com.organic.maynard.outliner.PreferenceInt" default="80">

@@ -2,10 +2,10 @@ file_format|save_default|com.organic.maynard.outliner.SimpleFileFormat|Plaintext
 file_format|open_default|com.organic.maynard.outliner.SimpleFileFormat|Plaintext|txt htm html xml xsl
 file_format|save|com.organic.maynard.outliner.OPMLFileFormat|OPML
 file_format|open|com.organic.maynard.outliner.OPMLFileFormat|OPML|opm opml
-file_format|open|com.organic.maynard.outliner.PdbBFFileFormat|Brain Forest Palm pdb|pdb
 file_format|open|com.organic.maynard.outliner.PdbSPFileFormat|ShadowPlan Palm pdb|pdb
 file_format|open|com.organic.maynard.outliner.PdbTMFileFormat|Thought Manager Palm pdb|pdb
 file_format|export|com.organic.maynard.outliner.HTMLExportFileFormat|HTML
 file_format|export|com.organic.maynard.outliner.JustifiedPlaintextExportFileFormat|Justified Plaintext
+file_format|import|com.organic.maynard.outliner.PdbBFImportFileFormat|Brain Forest Palm pdb|pdb
 file_protocol|com.organic.maynard.outliner.LocalFileSystemFileProtocol|Local File System
 file_protocol|com.yearahead.io.WebFilePHPFileProtocol|PHP:Web File
