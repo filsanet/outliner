@@ -40,14 +40,34 @@ public class CompoundUndoablePropertyChange extends AbstractCompoundUndoable {
 		for (int i = primitives.size() - 1; i >= 0; i--) {
 			((Undoable) primitives.elementAt(i)).undo();
 		}
-		tree.doc.panel.layout.draw();	
+		
+		Node node = ((PrimitiveUndoablePropertyChange) primitives.get(0)).getNode();
+		
+		tree.setSelectedNodesParent(node.getParent());
+		tree.addNodeToSelection(node);
+		tree.setEditingNode(node);
+		tree.setComponentFocus(OutlineLayoutManager.ICON);
+
+		tree.insertNode(node);
+		tree.doc.panel.layout.draw(node, OutlineLayoutManager.ICON);
+		tree.doc.attPanel.update();
 	}
 	
 	public void redo() {
 		for (int i = 0; i < primitives.size(); i++) {
 			((Undoable) primitives.elementAt(i)).redo();
 		}
-		tree.doc.panel.layout.draw();	
+
+		Node node = ((PrimitiveUndoablePropertyChange) primitives.get(0)).getNode();
+		
+		tree.setSelectedNodesParent(node.getParent());
+		tree.addNodeToSelection(node);
+		tree.setEditingNode(node);
+		tree.setComponentFocus(OutlineLayoutManager.ICON);
+
+		tree.insertNode(node);
+		tree.doc.panel.layout.draw(node, OutlineLayoutManager.ICON);
+		tree.doc.attPanel.update();
 	}
 	
 	public int getType() {return Undoable.COMPOUND_PROPERTY_CHANGE_TYPE;}

@@ -19,5 +19,5 @@
 package com.organic.maynard.outliner;
 
 public interface PrimitiveUndoablePropertyChange {
-
+	public Node getNode();
 }

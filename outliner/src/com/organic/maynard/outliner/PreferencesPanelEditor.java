@@ -28,6 +28,7 @@ import org.xml.sax.*;
 public class PreferencesPanelEditor extends AbstractPreferencesPanel implements PreferencesPanel, ActionListener, GUITreeComponent {
 	
 	// Constants
+	public static final String SHOW_ATTRIBUTES = "Show Attributes for new documents";
 	public static final String SHOW_LINE_NUMBERS = "Show Line Numbers";
 	public static final String UNDO_QUEUE_SIZE = "Undo Queue Size";
 	public static final String FONT_SIZE = "Font Size";
@@ -41,6 +42,7 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 	private final String[] LINE_WRAP_OPTIONS = {Preferences.TXT_WORDS, Preferences.TXT_CHARACTERS};
 	private final JComboBox LINE_WRAP_COMBOBOX = new JComboBox(LINE_WRAP_OPTIONS);
 	private final JCheckBox SHOW_LINE_NUMBERS_CHECKBOX = new JCheckBox();
+	private final JCheckBox SHOW_ATTRIBUTES_CHECKBOX = new JCheckBox();
 	private final JButton RESTORE_DEFAULT_EDITOR_BUTTON = new JButton(PreferencesFrame.RESTORE_DEFAULTS);
 
 
@@ -57,6 +59,7 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		FONT_FACE_COMBOBOX.addItemListener(new ComboBoxListener(FONT_FACE_COMBOBOX, Preferences.getPreferenceString(Preferences.FONT_FACE)));
 		LINE_WRAP_COMBOBOX.addItemListener(new ComboBoxListener(LINE_WRAP_COMBOBOX, Preferences.getPreferenceString(Preferences.LINE_WRAP)));
 		SHOW_LINE_NUMBERS_CHECKBOX.addActionListener(new CheckboxListener(SHOW_LINE_NUMBERS_CHECKBOX, Preferences.getPreferenceBoolean(Preferences.SHOW_LINE_NUMBERS)));
+		SHOW_ATTRIBUTES_CHECKBOX.addActionListener(new CheckboxListener(SHOW_ATTRIBUTES_CHECKBOX, Preferences.getPreferenceBoolean(Preferences.SHOW_ATTRIBUTES)));
 
 		Box editorBox = Box.createVerticalBox();
 
@@ -79,6 +82,10 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		editorBox.add(Box.createVerticalStrut(5));
 
 		AbstractPreferencesPanel.addPreferenceItem(SHOW_LINE_NUMBERS, SHOW_LINE_NUMBERS_CHECKBOX, editorBox);
+
+		editorBox.add(Box.createVerticalStrut(10));
+
+		AbstractPreferencesPanel.addPreferenceItem(SHOW_ATTRIBUTES, SHOW_ATTRIBUTES_CHECKBOX, editorBox);
 
 		editorBox.add(Box.createVerticalStrut(10));
 
@@ -106,6 +113,9 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 
 				SHOW_LINE_NUMBERS_CHECKBOX.setSelected(Preferences.getPreferenceBoolean(Preferences.SHOW_LINE_NUMBERS).def);
 				Preferences.getPreferenceBoolean(Preferences.SHOW_LINE_NUMBERS).restoreTemporaryToDefault();
+
+				SHOW_ATTRIBUTES_CHECKBOX.setSelected(Preferences.getPreferenceBoolean(Preferences.SHOW_ATTRIBUTES).def);
+				Preferences.getPreferenceBoolean(Preferences.SHOW_ATTRIBUTES).restoreTemporaryToDefault();
 			} catch (Exception ex) {
 				System.out.println("Exception: " + ex);
 			}
@@ -118,6 +128,7 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		FONT_FACE_COMBOBOX.setSelectedItem(Preferences.getPreferenceString(Preferences.FONT_FACE).cur);
 		LINE_WRAP_COMBOBOX.setSelectedItem(Preferences.getPreferenceString(Preferences.LINE_WRAP).cur);
 		SHOW_LINE_NUMBERS_CHECKBOX.setSelected(Preferences.getPreferenceBoolean(Preferences.SHOW_LINE_NUMBERS).cur);
+		SHOW_ATTRIBUTES_CHECKBOX.setSelected(Preferences.getPreferenceBoolean(Preferences.SHOW_ATTRIBUTES).cur);
 	}
 
 	public void applyTemporaryToCurrent() {

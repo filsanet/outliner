@@ -38,6 +38,11 @@ public class PrimitiveUndoableCommentChange implements Undoable, PrimitiveUndoab
 	public void destroy() {
 		node = null;
 	}
+
+
+	// PrimitiveUndoablePropertyChangeInterface
+	public Node getNode() {return node;}
+	
 	
 	// Undoable Interface
 	public void undo() {

@@ -39,39 +39,49 @@ public class AttributesPanel extends JTable {
 	public AttributesPanel(OutlinerDocument doc) {
 		this.doc = doc;
 
-		model = new AttributeTableModel();
+		model = new AttributeTableModel(this);
 		setModel(model);
-	}	
+		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	}
 	
 	// Data Display
 	public void update() {
-		Node node = doc.tree.getEditingNode();
-		
-		model.keys.clear();
-		model.values.clear();
-		
-		Iterator it = node.getAttributeKeys();
-		if (it != null) {
-			while (it.hasNext()) {
-				String key = (String) it.next();
-				Object value = node.getAttribute(key);
-				model.keys.add(key);
-				model.values.add(value);
+		if (doc.isShowingAttributes()) {
+			//System.out.println("Updating Table Data");
+			Node node = doc.tree.getEditingNode();
+			
+			model.keys.clear();
+			model.values.clear();
+			clearSelection();
+			
+			Iterator it = node.getAttributeKeys();
+			if (it != null) {
+				while (it.hasNext()) {
+					String key = (String) it.next();
+					Object value = node.getAttribute(key);
+					model.keys.add(key);
+					model.values.add(value);
+				}
 			}
+			if (isEditing()) {
+				getCellEditor().cancelCellEditing();
+			}
+			model.fireTableDataChanged();
 		}
-		
-		model.fireTableDataChanged();
 	}
 }
 
 
 class AttributeTableModel extends AbstractTableModel {
 	
+	public AttributesPanel panel = null;
+	
 	public Vector keys = new Vector();
 	public Vector values = new Vector();
 	
-	public AttributeTableModel() {
+	public AttributeTableModel(AttributesPanel panel) {
 		super();
+		this.panel = panel;
 	}
 
 	public int getColumnCount() {
@@ -96,5 +106,40 @@ class AttributeTableModel extends AbstractTableModel {
 		} else {
 			return "Value";
 		}
+	}
+
+	// Editing Methods
+    public Class getColumnClass(int c) {
+		return getValueAt(0, c).getClass();
+	}
+
+    public boolean isCellEditable(int row, int col) {
+		if (col == 1) { 
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+    public void setValueAt(Object value, int row, int col) {
+    	System.out.println("SetValue called.");
+		Node node = panel.doc.tree.getEditingNode();
+		String key = (String) keys.get(row);
+		
+		Object oldValue = node.getAttribute(key);
+		node.setAttribute(key, value);
+		values.set(row, value);
+		
+		if (oldValue.equals(value)) {
+			return;
+		}
+		
+		// undo
+		CompoundUndoable undoable = new CompoundUndoablePropertyChange(panel.doc.tree);
+		Undoable primitive = new PrimitiveUndoableAttributeChange(node, key, oldValue, key, value);
+		undoable.addPrimitive(primitive);
+		panel.doc.undoQueue.add(undoable);
+		
+		fireTableCellUpdated(row, col);
 	}
 }

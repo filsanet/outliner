@@ -512,11 +512,6 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		// Update the scrollbar size
 		Dimension d = scrollBar.getPreferredSize();
 		scrollBar.setBounds(right - d.width, top, d.width, bottom - top);
-		
-		// Redraw. This is here to support the split pane, it may have introduced a redundant draw. I'll have to check on that later.
-		//draw();
-		//setFocus(panel.doc.tree.getEditingNode(), panel.doc.tree.getComponentFocus());
-
 	}
 
 	public Dimension minimumLayoutSize(Container parent) {return new Dimension(0,32);}

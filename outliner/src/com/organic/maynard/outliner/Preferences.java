@@ -55,17 +55,18 @@ public class Preferences implements GUITreeComponent {
 	
 	// Preference Keys
 	public static final String RENDERER_WIDGIT_CACHE_SIZE = "renderer_widgit_cache_size";
+	public static final String TIME_ZONE_FOR_SAVING_DATES = "time_zone_for_saving_dates";
+	public static final String MOST_RECENT_SAVE_DIR = "most_recent_save_dir";
+	public static final String MOST_RECENT_OPEN_DIR = "most_recent_open_dir";
+	public static final String IS_MAXIMIZED = "is_maximized";
 
 	public static final String WEB_FILE_SYSTEM = "web_file_system";
 	public static final String WEB_FILE_URL = "web_file_url";
 	public static final String WEB_FILE_USER = "web_file_user";
 	public static final String WEB_FILE_PASSWORD = "web_file_password";
 
-	public static final String TIME_ZONE_FOR_SAVING_DATES = "time_zone_for_saving_dates";
-	public static final String MOST_RECENT_SAVE_DIR = "most_recent_save_dir";
-	public static final String MOST_RECENT_OPEN_DIR = "most_recent_open_dir";
-	public static final String IS_MAXIMIZED = "is_maximized";
 	
+	public static final String SHOW_ATTRIBUTES = "show_attributes";
 	public static final String SHOW_LINE_NUMBERS = "show_line_numbers";
 	public static final String PRINT_ENVIRONMENT = "print_environment";
 	public static final String NEW_DOC_ON_STARTUP = "new_doc_on_startup";

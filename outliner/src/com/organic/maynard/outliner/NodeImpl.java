@@ -561,6 +561,12 @@ public class NodeImpl implements Node {
 		}
 		attributes.put(key, value);
 	}
+
+	public void removeAttribute(String key) {
+		if (attributes != null && key != null) {
+			attributes.remove(key);
+		}
+	}
 	
 	public Object getAttribute(String key) {
 		if (attributes != null && key != null) {
