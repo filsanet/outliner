@@ -56,13 +56,25 @@
 					<validator id="show_line_numbers_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
 					<preference_component id="show_line_numbers_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Show Line Numbers"/>
 				</preference>
+				<preference id="show_attributes" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
+					<validator id="show_attributes_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+					<preference_component id="show_attributes_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Show Attributes for new documents"/>
+				</preference>
 				<preference id="show_indicators" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
 					<validator id="show_indicators_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
 					<preference_component id="show_indicators_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Show Indicators"/>
 				</preference>
-				<preference id="show_attributes" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
-					<validator id="show_attributes_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
-					<preference_component id="show_attributes_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Show Attributes for new documents"/>
+				<preference id="apply_font_style_for_comments" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+					<validator id="apply_font_style_for_comments_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+					<preference_component id="apply_font_style_for_comments_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Apply Font Style for Comments."/>
+				</preference>
+				<preference id="apply_font_style_for_editability" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+					<validator id="apply_font_style_for_editability_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+					<preference_component id="apply_font_style_for_editability_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Apply Font Style for Editability."/>
+				</preference>
+				<preference id="apply_font_style_for_moveability" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+					<validator id="apply_font_style_for_moveability_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+					<preference_component id="apply_font_style_for_moveability_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Apply Font Style for Moveability."/>
 				</preference>
 			</preferencepanel>
 			<preferencepanel id="preferences_panel_look_and_feel" class="com.organic.maynard.outliner.PreferencesPanelLookAndFeel" title="Look &amp; Feel">
@@ -283,4 +295,5 @@
 			<menuitem id="about" class="com.organic.maynard.outliner.HelpAboutMenuItem" text="About JOE"/>
 		</menu>
 	</menubar>
+	<document_settings_view id="document_settings_view" class="com.organic.maynard.outliner.DocumentSettingsView" title="Document Preferences"/>
 </root>
