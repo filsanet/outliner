@@ -22,9 +22,9 @@ set CP=%CP%;%module_root_path%xml\lib\xalan.jar
 set CP=%CP%;%module_root_path%xml\lib\fop.jar
 set CP=%CP%;%module_root_path%xml\lib\jep210.jar
 
-:: java -cp %CP% -Duser.language=ja -Duser.region=JP -Xincgc com.organic.maynard.outliner.Outliner
-:: java -cp %CP% -Duser.language=de -Duser.region=DE -Xincgc com.organic.maynard.outliner.Outliner
-:: java -cp %CP% -Duser.language=es -Duser.region=ES -Xincgc com.organic.maynard.outliner.Outliner
+:: java -cp %CP% -Duser.language=ja -Duser.region=JP -Xincgc com.organic.maynard.outliner.Outliner "%1"
+:: java -cp %CP% -Duser.language=de -Duser.region=DE -Xincgc com.organic.maynard.outliner.Outliner "%1"
+:: java -cp %CP% -Duser.language=es -Duser.region=ES -Xincgc com.organic.maynard.outliner.Outliner "%1"
 java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner "%1"
 
 @echo on
