@@ -389,7 +389,6 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		if (args.length > 1) {      // srk - put this test in -- 2002.09.03
 			StringBuffer sb_filepath = new StringBuffer(args[1]);
 			for (int i = 2; i < args.length; i++) {
-				System.out.println("appending");
 				sb_filepath.append(" ").append(args[i]);
 			}
 			String filepath = sb_filepath.toString();
