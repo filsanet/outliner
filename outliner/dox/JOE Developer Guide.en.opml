@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide.en.opml</title>
 <dateCreated>Thu, 1 Nov 2001 12:22:52 GMT</dateCreated>
-<dateModified>Thu, 24 Jan 2002 09:26:20 GMT</dateModified>
+<dateModified>Sun, 27 Jan 2002 09:50:34 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
-<vertScrollState>1</vertScrollState>
-<windowTop>7</windowTop>
-<windowLeft>47</windowLeft>
-<windowBottom>363</windowBottom>
-<windowRight>489</windowRight>
+<vertScrollState>5</vertScrollState>
+<windowTop>5</windowTop>
+<windowLeft>5</windowLeft>
+<windowBottom>455</windowBottom>
+<windowRight>455</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -984,7 +984,20 @@
 				<outline isEditable="true" isMoveable="true" text="cvs commit -m &quot;Renamed oldName to newName&quot;"/>
 			</outline>
 		</outline>
-		<outline isEditable="true" isMoveable="true" text="removing a file from the project"/>
+		<outline isEditable="true" isMoveable="true" text="removing a file from the project">
+			<outline text="Make sure the local copy is in sync with the repository">
+				<outline text="cvs diff SomeClass.java"/>
+			</outline>
+			<outline text="Delete the local copy">
+				<outline text="del SomeClass.java"/>
+			</outline>
+			<outline text="Schedule removal">
+				<outline text="cvs remove SomeClass.java"/>
+			</outline>
+			<outline text="Commit removal">
+				<outline text="cvs commit SomeClass.java"/>
+			</outline>
+		</outline>
 		<outline isEditable="true" isMoveable="true" text="removing a directory from the project"/>
 		<outline isEditable="true" isMoveable="true" text="Some Useful Batch Files">
 			<outline isEditable="true" isMoveable="true" text="cvs">
@@ -1152,15 +1165,35 @@
 		<outline text="Example: Window:Maximize:Horizontally/Vertically">
 			<outline text="Added items to gui_tree.en.xml">
 				<outline text="&lt;menuitem id=&quot;maximize_submenu&quot; class=&quot;com.organic.maynard.outliner.OutlinerSubMenuItem&quot; text=&quot;Maximize&quot;&gt;">
-					<outline text="&lt;menuitem id=&quot;maximize_vertically&quot; class=&quot;com.organic.maynard.outliner.MaximizeVerticallyMenuItem&quot; text=&quot;Vertically&quot;/&gt;"/>
 					<outline text="&lt;menuitem id=&quot;maximize_horizontally&quot; class=&quot;com.organic.maynard.outliner.MaximizeHorizontallyMenuItem&quot; text=&quot;Horizontally&quot;/&gt;"/>
+					<outline text="&lt;menuitem id=&quot;maximize_vertically&quot; class=&quot;com.organic.maynard.outliner.MaximizeVerticallyMenuItem&quot; text=&quot;Vertically&quot;/&gt;"/>
 				</outline>
 				<outline text="&lt;/menuitem&gt;"/>
 			</outline>
 			<outline text="Added classes MaximizeHorizontallyMenuItem and MaximizeVerticallyMenuItem">
-				<outline text="MaximizeHorizontallyMenuItem"/>
-				<outline text="MaximizeVerticallyMenuItem"/>
+				<outline text="each got these methods">
+					<outline text="startSetup"/>
+					<outline text="actionPerformed"/>
+				</outline>
 			</outline>
+			<outline text="Made it undoable [tbd]"/>
+		</outline>
+		<outline text="Example: Window:Tile:Horizontally/Vertically/Gridly">
+			<outline text="Added items to gui_tree.en.xml">
+				<outline text="&lt;menuitem id=&quot;tile_submenu&quot; class=&quot;com.organic.maynard.outliner.OutlinerSubMenuItem&quot; text=&quot;Tile&quot;&gt;">
+					<outline text="&lt;menuitem id=&quot;tile_horizontally&quot; class=&quot;com.organic.maynard.outliner.TileHorizontallyMenuItem&quot; text=&quot;Horizontally&quot;/&gt;"/>
+					<outline text="&lt;menuitem id=&quot;tile_vertically&quot; class=&quot;com.organic.maynard.outliner.TileVerticallyMenuItem&quot; text=&quot;Vertically&quot;/&gt;"/>
+					<outline text="&lt;menuitem id=&quot;tile_gridly&quot; class=&quot;com.organic.maynard.outliner.TileGridlyMenuItem&quot; text=&quot;Gridly&quot;/&gt;"/>
+				</outline>
+				<outline text="&lt;/menuitem&gt;"/>
+			</outline>
+			<outline text="Added classes MaximizeHorizontallyMenuItem and MaximizeVerticallyMenuItem">
+				<outline text="each got these methods">
+					<outline text="startSetup"/>
+					<outline text="actionPerformed"/>
+				</outline>
+			</outline>
+			<outline text="Made it undoable [tbd]"/>
 		</outline>
 	</outline>
 </outline>
