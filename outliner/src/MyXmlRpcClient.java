@@ -1,3 +1,15 @@
+/** 
+ * Copyright 1999 Hannes Wallnoefer
+ * Implements a XML-RPC client. See http://www.xmlrpc.com/
+ */
+ 
+/** 
+ * This class is a 99.9% copy of the the class helma.xmlrpc.XmlRpcClient.
+ * I needed to make modifications that the API wasn't exposing, so I duplicated
+ * the code as helma.xmlrpc.MyXmlRpcClient and made my minor modifications.
+ * The changes allow a "raw" XMLRPC message to be sent with the client.
+ */
+
 package helma.xmlrpc;
 
 import java.net.*;
