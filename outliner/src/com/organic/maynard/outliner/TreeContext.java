@@ -179,6 +179,7 @@ public class TreeContext
 	private static JMenuItem deleteItem = null;
 	private static JMenuItem selectInverseItem = null;
 	private static JMenuItem exportSelectionItem = null;
+	private static JMenuItem hoistItem = null;
 
 	public void updateEditMenu() {
 		if (cutItem == null) {
@@ -187,7 +188,10 @@ public class TreeContext
 			deleteItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.DELETE_MENU_ITEM);
 			selectInverseItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SELECT_INVERSE_MENU_ITEM);
 			exportSelectionItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_SELECTION_MENU_ITEM);
+			hoistItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.OUTLINE_HOIST_MENU_ITEM);
 		}
+		
+		Node node = getEditingNode();
 
 		if (getComponentFocus() == OutlineLayoutManager.TEXT) {
 			selectInverseItem.setEnabled(false);
@@ -203,14 +207,27 @@ public class TreeContext
 				deleteItem.setEnabled(true);
 				exportSelectionItem.setEnabled(true);
 			}
+
+			if (node.isLeaf()) {
+				hoistItem.setEnabled(false);
+			} else {
+				hoistItem.setEnabled(true);
+			}
 		} else if (getComponentFocus() == OutlineLayoutManager.ICON) {
 			selectInverseItem.setEnabled(true);
 			
 			if (selectedNodes.size() == 0) {
+				// Can this really ever happen? Seems not unless something has gone horribly wrong.
 				copyItem.setEnabled(false);
 				cutItem.setEnabled(false);
 				deleteItem.setEnabled(false);
 				exportSelectionItem.setEnabled(false);
+			} else if (selectedNodes.size() == 1) {
+				if (node.isLeaf()) {
+					hoistItem.setEnabled(false);
+				} else {
+					hoistItem.setEnabled(true);
+				}
 			} else {
 				copyItem.setEnabled(true);
 				cutItem.setEnabled(true);
