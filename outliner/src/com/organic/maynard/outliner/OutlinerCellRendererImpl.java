@@ -24,7 +24,7 @@ import javax.swing.*;
 
 public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellRenderer {
 
-	private static Font font = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.PLAIN, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);	
+	private static Font font = null;
 	private static Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
 	private static Insets marginInsets = new Insets(1,3,1,3);
 	
@@ -36,10 +36,14 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	
 	public int height = 0;
 	
+	static {
+		updateFont();
+	}
+	
 	// The Constructors
 	public OutlinerCellRendererImpl() {
 		super();
-
+				
 		setFont(font);
 		setCursor(cursor);
 		setCaretColor(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur);
@@ -71,6 +75,9 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		return true;
 	}
 
+	public static void updateFont() {
+		font = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.PLAIN, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
+	}
 
 	// Used to fire key events
 	public void fireKeyEvent(KeyEvent event) {

@@ -68,8 +68,11 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 			line_wrap = false;
 		}
 
+		OutlinerCellRendererImpl.updateFont(); // Updates fonts for new docs.
+		
+		// Update fonts for existing docs.
 		Font font = new Font(pFontFace.cur, Font.PLAIN, pFontSize.cur);
-
+		
 		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
 			OutlinerDocument doc = Outliner.getDocument(i);
 			for (int j = 0; j < OutlineLayoutManager.CACHE_SIZE; j++) {

@@ -53,6 +53,10 @@ public class AttributesPanel extends JTable {
 		removeColumn.setResizable(false);
 		removeColumn.setCellRenderer(removeColRenderer);
 		removeColumn.setCellEditor(removeColEditor);
+
+		removeColumn.setHeaderRenderer(removeColumnHeaderRenderer);   
+		getTableHeader().addMouseListener(model);   
+		getTableHeader().setReorderingAllowed(false); 
 	}
 	
 	// Data Display
@@ -163,7 +167,7 @@ class AttributeTableModel extends AbstractTableModel implements MouseListener {
 		if (col == 0) {
 			dialog.show(panel);
 		} else if (col == 1) {
-			System.out.println("sort");
+			//System.out.println("sort");
 		}
 	}
 	
