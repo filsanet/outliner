@@ -229,15 +229,9 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		OutlinerCellRendererImpl.pVerticalSpacing = Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).cur;
 		OutlinerCellRendererImpl.pShowLineNumbers = Preferences.getPreferenceBoolean(Preferences.SHOW_LINE_NUMBERS).cur;
 		
-		if (panel.doc.settings.useDocumentSettings()) {
-			OutlinerCellRendererImpl.pApplyFontStyleForComments = panel.doc.settings.applyFontStyleForComments.cur;
-			OutlinerCellRendererImpl.pApplyFontStyleForEditability = panel.doc.settings.applyFontStyleForEditability.cur;
-			OutlinerCellRendererImpl.pApplyFontStyleForMoveability = panel.doc.settings.applyFontStyleForMoveability.cur;
-		} else {
-			OutlinerCellRendererImpl.pApplyFontStyleForComments = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur;
-			OutlinerCellRendererImpl.pApplyFontStyleForEditability = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur;
-			OutlinerCellRendererImpl.pApplyFontStyleForMoveability = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur;
-		}
+		OutlinerCellRendererImpl.pApplyFontStyleForComments = panel.doc.settings.getApplyFontStyleForComments().cur;
+		OutlinerCellRendererImpl.pApplyFontStyleForEditability = panel.doc.settings.getApplyFontStyleForEditability().cur;
+		OutlinerCellRendererImpl.pApplyFontStyleForMoveability = panel.doc.settings.getApplyFontStyleForMoveability().cur;
 		
 		OutlinerCellRendererImpl.pCommentColor = Preferences.getPreferenceColor(Preferences.TEXTAREA_COMMENT_COLOR).cur;				
 		OutlinerCellRendererImpl.pForegroundColor = Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur;

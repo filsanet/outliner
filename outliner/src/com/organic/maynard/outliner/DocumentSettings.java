@@ -44,36 +44,45 @@ public class DocumentSettings {
 
 	// Editable Settings
 	private String sLineEnd = Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur;
-	private String sSaveEncoding = Preferences.getPreferenceString(Preferences.SAVE_ENCODING).cur;
-	private String sSaveFormat = Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur;
-	private String sOwnerName = Preferences.getPreferenceString(Preferences.OWNER_NAME).cur;
-	private String sOwnerEmail = Preferences.getPreferenceString(Preferences.OWNER_EMAIL).cur;
-	private boolean sApplyFontStyleForComments = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur;
-	private boolean sApplyFontStyleForEditability = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur;
-	private boolean sApplyFontStyleForMoveability = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur;
-	private boolean sUseCreateModDates = Preferences.getPreferenceBoolean(Preferences.USE_CREATE_MOD_DATES).cur;
-	private String sCreateModDatesFormat = Preferences.getPreferenceString(Preferences.CREATE_MOD_DATES_FORMAT).cur;
-
-	public PreferenceLineEnding lineEnd = new PreferenceLineEnding(sLineEnd, sLineEnd, "");
-	public PreferenceString saveEncoding = new PreferenceString(sSaveEncoding, sSaveEncoding, "");
-	public PreferenceString saveFormat = new PreferenceString(sSaveFormat, sSaveFormat, "");
-	public PreferenceString ownerName = new PreferenceString(sOwnerName, sOwnerName, "");
-	public PreferenceString ownerEmail = new PreferenceString(sOwnerEmail, sOwnerEmail, "");
-	public PreferenceBoolean applyFontStyleForComments = new PreferenceBoolean(sApplyFontStyleForComments, sApplyFontStyleForComments, "");
-	public PreferenceBoolean applyFontStyleForEditability = new PreferenceBoolean(sApplyFontStyleForEditability, sApplyFontStyleForEditability, "");
-	public PreferenceBoolean applyFontStyleForMoveability = new PreferenceBoolean(sApplyFontStyleForMoveability, sApplyFontStyleForMoveability, "");
-	private PreferenceBoolean useCreateModDates = new PreferenceBoolean(sUseCreateModDates, sUseCreateModDates, ""); // We should make all of these private at some point.
-	private PreferenceString createModDatesFormat = new PreferenceString(sCreateModDatesFormat, sCreateModDatesFormat, "");
-
-	// Hidden Settings
-	public String dateCreated = new String("");
-	public String dateModified = new String("");
+	protected PreferenceLineEnding lineEnd = new PreferenceLineEnding(sLineEnd, sLineEnd, "");
 	
-	public SimpleDateFormat dateFormat = null;
+	private String sSaveEncoding = Preferences.getPreferenceString(Preferences.SAVE_ENCODING).cur;
+	protected PreferenceString saveEncoding = new PreferenceString(sSaveEncoding, sSaveEncoding, "");
+	
+	private String sSaveFormat = Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur;
+	protected PreferenceString saveFormat = new PreferenceString(sSaveFormat, sSaveFormat, "");
+	
+	private String sOwnerName = Preferences.getPreferenceString(Preferences.OWNER_NAME).cur;
+	protected PreferenceString ownerName = new PreferenceString(sOwnerName, sOwnerName, "");
+	
+	private String sOwnerEmail = Preferences.getPreferenceString(Preferences.OWNER_EMAIL).cur;
+	protected PreferenceString ownerEmail = new PreferenceString(sOwnerEmail, sOwnerEmail, "");
+	
+	private boolean sApplyFontStyleForComments = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur;
+	protected PreferenceBoolean applyFontStyleForComments = new PreferenceBoolean(sApplyFontStyleForComments, sApplyFontStyleForComments, "");
+	
+	private boolean sApplyFontStyleForEditability = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur;
+	protected PreferenceBoolean applyFontStyleForEditability = new PreferenceBoolean(sApplyFontStyleForEditability, sApplyFontStyleForEditability, "");
+	
+	private boolean sApplyFontStyleForMoveability = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur;
+	protected PreferenceBoolean applyFontStyleForMoveability = new PreferenceBoolean(sApplyFontStyleForMoveability, sApplyFontStyleForMoveability, "");
+	
+	private boolean sUseCreateModDates = Preferences.getPreferenceBoolean(Preferences.USE_CREATE_MOD_DATES).cur;
+	protected PreferenceBoolean useCreateModDates = new PreferenceBoolean(sUseCreateModDates, sUseCreateModDates, ""); // We should make all of these private at some point.
+	
+	private String sCreateModDatesFormat = Preferences.getPreferenceString(Preferences.CREATE_MOD_DATES_FORMAT).cur;
+	protected PreferenceString createModDatesFormat = new PreferenceString(sCreateModDatesFormat, sCreateModDatesFormat, "");
 
-
+	// Hidden Settings: Has application level settings.
 	private String sFileProtocol = Preferences.getPreferenceString(Preferences.FILE_PROTOCOL).cur;
-	public PreferenceString fileProtocol = new PreferenceString(sFileProtocol, sFileProtocol, "");
+	protected PreferenceString fileProtocol = new PreferenceString(sFileProtocol, sFileProtocol, "");
+	
+	// Hidden Settings: Document Level only. No Application level settings for these.
+	private String dateCreated = new String("");
+	private String dateModified = new String("");
+	
+	// TBD: This could have an app level value.
+	public SimpleDateFormat dateFormat = null;
 
 
 	// The Constructors
@@ -105,6 +114,12 @@ public class DocumentSettings {
 	public boolean useDocumentSettings() {return this.useDocumentSettings;}
 	public void setUseDocumentSettings(boolean useDocumentSettings) {this.useDocumentSettings = useDocumentSettings;}
 
+	public String getDateCreated() {return this.dateCreated;}
+	public void setDateCreated(String dateCreated) {this.dateCreated = dateCreated;}
+
+	public String getDateModified() {return this.dateModified;}
+	public void setDateModified(String dateModified) {this.dateModified = dateModified;}
+	
 	public PreferenceBoolean getUseCreateModDates() {
 		if (useDocumentSettings()) {
 			return this.useCreateModDates;
@@ -120,6 +135,79 @@ public class DocumentSettings {
 			return Preferences.getPreferenceString(Preferences.CREATE_MOD_DATES_FORMAT);
 		}
 	}
+
+	public PreferenceLineEnding getLineEnd() {
+		if (useDocumentSettings()) {
+			return this.lineEnd;
+		} else {
+			return Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END);
+		}
+	}
+
+	public PreferenceString getSaveEncoding() {
+		if (useDocumentSettings()) {
+			return this.saveEncoding;
+		} else {
+			return Preferences.getPreferenceString(Preferences.SAVE_ENCODING);
+		}
+	}	
+
+	public PreferenceString getSaveFormat() {
+		if (useDocumentSettings()) {
+			return this.saveFormat;
+		} else {
+			return Preferences.getPreferenceString(Preferences.SAVE_FORMAT);
+		}
+	}	
+
+	public PreferenceString getOwnerName() {
+		if (useDocumentSettings()) {
+			return this.ownerName;
+		} else {
+			return Preferences.getPreferenceString(Preferences.OWNER_NAME);
+		}
+	}	
+
+	public PreferenceString getOwnerEmail() {
+		if (useDocumentSettings()) {
+			return this.ownerEmail;
+		} else {
+			return Preferences.getPreferenceString(Preferences.OWNER_EMAIL);
+		}
+	}	
+
+	public PreferenceBoolean getApplyFontStyleForComments() {
+		if (useDocumentSettings()) {
+			return this.applyFontStyleForComments;
+		} else {
+			return Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS);
+		}
+	}
+	
+	public PreferenceBoolean getApplyFontStyleForEditability() {
+		if (useDocumentSettings()) {
+			return this.applyFontStyleForEditability;
+		} else {
+			return Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY);
+		}
+	}
+
+	public PreferenceBoolean getApplyFontStyleForMoveability() {
+		if (useDocumentSettings()) {
+			return this.applyFontStyleForMoveability;
+		} else {
+			return Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY);
+		}
+	}
+
+	public PreferenceString getFileProtocol() {
+		if (useDocumentSettings()) {
+			return this.fileProtocol;
+		} else {
+			return Preferences.getPreferenceString(Preferences.FILE_PROTOCOL);
+		}
+	}	
+
 
 	// Date Methods
 	public void updateSimpleDateFormat(String format) {

@@ -201,9 +201,9 @@ public class OutlinerFileChooser extends JFileChooser {
 		setAccessory(exportAccessory);
 
 		// Set the Accessory GUI state.
-		exportLineEndComboBox.setSelectedItem(doc.settings.lineEnd.cur);
-		exportEncodingComboBox.setSelectedItem(doc.settings.saveEncoding.cur);
-		exportFormatComboBox.setSelectedItem(doc.settings.saveFormat.cur);
+		exportLineEndComboBox.setSelectedItem(doc.settings.getLineEnd().cur);
+		exportEncodingComboBox.setSelectedItem(doc.settings.getSaveEncoding().cur);
+		exportFormatComboBox.setSelectedItem(doc.settings.getSaveFormat().cur);
 
 		// Set the current directory location or selected file.
 		String currentFileName = doc.getFileName();
@@ -230,9 +230,9 @@ public class OutlinerFileChooser extends JFileChooser {
 		setAccessory(saveAccessory);
 
 		// Set the Accessory GUI state.
-		saveLineEndComboBox.setSelectedItem(doc.settings.lineEnd.cur);
-		saveEncodingComboBox.setSelectedItem(doc.settings.saveEncoding.cur);
-		saveFormatComboBox.setSelectedItem(doc.settings.saveFormat.cur);
+		saveLineEndComboBox.setSelectedItem(doc.settings.getLineEnd().cur);
+		saveEncodingComboBox.setSelectedItem(doc.settings.getSaveEncoding().cur);
+		saveFormatComboBox.setSelectedItem(doc.settings.getSaveFormat().cur);
 
 		// Set the current directory location or selected file.
 		// grab the file's name
@@ -244,7 +244,7 @@ public class OutlinerFileChooser extends JFileChooser {
 			String trimmedFileName = StanStringTools.trimFileExtension(currentFileName) ;
 
 			// obtain the current default save format's extension
-			String extension = 	(Outliner.fileFormatManager.getSaveFormat(doc.settings.saveFormat.cur)).getDefaultExtension() ;
+			String extension = 	(Outliner.fileFormatManager.getSaveFormat(doc.settings.getSaveFormat().cur)).getDefaultExtension() ;
 			
 			// addemup
 			setSelectedFile(new File(trimmedFileName + "." + extension)) ;
@@ -266,7 +266,7 @@ public class OutlinerFileChooser extends JFileChooser {
 				String title = doc.getTitle() ;
 				
 				// obtain the current default save format's extension
-				String extension = 	(Outliner.fileFormatManager.getSaveFormat(doc.settings.saveFormat.cur)).getDefaultExtension() ;
+				String extension = 	(Outliner.fileFormatManager.getSaveFormat(doc.settings.getSaveFormat().cur)).getDefaultExtension() ;
 			
 				// addemup
 				setSelectedFile(new File(title + "." + extension)) ;
@@ -345,8 +345,8 @@ public class OutlinerFileChooser extends JFileChooser {
 
 
 	// Overriden Methods of JFileChooser
-				public void approveSelection() {
-					File file = getSelectedFile();
+	public void approveSelection() {
+		File file = getSelectedFile();
 
 		if (getDialogType() == JFileChooser.OPEN_DIALOG) {
 			// Alert if file does not exist.
@@ -388,5 +388,5 @@ public class OutlinerFileChooser extends JFileChooser {
 		}
 
 		super.approveSelection();
-				}
+	}
 }

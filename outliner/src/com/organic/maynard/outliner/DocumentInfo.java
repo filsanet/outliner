@@ -407,40 +407,31 @@ public class DocumentInfo implements Serializable, Cloneable {
 		recordWindowPositioning(document);
 
 		// These three settings are set by SaveAsMenuItem so we can always be sure they exist in DocumentSettings
-		setEncodingType(document.settings.saveEncoding.cur);
-		setLineEnding(document.settings.lineEnd.cur);
-		setFileFormat(document.settings.saveFormat.cur);
+		setEncodingType(document.settings.getSaveEncoding().cur);
+		setLineEnding(document.settings.getLineEnd().cur);
+		setFileFormat(document.settings.getSaveFormat().cur);
 
-		// These five settings are NOT set by SavAsMenuItem so we have to check if DocumentSettings are being used
-		if (document.settings.useDocumentSettings()) {
-			setOwnerName(document.settings.ownerName.cur);
-			setOwnerEmail(document.settings.ownerEmail.cur);
-			setApplyFontStyleForComments(document.settings.applyFontStyleForComments.cur);
-			setApplyFontStyleForEditability(document.settings.applyFontStyleForEditability.cur);
-			setApplyFontStyleForMoveability(document.settings.applyFontStyleForMoveability.cur);
-		} else {
-			setOwnerName(Preferences.getPreferenceString(Preferences.OWNER_NAME).cur);
-			setOwnerEmail(Preferences.getPreferenceString(Preferences.OWNER_EMAIL).cur);
-			setApplyFontStyleForComments(Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur);
-			setApplyFontStyleForEditability(Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur);
-			setApplyFontStyleForMoveability(Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur);
-		}
-
-		setUseCreateModDates(document.settings.getUseCreateModDates().cur); // Don't need to be inside since the conditonal code is in DocumentSettings for these two settings.
-		setCreateModDatesFormat(document.settings.getCreateModDatesFormat().cur);  // Don't need to be inside since the conditonal code is in DocumentSettings for these two settings.
+		// These seven settings are NOT set by SavAsMenuItem so we have to check if DocumentSettings are being used
+		setOwnerName(document.settings.getOwnerName().cur);
+		setOwnerEmail(document.settings.getOwnerEmail().cur);
+		setApplyFontStyleForComments(document.settings.getApplyFontStyleForComments().cur);
+		setApplyFontStyleForEditability(document.settings.getApplyFontStyleForEditability().cur);
+		setApplyFontStyleForMoveability(document.settings.getApplyFontStyleForMoveability().cur);
+		setUseCreateModDates(document.settings.getUseCreateModDates().cur);
+		setCreateModDatesFormat(document.settings.getCreateModDatesFormat().cur);
 
 		String currentDateString = getCurrentDateTimeString();
 		
 		setDateModified(currentDateString);
-		document.settings.dateModified = currentDateString;
+		document.settings.setDateModified(currentDateString);
 
 		// Date created is a special hidden document setting that should always be up to date if we are dealing with a
 		// file that has been opened or previously saved.
 		if(saveAs) {
 			setDateCreated(currentDateString);
-			document.settings.dateCreated = currentDateString;
+			document.settings.setDateCreated(currentDateString);
 		} else {
-			setDateCreated(document.settings.dateCreated);
+			setDateCreated(document.settings.getDateCreated());
 		}	
 	}
 	

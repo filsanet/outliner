@@ -71,28 +71,6 @@ public class PreferencesPanelOpenAndSave extends AbstractPreferencesPanel implem
 		PreferenceString pSaveEncoding = (PreferenceString) prefs.getPreference(Preferences.SAVE_ENCODING);
 		PreferenceString pSaveFormat = (PreferenceString) prefs.getPreference(Preferences.SAVE_FORMAT);
 
-		// Update Document Settings
-		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
-		 OutlinerDocument doc = Outliner.getDocument(i);
-
-			// Only update files that do not have overriding document settings.
-			if (!doc.settings.useDocumentSettings()) {
-				doc.settings.fileProtocol.def = pFileProtocol.tmp;
-				doc.settings.fileProtocol.cur = pFileProtocol.tmp;
-				doc.settings.fileProtocol.tmp = pFileProtocol.tmp;
-				doc.settings.lineEnd.def = pLineEnd.tmp;
-				doc.settings.lineEnd.cur = pLineEnd.tmp;
-				doc.settings.lineEnd.tmp = pLineEnd.tmp;
-				doc.settings.saveEncoding.def = pSaveEncoding.tmp;
-				doc.settings.saveEncoding.cur = pSaveEncoding.tmp;
-				doc.settings.saveEncoding.tmp = pSaveEncoding.tmp;
-				doc.settings.saveFormat.def = pSaveFormat.tmp;
-				doc.settings.saveFormat.cur = pSaveFormat.tmp;
-				doc.settings.saveFormat.tmp = pSaveFormat.tmp;
-				//doc.setFileModified(true);
-			}
-		}
-
 		// Synchronize default protocol in model.
 		Outliner.fileProtocolManager.synchronizeDefault();
 		Outliner.fileProtocolManager.synchonizeDefaultMenuItem();

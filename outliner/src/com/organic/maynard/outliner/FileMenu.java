@@ -555,6 +555,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 		// Create a new document
 		OutlinerDocument newDoc = new OutlinerDocument(docInfo.getPath(), docInfo);
+		newDoc.settings.setUseDocumentSettings(true); // Use document settings immediately, otherwise we would update the application prefs which is bad.
 
 		// give it the docInfo we've got
 		newDoc.setDocumentInfo(docInfo);
@@ -589,37 +590,38 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 		// Update DocumentSettings
 		//newDoc.settings.syncPrefs();
-		newDoc.settings.lineEnd.def = docInfo.getLineEnding();
-		newDoc.settings.lineEnd.restoreCurrentToDefault();
-		newDoc.settings.lineEnd.restoreTemporaryToDefault();
 
-		newDoc.settings.saveEncoding.def = docInfo.getEncodingType();
-		newDoc.settings.saveEncoding.restoreCurrentToDefault();
-		newDoc.settings.saveEncoding.restoreTemporaryToDefault();
+		newDoc.settings.getLineEnd().def = docInfo.getLineEnding();
+		newDoc.settings.getLineEnd().restoreCurrentToDefault();
+		newDoc.settings.getLineEnd().restoreTemporaryToDefault();
+
+		newDoc.settings.getSaveEncoding().def = docInfo.getEncodingType();
+		newDoc.settings.getSaveEncoding().restoreCurrentToDefault();
+		newDoc.settings.getSaveEncoding().restoreTemporaryToDefault();
 
 		// if we were imported ....
 		if (mode == MODE_IMPORT) {
 			// the doc's default save format is the app's default save format
-			newDoc.settings.saveFormat.def = Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur;
+			newDoc.settings.getSaveFormat().def = Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur;
 		// else we weren't imported
 		} else {
 			// the doc's default save format is its existing format
-			newDoc.settings.saveFormat.def = docInfo.getFileFormat();
+			newDoc.settings.getSaveFormat().def = docInfo.getFileFormat();
 		} // end else
-		newDoc.settings.saveFormat.restoreCurrentToDefault();
-		newDoc.settings.saveFormat.restoreTemporaryToDefault();
+		newDoc.settings.getSaveFormat().restoreCurrentToDefault();
+		newDoc.settings.getSaveFormat().restoreTemporaryToDefault();
 
-		newDoc.settings.applyFontStyleForComments.def = docInfo.getApplyFontStyleForComments();
-		newDoc.settings.applyFontStyleForComments.restoreCurrentToDefault();
-		newDoc.settings.applyFontStyleForComments.restoreTemporaryToDefault();
+		newDoc.settings.getApplyFontStyleForComments().def = docInfo.getApplyFontStyleForComments();
+		newDoc.settings.getApplyFontStyleForComments().restoreCurrentToDefault();
+		newDoc.settings.getApplyFontStyleForComments().restoreTemporaryToDefault();
 
-		newDoc.settings.applyFontStyleForEditability.def = docInfo.getApplyFontStyleForEditability();
-		newDoc.settings.applyFontStyleForEditability.restoreCurrentToDefault();
-		newDoc.settings.applyFontStyleForEditability.restoreTemporaryToDefault();
+		newDoc.settings.getApplyFontStyleForEditability().def = docInfo.getApplyFontStyleForEditability();
+		newDoc.settings.getApplyFontStyleForEditability().restoreCurrentToDefault();
+		newDoc.settings.getApplyFontStyleForEditability().restoreTemporaryToDefault();
 
-		newDoc.settings.applyFontStyleForMoveability.def = docInfo.getApplyFontStyleForMoveability();
-		newDoc.settings.applyFontStyleForMoveability.restoreCurrentToDefault();
-		newDoc.settings.applyFontStyleForMoveability.restoreTemporaryToDefault();
+		newDoc.settings.getApplyFontStyleForMoveability().def = docInfo.getApplyFontStyleForMoveability();
+		newDoc.settings.getApplyFontStyleForMoveability().restoreCurrentToDefault();
+		newDoc.settings.getApplyFontStyleForMoveability().restoreTemporaryToDefault();
 
 		newDoc.settings.getUseCreateModDates().def = docInfo.getUseCreateModDates();
 		newDoc.settings.getUseCreateModDates().restoreCurrentToDefault();
@@ -629,10 +631,9 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		newDoc.settings.getCreateModDatesFormat().restoreCurrentToDefault();
 		newDoc.settings.getCreateModDatesFormat().restoreTemporaryToDefault();
 
-		newDoc.settings.dateCreated = docInfo.getDateCreated();
-		newDoc.settings.dateModified = docInfo.getDateModified();
+		newDoc.settings.setDateCreated(docInfo.getDateCreated());
+		newDoc.settings.setDateModified(docInfo.getDateModified());
 
-		newDoc.settings.setUseDocumentSettings(true);
 
 		// make any final modal adjustments
 		switch (mode) {
@@ -780,8 +781,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		}
 
 		// Record Document Settings
-		doc.settings.ownerName.cur = docInfo.getOwnerName();
-		doc.settings.ownerEmail.cur = docInfo.getOwnerEmail();
+		doc.settings.getOwnerName().cur = docInfo.getOwnerName();
+		doc.settings.getOwnerEmail().cur = docInfo.getOwnerEmail();
 
 		tree.setEditingNode(firstVisibleNode);
 		tree.setCursorPosition(0);
