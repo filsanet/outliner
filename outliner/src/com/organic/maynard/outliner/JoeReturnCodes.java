@@ -86,4 +86,7 @@ public interface JoeReturnCodes {
 	// -8xx nullness errors
 	public static final int NULL_OBJECT_REFERENCE = -800 ;
 	
+	// -9xx object errors
+	public static final int UNABLE_TO_CREATE_OBJECT = -900 ;
+	
 	} // end interface JoeReturnCodes
