@@ -1,10 +1,36 @@
 A couple notes about installation.
 
+Windows Installation:
+
 1) You should be running Java 1.3. I think the 1.4 beta should be OK too. If
    you've got more than one JDK installed, you may need to edit the run.bat
    file to call the correct version of java. This would look something like:
    c:\jdk1.3\bin\java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner
 
-2) If you want to setup Windows "sendto" then use the sendto.bat file. In
+2) On the Windows platform, run.bat gets JOE going. 
+
+  Run.bat opens in an MS-DOS window whose environment space is set to a 
+  default value of 256 bytes. 
+
+  On non-trivial Windows systems, that may not be enough. Without enough 
+  environment space, JOE won't run, because the SET statements in run.bat 
+  will fail.  
+
+  The fix: set run.bat so that it has lots of environment space: 
+
+    [1] Right-click run.bat. 
+    [2] A popup menu appears. 
+    [3] Click the Properties menu item. 
+    [4] A window titled "run.bat Properties" appears. 
+    [5] Select the Memory tab. 
+    [6] Set Initial Environment -- AKA environment space -- to 2048. 
+
+3) If you want to setup Windows "sendto" then use the sendto.bat file. In
    the batch file you need to change the path for cd to the directory you
    installed JOE into.
+
+
+UNIX Installation:
+
+  Haven't done anything in this area yet. Should be just reproducing the
+  .bat files as .sh scripts.
