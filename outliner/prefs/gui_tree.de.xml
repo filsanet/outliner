@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<root id="outliner" class="com.organic.maynard.outliner.Outliner" title="JOE">
+	<!-- COMPATIBLE WITH JOE VERSION: 1.8.6.1 -->
+	<!-- TEXT REPOSITORY -->
+		<asset type="text" key="new_script" value="Neues Skript"/>
+		<asset type="text" key="update_script" value="Skript updaten"/>
+		<asset type="text" key="script_type" value="Skript Typ"/>
+		<asset type="text" key="script" value="Skript"/>
+		<asset type="text" key="thread" value="Thread"/>
+		<asset type="text" key="script_name" value="Skript Name"/>
+		<asset type="text" key="apply" value="Anwenden"/>
+		<asset type="text" key="apply_font_style_for_comments" value="Schriftstil für Kommentare anwenden"/>
+		<asset type="text" key="apply_font_style_for_editability" value="Schriftstil für Editierbarkeit"/>
+		<asset type="text" key="apply_font_style_for_moveability" value="Schriftstil für Verschiebbarkeit"/>
+		<asset type="text" key="attribute" value="Attribut"/>
+		<asset type="text" key="bean_shell_code" value="Bean Shell Code"/>
+		<asset type="text" key="cancel" value="Abbrechen"/>
+		<asset type="text" key="characters" value="Zeichen:"/>
+		<asset type="text" key="comparator" value="Vergleicher"/>
+		<asset type="text" key="confirm_dehoist" value="De-Hoisting requires that the undo queue be cleared.\nProceed anyway?"/>
+		<asset type="text" key="confirm_delete" value="Löschen bestätigen"/>
+		<asset type="text" key="confirm_hoist" value="Hoisting requires that the undo queue be cleared.\nProceed anyway?"/>
+		<asset type="text" key="confirm_open" value="Öffnen bestätigen"/>
+		<asset type="text" key="confirm_replacement" value="Ersetzen bestätigen"/>
+		<asset type="text" key="confirm_save" value="Speichern bestätigen"/>
+		<asset type="text" key="confirmation_inconsistent_heirarchy" value="The file {$value_1} has an inconsistent heirarchy.\nEmpty nodes will need to be inserted to open it.\nDo you want to open it anyway?"/>
+		<asset type="text" key="confirmation_operation_not_undoable" value="This operation is not undoable.\nProceed anyway?"/>
+		<asset type="text" key="confirmation_replace_file" value="The file {$value_1} already exists.\nDo you want to replace it?"/>
+		<asset type="text" key="confirmation_revert_file" value="Revert File? All Changes will be lost."/>
+		<asset type="text" key="create" value="Erstellen"/>
+		<asset type="text" key="creation_date" value="Erstellungsdatum:"/>
+		<asset type="text" key="decode" value="Dekodieren"/>
+		<asset type="text" key="delete" value="Löschen"/>
+		<asset type="text" key="do_replacement" value="Ersetzung durchführen"/>
+		<asset type="text" key="do_you_want_to_delete" value="Do you want to delete the item."/>
+		<asset type="text" key="document" value="Dokument:"/>
+		<asset type="text" key="encode" value="Kodieren"/>
+		<asset type="text" key="encoding_when_saving" value="Beim Speichern kodieren."/>
+		<asset type="text" key="error_att_key_alpha" value="Fehler: Schlüssel muss alpha-numerisch sein."/>
+		<asset type="text" key="error_att_key_existance" value="Fehler: Schlüssel darf nicht leer sein."/>
+		<asset type="text" key="error_name_existance" value="Fehler: Name darf nicht leer sei.."/>
+		<asset type="text" key="error_att_key_uniqueness" value="Fehler: Schlüssel muss eindeutig sein."/>
+		<asset type="text" key="error_could_not_open_file" value="An error occurred. Could not open file: {$value_1}"/>
+		<asset type="text" key="error_could_not_open_no_file_format" value="An error occurred. Could not open file: {$value_1} because I couldn't retrieve the file format: {$value_2}"/>
+		<asset type="text" key="error_could_not_revert_no_file_format" value="An error occurred. Could not revert file: {$value_1} because I couldn't retrieve the file format: {$value_2}"/>
+		<asset type="text" key="error_could_not_save_file" value="An error occurred. Could not save file: {$value_1}"/>
+		<asset type="text" key="error_could_not_save_no_file_format" value="An error occurred. Could not save file: {$value_1} because I couldn't retrieve the file format: {$value_2}"/>
+		<asset type="text" key="error_file_format_does_not_support_attributes" value="The file format you are saving with: {$value_1}, does not support attributes.\nThe document contains nodes with attribute name/value pairs that will NOT be saved.\nDo you want to save?"/>
+		<asset type="text" key="error_file_format_does_not_support_comments" value="The file format you are saving with: {$value_1}, does not support comments.\nThe document contains commented nodes whose commented status will NOT be saved.\nDo you want to save?"/>
+		<asset type="text" key="error_file_format_does_not_support_document_attributes" value="The file format you are saving with: {$value_1}, does not support document attributes.\nThe document contains document attribute name/value pairs that will NOT be saved.\nDo you want to save?"/>
+		<asset type="text" key="error_file_format_does_not_support_editability" value="The file format you are saving with: {$value_1}, does not support editability settings.\nThe document contains editable node settings that will NOT be saved.\nDo you want to save?"/>
+		<asset type="text" key="error_file_format_does_not_support_moveability" value="The file format you are saving with: {$value_1}, does not support moveability settings.\nThe document contains moveable node settings that will NOT be saved.\nDo you want to save?"/>
+		<asset type="text" key="error_file_not_found" value="An error occurred. File not found: {$value_1}"/>
+		<asset type="text" key="error_window_monitor_save_changes" value="The text in the {$value_1} file has changed.\nDo you want to save the changes?"/>
+		<asset type="text" key="error_window_monitor_untitled_save_changes" value="The text in the Untitled file has changed.\nDo you want to save the changes?"/>
+		<asset type="text" key="escape" value="Escape"/>
+		<asset type="text" key="file_encoding" value="Dateikodierung"/>
+		<asset type="text" key="file_format" value="Dateiformat"/>
+		<asset type="text" key="find" value="Suchen"/>
+		<asset type="text" key="format_when_saving" value="Bei Speichern formatieren."/>
+		<asset type="text" key="goto_dialog_count_indents" value="Einrückungen für Spaltennummer zählen."/>
+		<asset type="text" key="goto_dialog_enter_column" value="Geben Sie eine Spaltennummer ein."/>
+		<asset type="text" key="goto_dialog_enter_line" value="Geben Sie eine Zeilennummer ein."/>
+		<asset type="text" key="goto_dialog_go" value="Los"/>
+		<asset type="text" key="goto_dialog_line_and_column" value="Gehe zu Zeile und Spalte"/>
+		<asset type="text" key="ignore_case" value="Groß-/Kleinschreibung ignorieren"/>
+		<asset type="text" key="include_read_only_nodes" value="Nur-lese-Knoten in Ersetzen einschließen"/>
+		<asset type="text" key="is_using_application_prefs" value="Currently Using Application Preferences"/>
+		<asset type="text" key="is_using_document_prefs" value="Currently Using Document Preferences"/>
+		<asset type="text" key="line_terminator" value="Zeilenende"/>
+		<asset type="text" key="lines" value="Zeilen:"/>
+		<asset type="text" key="mac" value="Macintosh"/>
+		<asset type="text" key="macro_name" value="Makro Name"/>
+		<asset type="text" key="macro_type" value="Makro Typ"/>
+		<asset type="text" key="macros" value="Makros"/>
+		<asset type="text" key="message_an_error_occurred" value="Ein Fehler ist aufgetreten."/>
+		<asset type="text" key="message_cannot_save_file_already_open" value="Cannot save to file: {$value_1} it is currently open."/>
+		<asset type="text" key="message_could_not_save_find_replace_config" value="Could not save find/replace config file because of"/>
+		<asset type="text" key="message_could_not_save_macros_config" value="Could not save macros config file because of"/>
+		<asset type="text" key="message_could_not_save_preferences" value="Could not save preferences because of"/>
+		<asset type="text" key="message_could_not_save_recent_files_config" value="Could not save recent files config file because of"/>
+		<asset type="text" key="message_do_you_really_want_to_delete_this_macro" value="Do you really want to delete this macro?"/>
+		<asset type="text" key="message_do_you_really_want_to_delete_this_script" value="Do you really want to delete this script?"/>
+		<asset type="text" key="message_file_already_open" value="The file: {$value_1} is already open."/>
+		<asset type="text" key="message_uh_oh" value="Uh Oh, something has gone wrong."/>
+		<asset type="text" key="modification_date" value="Änderungsdatum:"/>
+		<asset type="text" key="name" value="Name"/>
+		<asset type="text" key="new" value="Neu"/>
+		<asset type="text" key="new_attribute" value="Neues Attribut"/>
+		<asset type="text" key="new_find_replace" value="Suchen/Ersetzen Neu"/>
+		<asset type="text" key="new_macro" value="Neues Makro"/>
+		<asset type="text" key="no" value="Nein"/>
+		<asset type="text" key="ok" value="OK"/>
+		<asset type="text" key="owner_email" value="Besitzer Email"/>
+		<asset type="text" key="owner_name" value="Besitzer Name"/>
+		<asset type="text" key="pattern" value="Muster"/>
+		<asset type="text" key="regexp" value="Regexp"/>
+		<asset type="text" key="rename_find_replace" value="Suchen/Ersetzen umbenennen"/>
+		<asset type="text" key="replace" value="Ersetzen"/>
+		<asset type="text" key="replace_all" value="Alles ersetzen"/>
+		<asset type="text" key="replacement" value="Ersetzung"/>
+		<asset type="text" key="replacements" value="Ersetzungen"/>
+		<asset type="text" key="replacements_made" value="{$value_1} {$value_2} durchgeführt."/>
+		<asset type="text" key="restore_defaults" value="Standard wiederherstellen"/>
+		<asset type="text" key="restore_to_application_preferences" value="Zu Programmeinstellungen zurücksetzen"/>
+		<asset type="text" key="selection_only" value="Nur Auswahl"/>
+		<asset type="text" key="sort" value="Sortierung"/>
+		<asset type="text" key="sort_ascending" value="Aufsteigend"/>
+		<asset type="text" key="sort_deep" value="Tief"/>
+		<asset type="text" key="sort_descending" value="Absteigend"/>
+		<asset type="text" key="sort_macros" value="Makros sortieren"/>
+		<asset type="text" key="sort_shallow" value="Flach"/>
+		<asset type="text" key="start_at_top" value="Oben beginnen"/>
+		<asset type="text" key="tooltip_restore_to_global" value="Sets this document's preferences to the current application preference values."/>
+		<asset type="text" key="tooltip_toggle_comment" value="Klicken um Kommentar umzuschalten"/>
+		<asset type="text" key="tooltip_toggle_editability" value="Klicken um Nur-lese-Modus umzuschalten"/>
+		<asset type="text" key="tooltip_toggle_moveability" value="Klicken um die Verschiebbarkeit umzuschalten"/>
+		<asset type="text" key="unescape" value="Un-Escape"/>
+		<asset type="text" key="unix" value="Unix"/>
+		<asset type="text" key="untitled" value="Unbenannt"/>
+		<asset type="text" key="untitled_folder" value="unbenannt"/>
+		<asset type="text" key="update" value="Aktualisieren"/>
+		<asset type="text" key="update_macro" value="Makro aktualisieren"/>
+		<asset type="text" key="url" value="URL"/>
+		<asset type="text" key="value" value="Wert"/>
+		<asset type="text" key="windows" value="Windows"/>
+		<asset type="text" key="wrap_around" value="Zeilenumbruch"/>
+		<asset type="text" key="wrap_characters" value="Zeichen"/>
+		<asset type="text" key="wrap_words" value="Wörter"/>
+		<asset type="text" key="xmlrpc_call" value="XML-RPC Aufruf"/>
+		<asset type="text" key="yes" value="Ja"/>
+	<preferences id="prefs" class="com.organic.maynard.outliner.Preferences">
+		<!-- MISC HIDDEN PREFS -->
+			<preference id="most_recent_open_dir" class="com.organic.maynard.outliner.PreferenceString" default="."/>
+			<preference id="most_recent_save_dir" class="com.organic.maynard.outliner.PreferenceString" default="."/>
+			<preference id="is_maximized" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
+				<validator id="is_maximized_validator" class="com.organic.maynard.outliner.BooleanValidator">
+				</validator>
+			</preference>
+			<preference id="time_zone_for_saving_dates" class="com.organic.maynard.outliner.PreferenceString" default="GMT"/>
+			<preference id="renderer_widgit_cache_size" class="com.organic.maynard.outliner.PreferenceInt" default="40">
+				<validator id="renderer_widgit_cache_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="4" max="256" default="40">
+				</validator>
+			</preference>
+		<!-- MAIN WINDOW PREFS -->
+			<preference id="main_window_width" class="com.organic.maynard.outliner.PreferenceInt" default="600">
+				<validator id="main_window_width_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="450" max="2048" default="600">
+				</validator>
+			</preference>
+			<preference id="main_window_height" class="com.organic.maynard.outliner.PreferenceInt" default="600">
+				<validator id="main_window_height_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="450" max="2048" default="600">
+				</validator>
+			</preference>
+			<preference id="main_window_x_offset" class="com.organic.maynard.outliner.PreferenceInt" default="20">
+				<validator id="main_window_x_offset_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="2048" default="20">
+				</validator>
+			</preference>
+			<preference id="main_window_y_offset" class="com.organic.maynard.outliner.PreferenceInt" default="20">
+				<validator id="main_window_y_offset_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="2048" default="20">
+				</validator>
+			</preference>
+		<!-- HELP SYSTEM PREFS -->
+			<preference id="user_guide_path" class="com.organic.maynard.outliner.PreferenceString" default="dox\JOE User Guide.en.opml"/>
+			<preference id="developer_guide_path" class="com.organic.maynard.outliner.PreferenceString" default="dox\JOE Developer Guide.en.opml"/>
+			<preference id="bookmarks_path" class="com.organic.maynard.outliner.PreferenceString" default="usr\Default User\My JOE Bookmarks.opml"/>
+			<preference id="tutorials_path" class="com.organic.maynard.outliner.PreferenceString" default="dox\JOE Tutorials.en.opml"/>
+			<preference id="about_path" class="com.organic.maynard.outliner.PreferenceString" default="dox\About JOE.en.opml"/>
+		<preferencesframe id="preferences_frame" class="com.organic.maynard.outliner.PreferencesFrame" title="Programmeinstellungen">
+			<preferencepanel id="preferences_panel_editor" class="com.organic.maynard.outliner.PreferencesPanelEditor" title="Editor">
+				<preference id="font_face" class="com.organic.maynard.outliner.PreferenceString" default="SansSerif">
+					<preference_component id="font_face_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Font Face"/>
+				</preference>
+				<preference id="font_size" class="com.organic.maynard.outliner.PreferenceInt" default="12">
+					<validator id="font_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="6" max="36" default="12"/>
+					<preference_component id="font_size_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Font Size" size="4"/>
+				</preference>
+				<preference id="line_wrap" class="com.organic.maynard.outliner.PreferenceString" default="words">
+					<preference_component id="line_wrap_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Line Wrap"/>
+				</preference>
+				<preference id="undo_queue_size" class="com.organic.maynard.outliner.PreferenceInt" default="100">
+					<validator id="undo_queue_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="100000" default="100"/>
+					<preference_component id="undo_queue_size_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Undo Queue Size" size="4"/>
+				</preference>
+				<preference id="show_line_numbers" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+					<validator id="show_line_numbers_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+					<preference_component id="show_line_numbers_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Show Line Numbers"/>
+				</preference>
+				<preference id="show_attributes" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
+					<validator id="show_attributes_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+					<preference_component id="show_attributes_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Show Attributes for new documents"/>
+				</preference>
+				<preference id="show_indicators" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+					<validator id="show_indicators_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+					<preference_component id="show_indicators_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Show Indicators"/>
+				</preference>
+				<preference id="apply_font_style_for_comments" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+					<validator id="apply_font_style_for_comments_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+					<preference_component id="apply_font_style_for_comments_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Apply Font Style for Comments."/>
+				</preference>
+				<preference id="apply_font_style_for_editability" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+					<validator id="apply_font_style_for_editability_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+					<preference_component id="apply_font_style_for_editability_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Apply Font Style for Editability."/>
+				</preference>
+				<preference id="apply_font_style_for_moveability" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+					<validator id="apply_font_style_for_moveability_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+					<preference_component id="apply_font_style_for_moveability_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Apply Font Style for Moveability."/>
+				</preference>
+			</preferencepanel>
+			<preferencepanel id="preferences_panel_look_and_feel" class="com.organic.maynard.outliner.PreferencesPanelLookAndFeel" title="Look &amp; Feel">
+				<preference id="desktop_background_color" class="com.organic.maynard.outliner.PreferenceColor" default="-16777216">
+					<preference_component id="desktop_background_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Desktop Color"/>
+				</preference>
+				<preference id="panel_background_color" class="com.organic.maynard.outliner.PreferenceColor" default="-1">
+					<preference_component id="panel_background_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Background Color"/>
+				</preference>
+				<preference id="textarea_background_color" class="com.organic.maynard.outliner.PreferenceColor" default="-986896">
+					<preference_component id="textarea_background_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Foreground Color"/>
+				</preference>
+				<preference id="textarea_foreground_color" class="com.organic.maynard.outliner.PreferenceColor" default="-16777216">
+					<preference_component id="textarea_foreground_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Text/Selection Color"/>
+				</preference>
+				<preference id="textarea_comment_color" class="com.organic.maynard.outliner.PreferenceColor" default="-65536">
+					<preference_component id="textarea_comment_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Commented Text Color"/>
+				</preference>
+				<preference id="selected_child_color" class="com.organic.maynard.outliner.PreferenceColor" default="-10987432">
+					<preference_component id="selected_child_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Selected Children Color"/>
+				</preference>
+				<preference id="line_number_color" class="com.organic.maynard.outliner.PreferenceColor" default="-1315861">
+					<preference_component id="line_number_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Line Number Color"/>
+				</preference>
+				<preference id="line_number_selected_color" class="com.organic.maynard.outliner.PreferenceColor" default="-2960686">
+					<preference_component id="line_number_selected_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Line Number Selected Color"/>
+				</preference>
+				<preference id="line_number_selected_child_color" class="com.organic.maynard.outliner.PreferenceColor" default="-2302756">
+					<preference_component id="line_number_selected_children_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Line Number Selected Children Color"/>
+				</preference>
+				<vertical_strut size="5"/>
+				<preference id="vertical_spacing" class="com.organic.maynard.outliner.PreferenceInt" default="2">
+					<validator id="vertical_spacing_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="2"/>
+					<preference_component id="vertical_spacing_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Vertical Spacing" size="4"/>
+				</preference>
+				<preference id="indent" class="com.organic.maynard.outliner.PreferenceInt" default="15">
+					<validator id="indent_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="1" max="99" default="15"/>
+					<preference_component id="indent_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Indent" size="4"/>
+				</preference>
+				<vertical_strut size="5"/>
+				<preference id="left_margin" class="com.organic.maynard.outliner.PreferenceInt" default="5">
+					<validator id="left_margin_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="5"/>
+					<preference_component id="left_margin_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Left Margin" size="4"/>
+				</preference>
+				<preference id="top_margin" class="com.organic.maynard.outliner.PreferenceInt" default="5">
+					<validator id="top_margin_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="5"/>
+					<preference_component id="top_margin_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Top Margin" size="4"/>
+				</preference>
+				<preference id="right_margin" class="com.organic.maynard.outliner.PreferenceInt" default="5">
+					<validator id="right_margin_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="5"/>
+					<preference_component id="right_margin_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Right Margin" size="4"/>
+				</preference>
+				<preference id="bottom_margin" class="com.organic.maynard.outliner.PreferenceInt" default="5">
+					<validator id="bottom_margin_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="5"/>
+					<preference_component id="bottom_margin_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Bottom Margin" size="4"/>
+				</preference>
+			</preferencepanel>
+			<preferencepanel id="preferences_panel_open_and_save" class="com.organic.maynard.outliner.PreferencesPanelOpenAndSave" title="Öffnen &amp; Speichern">
+				<preference id="file_protocol" class="com.organic.maynard.outliner.PreferenceString" default="Local File System">
+					<preference_component id="file_protocol_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="File Protocol" style="single_centered"/>
+				</preference>
+				<vertical_strut size="5"/>
+				<preference id="line_end" class="com.organic.maynard.outliner.PreferenceLineEnding">
+					<preference_component id="line_end_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Standard Zeilenende" style="single_centered"/>
+				</preference>
+				<vertical_strut size="5"/>
+				<preference id="open_encoding" class="com.organic.maynard.outliner.PreferenceString" default="ISO-8859-1">
+					<preference_component id="open_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Standardkodierung beim Öffnen." style="single_centered"/>
+				</preference>
+				<preference id="save_encoding" class="com.organic.maynard.outliner.PreferenceString" default="ISO-8859-1">
+					<preference_component id="save_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Standardkodierung beim Speichern." style="single_centered"/>
+				</preference>
+				<vertical_strut size="5"/>
+				<preference id="open_format" class="com.organic.maynard.outliner.PreferenceString" default="Plaintext">
+					<preference_component id="open_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Standardformat beim Öffnen." style="single_centered"/>
+				</preference>
+				<preference id="save_format" class="com.organic.maynard.outliner.PreferenceString" default="Plaintext">
+					<preference_component id="save_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Standardformat beim Speichern." style="single_centered"/>
+				</preference>
+				<preferencepanel id="preferences_panel_justified_plaintext" class="com.organic.maynard.outliner.PreferencesPanelImpl" title="Dateiformat: Ausgerichteter Klartext">
+					<preference id="justified_plaintext_col_width" class="com.organic.maynard.outliner.PreferenceInt" default="80">
+						<validator id="justified_plaintext_col_width_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="999" default="80"/>
+						<preference_component id="justified_plaintext_col_width_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Column Width" size="3"/>
+					</preference>
+					<preference id="justified_plaintext_draw_lines" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+						<validator id="justified_plaintext_draw_lines_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+						<preference_component id="justified_plaintext_draw_lines_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Draw Heirarchy Lines"/>
+					</preference>
+				</preferencepanel>
+				<preferencepanel id="preferences_panel_web_file" class="com.organic.maynard.outliner.PreferencesPanelImpl" title="File Protocol: WebFile">
+					<preference id="web_file_url" class="com.organic.maynard.outliner.PreferenceString" default="http://localhost/outliner.php">
+						<preference_component id="web_file_url_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Remote URL" size="10"/>
+					</preference>
+					<preference id="web_file_user" class="com.organic.maynard.outliner.PreferenceString" default="">
+						<preference_component id="web_file_user_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Remote username" size="10"/>
+					</preference>
+					<preference id="web_file_password" class="com.organic.maynard.outliner.PreferenceString" default="">
+						<preference_component id="web_file_password_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Remote password" size="10"/>
+					</preference>
+				</preferencepanel>
+			</preferencepanel>
+			<preferencepanel id="preferences_panel_misc" class="com.organic.maynard.outliner.PreferencesPanelMisc" title="Sonstiges">
+				<preference id="print_environment" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
+					<validator id="print_environment_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+					<preference_component id="print_environment_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Print environment to console on startup"/>
+				</preference>
+				<preference id="new_doc_on_startup" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+					<validator id="new_doc_on_startup_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+					<preference_component id="new_doc_on_startup_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="New document on startup"/>
+				</preference>
+				<preference id="recent_files_list_size" class="com.organic.maynard.outliner.PreferenceInt" default="10">
+					<validator id="recent_files_list_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="10"/>
+					<preference_component id="recent_files_list_size_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Recent files list size" size="2"/>
+				</preference>
+				<preference id="owner_name" class="com.organic.maynard.outliner.PreferenceString" default="">
+					<preference_component id="owner_name_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Owner name" size="10"/>
+				</preference>
+				<preference id="owner_email" class="com.organic.maynard.outliner.PreferenceString" default="">
+					<preference_component id="owner_email_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Owner email" size="10"/>
+				</preference>
+				<preference id="mouse_wheel_scroll_speed" class="com.organic.maynard.outliner.PreferenceInt" default="1">
+					<validator id="mouse_wheel_scroll_speed_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="1" max="1000" default="1"/>
+					<preference_component id="mouse_wheel_scroll_speed_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Mouse Wheel Scroll Speed" size="2"/>
+				</preference>
+				<preference id="autosave_frequency" class="com.organic.maynard.outliner.PreferenceInt" default="30">
+					<validator id="autosave_frequency_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="10" max="3600" default="30"/>
+					<preference_component id="autosave_frequency_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Autosave Frequency (sec)" size="4"/>
+				</preference>
+			</preferencepanel>
+		</preferencesframe>
+	</preferences>
+	<menubar id="menubar" class="com.organic.maynard.outliner.OutlinerDesktopMenuBar">
+		<menu id="file" class="com.organic.maynard.outliner.FileMenu" text="Datei">
+			<menuitem id="new_file" class="com.organic.maynard.outliner.NewFileMenuItem" text="Neu" keybinding="N" keybindingmodifiers="control"/>
+			<menuitem id="open" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Öffnen..."/>
+			<menu id="recent_file_list" class="com.organic.maynard.outliner.RecentFilesList" text="Zuletzt bearbeitete Dateien">
+			</menu>
+			<separator/>
+			<menuitem id="save" class="com.organic.maynard.outliner.SaveFileMenuItem" text="Speichern" keybinding="S" keybindingmodifiers="control"/>
+			<menuitem id="save_all" class="com.organic.maynard.outliner.SaveAllFileMenuItem" text="Alle speichern"/>
+			<menuitem id="save_as" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Speichern unter..."/>
+			<menuitem id="revert" class="com.organic.maynard.outliner.RevertFileMenuItem" text="Neu einlesen"/>
+			<separator/>
+			<menuitem id="export" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Exportieren..."/>
+			<menuitem id="export_selection" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Auswahl exportieren..."/>
+			<separator/>
+			<menuitem id="close" class="com.organic.maynard.outliner.CloseFileMenuItem" text="Schließen" keybinding="W" keybindingmodifiers="control"/>
+			<menuitem id="close_all" class="com.organic.maynard.outliner.CloseAllFileMenuItem" text="Alle schließen"/>
+			<separator/>
+			<menuitem id="quit" class="com.organic.maynard.outliner.QuitMenuItem" text="Beenden" keybinding="Q" keybindingmodifiers="control"/>
+		</menu>
+		<menu id="edit" class="com.organic.maynard.outliner.EditMenu" text="Bearbeiten">
+			<menuitem id="undo" class="com.organic.maynard.outliner.UndoMenuItem" text="Rückgängig" keybinding="Z" keybindingmodifiers="control"/>
+			<menuitem id="redo" class="com.organic.maynard.outliner.RedoMenuItem" text="Wiederherstellen" keybinding="Z" keybindingmodifiers="control shift"/>
+			<separator/>
+			<menuitem id="undo_all" class="com.organic.maynard.outliner.UndoAllMenuItem" text="Alles rückgängig"/>
+			<menuitem id="redo_all" class="com.organic.maynard.outliner.RedoAllMenuItem" text="Alles wiederherstellen"/>
+			<separator/>
+			<menuitem id="cut" class="com.organic.maynard.outliner.CutMenuItem" text="Ausschneiden" keybinding="X" keybindingmodifiers="control"/>
+			<menuitem id="copy" class="com.organic.maynard.outliner.CopyMenuItem" text="Kopieren" keybinding="C" keybindingmodifiers="control"/>
+			<menuitem id="paste" class="com.organic.maynard.outliner.PasteMenuItem" text="Einfügen" keybinding="V" keybindingmodifiers="control"/>
+			<menuitem id="delete" class="com.organic.maynard.outliner.DeleteMenuItem" text="Löschen" keybinding="delete"/>
+			<separator/>
+			<menuitem id="select_all" class="com.organic.maynard.outliner.SelectAllMenuItem" text="Alles auswählen" keybinding="A" keybindingmodifiers="control"/>
+			<menuitem id="select_none" class="com.organic.maynard.outliner.SelectNoneMenuItem" text="Nichts auswählen" keybinding="D" keybindingmodifiers="control"/>
+			<menuitem id="select_inverse" class="com.organic.maynard.outliner.SelectInverseMenuItem" text="Auswahl umkehren" keybinding="I" keybindingmodifiers="control"/>
+			<separator/>
+			<menuitem id="preferences" class="com.organic.maynard.outliner.PreferencesMenuItem" text="Programmeinstellungen..."/>
+			<menuitem id="edit_document_settings" class="com.organic.maynard.outliner.EditDocumentSettingsMenuItem" text="Dokumenteinstellungen..."/>
+			<menuitem id="edit_document_attributes" class="com.organic.maynard.outliner.EditDocumentAttributesMenuItem" text="Dokumentattribute..."/>
+		</menu>
+		<menu id="outline" class="com.organic.maynard.outliner.OutlineMenu" text="Outline">
+			<menuitem id="comment_submenu" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Kommentare">
+				<menuitem id="toggle_comment_and_clear" class="com.organic.maynard.outliner.ToggleCommentAndClearMenuItem" text="Kommentar umschalten und Unterknoten löschen" keybinding="page_up"/>
+				<menuitem id="clear_comments" class="com.organic.maynard.outliner.ClearCommentsMenuItem" text="Kommentare in ausgewählten Knoten löschen" keybinding="page_up" keybindingmodifiers="control shift"/>
+				<separator/>
+				<menuitem id="toggle_comment" class="com.organic.maynard.outliner.ToggleCommentMenuItem" text="Kommentar umschalten" keybinding="page_up" keybindingmodifiers="shift"/>
+				<menuitem id="toggle_comment_inheritance" class="com.organic.maynard.outliner.ToggleCommentInheritanceMenuItem" text="Vererbung der Kommentare umschalten" keybinding="page_up" keybindingmodifiers="control"/>
+			</menuitem>
+			<menuitem id="editable_submenu" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Read-Only Node Settings">
+				<menuitem id="toggle_editable_and_clear" class="com.organic.maynard.outliner.ToggleEditableAndClearMenuItem" text="Nur-lese-Modus umschalten und Unterknoten löschen" keybinding="f11"/>
+				<menuitem id="clear_editables" class="com.organic.maynard.outliner.ClearEditablesMenuItem" text="Nur-lese-Modus in ausgewählten Knoten löschen" keybinding="f11" keybindingmodifiers="control shift"/>
+				<separator/>
+				<menuitem id="toggle_editable" class="com.organic.maynard.outliner.ToggleEditableMenuItem" text="Nur-lese-Modus umschalten" keybinding="f11" keybindingmodifiers="shift"/>
+				<menuitem id="toggle_editable_inheritance" class="com.organic.maynard.outliner.ToggleEditableInheritanceMenuItem" text="Vererbung des Nur-lese-Modus umschalten" keybinding="f11" keybindingmodifiers="control"/>
+			</menuitem>
+			<menuitem id="moveable_submenu" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Moveable Node Settings">
+				<menuitem id="toggle_moveable_and_clear" class="com.organic.maynard.outliner.ToggleMoveableAndClearMenuItem" text="Verschiebbarkeitseinstellungen umschalten und Unterknoten löschen" keybinding="f12"/>
+				<menuitem id="clear_moveables" class="com.organic.maynard.outliner.ClearMoveablesMenuItem" text="Verschiebbarkeitseinstellung in ausgewählten Knoten löschen" keybinding="f12" keybindingmodifiers="control shift"/>
+				<separator/>
+				<menuitem id="toggle_moveable" class="com.organic.maynard.outliner.ToggleMoveableMenuItem" text="Verschiebbarkeitseinstellung umschalten" keybinding="f12" keybindingmodifiers="shift"/>
+				<menuitem id="toggle_moveable_inheritance" class="com.organic.maynard.outliner.ToggleMoveableInheritanceMenuItem" text="Vererbung der Verschiebbarkeitseinstellung umschalten" keybinding="f12" keybindingmodifiers="control"/>
+			</menuitem>
+			<separator/>
+			<menuitem id="toggle_expansion" class="com.organic.maynard.outliner.ToggleExpansionMenuItem" text="Aufklappen umschalten" keybinding="page_down"/>
+			<separator/>
+			<menuitem id="expand_all_subheads" class="com.organic.maynard.outliner.ExpandAllSubheadsMenuItem" text="Alle Unterknoten aufklappen"/>
+			<menuitem id="expand_everything" class="com.organic.maynard.outliner.ExpandEverythingMenuItem" text="Alles aufklappen"/>
+			<separator/>
+			<menuitem id="collapse_to_parent" class="com.organic.maynard.outliner.CollapseToParentMenuItem" text="Bis Überknoten zuklappen"/>
+			<menuitem id="collapse_everything" class="com.organic.maynard.outliner.CollapseEverythingMenuItem" text="Alles zuklappen"/>
+			<separator/>
+			<menuitem id="move_up" class="com.organic.maynard.outliner.MoveUpMenuItem" text="Nach oben verschieben" keybinding="up" keybindingmodifiers="shift"/>
+			<menuitem id="move_down" class="com.organic.maynard.outliner.MoveDownMenuItem" text="Nach unten verschieben" keybinding="down" keybindingmodifiers="shift"/>
+			<menuitem id="move_left" class="com.organic.maynard.outliner.MoveLeftMenuItem" text="Nach links verschieben" keybinding="left" keybindingmodifiers="shift"/>
+			<menuitem id="move_right" class="com.organic.maynard.outliner.MoveRightMenuItem" text="Nach rechts verschieben" keybinding="right" keybindingmodifiers="shift"/>
+			<separator/>
+			<menuitem id="promote" class="com.organic.maynard.outliner.PromoteMenuItem" text="Promote" keybinding="tab" keybindingmodifiers="shift"/>
+			<menuitem id="demote" class="com.organic.maynard.outliner.DemoteMenuItem" text="Demote" keybinding="tab"/>
+			<separator/>
+			<menuitem id="merge" class="com.organic.maynard.outliner.MergeMenuItem" text="Zusammenführen" keybinding="M" keybindingmodifiers="control"/>
+			<menuitem id="merge_with_spaces" class="com.organic.maynard.outliner.MergeWithSpacesMenuItem" text="Mit Leerzeichen zusammenführen" keybinding="M" keybindingmodifiers="control shift"/>
+			<separator/>
+			<menuitem id="hoist" class="com.organic.maynard.outliner.HoistMenuItem" text="Hoist"/>
+			<menuitem id="dehoist" class="com.organic.maynard.outliner.DehoistMenuItem" text="De-Hoist"/>
+			<menuitem id="dehoist_all" class="com.organic.maynard.outliner.DehoistAllMenuItem" text="De-Hoist All"/>
+			<separator/>
+			<menuitem id="toggle_attributes" class="com.organic.maynard.outliner.ToggleAttributesMenuItem" text="X" show="Attribute anzeigen" hide="Attribute ausblenden" keybinding="T" keybindingmodifiers="control"/>
+		</menu>
+		<menu id="search" class="com.organic.maynard.outliner.SearchMenu" text="Suchen">
+			<menuitem id="goto" class="com.organic.maynard.outliner.GoToMenuItem" text="Gehe zu Zeile..." keybinding="G" keybindingmodifiers="control"/>
+			<separator/>
+			<menuitem id="find" class="com.organic.maynard.outliner.FindMenuItem" text="Suchen/Ersetzen..." keybinding="F" keybindingmodifiers="control"/>
+		</menu>
+		<menu id="script" class="com.organic.maynard.outliner.ScriptMenu" text="Skript">
+			<menuitem id="macros" class="com.organic.maynard.outliner.MacrosMenuItem" text="Makro Manager..."/>
+			<separator/>
+			<run_as_bsh_script id="run_as_bsh_script" class="com.organic.maynard.outliner.RunAsBSHScriptMenuItem" text="Als Bean Shell Skript ausführen"/>
+			<menuitem id="bsh_console" class="com.organic.maynard.outliner.BSHConsoleMenuItem" text="Bean Shell Konsole"/>
+			<menuitem id="scripts_manager" class="com.organic.maynard.outliner.ScriptsManagerMenuItem" text="Skript Manager..."/>
+		</menu>
+		<menu id="window" class="com.organic.maynard.outliner.WindowMenu" text="Fenster">
+			<menuitem id="statistics" class="com.organic.maynard.outliner.StatisticsMenuItem" text="Dokumentstatistik..."/>
+			<separator/>
+			<menuitem id="stack" class="com.organic.maynard.outliner.StackMenuItem" text="Stapeln"/>
+			<separator/>
+			<menuitem id="next_window" class="com.organic.maynard.outliner.NextWindowMenuItem" text="Nächstes" keybinding="S" keybindingmodifiers="control shift"/>
+			<menuitem id="prev_window" class="com.organic.maynard.outliner.PrevWindowMenuItem" text="Vorheriges" keybinding="A" keybindingmodifiers="control shift"/>asdfsa
+			<separator/>
+		</menu>
+		<menu id="help" class="com.organic.maynard.outliner.HelpMenu" text="Hilfe">
+			<menuitem id="userGuide" class="com.organic.maynard.outliner.HelpUserGuideMenuItem" text="Benutzerhandbuch"/>
+			<menuitem id="developerGuide" class="com.organic.maynard.outliner.HelpDeveloperGuideMenuItem" text="Entwicklerhandbuch"/>
+			<separator/>
+			<menuitem id="tutorials" class="com.organic.maynard.outliner.HelpTutorialsMenuItem" text="Tutorials"/>
+			<menuitem id="bookmarks" class="com.organic.maynard.outliner.HelpBookmarksMenuItem" text="Bookmarks"/>
+			<separator/>
+			<menuitem id="about" class="com.organic.maynard.outliner.HelpAboutMenuItem" text="Über JOE"/>
+		</menu>
+	</menubar>
+	<!-- MISC COMPONENTS -->
+		<document_settings_view id="document_settings_view" class="com.organic.maynard.outliner.DocumentSettingsView" title="Dokumenteinstellungen"/>
+		<document_attributes_view id="document_attributes_view" class="com.organic.maynard.outliner.DocumentAttributesView" title="Dokumentattribute"/>
+		<document_statistics id="document_statistics" class="com.organic.maynard.outliner.DocumentStatistics" title="Dokumentstatistik"/>
+		<macro_manager id="macro_manager" class="com.organic.maynard.outliner.MacroManagerFrame" title="Makro Manager"/>
+		<scripts_manager id="macro_manager" class="com.organic.maynard.outliner.ScriptsManager" title="Skript Manager"/>
+		<macro_editor id="macro_editor" class="com.organic.maynard.outliner.MacroEditor" title="Makro Editor"/>
+		<script_editor id="script_editor" class="com.organic.maynard.outliner.ScriptEditor" title="Skript Editor"/>
+		<find_replace id="find_replace" class="com.organic.maynard.outliner.FindReplaceFrame" title="Suchen/Ersetzen"/>
+		<goto_dialog id="goto_dialog" class="com.organic.maynard.outliner.GoToDialog" title="Gehe zu Zeile"/>
+		<bsh_console id="bsh_console" class="com.organic.maynard.outliner.BSHConsole" title="Bean Shell Konsole"/>
+</root>
