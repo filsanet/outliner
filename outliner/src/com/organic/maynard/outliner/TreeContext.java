@@ -448,28 +448,28 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 	// ----------------------- JoeTree interface ------------------------
 	
 	public OutlinerDocument getDocument () {
-		return document ;
-	} // end method getVisibleNodes
+		return document;
+	}
 	
 	
 	public void setDocument (OutlinerDocument someDocument) {
-		document = someDocument ;
-	} // end method getVisibleNodes
+		document = someDocument;
+	}
 	
 	
-	public JoeNodeList getVisibleNodes () {
-		return visibleNodes ;
-	} // end method getVisibleNodes
+	public JoeNodeList getVisibleNodes() {
+		return visibleNodes;
+	}
 	
 	
-	public JoeNodeList getSelectedNodes () {
-		return selectedNodes ;
-	} // end method getSelectedNodes
+	public JoeNodeList getSelectedNodes() {
+		return selectedNodes;
+	}
 	
 	
 	public Node getRootNode () {
 		return rootNode ;
-	} // end method getSelectedNodes
+	}
 	
 	
 	public void setRootNode(Node someNode) {
