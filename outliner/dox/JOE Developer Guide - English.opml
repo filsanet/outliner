@@ -3,18 +3,18 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide - English.opml</title>
 <dateCreated>Tue, 17 Jul 2001 02:49:03 GMT</dateCreated>
-<dateModified>Sun, 5 Aug 2001 04:58:26 GMT</dateModified>
+<dateModified>Sat, 11 Aug 2001 05:30:49 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
-<expansionState>6,7,17,19,20,23,25,27,30</expansionState>
-<vertScrollState>7</vertScrollState>
-<windowTop>122</windowTop>
-<windowLeft>116</windowLeft>
-<windowBottom>385</windowBottom>
-<windowRight>577</windowRight>
+<expansionState></expansionState>
+<vertScrollState>1</vertScrollState>
+<windowTop>13</windowTop>
+<windowLeft>560</windowLeft>
+<windowBottom>624</windowBottom>
+<windowRight>1129</windowRight>
 </head>
 <body>
-<outline text="JOE Developer Guide"/>
+<outline text="JOE Developer Guide [JDG]"/>
 <outline text="--------------------------"/>
 <outline text="Front End">
 <outline text="About JOE">
@@ -67,8 +67,9 @@
 </outline>
 </outline>
 <outline text="About JOE Developer Guide [JDG]">
-<outline text="This is a work in perpetual progress."/>
-<outline text="Empty andor missing nodes are not bugs, they're just things we just haven't gotten 'round to thinking andor writing about yet"/>
+<outline text="This is a work in perpetual progress.">
+<outline text="Empty/incomplete/missing nodes are generally not bugs, they're just things someone hasn't gotten 'round to thinking thru andor writing about completely yet"/>
+</outline>
 <outline text="Wanna help ?? ">
 <outline text="Send suggestions for nodes"/>
 <outline text="Send content contributions">
@@ -95,7 +96,14 @@
 </outline>
 <outline text="JOE Developer Guide Authors">
 <outline text="Stanley Krute">
-<outline text="Stan@JavaOutlineEditor.org"/>
+<outline text="access: Stan@JavaOutlineEditor.org"/>
+<outline text="Stan's Preface">
+<outline text="Open Source development via SourceForge, cvs, ssh, NetBeans, and Java are all new to me"/>
+<outline text="This guide came about as I climbed the learning curve">
+<outline text="My climb notebook"/>
+</outline>
+<outline text="Hopefully it'll flatten that curve for those to come"/>
+</outline>
 </outline>
 </outline>
 <outline text="Thanks To">
@@ -115,10 +123,9 @@
 <outline text="http://SourceForge/projects/outliner/"/>
 </outline>
 <outline text="forums">
-<outline text="General"/>
+<outline text="Open"/>
 <outline text="Developers"/>
 <outline text="Feature Requests"/>
-<outline text="Design Thoughts"/>
 <outline text="Bugs"/>
 </outline>
 <outline text="code">
@@ -171,12 +178,19 @@
 <outline text="I put together this doc with the hope that it can speed the process for others"/>
 </outline>
 <outline text="This is just one of a large number of paths">
-<outline text="Its main feature: it works."/>
+<outline text="Two salient features:">
+<outline text="It's a path the author's followed"/>
+<outline text="It works"/>
+</outline>
+</outline>
+<outline text="As you travel your own, send us info">
+<outline text="mailto: DocHelp@JavaOutlineEditor.org"/>
 </outline>
 </outline>
 </outline>
+<outline text="Places">
 <outline text="Enroll at SourceForge"/>
-<outline text="Set Up Directories">
+<outline text="Set Up Directories on Local Machine">
 <outline text="home at root of some drive">
 <outline text="mine is c:\home"/>
 <outline text="lots of unixoid programs will store data sub this directory"/>
@@ -191,59 +205,7 @@
 <outline text="mine is at e:\stan's java projects\Joe"/>
 </outline>
 </outline>
-<outline text="Adjust config.sys"/>
-<outline text="Adjust autoexec.bat">
-<outline text="environment settings">
-<outline text="(adjusting as necessary for your specific username, projectname, drive, and directories) "/>
-<outline text="set CVSROOT=:ext:your_username@cvs.outliner.sourceforge.net:/cvsroot/outliner"/>
-<outline text="set USERNAME=your_username"/>
-<outline text="set HOMEDRIVE=c:"/>
-<outline text="set HOME=\home"/>
-<outline text="set HOMEPATH=\home"/>
-<outline text="set CVS_RSH=ssh"/>
-</outline>
-<outline text="path">
-<outline text="add ssh directory and cvs directory to your path"/>
-<outline text="path=...;c:\ssh;c:\cvs"/>
-</outline>
-</outline>
-<outline text="Obtain and Install ssh">
-<outline text="Obtain and Install SourceForge Setup">
-<outline text="It's at "/>
-</outline>
-<outline text="Run it"/>
-<outline text="Choose to download and install ssh -- don't do WinCVS"/>
-<outline text="Log into your project">
-<outline text="ssh -l &lt;user_name&gt; projectname.sourceforge.net">
-<outline text="ssh -l stanley_krute outliner.sourceforge.net"/>
-</outline>
-</outline>
-<outline text="Log out">
-<outline text="exit"/>
-</outline>
-</outline>
-<outline text="Obtain and Install CVS">
-<outline text="Why CVS ?"/>
-<outline text="Download it ">
-<outline text="Get it from http://cvshome.org"/>
-</outline>
-<outline text="installation notes">
-<outline text="suggestions">
-<outline text="Install in a top-level directory">
-<outline text="e:\cvs"/>
-</outline>
-</outline>
-<outline text="adjust autoexec.bat">
-<outline text="add cvs install directory to path"/>
-<outline text="set CVSROOT">
-<outline text="set CVSROOT to point to the reposity, which in this case resides out on SourceForge"/>
-<outline text="set CVSROOT=:pserver:anonymous@cvs.outliner.sourceforge.net:/cvsroot/outliner"/>
-</outline>
-</outline>
-</outline>
-<outline text="Sample CVS Commands"/>
-</outline>
-<outline text="Set up your CVS directory on SourceForge">
+<outline text="Set up CVS directory on SourceForge">
 <outline text="Open up a command prompt"/>
 <outline text="Give this command">
 <outline text="ssh -l &lt;user_name&gt; cvs.sourceforge.net">
@@ -277,17 +239,68 @@
 <outline text="E:\stan's java projects\Joe\outliner&gt;"/>
 </outline>
 </outline>
-<outline text="Download Project Files">
-<outline text="Open up a command prompt"/>
-<outline text="go to the directory where your project will live"/>
-<outline text="give this command">
-<outline text="cvs -z3 -d:ext:developername@cvs.outliner.sourceforge.net:/cvsroot/outliner co outliner"/>
-<outline text="cvs -z3 -d:ext:stanley_krute@cvs.outliner.sourceforge.net:/cvsroot/outliner co outliner"/>
 </outline>
-<outline text="When prompted, provide your SourceForge password"/>
-<outline text="You'll see a whole bunch of files roll by"/>
-<outline text="The U stands for Updated file. Updated because it doesn't exist on your box."/>
+<outline text="Tools">
+<outline text="a Programmer's Text Editor">
+<outline text="jEdit"/>
+<outline text="Ultra-Edit 32"/>
 </outline>
+<outline text="a Secure Terminal Shell">
+<outline text="Obtain and Install ssh">
+<outline text="About ssh">
+<outline text="ssh stands for 'secure shell'"/>
+<outline text="it provides a secure means of communication with a server"/>
+<outline text="it is a command line program"/>
+</outline>
+<outline text="Which version to get">
+<outline text="TBD"/>
+</outline>
+<outline text="Where to get it from">
+<outline text="Obtain and Install SourceForge Setup">
+<outline text="It's at TBD"/>
+</outline>
+</outline>
+<outline text="Installation"/>
+<outline text="Run it">
+<outline text=""/>
+</outline>
+<outline text="Choose to download and install ssh">
+<outline text="Don't download and install WinCVS"/>
+</outline>
+<outline text="Log into your project">
+<outline text="ssh -l &lt;user_name&gt; projectname.sourceforge.net">
+<outline text="ssh -l stanley_krute outliner.sourceforge.net"/>
+</outline>
+</outline>
+<outline text="Log out">
+<outline text="exit"/>
+</outline>
+</outline>
+</outline>
+<outline text="a Version Control System">
+<outline text="Obtain and Install CVS">
+<outline text="Why CVS ?"/>
+<outline text="Download it ">
+<outline text="Get it from http://cvshome.org"/>
+</outline>
+<outline text="installation notes">
+<outline text="suggestions">
+<outline text="Install in a top-level directory">
+<outline text="e:\cvs"/>
+</outline>
+</outline>
+<outline text="adjust autoexec.bat">
+<outline text="add cvs install directory to path"/>
+<outline text="set CVSROOT">
+<outline text="set CVSROOT to point to the reposity, which in this case resides out on SourceForge"/>
+<outline text="set CVSROOT=:pserver:anonymous@cvs.outliner.sourceforge.net:/cvsroot/outliner"/>
+</outline>
+</outline>
+</outline>
+<outline text="Sample CVS Commands"/>
+</outline>
+</outline>
+<outline text="a Development Kit">
 <outline text="Obtain and Install Java JDK">
 <outline text="Why Java ?"/>
 <outline text="Download it">
@@ -296,6 +309,9 @@
 </outline>
 <outline text="installation notes"/>
 </outline>
+</outline>
+<outline text="an Integrated Development Environment [IDE]">
+<outline text="NetBeans">
 <outline text="Obtain and Install NetBeans IDE">
 <outline text="NetBeans">
 <outline text="Why NetBeans ?"/>
@@ -424,14 +440,190 @@
 </outline>
 </outline>
 <outline text="Set up Ant to control compiles and builds"/>
+</outline>
+</outline>
+</outline>
+<outline text="Adjustments">
+<outline text="Adjust config.sys"/>
+<outline text="Adjust autoexec.bat">
+<outline text="environment settings">
+<outline text="(adjusting as necessary for your specific username, projectname, drive, and directories) "/>
+<outline text="set CVSROOT=:ext:your_username@cvs.outliner.sourceforge.net:/cvsroot/outliner"/>
+<outline text="set USERNAME=your_username"/>
+<outline text="set HOMEDRIVE=c:"/>
+<outline text="set HOME=\home"/>
+<outline text="set HOMEPATH=\home"/>
+<outline text="set CVS_RSH=ssh"/>
+</outline>
+<outline text="path">
+<outline text="add ssh directory and cvs directory to your path"/>
+<outline text="path=...;c:\ssh;c:\cvs"/>
+</outline>
+</outline>
+</outline>
+<outline text="Download Project Files">
+<outline text="Open up a command prompt"/>
+<outline text="go to the directory where your project will live"/>
+<outline text="give this command">
+<outline text="cvs -z3 -d:ext:developername@cvs.outliner.sourceforge.net:/cvsroot/outliner co outliner"/>
+<outline text="cvs -z3 -d:ext:stanley_krute@cvs.outliner.sourceforge.net:/cvsroot/outliner co outliner"/>
+</outline>
+<outline text="When prompted, provide your SourceForge password"/>
+<outline text="You'll see a whole bunch of files roll by"/>
+<outline text="The U stands for Updated file. Updated because it doesn't exist on your box."/>
+</outline>
 <outline text="Build and Run the Project"/>
 </outline>
-<outline text="Linux/Unix"/>
-<outline text="Macintosh"/>
+<outline text="Linux/Unix [forthcoming]"/>
+<outline text="Macintosh [forthcoming]"/>
 </outline>
-<outline text="JOE Development Cookbooks">
+<outline text="Development Tool Resources">
+<outline text="Links">
+<outline text="ssh">
+<outline text="Latest versions available at TBD"/>
+</outline>
+<outline text="CVS ">
+<outline text="Latest versions">
+<outline text=" http://cvshome.org"/>
+</outline>
+</outline>
+<outline text="SourceForge"/>
+<outline text="Java JDK">
+<outline text="Latest versions"/>
+<outline text="Official Docs">
+<outline text="TBD"/>
+</outline>
+<outline text="Tutorials">
+<outline text="TBD"/>
+</outline>
+<outline text="Cookbooks">
+<outline text="TBD"/>
+</outline>
+</outline>
+<outline text="NetBeans">
+<outline text="Latest versions available at"/>
+</outline>
+<outline text="Ant">
+<outline text="Latest versions available at"/>
+</outline>
+<outline text="jBuilder">
+<outline text="Latest versions available at"/>
+</outline>
+<outline text="Metrowerks Java">
+<outline text="Latest versions available at"/>
+</outline>
+</outline>
+<outline text="Hints and Tips">
+<outline text="ssh"/>
+<outline text="CVS ">
+<outline text="Output to a Text File">
+<outline text="You can then examine the output at your leisure">
+<outline text="For example">
+<outline text="I run a general update like this">
+<outline text="c:\outliner&gt;cvs update &gt; update.txt"/>
+</outline>
+<outline text="I then examine update.txt in JOE"/>
+</outline>
+</outline>
+<outline text="Especially vital in Windows worlds">
+<outline text="The stock Windows command line window keeps you from getting at anything beyond the last 50 lines of output"/>
+</outline>
+</outline>
+<outline text="Dealing with M-result Update Items">
+<outline text="note: this is Stan-the-Novice-cvs-Guy's approach">
+<outline text="I'm sure it's a bit of a way-too-blunt bludgeon"/>
+<outline text="Better info earnestly solicited">
+<outline text="Send it to Stan@JavaOutlineEditor.org"/>
+<outline text="Lookin' for those 'surgical' tools/techniques"/>
+</outline>
+</outline>
+<outline text="An item marked M in the cvs update output means that you've got to do some merging, because the repository version of the file differs from the local version of the file ">
+<outline text="For example, imagine update.txt shows this line:">
+<outline text="M src/com/organic/maynard/outliner/Outliner.java"/>
+</outline>
+</outline>
+<outline text="Rename the local file">
+<outline text="continuing our example:">
+<outline text="ren Outliner.java aaaOutliner.java">
+<outline text="the 'aaa' prefix used here eases many tasks"/>
+</outline>
+</outline>
+</outline>
+<outline text="Grab the repository file">
+<outline text="continuing our example:">
+<outline text="cvs update Outliner.java"/>
+</outline>
+</outline>
+<outline text="Compare and contrast">
+<outline text="I use the GUI tool WinDiff for this ">
+<outline text="it's included with various MS products">
+<outline text="Visual Studio, Windows Resource Kits"/>
+</outline>
+<outline text="hey ! howzabout an Open Source jsDiff ??">
+<outline text="a Java Swing tool ala WinDiff "/>
+</outline>
+</outline>
+</outline>
+<outline text="Think carefully"/>
+<outline text="Incorporate one or more of your changes into the repository version you just updated to">
+<outline text="Personally, I [stan] go in small increments, one leetul chunka change at a time, so as to ease testing/debugging"/>
+</outline>
+<outline text="Build and test the project"/>
+<outline text="When all seems well, commit your change[s]-incorporated version back up to the repository"/>
+</outline>
+<outline text="CVS Update and Commit Result Codes">
+<outline text="?">
+<outline text="The file is unknown to CVS"/>
+</outline>
+<outline text="A">
+<outline text="The file's been added to your world, but needs to be committed to the repository."/>
+</outline>
+<outline text="C">
+<outline text="There's a conflict."/>
+</outline>
+<outline text="M">
+<outline text="The local copy is different from what's in the repository"/>
+<outline text="You need to diff the files and merge as necessary"/>
+</outline>
+<outline text="P">
+<outline text="CVS has sent a patch for the file in order to have it match what's in the Repository."/>
+</outline>
+<outline text="R">
+<outline text="The file's been removed from your private copy, but won't be removed from the repository until you commit the removal"/>
+</outline>
+<outline text="U">
+<outline text="The file's been Updated to match what's in the Repository."/>
+</outline>
+</outline>
+<outline text="Some links to CVS info that you may find useful"/>
+</outline>
+<outline text="SourceForge"/>
+<outline text="Java JDK">
+<outline text="Latest versions available at"/>
+</outline>
+<outline text="NetBeans">
+<outline text="Latest versions available at"/>
+</outline>
+<outline text="Ant">
+<outline text="Latest versions available at"/>
+</outline>
+<outline text="jBuilder">
+<outline text="Latest versions available at"/>
+</outline>
+<outline text="Metrowerks Java">
+<outline text="Latest versions available at"/>
+</outline>
+<outline text="CVS"/>
+</outline>
+</outline>
+<outline text="Life with JOE">
 <outline text="Windows">
-<outline text="downloading the latest versions of files">
+<outline text="Updating to Latest File Versions">
+<outline text="Preparing for a general source update">
+<outline text="Delete the .class files">
+<outline text="They only produce ? update listings"/>
+</outline>
+</outline>
 <outline text="Updating all project files">
 <outline text="open a command line, and go to the project's root directory"/>
 <outline text="give this command">
@@ -440,12 +632,12 @@
 </outline>
 <outline text="Updating specific project files"/>
 </outline>
-<outline text="checking in your changes to files">
+<outline text="Checking In Changed Files">
 <outline text="Checking in a source file that you've changed">
 <outline text="cvs commit -m &quot;brief change summary note&quot; filename"/>
 </outline>
 </outline>
-<outline text="adding files to the project">
+<outline text="Adding Files to the Project">
 <outline text="go to the directory containing the file[s]"/>
 <outline text="Give this command">
 <outline text="cvs add newFile1, newFile2, ..."/>
@@ -460,8 +652,8 @@
 <outline text="cvs commit newDir"/>
 </outline>
 </outline>
-<outline text="Removing a file from the project"/>
-<outline text="Removing a directory from the project"/>
+<outline text="removing a file from the project"/>
+<outline text="removing a directory from the project"/>
 <outline text="Some Useful Batch Files">
 <outline text="cvs">
 <outline text="commitment"/>
@@ -474,66 +666,31 @@
 <outline text="Linux/Unix"/>
 <outline text="Macintosh"/>
 </outline>
-<outline text="Open Source Development Survival Guides">
-<outline text="ssh"/>
-<outline text="CVS ">
-<outline text="CVS Update and Commit Result Codes">
-<outline text="?">
-<outline text="The file is unknown to CVS"/>
-</outline>
-<outline text="A">
-<outline text="The file's been added to your world, but needs to be committed to the repository."/>
-</outline>
-<outline text="C">
-<outline text="There's a conflict."/>
-</outline>
-<outline text="M">
-<outline text="The local copy is different from what's in the repository"/>
-</outline>
-<outline text="P">
-<outline text="Like U, but CVS has sent a patch for the file."/>
-</outline>
-<outline text="R">
-<outline text="The file's been removed from your private copy, but won't be removed from the repository until you commit the removal"/>
-</outline>
-<outline text="U">
-<outline text="The file's been Updated with what's in the repository."/>
-</outline>
-</outline>
-<outline text="Links">
-<outline text="further info on CVS that I found useful"/>
-<outline text="please send changes/additions/deletions to Stan@StanKrute.com"/>
-<outline text=""/>
-</outline>
-</outline>
-<outline text="SourceForge"/>
-<outline text="Java JDK"/>
-<outline text="NetBeans"/>
-<outline text="Ant"/>
-<outline text="jBuilder"/>
-<outline text="Metrowerks Java"/>
-</outline>
 <outline text="Open Questions">
-<outline text="Got a question about a JOE development tool ?">
-<outline text="Send it to Devhead@JavaOutlineEditor.org"/>
+<outline text="These are things that the JDG author[s] haven't figured out yet"/>
+<outline text="Got a question that you don't see here about a JOE development tool ?">
+<outline text="Send it to DocHelp@JavaOutlineEditor.org"/>
 </outline>
 <outline text="Got an answer to one or more of these questions ?">
-<outline text="Send it to Devhead@JavaOutlineEditor.org"/>
+<outline text="Send it to DocHelp@JavaOutlineEditor.org"/>
 </outline>
 <outline text="ssh">
 <outline text="How to avoid having to type in ssh password when command-lining a cvs command"/>
 </outline>
 <outline text="CVS">
-<outline text="How to avoid having to type in ssh password when command-lining a cvs command"/>
+<outline text="How to avoid having to type in ssh password when command-lining a cvs command [Windows]"/>
 </outline>
 <outline text="SourceForge"/>
 <outline text="Java JDK"/>
 <outline text="NetBeans">
-<outline text="How to debug JOE with the NetBeans step-thru debugger"/>
+<outline text="How to debug JOE with the NetBeans step-thru debugger [Windows]"/>
 </outline>
 <outline text="Ant"/>
 <outline text="jBuilder"/>
 <outline text="Metrowerks Java "/>
+<outline text="Windows Command Line">
+<outline text="What's the easiest way to get a line buffer &gt; 50 lines ?"/>
+</outline>
 </outline>
 </body>
 </opml>
