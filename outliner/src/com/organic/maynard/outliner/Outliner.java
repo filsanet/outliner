@@ -490,7 +490,13 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		String filepath = null;
 		try {
 			filepath = args[1];
-			if (filepath != null) {
+			
+			// if the filepath is present and non-empty ...
+			if (filepath != null && (! filepath.equals(""))) {
+				
+				// ensure that we have a full pathname [srk]
+				filepath = canonicalPath(filepath) ;
+				
 				String extension = filepath.substring(filepath.lastIndexOf(".") + 1,filepath.length());
 				String fileFormat = Outliner.fileFormatManager.getOpenFileFormatNameForExtension(extension);
 	
@@ -673,5 +679,19 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		
 	} // end method newNodeList
 	
+	
+	// ensures a canonical pathname
+	private static String canonicalPath (String inputString) {
+		String canon = null ;
+		File file = new File(inputString) ;
 
-}
+		try {
+			canon = file.getCanonicalPath() ;
+		}
+		catch (IOException e) {return inputString ;}
+		
+		return canon ;
+		
+	} // end method canonicalPath
+
+} // end class Outliner
