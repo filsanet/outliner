@@ -106,9 +106,9 @@
 		<target name="compile-maynard" depends="init, clean-maynard" description="Compile classes for maynard.">
 			<javac debug="true" deprecation="false" srcdir="${src-maynard}">
 				<classpath>
-					<pathelement path="${lib}/bsh-1_2b1.jar"/>
+					<pathelement path="${lib}/bsh.jar"/>
 					<pathelement path="${lib}/helma.xmlrpc.jar"/>
-					<pathelement path="${lib}/jakarta-oro-2.0.4.jar"/>
+					<pathelement path="${lib}/jakarta-oro.jar"/>
 					<pathelement path="${lib}/sax.jar"/>
 					<pathelement path="${lib}/xerces.jar"/>
 					<pathelement path="${lib}/xp.jar"/>
@@ -136,11 +136,11 @@
 		<target name="compile-outliner" depends="init, clean-outliner" description="Compile classes for outliner.">
 			<javac debug="true" deprecation="false" srcdir="${src-outliner}">
 				<classpath>
-					<pathelement path="${lib}/bsh-1_2b1.jar"/>
+					<pathelement path="${lib}/bsh.jar"/>
 					<pathelement path="${lib}/com.organic.maynard.jar"/>
 					<pathelement path="${lib}/com.yearahead.io.webfile.jar"/>
 					<pathelement path="${lib}/helma.xmlrpc.jar"/>
-					<pathelement path="${lib}/jakarta-oro-2.0.4.jar"/>
+					<pathelement path="${lib}/jakarta-oro.jar"/>
 					<pathelement path="${lib}/jmousewheel.jar"/>
 					<pathelement path="${lib}/sax.jar"/>
 					<pathelement path="${lib}/xerces.jar"/>
