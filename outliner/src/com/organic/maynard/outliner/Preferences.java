@@ -109,11 +109,19 @@ public class Preferences implements GUITreeComponent {
 		public static final String OWNER_NAME = "owner_name";
 		public static final String OWNER_EMAIL = "owner_email";
 
-			// WebFile
-			public static final String WEB_FILE_SYSTEM = "web_file_system";
-			public static final String WEB_FILE_URL = "web_file_url";
-			public static final String WEB_FILE_USER = "web_file_user";
-			public static final String WEB_FILE_PASSWORD = "web_file_password";
+		// WebFile
+		public static final String WEB_FILE_SYSTEM = "web_file_system";
+		public static final String WEB_FILE_URL = "web_file_url";
+		public static final String WEB_FILE_USER = "web_file_user";
+		public static final String WEB_FILE_PASSWORD = "web_file_password";
+		
+		// Help System	[srk] 8/11/01 3:17PM
+		public static final String USER_GUIDE_PATH = "user_guide_path";
+		public static final String DEVELOPER_GUIDE_PATH = "developer_guide_path";
+		public static final String BOOKMARKS_PATH = "bookmarks_path";
+		public static final String TUTORIALS_PATH = "tutorials_path";
+		public static final String ABOUT_PATH = "about_path";
+
 	// End Preference Keys
 
 

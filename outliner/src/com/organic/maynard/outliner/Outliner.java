@@ -38,22 +38,21 @@
     public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent {
     	
     	// Constants
-    	// [srk] for [temporary!] conditional debugging code
+    	// for [temporary!] conditional debugging code	[srk] 8/04/01 7:33PM
     	public static final boolean DEBUG = true ;
     	
     	private static final String A_TITLE = "title";
-    	
-    	public static final String USER_OUTLINER_DIR = "outliner";
-    	
     	
     	// Language Handling
     	public static String LANGUAGE = "";
     	
     	
     	// Directory setup
+    	public static final String USER_OUTLINER_DIR = "outliner";
     	public static String GRAPHICS_DIR = "graphics" + System.getProperty("file.separator");
     	public static String PREFS_DIR = "prefs" + System.getProperty("file.separator");
     	public static String USER_PREFS_DIR = PREFS_DIR;
+    	public static final String APP_DIR_PATH = System.getProperty("user.dir") + System.getProperty("file.separator");
     
     	// Find out if we've got a home directory to work with for user preferences, if
     	// not then we use the prefs dir as usual.
@@ -154,7 +153,7 @@
     	public void setGUITreeComponentID(String id) {this.id = id;}
     
  	// Help system	[srk] 8/5/01 1:28PM
- 	// public static HelpDocumentsManager helpDoxMgr = null ;
+ 	public static HelpDocumentsManager helpDoxMgr = null ;
  	
     	public void startSetup(AttributeList atts) {
     		outliner = this;	
@@ -288,7 +287,7 @@
     		} catch (ArrayIndexOutOfBoundsException e) {}
     
  		// Crank up the Help system	[srk] 8/5/01 1:30PM
-		// helpDoxMgr = new HelpDocumentsManager(lang) ;
+		helpDoxMgr = new HelpDocumentsManager() ;
     
     		// Load the GUI
     		GUITreeLoader loader = new GUITreeLoader();
@@ -364,7 +363,7 @@
     			OutlineMenu.updateOutlineMenu(doc);
     			SearchMenu.updateSearchMenu(doc);
     			WindowMenu.updateWindowMenu();
-  			// HelpMenu.updateHelpMenu(); // [srk] 8/5/01 1:06PM
+  			HelpMenu.updateHelpMenu();	// [srk] 8/5/01 1:06PM
     		}
     	}
     	
@@ -374,8 +373,7 @@
     		// Add it to the WindowMenu
     		WindowMenu.addWindow(document);
     		
-  		// [srk] Update the File:Close* menu items
-  		// Update the close menu item
+  		// Update the close menu items
     		CloseFileMenuItem closeItem = (CloseFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CLOSE_MENU_ITEM);
     		CloseAllFileMenuItem closeAllItem = (CloseAllFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CLOSE_ALL_MENU_ITEM);
     		
@@ -383,7 +381,7 @@
     		closeAllItem.setEnabled(true);
 
    		// Notify the Help documents manager	[srk 8/5/01 1:12PM]
-  		// helpDoxMgr.docJustOpened(document) ;
+  		helpDoxMgr.someDocumentJustOpened(document) ;
     	}
     	
     	public static OutlinerDocument getDocument(int i) {
@@ -425,7 +423,7 @@
     		Outliner.updateSaveAllMenuItem();
 
  		// Notify the Help documents manager	[srk 8/5/01 1:23PM]
- 		// helpDoxMgr.docJustClosed(document) ;
+ 		helpDoxMgr.someDocumentJustClosed(document) ;
     	}
     	
     	public static int openDocumentCount() {

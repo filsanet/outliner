@@ -181,7 +181,7 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 			OutlineMenu.updateOutlineMenu(doc);
 			SearchMenu.updateSearchMenu(doc);
 			WindowMenu.updateWindowMenu();
-			// HelpMenu.updateHelpMenu ;	[srk] 8/11/01 12:03PM
+			HelpMenu.updateHelpMenu() ;	// [srk] 8/11/01 12:03PM
 			
 			doc.hoistStack.updateOutlinerMenuHoisting();
 		}

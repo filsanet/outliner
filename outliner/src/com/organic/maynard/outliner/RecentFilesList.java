@@ -86,7 +86,15 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		
 		// Short Circuit if undo is disabled.
 		if (Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur == 0) {return;}
-
+		
+		// if it's a Help system file ... 		[srk] 8/12/01 12:26AM
+		if (Outliner.helpDoxMgr.isThisOneOfOurs(filename) != jrc.DOCUMENT_NOT_FOUND){
+			
+			// fuhgedabowdit
+			return ;
+			
+			} // end if
+		 
 		if (isFileNameUnique(filename)) {
 			RecentFilesList menu = (RecentFilesList) GUITreeLoader.reg.get(GUITreeComponentRegistry.RECENT_FILE_MENU);
 			if (docInfoList.size() >= Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur) {
