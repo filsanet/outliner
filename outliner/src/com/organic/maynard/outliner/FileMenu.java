@@ -26,10 +26,6 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
-	// Temporarily store file formats here until we get a file format manager setup.
-	public static final SimpleFileFormat simpleFileFormat = new SimpleFileFormat();
-
-
 	public static final String FILE_NEW = "New";
 	public static final String FILE_OPEN = "Open...";
 	public static final String FILE_OPEN_RECENT = "Open Recent";
@@ -188,6 +184,7 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		Outliner.chooser.setAccessory(Outliner.saveAccessory);
 		Outliner.lineEndComboBox.setSelectedItem(document.settings.lineEnd.cur);
 		Outliner.encodingComboBox.setSelectedItem(document.settings.saveEncoding.cur);
+		Outliner.saveFormatComboBox.setSelectedItem(document.settings.saveFormat.cur);
 
 		int option = Outliner.chooser.showSaveDialog(document);
 		if (option == JFileChooser.APPROVE_OPTION) {
@@ -200,6 +197,7 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 			// Pull Preference Values from the file chooser
 			String lineEnd = (String) Outliner.lineEndComboBox.getSelectedItem();
 			String encoding = (String) Outliner.encodingComboBox.getSelectedItem();
+			String fileFormat = (String) Outliner.saveFormatComboBox.getSelectedItem();
 
 			// Update the document settings
 			document.settings.lineEnd.def = lineEnd;
@@ -208,6 +206,9 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 			document.settings.saveEncoding.def = encoding;
 			document.settings.saveEncoding.cur = encoding;
 			document.settings.saveEncoding.tmp = encoding;
+			document.settings.saveFormat.def = fileFormat;
+			document.settings.saveFormat.cur = fileFormat;
+			document.settings.saveFormat.tmp = fileFormat;
 			
 			saveFile(filename,document,true);
 		}
@@ -218,6 +219,7 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		Outliner.chooser.setAccessory(Outliner.openAccessory);
 		Outliner.lineEndComboBox.setSelectedItem(Preferences.LINE_END.cur);
 		Outliner.openEncodingComboBox.setSelectedItem(Preferences.OPEN_ENCODING.cur);
+		Outliner.openFormatComboBox.setSelectedItem(Preferences.OPEN_FORMAT.cur);
 		
 		int option = Outliner.chooser.showOpenDialog(document);
 		if (option == JFileChooser.APPROVE_OPTION) {
@@ -226,7 +228,12 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 				JOptionPane.showMessageDialog(document, "The file: " + filename + " is already open.");
 				return;
 			}
-			openFile(filename,(String) Outliner.openEncodingComboBox.getSelectedItem());
+			
+			// Pull Preference Values from the file chooser
+			String encoding = (String) Outliner.openEncodingComboBox.getSelectedItem();
+			String fileFormat = (String) Outliner.openFormatComboBox.getSelectedItem();
+
+			openFile(filename, encoding, fileFormat);
 		}
 	}
 
@@ -240,13 +247,21 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 	}
 
 	protected static void saveFile(String filename, OutlinerDocument document, boolean saveAs) {
-	
+		// Get the file format object
+		String fileFormatName = document.settings.saveFormat.cur;
+		SaveFileFormat saveFileFormat = Outliner.fileFormatManager.getSaveFormat(fileFormatName);
+		if (saveFileFormat == null) {
+			JOptionPane.showMessageDialog(document, "An error occurred. Could not save file: " + Outliner.chooser.getSelectedFile().getPath() + " because I couldn't retrieve the file format: " + fileFormatName);
+			return;
+		}
+		
+		// Save the file
 		DocumentInfo docInfo = new DocumentInfo();
 		docInfo.setPath(filename);
 		docInfo.setEncodingType(document.settings.saveEncoding.cur);
 		docInfo.setLineEnding(document.settings.lineEnd.cur);
 		
-		boolean success = simpleFileFormat.save(document.tree, docInfo);
+		boolean success = saveFileFormat.save(document.tree, docInfo);
 		if (!success) {
 			JOptionPane.showMessageDialog(document, "An error occurred. Could not save file: " + Outliner.chooser.getSelectedFile().getPath());
 			return;
@@ -257,7 +272,9 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		
 		// Update the Recent File List
 		if (saveAs && !document.getFileName().equals(filename)) {
-			RecentFilesList.addFileNameToList(filename,document.settings.saveEncoding.cur);
+			RecentFilesList.addFileNameToList(filename, document.settings.saveEncoding.cur, document.settings.saveFormat.cur);
+		} else {
+			RecentFilesList.updateFileNameInList(filename, filename, document.settings.saveEncoding.cur, document.settings.saveFormat.cur);
 		}
 
 		document.setFileName(filename);
@@ -268,7 +285,14 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		WindowMenu.updateWindow(document);
 	}
 		
-	protected static void openFile(String filename, String encoding) {
+	protected static void openFile(String filename, String encoding, String fileFormat) {
+		// Get the file format object
+		OpenFileFormat openFileFormat = Outliner.fileFormatManager.getOpenFormat(fileFormat);
+		if (openFileFormat == null) {
+			JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. Could not open file: " + filename + " because I couldn't retrieve the file format: " + fileFormat);
+			return;
+		}
+		
 		// Load the file
 		TreeContext tree = new TreeContext();
 		
@@ -276,7 +300,7 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		docInfo.setPath(filename);
 		docInfo.setEncodingType(encoding);
 
-		boolean success = simpleFileFormat.open(tree, docInfo);
+		boolean success = openFileFormat.open(tree, docInfo);
 		if (!success) {
 			RecentFilesList.removeFileNameFromList(filename);
 			return;
@@ -291,6 +315,9 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		newDoc.settings.saveEncoding.def = encoding;
 		newDoc.settings.saveEncoding.cur = encoding;
 		newDoc.settings.saveEncoding.tmp = encoding;
+		newDoc.settings.saveFormat.def = fileFormat;
+		newDoc.settings.saveFormat.cur = fileFormat;
+		newDoc.settings.saveFormat.tmp = fileFormat;
 		newDoc.settings.useDocumentSettings = true;
 		
 		// Clear current selection
@@ -310,7 +337,7 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		newDoc.setTitle(filename);
 
 		// Move it to the bottom of the recent files list
-		RecentFilesList.updateFileNameInList(filename, filename, encoding);
+		RecentFilesList.updateFileNameInList(filename, filename, encoding, fileFormat);
 
 		// Record the current location
 		tree.setEditingNode((Node) tree.visibleNodes.get(0));
@@ -324,6 +351,14 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 	}
 
 	protected static void revertFile(String filename, OutlinerDocument document) {
+		// Get the file format object
+		String fileFormatName = document.settings.saveFormat.cur;
+		OpenFileFormat openFileFormat = Outliner.fileFormatManager.getOpenFormat(fileFormatName);
+		if (openFileFormat == null) {
+			JOptionPane.showMessageDialog(document, "An error occurred. Could not revert file: " + filename + " because I couldn't retrieve the file format: " + fileFormatName);
+			return;
+		}
+		
 		// Load the file
 		TreeContext tree = new TreeContext();
 		
@@ -331,7 +366,7 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		docInfo.setPath(filename);
 		docInfo.setEncodingType(document.settings.saveEncoding.cur);
 
-		boolean success = simpleFileFormat.open(tree, docInfo);
+		boolean success = openFileFormat.open(tree, docInfo);
 		if (!success) {
 			RecentFilesList.removeFileNameFromList(filename); // Not really sure this is appropriate.
 			return;

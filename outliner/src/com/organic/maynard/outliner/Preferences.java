@@ -32,7 +32,7 @@ public class Preferences {
 	
 
 	// Static Fields (Global Preferences) These are saved.
-	public static final Preference[] pref_list = new Preference[22];
+	public static final Preference[] pref_list = new Preference[24];
 
 	public static final String DEPTH_PAD_STRING = "\t";
 	public static final String LINE_END_STRING = "\n";
@@ -48,6 +48,9 @@ public class Preferences {
 	public static final String[] PLATFORM_IDENTIFIERS = {PLATFORM_MAC,PLATFORM_WIN,PLATFORM_UNIX};
 
 	public static final Vector ENCODINGS = new Vector();
+
+	public static final Vector FILE_FORMATS_OPEN = new Vector();
+	public static final Vector FILE_FORMATS_SAVE = new Vector();
 	
 	public static final String TXT_WORDS = "words";
 	public static final String TXT_CHARACTERS = "characters";
@@ -76,6 +79,9 @@ public class Preferences {
 	public static final String LINE_END_DEFAULT = System.getProperty("line.separator");
 	public static final String OPEN_ENCODING_DEFAULT = "ISO-8859-1";
 	public static final String SAVE_ENCODING_DEFAULT = "ISO-8859-1";
+
+	public static final String OPEN_FORMAT_DEFAULT = "Plaintext";
+	public static final String SAVE_FORMAT_DEFAULT = "Plaintext";
 
 	
 	// Editing Settings
@@ -106,6 +112,8 @@ public class Preferences {
 		public static final PreferenceString LINE_END = new PreferenceString(lineEndingToPlatform(LINE_END_DEFAULT),lineEndingToPlatform(LINE_END_DEFAULT),"line_end");
 		public static final PreferenceString OPEN_ENCODING = new PreferenceString(OPEN_ENCODING_DEFAULT,OPEN_ENCODING_DEFAULT,"open_encoding");
 		public static final PreferenceString SAVE_ENCODING = new PreferenceString(SAVE_ENCODING_DEFAULT,SAVE_ENCODING_DEFAULT,"save_encoding");
+		public static final PreferenceString OPEN_FORMAT = new PreferenceString(OPEN_FORMAT_DEFAULT,OPEN_FORMAT_DEFAULT,"open_format");
+		public static final PreferenceString SAVE_FORMAT = new PreferenceString(SAVE_FORMAT_DEFAULT,SAVE_FORMAT_DEFAULT,"save_format");
 		public static final PreferenceBoolean IS_MAXIMIZED = new PreferenceBoolean(IS_MAXIMIZED_DEFAULT,false,"is_maximized");
 		
 	// Misc Settings
@@ -136,6 +144,8 @@ public class Preferences {
 		pref_list[19] = LINE_WRAP;	
 		pref_list[20] = NEW_DOC_ON_STARTUP;	
 		pref_list[21] = IS_MAXIMIZED;	
+		pref_list[22] = OPEN_FORMAT;	
+		pref_list[23] = SAVE_FORMAT;	
 	}
 		
 	// Static Methods	
@@ -173,7 +183,7 @@ public class Preferences {
 		}
 
 		// Update the file modified status
-		if (!LINE_END.tmp.equals(LINE_END.cur) || !SAVE_ENCODING.tmp.equals(SAVE_ENCODING.cur)) {
+		if (!LINE_END.tmp.equals(LINE_END.cur) || !SAVE_ENCODING.tmp.equals(SAVE_ENCODING.cur) || !SAVE_FORMAT.tmp.equals(SAVE_FORMAT.cur)) {
 			for (int i = 0; i < Outliner.openDocumentCount(); i++) {
 				OutlinerDocument doc = Outliner.getDocument(i);
 				// Only update files that do not have overriding document settings.
@@ -184,6 +194,9 @@ public class Preferences {
 					doc.settings.saveEncoding.def = SAVE_ENCODING.tmp;
 					doc.settings.saveEncoding.cur = SAVE_ENCODING.tmp;
 					doc.settings.saveEncoding.tmp = SAVE_ENCODING.tmp;
+					doc.settings.saveFormat.def = SAVE_FORMAT.tmp;
+					doc.settings.saveFormat.cur = SAVE_FORMAT.tmp;
+					doc.settings.saveFormat.tmp = SAVE_FORMAT.tmp;
 					//doc.setFileModified(true);
 				}
 			}

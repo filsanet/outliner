@@ -140,11 +140,24 @@ public class SetPrefCommand extends Command {
 		} else if (variableName.equals(Preferences.SAVE_ENCODING.getCommand())) {
 			Preferences.SAVE_ENCODING.cur = (String) signature.elementAt(2);
 			Preferences.SAVE_ENCODING.restoreTemporaryToCurrent();
+
+		} else if (variableName.equals(Preferences.OPEN_FORMAT.getCommand())) {
+			Preferences.OPEN_FORMAT.cur = (String) signature.elementAt(2);
+			Preferences.OPEN_FORMAT.restoreTemporaryToCurrent();
+		
+		} else if (variableName.equals(Preferences.SAVE_FORMAT.getCommand())) {
+			Preferences.SAVE_FORMAT.cur = (String) signature.elementAt(2);
+			Preferences.SAVE_FORMAT.restoreTemporaryToCurrent();
 		
 		} else if (variableName.equals(COMMAND_RECENT_FILE)) {
 			if (RecentFilesList.fileList.size() < Preferences.RECENT_FILES_LIST_SIZE.cur) {
 				RecentFilesList.fileList.addElement((String) signature.elementAt(2));
 				RecentFilesList.encodingList.addElement((String) signature.elementAt(3));
+				try {
+					RecentFilesList.formatList.addElement((String) signature.elementAt(4));
+				} catch (ArrayIndexOutOfBoundsException e) {
+					RecentFilesList.formatList.addElement(Preferences.OPEN_FORMAT_DEFAULT);
+				}
 			}
 		} else if (variableName.equals(COMMAND_ENCODING)) {
 			Preferences.ENCODINGS.addElement((String) signature.elementAt(2));

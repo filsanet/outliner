@@ -37,16 +37,19 @@ public class Outliner extends JFrame {
 	public static final String CONFIG_FILE = PREFS_DIR + "config.txt";
 	public static final String RECENT_FILES_FILE = PREFS_DIR + "recent_files.txt";
 	public static final String ENCODINGS_FILE = PREFS_DIR + "encodings.txt";
+	public static final String FILE_FORMATS_FILE = PREFS_DIR + "file_formats.txt";
 	
 	public static final String COMMAND_PARSER_SEPARATOR = "|";
 	public static final String COMMAND_SET = "set";
 	public static final String COMMAND_MACRO_CLASS = "macro_class";
+	public static final String COMMAND_FILE_FORMAT = "file_format";
 	public static final CommandParser PARSER = new CommandParser(COMMAND_PARSER_SEPARATOR);
 	
 	public static PreferencesFrame prefs = null;
 	public static FindReplaceFrame findReplace = null;
 	public static MacroManagerFrame macroManager = null;
 	public static MacroPopupMenu macroPopup = null;
+	public static FileFormatManager fileFormatManager = null;
 
 	// GUI
 	static final int MIN_WIDTH = 450;
@@ -73,11 +76,18 @@ public class Outliner extends JFrame {
 		// Load Preferences
 		PARSER.addCommand(new SetPrefCommand(COMMAND_SET,2,this));
 		PARSER.addCommand(new LoadMacroClassCommand(COMMAND_MACRO_CLASS,2,this));
+		PARSER.addCommand(new LoadFileFormatClassCommand(COMMAND_FILE_FORMAT,2,this));
 
 		loadPrefsFile(PARSER,CONFIG_FILE);
 		loadPrefsFile(PARSER,RECENT_FILES_FILE);
 		loadPrefsFile(PARSER,ENCODINGS_FILE);
-		
+
+		// Setup the FileFormatManager
+		fileFormatManager = new FileFormatManager();
+		System.out.println("Loading File Formats...");
+		loadPrefsFile(PARSER,FILE_FORMATS_FILE);
+		System.out.println("Done Loading File Formats.");
+				
 		// Now setup the Preferences Frame since we now have the prefs loaded from the config file.
 		prefs = new PreferencesFrame();
 		
@@ -89,7 +99,7 @@ public class Outliner extends JFrame {
 		loadPrefsFile(PARSER,MACRO_CLASSES_FILE);
 		
 		macroPopup = new MacroPopupMenu();
-		macroPopup.init();		
+		macroPopup.init();
 		
 		// Setup the Desktop
 		menuBar = new OutlinerDesktopMenuBar();
@@ -223,6 +233,7 @@ public class Outliner extends JFrame {
 	public static JFileChooser chooser = new JFileChooser();
 	public static PreferenceString chooserLineEnd = null;
 	public static PreferenceString chooserEncoding = null;
+	public static PreferenceString chooserFileFormat = null;
 
 	public static JPanel openAccessory = new JPanel();
 	public static JPanel saveAccessory = new JPanel();
@@ -230,14 +241,19 @@ public class Outliner extends JFrame {
 	public static JComboBox lineEndComboBox = new JComboBox(Preferences.PLATFORM_IDENTIFIERS);
 	public static JComboBox encodingComboBox = new JComboBox();
 	public static JComboBox openEncodingComboBox = new JComboBox();
+	public static JComboBox openFormatComboBox = new JComboBox();
+	public static JComboBox saveFormatComboBox = new JComboBox();
 
 	private static void setupFileChooser() {
 		chooserLineEnd = new PreferenceString(Preferences.LINE_END.cur,Preferences.LINE_END.cur,"");
 		chooserEncoding = new PreferenceString(Preferences.SAVE_ENCODING.cur,Preferences.SAVE_ENCODING.cur,"");
+		chooserFileFormat = new PreferenceString(Preferences.SAVE_FORMAT.cur,Preferences.SAVE_FORMAT.cur,"");
 
 		lineEndComboBox.addItemListener(new ComboBoxListener(lineEndComboBox, chooserLineEnd));
 		encodingComboBox.addItemListener(new ComboBoxListener(encodingComboBox, chooserEncoding));
 		openEncodingComboBox.addItemListener(new ComboBoxListener(openEncodingComboBox, chooserEncoding));
+		openFormatComboBox.addItemListener(new ComboBoxListener(openFormatComboBox, chooserFileFormat));
+		saveFormatComboBox.addItemListener(new ComboBoxListener(saveFormatComboBox, chooserFileFormat));
 		
 		for (int i = 0; i < Preferences.ENCODINGS.size(); i++) {
 			String encoding = (String) Preferences.ENCODINGS.elementAt(i);
@@ -245,6 +261,13 @@ public class Outliner extends JFrame {
 			openEncodingComboBox.addItem(encoding);
 		}
 		
+		for (int i = 0; i < Preferences.FILE_FORMATS_OPEN.size(); i++) {
+			openFormatComboBox.addItem((String) Preferences.FILE_FORMATS_OPEN.elementAt(i));
+		}
+
+		for (int i = 0; i < Preferences.FILE_FORMATS_SAVE.size(); i++) {
+			saveFormatComboBox.addItem((String) Preferences.FILE_FORMATS_SAVE.elementAt(i));
+		}
 		
 		// Layout save panel
 		Box box = Box.createVerticalBox();
@@ -257,6 +280,11 @@ public class Outliner extends JFrame {
 		addSingleItemCentered(new JLabel("File Encoding"), box);
 		addSingleItemCentered(encodingComboBox, box);
 
+		box.add(Box.createVerticalStrut(5));
+
+		addSingleItemCentered(new JLabel("File Format"), box);
+		addSingleItemCentered(saveFormatComboBox, box);
+
 		saveAccessory.add(box,BorderLayout.CENTER);
 		
 		// Layout open panel
@@ -264,6 +292,11 @@ public class Outliner extends JFrame {
 
 		addSingleItemCentered(new JLabel("File Encoding"), box2);
 		addSingleItemCentered(openEncodingComboBox, box2);
+
+		box2.add(Box.createVerticalStrut(5));
+
+		addSingleItemCentered(new JLabel("File Format"), box2);
+		addSingleItemCentered(openFormatComboBox, box2);
 
 		openAccessory.add(box2,BorderLayout.CENTER);
 	}

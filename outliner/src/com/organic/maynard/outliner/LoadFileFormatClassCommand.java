@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2000 Maynard Demmon, maynard@organic.com
+ * Copyright (C) 2001 Maynard Demmon, maynard@organic.com
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,22 +19,26 @@
 package com.organic.maynard.outliner;
 
 import java.awt.*;
-import java.awt.event.*;
-
 import java.util.*;
-import javax.swing.*;
+import java.io.*;
 
-public class RecentFilesListItem extends JMenuItem {
+import com.organic.maynard.util.*;
+
+public class LoadFileFormatClassCommand extends Command {
 	
-	public String filename = "";
-	public String encoding = "";
-	public String fileFormat = "";
-		
+	public Outliner outliner = null;
+	
 	// The Constructors
-	public RecentFilesListItem(String text, String filename, String encoding, String fileFormat) {
-		super(text);
-		this.filename = filename;
-		this.encoding = encoding;
-		this.fileFormat = fileFormat;
-	}	
+	public LoadFileFormatClassCommand(String name, int numOfArgs, Outliner outliner) {
+		super(name,numOfArgs);
+		this.outliner = outliner;
+	}
+
+	public synchronized void execute(Vector signature) {
+		String formatType = (String) signature.elementAt(1);
+		String className = (String) signature.elementAt(2);
+		String formatName = (String) signature.elementAt(3);
+		
+		Outliner.fileFormatManager.createFileFormat(formatType, formatName, className);
+	}
 }

@@ -108,6 +108,9 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 		public static final JComboBox LINE_END_COMBOBOX = new JComboBox(Preferences.PLATFORM_IDENTIFIERS);
 		public static final JComboBox OPEN_ENCODING_COMBOBOX = new JComboBox();
 		public static final JComboBox SAVE_ENCODING_COMBOBOX = new JComboBox();
+
+		public static final JComboBox OPEN_FORMAT_COMBOBOX = new JComboBox();
+		public static final JComboBox SAVE_FORMAT_COMBOBOX = new JComboBox();
 		
 		public static final JButton RESTORE_DEFAULT_OPEN_AND_SAVE_BUTTON = new JButton(RESTORE_DEFAULTS);
 		
@@ -151,6 +154,17 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 			
 			OPEN_ENCODING_COMBOBOX.addItemListener(new ComboBoxListener(OPEN_ENCODING_COMBOBOX, Preferences.OPEN_ENCODING));
 			SAVE_ENCODING_COMBOBOX.addItemListener(new ComboBoxListener(SAVE_ENCODING_COMBOBOX, Preferences.SAVE_ENCODING));
+
+			for (int i = 0; i < Preferences.FILE_FORMATS_OPEN.size(); i++) {
+				OPEN_FORMAT_COMBOBOX.addItem((String) Preferences.FILE_FORMATS_OPEN.elementAt(i));
+			}
+
+			for (int i = 0; i < Preferences.FILE_FORMATS_SAVE.size(); i++) {
+				SAVE_FORMAT_COMBOBOX.addItem((String) Preferences.FILE_FORMATS_SAVE.elementAt(i));
+			}
+
+			OPEN_FORMAT_COMBOBOX.addItemListener(new ComboBoxListener(OPEN_FORMAT_COMBOBOX, Preferences.OPEN_FORMAT));
+			SAVE_FORMAT_COMBOBOX.addItemListener(new ComboBoxListener(SAVE_FORMAT_COMBOBOX, Preferences.SAVE_FORMAT));
 
 			// Misc
 			RESTORE_DEFAULT_MISC_BUTTON.addActionListener(new MiscAction());		
@@ -369,6 +383,16 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 
 		addSingleItemCentered(new JLabel("Default Encoding when saving."), openAndSaveBox);
 		addSingleItemCentered(SAVE_ENCODING_COMBOBOX, openAndSaveBox);
+
+		openAndSaveBox.add(Box.createVerticalStrut(5));
+
+		addSingleItemCentered(new JLabel("Default Format when opening."), openAndSaveBox);
+		addSingleItemCentered(OPEN_FORMAT_COMBOBOX, openAndSaveBox);
+
+		openAndSaveBox.add(Box.createVerticalStrut(5));
+
+		addSingleItemCentered(new JLabel("Default Format when saving."), openAndSaveBox);
+		addSingleItemCentered(SAVE_FORMAT_COMBOBOX, openAndSaveBox);
 
 		openAndSaveBox.add(Box.createVerticalStrut(10));
 
@@ -620,6 +644,12 @@ public class OpenAndSaveAction implements ActionListener {
 
 				PreferencesFrame.SAVE_ENCODING_COMBOBOX.setSelectedItem(Preferences.SAVE_ENCODING.def);
 				Preferences.SAVE_ENCODING.restoreTemporaryToDefault();
+
+				PreferencesFrame.OPEN_FORMAT_COMBOBOX.setSelectedItem(Preferences.OPEN_FORMAT.def);
+				Preferences.OPEN_FORMAT.restoreTemporaryToDefault();
+
+				PreferencesFrame.SAVE_FORMAT_COMBOBOX.setSelectedItem(Preferences.SAVE_FORMAT.def);
+				Preferences.SAVE_FORMAT.restoreTemporaryToDefault();
 			} catch (Exception ex) {
 				System.out.println("Exception: " + ex);
 			}
@@ -630,6 +660,8 @@ public class OpenAndSaveAction implements ActionListener {
 		PreferencesFrame.LINE_END_COMBOBOX.setSelectedItem(Preferences.LINE_END.cur);
 		PreferencesFrame.OPEN_ENCODING_COMBOBOX.setSelectedItem(Preferences.OPEN_ENCODING.cur);
 		PreferencesFrame.SAVE_ENCODING_COMBOBOX.setSelectedItem(Preferences.SAVE_ENCODING.cur);
+		PreferencesFrame.OPEN_FORMAT_COMBOBOX.setSelectedItem(Preferences.OPEN_FORMAT.cur);
+		PreferencesFrame.SAVE_FORMAT_COMBOBOX.setSelectedItem(Preferences.SAVE_FORMAT.cur);
 	}
 }
 

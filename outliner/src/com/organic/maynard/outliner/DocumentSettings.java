@@ -39,6 +39,7 @@ public class DocumentSettings extends JDialog implements ActionListener {
 	// Instance Fields (Document Preferences) These are NOT saved.
 	public PreferenceString lineEnd = new PreferenceString(Preferences.LINE_END.cur,Preferences.LINE_END.cur,"");
 	public PreferenceString saveEncoding = new PreferenceString(Preferences.SAVE_ENCODING.cur,Preferences.SAVE_ENCODING.cur,"");
+	public PreferenceString saveFormat = new PreferenceString(Preferences.SAVE_FORMAT.cur,Preferences.SAVE_FORMAT.cur,"");
 
 	// GUI Elements
 	public JButton buttonOK = new JButton("OK");
@@ -46,6 +47,7 @@ public class DocumentSettings extends JDialog implements ActionListener {
 	public JButton buttonRestoreToGlobal = new JButton("Restore to Global");
 	public JComboBox lineEndComboBox = new JComboBox(Preferences.PLATFORM_IDENTIFIERS);
 	public JComboBox saveEncodingComboBox = new JComboBox();
+	public JComboBox saveFormatComboBox = new JComboBox();
 
 	// The Constructors
 	public DocumentSettings(OutlinerDocument document) {
@@ -54,7 +56,7 @@ public class DocumentSettings extends JDialog implements ActionListener {
 		this.doc = document;
 		
 		// Create the Layout
-		setSize(250,200);
+		setSize(250,220);
 		setResizable(false);
 		
 		// Define the Bottom Panel
@@ -72,12 +74,16 @@ public class DocumentSettings extends JDialog implements ActionListener {
 		
 		// Setup ComboBoxes
 		for (int i = 0; i < Preferences.ENCODINGS.size(); i++) {
-			String encoding = (String) Preferences.ENCODINGS.elementAt(i);
-			saveEncodingComboBox.addItem(encoding);
+			saveEncodingComboBox.addItem((String) Preferences.ENCODINGS.elementAt(i));
+		}
+
+		for (int i = 0; i < Preferences.FILE_FORMATS_SAVE.size(); i++) {
+			saveFormatComboBox.addItem((String) Preferences.FILE_FORMATS_SAVE.elementAt(i));
 		}
 
 		lineEndComboBox.addItemListener(new ComboBoxListener(lineEndComboBox, lineEnd));
 		saveEncodingComboBox.addItemListener(new ComboBoxListener(saveEncodingComboBox, saveEncoding));		
+		saveFormatComboBox.addItemListener(new ComboBoxListener(saveFormatComboBox, saveFormat));		
 
 		// Define the Center Panel
 		buttonRestoreToGlobal.addActionListener(this);
@@ -91,6 +97,11 @@ public class DocumentSettings extends JDialog implements ActionListener {
 
 		addSingleItemCentered(new JLabel("Encoding when saving."), box);
 		addSingleItemCentered(saveEncodingComboBox, box);
+
+		box.add(Box.createVerticalStrut(10));
+
+		addSingleItemCentered(new JLabel("Format when saving."), box);
+		addSingleItemCentered(saveFormatComboBox, box);
 
 		box.add(Box.createVerticalStrut(10));
 
@@ -117,6 +128,9 @@ public class DocumentSettings extends JDialog implements ActionListener {
 
 		saveEncoding.restoreTemporaryToCurrent();
 		saveEncodingComboBox.setSelectedItem(saveEncoding.tmp);
+
+		saveFormat.restoreTemporaryToCurrent();
+		saveFormatComboBox.setSelectedItem(saveFormat.tmp);
 	}
 	
 	// Misc methods
@@ -141,12 +155,13 @@ public class DocumentSettings extends JDialog implements ActionListener {
 	}
 	
 	private void ok() {
-		if (!lineEnd.cur.equals(lineEnd.tmp) || !saveEncoding.cur.equals(saveEncoding.tmp)) {
+		if (!lineEnd.cur.equals(lineEnd.tmp) || !saveEncoding.cur.equals(saveEncoding.tmp) || !saveFormat.cur.equals(saveFormat.tmp)) {
 			doc.setFileModified(true);
 		}
 		
 		lineEnd.cur = lineEnd.tmp;
 		saveEncoding.cur = saveEncoding.tmp;
+		saveFormat.cur = saveFormat.tmp;
 		this.hide();
 	}
 
@@ -157,8 +172,10 @@ public class DocumentSettings extends JDialog implements ActionListener {
 	private void restoreToGlobal() {
 		lineEnd.tmp = Preferences.LINE_END.cur;
 		saveEncoding.tmp = Preferences.SAVE_ENCODING.cur;
+		saveFormat.tmp = Preferences.SAVE_FORMAT.cur;
 		
 		lineEndComboBox.setSelectedItem(lineEnd.tmp);
 		saveEncodingComboBox.setSelectedItem(saveEncoding.tmp);
+		saveFormatComboBox.setSelectedItem(saveFormat.tmp);
 	}
 }
