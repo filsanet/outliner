@@ -81,11 +81,11 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	protected static boolean pApplyFontStyleForComments = true;
 	protected static boolean pApplyFontStyleForEditability = true;
 	protected static boolean pApplyFontStyleForMoveability = true;
-
+	
 	static {
 		updateFonts();
 	}
-
+	
 	// Actions
 	private static final ToggleCommentAction toggleCommentAction = new ToggleCommentAction();
 	private static final ToggleEditableAction toggleEditableAction = new ToggleEditableAction();
@@ -109,10 +109,10 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	private static final DownAction downAction = new DownAction();
 	private static final LeftAction leftAction = new LeftAction();
 	private static final RightAction rightAction = new RightAction();
-
+	
 	private static final DefaultAction defaultAction = new DefaultAction();
-
-
+	
+	
 	// Instance Fields
 	public Node node = null;
 	public OutlineButton button = new OutlineButton(this);
@@ -122,9 +122,9 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	public OutlineLineNumber lineNumber = new OutlineLineNumber(this);
 	
 	public int height = 0;
-
+	
 	public boolean hasFocus = false;
-
+	
 	
 	// The Constructors
 	public OutlinerCellRendererImpl() {
@@ -137,7 +137,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		Keymap keymap = this.getKeymap();
 		keymap.setDefaultAction(defaultAction);
 		
-
+		
 		// Settings
 		setFont(font);
 		setCursor(cursor);
@@ -146,7 +146,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		setSelectionColor(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
 		setSelectedTextColor(Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).cur);
 		setLineWrap(true);
-
+		
 		if (Preferences.getPreferenceString(Preferences.LINE_WRAP).cur.equals(Preferences.TXT_CHARACTERS)) {
 			setWrapStyleWord(false);
 		} else {
@@ -162,98 +162,98 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, Event.CTRL_MASK, false), "left");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, Event.CTRL_MASK + Event.SHIFT_MASK, false), "left");
 		action_map.put("left", leftAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "right");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, Event.SHIFT_MASK, false), "right");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, Event.CTRL_MASK, false), "right");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, Event.CTRL_MASK + Event.SHIFT_MASK, false), "right");
 		action_map.put("right", rightAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, false), "down");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, Event.SHIFT_MASK, false), "down");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, Event.CTRL_MASK, false), "down");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, Event.CTRL_MASK + Event.SHIFT_MASK, false), "down");
 		action_map.put("down", downAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false), "up");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, Event.SHIFT_MASK, false), "up");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, Event.CTRL_MASK, false), "up");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, Event.CTRL_MASK + Event.SHIFT_MASK, false), "up");
 		action_map.put("up", upAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, Event.CTRL_MASK, false), "cut");
 		action_map.put("cut", cutAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, Event.CTRL_MASK, false), "paste");
 		action_map.put("paste", pasteAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, Event.CTRL_MASK, false), "copy");
 		action_map.put("copy", copyAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, 0, false), "end");
 		action_map.put("end", endAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0, false), "home");
 		action_map.put("home", homeAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0, false), "delete");
 		action_map.put("delete", deleteAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0, false), "backspace");
 		action_map.put("backspace", backspaceAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_I, Event.CTRL_MASK, false), "select_inverse");
 		action_map.put("select_inverse", selectInverseAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, Event.CTRL_MASK, false), "select_all");
 		action_map.put("select_all", selectAllAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0, false), "change_focus");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, Event.SHIFT_MASK, false), "change_focus");
 		action_map.put("change_focus", changeFocusAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "insert_and_split");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, Event.SHIFT_MASK, false), "insert_and_split");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, Event.CTRL_MASK, false), "insert_and_split");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, Event.CTRL_MASK + Event.SHIFT_MASK, false), "insert_and_split");
 		action_map.put("insert_and_split", insertAndSplitAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0, false), "promote_demote");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, Event.SHIFT_MASK + Event.SHIFT_MASK, false), "promote_demote");
 		action_map.put("promote_demote", promoteDemoteAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, Event.CTRL_MASK, false), "select_none");
 		action_map.put("select_none", selectNoneAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_M, Event.CTRL_MASK, false), "merge");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_M, Event.CTRL_MASK + Event.SHIFT_MASK, false), "merge");
 		action_map.put("merge", mergeAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0, false), "expansion");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, Event.SHIFT_MASK, false), "expansion");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, Event.CTRL_MASK, false), "expansion");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, Event.CTRL_MASK + Event.SHIFT_MASK, false), "expansion");
 		action_map.put("expansion", toggleExpansionAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0, false), "comments");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, Event.SHIFT_MASK, false), "comments");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, Event.CTRL_MASK, false), "comments");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, Event.CTRL_MASK + Event.SHIFT_MASK, false), "comments");
 		action_map.put("comments", toggleCommentAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0, false), "editable");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_F11, Event.SHIFT_MASK, false), "editable");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_F11, Event.CTRL_MASK, false), "editable");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_F11, Event.CTRL_MASK + Event.SHIFT_MASK, false), "editable");
 		action_map.put("editable", toggleEditableAction);
-
+		
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0, false), "moveable");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_F12, Event.SHIFT_MASK, false), "moveable");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_F12, Event.CTRL_MASK, false), "moveable");
 		input_map.put(KeyStroke.getKeyStroke(KeyEvent.VK_F12, Event.CTRL_MASK + Event.SHIFT_MASK, false), "moveable");
 		action_map.put("moveable", toggleMoveableAction);	
 	}
-
+	
 	public void destroy() {
 		removeAll();
 		removeNotify();
@@ -266,25 +266,25 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		iEditable = null;
 		iMoveable = null;
 	}
-		
+	
 	public boolean isManagingFocus() {
 		return true;
 	}
-
+	
 	public static void updateFonts() {
 		font = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.PLAIN, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
-
+		
 		readOnlyFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.ITALIC, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
 		immoveableFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.BOLD, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
 		immoveableReadOnlyFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.BOLD + Font.ITALIC, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
 	}
-
+	
 	// Used to fire key events
 	public void fireKeyEvent(KeyEvent event) {
 		processKeyEvent(event);
 	}
-
-
+	
+	
 	// OutlinerCellRenderer Interface
 	public void setVisible(boolean visibility) {
 		super.setVisible(visibility);
@@ -358,28 +358,28 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 			OutlineLineNumber.LINE_NUMBER_WIDTH + indent, 
 			height
 		);
-
+		
 		// Draw Indicators
 		if (pShowIndicators) {
 			// Update the Indicators
 			updateCommentIndicator();
 			updateEditableIndicator();
 			updateMoveableIndicator();
-
+			
 			iComment.setBounds(
 				commentOffset, 
 				p.y, 
 				OutlineCommentIndicator.BUTTON_WIDTH, 
 				height
 			);
-
+			
 			iEditable.setBounds(
 				editableOffset, 
 				p.y, 
 				OutlineEditableIndicator.BUTTON_WIDTH, 
 				height
 			);
-
+			
 			iMoveable.setBounds(
 				moveableOffset, 
 				p.y, 
@@ -391,13 +391,13 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		
 	public void drawDown(Point p, Node node) {
 		this.node = node;
-
+		
 		// Adjust color when we are selected
 		updateColors();
 				
 		// Update the button
 		updateButton();
-
+		
 		// Update font
 		updateFont();
 				
@@ -414,7 +414,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		
 		// Draw the Button
 		button.setBounds(p.x + indent, p.y, OutlineButton.BUTTON_WIDTH, height);
-
+		
 		// Draw the LineNumber
 		if (pShowLineNumbers) {
 			if (node.getTree().getDocument().hoistStack.isHoisted()) {
@@ -432,28 +432,28 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 			OutlineLineNumber.LINE_NUMBER_WIDTH + indent, 
 			height
 		);
-
+		
 		// Draw Indicators
 		if (pShowIndicators) {
 			// Update the Indicators
 			updateCommentIndicator();
 			updateEditableIndicator();
 			updateMoveableIndicator();
-
+			
 			iComment.setBounds(
 				commentOffset, 
 				p.y, 
 				OutlineCommentIndicator.BUTTON_WIDTH, 
 				height
 			);
-
+			
 			iEditable.setBounds(
 				editableOffset, 
 				p.y, 
 				OutlineEditableIndicator.BUTTON_WIDTH, 
 				height
 			);
-
+			
 			iMoveable.setBounds(
 				moveableOffset, 
 				p.y, 
@@ -461,9 +461,8 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 				height
 			);
 		}
-						
-		p.y += height + pVerticalSpacing;	
-
+		
+		p.y += height + pVerticalSpacing;
 	}
 	
 	private void updateFont() {
@@ -475,7 +474,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		
 		if (node.isEditable()) {
 			setEditable(true);
-		
+			
 			if (!node.isMoveable() && pApplyFontStyleForMoveability) {
 				setFont(immoveableFont);
 			} else {
@@ -509,13 +508,13 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		
 		if (node.isAncestorSelected()) {
 			if (pApplyFontStyleForComments && node.isComment()) {
-				setForeground(pCommentColor);				
+				setForeground(pCommentColor);
 			} else {
 				setForeground(pBackgroundColor);
 			}
 			
 			lineNumber.setForeground(pSelectedChildColor);
-
+			
 			if (node.isSelected()) {
 				setBackground(pForegroundColor);
 				lineNumber.setBackground(pLineNumberSelectedColor);
@@ -535,7 +534,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 			
 		} else {
 			if (pApplyFontStyleForComments && node.isComment()) {
-				setForeground(pCommentColor);				
+				setForeground(pCommentColor);
 			} else {
 				setForeground(pForegroundColor);
 			}
@@ -547,7 +546,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 			iComment.setBackground(pLineNumberColor);
 			iEditable.setBackground(pLineNumberColor);
 			iMoveable.setBackground(pLineNumberColor);
-		}	
+		}
 	}
 	
 	private void updateButton() {
@@ -622,7 +621,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		
 		iEditable.updateIcon();
 	}
-
+	
 	private void updateMoveableIndicator() {
 		// [srk] same protection added to updateColors
 		// make sure node is not null

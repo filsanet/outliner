@@ -51,29 +51,31 @@ import org.xml.sax.*;
  */
  
 public class PreferencesPanelLookAndFeel extends AbstractPreferencesPanel implements PreferencesPanel, GUITreeComponent {
-
+	
 	// PreferencePanel Interface
 	public void applyCurrentToApplication() {
 		//Preferences prefs = Outliner.prefs;
-
+		
+		PreferenceBoolean pShowIndicators =             Preferences.getPreferenceBoolean(Preferences.SHOW_INDICATORS);
+		
 		PreferenceColor pDesktopBackgroundColor =       Preferences.getPreferenceColor(Preferences.DESKTOP_BACKGROUND_COLOR);
 		PreferenceColor pPanelBackgroundColor =         Preferences.getPreferenceColor(Preferences.PANEL_BACKGROUND_COLOR);
 		PreferenceColor pTextareaForegroundColor =      Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR);
 		PreferenceColor pTextareaBackgroundColor =      Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR);
-		PreferenceColor pTextareaCommentColor =         Preferences.getPreferenceColor(Preferences.TEXTAREA_COMMENT_COLOR);				
+		PreferenceColor pTextareaCommentColor =         Preferences.getPreferenceColor(Preferences.TEXTAREA_COMMENT_COLOR);
 		PreferenceColor pSelectedChildColor =           Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR);
 		PreferenceColor pLineNumberColor =              Preferences.getPreferenceColor(Preferences.LINE_NUMBER_COLOR);
 		PreferenceColor pLineNumberSelectedColor =      Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR);
 		PreferenceColor pLineNumberSelectedChildColor = Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR);
-
+		
 		PreferenceInt pIndent =                         Preferences.getPreferenceInt(Preferences.INDENT);
 		PreferenceInt pVerticalSpacing =                Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING);
 		PreferenceInt pLeftMargin =                     Preferences.getPreferenceInt(Preferences.LEFT_MARGIN);
-
+		
 		// Set the Desktop Background color
 		Outliner.jsp.getViewport().setBackground(pDesktopBackgroundColor.cur);
 		Outliner.desktop.setBackground(pDesktopBackgroundColor.cur);
-
+		
 		// for each open document ...
 		for (int i = 0, limit = Outliner.documents.openDocumentCount(); i < limit; i++) {
 			// get the document
@@ -81,7 +83,7 @@ public class PreferencesPanelLookAndFeel extends AbstractPreferencesPanel implem
 			
 			// Set the Panel Background color.
 			doc.panel.setBackground(pPanelBackgroundColor.cur);
-
+			
 			// Update the cellRenderers
 			for (int j = 0; j < OutlineLayoutManager.CACHE_SIZE; j++) {
 				OutlinerCellRendererImpl renderer = doc.panel.layout.textAreas[j];
@@ -90,7 +92,7 @@ public class PreferencesPanelLookAndFeel extends AbstractPreferencesPanel implem
 				renderer.setCaretColor(pSelectedChildColor.cur);
 			}
 		}
-
+		
 		// Push values into the renderer for faster access.
 		OutlinerCellRendererImpl.pCommentColor =                 pTextareaCommentColor.cur;				
 		OutlinerCellRendererImpl.pForegroundColor =              pTextareaForegroundColor.cur;
@@ -99,15 +101,19 @@ public class PreferencesPanelLookAndFeel extends AbstractPreferencesPanel implem
 		OutlinerCellRendererImpl.pLineNumberColor =              pLineNumberColor.cur;
 		OutlinerCellRendererImpl.pLineNumberSelectedColor =      pLineNumberSelectedColor.cur;
 		OutlinerCellRendererImpl.pLineNumberSelectedChildColor = pLineNumberSelectedChildColor.cur;
-
+		
 		OutlinerCellRendererImpl.pIndent =          pIndent.cur;
 		OutlinerCellRendererImpl.pVerticalSpacing = pVerticalSpacing.cur;
-
+		
 		OutlinerCellRendererImpl.moveableOffset =   pLeftMargin.cur;
 		OutlinerCellRendererImpl.editableOffset =   OutlinerCellRendererImpl.moveableOffset + OutlineMoveableIndicator.BUTTON_WIDTH;
 		OutlinerCellRendererImpl.commentOffset =    OutlinerCellRendererImpl.editableOffset + OutlineEditableIndicator.BUTTON_WIDTH;
-		OutlinerCellRendererImpl.lineNumberOffset = OutlinerCellRendererImpl.commentOffset + OutlineCommentIndicator.BUTTON_WIDTH;
-
+		if (pShowIndicators.cur) {
+			OutlinerCellRendererImpl.lineNumberOffset = OutlinerCellRendererImpl.commentOffset + OutlineCommentIndicator.BUTTON_WIDTH;
+		} else {
+			OutlinerCellRendererImpl.lineNumberOffset = pLeftMargin.cur;
+		}
+		
 		OutlinerCellRendererImpl.bestHeightComparison = 
 		Math.max(
 			Math.max(

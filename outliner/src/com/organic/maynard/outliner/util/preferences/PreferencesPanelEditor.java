@@ -65,7 +65,7 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		PreferenceString pLineWrap = (PreferenceString) prefs.getPreference(Preferences.LINE_WRAP);
 		PreferenceBoolean pUseCreateModDates = (PreferenceBoolean) prefs.getPreference(Preferences.USE_CREATE_MOD_DATES);
 		PreferenceString pCreateModDatesFormat = (PreferenceString) prefs.getPreference(Preferences.CREATE_MOD_DATES_FORMAT);
-
+		
 		// Push UndoQueueSize into UndoQueue
 		UndoQueue.MAX_QUEUE_SIZE = pUndoQueueSize.cur;
 		
@@ -84,35 +84,27 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		}
 		
 		// Update the Indicators
-		if (pShowIndicators.cur) {
-			OutlineCommentIndicator.BUTTON_WIDTH = OutlineCommentIndicator.WIDTH_DEFAULT;
-			OutlineEditableIndicator.BUTTON_WIDTH = OutlineEditableIndicator.WIDTH_DEFAULT;
-			OutlineMoveableIndicator.BUTTON_WIDTH = OutlineMoveableIndicator.WIDTH_DEFAULT;
-		} else {
-			OutlineCommentIndicator.BUTTON_WIDTH = 0;
-			OutlineEditableIndicator.BUTTON_WIDTH = 0;
-			OutlineMoveableIndicator.BUTTON_WIDTH = 0;
-		}
+		// This is handled in PreferencesPanelLookAndFeel.
 		
 		// Update the cellRenderers
 		boolean line_wrap = true;
 		if (pLineWrap.cur.equals(Preferences.TXT_CHARACTERS)) {
 			line_wrap = false;
 		}
-
+		
 		OutlinerCellRendererImpl.pShowLineNumbers = pShowLineNumbers.cur;
 		OutlinerCellRendererImpl.pShowIndicators = pShowIndicators.cur;
-
+		
 		// Update fonts
 		OutlinerCellRendererImpl.updateFonts();
 		
 		// Update renderers in existing docs
 		for (int i = 0, limit = Outliner.documents.openDocumentCount(); i < limit; i++) {
 			OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getDocument(i);
-
+			
 			// Update the undo queue for all the documents immediatly if it is being downsized.
 			doc.getUndoQueue().prefsTrim();
-
+			
 			for (int j = 0; j < OutlineLayoutManager.CACHE_SIZE; j++) {
 				OutlinerCellRendererImpl renderer = doc.panel.layout.textAreas[j];
 				
