@@ -53,6 +53,9 @@ public class ExportSubMenuItem extends OutlinerSubMenuItem implements DocumentRe
 	// Constructors
 	public ExportSubMenuItem() {
 		super();
+		
+		setEnabled(false);
+		
 		Outliner.documents.addDocumentRepositoryListener(this);
 	}
 

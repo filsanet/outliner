@@ -53,6 +53,9 @@ public class SaveAsSubMenuItem extends OutlinerSubMenuItem implements DocumentRe
 	// Constructors
 	public SaveAsSubMenuItem() {
 		super();
+		
+		setEnabled(false);
+		
 		Outliner.documents.addDocumentRepositoryListener(this);
 	}
 

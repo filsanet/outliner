@@ -54,6 +54,8 @@ public class ExportSelectionSubMenuItem extends OutlinerSubMenuItem implements T
 	public ExportSelectionSubMenuItem() {
 		super();
 		
+		setEnabled(false);
+		
 		Outliner.documents.addTreeSelectionListener(this);
 		Outliner.documents.addDocumentRepositoryListener(this);
 	}

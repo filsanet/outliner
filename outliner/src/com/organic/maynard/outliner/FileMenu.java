@@ -1,52 +1,6 @@
 /**
- * FileMenu class
- *
- *	Does the work for the File menu commands New, Open, Import Save, Export, Revert, Close
- *
- *	Members
- *	constants
- *		class
- *			private
- *				MODE_SAVE
- *				MODE_EXPORT
- *				MODE_OPEN
- *				MODE_IMPORT
- *	methods
- *		instance
- *			public
- *				constructors
- *					public FileMenu()
- *				void startSetup(AttributeList)
- *				void endSetup(AttributeList)
- *		class
- *			public
- *				void exportFile(String, OutlinerDocument, FileProtocol)
- *				void saveFile(String, OutlinerDocument, boolean)
- *				void saveFile(String, OutlinerDocument, FileProtocol, boolean)
- *				void saveFile(String, OutlinerDocument, FileProtocol, boolean, int)
- *				void updateSaveAllMenuItem()
- *				void updateFileMenuItems()
- *
- *
- *
- *
- *			protected
- *				void importFile(DocumentInfo, FileProtocol)
- *				void openFile(DocumentInfo, FileProtocol)
- *				void openFile(DocumentInfo, FileProtocol, int)
- *				void importFile(DocumentInfo, FileProtocol)
- *				void revertFile(OutlinerDocument document)
- *			private
- *				int openOrImportFileAndGetTree(JoeTree, DocumentInfo, FileProtocol, int)
- *				void setupAndDraw(DocumentInfo, OutlinerDocument, int)
- *				int promptUser(String)
- *
- *
- *
- *
-.*
  * Portions copyright (C) 2000-2001 Maynard Demmon, maynard@organic.com
- * Portions copyright (C) 20012002 Stan Krute <Stan@StanKrute.com>
+ * Portions copyright (C) 2001, 2002 Stan Krute <Stan@StanKrute.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or
@@ -79,12 +33,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * @author  $Author$
- * @version $Revision$, $Date$
- */
-
-// we're part of this
 package com.organic.maynard.outliner;
 
 import com.organic.maynard.outliner.guitree.*;
@@ -99,10 +47,16 @@ import org.xml.sax.*;
 import com.organic.maynard.util.string.Replace;
 import com.organic.maynard.util.string.StanStringTools ;
 
-// this class implements the meat of several File Menu commands: New, Open, Import, Save, Revert, Close
+/**
+ * This class implements the meat of several File Menu commands: New, Open, Import, Save, Revert, Close.
+ *
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
 public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, JoeReturnCodes {
 
-	// public class constants
+	// Constants
 	private static final int MODE_SAVE = 0;
 	private static final int MODE_EXPORT = 1;
 	private static final int MODE_OPEN = 0;
@@ -111,56 +65,64 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 	private static final String TRUNC_STRING = GUITreeLoader.reg.getText("trunc_string");
 
 	// document title name forms
-	private static final int FULL_PATHNAME = 0 ;
-	private static final int TRUNC_PATHNAME = 1 ;
-	private static final int JUST_FILENAME = 2 ;
+	private static final int FULL_PATHNAME = 0;
+	private static final int TRUNC_PATHNAME = 1;
+	private static final int JUST_FILENAME = 2;
 
 	
-	// The Constructors
+	// Constructors
 	public FileMenu() {
 		super();
-	} // end FileMenu
-
-	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
-		super.startSetup(atts);
+		
 		Outliner.menuBar.fileMenu = this;
-	} // end startSetup
+	}
 
-	public void endSetup(AttributeList atts) {
-		// Disable menus at startup
-		((OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM)).setEnabled(false);
-		((OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_MENU_ITEM)).setEnabled(false);
-		((OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_SELECTION_MENU_ITEM)).setEnabled(false);
 
-		super.endSetup(atts);
-	} // end endSetup
-
-	// Utility Methods
-
-	// export a file
-	// we call the master-blaster-flavor save routine
+	/**
+	 * Exports a file.
+	 *
+	 * @param filename the filename to write the exported document to.
+	 * @param document the document to export.
+	 * @param protocol the Protocol to use when exporting the document.
+	 */
 	public static void exportFile(String filename, OutlinerDocument document, FileProtocol protocol) {
 		saveFile(filename, document, protocol, true, MODE_EXPORT);
-	} // end exportFile
+	}
 
-	// save a file
-	// this flavor uses the doc's existing file protocol
+	/**
+	 * Saves a file using the protocol currently set on the Document's DocumentInfo object.
+	 *
+	 * @param filename the filename to write the saved document to.
+	 * @param document the document to save.
+	 * @param saveAs indicates if we are in the process of doing a "Save As" operation rather than a straight "Save".
+	 */
 	public static void saveFile(String filename, OutlinerDocument document, boolean saveAs) {
-		DocumentInfo docInfo = document.getDocumentInfo();
-		FileProtocol protocol = Outliner.fileProtocolManager.getProtocol(docInfo.getProtocolName());
+		FileProtocol protocol = Outliner.fileProtocolManager.getProtocol(document.getDocumentInfo().getProtocolName());
 		saveFile(filename, document, protocol, saveAs, MODE_SAVE);
-	} // end saveFile
+	}
 
-	// save a file
-	// this flavor lets you spec a file protocol
+	/**
+	 * Saves a file.
+	 *
+	 * @param filename the filename to write the saved document to.
+	 * @param document the document to save.
+	 * @param protocol the Protocol to use when saving the document.
+	 * @param saveAs indicates if we are in the process of doing a "Save As" operation rather than a straight "Save".
+	 */
 	public static void saveFile(String filename, OutlinerDocument document, FileProtocol protocol, boolean saveAs) {
 		saveFile(filename, document, protocol, saveAs, MODE_SAVE);
-	} // end save file
+	}
 
-	// save or export a file
-	// this is the master-blaster routine that the other save/export routines call
-	public static void saveFile(String filename, OutlinerDocument document, FileProtocol protocol, boolean saveAs, int mode) {
+	/**
+	 * The main save routine which the above export and save methods resolve to.
+	 *
+	 * @param filename the filename to write the saved document to.
+	 * @param document the document to save.
+	 * @param protocol the Protocol to use when saving the document.
+	 * @param saveAs indicates if we are in the process of doing a "Save As" operation rather than a straight "Save".
+	 * @param mode indicates if we are in the process of doing a "Save" or an "Export".
+	 */
+	private static void saveFile(String filename, OutlinerDocument document, FileProtocol protocol, boolean saveAs, int mode) {
 
 		// set up local vars
 		String msg = null;
@@ -180,9 +142,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// set up the protocol
 		docInfo.setProtocolName(protocol.getName()) ;
 
-		// we're going to use the document settings
-		document.settings.setUseDocumentSettings(true);
-
 		// Get the proper file format object for the specified mode
 		// Initialize DocumentInfo with current document state, prefs and document settings.
 		// Filter out bad modes
@@ -195,22 +154,22 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 					fileFormatName = document.settings.getSaveFormat().cur;
 				}
 				saveOrExportFileFormat = Outliner.fileFormatManager.getSaveFormat(fileFormatName);
-				savedDocsPrevName = document.getFileName() ;
+				savedDocsPrevName = document.getFileName();
 				document.setFileName(filename);
 				docInfo.updateDocumentInfoForDocument(document, saveAs); // Might not be neccessary anymore.
-				break ;
+				break;
 
 			case MODE_EXPORT:
 				fileFormatName = docInfo.getFileFormat();
 				saveOrExportFileFormat = Outliner.fileFormatManager.getExportFormat(fileFormatName);
 				docInfo.setPath(filename);
-				break ;
+				break;
 
 			default:
 				// Ack, this shouldn't happen.
 				// illegal/unknown mode specification
 				System.out.println("FileMenu:SaveFile: bad mode parameter");
-				return ;
+				return;
 		}
 
 		// if we couldn't get a saveOrExportFileFormat
@@ -228,41 +187,39 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// do we have document attributes ?
 		if (document.tree.getAttributeCount() > 0) {
 			documentAttributesExist = true;
-		} // end if
+		}
 
 		// walk the document tree, looking for various node features:
-		//     comments, not-editable, locked-in-place, attributes
-		//  [srk] hmmm, I sniff it'd be a useful optimization to maintain this info in DocInfo
+		// comments, not-editable, locked-in-place, attributes
+		// [srk] hmmm, I sniff it'd be a useful optimization to maintain this info in DocInfo
 		// as someone works on an outline .... rather than having to
 		// scan the whole tree .... I think this scan is a big factor in
-		//  the slowness of saving very large outlines  ... can test that by
+		// the slowness of saving very large outlines  ... can test that by
 		// temporarily commenting it out and doing some vlo saves
 		Node node = document.tree.getRootNode();
-		int lineCount = -1;
 		while (true) {
 			node = node.nextNode();
-			lineCount++;
-
+			
 			if (node.isRoot()) {
 				break;
 			}
 
-			if (node.isComment()) {
+			if (!commentExists && node.isComment()) {
 				commentExists = true;
 			}
 
-			if (!node.isEditable()) {
+			if (!editableExists && !node.isEditable()) {
 				editableExists = true;
 			}
 
-			if (!node.isMoveable()) {
+			if (!moveableExists && !node.isMoveable()) {
 				moveableExists = true;
 			}
 
 			if (!attributesExist && node.getAttributeCount() > 0) {
 				attributesExist = true;
 			}
-		} // end while
+		}
 
 		// if we found comment nodes, but the save/export format doesn't support that concept  ...
 		if (commentExists && !saveOrExportFileFormat.supportsComments()) {
@@ -270,8 +227,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, fileFormatName);
 			if (USER_ABORTED == promptUser(msg)) {
 				return;
-			} // end if
-		} // end if
+			}
+		}
 
 		// if found non-editable nodes, but the save/export format doesn't support that concept ...
 		if (editableExists && !saveOrExportFileFormat.supportsEditability()) {
@@ -279,8 +236,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, fileFormatName);
 			if (USER_ABORTED == promptUser(msg)) {
 				return;
-			} // end if
-		} // end if
+			}
+		}
 
 		// if we found immoveable nodes, but the save/export format doesn't support that concept ...
 		if (moveableExists && !saveOrExportFileFormat.supportsMoveability()) {
@@ -288,8 +245,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, fileFormatName);
 			if (USER_ABORTED == promptUser(msg)) {
 				return;
-			} // end if
-		} // end if
+			}
+		}
 
 		// if we found nodes with attributes, but the save/export format doesn't support that concept ...
 		if (attributesExist && !saveOrExportFileFormat.supportsAttributes()) {
@@ -297,8 +254,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, fileFormatName);
 			if (USER_ABORTED == promptUser(msg)) {
 				return;
-			} // end if
-		} // end if
+			}
+		}
 
 		// if we've got document attributes, but the save/export format doesn't support that concept ....
 		if (documentAttributesExist && !saveOrExportFileFormat.supportsDocumentAttributes()) {
@@ -306,235 +263,141 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, fileFormatName);
 			if (USER_ABORTED == promptUser(msg)) {
 				return;
-			} // end if
-		} // end if
+			}
+		}
 
 		// if parts of the doc are hoisted, temporarily dehoist
 		// so that a hoisted doc will be completely saved.
 		if (document.hoistStack.isHoisted()) {
 			document.hoistStack.temporaryDehoistAll();
-		} //
+		}
 
 		// ask the save/export format to send us an array of bytes to save/export. 
 		// This also gives the format a chance to display a dialog to the user.
 		byte[] bytes = saveOrExportFileFormat.save(document.tree, docInfo);
 
-		int saveOrExportResult = 0; // -1 error, 0 user aborted, 1 success.
+		int saveOrExportResult = USER_ABORTED;
 		
-		// Make sure bytes isn't null. If it is then we need to abort since there was an error in the format.
+		// If the bytes aren't null then save the file.
 		if (bytes != null) {
 			// point the doc info at that array of save/export bytes
 			docInfo.setOutputBytes(bytes);
 
 			// if we're an imported file, the savee/exportee won't be
 			if (wereImported = docInfo.isImported()){
-				docInfo.setImported(false) ;
-			} // end if we're imported
+				docInfo.setImported(false);
+			}
 
-			// ask the protocol to save/export the file
-			boolean result = protocol.saveFile(docInfo);
-			if (result) {saveOrExportResult = 1;} else {saveOrExportResult = -1;}
+			// Ask the protocol to save/export the file. This is where the data actually gets written.
+			if (protocol.saveFile(docInfo)) {
+				saveOrExportResult = SUCCESS;
+			} else {
+				saveOrExportResult = FAILURE;
+			}
+
+			// Get rid of the bytes now that were done so they can be GC'd.
+			docInfo.setOutputBytes(null);
 		}
 
-		// if we had to unhoist stuff
+		// if we had to unhoist stuff then rehoist it.
 		if (document.hoistStack.isHoisted()) {
-			// rehoist it
 			document.hoistStack.temporaryHoistAll();
-		} // end if
-
-		// if we succeeded
-		if (saveOrExportResult == 1) {
-			// do special stuff based on mode
-			switch (mode) {
-
-			case MODE_SAVE:
-				// Stop collecting text edits into the current undoable.
-				UndoableEdit.freezeUndoEdit(document.tree.getEditingNode());
-
-				// Update the Recent File List
-				
-				// TBD [srk] collapse this if/else/if now that 
-				//	addFileNameToList is smarter 
-				// if we were imported ...
-				if (wereImported) {
-					RecentFilesList.addFileNameToList(docInfo);
-					
-				// else if we're doing a Save As and the name has changed ...
-				} else if ( saveAs && (! savedDocsPrevName.equals(filename))) {
-					
-					RecentFilesList.addFileNameToList(docInfo);
-					
-				// else we weren't imported and haven't changed our name on a Save As op
-				} else {
-					
-					RecentFilesList.addFileNameToList(docInfo);
-				} // end else
-
-				//document.setFileName(filename);
-				document.setFileModified(false);
-				// document.setTitle(StanStringTools.getTruncatedPathName(filename, TRUNC_STRING)) ;
-				
-				// case out on the form to build the title
-				switch (OutlinerDocument.getTitleNameForm()) {
-				
-				case FULL_PATHNAME:
-				default: 
-					title = filename ;
-					break ;
-					
-				case TRUNC_PATHNAME: 
-					title = StanStringTools.getTruncatedPathName(filename, TRUNC_STRING) ;
-					break ;
-					
-				case JUST_FILENAME: 
-					title = StanStringTools.getFileNameFromPathName(filename) ;
-					break ;
-					
-				} // end switch
-				
-				// set the title
-				document.setTitle(title) ;
-
-				// Update the Window Menu
-				Outliner.menuBar.windowMenu.updateWindow(document);
-				break ;
-
-			case MODE_EXPORT:
-				// if we were imported, we stay that way
-				if (wereImported) {
-					docInfo.setImported(true) ;
-				} // end if
-				break ;
-
-			default:
-				break ;
-
-			} // end switch
-
-		} else if (saveOrExportResult == -1) {
-			// we failed
-
-				// if were were imported, we stay that way
-				if (wereImported) {
-					docInfo.setImported(true) ;
-				} // end if
-
-			msg = GUITreeLoader.reg.getText("error_could_not_save_file");
-			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
-			JOptionPane.showMessageDialog(document, msg);
-		} else {
-				// if were were imported, we stay that way
-				if (wereImported) {
-					docInfo.setImported(true) ;
-				} // end if		
 		}
 
-		// Get rid of the bytes now that were done so they can be GC'd.
-		docInfo.setOutputBytes(null);
-
-	} // end method saveFile
-
-
-	// open/import a file and store its outline into a tree
-	private static int openOrImportFileAndGetTree(JoeTree tree, DocumentInfo docInfo, FileProtocol protocol, int mode) {
-		// Stop updating mod/create dates
-		//boolean tempIsSettingCreateModDates = tree.getDocument().settings.getUseCreateModDates().cur;
-		//tree.getDocument().settings.getUseCreateModDates().cur = false;
-		
-		// local vars
-		String msg = null;
-		int openOrImportResult = FAILURE;
-		OpenFileFormat openOrImportFileFormat = null ;
-
-		// try to open the file
-		if (!protocol.openFile(docInfo)) {
-			// Restore
-			//tree.getDocument().settings.getUseCreateModDates().cur = tempIsSettingCreateModDates;
-
-			return FAILURE;
-		} // end if
-
-		// Get the proper file format object for the specified mode
-		switch (mode) {
-
-			case MODE_OPEN:
-				openOrImportFileFormat = Outliner.fileFormatManager.getOpenFormat(docInfo.getFileFormat());
-				break ;
-
-			case MODE_IMPORT:
-				openOrImportFileFormat = Outliner.fileFormatManager.getImportFormat(docInfo.getFileFormat());
-				break ;
-
-			default:
-				// Ack, this shouldn't happen.
-				// illegal/unknown mode specification
-				System.out.println("FileMenu:OpenFile: bad mode parameter");
-
-				// Restore
-				//tree.getDocument().settings.getUseCreateModDates().cur = tempIsSettingCreateModDates;
-
-				return FAILURE;
-			} // end switch
-
-		// if we couldn't get a file format object reference ...
-		if (openOrImportFileFormat == null) {
-			msg = GUITreeLoader.reg.getText("error_could_not_open_no_file_format");
-			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
-			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_2, docInfo.getFileFormat());
-			JOptionPane.showMessageDialog(Outliner.outliner, msg);
-		} else {
-			// we got one
-			// try to open the file
-			openOrImportResult = openOrImportFileFormat.open(tree, docInfo, docInfo.getInputStream());
-
-			// if we couldn't ....
-			if (openOrImportResult == FAILURE) {
-				msg = GUITreeLoader.reg.getText("error_could_not_open_file");
+		switch (saveOrExportResult) {
+			case FAILURE:
+				msg = GUITreeLoader.reg.getText("error_could_not_save_file");
 				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
+				JOptionPane.showMessageDialog(document, msg);
+				
+			case USER_ABORTED:
+				if (wereImported) {
+					docInfo.setImported(true) ;
+				}
+				break;
+				
+			case SUCCESS:
+				switch (mode) {
+					case MODE_EXPORT:
+						// if we were imported, we stay that way
+						if (wereImported) {
+							docInfo.setImported(true) ;
+						}
+						break;
+							
+					case MODE_SAVE:
+						// we're going to use the document settings
+						document.settings.setUseDocumentSettings(true);
 
-				JOptionPane.showMessageDialog(Outliner.outliner, msg);
-				RecentFilesList.removeFileNameFromList(docInfo);
-			} else if (openOrImportResult != FAILURE_USER_ABORTED) {
-				// Deal with a childless RootNode or an Empty or Null Tree
-				if ((tree.getRootNode() == null) || (tree.getRootNode().numOfChildren() <= 0)) {
-					tree.reset();
-				} // end if
-			} // end else if
-		} // end else
-
-		// no matter what happened,
-		// reset the input stream in the docInfo
-		docInfo.setInputStream(null);
+						// Stop collecting text edits into the current undoable.
+						UndoableEdit.freezeUndoEdit(document.tree.getEditingNode());
 		
-		// Restore
-		//tree.getDocument().settings.getUseCreateModDates().cur = tempIsSettingCreateModDates;
+						// Update the Recent File List
+						RecentFilesList.addFileNameToList(docInfo);
+		
+						document.setFileModified(false);
+						
+						// case out on the form to build the title
+						switch (OutlinerDocument.getTitleNameForm()) {
+						
+							case FULL_PATHNAME:
+							
+							default: 
+								title = filename;
+								break;
+							
+							case TRUNC_PATHNAME: 
+								title = StanStringTools.getTruncatedPathName(filename, TRUNC_STRING) ;
+								break;
+							
+							case JUST_FILENAME: 
+								title = StanStringTools.getFileNameFromPathName(filename) ;
+								break;
+						}
+						
+						// set the title
+						document.setTitle(title) ;
+		
+						// Update the Window Menu
+						Outliner.menuBar.windowMenu.updateWindow(document);
+						break;
+				}
+				break;
+		}
+	}
 
-		// return the results of our efforts
-		return openOrImportResult;
 
-	} // end method openOrImportFileAndGetTree
-
-
-	// import a file
-	// similar to opening a file
-	// key diff is that we assume we can't save it
-	// calls the master opening method, mode set to IMPORT
+	/**
+	 * Imports a file. Similar to opening a file. The key difference
+	 * is that we assume we can't save it.
+	 *
+	 * @param docInfo contains all the info about the file we're importing.
+	 * @param protocol the Protocol to use when importing the document.
+	 */
 	protected static void importFile(DocumentInfo docInfo, FileProtocol protocol) {
-
 		openFile (docInfo, protocol, MODE_IMPORT) ;
+	}
 
-	} // end method importFile
-
-	// open a file
-	// calls the master opening method, mode set to OPEN
+	/**
+	 * Opens a file. Similar to importing a file. The key difference
+	 * is that we assume we can save it.
+	 *
+	 * @param docInfo contains all the info about the file we're opening.
+	 * @param protocol the Protocol to use when opening the document.
+	 */
 	protected static void openFile(DocumentInfo docInfo, FileProtocol protocol) {
-
 		openFile (docInfo, protocol, MODE_OPEN) ;
+	}
 
-	} // end method openFile
 
-
-	// open or import a file
+	/**
+	 * This is the main method used to open or import a file. The above
+	 * import and open methods all resolve to this method.
+	 *
+	 * @param docInfo contains all the info about the file we're opening.
+	 * @param protocol the Protocol to use when opening the document.
+	 * @param mode indicates if the current process is an "Open" or an "Import".
+	 */
 	protected static void openFile(DocumentInfo docInfo, FileProtocol protocol, int mode) {
 		
 		// Validate uniqueness of the filename
@@ -565,18 +428,22 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// if mode is invalid, abort
 		switch (mode) {
 			case MODE_OPEN:
+			
 			case MODE_IMPORT:
-				break ;
+				break;
+				
 			default:
 				// ack, as they say
 				// we should never get here
 				System.out.println("FileMenu:OpenFile: invalid mode parameter");
-				return ;
-			} // end switch
+				return;
+		}
 
 		// Create a new document
 		OutlinerDocument newDoc = new OutlinerDocument(docInfo.getPath(), docInfo);
-		newDoc.settings.setUseDocumentSettings(true); // Use document settings immediately, otherwise we would update the application prefs which is bad.
+		
+		// Use document settings immediately, otherwise we would update the application prefs which is bad.
+		newDoc.settings.setUseDocumentSettings(true);
 
 		// give it the docInfo we've got
 		newDoc.setDocumentInfo(docInfo);
@@ -591,7 +458,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// if lineEnding is not yet set ...
 		if (docInfo.getLineEnding().length() == 0) {
 			docInfo.setLineEnding (Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur);
-		} // end if
+		}
 
 		// [srk] bug:we can get to this
 		// point with no owner name
@@ -599,7 +466,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// if ownerName is not yet set ...
 		if (docInfo.getOwnerName().length() == 0) {
 			docInfo.setOwnerName(Preferences.getPreferenceString(Preferences.OWNER_NAME).cur);
-		} // end if
+		}
 
 		// [srk] bug:we can get to this
 		// point with no owner email
@@ -607,11 +474,9 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// if ownerEmail is not yet set ...
 		if (docInfo.getOwnerEmail().length() == 0) {
 			docInfo.setOwnerEmail(Preferences.getPreferenceString(Preferences.OWNER_EMAIL).cur);
-		} // end if
+		}
 
 		// Update DocumentSettings
-		//newDoc.settings.syncPrefs();
-
 		newDoc.settings.getLineEnd().def = docInfo.getLineEnding();
 		newDoc.settings.getLineEnd().restoreCurrentToDefault();
 		newDoc.settings.getLineEnd().restoreTemporaryToDefault();
@@ -624,11 +489,10 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		if (mode == MODE_IMPORT) {
 			// the doc's default save format is the app's default save format
 			newDoc.settings.getSaveFormat().def = Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur;
-		// else we weren't imported
 		} else {
 			// the doc's default save format is its existing format
 			newDoc.settings.getSaveFormat().def = docInfo.getFileFormat();
-		} // end else
+		}
 		newDoc.settings.getSaveFormat().restoreCurrentToDefault();
 		newDoc.settings.getSaveFormat().restoreTemporaryToDefault();
 
@@ -661,22 +525,21 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			case MODE_IMPORT:
 				// we were imported
 				docInfo.setImported(true) ;
-				break ;
+				break;
 
 			case MODE_OPEN:
-				break ;
+				break;
 
 			default:
-				break ;
-		} // end switch
+				break;
+		}
 
 		// make sure we're in the Recent Files list
 		RecentFilesList.addFileNameToList(docInfo);
 
 		// perform final setup and draw the suckah
 		setupAndDraw(docInfo, newDoc, openOrImportResult);
-
-	} // end method openFile
+	}
 
 	// revert a file to it's previous state
 	// TBD get this to work with IMPORTs
@@ -697,7 +560,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// if we failed somehow, bag it
 		if ((openOrImportResult != SUCCESS) && (openOrImportResult != SUCCESS_MODIFIED)) { // Might be good to have codes we can do % on.
 			return;
-		} // end if we failed somehow
+		}
 
 		// we succeeded
 
@@ -715,23 +578,85 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// TBD as warranted
 		switch (mode) {
 			case MODE_OPEN:
-				break ;
+				break;
 			case MODE_IMPORT:
-				break ;
+				break;
 			default:
-				break ;
-			} // end switch
-
+				break;
+		}
 
 		// okay, let's finish up and draw the suckah
 		setupAndDraw(docInfo, document, openOrImportResult);
+	}
 
-		} // end method Revert
 
+	// open/import a file and store its outline into a tree
+	private static int openOrImportFileAndGetTree(JoeTree tree, DocumentInfo docInfo, FileProtocol protocol, int mode) {
+
+		// local vars
+		String msg = null;
+		int openOrImportResult = FAILURE;
+		OpenFileFormat openOrImportFileFormat = null ;
+
+		// try to open the file
+		if (!protocol.openFile(docInfo)) {
+			return FAILURE;
+		}
+		
+		// Get the proper file format object for the specified mode
+		switch (mode) {
+
+			case MODE_OPEN:
+				openOrImportFileFormat = Outliner.fileFormatManager.getOpenFormat(docInfo.getFileFormat());
+				break ;
+
+			case MODE_IMPORT:
+				openOrImportFileFormat = Outliner.fileFormatManager.getImportFormat(docInfo.getFileFormat());
+				break ;
+
+			default:
+				// Ack, this shouldn't happen.
+				// illegal/unknown mode specification
+				System.out.println("FileMenu:OpenFile: bad mode parameter");
+				return FAILURE;
+		}
+
+		// if we couldn't get a file format object reference ...
+		if (openOrImportFileFormat == null) {
+			msg = GUITreeLoader.reg.getText("error_could_not_open_no_file_format");
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_2, docInfo.getFileFormat());
+			JOptionPane.showMessageDialog(Outliner.outliner, msg);
+		} else {
+			// we got one
+			// try to open the file
+			openOrImportResult = openOrImportFileFormat.open(tree, docInfo, docInfo.getInputStream());
+
+			// if we couldn't ....
+			if (openOrImportResult == FAILURE) {
+				msg = GUITreeLoader.reg.getText("error_could_not_open_file");
+				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
+
+				JOptionPane.showMessageDialog(Outliner.outliner, msg);
+				RecentFilesList.removeFileNameFromList(docInfo);
+				
+			} else if (openOrImportResult != FAILURE_USER_ABORTED) {
+				// Deal with a childless RootNode or an Empty or Null Tree
+				if ((tree.getRootNode() == null) || (tree.getRootNode().numOfChildren() <= 0)) {
+					tree.reset();
+				} // end if
+			} // end else if
+		} // end else
+
+		// no matter what happened,
+		// reset the input stream in the docInfo
+		docInfo.setInputStream(null);
+
+		// return the results of our efforts
+		return openOrImportResult;
+	}
 
 	private static void setupAndDraw(DocumentInfo docInfo, OutlinerDocument doc, int openOrImportResult) {
-		String title;
-		
 		// grab a ref to the tree
 		JoeTree tree = doc.tree;
 		
@@ -745,32 +670,33 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		tree.getVisibleNodes().clear();
 
 		// Insert nodes into the VisibleNodes Cache
+		Node rootNode = tree.getRootNode();
 		for (int i = 0, limit = tree.getRootNode().numOfChildren(); i < limit; i++) {
-			tree.addNode(tree.getRootNode().getChild(i));
+			tree.addNode(rootNode.getChild(i));
 		}
 
 		// Update the menuBar
 		doc.setFileName(filename);
 		doc.setFileModified(false);
-		// doc.setTitle(filename) ;
 		
 		// case out on the form to build the title
+		String title;
 		switch (doc.getTitleNameForm()) {
 		
 			case FULL_PATHNAME:
+			
 			default: 
 				title = filename ;
-				break ;
+				break;
 				
 			case TRUNC_PATHNAME: 
 				title = StanStringTools.getTruncatedPathName(filename, TRUNC_STRING) ;
-				break ;
+				break;
 				
 			case JUST_FILENAME: 
 				title = StanStringTools.getFileNameFromPathName(filename) ;
-				break ;
-			
-		} // end switch
+				break;
+		}
 		
 		// set the title
 		doc.setTitle(title) ;
@@ -813,7 +739,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		OutlineLayoutManager layout = doc.panel.layout;
 		layout.setNodeToDrawFrom(firstVisibleNode,index);
 		layout.redraw();
-		//layout.setFocus(firstVisibleNode, OutlineLayoutManager.TEXT);
 
 		// Set document as modified if something happened on open
 		if (openOrImportResult == SUCCESS_MODIFIED) {
@@ -824,15 +749,11 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 	// Utility Methods
 	private static int promptUser(String msg) {
-		String yes = GUITreeLoader.reg.getText("yes");
-		String no = GUITreeLoader.reg.getText("no");
-		String confirm_save = GUITreeLoader.reg.getText("confirm_save");
-
-
-		Object[] options = {yes, no};
-		int result = JOptionPane.showOptionDialog(Outliner.outliner,
+		Object[] options = {GUITreeLoader.reg.getText("yes"), GUITreeLoader.reg.getText("no")};
+		int result = JOptionPane.showOptionDialog(
+			Outliner.outliner,
 			msg,
-			confirm_save,
+			GUITreeLoader.reg.getText("confirm_save"),
 			JOptionPane.YES_NO_OPTION,
 			JOptionPane.QUESTION_MESSAGE,
 			null,

@@ -84,7 +84,7 @@ public class PadSelection implements JoeReturnCodes {
 		}
 		
 		// Abort if we've got an empty node list.
-		if (nodes.size() <= 1) {
+		if (nodes.size() <= 0) {
 			return padRetVal;
 		}
 		
