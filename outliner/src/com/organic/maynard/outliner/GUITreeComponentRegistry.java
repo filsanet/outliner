@@ -122,7 +122,7 @@ public class GUITreeComponentRegistry {
 		value = Replace.replace(value,"\\n", "\n");
 		value = Replace.replace(value,"\\\\", "\\");
 		
-		if (getText(key) != null) {
+		if (textResources.get(key) != null) {
 			System.out.println("WARNING: Writing over existing text repository key: " + key);
 		}
 		
@@ -130,6 +130,10 @@ public class GUITreeComponentRegistry {
 	}
 
 	public String getText(String key) {
-		return (String) textResources.get(key);
+		String retVal = (String) textResources.get(key);
+		if (retVal == null) {
+			System.out.println("Invalid text resource key: " + key);
+		}
+		return retVal;
 	}
 }
