@@ -1,26 +1,5 @@
 /**
- * HelpMenu class
- * 
- * Runs the Help menu
- *	routes menu commands
- * 
- * extends AbstractOutlinerMenu
- * implements GUITreeComponent 
- * 
- *
- * Members
- *	methods
- * 		instance
- * 			public
- * 				HelpMenu ()
- * 				void startSetup(AttributeList)
- * 		class
- * 			public
- * 				void updateHelpMenu()
- *
- *		
- * Portions copyright (C) 2000-2001 Maynard Demmon <maynard@organic.com>
- * Portions copyright (C) 2001 Stan Krute <Stan@StanKrute.com>
+ * Portions copyright (C) 2003 Maynard Demmon, maynard@organic.com
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or 
@@ -56,9 +35,6 @@
 package com.organic.maynard.outliner;
 
 import com.organic.maynard.outliner.guitree.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
 import org.xml.sax.*;
 
 /**
@@ -67,13 +43,10 @@ import org.xml.sax.*;
  */
 
 public class HelpMenu extends AbstractOutlinerMenu implements GUITreeComponent {
-
+	
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
 		Outliner.menuBar.helpMenu = this;
-
-		// call startSetup on the Help documents manager
-		Outliner.helpDoxMgr.startSetup();
 	}
 }

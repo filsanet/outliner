@@ -336,9 +336,6 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	public static DocumentStatistics statistics = null;
 	public static DocumentAttributesView documentAttributes = null;
 	
-	// Help system	[srk] 8/5/01 1:28PM
-	public static HelpDocumentsManager helpDoxMgr = null;
-	
 	// Spell Checking
 	public static final SpellingCheckerWrapper spellChecker = new SpellingCheckerWrapper();
 	
@@ -452,9 +449,6 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		fileProtocolManager = new FileProtocolManager();
 		
 		loadPrefsFile(PARSER, FILE_FORMATS_FILE);
-		
-		// Crank up the Help system	[srk] 8/5/01 1:30PM
-		helpDoxMgr = new HelpDocumentsManager();
 	}
 	
 	public void endSetup(AttributeList atts) {
