@@ -33,6 +33,8 @@
  */
 package com.yearahead.io;
 
+import com.organic.maynard.outliner.io.*;
+import com.organic.maynard.outliner.io.protocols.*;
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.util.preferences.*;
 import com.organic.maynard.outliner.*;
