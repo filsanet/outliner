@@ -207,4 +207,49 @@ public class StringTools {
 		
 		return parts;
 	}
+
+	public static void split(ArrayList parts, String text, char escapeChar, char[] delimiters) {
+		boolean isEscaped = false;
+		boolean isDelimiter = false;
+		StringBuffer part = new StringBuffer();
+		
+		for (int i = 0, limit = text.length(); i < limit; i++) {
+			char c = text.charAt(i);		
+			
+			// Is the char a delimiter
+			for (int j = 0; j < delimiters.length; j++) {
+				if (c == delimiters[j]) {
+					isDelimiter = true;
+					break;
+				}
+			}
+			
+			// Deal with the type of char
+			if (isDelimiter) {
+				if (isEscaped) {
+					part.append(c);
+					isEscaped = false;
+				} else {
+					parts.add(part.toString());
+					part.setLength(0);
+				}
+				isDelimiter = false;
+			} else if (c == escapeChar) {
+				if (isEscaped) {
+					part.append(c);
+					isEscaped = false;				
+				} else {
+					isEscaped = true;
+				}
+			} else {
+				if (isEscaped) {
+					isEscaped = false;				
+				}
+				part.append(c);			
+			}
+		}
+		
+		// Append the last section
+		parts.add(part.toString());
+	}
 }

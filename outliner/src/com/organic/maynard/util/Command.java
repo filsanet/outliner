@@ -35,33 +35,21 @@ import java.util.*;
 
 public abstract class Command implements Nameable {
 	private String name = null;
-	private int numOfArgs = 0;
 	
 	// The Constructors
 	public Command(String name) {
-		this(name,0);
-	}
-
-	public Command(String name, int numOfArgs) {
-		setName(name);
-		setNumOfArgs(numOfArgs);
+		this.name = name;
 	}
 	
 	// The Accessors
-	public synchronized void setName(String name) {this.name = name;}
-	public String getName() {return this.name;}
-
-	public synchronized void setNumOfArgs(int numOfArgs) {
-		if (numOfArgs >= 0) {
-			this.numOfArgs = numOfArgs;
-		} else {
-			this.numOfArgs = 0;
-		}
+	public synchronized void setName(String name) {
+		this.name = name;
 	}
-
-	public int getNumOfArgs() {return this.numOfArgs;}
+	
+	public String getName() {
+		return this.name;
+	}
 	
 	// The execute method this should be implemented for each specific command
-	public abstract void execute(Vector signature);
-
+	public abstract void execute(ArrayList signature);
 }

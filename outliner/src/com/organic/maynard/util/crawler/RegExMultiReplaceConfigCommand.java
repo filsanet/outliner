@@ -46,20 +46,20 @@ public class RegExMultiReplaceConfigCommand extends Command {
 	public RegExMultiReplace app = null;
 	
 	// The Constructors
-	public RegExMultiReplaceConfigCommand(String name, int numOfArgs, RegExMultiReplace app) {
-		super(name,numOfArgs);
+	public RegExMultiReplaceConfigCommand(String name, RegExMultiReplace app) {
+		super(name);
 		this.app = app;
 	}
 
-	public synchronized void execute(Vector signature) {
-		String variableName = (String) signature.elementAt(1);
+	public synchronized void execute(ArrayList signature) {
+		String variableName = (String) signature.get(1);
 		
 		if (variableName.equals(RegExMultiReplace.COMMAND_START_PATH)) {
 			if (!app.blockSetStartingPath) {
-				app.startingPath = (String) signature.elementAt(2);
+				app.startingPath = (String) signature.get(2);
 			}
 		} else if (variableName.equals(RegExMultiReplace.COMMAND_REGEX)) {
-			String regex = (String) signature.elementAt(2);
+			String regex = (String) signature.get(2);
 			
 			String[] newArray;
 			if (app.regexes != null) {
@@ -72,7 +72,7 @@ public class RegExMultiReplaceConfigCommand extends Command {
 			}
 			app.regexes = newArray;
 		} else if (variableName.equals(RegExMultiReplace.COMMAND_LINE_ENDING)) {
-			String lineEndingType = (String) signature.elementAt(2);
+			String lineEndingType = (String) signature.get(2);
 			if (lineEndingType.equals(RegExMultiReplace.PLATFORM_MAC)) {
 				app.lineEnding = FileTools.LINE_ENDING_MAC;
 			} else if (lineEndingType.equals(RegExMultiReplace.PLATFORM_WIN)) {
@@ -81,7 +81,7 @@ public class RegExMultiReplaceConfigCommand extends Command {
 				app.lineEnding = FileTools.LINE_ENDING_UNIX;
 			}
 		} else if (variableName.equals(RegExMultiReplace.COMMAND_FILE_EXTENSION)) {
-			String fileExtension = (String) signature.elementAt(2);
+			String fileExtension = (String) signature.get(2);
 			
 			String[] newArray;
 			if (app.fileExtensions != null) {

@@ -36,27 +36,26 @@ import com.organic.maynard.util.string.*;
 
 public class CommandParser{
 
-	private HashMap commands = new HashMap();
-
-	public static final String WHITESPACE = " \t\r\n";
+	// Constants
+	public static final char[] WHITESPACE = {' ','\t','\n','\r'};
 	public static final char DEFAULT_ESCAPE_CHAR = '\\';
 	public static final String COMMENT_CHAR = "#";
 
-	private String delimiters = null;
+	// Instance Fields
+	private HashMap commands = new HashMap();
+	private char[] delimiters = WHITESPACE;
 	private char escapeChar = DEFAULT_ESCAPE_CHAR;
 
 
 	// The Constructors
-	public CommandParser() {
-		this(WHITESPACE);
-	}
+	public CommandParser() {}
 
 	public CommandParser(String delimiters) {
-		this(delimiters, DEFAULT_ESCAPE_CHAR);
+		this.delimiters = delimiters.toCharArray();
 	}
 
 	public CommandParser(String delimiters, char escapeChar) {
-		this.delimiters = delimiters;
+		this.delimiters = delimiters.toCharArray();
 		this.escapeChar = escapeChar;
 	}
 
@@ -66,8 +65,8 @@ public class CommandParser{
 		parse(input, true, true);
 	}
 
+	private ArrayList commandSignature = new ArrayList();
 	public void parse(String input, boolean trimWhitespace, boolean useComments) throws UnknownCommandException {
-		Vector commandSignature = new Vector();
 		
 		// Strip whitespace
 		if (trimWhitespace) {
@@ -76,18 +75,20 @@ public class CommandParser{
 		
 		// Ignore Comments
 		if (useComments) {
-			if ((input.startsWith(COMMENT_CHAR)) || (input.length() <= 0)) {
+			if ((input.length() <= 0) || (input.startsWith(COMMENT_CHAR))) {
 				return;
 			}
 		}
 		
 		// Break it down into pieces
-		commandSignature = StringTools.split(input, escapeChar, delimiters.toCharArray());
+		commandSignature.clear();
+		StringTools.split(commandSignature, input, escapeChar, delimiters);
 
 		// Find the appropriate command and execute it
 		if (commandSignature.size() > 0) {
 			// Lookup the command
-			Command command = (Command) commands.get((String) commandSignature.firstElement());
+			Command command = (Command) commands.get((String) commandSignature.get(0));
+			
 			if (command != null) {
 				command.execute(commandSignature);
 			} else {
@@ -114,15 +115,15 @@ public class CommandParser{
 		return (Command) commands.get(key);
 	}
 	
-	public void setDelimiters(String delimiters) {
-		if (delimiters.length() > 0) {
+	public void setDelimiters(char[] delimiters) {
+		if (delimiters.length > 0) {
 			this.delimiters = delimiters;
 		} else {
 			this.delimiters = WHITESPACE;
 		}
 	}
 	
-	public String getDelimiters() {
+	public char[] getDelimiters() {
 		return this.delimiters;
 	}
 }

@@ -83,7 +83,7 @@ public class SimpleMultiReplace {
 
 			// Get input from a configFile
 			CommandParser parser = new CommandParser(COMMAND_PARSER_SEPARATOR);
-			parser.addCommand(new SimpleMultiReplaceConfigCommand(COMMAND_SET,2,this));
+			parser.addCommand(new SimpleMultiReplaceConfigCommand(COMMAND_SET,this));
 	
 			// Load things from the config file
 			CommandQueue commandQueue = new CommandQueue(30);

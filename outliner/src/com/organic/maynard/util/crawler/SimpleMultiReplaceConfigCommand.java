@@ -43,23 +43,23 @@ public class SimpleMultiReplaceConfigCommand extends Command {
 	public SimpleMultiReplace app = null;
 	
 	// The Constructors
-	public SimpleMultiReplaceConfigCommand(String name, int numOfArgs, SimpleMultiReplace app) {
-		super(name,numOfArgs);
+	public SimpleMultiReplaceConfigCommand(String name, SimpleMultiReplace app) {
+		super(name);
 		this.app = app;
 	}
 
-	public synchronized void execute(Vector signature) {
-		String variableName = (String) signature.elementAt(1);
+	public synchronized void execute(ArrayList signature) {
+		String variableName = (String) signature.get(1);
 		
 		if (variableName.equals(SimpleMultiReplace.COMMAND_START_PATH)) {
 			if (!app.blockSetStartingPath) {
-				app.startingPath = (String) signature.elementAt(2);
+				app.startingPath = (String) signature.get(2);
 			}
 		} else if (variableName.equals(SimpleMultiReplace.COMMAND_MATCH)) {
-			app.matches.add((String) signature.elementAt(2));
-			app.replacements.add((String) signature.elementAt(3));
+			app.matches.add((String) signature.get(2));
+			app.replacements.add((String) signature.get(3));
 		} else if (variableName.equals(SimpleMultiReplace.COMMAND_LINE_ENDING)) {
-			String lineEndingType = (String) signature.elementAt(2);
+			String lineEndingType = (String) signature.get(2);
 			if (lineEndingType.equals(SimpleMultiReplace.PLATFORM_MAC)) {
 				app.lineEnding = FileTools.LINE_ENDING_MAC;
 			} else if (lineEndingType.equals(SimpleMultiReplace.PLATFORM_WIN)) {
@@ -68,7 +68,7 @@ public class SimpleMultiReplaceConfigCommand extends Command {
 				app.lineEnding = FileTools.LINE_ENDING_UNIX;
 			}
 		} else if (variableName.equals(SimpleMultiReplace.COMMAND_FILE_EXTENSION)) {
-			String fileExtension = (String) signature.elementAt(2);
+			String fileExtension = (String) signature.get(2);
 			
 			String[] newArray;
 			if (app.fileExtensions != null) {
