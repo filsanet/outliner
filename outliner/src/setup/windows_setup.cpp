@@ -554,9 +554,6 @@ int setEnvVar (char * varName, char * varValue, char * introLines, windows_versi
 			// win 9x OSes use autoexec.bat and a reboot
 			result = setAutoExecEnvVar (varName, varValue, introLines) ;
 			
-			// just for fun, let's try to set the registry var anyhow
-			setRegistryEnvVar (varName, varValue, SYSTEM) ;
-			
 			break ;
 			
 		case WIN_ME:
