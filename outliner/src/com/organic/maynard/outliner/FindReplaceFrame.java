@@ -944,7 +944,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		if (startNode == null
 			|| endNode == null
 			|| match == null
-			|| replacement == null) { return ; }
+			|| replacement == null) { return null; }
 				
 		String text = startNode.getValue();
 		
