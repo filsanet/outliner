@@ -78,7 +78,7 @@ public class HelpBookmarksMenuItem
 			} // end if
 		else {
 			// it's not open; try to open it
-			openHelpBookmarksDocument() ;
+			int result = openHelpBookmarksDocument() ;
 			
 			} // end else
 		
