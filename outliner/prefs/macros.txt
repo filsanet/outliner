@@ -5,3 +5,5 @@ macro|URL Decode.txt|com.organic.maynard.outliner.URLEncodeMacro
 macro|URL Encode.txt|com.organic.maynard.outliner.URLEncodeMacro
 macro|XSL text disable.txt|com.organic.maynard.outliner.TextMacro
 macro|XSL value-of disable.txt|com.organic.maynard.outliner.TextMacro
+macro|BSH Lower Case.txt|com.organic.maynard.outliner.BSHMacro
+macro|BSH Upper Case.txt|com.organic.maynard.outliner.BSHMacro
