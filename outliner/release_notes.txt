@@ -14,9 +14,9 @@
 			c) Added import format Shadow Plan Palm pdb. Import reads node and note text, ignores other data.
 			d) Added import format Thought Manager Palm pdb. Import reads node and note text, ignores other data.
 		4) Added Maximize:Horizontal/Vertical commands to Windows menu
-			a) These commands resize the topmost window so that it is made as large as fits within JOE along the specified axis. The window size does not change along the other axis.
+			These commands resize the topmost window so that it is made as large as fits within JOE along the specified axis. The window size does not change along the other axis.
 		5) Added Tile Horizontal/Vertical/Grid commands to Windows menu
-			b) Each command tiles all non-iconified document windows. The axis tilings maximize the windows along the specified axis. The grid tiling seeks a balanced arrangement.
+			Each command tiles all non-iconified document windows. The axis tilings maximize the windows along the specified axis. The grid tiling seeks a balanced arrangement.
 	Enhanced Features:
 		1) Autosave agent frequency can now be set from the misc panel.
 		2) Added a "ding" when a search/replace finds no matches.
