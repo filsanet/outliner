@@ -46,16 +46,15 @@ import org.xml.sax.*;
  */
 
 public class OutlinerSubMenuItem extends AbstractOutlinerMenu implements GUITreeComponent, JoeXMLConstants {
-
+	
 	// Constructors
 	public OutlinerSubMenuItem() {}
-
-
+	
+	
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
-		// Set the text of the menuItem
-		setText(atts.getValue(A_TEXT));
-
+		super.startSetup(atts);
+		
 		// Add this menuItem to the parent menu.
 		((JMenu) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 2)).add(this);
 	}

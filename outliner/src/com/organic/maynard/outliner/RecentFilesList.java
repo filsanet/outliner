@@ -56,7 +56,7 @@ import com.organic.maynard.util.vector.StanVectorTools ;
  */
 
 public class RecentFilesList extends AbstractOutlinerMenu implements ActionListener, GUITreeComponent, JoeReturnCodes, JoeXMLConstants {
-
+	
 	// Constants
 	private static final String TRUNC_STRING = GUITreeLoader.reg.getText("trunc_string");
 	
@@ -75,8 +75,8 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 	
 	// presence in frameInfoList
 	private static final int NOT_THERE = -1;
-
-
+	
+	
 	// Static Fields
 	private static RecentFilesList recentFilesList = null;
 	private static Vector frameInfoList = null; // All objects stored herein should be DocumentInfo objects.
@@ -97,28 +97,27 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 	private static int currentDisplayNameForm = -1 ;
 	private static int currentDisplayDirection = -1 ;
 	private static int currentRecentFilesListSize = 0 ;
-
-
+	
+	
 	// The Constructors
 	public RecentFilesList() {
 		recentFilesList = this;
 	}
-
-
+	
+	
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
-		// get the menu's title and set it
-		setText(atts.getValue(A_TEXT));
+		super.startSetup(atts);
 		
 		// we start out disabled
 		setEnabled(false);
-
+		
 		// Add us to our parent menu.
 		((JMenu) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 2)).add(this);
 		
 		// set size of Recent Files list
 		currentRecentFilesListSize = Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur;
-
+		
 		// Try to load the frameInfoList from disk
 		// TBD [srk] rename RECENT_FILES_FILE to FRAME_INFO_LIST_FILE
 		Object obj = FileTools.ReadObjectFromFile(Outliner.RECENT_FILES_FILE);
@@ -145,12 +144,12 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 			frameInfoList = new Vector();
 		}
 	}
-
-
+	
+	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		DocumentInfo docInfo = ((RecentFilesListItem) e.getSource()).getDocumentInfo();
-
+		
 		// Get the protocol from the FileProtocolManager by using the protocolName
 		String protocolName = docInfo.getProtocolName();
 		
@@ -160,7 +159,7 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		} else {
 			protocol = Outliner.fileProtocolManager.getProtocol(protocolName);
 		}
-
+		
 		// Open or Import the file, as is appropriate
 		if (!docInfo.isImported()) {
 			FileMenu.openFile(docInfo, protocol);
@@ -169,7 +168,7 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		}
 	}
 	
-
+	
 	// Static Accessors
 	public static Vector getFrameInfoList() {
 		return frameInfoList;
@@ -186,8 +185,8 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 	public static void addDocumentInfo(DocumentInfo docInfo) {
 		frameInfoList.add(docInfo);
 	}
-
-
+	
+	
 	// set display options -- adjust menu and treeset structures as necessary
 	// called from PreferencesPanelRecentFiles.applyCurrentToApplication
 	public void setDisplayOptions (int ordering, int nameForm, int direction) {
@@ -236,13 +235,13 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		if (recentFilesListSize == 0) {
 			return;
 		}
-
+		
 		// set up some local vars
 		DocumentInfo docInfo = null ;
 		StrungDocumentInfo strungDocInfo = null ;
 		
 		// let's go mine some data
-
+		
 		// until we get to the bottom of frameInfoList or hit RECENT_FILES_LIST_SIZE ...
 		for (int i = frameInfoListSize - 1, j = 0; (i >= 0) && (j < recentFilesListSize); i--) {
 			
@@ -286,8 +285,8 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 			j++;
 		}
 	}
-
-		
+	
+	
 	// ensure that this menu contains the proper set of menu items
 	private void syncMenuItems() {
 		// start with a clean slate by removing all menu items
@@ -310,12 +309,12 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		if (recentFilesListSize == 0) {
 			return;
 		}
-
+		
 		// switch on ordering
 		switch (currentDisplayOrdering) {
 			
 			case CHRONO_ORDER:
-		
+			
 			default:
 				// we send these out in reverse order
 				if (currentDisplayOrdering == TOP_TO_BOTTOM) {
@@ -327,7 +326,7 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 				DocumentInfo docInfo = null;
 				
 				for (int j = 0, i = frameInfoListSize - 1; (i >= 0) && (j < recentFilesListSize); i--) {
-
+					
 					// grab docInfo from frameInfoList
 					docInfo = (DocumentInfo) frameInfoList.get(i) ;
 					
@@ -339,14 +338,14 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 					if (docInfo.isHelpFile()) {
 						continue;
 					}
-		
+					
 					// okay, we're to be shown -- do it
 					addMenuItemForFileToMenu(docInfo);
-		
+					
 					// up the Recent Files list counter
 					j++;
 				}
-
+				
 				// go back to our entry direction state
 				if (currentDisplayOrdering == TOP_TO_BOTTOM) {
 					currentDisplayOrdering = BOTTOM_TO_TOP;
@@ -357,7 +356,7 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 				break; // case CHRONO_ORDER, default
 			
 			case ALFA_ORDER:
-		
+			
 			case ASCII_ORDER:
 				// add each item in alfaAscii tree order to the menu
 				// note that we don't check whether item's to be shown on menu
@@ -372,7 +371,7 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 				break; // case ALFA_ORDER, ASCII_ORDER
 		}
 	}
-
+	
 	
 	// add a menu item for a file to the menu
 	private void addMenuItemForFileToMenu(DocumentInfo docInfo) {
@@ -389,7 +388,7 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 				// create a menu item
 				menuItem = new RecentFilesListItem(docInfo.getPath(), docInfo);
 				break;
-				
+			
 			case TRUNC_PATHNAME:
 				// create a menu item
 				menuItem = new RecentFilesListItem(StanStringTools.getTruncatedPathName(docInfo.getPath(), TRUNC_STRING), docInfo);
@@ -423,8 +422,8 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		// since we've got at least one item on our menu, we're enabled
 		setEnabled(true);
 	}
-
-
+	
+	
 	// Static methods
 	
 	// this method is called by outsiders when a file is open or imported
@@ -439,7 +438,7 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		// check to see if this file is in frameInfoList 
 		int position = NOT_THERE;
 		String filename = docInfo.getPath();
-
+		
 		for (int i = 0, limit = frameInfoList.size(); i < limit; i++) {
 			if (filename.equals(((DocumentInfo) frameInfoList.get(i)).getPath())) {
 				position = i;
@@ -462,13 +461,13 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 			// move that to the top of the list
 			StanVectorTools.moveElementToTail(frameInfoList, position) ;
 		}
-
+		
 		// sync
 		recentFilesList.syncTreeSet() ;
 		recentFilesList.syncMenuItems() ;
 	}
-
-
+	
+	
 	// this method is called by outsiders when a file is to be removed from Recent Files List
 	
 	// if the file is not in frameInfoList, we do nothing
@@ -480,7 +479,7 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		// check to see if this file is in frameInfoList 
 		int position = NOT_THERE;
 		String filename = docInfo.getPath();
-
+		
 		for (int i = 0, limit = frameInfoList.size(); i < limit; i++) {
 			if (filename.equals(((DocumentInfo) frameInfoList.get(i)).getPath())) {
 				position = i;
@@ -497,13 +496,13 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		
 		// cut off the tail
 		frameInfoList.setSize(frameInfoList.size() - 1);
-
+		
 		// sync 
 		recentFilesList.syncTreeSet();
 		recentFilesList.syncMenuItems();
 	}
-
-
+	
+	
 	// called by outsiders when the size of the recent files list may have been changed
 	public static void syncSize() {
 		// grab the size that's been set
@@ -520,8 +519,8 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 			recentFilesList.syncMenuItems();
 		}
 	}
-
-
+	
+	
 	// given a pathname, get docInfo from frameInfoList
 	public static DocumentInfo getDocumentInfo(String pathname) {
 		for (int i = 0, limit = frameInfoList.size(); i < limit; i++) {
@@ -538,7 +537,7 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		}
 		return null;
 	}
-
+	
 	
 	// Config File
 	public static void saveConfigFile(String filename) {
