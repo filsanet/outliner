@@ -3,15 +3,15 @@
 <head>
 <title>e:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Sun, 29 Jul 2001 04:20:18 GMT</dateModified>
+<dateModified>Mon, 30 Jul 2001 05:19:12 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>24</windowTop>
-<windowLeft>119</windowLeft>
-<windowBottom>529</windowBottom>
-<windowRight>514</windowRight>
+<windowTop>0</windowTop>
+<windowLeft>152</windowLeft>
+<windowBottom>432</windowBottom>
+<windowRight>552</windowRight>
 </head>
 <body>
 <outline text="Front End">
@@ -38,12 +38,25 @@
 <outline text="ftp support [forthcoming]"/>
 <outline text="WebDav support [forthcoming]"/>
 </outline>
+<outline text="OS-Agnostic">
+<outline text="JOE is programmed in Java"/>
+<outline text="JOE releases are available for these platforms">
+<outline text="Windows"/>
+<outline text="Linux/Unix [forthcoming]"/>
+<outline text="Macintosh [forthcoming]"/>
 </outline>
 </outline>
+<outline text="Open Source"/>
+</outline>
+</outline>
+<outline text="About JOE User Guide"/>
 <outline text="Use JOE"/>
-<outline text="Help Develop JOE"/>
-<outline text="Authors">
-<outline text="Stan Krute"/>
+<outline text="Develop JOE"/>
+<outline text="JOE Feedback">
+<outline text="send feedback/suggestions/links/content contributions concerning JOE itself to Joe@JavaOutlineEditor.org"/>
+</outline>
+<outline text="JOE User Guide Feedback">
+<outline text="send feedback/suggestions/links/content contributions concerning JOE User Guide to Stan@JavaOutlineEditor.org"/>
 </outline>
 <outline text="JOE People">
 <outline text="Maynard Demmon"/>
@@ -52,6 +65,9 @@
 <outline text="Stanley Krute">
 <outline text="Stan@JavaOutlineEditor.org"/>
 </outline>
+</outline>
+<outline text="JOE User Guide Authors">
+<outline text="Stan Krute"/>
 </outline>
 <outline text="Thanks To">
 <outline text="Dave Winer">
@@ -65,14 +81,14 @@
 </outline>
 <outline text="the Java community"/>
 </outline>
-<outline text="Feedback">
-<outline text="send feedback/suggestions/links/content contributions to Stan@JavaOutlineEditor.org"/>
-</outline>
 <outline text="Copyright"/>
 <outline text="Version">
-<outline text="JUG versionStamp: 2001.07.25.001"/>
+<outline text="JUG versionStamp: 2001.07.30.001"/>
 </outline>
-<outline text="Cataloging Info"/>
+<outline text="Cataloging Info">
+<outline text="Library of Congress Classification System"/>
+<outline text="Dewey Decimal System"/>
+</outline>
 </outline>
 <outline text="Installation and Setup">
 <outline text="Prepare your system">
@@ -80,21 +96,24 @@
 <outline text="Macintosh"/>
 <outline text="Windows">
 <outline text="If you're running JOE by invoking run.bat, you need to ensure that there is enough environment space">
-<outline text="Add a line like this to the file c:\config.sys">
+<outline text="Environment space is where DOS/Windows stores string constants"/>
+<outline text="It defaults to a very small amount, 256 bytes"/>
+<outline text="To increase environment space, add a line like this to the file c:\config.sys">
 <outline text="shell=c:\windows\command.com /e2048 /p"/>
-<outline text="This example sets the environment to 2048 bytes"/>
+<outline text="In this example, Windows is installed on the c drive in a directory named windows, and we are setting the environment to 2048 bytes"/>
 </outline>
 </outline>
 </outline>
 </outline>
 <outline text="Download the latest JOE">
 <outline text="Go to http://sourceforge.net/projects/outliner"/>
-<outline text="You'll find the latest JOE file releases halfway down the page"/>
+<outline text="Halfway down the page, in a section labeled &quot;File Releases&quot;, you'll find the latest release of JOE"/>
 </outline>
 <outline text="Install the download"/>
 <outline text="Create some shortcuts"/>
 <outline text="Start 'im up"/>
-<outline text="Set preferences"/>
+<outline text="Set JOE application preferences"/>
+<outline text="Set JOE user preferences [forthcoming]"/>
 </outline>
 <outline text="Your First Outline">
 <outline text="Some terminology"/>
