@@ -310,4 +310,22 @@
 		<find_replace id="find_replace" class="com.organic.maynard.outliner.FindReplaceFrame" title="Find/Replace"/>
 		<goto_dialog id="goto_dialog" class="com.organic.maynard.outliner.GoToDialog" title="Go To Line"/>
 		<bsh_console id="bsh_console" class="com.organic.maynard.outliner.BSHConsole" title="Bean Shell Console"/>
+	<!-- TEXT REPOSITORY -->
+		<asset type="text" key="yes" value="Yes"/>
+		<asset type="text" key="no" value="No"/>
+		<asset type="text" key="confirm_save" value="Confirm Save"/>
+		<asset type="text" key="confirmation_revert_file" value="Revert File? All Changes will be lost."/>
+		<asset type="text" key="message_cannot_save_file_already_open" value="Cannot save to file: {$value_1} it is currently open."/>
+		<asset type="text" key="message_file_already_open" value="The file: {$value_1} is already open."/>
+		<asset type="text" key="error_could_not_save_no_file_format" value="An error occurred. Could not save file: {$value_1} because I couldn't retrieve the file format: {$value_2}"/>
+		<asset type="text" key="error_could_not_open_no_file_format" value="An error occurred. Could not open file: {$value_1} because I couldn't retrieve the file format: {$value_2}"/>
+		<asset type="text" key="error_could_not_revert_no_file_format" value="An error occurred. Could not revert file: {$value_1} because I couldn't retrieve the file format: {$value_2}"/>
+		<asset type="text" key="error_file_format_does_not_support_comments" value="The file format you are saving with: {$value_1}, does not support comments.\nThe document contains commented nodes whose commented status will NOT be saved.\nDo you want to save?"/>
+		<asset type="text" key="error_file_format_does_not_support_editability" value="The file format you are saving with: {$value_1}, does not support editability settings.\nThe document contains editable node settings that will NOT be saved.\nDo you want to save?"/>
+		<asset type="text" key="error_file_format_does_not_support_moveability" value="The file format you are saving with: {$value_1}, does not support moveability settings.\nThe document contains moveable node settings that will NOT be saved.\nDo you want to save?"/>
+		<asset type="text" key="error_file_format_does_not_support_attributes" value="The file format you are saving with: {$value_1}, does not support attributes.\nThe document contains nodes with attribute name/value pairs that will NOT be saved.\nDo you want to save?"/>
+		<asset type="text" key="error_file_format_does_not_support_document_attributes" value="The file format you are saving with: {$value_1}, does not support document attributes.\nThe document contains document attribute name/value pairs that will NOT be saved.\nDo you want to save?"/>
+		<asset type="text" key="error_could_not_save_file" value="An error occurred. Could not save file: {$value_1}"/>
+		<asset type="text" key="error_could_not_open_file" value="An error occurred. Could not open file: {$value_1}"/>
+		<asset type="text" key="error_file_not_found" value="An error occurred. File not found: {$value_1}"/>
 </root>
