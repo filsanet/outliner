@@ -16,7 +16,9 @@
  *				void swapElements (Vector, int, int)
  *				void removeDupesHeadside (Vector)
  *				[TBD] void removeDupesTailside (Vector)
- *				reverse (Vector) 
+ *				reverse (Vector)
+ *				Vector arrayListToVector (ArrayList)
+ *				ArrayList vectorToArrayList (Vector) 
  *
  *		
  * Copyright (C) 2002 Stan Krute <Stan@StanKrute.com>
@@ -61,6 +63,7 @@
 package com.organic.maynard.util.vector;
 
 // we use these
+import java.util.ArrayList ;
 import java.util.Vector ;
 import java.util.TreeSet ;
 
@@ -297,5 +300,70 @@ public class StanVectorTools {
 		} // end for
 		
 	} // end method moveElementsHeadward
-
+	
+	
+	// Vectorize an ArrayList
+	public static Vector arrayListToVector (ArrayList someArrayList) {
+		
+		// if we've got a null param, leave
+		if (someArrayList == null) {
+			return null ;
+		} // end if
+		
+		// try to create a vector
+		Vector someVector = new Vector () ;
+		
+		// if we failed, leave
+		if (someVector == null) {
+			return null ;
+		} // end if
+		
+		// okay, we've got a right-sized Vector, it's .... Copy Time !
+		
+		// for each element of the ArrayList ...
+		for (int counter = 0, aLsize = someArrayList.size(); counter < aLsize; counter++) {
+			
+			// copy it to the Vector
+			someVector.add(someArrayList.get(counter)) ;
+			
+		} // end for
+		
+		// done
+		return someVector ;
+		
+	} // end arrayListToVector
+	
+	
+	// ArrayListize a Vector
+	public static ArrayList vectorToArrayList (Vector someVector) {
+		
+		// if we've got a null param, leave
+		if (someVector == null) {
+			return null ;
+		} // end if
+		
+		// try to create an ArrayList
+		ArrayList someArrayList = new ArrayList () ;
+		
+		// if we failed, leave
+		if (someArrayList == null) {
+			return null ;
+		} // end if
+		
+		// okay, we've got a right-sized ArrayList, it's .... Copy Time !
+		
+		// for each element of the Vector ...
+		for (int counter = 0, vecSize = someVector.size(); counter < vecSize; counter++) {
+			
+			// copy it to the ArrayList
+			someArrayList.add(someVector.get(counter)) ;
+			
+		} // end for
+		
+		// done
+		return someArrayList ;
+		
+	} // end vectorToArrayList
+	
+	
 } // end class StanVectorTools
