@@ -35,6 +35,7 @@
 package com.organic.maynard.outliner.util.find;
 
 import com.organic.maynard.outliner.*;
+import com.organic.maynard.util.crawler.*;
 
 import javax.swing.plaf.*;
 import javax.swing.plaf.basic.*;
@@ -69,10 +70,10 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	private static final int MODE_FILE_SYSTEM = 3;
 	private static final int MODE_UNKNOWN = -1;
 
-	private static final int MINIMUM_WIDTH = 500;
-	private static final int MINIMUM_HEIGHT = 400;
- 	private static final int INITIAL_WIDTH = 500;
-	private static final int INITIAL_HEIGHT = 400;
+	private static final int MINIMUM_WIDTH = 550;
+	private static final int MINIMUM_HEIGHT = 650;
+ 	private static final int INITIAL_WIDTH = 550;
+	private static final int INITIAL_HEIGHT = 650;
 
 	private static final String REGEX_MATCH_START = "m/";
 	private static final String REGEX_MATCH_END = "/";
@@ -129,6 +130,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	private static String DIR_FILTER_INCLUDE_IGNORE_CASE ="dir_filter_include_ignore_case";
 	private static String DIR_FILTER_EXCLUDE = "dir_filter_exclude";
 	private static String DIR_FILTER_EXCLUDE_IGNORE_CASE = "dir_filter_exclude_ignore_case";
+	
+	// ToolTip Text
+	private static String TT_FILTER = "Use ';' to seperate globs.";
 
 
 	// Define Fields and Buttons
@@ -348,11 +352,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		LABEL_FILE_FILTER = new JLabel(FILE_FILTER);
 		LABEL_FILE_FILTER_INCLUDE = new JLabel(INCLUDE);
 		TEXTFIELD_FILE_FILTER_INCLUDE = new JTextField();
+		TEXTFIELD_FILE_FILTER_INCLUDE.setToolTipText(TT_FILTER);
 		CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE = new JCheckBox(IGNORE_CASE);
 		CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.addActionListener(this);
 		CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.setActionCommand(FILE_FILTER_INCLUDE_IGNORE_CASE);
 		LABEL_FILE_FILTER_EXCLUDE = new JLabel(EXCLUDE);
 		TEXTFIELD_FILE_FILTER_EXCLUDE = new JTextField();
+		TEXTFIELD_FILE_FILTER_EXCLUDE.setToolTipText(TT_FILTER);
 		CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE = new JCheckBox(IGNORE_CASE);
 		CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.addActionListener(this);
 		CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.setActionCommand(FILE_FILTER_EXCLUDE_IGNORE_CASE);
@@ -360,11 +366,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		LABEL_DIR_FILTER = new JLabel(DIR_FILTER);
 		LABEL_DIR_FILTER_INCLUDE = new JLabel(INCLUDE);
 		TEXTFIELD_DIR_FILTER_INCLUDE = new JTextField();
+		TEXTFIELD_DIR_FILTER_INCLUDE.setToolTipText(TT_FILTER);
 		CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE = new JCheckBox(IGNORE_CASE);
 		CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.addActionListener(this);
 		CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setActionCommand(DIR_FILTER_INCLUDE_IGNORE_CASE);
 		LABEL_DIR_FILTER_EXCLUDE = new JLabel(EXCLUDE);
 		TEXTFIELD_DIR_FILTER_EXCLUDE = new JTextField();
+		TEXTFIELD_DIR_FILTER_EXCLUDE.setToolTipText(TT_FILTER);
 		CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE = new JCheckBox(IGNORE_CASE);
 		CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.addActionListener(this);
 		CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setActionCommand(DIR_FILTER_EXCLUDE_IGNORE_CASE);	
@@ -985,21 +993,18 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				break;
 			
 			case MODE_FILE_SYSTEM:
-				Object path = TEXTFIELD_PATH.getText();
-				if (path == null) {
-					path = new String("");
-				}
-
-				Object extensions = TEXTFIELD_FILE_FILTER_INCLUDE.getText();
-				if (extensions == null) {
-					extensions = new String("");
-				}
-				
 				findAllFileSystem(
 					results,
-					path.toString(),
+					TEXTFIELD_PATH.getText(),
 					CHECKBOX_INCLUDE_SUB_DIRECTORIES.isSelected(),
-					extensions.toString(), 
+					TEXTFIELD_FILE_FILTER_INCLUDE.getText(), 
+					CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.isSelected(), 
+					TEXTFIELD_FILE_FILTER_EXCLUDE.getText(), 
+					CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.isSelected(), 
+					TEXTFIELD_DIR_FILTER_INCLUDE.getText(), 
+					CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.isSelected(), 
+					TEXTFIELD_DIR_FILTER_EXCLUDE.getText(), 
+					CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.isSelected(), 
 					TEXTAREA_FIND.getText(), 
 					CHECKBOX_IGNORE_CASE.isSelected(), 
 					CHECKBOX_REGEXP.isSelected()
@@ -1211,7 +1216,14 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		FindReplaceResultsModel model, 
 		String startingPath, 
 		boolean includeSubDirectories,
-		String fileExtensions, 
+		String fileFilterInclude, 
+		boolean fileFilterIncludeIgnoreCase,
+		String fileFilterExclude, 
+		boolean fileFilterExcludeIgnoreCase,
+		String dirFilterInclude, 
+		boolean dirFilterIncludeIgnoreCase,
+		String dirFilterExclude, 
+		boolean dirFilterExcludeIgnoreCase,
 		String sFind, 
 		boolean ignoreCase, 
 		boolean isRegexp
@@ -1230,16 +1242,17 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			}
 		}
 		
-		// Prep Extensions List
-		ArrayList extensions = new ArrayList();
-		StringTokenizer tok = new StringTokenizer(fileExtensions);
-		while (tok.hasMoreTokens()) {
-			String extension = tok.nextToken();
-			extensions.add(extension);
+		// Prepare Filters
+		com.organic.maynard.util.crawler.FileFilter fileFilter = new TypeGlobFileFilter(fileFilterInclude, fileFilterIncludeIgnoreCase, fileFilterExclude, fileFilterExcludeIgnoreCase);
+		com.organic.maynard.util.crawler.FileFilter dirFilter = null;
+		if (includeSubDirectories) {
+			dirFilter = new TypeGlobFileFilter(dirFilterInclude, dirFilterIncludeIgnoreCase, dirFilterExclude, dirFilterExcludeIgnoreCase);
+		} else {
+			dirFilter = new NoSubDirectoryFilter();
 		}
 
 		// Do it
-		fileSystemFind.find(model, convertListToStringArray(extensions), startingPath, sFind, isRegexp, ignoreCase, includeSubDirectories);
+		fileSystemFind.find(model, fileFilter, dirFilter, startingPath, sFind, isRegexp, ignoreCase, includeSubDirectories);
 	}
 	
 	public void replaceAllFileSystem(
@@ -2537,15 +2550,3 @@ class FindReplaceJTextAreaDocumentListener implements DocumentListener {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-

@@ -54,7 +54,8 @@ import java.util.*;
 	
 	public void find(
 		FindReplaceResultsModel model, 
-		String[] fileExtensions, 
+		FileFilter fileFilter,
+		FileFilter dirFilter,
 		String startingPath, 
 		String query,
 		boolean isRegexp,
@@ -63,16 +64,21 @@ import java.util.*;
 	) {		
 		// Setup the Crawler
 		crawler.setFileHandler(new FileSystemFindFileContentsHandler(query, model, isRegexp, ignoreCase, PlatformCompatibility.LINE_END_UNIX));
-		if (fileExtensions.length > 0) {
+		
+		crawler.setFileFilter(fileFilter);
+		crawler.setDirectoryFilter(dirFilter);
+		
+		/*if (fileExtensions.length > 0) {
 			crawler.setFileFilter(new FileExtensionFilter(fileExtensions));
 		} else {
 			crawler.setFileFilter(new BasicFileFilter());		
 		}
+		
 		if (!includeSubDirectories) {
 			crawler.setDirectoryFilter(new NoSubDirectoryFilter());
 		} else {
 			crawler.setDirectoryFilter(new BasicFileFilter());
-		}
+		}*/
 		crawler.setVerbose(false);
 		
 		// Do the Crawl
