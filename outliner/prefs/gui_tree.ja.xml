@@ -188,14 +188,14 @@
 					<preferencepanel id="preferences_panel_editor" class="com.organic.maynard.outliner.util.preferences.PreferencesPanelEditor" title="編集者">
 						<preference_container id="font_preference_container" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeSubContainer" style="titled" label=" Font Settings ">
 							<preference id="font_face" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="SansSerif">
-								<preference_component id="font_face_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Font Face"/>
+								<preference_component id="font_face_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Font Face" list="font_family_names"/>
 							</preference>
 							<preference id="font_size" class="com.organic.maynard.outliner.util.preferences.PreferenceInt" default="12">
 								<validator id="font_size_validator" class="com.organic.maynard.outliner.util.preferences.IntRangeValidator" min="6" max="36" default="12"/>
 								<preference_component id="font_size_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeTextFieldComponent" label="Font Size" size="4"/>
 							</preference>
 							<preference id="line_wrap" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="words">
-								<preference_component id="line_wrap_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Line Wrap"/>
+								<preference_component id="line_wrap_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Line Wrap" list="line_wrap_options"/>
 							</preference>
 						</preference_container>
 						<preference id="undo_queue_size" class="com.organic.maynard.outliner.util.preferences.PreferenceInt" default="100">
@@ -295,48 +295,48 @@
 							<preference_component id="bottom_margin_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeTextFieldComponent" label="Bottom Margin" size="4"/>
 						</preference>
 						<preference id="document_titles_name_form" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="Full Pathname">
-							<preference_component id="document_titles_name_form_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Document Titles" />
+							<preference_component id="document_titles_name_form_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Document Titles" list="recent_files_name_forms"/>
 						</preference>
 					</preferencepanel>
 					<preferencepanel id="preferences_panel_open_and_save" class="com.organic.maynard.outliner.util.preferences.PreferencesPanelOpenAndSave" title="開け, 救いなさい">
 						<preference_container id="open_and_save_general_preference_container" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeSubContainer" style="titled" label=" General ">
 							<preference id="file_protocol" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="Local File System">
-								<preference_component id="file_protocol_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="File Protocol" style="single_centered"/>
+								<preference_component id="file_protocol_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="File Protocol" style="single_centered" list="file_protocols"/>
 							</preference>
 							<preference id="save_line_end" class="com.organic.maynard.outliner.util.preferences.PreferenceLineEnding">
-								<preference_component id="line_end_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Default Line Terminator" style="single_centered"/>
+								<preference_component id="line_end_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Default Line Terminator" style="single_centered" list="platform_identifiers"/>
 							</preference>
 						</preference_container>
 						<preference_container id="open_and_save_opening_preference_container" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeSubContainer" style="titled" label=" Opening ">
 							<preference id="open_encoding" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="ISO-8859-1">
-								<preference_component id="open_encoding_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Default Encoding" style="single_centered"/>
+								<preference_component id="open_encoding_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Default Encoding" style="single_centered" list="encodings"/>
 							</preference>
 							<preference id="open_format" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="Plaintext">
-								<preference_component id="open_format_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Default Format" style="single_centered"/>
+								<preference_component id="open_format_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Default Format" style="single_centered" list="file_formats_open"/>
 							</preference>
 						</preference_container>
 						<preference_container id="open_and_save_importing_preference_container" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeSubContainer" style="titled" label=" Importing ">
 							<preference id="import_encoding" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="ISO-8859-1">
-								<preference_component id="import_encoding_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Default Encoding" style="single_centered"/>
+								<preference_component id="import_encoding_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Default Encoding" style="single_centered" list="encodings"/>
 							</preference>
 							<preference id="import_format" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="BrainForest Palm pdb">
-								<preference_component id="import_format_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Default Format" style="single_centered"/>
+								<preference_component id="import_format_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Default Format" style="single_centered" list="file_formats_import"/>
 							</preference>
 						</preference_container>
 						<preference_container id="open_and_save_saving_preference_container" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeSubContainer" style="titled" label=" Saving ">
 							<preference id="save_encoding" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="ISO-8859-1">
-								<preference_component id="save_encoding_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Default Encoding" style="single_centered"/>
+								<preference_component id="save_encoding_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Default Encoding" style="single_centered" list="encodings"/>
 							</preference>
 							<preference id="save_format" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="Plaintext">
-								<preference_component id="save_format_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Default Format" style="single_centered"/>
+								<preference_component id="save_format_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Default Format" style="single_centered" list="file_formats_save"/>
 							</preference>
 						</preference_container>
 						<preference_container id="open_and_save_exporting_preference_container" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeSubContainer" style="titled" label=" Exporting ">
 							<preference id="export_encoding" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="ISO-8859-1">
-								<preference_component id="export_encoding_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Default Encoding" style="single_centered"/>
+								<preference_component id="export_encoding_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Default Encoding" style="single_centered" list="encodings"/>
 							</preference>
 							<preference id="export_format" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="Plaintext">
-								<preference_component id="export_format_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Default Format" style="single_centered"/>
+								<preference_component id="export_format_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Default Format" style="single_centered" list="file_formats_export"/>
 							</preference>
 						</preference_container>
 						<preferencepanel id="preferences_panel_justified_plaintext" class="com.organic.maynard.outliner.util.preferences.PreferencesPanelImpl" title="File Format: Justified Plaintext">
@@ -368,15 +368,15 @@
 							</preference>
 							<vertical_strut size="10"/>
 							<preference id="recent_files_ordering" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="Chronological">
-								<preference_component id="recent_files_ordering_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Ordering" />
+								<preference_component id="recent_files_ordering_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Ordering" list="recent_files_orderings"/>
 							</preference>
 							<vertical_strut size="10"/>
 							<preference id="recent_files_direction" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="Top to Bottom">
-								<preference_component id="recent_files_direction_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Direction" />
+								<preference_component id="recent_files_direction_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Direction" list="recent_files_directions"/>
 							</preference>
 							<vertical_strut size="10"/>
 							<preference id="recent_files_name_form" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="Full Pathname">
-								<preference_component id="recent_files_name_form_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Name Form" />
+								<preference_component id="recent_files_name_form_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Name Form" list="recent_files_name_forms"/>
 							</preference>
 							<vertical_strut size="20"/>
 						</preferencepanel>
