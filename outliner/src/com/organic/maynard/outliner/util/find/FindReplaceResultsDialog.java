@@ -38,24 +38,30 @@ import com.organic.maynard.outliner.*;
 
 import com.organic.maynard.outliner.dom.*;
 import com.organic.maynard.outliner.event.*;
+import com.organic.maynard.outliner.util.preferences.*;
 
+import java.io.*;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.table.*;
 
 /**
+ * 
+ * Holds a list of results from a find.
+ * 
  * @author  $Author$
  * @version $Revision$, $Date$
  */
 
 public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements DocumentRepositoryListener, MouseListener {
-
+	
 	// Constants
 	private static final int MINIMUM_WIDTH = 400;
 	private static final int MINIMUM_HEIGHT = 150;
- 	private static final int INITIAL_WIDTH = 400;
+ 	private static final int INITIAL_WIDTH = 450;
 	private static final int INITIAL_HEIGHT = 150;
 	
 	private static final String TOTAL_MATCHES = "Total Matches: ";
@@ -64,31 +70,33 @@ public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements
 	// GUI
 	private JTable table = null;
 	private JLabel totalMatches = null;
-
+	
 	
 	// Model
 	private FindReplaceResultsModel model = null;
-
-		
+	
+	
 	// The Constructor
 	public FindReplaceResultsDialog() {
 		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
 	}
 	
 	private void initialize() {
-		totalMatches = new JLabel(TOTAL_MATCHES + "0");
-
+		totalMatches = new JLabel(new StringBuffer().append(TOTAL_MATCHES).append("0").toString());
+		
 		table = new JTable();
+		
 		table.addMouseListener(this);
+		
 		
 		Outliner.documents.addDocumentRepositoryListener(this);
 		
 		JScrollPane jsp = new JScrollPane(table);
 		getContentPane().add(jsp, BorderLayout.CENTER);
 		getContentPane().add(totalMatches, BorderLayout.SOUTH);
-
-		setTitle("Find/Replace All Results");
-
+		
+		setTitle("Find/Replace Results");
+		
 		setVisible(false);
 	}
 	
@@ -97,21 +105,21 @@ public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements
 	public boolean isInitialized() {
 		return this.initialized;
 	}
-
-
+	
+	
 	// DocumentRepositoryListener Interface
 	public void documentAdded(DocumentRepositoryEvent e) {}
 	
 	public void documentRemoved(DocumentRepositoryEvent e) {
 		if (isVisible()) {
 			getModel().removeAllResultsForDocument(e.getDocument());
-		}	
+		}
 	}
 	
 	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {}
-
-
-
+	
+	
+	
 	public FindReplaceResultsModel getModel() {
 		return this.model;
 	}
@@ -122,13 +130,37 @@ public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements
 			initialize();
 			initialized = true;
 		}
-
+		
 		this.model = model;
 		model.setView(this);
 		
 		// Setup the JTable
 		table.setModel(model);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		TableColumn column = null;
+		
+		// Document column
+		column = table.getColumnModel().getColumn(0);
+		column.setPreferredWidth(220);
+		
+		// Line column
+		column = table.getColumnModel().getColumn(1);
+		column.setPreferredWidth(35);
+		column.setMaxWidth(60);
+		
+		// Column column
+		column = table.getColumnModel().getColumn(2);
+		column.setPreferredWidth(35);
+		column.setMaxWidth(45);
+		
+		// Match column
+		column = table.getColumnModel().getColumn(3);
+		column.setPreferredWidth(55);
+		
+		// Replacement column
+		column = table.getColumnModel().getColumn(4);
+		column.setPreferredWidth(95);
 		
 		updateTotalMatches();
 		
@@ -138,11 +170,11 @@ public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements
 	}
 	
 	public void updateTotalMatches() {
-		totalMatches.setText(TOTAL_MATCHES + model.size());
+		totalMatches.setText(new StringBuffer().append(TOTAL_MATCHES).append(model.size()).toString());
 	}
 	
 	public void requestFocus() {}
-
+	
 	// MouseListener Interface
 	public void mouseClicked(MouseEvent e) {}
 	public void mouseEntered(MouseEvent e) {}
@@ -160,15 +192,22 @@ public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements
 			handleFileClick(result);
 		} else {
 			System.out.println("ERROR: Unknown FindReplaceResult type.");
-		}	
+		}
 	}
 	
+	private static final int DOCUMENT_MODE = 0;
+	private static final int FILE_MODE = 1;
+	
 	private void handleDocumentClick(FindReplaceResult result) {
+		handleDocumentClick(result, DOCUMENT_MODE);
+	}
+	
+	private void handleDocumentClick(FindReplaceResult result, int mode) {
 		OutlinerDocument doc = result.getDocument();
 		int line = result.getLine();
 		int start = result.getStart();
 		int end = start;
-
+		
 		if (result.isReplacement()) {
 			end = start + result.getReplacement().length();
 		} else {
@@ -176,13 +215,53 @@ public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements
 		}
 		
 		Outliner.outliner.requestFocus();
-		Node node = GoToDialog.goToLineAndColumn(doc, line, start, false, true);
+		Node node = null;
+		if (mode == FILE_MODE) {
+			node = GoToDialog.goToLineAndColumn(doc, line, start, true, true);
+			end -= node.getDepth();
+			result.setStart(start - node.getDepth());
+		} else {
+			node = GoToDialog.goToLineAndColumn(doc, line, start, false, true);
+		}
 		doc.tree.setCursorMarkPosition(end);
 		doc.panel.layout.draw(node, OutlineLayoutManager.TEXT);
 		WindowMenu.changeToWindow(doc);
 	}
 	
 	private void handleFileClick(FindReplaceResult result) {
-	
+		try {
+			String filepath = result.getFile().getCanonicalPath();
+			Document doc = Outliner.documents.getDocument(filepath);
+			
+			if (doc == null) {
+				// grab the file's extension
+				String extension = filepath.substring(filepath.lastIndexOf(".") + 1, filepath.length());
+				
+				// use the extension to figure out the file's format
+				String fileFormat = Outliner.fileFormatManager.getOpenFileFormatNameForExtension(extension);
+				
+				// crank up a fresh docInfo struct
+				DocumentInfo docInfo = new DocumentInfo();
+				docInfo.setPath(filepath);
+				docInfo.setEncodingType(Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur);
+				docInfo.setFileFormat(fileFormat);
+				
+				// try to open up the file
+				FileMenu.openFile(docInfo, Outliner.fileProtocolManager.getDefault());
+				
+				doc = Outliner.documents.getDocument(filepath);
+				
+				if (doc == null) {
+					// Something went wrong opening the file so abort.
+					return;
+				}
+			}
+			result.setDocument((OutlinerDocument) doc);
+			
+			// Handle like an open document now
+			handleDocumentClick(result, FILE_MODE);
+		} catch (IOException e) {
+			System.out.println("IOException while handling click to open file: " + e.getMessage());
+		}
 	}
 }

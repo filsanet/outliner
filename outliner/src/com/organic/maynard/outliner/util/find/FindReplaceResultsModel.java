@@ -48,26 +48,28 @@ import java.io.*;
  */
 
 public class FindReplaceResultsModel extends AbstractTableModel {
-
+	
 	// Constants
-
-
+	
+	
 	// Fields
 	private ArrayList results = new ArrayList();
 	
 	private FindReplaceResultsDialog view = null;
-
-
+	
+	
 	// Constructors
 	public FindReplaceResultsModel() {}
 	
 	public void setView(FindReplaceResultsDialog view) {
 		this.view = view;
 	}
-
-
+	
+	
 	// Accessors
-	public int size() {return results.size();}
+	public int size() {
+		return results.size();
+	}
 	
 	public void addResult(FindReplaceResult result) {
 		results.add(result);
@@ -138,14 +140,14 @@ public class FindReplaceResultsModel extends AbstractTableModel {
 			return null;
 		}
 	}
-
+	
 	public String getColumnName(int col) {
 		if (col == 0) {
 			return "Document";
 		} else if (col == 1) {
 			return "Line";
 		} else if (col == 2) {
-			return "Column";
+			return "Col.";
 		} else if (col == 3) {
 			return "Match";
 		} else if (col == 4) {
@@ -154,11 +156,8 @@ public class FindReplaceResultsModel extends AbstractTableModel {
 			return "";
 		}
 	}
-
+	
     public boolean isCellEditable(int row, int col) {
 		return false;
 	}
 }
-
-
-
