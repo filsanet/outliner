@@ -49,8 +49,6 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 	private static final int MINIMUM_HEIGHT = 300;
 
 	protected static String OK = null;
-	protected static String CANCEL = null;
-
 
 	// GUI Elements
 	protected Box box = Box.createVerticalBox();
@@ -58,8 +56,6 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 	protected DocumentAttributesPanel attPanel = null;
 
 	protected JButton buttonOK = null;
-	protected JButton buttonCancel = null;
-
 
 	// The Constructors
 	public DocumentAttributesView() {
@@ -71,11 +67,8 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 		super.startSetup(atts);
 
 		OK = GUITreeLoader.reg.getText("ok");
-		CANCEL = GUITreeLoader.reg.getText("cancel");
 		
 		buttonOK= new JButton(OK);
-		buttonCancel = new JButton(CANCEL);
-
 		
 		Outliner.documentAttributes = this;
 		
@@ -83,13 +76,11 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new FlowLayout());
 		bottomPanel.add(buttonOK);
-		bottomPanel.add(buttonCancel);
 		
 		getContentPane().add(bottomPanel,BorderLayout.SOUTH);
 
 		// Add Listeners
 		buttonOK.addActionListener(this);
-		buttonCancel.addActionListener(this);
 			
 		// Define the Center Panel
 		attPanel = new DocumentAttributesPanel();
@@ -118,21 +109,14 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(OK)) {
 			ok();
-		} else if (e.getActionCommand().equals(CANCEL)) {
-			cancel();
 		}
 	}
 	
 	private void ok() {
-		applyChanges();
-		hide();
-	}
-	
-	private void cancel() {
 		hide();
 	}
 
-	private void applyChanges() {
+	/*private void applyChanges() {
 		tree.clearAttributes();
 		
 		AttributeTableModel model = attPanel.model;
@@ -140,10 +124,12 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 		for (int i = 0; i < model.keys.size(); i++) {
 			String key = (String) model.keys.get(i);
 			Object value = model.values.get(i);
+			Boolean editable = (Boolean) model.readOnly.get(i);
 			
 			tree.setAttribute(key, value);
+			tree.setReadOnly(key, editable.booleanValue());
 		}
 		
 		tree.getDocument().setFileModified(true);
-	}
+	}*/
 }

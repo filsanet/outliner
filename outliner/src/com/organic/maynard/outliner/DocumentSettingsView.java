@@ -296,7 +296,8 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 			syncToDocumentSettings();
 		} else {
 			isInheritingPrefsLabel.setText(IS_USING_APPLICATION_PREFS);
-			syncToGlobal();
+			docSettings.syncToGlobal();
+			syncToDocumentSettings();
 		}
 				
   		super.show();
@@ -325,13 +326,32 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 
 	private void restoreToGlobal() {
 		// We should no longer use document settings because the user explicitly said Restore to Global to them.
+		//docSettings.setUseDocumentSettings(false);
+		docSettings.syncToGlobal();
+		updateGUI();
+		docSettings.restoreTemporaryToCurrent();
 		docSettings.setUseDocumentSettings(false);
-		syncToGlobal();
-		applyChanges();
 		hide();
 	}
 
 	private void applyChanges() {
+		updateGUI();
+
+		// Record all the changes.
+		docSettings.getLineEnd().applyTemporaryToCurrent();
+		docSettings.getSaveEncoding().applyTemporaryToCurrent();
+		docSettings.getSaveFormat().applyTemporaryToCurrent();
+		docSettings.getOwnerName().applyTemporaryToCurrent();
+		docSettings.getOwnerEmail().applyTemporaryToCurrent();
+		docSettings.getApplyFontStyleForComments().applyTemporaryToCurrent();
+		docSettings.getApplyFontStyleForEditability().applyTemporaryToCurrent();
+		docSettings.getApplyFontStyleForMoveability().applyTemporaryToCurrent();
+		docSettings.getUseCreateModDates().applyTemporaryToCurrent();
+		docSettings.getCreateModDatesFormat().applyTemporaryToCurrent();
+		docSettings.updateSimpleDateFormat(docSettings.getCreateModDatesFormat().cur);
+	}
+
+	private void updateGUI() {
 		// If anything has changed then mark the doc as modified.
 		if (!docSettings.getLineEnd().cur.equals(docSettings.getLineEnd().tmp)
 			|| !docSettings.getSaveEncoding().cur.equals(docSettings.getSaveEncoding().tmp)
@@ -355,41 +375,13 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		) {
 			doRedraw = true;
 		}
-
-		// Record all the changes.
-		docSettings.getLineEnd().cur = docSettings.getLineEnd().tmp;
-		docSettings.getSaveEncoding().cur = docSettings.getSaveEncoding().tmp;
-		docSettings.getSaveFormat().cur = docSettings.getSaveFormat().tmp;
-		docSettings.getOwnerName().cur = docSettings.getOwnerName().tmp;
-		docSettings.getOwnerEmail().cur = docSettings.getOwnerEmail().tmp;
-		docSettings.getApplyFontStyleForComments().cur = docSettings.getApplyFontStyleForComments().tmp;
-		docSettings.getApplyFontStyleForEditability().cur = docSettings.getApplyFontStyleForEditability().tmp;
-		docSettings.getApplyFontStyleForMoveability().cur = docSettings.getApplyFontStyleForMoveability().tmp;
-		docSettings.getUseCreateModDates().cur = docSettings.getUseCreateModDates().tmp;
-		docSettings.getCreateModDatesFormat().cur = docSettings.getCreateModDatesFormat().tmp;
 		
-		docSettings.updateSimpleDateFormat(docSettings.getCreateModDatesFormat().cur);
 		if (doRedraw) {
 			docSettings.getDocument().panel.layout.redraw();
 		}
 	}
-
-	// Syncing Methods
-	private void syncToGlobal() {
-		docSettings.getLineEnd().cur = Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur;
-		docSettings.getSaveEncoding().cur = Preferences.getPreferenceString(Preferences.SAVE_ENCODING).cur;
-		docSettings.getSaveFormat().cur = Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur;
-		docSettings.getOwnerName().cur = Preferences.getPreferenceString(Preferences.OWNER_NAME).cur;
-		docSettings.getOwnerEmail().cur = Preferences.getPreferenceString(Preferences.OWNER_EMAIL).cur;
-		docSettings.getApplyFontStyleForComments().cur = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur;
-		docSettings.getApplyFontStyleForEditability().cur = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur;
-		docSettings.getApplyFontStyleForMoveability().cur = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur;
-		docSettings.getUseCreateModDates().cur = Preferences.getPreferenceBoolean(Preferences.USE_CREATE_MOD_DATES).cur;
-		docSettings.getCreateModDatesFormat().cur = Preferences.getPreferenceString(Preferences.CREATE_MOD_DATES_FORMAT).cur;
-
-		syncToDocumentSettings();
-	}
 	
+	// Syncing Methods
 	private void syncToDocumentSettings() {
 		docSettings.getLineEnd().restoreTemporaryToCurrent();
 		lineEndComboBox.setSelectedItem(docSettings.getLineEnd().tmp);

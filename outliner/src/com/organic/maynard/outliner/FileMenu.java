@@ -163,7 +163,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// set up local vars
 		String msg = null;
 		DocumentInfo docInfo = document.getDocumentInfo();
-		String fileFormatName = docInfo.getFileFormat();
+		
+		String fileFormatName = null;
 		SaveFileFormat saveOrExportFileFormat = null;
 		boolean commentExists = false;
 		boolean editableExists = false;
@@ -171,11 +172,14 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		boolean attributesExist = false;
 		boolean documentAttributesExist = false;
 		boolean wereImported = false ;
-		String savedDocsPrevName = null ;
-		String title ;
+		String savedDocsPrevName = null;
+		String title;
 		
 		// set up the protocol
 		docInfo.setProtocolName(protocol.getName()) ;
+
+		// we're going to use the document settings
+		document.settings.setUseDocumentSettings(true);
 
 		// Get the proper file format object for the specified mode
 		// Initialize DocumentInfo with current document state, prefs and document settings.
@@ -183,13 +187,19 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		switch (mode) {
 
 			case MODE_SAVE:
+				if (saveAs) {
+					fileFormatName = docInfo.getFileFormat();
+				} else {
+					fileFormatName = document.settings.getSaveFormat().cur;
+				}
 				saveOrExportFileFormat = Outliner.fileFormatManager.getSaveFormat(fileFormatName);
-				savedDocsPrevName = document.getFileName () ;
+				savedDocsPrevName = document.getFileName() ;
 				document.setFileName(filename);
 				docInfo.updateDocumentInfoForDocument(document, saveAs); // Might not be neccessary anymore.
 				break ;
 
 			case MODE_EXPORT:
+				fileFormatName = docInfo.getFileFormat();
 				saveOrExportFileFormat = Outliner.fileFormatManager.getExportFormat(fileFormatName);
 				docInfo.setPath(filename);
 				break ;
@@ -199,21 +209,16 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				// illegal/unknown mode specification
 				System.out.println("FileMenu:SaveFile: bad mode parameter");
 				return ;
-			} // end switch
+		}
 
 		// if we couldn't get a saveOrExportFileFormat
 		if (saveOrExportFileFormat == null) {
-
-				msg = GUITreeLoader.reg.getText("error_could_not_save_no_file_format");
-				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
-				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_2, fileFormatName);
-				JOptionPane.showMessageDialog(document, msg);
-				return;
-			} // end if
-
-
-		// we're going to use the document settings
-		document.settings.setUseDocumentSettings(true);
+			msg = GUITreeLoader.reg.getText("error_could_not_save_no_file_format");
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_2, fileFormatName);
+			JOptionPane.showMessageDialog(document, msg);
+			return;
+		}
 
 		// Check to see what special features the outline has
 		// That's because some save/export formats don't support all special features

@@ -88,13 +88,52 @@ public class DocumentSettings {
 		createModDatesFormat = null;
 		dateFormat = null;
 	}
-	
+
+	public void syncToGlobal() {
+		lineEnd.cur = Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur;
+		saveEncoding.cur = Preferences.getPreferenceString(Preferences.SAVE_ENCODING).cur;
+		saveFormat.cur = Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur;
+		ownerName.cur = Preferences.getPreferenceString(Preferences.OWNER_NAME).cur;
+		ownerEmail.cur = Preferences.getPreferenceString(Preferences.OWNER_EMAIL).cur;
+		applyFontStyleForComments.cur = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur;
+		applyFontStyleForEditability.cur = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur;
+		applyFontStyleForMoveability.cur = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur;
+		useCreateModDates.cur = Preferences.getPreferenceBoolean(Preferences.USE_CREATE_MOD_DATES).cur;
+		createModDatesFormat.cur = Preferences.getPreferenceString(Preferences.CREATE_MOD_DATES_FORMAT).cur;
+	}
+
+	public void restoreTemporaryToCurrent() {
+		lineEnd.restoreTemporaryToCurrent();
+		saveEncoding.restoreTemporaryToCurrent();
+		saveFormat.restoreTemporaryToCurrent();
+		ownerName.restoreTemporaryToCurrent();
+		ownerEmail.restoreTemporaryToCurrent();
+		applyFontStyleForComments.restoreTemporaryToCurrent();
+		applyFontStyleForEditability.restoreTemporaryToCurrent();
+		applyFontStyleForMoveability.restoreTemporaryToCurrent();
+		useCreateModDates.restoreTemporaryToCurrent();
+		createModDatesFormat.restoreTemporaryToCurrent();
+	}
+
 	
 	// Accessors
 	public OutlinerDocument getDocument() {return this.doc;}
 
 	public boolean useDocumentSettings() {return this.useDocumentSettings;}
-	public void setUseDocumentSettings(boolean useDocumentSettings) {this.useDocumentSettings = useDocumentSettings;}
+	public void setUseDocumentSettings(boolean useDocumentSettings) {
+		if (this.useDocumentSettings == useDocumentSettings) {
+			// Abort if we're not changing the value.
+			return;
+		}
+		
+		this.useDocumentSettings = useDocumentSettings;
+		
+		if (useDocumentSettings) {
+			// Sync up to latest values of the application level settings since we're changing to document level settings.
+			syncToGlobal();
+			restoreTemporaryToCurrent();
+		}
+	}
 
 	public String getDateCreated() {return this.dateCreated;}
 	public void setDateCreated(String dateCreated) {this.dateCreated = dateCreated;}

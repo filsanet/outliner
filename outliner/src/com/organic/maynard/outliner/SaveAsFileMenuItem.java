@@ -84,10 +84,13 @@ public class SaveAsFileMenuItem extends AbstractOutlinerMenuItem implements Acti
 		document.setDocumentInfo(cloneDocInfo) ;
 		
 		// if the user backs out on the operation 
+		document.settings.setUseDocumentSettings(true);
 		if (!protocol.selectFileToSave(document, FileProtocol.SAVE)) {
 			
 			// restore the current doc info
-			document.setDocumentInfo(currentDocInfo) ;
+			document.setDocumentInfo(currentDocInfo);
+			
+			document.settings.setUseDocumentSettings(false);
 			
 			// leave
 			return;

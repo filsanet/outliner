@@ -406,12 +406,9 @@ public class DocumentInfo implements Serializable, Cloneable {
 		
 		recordWindowPositioning(document);
 
-		// These three settings are set by SaveAsMenuItem so we can always be sure they exist in DocumentSettings
 		setEncodingType(document.settings.getSaveEncoding().cur);
 		setLineEnding(document.settings.getLineEnd().cur);
 		setFileFormat(document.settings.getSaveFormat().cur);
-
-		// These seven settings are NOT set by SavAsMenuItem so we have to check if DocumentSettings are being used
 		setOwnerName(document.settings.getOwnerName().cur);
 		setOwnerEmail(document.settings.getOwnerEmail().cur);
 		setApplyFontStyleForComments(document.settings.getApplyFontStyleForComments().cur);
@@ -419,7 +416,7 @@ public class DocumentInfo implements Serializable, Cloneable {
 		setApplyFontStyleForMoveability(document.settings.getApplyFontStyleForMoveability().cur);
 		setUseCreateModDates(document.settings.getUseCreateModDates().cur);
 		setCreateModDatesFormat(document.settings.getCreateModDatesFormat().cur);
-
+		
 		String currentDateString = getCurrentDateTimeString();
 		
 		setDateModified(currentDateString);
