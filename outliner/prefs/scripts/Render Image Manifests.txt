@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<script>// Description: This script prompts the user for a directory path. It then crawls the
+// directory structure creating an HTML file in each directory that displays each Image
+// with it's width and height.
+
+import java.io.File;
+import javax.swing.ImageIcon;
+import com.organic.maynard.io.FileTools;
+
+String path = "";
+
+// Method Delcaration
+
+promptForPath() {
+	while (global.path.equals("")) {
+		global.path = JOptionPane.showInputDialog("Path to start from");
+		
+		if (global.path == null) {
+			// Aborted by User
+			return;
+		}
+	}
+}
+
+generateManifestsRecursively(String path) {
+	File file = new File(path);
+	File[] files = file.listFiles();
+
+	File manifestFile = new File(path + "/manifest.html");
+	StringBuffer buf = new StringBuffer("&lt;html>&lt;head>&lt;title>manifest&lt;/title>&lt;/head>&lt;body>");
+	StringBuffer fileList = new StringBuffer("&lt;table cellpadding=\"3\" cellspacing=\"1\">");
+	StringBuffer subDirs = new StringBuffer("");
+
+	// Prep fileList header
+	fileList.append("&lt;tr valign=\"top\" bgcolor=\"#aaaaaa\">&lt;td>&lt;b>Name&lt;/b>&lt;/td>&lt;td>&lt;b>Dimensions&lt;/b>&lt;/td>&lt;td>&lt;b>Image&lt;/b>&lt;/td>&lt;/tr>");
+
+	// Loop over the files in the directory.
+	boolean even = false;
+
+	for (int i = 0; i &lt; files.length; i++) {
+		File fileToAdd = files[i];
+
+		String src = fileToAdd.getName();
+
+		if (fileToAdd.getName().endsWith(".gif") || fileToAdd.getName().endsWith(".jpg")) {
+
+			// Get dimensions
+			ImageIcon image = new ImageIcon(fileToAdd.getPath());
+			int width = image.getIconWidth();
+			int height = image.getIconHeight();
+
+			if (even) {
+				fileList.append("&lt;tr valign=\"top\" bgcolor=\"#dddddd\">");
+				even = false;
+			} else {
+				fileList.append("&lt;tr valign=\"top\" bgcolor=\"#cccccc\">");
+				even = true;
+			}
+			fileList.append("&lt;td>&lt;a href=\"" + src + "\">" + src + "&lt;/a>&lt;/td>");
+			fileList.append("&lt;td> " + width + "x" + height + "&lt;/td>");
+			fileList.append("&lt;td>&lt;a href=\"" + src + "\">&lt;img src=\"" + src + "\" width=\"" + width + "\" height=\"" + height + "\" border=\"0\" alt=\"\">&lt;/a>&lt;/td>");
+			fileList.append("&lt;/tr>");
+
+		} else if (fileToAdd.isDirectory() &amp;&amp; !src.equals("CVS")) {
+			subDirs.append("&lt;a href=\"" + src + "/manifest.html\">" + src + "&lt;/a>&lt;br>");
+			generateManifestsRecursively(fileToAdd.toString());
+		} 
+	}
+
+	fileList.append("&lt;/table>");
+
+	buf.append("&lt;a href=\"../manifest.html\">Parent&lt;/a>&lt;br>");
+	buf.append("&lt;h2>Subdirectories&lt;/h2>" + subDirs.toString());
+	buf.append("&lt;h2>Files&lt;/h2>" + fileList.toString());
+	buf.append("&lt;/body>&lt;/html>");
+
+	// Save the manifest to disk.
+	FileTools.dumpStringToFile(manifestFile, buf.toString());
+}
+
+// Main Execution
+promptForPath();
+
+if (path == null) {
+	// Aborted by User
+	return;
+}
+
+while (true) {
+	generateManifestsRecursively(path);
+	// Adjust the time below to set the frequency with which the
+	// image manifets are created. Currently set to 30sec.
+	Thread.sleep(30000);
+}</script>
