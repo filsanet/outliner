@@ -317,10 +317,13 @@ public class DocumentInfo implements Serializable, Cloneable {
 	public void setProtocolName(String protocolName) { this.protocolName = protocolName;}
 	
 	// Expanded Nodes
-	public ArrayList getExpandedNodes() {return this.expandedNodes;}
+	public ArrayList getExpandedNodes() {
+		return this.expandedNodes;
+	}
+	
 	public boolean setExpandedNodes(ArrayList expandedNodes) {
 		// Make sure all values are Integers
-		for (int i = 0; i < expandedNodes.size(); i++) {
+		for (int i = 0, limit = expandedNodes.size(); i < limit; i++) {
 			try {
 				Integer temp = (Integer) expandedNodes.get(i);
 			} catch (ClassCastException e) {
@@ -338,8 +341,8 @@ public class DocumentInfo implements Serializable, Cloneable {
 	
 	public String getExpandedNodesStringShifted(int shift) {
 		StringBuffer buf = new StringBuffer();
-		for (int i = 0; i < expandedNodes.size(); i++) {
-			buf.append("" + (((Integer) expandedNodes.get(i)).intValue() + shift));
+		for (int i = 0, limit = expandedNodes.size(); i < limit; i++) {
+			buf.append("").append(((Integer) expandedNodes.get(i)).intValue() + shift);
 			if (i < expandedNodes.size() - 1) {
 				buf.append(EXPANDED_NODE_SEPERATOR);
 			}
@@ -442,7 +445,7 @@ public class DocumentInfo implements Serializable, Cloneable {
 		setVerticalScrollState(index);
 		
 		getExpandedNodes().clear();
-		for (int i = 0; i < document.tree.getVisibleNodes().size(); i++) {
+		for (int i = 0, limit = document.tree.getVisibleNodes().size(); i < limit; i++) {
 			Node node = document.tree.getVisibleNodes().get(i);
 			if (node.isExpanded()) {
 				addExpandedNodeNum(i);
