@@ -344,7 +344,7 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 			|| !docSettings.getUseCreateModDates().cur == docSettings.getUseCreateModDates().tmp
 			|| !docSettings.getCreateModDatesFormat().cur.equals(docSettings.getCreateModDatesFormat().tmp)
 		) {
-			docSettings.doc.setFileModified(true);
+			docSettings.getDocument().setFileModified(true);
 		}
 
 		// If anything has changed that would effect the GUI then redraw.
@@ -370,11 +370,26 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		
 		docSettings.updateSimpleDateFormat(docSettings.getCreateModDatesFormat().cur);
 		if (doRedraw) {
-			docSettings.doc.panel.layout.redraw();
+			docSettings.getDocument().panel.layout.redraw();
 		}
 	}
 
 	// Syncing Methods
+	private void syncToGlobal() {
+		docSettings.getLineEnd().cur = Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur;
+		docSettings.getSaveEncoding().cur = Preferences.getPreferenceString(Preferences.SAVE_ENCODING).cur;
+		docSettings.getSaveFormat().cur = Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur;
+		docSettings.getOwnerName().cur = Preferences.getPreferenceString(Preferences.OWNER_NAME).cur;
+		docSettings.getOwnerEmail().cur = Preferences.getPreferenceString(Preferences.OWNER_EMAIL).cur;
+		docSettings.getApplyFontStyleForComments().cur = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur;
+		docSettings.getApplyFontStyleForEditability().cur = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur;
+		docSettings.getApplyFontStyleForMoveability().cur = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur;
+		docSettings.getUseCreateModDates().cur = Preferences.getPreferenceBoolean(Preferences.USE_CREATE_MOD_DATES).cur;
+		docSettings.getCreateModDatesFormat().cur = Preferences.getPreferenceString(Preferences.CREATE_MOD_DATES_FORMAT).cur;
+
+		syncToDocumentSettings();
+	}
+	
 	private void syncToDocumentSettings() {
 		docSettings.getLineEnd().restoreTemporaryToCurrent();
 		lineEndComboBox.setSelectedItem(docSettings.getLineEnd().tmp);
@@ -406,53 +421,6 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		docSettings.getCreateModDatesFormat().restoreTemporaryToCurrent();
 		createModDatesFormatField.setText(docSettings.getCreateModDatesFormat().tmp);
 
-		creationDateLabel.setText(docSettings.getDateCreated());
-		modificationDateLabel.setText(docSettings.getDateModified());
-	}
-
-	private void syncToGlobal() {
-		docSettings.getLineEnd().cur = Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur;
-		docSettings.getSaveEncoding().cur = Preferences.getPreferenceString(Preferences.SAVE_ENCODING).cur;
-		docSettings.getSaveFormat().cur = Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur;
-		docSettings.getOwnerName().cur = Preferences.getPreferenceString(Preferences.OWNER_NAME).cur;
-		docSettings.getOwnerEmail().cur = Preferences.getPreferenceString(Preferences.OWNER_EMAIL).cur;
-		docSettings.getApplyFontStyleForComments().cur = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur;
-		docSettings.getApplyFontStyleForEditability().cur = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur;
-		docSettings.getApplyFontStyleForMoveability().cur = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur;
-		docSettings.getUseCreateModDates().cur = Preferences.getPreferenceBoolean(Preferences.USE_CREATE_MOD_DATES).cur;
-		docSettings.getCreateModDatesFormat().cur = Preferences.getPreferenceString(Preferences.CREATE_MOD_DATES_FORMAT).cur;
-
-		docSettings.getLineEnd().restoreTemporaryToCurrent();
-		lineEndComboBox.setSelectedItem(docSettings.getLineEnd().tmp);
-
-		docSettings.getSaveEncoding().restoreTemporaryToCurrent();
-		saveEncodingComboBox.setSelectedItem(docSettings.getSaveEncoding().tmp);
-
-		docSettings.getSaveFormat().restoreTemporaryToCurrent();
-		saveFormatComboBox.setSelectedItem(docSettings.getSaveFormat().tmp);
-
-		docSettings.getOwnerName().restoreTemporaryToCurrent();
-		ownerNameField.setText(docSettings.getOwnerName().tmp);
-
-		docSettings.getOwnerEmail().restoreTemporaryToCurrent();
-		ownerEmailField.setText(docSettings.getOwnerEmail().tmp);
-
-		docSettings.getApplyFontStyleForComments().restoreTemporaryToCurrent();
-		applyFontStyleForCommentsCheckBox.setSelected(docSettings.getApplyFontStyleForComments().tmp);
-
-		docSettings.getApplyFontStyleForEditability().restoreTemporaryToCurrent();
-		applyFontStyleForEditabilityCheckBox.setSelected(docSettings.getApplyFontStyleForEditability().tmp);
-
-		docSettings.getApplyFontStyleForMoveability().restoreTemporaryToCurrent();
-		applyFontStyleForMoveabilityCheckBox.setSelected(docSettings.getApplyFontStyleForMoveability().tmp);
-
-		docSettings.getUseCreateModDates().restoreTemporaryToCurrent();
-		useCreateModDatesCheckBox.setSelected(docSettings.getUseCreateModDates().tmp);
-
-		docSettings.getCreateModDatesFormat().restoreTemporaryToCurrent();
-		createModDatesFormatField.setText(docSettings.getCreateModDatesFormat().tmp);
-		
-		// We always do these, even though they are document level, because they have no global equivilents.
 		creationDateLabel.setText(docSettings.getDateCreated());
 		modificationDateLabel.setText(docSettings.getDateModified());
 	}

@@ -38,51 +38,31 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class DocumentSettings {
-	protected OutlinerDocument doc = null;
+	private OutlinerDocument doc = null;
 
 	private boolean useDocumentSettings = false;
 
 	// Editable Settings
-	private String sLineEnd = Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur;
-	protected PreferenceLineEnding lineEnd = new PreferenceLineEnding(sLineEnd, sLineEnd, "");
-	
-	private String sSaveEncoding = Preferences.getPreferenceString(Preferences.SAVE_ENCODING).cur;
-	protected PreferenceString saveEncoding = new PreferenceString(sSaveEncoding, sSaveEncoding, "");
-	
-	private String sSaveFormat = Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur;
-	protected PreferenceString saveFormat = new PreferenceString(sSaveFormat, sSaveFormat, "");
-	
-	private String sOwnerName = Preferences.getPreferenceString(Preferences.OWNER_NAME).cur;
-	protected PreferenceString ownerName = new PreferenceString(sOwnerName, sOwnerName, "");
-	
-	private String sOwnerEmail = Preferences.getPreferenceString(Preferences.OWNER_EMAIL).cur;
-	protected PreferenceString ownerEmail = new PreferenceString(sOwnerEmail, sOwnerEmail, "");
-	
-	private boolean sApplyFontStyleForComments = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur;
-	protected PreferenceBoolean applyFontStyleForComments = new PreferenceBoolean(sApplyFontStyleForComments, sApplyFontStyleForComments, "");
-	
-	private boolean sApplyFontStyleForEditability = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur;
-	protected PreferenceBoolean applyFontStyleForEditability = new PreferenceBoolean(sApplyFontStyleForEditability, sApplyFontStyleForEditability, "");
-	
-	private boolean sApplyFontStyleForMoveability = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur;
-	protected PreferenceBoolean applyFontStyleForMoveability = new PreferenceBoolean(sApplyFontStyleForMoveability, sApplyFontStyleForMoveability, "");
-	
-	private boolean sUseCreateModDates = Preferences.getPreferenceBoolean(Preferences.USE_CREATE_MOD_DATES).cur;
-	protected PreferenceBoolean useCreateModDates = new PreferenceBoolean(sUseCreateModDates, sUseCreateModDates, ""); // We should make all of these private at some point.
-	
-	private String sCreateModDatesFormat = Preferences.getPreferenceString(Preferences.CREATE_MOD_DATES_FORMAT).cur;
-	protected PreferenceString createModDatesFormat = new PreferenceString(sCreateModDatesFormat, sCreateModDatesFormat, "");
+	protected PreferenceLineEnding lineEnd = new PreferenceLineEnding(Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur, Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur, "");
+	protected PreferenceString saveEncoding = new PreferenceString(Preferences.getPreferenceString(Preferences.SAVE_ENCODING).cur, Preferences.getPreferenceString(Preferences.SAVE_ENCODING).cur, "");
+	protected PreferenceString saveFormat = new PreferenceString(Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur, Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur, "");
+	protected PreferenceString ownerName = new PreferenceString(Preferences.getPreferenceString(Preferences.OWNER_NAME).cur, Preferences.getPreferenceString(Preferences.OWNER_NAME).cur, "");
+	protected PreferenceString ownerEmail = new PreferenceString(Preferences.getPreferenceString(Preferences.OWNER_EMAIL).cur, Preferences.getPreferenceString(Preferences.OWNER_EMAIL).cur, "");
+	protected PreferenceBoolean applyFontStyleForComments = new PreferenceBoolean(Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur, Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur, "");
+	protected PreferenceBoolean applyFontStyleForEditability = new PreferenceBoolean(Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur, Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur, "");
+	protected PreferenceBoolean applyFontStyleForMoveability = new PreferenceBoolean(Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur, Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur, "");
+	protected PreferenceBoolean useCreateModDates = new PreferenceBoolean(Preferences.getPreferenceBoolean(Preferences.USE_CREATE_MOD_DATES).cur, Preferences.getPreferenceBoolean(Preferences.USE_CREATE_MOD_DATES).cur, ""); 
+	protected PreferenceString createModDatesFormat = new PreferenceString(Preferences.getPreferenceString(Preferences.CREATE_MOD_DATES_FORMAT).cur, Preferences.getPreferenceString(Preferences.CREATE_MOD_DATES_FORMAT).cur, "");
 
 	// Hidden Settings: Has application level settings.
-	private String sFileProtocol = Preferences.getPreferenceString(Preferences.FILE_PROTOCOL).cur;
-	protected PreferenceString fileProtocol = new PreferenceString(sFileProtocol, sFileProtocol, "");
+	protected PreferenceString fileProtocol = new PreferenceString(Preferences.getPreferenceString(Preferences.FILE_PROTOCOL).cur, Preferences.getPreferenceString(Preferences.FILE_PROTOCOL).cur, "");
 	
 	// Hidden Settings: Document Level only. No Application level settings for these.
 	private String dateCreated = new String("");
 	private String dateModified = new String("");
 	
 	// TBD: This could have an app level value.
-	public SimpleDateFormat dateFormat = null;
+	protected SimpleDateFormat dateFormat = null;
 
 
 	// The Constructors
@@ -111,6 +91,8 @@ public class DocumentSettings {
 	
 	
 	// Accessors
+	public OutlinerDocument getDocument() {return this.doc;}
+
 	public boolean useDocumentSettings() {return this.useDocumentSettings;}
 	public void setUseDocumentSettings(boolean useDocumentSettings) {this.useDocumentSettings = useDocumentSettings;}
 
