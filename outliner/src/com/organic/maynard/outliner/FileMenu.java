@@ -126,7 +126,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 	 */
 	private static void saveFile(String filename, OutlinerDocument document, FileProtocol protocol, boolean saveAs, int mode) {
 		
-		// set up local vars
 		String msg = null;
 		DocumentInfo docInfo = document.getDocumentInfo();
 		
@@ -273,7 +272,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			document.hoistStack.temporaryDehoistAll();
 		}
 		
-		// ask the save/export format to send us an array of bytes to save/export. 
+		// ask the save/export format to send us an array of bytes to save/export.
 		// This also gives the format a chance to display a dialog to the user.
 		byte[] bytes = saveOrExportFileFormat.save(document.tree, docInfo);
 		
@@ -325,7 +324,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 							docInfo.setImported(true) ;
 						}
 						break;
-							
+					
 					case MODE_SAVE:
 						// we're going to use the document settings
 						document.settings.setUseDocumentSettings(true);
@@ -355,10 +354,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 								break;
 						}
 						
-						// set the title
 						document.setTitle(title) ;
 						
-						// Update the Window Menu
 						Outliner.menuBar.windowMenu.updateWindow(document);
 						break;
 				}
@@ -412,7 +409,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			return;
 		}
 		
-		// create a fresh new tree
 		JoeTree tree = Outliner.newTree(null);
 		
 		// try to open the file and pour its data into that tree
@@ -437,7 +433,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				return;
 		}
 		
-		// Create a new document
 		OutlinerDocument newDoc = new OutlinerDocument(docInfo.getPath(), docInfo);
 		
 		// Use document settings immediately, otherwise we would update the application prefs which is bad.
@@ -535,7 +530,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// make sure we're in the Recent Files list
 		RecentFilesList.addFileNameToList(docInfo);
 		
-		// perform final setup and draw the suckah
 		setupAndDraw(docInfo, newDoc, openOrImportResult);
 	}
 	
@@ -547,43 +541,27 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		FileProtocol protocol = Outliner.fileProtocolManager.getProtocol(docInfo.getProtocolName());
 		
 		// set mode based on whether we were OPENed or IMPORTed
-		int mode = docInfo.isImported()?MODE_IMPORT:MODE_OPEN;
+		int mode = docInfo.isImported() ? MODE_IMPORT:MODE_OPEN;
 		
-		// create a fresh new tree
 		JoeTree tree = Outliner.newTree(null);
 		
 		// try to open the file and pour its data into that tree
 		int openOrImportResult = openOrImportFileAndGetTree(tree, docInfo, protocol, mode);
 		
-		// if we failed somehow, bag it
-		if ((openOrImportResult != SUCCESS) && (openOrImportResult != SUCCESS_MODIFIED)) { // Might be good to have codes we can do % on.
+		if ((openOrImportResult != SUCCESS) && (openOrImportResult != SUCCESS_MODIFIED)) {
 			return;
 		}
-		
-		// we succeeded
 		
 		// swap in the new tree
 		tree.setDocument(document);
 		document.tree = tree;
 		
-		// Clear the UndoQueue
 		document.undoQueue.clear();
-		
-		// Clear the HoistStack
 		document.hoistStack.clear();
 		
-		// make any necessary adjustments based on mode
-		// TBD as warranted
-		switch (mode) {
-			case MODE_OPEN:
-				break;
-			case MODE_IMPORT:
-				break;
-			default:
-				break;
-		}
+		// Reset the document attributes
+		Outliner.documentAttributes.configure(tree);
 		
-		// okay, let's finish up and draw the suckah
 		setupAndDraw(docInfo, document, openOrImportResult);
 	}
 	
@@ -591,7 +569,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 	// open/import a file and store its outline into a tree
 	private static int openOrImportFileAndGetTree(JoeTree tree, DocumentInfo docInfo, FileProtocol protocol, int mode) {
 		
-		// local vars
 		String msg = null;
 		int openOrImportResult = FAILURE;
 		OpenFileFormat openOrImportFileFormat = null ;
@@ -649,21 +626,14 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// no matter what happened, reset the input stream in the docInfo
 		docInfo.setInputStream(null);
 		
-		// return the results of our efforts
 		return openOrImportResult;
 	}
 	
 	private static void setupAndDraw(DocumentInfo docInfo, OutlinerDocument doc, int openOrImportResult) {
-		// grab a ref to the tree
 		JoeTree tree = doc.tree;
-		
-		// grab the path
 		String filename = docInfo.getPath();
 		
-		// Clear current selection
 		tree.clearSelection();
-		
-		// Clear the VisibleNodeCache
 		tree.getVisibleNodes().clear();
 		
 		// Insert nodes into the VisibleNodes Cache
@@ -694,10 +664,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				break;
 		}
 		
-		// set the title
 		doc.setTitle(title);
 		
-		// update window menu entry
 		Outliner.menuBar.windowMenu.updateWindow(doc);
 		
 		// Expand Nodes

@@ -109,7 +109,7 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 	// Configuration
 	protected JoeTree tree = null;
 	
-	public void configureAndShow(JoeTree tree) {
+	public void configure(JoeTree tree) {
 		// Lazy Instantiation
 		if (!initialized) {
 			initialize();
@@ -119,6 +119,10 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 		this.tree = tree;
 		
 		attPanel.update(this);
+	}
+	
+	public void configureAndShow(JoeTree tree) {
+		configure(tree);
 		
 		super.show();
 	}
