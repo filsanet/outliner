@@ -4,15 +4,16 @@
  * Manages sets of Help system documents
  *	tracks whether they're open or shut
  *	stores their pathnames
- 		pathnames can come in many forms
- 		we just store 'em
- 		examples
- 			local:  c:\someDir\someDoc.opml
- 			network: \\some_machine\some_sharepoint\someDir\someDoc.opml
- 			internet: http://someSite.dom/someDir/someDoc.opml
- 			internet: ftp://someSite.dom/someDir/someDoc.opml
+ *		pathnames can come in many forms
+ *		we just store 'em
+ *		examples
+ *			local:  c:\someDir\someDoc.opml
+ *			network: \\some_machine\some_sharepoint\someDir\someDoc.opml
+ *			internet: http://someSite.dom/someDir/someDoc.opml
+ *			internet: ftp://someSite.dom/someDir/someDoc.opml
  * 
- * Extends DocumentManager
+ * extends DocumentManager
+ * implements JoeReturnCodes
  *
  * Members
  *	constants
@@ -35,7 +36,7 @@
  *
  *		
  * Copyright (C) 2001 Stan Krute, Stan@StanKrute.com
- * Last Touched: 8/4/01 5:54AM
+ * Last Touched: 8/12/01 7:58PM
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -109,7 +110,7 @@ public class HelpDocumentsManager
 		int whichOne = isThisOneOfOurs(document.getTitle());
 		
 		// if it's one of ours ...
-		if (whichOne != jrc.DOCUMENT_NOT_FOUND) {
+		if (whichOne != DOCUMENT_NOT_FOUND) {
 			
 			// mark it open
 			docOpenStates[whichOne] = true ;
@@ -126,7 +127,7 @@ public class HelpDocumentsManager
 		int whichOne = isThisOneOfOurs(document.getTitle());
 		
 		// if it's one of ours ...
-		if (whichOne != jrc.DOCUMENT_NOT_FOUND) {
+		if (whichOne != DOCUMENT_NOT_FOUND) {
 			
 			// mark it closed
 			docOpenStates[whichOne] = false ;
