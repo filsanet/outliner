@@ -149,8 +149,11 @@ public class Preferences implements GUITreeComponent {
 
 		public static final String RF_D_BOTTOMTOTOP= "rf_d_bottomtotop";
 		public static final String RF_D_TOPTOBOTTOM= "rf_d_toptobottom";
+		
 		public static final String RF_NF_FILENAME= "rf_nf_filename";
-		public static final String RF_NF_PATHNAME= "rf_nf_pathname";
+		public static final String RF_NF_FULL_PATHNAME= "rf_nf_full_pathname";
+		public static final String RF_NF_TRUNC_PATHNAME= "rf_nf_trunc_pathname";
+		
 		public static final String RF_O_ALPHABETICAL= "rf_o_alphabetical";
 		public static final String RF_O_ASCII= "rf_o_ascii";
 		public static final String RF_O_CHRONOLOGICAL= "rf_o_chronological";
