@@ -102,7 +102,7 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 		Outliner.prefs.addPreferencesPanel(id, this);
 
 		// Start setting up box
-		addSingleItemCentered(new JLabel(title), this);
+		addSingleItemCentered(new JLabel(new StringBuffer().append("<html><font size=\"+1\">").append(title).append("</font></html>").toString()), this);
 	}
 	
 	public void endSetup(AttributeList atts) {
