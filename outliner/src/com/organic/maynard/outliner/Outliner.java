@@ -331,6 +331,15 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 			return false;
 		}
 	}
+	
+	public static boolean isJava131() {
+		String javaVersion = System.getProperty("java.version");
+		if (javaVersion.startsWith("1.3.1")) {
+			return true;
+		} else {
+			return false;
+		}	
+	}
 
 	
 	// Open Document Repository
