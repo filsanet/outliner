@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Tue, 24 Jul 2001 07:01:29 GMT</dateModified>
+<dateModified>Wed, 25 Jul 2001 02:39:19 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>31</windowTop>
-<windowLeft>311</windowLeft>
-<windowBottom>412</windowBottom>
-<windowRight>775</windowRight>
+<windowTop>68</windowTop>
+<windowLeft>98</windowLeft>
+<windowBottom>449</windowBottom>
+<windowRight>562</windowRight>
 </head>
 <body>
 <outline text="Introduction">
@@ -36,7 +36,18 @@
 <outline text="Feedback"/>
 </outline>
 <outline text="Installation and Setup">
-<outline text="Prepare your system"/>
+<outline text="Prepare your system">
+<outline text="Linux/Unix"/>
+<outline text="Macintosh"/>
+<outline text="Windows">
+<outline text="If you're running JOE by invoking run.bat, you need to ensure that there is enough environment space">
+<outline text="Add a line like this to the file c:\config.sys">
+<outline text="shell=c:\windows\command.com /e2048 /p"/>
+<outline text="In this example, the environment is set to 2048 bytes"/>
+</outline>
+</outline>
+</outline>
+</outline>
 <outline text="Download the latest JOE"/>
 <outline text="Install the download"/>
 <outline text="Create some shortcuts"/>
@@ -155,7 +166,9 @@
 <outline text="A-E">
 <outline text="A"/>
 <outline text="B"/>
-<outline text="C"/>
+<outline text="C">
+<outline text="child"/>
+</outline>
 <outline text="D"/>
 <outline text="E"/>
 </outline>
@@ -172,27 +185,34 @@
 <outline text="M"/>
 <outline text="N">
 <outline text="node">
-<outline text="some pithy simple clear definition"/>
+<outline text=""/>
 </outline>
 </outline>
 <outline text="O">
+<outline text="OPML"/>
 <outline text="outline">
-<outline text="some pithy simple clear definition"/>
+<outline text=""/>
 </outline>
 </outline>
 </outline>
 <outline text="P-T">
-<outline text="P"/>
+<outline text="P">
+<outline text="parent "/>
+</outline>
 <outline text="Q"/>
 <outline text="R"/>
-<outline text="S"/>
+<outline text="S">
+<outline text="sibling"/>
+</outline>
 <outline text="T"/>
 </outline>
 <outline text="U-Z">
 <outline text="U"/>
 <outline text="V"/>
 <outline text="W"/>
-<outline text="X"/>
+<outline text="X">
+<outline text="XML-RPC"/>
+</outline>
 <outline text="Y"/>
 <outline text="Z"/>
 </outline>
