@@ -33,6 +33,7 @@
  */
 package com.yearahead.io;
 
+import com.organic.maynard.outliner.menus.file.RecentFilesList;
 import com.organic.maynard.outliner.io.*;
 import com.organic.maynard.outliner.io.protocols.*;
 import com.organic.maynard.outliner.guitree.*;
