@@ -60,6 +60,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
  
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
  // we're part of this
 package com.organic.maynard.outliner;
 
@@ -93,6 +98,21 @@ public class PdbBFReaderWriter
 		
 		
 		} // end constructor
+
+	// process a PDB BF header block
+	// this is a PDB-flavor specific method
+	// TBD
+	protected int processHeader (byte[] header)
+		{
+		
+		// TBD
+			
+//		if (Outliner.DEBUG) { System.out.println("\tStan_Debug:\tPdbBFReaderWriter:processHeader"); }
+			
+		return SUCCESS ;
+			
+		} // end method processAppInfo;
+
 
 	// process a PDB record chunk
 	// NOTE this method is PDB-flavor specific
@@ -245,9 +265,8 @@ public class PdbBFReaderWriter
 		} // end protected method processRecord	
 
 	// process a PDB AppInfo block
-	
 	// this is a PDB-flavor specific method
-	
+	// TBD
 	protected int processAppInfo (byte[] appInfo)
 		{
 		
