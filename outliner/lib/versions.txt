@@ -5,4 +5,5 @@ upgrade the jars.
 
 bsh.jar           1.2b6
 jakarta-oro.jar   2.0.6
-xmlrpc.jar        1.1 with minor modifications by maynard to XmlRpcClient class.
+xmlrpc.jar        1.1 with minor modifications specific to JOE to the XmlRpcClient class.
+xp.jar            0.5
