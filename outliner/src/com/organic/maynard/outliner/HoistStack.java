@@ -39,7 +39,14 @@ public class HoistStack {
 	}
 	
 	
-	// Methods	
+	// Methods
+	public void clear() {
+		stack.clear();
+		
+		// Update the MenuBar
+		updateOutlinerMenuHoisting();
+	}
+	
 	public int getHoistDepth() {
 		return this.stack.size();
 	}
@@ -52,23 +59,67 @@ public class HoistStack {
 		}
 	}
 	
+	public int getLineCountOffset() {
+		int offset = 0;
+		for (int i = 0; i < stack.size(); i++) {
+			offset += ((HoistStackItem) stack.get(i)).getLineCountOffset();
+		}
+
+		return offset;
+	}
+	
+	protected synchronized void temporaryHoistAll() {
+		for (int i = 0; i < stack.size(); i++) {
+			((HoistStackItem) stack.get(i)).hoist();
+		}
+	}
+	
+	protected synchronized void temporaryDehoistAll() {
+		for (int i = stack.size() - 1; i >= 0; i--) {
+			((HoistStackItem) stack.get(i)).dehoist();
+		}
+	}
+	
 	public void hoist(HoistStackItem item) {
 		Node currentNode = item.getNode();
 		if (!currentNode.isLeaf() && !currentNode.isHoisted()) {
 
+			// Shorthand
+			TreeContext tree = currentNode.getTree();
+			outlineLayoutManager layout = tree.doc.panel.layout;
+
 			// Clear the undoQueue
-			int result = JOptionPane.showConfirmDialog(doc, "Hoisting requires that the undo queue be cleared.\nProceed anyway?","",JOptionPane.OK_CANCEL_OPTION);
-			if (result == JOptionPane.YES_OPTION) {
-				doc.undoQueue.clear();
-			} else if (result == JOptionPane.CANCEL_OPTION) {
-				return;
-			}			
+			if (!doc.undoQueue.isEmpty()) {
+				int result = JOptionPane.showConfirmDialog(doc, "Hoisting requires that the undo queue be cleared.\nProceed anyway?","",JOptionPane.OK_CANCEL_OPTION);
+				if (result == JOptionPane.YES_OPTION) {
+					doc.undoQueue.clear();
+				} else if (result == JOptionPane.CANCEL_OPTION) {
+					return;
+				}
+			}	
 
 			// Do the hoist
 			item.hoist();
 
+			// Update Selection
+			tree.setSelectedNodesParent(currentNode);
+			tree.addNodeToSelection(currentNode.getFirstChild());
+			
+			// Record the EditingNode and CursorPosition and ComponentFocus
+			tree.setEditingNode(currentNode.getFirstChild());
+			tree.setCursorPosition(0);
+			tree.setComponentFocus(outlineLayoutManager.ICON);
+		
 			// Throw it onto the stack
 			stack.push(item);
+
+			// Redraw and Set Focus
+			Node nodeToDrawFrom = currentNode.getFirstChild();
+			int ioNodeToDrawFrom = tree.visibleNodes.indexOf(nodeToDrawFrom);
+			layout.setNodeToDrawFrom(nodeToDrawFrom, ioNodeToDrawFrom);
+	
+			layout.draw();
+			layout.setFocus(nodeToDrawFrom, outlineLayoutManager.ICON);
 			
 			// Update the MenuBar
 			updateOutlinerMenuHoisting();
@@ -85,12 +136,14 @@ public class HoistStack {
 			outlineLayoutManager layout = doc.panel.layout;
 
 			// Clear the undoQueue
-			int result = JOptionPane.showConfirmDialog(doc, "De-Hoisting requires that the undo queue be cleared.\nProceed anyway?","",JOptionPane.OK_CANCEL_OPTION);
-			if (result == JOptionPane.YES_OPTION) {
-				doc.undoQueue.clear();
-			} else if (result == JOptionPane.CANCEL_OPTION) {
-				return;
-			}			
+			if (!doc.undoQueue.isEmpty()) {
+				int result = JOptionPane.showConfirmDialog(doc, "De-Hoisting requires that the undo queue be cleared.\nProceed anyway?","",JOptionPane.OK_CANCEL_OPTION);
+				if (result == JOptionPane.YES_OPTION) {
+					doc.undoQueue.clear();
+				} else if (result == JOptionPane.CANCEL_OPTION) {
+					return;
+				}
+			}		
 
 			// Remove it from the stack
 			HoistStackItem item = (HoistStackItem) stack.pop();
@@ -128,13 +181,15 @@ public class HoistStack {
 			outlineLayoutManager layout = doc.panel.layout;
 
 			// Clear the undoQueue
-			int result = JOptionPane.showConfirmDialog(doc, "De-Hoisting requires that the undo queue be cleared.\nProceed anyway?","",JOptionPane.OK_CANCEL_OPTION);
-			if (result == JOptionPane.YES_OPTION) {
-				doc.undoQueue.clear();
-			} else if (result == JOptionPane.CANCEL_OPTION) {
-				return;
-			}			
-			
+			if (!doc.undoQueue.isEmpty()) {
+				int result = JOptionPane.showConfirmDialog(doc, "De-Hoisting requires that the undo queue be cleared.\nProceed anyway?","",JOptionPane.OK_CANCEL_OPTION);
+				if (result == JOptionPane.YES_OPTION) {
+					doc.undoQueue.clear();
+				} else if (result == JOptionPane.CANCEL_OPTION) {
+					return;
+				}
+			}
+				
 			HoistStackItem item = null;
 			
 			while (isHoisted()) {
@@ -193,6 +248,7 @@ public class HoistStackItem {
 	private int hoistedNodeDepth = -1;
 	
 	private Node oldNodeSet = null;
+	private int lineCountOffset = 0;
 		
 	
 	// The Constructor
@@ -203,6 +259,7 @@ public class HoistStackItem {
 		this.hoistedNodeDepth = hoistedNode.getDepth();
 		
 		this.oldNodeSet = hoistedNode.getTree().getRootNode();
+		this.lineCountOffset = hoistedNode.getLineNumber();
 	}
 	
 	public void destroy() {
@@ -215,7 +272,7 @@ public class HoistStackItem {
 	public Node getNodeParent() {return this.hoistedNodeParent;}
 
 	public Node getOldNodeSet() {return this.oldNodeSet;}
-	
+	public int getLineCountOffset() {return this.lineCountOffset;}
 	
 	// Methods
 	public void dehoist() {
@@ -241,7 +298,6 @@ public class HoistStackItem {
 		
 		// Shorthand
 		TreeContext tree = hoistedNode.getTree();
-		outlineLayoutManager layout = tree.doc.panel.layout;
 		
 		hoistedNode.setHoisted(true);
 		
@@ -255,25 +311,6 @@ public class HoistStackItem {
 			tree.insertNode(node);
 		}
 		
-		
-		// Update Selection
-		tree.setSelectedNodesParent(hoistedNode);
-		tree.addNodeToSelection(hoistedNode.getFirstChild());
-		
-		// Record the EditingNode and CursorPosition and ComponentFocus
-		tree.setEditingNode(hoistedNode.getFirstChild());
-		tree.setCursorPosition(0);
-		tree.setComponentFocus(outlineLayoutManager.ICON);
-
-		// Redraw and Set Focus
-		Node nodeToDrawFrom = hoistedNode.getFirstChild();
-		int ioNodeToDrawFrom = tree.visibleNodes.indexOf(nodeToDrawFrom);
-		layout.setNodeToDrawFrom(nodeToDrawFrom, ioNodeToDrawFrom);
-
-		layout.draw();
-		layout.setFocus(nodeToDrawFrom, outlineLayoutManager.ICON);
-
 		return;
 	}
-
 }

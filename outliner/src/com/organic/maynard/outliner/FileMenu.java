@@ -364,12 +364,22 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 			docInfo.setDateModified(currentDateString);
 		}
 		
-							
-		boolean success = saveFileFormat.save(document.tree, docInfo);
-		if (!success) {
-			JOptionPane.showMessageDialog(document, "An error occurred. Could not save file: " + Outliner.chooser.getSelectedFile().getPath());
-			return;
-		}
+		// Save the File
+		if (document.hoistStack.isHoisted()) {
+			document.hoistStack.temporaryDehoistAll();
+			boolean success = saveFileFormat.save(document.tree, docInfo);
+			if (!success) {
+				JOptionPane.showMessageDialog(document, "An error occurred. Could not save file: " + Outliner.chooser.getSelectedFile().getPath());
+				return;
+			}
+			document.hoistStack.temporaryHoistAll();
+		} else {
+			boolean success = saveFileFormat.save(document.tree, docInfo);
+			if (!success) {
+				JOptionPane.showMessageDialog(document, "An error occurred. Could not save file: " + Outliner.chooser.getSelectedFile().getPath());
+				return;
+			}
+		}					
 
 		// Stop collecting text edits into the current undoable.
 		UndoableEdit.freezeUndoEdit(document.tree.getEditingNode());
@@ -480,6 +490,9 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		
 		// Clear the UndoQueue
 		document.undoQueue.clear();
+		
+		// Clear the HoistStack
+		document.hoistStack.clear();
 
 		setupAndDraw(docInfo, document);
 

@@ -125,7 +125,13 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		
 		// Draw the LineNumber
 		if (Preferences.SHOW_LINE_NUMBERS.cur) {
-			lineNumber.setText("" + node.getLineNumber());
+			if (node.getTree().doc.hoistStack.isHoisted()) {
+				// TODO: This value should be pre-calculated.
+				int offset = node.getTree().doc.hoistStack.getLineCountOffset()  + node.getLineNumber();
+				lineNumber.setText("" + offset);
+			} else {
+				lineNumber.setText("" + node.getLineNumber());
+			}
 		} else {
 			lineNumber.setText("");
 		}
@@ -154,7 +160,13 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 
 		// Draw the LineNumber
 		if (Preferences.SHOW_LINE_NUMBERS.cur) {
-			lineNumber.setText("" + node.getLineNumber());
+			if (node.getTree().doc.hoistStack.isHoisted()) {
+				// TODO: This value should be pre-calculated.
+				int offset = node.getTree().doc.hoistStack.getLineCountOffset()  + node.getLineNumber();
+				lineNumber.setText("" + offset);
+			} else {
+				lineNumber.setText("" + node.getLineNumber());
+			}
 		} else {
 			lineNumber.setText("");
 		}

@@ -95,6 +95,14 @@ public class UndoQueue {
 		queue.setSize(0);
 		updateMenuBar(doc);
 	}
+	
+	public boolean isEmpty() {
+		if (queue.size() <= 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 
 	// Undo Methods
