@@ -43,9 +43,8 @@
 
 
 // include files
-#include <windows.h>
 #include <stdio.h>
-
+#include <windows.h>
 #include "windows_setup.h"
 
 // TBD [srk] make this a very simple GUI app
@@ -90,10 +89,8 @@ int set_JOE_HOME () {
 		// leave in failure
 		return 0 ;
 
-	// add a slash
+	// append a backslash
 	strcat (shortPathBuffer, "\\") ;
-	
-	// an introductory line for autoexec.bat verbosity 
 	
 	// return result of trying to set 
 	// environment var JOE_HOME to that value
@@ -124,6 +121,7 @@ int getShortPathCurDir (char * shortPathBuffer) {
 // set an environment variable
 int setEnvVar (char * varName, char * varValue, char * introLines) {
 	
+	// obtain info RE Windows version
 	// switch out on windows version
 		// for win 9x, use autoexec.bat
 		return setEnvVarWin9x (varName, varValue, introLines) ;
@@ -173,9 +171,9 @@ int setAutoExecEnvVar (char * varName, char * varValue, char * introLines) {
 	FILE * autoExec = fopen(autoExecPathBuffer, "r" ) ;
 	
 	// if we failed, leave in failure
-	if (autoExec == 0) return result ;
+	if (autoExec == 0) return 0 ;
 	
-	// try to open temp file in same directory for writing 
+	// try to create  temp file in same directory for writing 
 	strcpy(tempFilePathBuffer, autoExecPathBuffer) ;
 	tempIndex = trimFileOffPath(tempFilePathBuffer) ;
 	
@@ -185,7 +183,10 @@ int setAutoExecEnvVar (char * varName, char * varValue, char * introLines) {
 	// try to open that file 
 	FILE * tempFile = fopen(tempFilePathBuffer, "w") ;
 	
-	// okay, we're open
+	// if we failed, leave in failure
+	if (tempFile == 0) return 0 ;
+	
+	// okay, everybody's open
 	
 	// for each line in autoexec.bat
 	while (fgets(lineBuffer, LINE_MAX, autoExec)) {
