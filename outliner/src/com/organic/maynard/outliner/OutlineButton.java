@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
+ * Copyright (C) 2000, 2001, 2002 Maynard Demmon, maynard@organic.com
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or 
@@ -41,8 +41,17 @@ import javax.swing.*;
 import java.awt.image.*;
 import java.awt.geom.*;
 
-public class OutlineButton extends JLabel {
+import com.organic.maynard.outliner.util.preferences.Preferences;
 
+import com.organic.maynard.imaging.ImageFilters;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
+public class OutlineButton extends JLabel {
+	
 	// Class Fields
 	public static final ImageIcon ICON_CLOSED_NODE = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("graphics/closed_node.gif"));
 	
@@ -52,17 +61,17 @@ public class OutlineButton extends JLabel {
 	public static ImageIcon ICON_OPEN_NODE = new ImageIcon();
 	public static ImageIcon ICON_OPEN_NODE_SELECTED = new ImageIcon();
 	public static ImageIcon ICON_CLOSED_NODE_SELECTED = new ImageIcon();
-
+	
 	public static ImageIcon ICON_LEAF = new ImageIcon();
 	public static ImageIcon ICON_LEAF_SELECTED = new ImageIcon();
 	
 	// Note: icons are initialized by the createIcons() method below. This method
 	// is called from Outliner during it's endSetup() method.
-
+	
 	public static final ImageIcon ICON_DOWN_ARROW = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("graphics/down_arrow.gif"));
 	public static final ImageIcon ICON_SE_ARROW = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("graphics/se_arrow.gif"));
-
-
+	
+	
 	// Instance Fields
 	public OutlinerCellRendererImpl renderer = null;
 	
@@ -82,12 +91,12 @@ public class OutlineButton extends JLabel {
 	public void destroy() {
 		removeAll();
 		removeNotify();
-		setIcon(null);		
+		setIcon(null);
 		renderer = null;
 	}
 	
 	public boolean isManagingFocus() {return true;}
-
+	
 	// Used to fire key events
 	public void fireKeyEvent(KeyEvent event) {
 		processKeyEvent(event);
@@ -96,7 +105,7 @@ public class OutlineButton extends JLabel {
 	public void setNode(boolean isNode) {this.isNode = isNode;}
 	public void setOpen(boolean isOpen) {this.isOpen = isOpen;}
 	public void setSelected(boolean isSelected) {this.isSelected = isSelected;}
-
+	
 	public void updateIcon() {
 		if(isNode) {
 			if(isOpen) {
@@ -110,7 +119,7 @@ public class OutlineButton extends JLabel {
 					setIcon(ICON_CLOSED_NODE_SELECTED);
 				} else {
 					setIcon(ICON_CLOSED_NODE);
-				}			
+				}
 			}	
 		} else {
 			if(isSelected) {
@@ -120,16 +129,34 @@ public class OutlineButton extends JLabel {
 			}
 		}
 	}
-
-
+	
+	
 	// Static Methods
 	public static void createIcons() {
-		// Create a buffered image from the closed node image.
+		// Get the colors to use
+		Color c = Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur;
+		int hexColor = ((c.getRed() << 16) | (c.getGreen() << 8) | c.getBlue());
+		
+		Color c2 = Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).cur;
+		int hexColor2 = ((c2.getRed() << 16) | (c2.getGreen() << 8) | c2.getBlue());
+		
+		// Transfer the image from the ImageIcon to a Graphics2D so we can manipulate it.
 		Image closedImage = ICON_CLOSED_NODE.getImage();
+		
 		BufferedImage image = new BufferedImage(BUTTON_WIDTH, BUTTON_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = image.createGraphics();
 		g.drawImage(closedImage,0,0,Outliner.outliner);
-
+		
+		// Create a buffered image from the closed node image.
+		RGBImageFilter colorFilter = ImageFilters.getFillFilter(hexColor);
+		FilteredImageSource source = new FilteredImageSource(image.getSource(), colorFilter);
+		Image closedImage2 = Outliner.outliner.createImage(source);
+		
+		ICON_CLOSED_NODE.setImage(closedImage2);
+		
+		// Re-Apply the new image to the Graphics2D so the other images can work from the colored image.
+		g.drawImage(closedImage2,0,0,Outliner.outliner);
+		
 		// Create Buffered Image for the derived images.
 		BufferedImage openImage = new BufferedImage(BUTTON_WIDTH, BUTTON_HEIGHT, image.getType());
 		
@@ -140,64 +167,27 @@ public class OutlineButton extends JLabel {
 		ICON_OPEN_NODE.setImage(openImage);
 		
 		// Lighten color to create leaf
-		lightenFilter lightenFilter = new lightenFilter(0x00999999);
+		RGBImageFilter lightenFilter = ImageFilters.getLightenFilter(0x00999999);
 		FilteredImageSource leafSource = new FilteredImageSource(image.getSource(), lightenFilter);
 		Image leafImage = Outliner.outliner.createImage(leafSource);
-
+		
 		ICON_LEAF.setImage(leafImage);
 		
-		// Darken color for selected leaf
-		lightenFilter lightenFilter2 = new lightenFilter(0x00333333);
+		// Lighten color for selected leaf
+		RGBImageFilter lightenFilter2 = ImageFilters.getLightenFilter(0x00333333);
 		FilteredImageSource leafSelectedSource = new FilteredImageSource(leafImage.getSource(), lightenFilter2);
 		Image leafSelectedImage = Outliner.outliner.createImage(leafSelectedSource);
-
+		
 		ICON_LEAF_SELECTED.setImage(leafSelectedImage);
 		
-		// Invert color for selected images
-		inversionFilter inversionFilter = new inversionFilter();
-		FilteredImageSource openSource = new FilteredImageSource(openImage.getSource(), inversionFilter);
-		FilteredImageSource closedSource = new FilteredImageSource(image.getSource(), inversionFilter);
+		// Fill with the background color for selected images
+		RGBImageFilter fillFilter = ImageFilters.getFillFilter(hexColor2);
+		FilteredImageSource openSource = new FilteredImageSource(openImage.getSource(), fillFilter);
+		FilteredImageSource closedSource = new FilteredImageSource(image.getSource(), fillFilter);
 		Image openSelectedImage = Outliner.outliner.createImage(openSource);
 		Image closedSelectedImage = Outliner.outliner.createImage(closedSource);
 		
 		ICON_OPEN_NODE_SELECTED.setImage(openSelectedImage);
 		ICON_CLOSED_NODE_SELECTED.setImage(closedSelectedImage);
-	}
-}
-
-		
-class inversionFilter extends RGBImageFilter {
-	public int filterRGB(int x, int y, int rgb) {
-		return (
-			(rgb & 0xff000000) | (0xffffff - (rgb & 0x00ffffff))
-		);
-	}
-}
-
-class lightenFilter extends RGBImageFilter {
-	private int amount = 0;
-	
-	public lightenFilter(int amount) {
-		this.amount = amount;
-	}
-	
-	public int filterRGB(int x, int y, int rgb) {
-		return (
-			(rgb & 0xff000000) | (amount | (rgb & 0x00ffffff))
-		);
-	}
-}
-
-class darkenFilter extends RGBImageFilter {
-	private int amount = 0;
-	
-	public darkenFilter(int amount) {
-		this.amount = amount;
-	}
-
-	public int filterRGB(int x, int y, int rgb) {
-		return (
-			(rgb & 0xff000000) | (amount & (rgb & 0x00ffffff))
-		);
 	}
 }
