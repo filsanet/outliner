@@ -5,7 +5,7 @@
  * 
  *		
  * Copyright (C) 2001 Stan Krute <Stan@StanKrute.com>
- * Last Touched: 8/12/01 8:15PM
+ * Last Touched: 8/14/01 10:03PM
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,13 +32,19 @@ public interface JoeReturnCodes {
 	public static final int SUCCESS = 1 ;
 	public static final int FAILURE = 0 ;
 	
-	// from OpenFileFormat
-	public static final int SUCCESS_MODIFIED = 2;
-	public static final int FAILURE_USER_ABORTED = 3;  
-	
-	// try to allocate additions with thoughts of future expansion and general elbow room
-	// try to group with similars
 	// set success codes > 1, error/failure codes < 0
+
+	// try to allocate additions with thoughts of future expansion and general elbow room
+	// try to group similars
+	
+
+	// success codes
+	
+	// 1xx success flavors
+	public static final int SUCCESS_MODIFIED = 100;		// from OpenFileFormat
+	
+
+	// failure codes
 	
 	// -1xx boundary errors
 	public static final int ARRAY_SELECTOR_OUT_OF_BOUNDS = -100 ;
@@ -58,6 +64,7 @@ public interface JoeReturnCodes {
 	
 	// -6xx user actions
 	public static final int USER_ABORTED = -600 ;
+	public static final int FAILURE_USER_ABORTED = -600;  	// from OpenFileFormat
 	
 	// -7xx internet errors
 	public static final int URL_NOT_FOUND = -700 ;

@@ -24,7 +24,10 @@ import com.organic.maynard.util.string.StringTools;
 
 import org.xml.sax.*;
 
-public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFileFormat {
+public class OPMLFileFormat 
+
+	extends HandlerBase 
+	implements SaveFileFormat, OpenFileFormat, JoeReturnCodes {
 
 	// Constants
 	public static final String ELEMENT_OPML = "opml";
@@ -215,7 +218,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		this.tree = tree;
 		
 		// Do the Parsing
-		int success = OpenFileFormat.FAILURE;
+		int success = FAILURE;
 		errorOccurred = false;
 		
 		try {
@@ -224,16 +227,16 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 
 			parser.parse(new InputSource(buf));
 			if (errorOccurred) {
-				success = OpenFileFormat.FAILURE;
+				success = FAILURE;
 				return success;
 			}
-			success = OpenFileFormat.SUCCESS;
+			success = SUCCESS;
 		} catch (SAXException e) {
-			success = OpenFileFormat.FAILURE;
+			success = FAILURE;
 		} catch (IOException e) {
-			success = OpenFileFormat.FAILURE;
+			success = FAILURE;
 		} catch (Exception e) {
-			success = OpenFileFormat.FAILURE;
+			success = FAILURE;
 		}
 				
 		return success;

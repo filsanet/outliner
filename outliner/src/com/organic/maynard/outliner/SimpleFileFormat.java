@@ -22,7 +22,9 @@ import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
-public class SimpleFileFormat implements SaveFileFormat, OpenFileFormat {
+public class SimpleFileFormat 
+
+	implements SaveFileFormat, OpenFileFormat, JoeReturnCodes {
 	
 	// Constructors
 	public SimpleFileFormat() {}
@@ -49,7 +51,7 @@ public class SimpleFileFormat implements SaveFileFormat, OpenFileFormat {
 	
 	// OpenFileFormat Interface
 	public int open(TreeContext tree, DocumentInfo docInfo, InputStream stream) {
-		int success = OpenFileFormat.FAILURE;
+		int success = FAILURE;
 
 		String text = null;
 
@@ -78,7 +80,7 @@ public class SimpleFileFormat implements SaveFileFormat, OpenFileFormat {
 			
 				case PadSelection.SUCCESS:
 					tree.setRootNode(newNode);
-					success = OpenFileFormat.SUCCESS;
+					success = SUCCESS;
 					break;
 					
 				case PadSelection.SUCCESS_MODIFIED:
@@ -95,20 +97,20 @@ public class SimpleFileFormat implements SaveFileFormat, OpenFileFormat {
 					);
 					
 					if (result == JOptionPane.YES_OPTION) {
-						success = OpenFileFormat.SUCCESS_MODIFIED;
+						success = SUCCESS_MODIFIED;
 						tree.setRootNode(newNode);
 						break;
 					} else if (result == JOptionPane.NO_OPTION) {
-						success = OpenFileFormat.FAILURE_USER_ABORTED;
+						success = FAILURE_USER_ABORTED;
 						break;
 					}
 										
 				case PadSelection.FAILURE:
-					success = OpenFileFormat.FAILURE;
+					success = FAILURE;
 					break;
 			}
 		} else {
-			success = OpenFileFormat.FAILURE;
+			success = FAILURE;
 		}
 				
 		return success;

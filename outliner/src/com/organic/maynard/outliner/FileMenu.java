@@ -231,11 +231,11 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		}
 
 		int success = openFileFormat.open(tree, docInfo, stream);
-		if (success == OpenFileFormat.FAILURE) {
+		if (success == FAILURE) {
 			JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. Could not open file: " + filename);
 			RecentFilesList.removeFileNameFromList(filename);
 			return;
-		} else if (success == OpenFileFormat.FAILURE_USER_ABORTED) {
+		} else if (success == FAILURE_USER_ABORTED) {
 			return;
 		}
 		
@@ -278,7 +278,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		setupAndDraw(docInfo, newDoc);
 
 		// Set document as modified if something happened on open
-		if (success == OpenFileFormat.SUCCESS_MODIFIED) {
+		if (success == SUCCESS_MODIFIED) {
 			newDoc.setFileModified(true);
 		}
 	}
@@ -325,10 +325,10 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 
 		int success = openFileFormat.open(tree, docInfo, stream);
-		if (success == OpenFileFormat.FAILURE) {
+		if (success == FAILURE) {
 			RecentFilesList.removeFileNameFromList(filename); // Not really sure this is appropriate.
 			return;
-		} else if (success == OpenFileFormat.FAILURE_USER_ABORTED) {
+		} else if (success == FAILURE_USER_ABORTED) {
 			return;
 		}
 
@@ -352,7 +352,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		setupAndDraw(docInfo, document);
 
 		// Set document as modified if something happened on open
-		if (success == OpenFileFormat.SUCCESS_MODIFIED) {
+		if (success == SUCCESS_MODIFIED) {
 			document.setFileModified(true);
 		}
 	}
