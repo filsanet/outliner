@@ -38,47 +38,64 @@ import com.organic.maynard.util.crawler.*;
 import com.organic.maynard.io.*;
 import com.organic.maynard.util.string.*;
 
-import org.xml.sax.*;
-import org.apache.xerces.parsers.*;
-
-import com.organic.maynard.xml.*;
-
-public class XMLChecker {
+public class SimpleFindFileContentsHandler extends FileContentsInspector {
+	private String query = null;
+	private int totalNumberOfMatches = 0;
 	
-	public static final String VALID = "v";
-	public static final String WELL_FORMED = "w";
-	
-	public XMLChecker(String args[]) {
-		
-		// Get input from the console
-		String startingPath = ConsoleTools.getNonEmptyInput("Enter starting path: ");
-		String checkType = ConsoleTools.getNonEmptyInput("Enter check type (v) validate, (w) well-formed: ").toLowerCase();
-		while (!(checkType.equals(VALID) || checkType.equals(WELL_FORMED))) {
-			checkType = ConsoleTools.getNonEmptyInput("Enter check type (v) validate, (w) well-formed: ").toLowerCase();
-		}
-		String[] fileExtensions = ConsoleTools.getSeriesOfInputs("Enter file extension to match: ");
-		while (fileExtensions.length <= 0) {
-			fileExtensions = ConsoleTools.getSeriesOfInputs("Enter file extension to match: ");
-		}
-		System.out.println("");
-		
-		// Setup the Crawler
-		DirectoryCrawler crawler = new DirectoryCrawler();
-		crawler.setFileHandler(new XMLCheckerFileContentsHandler(checkType, FileTools.LINE_ENDING_WIN));
-		crawler.setFileFilter(new FileExtensionFilter(fileExtensions));
-		crawler.setVerbose(false);
-		
-		// Do the Crawl
-		System.out.println("STARTING...");
-		System.out.println("");
-		int status = crawler.crawl(startingPath);
-		System.out.println("DONE");
-		
-// java -classpath com.organic.maynard.jar;xerces.jar com.organic.maynard.XMLChecker
+	// Constructors
+	public SimpleFindFileContentsHandler(String query, String lineEnding) {
+		super(lineEnding);
+		setQuery(query);
 	}
 
+
+	// Accessors
+	public String getQuery() {return query;}
+	public void setQuery(String query) {this.query = query;}
 	
-	public static void main(String args[]) {
-		XMLChecker app = new XMLChecker(args);
-	}
+	public int getTotalNumberOfMatches() {return totalNumberOfMatches;}
+	public void setTotalNumberOfMatches(int totalNumberOfMatches) {this.totalNumberOfMatches = totalNumberOfMatches;}
+	
+	// Overridden Methods
+	protected void inspectContents(File file, String contents) {
+		StringBuffer buf = new StringBuffer();
+		
+		// Split it into lines
+		StringSplitter splitter = new StringSplitter(contents, getLineEnding());
+		
+		// Scan each line
+		int totalMatchesForThisFile = 0;
+		int lineCount = 1;
+		while (splitter.hasMoreElements()) {
+			String line = (String) splitter.nextElement();
+			
+			boolean keepLooking = true;
+			int indexStart = 0;
+			do {
+				int index = line.indexOf(query, indexStart);
+				if (index == -1) {
+					keepLooking = false;
+				} else {
+					totalMatchesForThisFile++;
+					totalNumberOfMatches++;
+					buf.append("  line: " + lineCount + " position: " + index + getLineEnding());
+
+					indexStart = index + query.length();
+				}
+			} while (keepLooking);
+			
+			lineCount++;
+		}
+		
+		// Output the results
+		if (totalMatchesForThisFile > 0) {
+			if (totalMatchesForThisFile == 1) {
+				System.out.println("Found " + totalMatchesForThisFile + " match in file: " + file.getPath());
+			} else {
+				System.out.println("Found " + totalMatchesForThisFile + " matches in file: " + file.getPath());			
+			}
+			System.out.print(buf.toString());
+			System.out.println("");
+		}
+	}	
 }

@@ -34,37 +34,44 @@ package com.organic.maynard;
 import java.io.*;
 import java.util.*;
 
-import com.organic.maynard.util.crawler.*;
 import com.organic.maynard.io.*;
+import com.organic.maynard.util.*;
+import com.organic.maynard.util.crawler.*;
 import com.organic.maynard.util.string.StringTools;
 
-public class SimpleReplace {
-			
-	public SimpleReplace(String args[]) {
-		
-		// Get input from the console
-		String startingPath = ConsoleTools.getNonEmptyInput("Enter starting path: ");
-		String match = ConsoleTools.getNonEmptyInput("Enter string to match: ");
-		String replacement = ConsoleTools.getNonNullInput("Enter string to replace: ");
-		String[] fileExtensions = ConsoleTools.getSeriesOfInputs("Enter file extension to match: ");
-		while (fileExtensions.length <= 0) {
-			fileExtensions = ConsoleTools.getSeriesOfInputs("Enter file extension to match: ");
-		}
-		System.out.println("");
-		
-		// Setup the Crawler
-		DirectoryCrawler crawler = new DirectoryCrawler();
-		crawler.setFileHandler(new SimRepFileConHandler(match, replacement, FileTools.LINE_ENDING_WIN));
-		crawler.setFileFilter(new FileExtensionFilter(fileExtensions));
-		
-		// Do the Crawl
-		System.out.println("STARTING...");
-		crawler.crawl(startingPath);
-		System.out.println("DONE");
+import org.apache.oro.text.perl.Perl5Util;
+import org.apache.oro.text.perl.MalformedPerl5PatternException;
+
+public class RegExMultiReplacementFileContentsHandler extends FileContentsHandler {
+
+	// Declare Fields
+	private String[] regexes = null;
+	
+	private Perl5Util util = new Perl5Util();
+
+
+	// Constructors
+	public RegExMultiReplacementFileContentsHandler(String[] regexes, String lineEnding) {
+		super(lineEnding);
+		setRegExes(regexes);
 	}
 
+
+	// Accessors
+	public void setRegExes(String[] regexes) {this.regexes = regexes;}
 	
-	public static void main(String args[]) {
-		SimpleReplace sr = new SimpleReplace(args);
+	
+	// Overridden Methods
+	protected String processContents(String contents) {
+		for (int i = 0; i < regexes.length; i++) {
+			String regex = regexes[i];
+			try {
+				System.out.println("\t\tREGEX: " + regex);
+				contents = util.substitute(regex, contents);
+			} catch (MalformedPerl5PatternException e) {
+				e.printStackTrace();
+			}
+		}
+		return contents;
 	}
 }

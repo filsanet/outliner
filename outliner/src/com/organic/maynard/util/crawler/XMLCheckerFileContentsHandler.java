@@ -43,42 +43,65 @@ import org.apache.xerces.parsers.*;
 
 import com.organic.maynard.xml.*;
 
-public class XMLChecker {
+public class XMLCheckerFileContentsHandler extends FileContentsInspector {
+
+	private SAXParser parser = new SAXParser();
+	private String checkType = null;
 	
-	public static final String VALID = "v";
-	public static final String WELL_FORMED = "w";
-	
-	public XMLChecker(String args[]) {
+	// Constructors
+	public XMLCheckerFileContentsHandler(String checkType, String lineEnding) {
+		super(lineEnding);
 		
-		// Get input from the console
-		String startingPath = ConsoleTools.getNonEmptyInput("Enter starting path: ");
-		String checkType = ConsoleTools.getNonEmptyInput("Enter check type (v) validate, (w) well-formed: ").toLowerCase();
-		while (!(checkType.equals(VALID) || checkType.equals(WELL_FORMED))) {
-			checkType = ConsoleTools.getNonEmptyInput("Enter check type (v) validate, (w) well-formed: ").toLowerCase();
-		}
-		String[] fileExtensions = ConsoleTools.getSeriesOfInputs("Enter file extension to match: ");
-		while (fileExtensions.length <= 0) {
-			fileExtensions = ConsoleTools.getSeriesOfInputs("Enter file extension to match: ");
-		}
-		System.out.println("");
-		
-		// Setup the Crawler
-		DirectoryCrawler crawler = new DirectoryCrawler();
-		crawler.setFileHandler(new XMLCheckerFileContentsHandler(checkType, FileTools.LINE_ENDING_WIN));
-		crawler.setFileFilter(new FileExtensionFilter(fileExtensions));
-		crawler.setVerbose(false);
-		
-		// Do the Crawl
-		System.out.println("STARTING...");
-		System.out.println("");
-		int status = crawler.crawl(startingPath);
-		System.out.println("DONE");
-		
-// java -classpath com.organic.maynard.jar;xerces.jar com.organic.maynard.XMLChecker
+		// Setup the parser
+		parser.setErrorHandler(new SimpleSAXErrorHandler("    "));
+		setCheckType(checkType);
+
 	}
 
+
+	// Accessors
+	public String getCheckType() {return checkType;}
+	public void setCheckType(String checkType) {
+		this.checkType = checkType;
+		try {
+			if (checkType.equals(XMLChecker.VALID)) {
+				parser.setFeature("http://xml.org/sax/features/validation", true);
+			} else {
+				parser.setFeature("http://xml.org/sax/features/validation", false);			
+			}
+		} catch (Exception e) {
+			System.out.println("Error setting up parser.");
+			e.printStackTrace();
+		}
+	}
+
+	// Overridden Methods
+	protected void inspectContents(File file, String contents) {
+
+		if (checkType.equals(XMLChecker.VALID)) {
+			System.out.println("  START VALIDATION FOR FILE: " + file.getPath());
+			doParse(contents);
+			System.out.println("  END VALIDATION");
+		} else if (checkType.equals(XMLChecker.WELL_FORMED)) {
+			System.out.println("  START WELL-FORMEDNESS CHECK FOR FILE: " + file.getPath());
+			doParse(contents);
+			System.out.println("  END WELL-FORMEDNESS CHECK");
+		}
+		System.out.println("");
+	}
 	
-	public static void main(String args[]) {
-		XMLChecker app = new XMLChecker(args);
+	private void doParse(String contents) {
+		try {
+			InputSource xmlParserSource = new InputSource(new StringReader(contents));
+			parser.parse(xmlParserSource);
+		} catch (IOException ioe) {
+			System.out.println("IOException when running parser.");
+			ioe.printStackTrace();
+			System.out.println("IOException when running parser.");
+		} catch (SAXException se) {
+			//System.out.println("SAXException when running parser." + se);
+			//se.printStackTrace();
+			//System.out.println("SAXException when running parser.");
+		}
 	}
 }

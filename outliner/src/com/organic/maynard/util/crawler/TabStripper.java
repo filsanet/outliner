@@ -69,37 +69,3 @@ public class TabStripper {
 		TabStripper ts = new TabStripper(args);
 	}
 }
-
-public class TabStripperFileContentsHandler extends FileContentsHandler {
-	private int numOfTabs = 0;
-	
-	
-	// Constructors
-	public TabStripperFileContentsHandler(int numOfTabs, String lineEnding) {
-		super(lineEnding, false);
-		setNumOfTabs(numOfTabs);
-	}
-
-
-	// Accessors
-	public int getNumOfTabs() {return numOfTabs;}
-	public void setNumOfTabs(int numOfTabs) {this.numOfTabs = numOfTabs;}	
-	
-	// Overridden Methods
-	protected String processContents(String contents) {
-		StringBuffer buf = new StringBuffer();
-		
-		// Split it into lines
-		StringSplitter splitter = new StringSplitter(contents, getLineEnding());
-		
-		// Trim each line
-		while (splitter.hasMoreElements()) {
-			String line = (String) splitter.nextElement();
-			buf.append(StringTools.trimFront(line,"\t",numOfTabs)).append(getLineEnding());
-			
-		}
-		
-		return buf.toString();
-	}	
-
-}

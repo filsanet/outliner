@@ -41,16 +41,3 @@ public class Replace {
 		return StringTools.replace(in, match, replacement);
 	}
 }
-
-public class Count {
-	/**
-	 * @depricated The functionality of this class has been moved into the StringTools class.
-	 */
-	public static int startsWith(String text, String match) {
-		return StringTools.startsWith(text, match);
-	}
-
-	public static int contains(String text, String match) {
-		return StringTools.contains(text, match);
-	}
-}

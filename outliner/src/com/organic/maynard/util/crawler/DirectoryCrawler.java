@@ -211,22 +211,3 @@ public class DirectoryCrawler {
 		}
 	}
 }
-
-
-// This is intended as a sample comparator for sorting files.
-public class FileNameLengthComparator implements Comparator {
-	public FileNameLengthComparator() {}
-	
-	public int compare(Object objA, Object objB) throws ClassCastException {
-		int lengthA = ((File) objA).getName().length();
-		int lengthB = ((File) objB).getName().length();
-		
-		if (lengthA < lengthB) {
-			return -1;
-		} else if (lengthA > lengthB) {
-			return 1;
-		} else {
-			return 0;
-		}
-	}
-}

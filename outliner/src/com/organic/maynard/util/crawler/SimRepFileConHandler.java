@@ -38,33 +38,31 @@ import com.organic.maynard.util.crawler.*;
 import com.organic.maynard.io.*;
 import com.organic.maynard.util.string.StringTools;
 
-public class SimpleReplace {
-			
-	public SimpleReplace(String args[]) {
-		
-		// Get input from the console
-		String startingPath = ConsoleTools.getNonEmptyInput("Enter starting path: ");
-		String match = ConsoleTools.getNonEmptyInput("Enter string to match: ");
-		String replacement = ConsoleTools.getNonNullInput("Enter string to replace: ");
-		String[] fileExtensions = ConsoleTools.getSeriesOfInputs("Enter file extension to match: ");
-		while (fileExtensions.length <= 0) {
-			fileExtensions = ConsoleTools.getSeriesOfInputs("Enter file extension to match: ");
-		}
-		System.out.println("");
-		
-		// Setup the Crawler
-		DirectoryCrawler crawler = new DirectoryCrawler();
-		crawler.setFileHandler(new SimRepFileConHandler(match, replacement, FileTools.LINE_ENDING_WIN));
-		crawler.setFileFilter(new FileExtensionFilter(fileExtensions));
-		
-		// Do the Crawl
-		System.out.println("STARTING...");
-		crawler.crawl(startingPath);
-		System.out.println("DONE");
+public class SimRepFileConHandler extends FileContentsHandler {
+
+	// Declare Fields
+	private String match = null;
+	private String replacement = null;
+	
+	
+	// Constructors
+	public SimRepFileConHandler(String match, String replacement, String lineEnding) {
+		super(lineEnding);
+		setMatch(match);
+		setReplacement(replacement);
 	}
 
+
+	// Accessors
+	public String getMatch() {return match;}
+	public void setMatch(String match) {this.match = match;}
+
+	public String getReplacement() {return replacement;}
+	public void setReplacement(String replacement) {this.replacement = replacement;}
 	
-	public static void main(String args[]) {
-		SimpleReplace sr = new SimpleReplace(args);
-	}
+	
+	// Overridden Methods
+	protected String processContents(String contents) {
+		return StringTools.replace(contents, match, replacement);
+	}	
 }

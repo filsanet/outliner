@@ -29,42 +29,25 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.organic.maynard;
+package com.organic.maynard.util.crawler;
 
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
-import com.organic.maynard.util.crawler.*;
-import com.organic.maynard.io.*;
-import com.organic.maynard.util.string.StringTools;
-
-public class SimpleReplace {
-			
-	public SimpleReplace(String args[]) {
-		
-		// Get input from the console
-		String startingPath = ConsoleTools.getNonEmptyInput("Enter starting path: ");
-		String match = ConsoleTools.getNonEmptyInput("Enter string to match: ");
-		String replacement = ConsoleTools.getNonNullInput("Enter string to replace: ");
-		String[] fileExtensions = ConsoleTools.getSeriesOfInputs("Enter file extension to match: ");
-		while (fileExtensions.length <= 0) {
-			fileExtensions = ConsoleTools.getSeriesOfInputs("Enter file extension to match: ");
-		}
-		System.out.println("");
-		
-		// Setup the Crawler
-		DirectoryCrawler crawler = new DirectoryCrawler();
-		crawler.setFileHandler(new SimRepFileConHandler(match, replacement, FileTools.LINE_ENDING_WIN));
-		crawler.setFileFilter(new FileExtensionFilter(fileExtensions));
-		
-		// Do the Crawl
-		System.out.println("STARTING...");
-		crawler.crawl(startingPath);
-		System.out.println("DONE");
-	}
-
+// This is intended as a sample comparator for sorting files.
+public class FileNameLengthComparator implements Comparator {
+	public FileNameLengthComparator() {}
 	
-	public static void main(String args[]) {
-		SimpleReplace sr = new SimpleReplace(args);
+	public int compare(Object objA, Object objB) throws ClassCastException {
+		int lengthA = ((File) objA).getName().length();
+		int lengthB = ((File) objB).getName().length();
+		
+		if (lengthA < lengthB) {
+			return -1;
+		} else if (lengthA > lengthB) {
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 }

@@ -29,42 +29,19 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.organic.maynard;
+package com.organic.maynard.util.string;
 
-import java.io.*;
 import java.util.*;
 
-import com.organic.maynard.util.crawler.*;
-import com.organic.maynard.io.*;
-import com.organic.maynard.util.string.StringTools;
-
-public class SimpleReplace {
-			
-	public SimpleReplace(String args[]) {
-		
-		// Get input from the console
-		String startingPath = ConsoleTools.getNonEmptyInput("Enter starting path: ");
-		String match = ConsoleTools.getNonEmptyInput("Enter string to match: ");
-		String replacement = ConsoleTools.getNonNullInput("Enter string to replace: ");
-		String[] fileExtensions = ConsoleTools.getSeriesOfInputs("Enter file extension to match: ");
-		while (fileExtensions.length <= 0) {
-			fileExtensions = ConsoleTools.getSeriesOfInputs("Enter file extension to match: ");
-		}
-		System.out.println("");
-		
-		// Setup the Crawler
-		DirectoryCrawler crawler = new DirectoryCrawler();
-		crawler.setFileHandler(new SimRepFileConHandler(match, replacement, FileTools.LINE_ENDING_WIN));
-		crawler.setFileFilter(new FileExtensionFilter(fileExtensions));
-		
-		// Do the Crawl
-		System.out.println("STARTING...");
-		crawler.crawl(startingPath);
-		System.out.println("DONE");
+public class Count {
+	/**
+	 * @depricated The functionality of this class has been moved into the StringTools class.
+	 */
+	public static int startsWith(String text, String match) {
+		return StringTools.startsWith(text, match);
 	}
 
-	
-	public static void main(String args[]) {
-		SimpleReplace sr = new SimpleReplace(args);
+	public static int contains(String text, String match) {
+		return StringTools.contains(text, match);
 	}
 }

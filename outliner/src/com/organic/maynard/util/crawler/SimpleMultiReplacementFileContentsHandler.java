@@ -34,37 +34,40 @@ package com.organic.maynard;
 import java.io.*;
 import java.util.*;
 
-import com.organic.maynard.util.crawler.*;
 import com.organic.maynard.io.*;
+import com.organic.maynard.util.*;
+import com.organic.maynard.util.crawler.*;
 import com.organic.maynard.util.string.StringTools;
 
-public class SimpleReplace {
-			
-	public SimpleReplace(String args[]) {
-		
-		// Get input from the console
-		String startingPath = ConsoleTools.getNonEmptyInput("Enter starting path: ");
-		String match = ConsoleTools.getNonEmptyInput("Enter string to match: ");
-		String replacement = ConsoleTools.getNonNullInput("Enter string to replace: ");
-		String[] fileExtensions = ConsoleTools.getSeriesOfInputs("Enter file extension to match: ");
-		while (fileExtensions.length <= 0) {
-			fileExtensions = ConsoleTools.getSeriesOfInputs("Enter file extension to match: ");
-		}
-		System.out.println("");
-		
-		// Setup the Crawler
-		DirectoryCrawler crawler = new DirectoryCrawler();
-		crawler.setFileHandler(new SimRepFileConHandler(match, replacement, FileTools.LINE_ENDING_WIN));
-		crawler.setFileFilter(new FileExtensionFilter(fileExtensions));
-		
-		// Do the Crawl
-		System.out.println("STARTING...");
-		crawler.crawl(startingPath);
-		System.out.println("DONE");
+public class SimpleMultiReplacementFileContentsHandler extends FileContentsHandler {
+	private Vector matches = null;
+	private Vector replacements = null;
+	
+	
+	// Constructors
+	public SimpleMultiReplacementFileContentsHandler(Vector matches, Vector replacements, String lineEnding) {
+		super(lineEnding);
+		setMatches(matches);
+		setReplacements(replacements);
 	}
 
+
+	// Accessors
+	//public String getMatch() {return match;}
+	public void setMatches(Vector matches) {this.matches = matches;}
+
+	//public String getReplacement() {return replacement;}
+	public void setReplacements(Vector replacements) {this.replacements = replacements;}
 	
-	public static void main(String args[]) {
-		SimpleReplace sr = new SimpleReplace(args);
+	
+	// Overridden Methods
+	protected String processContents(String contents) {
+		for (int i = 0; i < matches.size(); i++) {
+			String match = (String) matches.get(i);
+			String replacement = (String) replacements.get(i);
+			contents = StringTools.replace(contents, match, replacement);
+		}
+		//return StringTools.replace(contents, match, replacement);
+		return contents;
 	}
 }
