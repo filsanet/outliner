@@ -136,14 +136,15 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 			
 		// Create the Layout
-		restoreWindowToInitialSize();
-		setLocation(INITIAL_X, INITIAL_Y);
 		
 		dummy = new DummyJScrollPane(panel, panel.layout.scrollBar);
 		
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, dummy, attJSP);
 		splitPane.setResizeWeight(1.0);
 		splitPane.addPropertyChangeListener(this);
+
+		restoreWindowToInitialSize();
+		setLocation(INITIAL_X, INITIAL_Y);
 
 		// Set the icon in the frame header.
 		setFrameIcon(ICON_DOCUMENT_UNSAVED);
@@ -159,6 +160,9 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		} else {
 			showAttributes(false);
 		}
+		
+		validate();
+		panel.layout.redraw();
 
 		setVisible(true);
 	}

@@ -264,13 +264,13 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			OutlineEditableIndicator.BUTTON_HEIGHT), 
 		OutlineMoveableIndicator.BUTTON_HEIGHT);
 
-		OutlinerCellRendererImpl.textAreaWidth = panel.getWidth()
+		OutlinerCellRendererImpl.textAreaWidth = 
+			panel.getParent().getWidth()
 			 - OutlinerCellRendererImpl.lineNumberOffset 
 			 - OutlineLineNumber.LINE_NUMBER_WIDTH 
 			 - OutlineButton.BUTTON_WIDTH
 			 - Preferences.getPreferenceInt(Preferences.RIGHT_MARGIN).cur 
-			 - scrollBar.getWidth();
-			 
+			 - scrollBar.getWidth();			 
 
 		// Draw the visible components
 
