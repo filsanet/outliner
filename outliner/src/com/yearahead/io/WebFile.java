@@ -29,7 +29,7 @@ import java.util.*;
 public class WebFile extends File
 {
 	/** Set to true to turn on debugging. */
-	public static boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	private String url;
 	private boolean isDir;

@@ -23,16 +23,13 @@ import java.net.*;
  * Class that handles basic http authorization.  Called when user/password
  * is needed.
  */
-public class WebAuthenticator
-	extends Authenticator
-{
-	PasswordAuthentication pa;
+public class WebAuthenticator extends Authenticator {
+	private PasswordAuthentication pa;
 
 	/**
 	 * Create a new authentication handler.
 	 */
-	public WebAuthenticator(String user, String pw)
-	{
+	public WebAuthenticator(String user, String pw) {
 		pa = new PasswordAuthentication(user, pw.toCharArray());
 	}
 
@@ -40,8 +37,7 @@ public class WebAuthenticator
 	 * Called if directory where outliner.php resides is protected by
 	 * basic authorization.
 	 */
-	protected PasswordAuthentication getPasswordAuthentication()
-	{
+	protected PasswordAuthentication getPasswordAuthentication() {
 		return pa;
 	}
 }

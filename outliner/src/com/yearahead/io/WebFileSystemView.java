@@ -32,13 +32,14 @@ import com.organic.maynard.outliner.GUITreeLoader;
 public class WebFileSystemView extends FileSystemView
 {
 	/** Set to true to turn on debugging. */
-	public static boolean DEBUG = false;
+	public static final boolean DEBUG = false;
 
 	/** Default name of a new folder. */
 	private static String NEW_FOLDER = null;
 
 	private HashMap fileMap = new HashMap();
 	private WebFile rootDir;
+
 
 	/**
 	 * Create a new web file view.  Base url defaults to
@@ -67,12 +68,14 @@ public class WebFileSystemView extends FileSystemView
 	public WebFileSystemView(String url, String user, String pw)
 	{
 		NEW_FOLDER = GUITreeLoader.reg.getText("untitled_folder");
-		int len = "http://".length();
+		//int len = "http://".length();
+		int len = url.indexOf("//") + 2; // [md] 11-8-01 This should work better in case it's https://
 		String host = url.substring(len, url.indexOf("/", len));
 
 		// set the username/pw for basic apache authorization.
 		if (user != null && pw != null) {
-			Authenticator.setDefault(new WebAuthenticator("steve", "ally"));
+			//Authenticator.setDefault(new WebAuthenticator("steve", "ally"));
+			Authenticator.setDefault(new WebAuthenticator(user, pw)); // [md] 11-8-01 Looks like this was hard coded. Let's see if this works.
 		}
 
 		rootDir = new WebFile(host, url);
@@ -166,7 +169,7 @@ public class WebFileSystemView extends FileSystemView
 		return false;
 	}
 	
-	// Returns all root partitians on this system. 
+	// Returns all root partitions on this system. 
 	public File[] getRoots()
 	{
 		return new File[] {rootDir};
