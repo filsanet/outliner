@@ -47,45 +47,45 @@ public abstract class JMouseWheelSupport {
 		// Find the embedded Swing component which should receive the scroll messages
 		Component c = SwingUtilities.getDeepestComponentAt(owner, p.x, p.y);
 
-        // Get the scroll pane for the widget, if any
-        while ( c != null )
-        {
-            if ( c instanceof JScrollPane )
-            {
-                // Get the vertical scrollbar for the scroll pane.
-                JScrollBar scrollBar = ((DummyJScrollPane)c).getVerticalScrollBarProxy(); // MD: Modifed to use a different method name so that other processes don't get access to the scrollbar by when they shouldn't.
-                BoundedRangeModel model = scrollBar.getModel();
+		// Get the scroll pane for the widget, if any
+		while ( c != null ) {
+			if ( c instanceof JScrollPane ) {
+				// Get the vertical scrollbar for the scroll pane.
+				JScrollBar scrollBar = null;
+				if (c instanceof DummyJScrollPane) {
+					scrollBar = ((DummyJScrollPane) c).getVerticalScrollBarProxy(); // MD: Modifed to use a different method name so that other processes don't get access to the scrollbar by when they shouldn't.
+				} else {
+					scrollBar = ((JScrollPane) c).getVerticalScrollBar(); // MD: Modifed to use a different method name so that other processes don't get access to the scrollbar by when they shouldn't.
+				}
+				BoundedRangeModel model = scrollBar.getModel();
 
-                // If there's room to scroll, update this scrollbar and return.
-                if ( model.getMinimum() + model.getExtent() != model.getMaximum() )
-                {
-                    // Get the current value and set the new value depending on
-                    // the direction of the mouse wheel.
-                    int nValue = scrollBar.getValue();
-                    int nIncrement = scrollBar.getUnitIncrement((zDelta > 0) ? -1 : 1);
-                    nIncrement = Math.max( nIncrement, minScrollDistance ) * scrollSpeed; 	// (15 is not too annoying yet still less than table row increment)
-                    nValue = nValue + ((zDelta > 0) ? -nIncrement : nIncrement);
-                    SwingUtilities.invokeLater(new ScrollBarAdjuster(scrollBar, nValue));
-                    return;
+				// If there's room to scroll, update this scrollbar and return.
+				if ( model.getMinimum() + model.getExtent() != model.getMaximum() ) {
+					// Get the current value and set the new value depending on
+					// the direction of the mouse wheel.
+					int nValue = scrollBar.getValue();
+					int nIncrement = scrollBar.getUnitIncrement((zDelta > 0) ? -1 : 1);
+					nIncrement = Math.max( nIncrement, minScrollDistance ) * scrollSpeed; 	// (15 is not too annoying yet still less than table row increment)
+					nValue = nValue + ((zDelta > 0) ? -nIncrement : nIncrement);
+					SwingUtilities.invokeLater(new ScrollBarAdjuster(scrollBar, nValue));
+					return;
                 }
-            }
-			else if ( c instanceof JComboBox )
-			{
+            } else if ( c instanceof JComboBox ) {
 				JComboBox cb = (JComboBox) c;
-
+				
 				// if the mouse is over a combo box, we
 				// should change it's scroll value too...
-
+				
 				// (only adjust if it's enabled...)
 				if (!cb.isEnabled())
 					return;
-
+				
 				SwingUtilities.invokeLater(new ComboBoxAdjuster(cb, zDelta));
 				return;
 			}
-
-            // See if parent is a scroll pane that can scroll
-            c = c.getParent();
+			
+			// See if parent is a scroll pane that can scroll
+			c = c.getParent();
         }
 
 	}
@@ -144,6 +144,9 @@ public abstract class JMouseWheelSupport {
 
 /*
  * $Log$
+ * Revision 1.2  2001/09/28 07:50:22  maynardd
+ * Had to make this explicitly use DummyJScrollPane to fix the jump scrolling bug.
+ *
  * Revision 1.1  2001/09/21 07:37:13  maynardd
  * modified to let us get at scroll speed.
  *
