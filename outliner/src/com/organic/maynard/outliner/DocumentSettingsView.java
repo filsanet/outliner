@@ -42,13 +42,18 @@ import java.util.*;
 import javax.swing.*;
 import org.xml.sax.*;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
 public class DocumentSettingsView extends AbstractGUITreeJDialog implements ActionListener {
 
 	// Constants
-	private static final int INITIAL_WIDTH = 350;
-	private static final int INITIAL_HEIGHT = 400;
-	private static final int MINIMUM_WIDTH = 250;
-	private static final int MINIMUM_HEIGHT = 300;
+	private static final int INITIAL_WIDTH = 450;
+	private static final int INITIAL_HEIGHT = 300;
+	private static final int MINIMUM_WIDTH = 450;
+	private static final int MINIMUM_HEIGHT = 200;
 
 
 	protected static String OK = null;
@@ -72,7 +77,7 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 	private static String IS_USING_DOCUMENT_PREFS = null;
 
 	// GUI Elements
-	protected Box box = null;
+	//protected Box box = null;
 
 	protected JButton buttonOK = null;
 	protected JButton buttonCancel = null;
@@ -110,7 +115,7 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 	}
 
 	private void initialize() {
-		box = Box.createVerticalBox();
+		//box = Box.createVerticalBox();
 		
 		OK = GUITreeLoader.reg.getText("ok");
 		CANCEL = GUITreeLoader.reg.getText("cancel");
@@ -162,13 +167,6 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		useCreateModDatesCheckBoxListener = new CheckboxListener(useCreateModDatesCheckBox, null);
 		createModDatesFormatTextFieldListener = new TextFieldListener(createModDatesFormatField, null);
 
-		// Define the Bottom Panel
-		JPanel bottomPanel = new JPanel();
-		bottomPanel.setLayout(new FlowLayout());
-		bottomPanel.add(buttonOK);
-		bottomPanel.add(buttonCancel);
-		getContentPane().add(bottomPanel,BorderLayout.SOUTH);
-
 		// Setup ComboBoxes
 		for (int i = 0; i < Preferences.ENCODINGS.size(); i++) {
 			saveEncodingComboBox.addItem((String) Preferences.ENCODINGS.get(i));
@@ -195,80 +193,48 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		useCreateModDatesCheckBox.addActionListener(useCreateModDatesCheckBoxListener);
 		createModDatesFormatField.addFocusListener(createModDatesFormatTextFieldListener);
 
+
+		// Define the top panel
+		JPanel topPanel = new JPanel();
+		topPanel.setLayout(new GridBagLayout());
+		
+		AbstractPreferencesPanel.addSingleItemCentered(isInheritingPrefsLabel,               topPanel);
+		AbstractPreferencesPanel.addPreferenceItem(CREATION_DATE,     creationDateLabel,     topPanel);
+		AbstractPreferencesPanel.addPreferenceItem(MODIFICATION_DATE, modificationDateLabel, topPanel);
+
+		getContentPane().add(topPanel, BorderLayout.NORTH);
+
+
 		// Define the Center Panel
-		Box box = Box.createVerticalBox();
+		JPanel centerPanel = new JPanel();
+		centerPanel.setLayout(new GridBagLayout());
 
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(LINE_TERMINATOR), box);
-		AbstractPreferencesPanel.addSingleItemCentered(lineEndComboBox, box);
+		AbstractPreferencesPanel.addPreferenceItem(LINE_TERMINATOR,                  lineEndComboBox,                      centerPanel);
+		AbstractPreferencesPanel.addPreferenceItem(ENCODING_WHEN_SAVING,             saveEncodingComboBox,                 centerPanel);
+		AbstractPreferencesPanel.addPreferenceItem(FORMAT_WHEN_SAVING,               saveFormatComboBox,                   centerPanel);
+		AbstractPreferencesPanel.addPreferenceItem(OWNER_NAME,                       ownerNameField,                       centerPanel);
+		AbstractPreferencesPanel.addPreferenceItem(OWNER_EMAIL,                      ownerEmailField,                      centerPanel);
+		AbstractPreferencesPanel.addPreferenceItem(APPLY_FONT_STYLE_FOR_COMMENTS,    applyFontStyleForCommentsCheckBox,    centerPanel);
+		AbstractPreferencesPanel.addPreferenceItem(APPLY_FONT_STYLE_FOR_EDITABILITY, applyFontStyleForEditabilityCheckBox, centerPanel);
+		AbstractPreferencesPanel.addPreferenceItem(APPLY_FONT_STYLE_FOR_MOVEABILITY, applyFontStyleForMoveabilityCheckBox, centerPanel);
+		AbstractPreferencesPanel.addPreferenceItem(USE_CREATE_MOD_DATES,             useCreateModDatesCheckBox,            centerPanel);
+		AbstractPreferencesPanel.addPreferenceItem(CREATE_MOD_DATES_FORMAT,          createModDatesFormatField,            centerPanel);
 
-		box.add(Box.createVerticalStrut(5));
+		JScrollPane jsp = new JScrollPane(centerPanel);
+		
+		getContentPane().add(jsp, BorderLayout.CENTER);
 
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(ENCODING_WHEN_SAVING), box);
-		AbstractPreferencesPanel.addSingleItemCentered(saveEncodingComboBox, box);
 
-		box.add(Box.createVerticalStrut(5));
+		// Define the Bottom Panel
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.setLayout(new FlowLayout());
+		
+		bottomPanel.add(buttonRestoreToGlobal);
+		bottomPanel.add(buttonOK);
+		bottomPanel.add(buttonCancel);
+		
+		getContentPane().add(bottomPanel,BorderLayout.SOUTH);
 
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(FORMAT_WHEN_SAVING), box);
-		AbstractPreferencesPanel.addSingleItemCentered(saveFormatComboBox, box);
-
-		box.add(Box.createVerticalStrut(10));
-
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(OWNER_NAME), box);
-		AbstractPreferencesPanel.addSingleItemCentered(ownerNameField, box);
-
-		box.add(Box.createVerticalStrut(5));
-
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(OWNER_EMAIL), box);
-		AbstractPreferencesPanel.addSingleItemCentered(ownerEmailField, box);
-
-		box.add(Box.createVerticalStrut(10));
-
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(APPLY_FONT_STYLE_FOR_COMMENTS), box);
-		AbstractPreferencesPanel.addSingleItemCentered(applyFontStyleForCommentsCheckBox, box);
-
-		box.add(Box.createVerticalStrut(5));
-
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(APPLY_FONT_STYLE_FOR_EDITABILITY), box);
-		AbstractPreferencesPanel.addSingleItemCentered(applyFontStyleForEditabilityCheckBox, box);
-
-		box.add(Box.createVerticalStrut(5));
-
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(APPLY_FONT_STYLE_FOR_MOVEABILITY), box);
-		AbstractPreferencesPanel.addSingleItemCentered(applyFontStyleForMoveabilityCheckBox, box);
-
-		box.add(Box.createVerticalStrut(5));
-
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(USE_CREATE_MOD_DATES), box);
-		AbstractPreferencesPanel.addSingleItemCentered(useCreateModDatesCheckBox, box);
-
-		box.add(Box.createVerticalStrut(5));
-
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(CREATE_MOD_DATES_FORMAT), box);
-		AbstractPreferencesPanel.addSingleItemCentered(createModDatesFormatField, box);
-
-		// Define the Outter Box
-		JScrollPane jsp = new JScrollPane(box);
-		Box outterBox = Box.createVerticalBox();
-
-		AbstractPreferencesPanel.addSingleItemCentered(isInheritingPrefsLabel, outterBox);
-
-		outterBox.add(Box.createVerticalStrut(5));
-
-		AbstractPreferencesPanel.addPreferenceItem(CREATION_DATE, creationDateLabel, outterBox);
-
-		outterBox.add(Box.createVerticalStrut(5));
-
-		AbstractPreferencesPanel.addPreferenceItem(MODIFICATION_DATE, modificationDateLabel, outterBox);
-
-		outterBox.add(Box.createVerticalStrut(10));
-
-		outterBox.add(jsp);
-
-		outterBox.add(Box.createVerticalStrut(10));
-
-		AbstractPreferencesPanel.addSingleItemCentered(buttonRestoreToGlobal, outterBox);
-
-		getContentPane().add(outterBox,BorderLayout.CENTER);
 
 		// Set the default button
 		getRootPane().setDefaultButton(buttonOK);
@@ -307,12 +273,13 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 
 		if (docSettings.useDocumentSettings()) {
 			isInheritingPrefsLabel.setText(IS_USING_DOCUMENT_PREFS);
-			syncToDocumentSettings();
+			buttonRestoreToGlobal.setEnabled(true);
 		} else {
 			isInheritingPrefsLabel.setText(IS_USING_APPLICATION_PREFS);
+			buttonRestoreToGlobal.setEnabled(false);
 			docSettings.syncToGlobal();
-			syncToDocumentSettings();
 		}
+		syncToDocumentSettings();
 				
   		super.show();
 	}
