@@ -50,66 +50,66 @@ import javax.swing.plaf.metal.*;
  */
  
 public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
-
+	
 	static {
 		javax.swing.FocusManager.setCurrentManager(new OutlinerFocusManager());
 	}
-		
+	
 	// Constants
 	private static final int UP = 1;
 	private static final int DOWN = 2;
 	
 	public static final int TEXT = 0;
 	public static final int ICON = 1;
-
+	
 	public static final int CACHE_SIZE = Preferences.getPreferenceInt(Preferences.RENDERER_WIDGIT_CACHE_SIZE).cur;
-
+	
 	private static final Dimension MINIMUM_DIMENSION = new Dimension(0,32);
-
-
+	
+	
 	// Class Fields
 	private static Point startPoint = new Point(0,0);
-
-
+	
+	
 	// Instance Fields
 	private int drawingDirection = DOWN;
-
+	
 	private int numNodesDrawn = 1;
 	private int ioFirstVisNode = 0;
 	private int ioLastVisNode = 0;
 	
 	private boolean partialCellDrawn = false;
-
+	
 	private Node nodeToDrawFrom = null;
 	private int ioNodeToDrawFrom = 0;
-
-
+	
+	
 	private boolean drawBlock = false; // Used to prevent drawing from happening when we update the scrollbar's value.
-
+	
 	private int top = 0;
 	private int bottom = 0;
 	private int left = 0;
 	private int right = 0;
-
+	
 	// GUI Components'
 	public OutlinerPanel panel = null;
 	public JScrollBar scrollBar = new JScrollBar();
-
+	
 	// Event Listeners
 	private TextKeyListener textListener = new TextKeyListener();
 	private IconKeyListener iconListener = new IconKeyListener();
 	private IndicatorMouseListener indicatorMouseListener = new IndicatorMouseListener();
 	protected InternalDragAndDropListener dndListener = new InternalDragAndDropListener();
-		
+	
 	// Widgit Cache
 	public OutlinerCellRendererImpl[] textAreas = new OutlinerCellRendererImpl[CACHE_SIZE];
 	private OutlinerCellRendererImpl hiddenCell = new OutlinerCellRendererImpl();
 	
-
+	
 	// The Constructors
 	public OutlineLayoutManager(OutlinerPanel panel) {
 		this.panel = panel;
-
+		
 		// Setup and Add the ScrollBar
 		scrollBar.addAdjustmentListener(this); 
 		panel.add(scrollBar);
@@ -139,10 +139,10 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			
 			panel.add(renderer.iComment);
 			renderer.iComment.addMouseListener(indicatorMouseListener);
-
+			
 			panel.add(renderer.iEditable);
 			renderer.iEditable.addMouseListener(indicatorMouseListener);
-
+			
 			panel.add(renderer.iMoveable);
 			renderer.iMoveable.addMouseListener(indicatorMouseListener);
 		}
@@ -160,7 +160,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	}
 	
 	public void destroy() {
-		// Destroy Renderers		
+		// Destroy Renderers
 		for (int i = 0; i < CACHE_SIZE; i++) {
 			panel.remove(textAreas[i]);
 			panel.remove(textAreas[i].button);
@@ -174,7 +174,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			textAreas[i].button.removeKeyListener(iconListener);
 			textAreas[i].button.removeMouseListener(iconListener);
 			textAreas[i].button.destroy();
-
+			
 			textAreas[i].lineNumber.removeMouseListener(dndListener);
 			textAreas[i].lineNumber.removeFocusListener(iconListener);
 			textAreas[i].lineNumber.removeKeyListener(iconListener);
@@ -183,13 +183,13 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			
 			textAreas[i].iComment.removeMouseListener(indicatorMouseListener);
 			textAreas[i].iComment.destroy();
-
+			
 			textAreas[i].iEditable.removeMouseListener(indicatorMouseListener);
 			textAreas[i].iEditable.destroy();
-
+			
 			textAreas[i].iMoveable.removeMouseListener(indicatorMouseListener);
 			textAreas[i].iMoveable.destroy();
-
+			
 			textAreas[i].removeMouseListener(dndListener);
 			textAreas[i].removeFocusListener(textListener);
 			textAreas[i].removeKeyListener(textListener);
@@ -203,22 +203,22 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		// Destroy the hidden cell
 		panel.remove(hiddenCell);
 		panel.remove(hiddenCell.button);
-
+		
 		hiddenCell.button.removeFocusListener(iconListener);
 		hiddenCell.button.removeKeyListener(iconListener);
 		hiddenCell.button.removeMouseListener(iconListener);
 		hiddenCell.button.destroy();
-
+		
 		hiddenCell.lineNumber.removeKeyListener(iconListener);
 		hiddenCell.lineNumber.removeMouseListener(iconListener);
 		hiddenCell.lineNumber.destroy();
 		
 		hiddenCell.iComment.destroy();
-
+		
 		hiddenCell.iEditable.destroy();
-
+		
 		hiddenCell.iMoveable.destroy();
-
+		
 		hiddenCell.removeFocusListener(textListener);
 		hiddenCell.removeKeyListener(textListener);
 		hiddenCell.removeMouseListener(textListener);
@@ -244,7 +244,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		
 		nodeToDrawFrom = null;
 	}
-
+	
 	// Accessors
 	public OutlinerCellRendererImpl getHiddenCell() {
 		return hiddenCell;
@@ -258,21 +258,21 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		this.nodeToDrawFrom = nodeToDrawFrom;
 		this.ioNodeToDrawFrom = ioNodeToDrawFrom;
 	}
-
+	
 	public Node getNodeToDrawFrom() {
 		return this.nodeToDrawFrom;
 	}
-		
+	
 	public int getIndexOfNodeToDrawFrom() {
 		return ioNodeToDrawFrom;
-	}	
+	}
 	
 	public void updateNodeToDrawFrom() {
 		ioNodeToDrawFrom = panel.doc.tree.getVisibleNodes().indexOf(nodeToDrawFrom);
 	}
-
-
-	// Main Drawing Methods	
+	
+	
+	// Main Drawing Methods
 	public void redraw() {
 		draw();
 		setFocus(panel.doc.tree.getEditingNode(), panel.doc.tree.getComponentFocus());
@@ -281,7 +281,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	public void draw(Node nodeThatMustBeVis, int focusElement) {
 		draw(nodeThatMustBeVis, panel.doc.tree.getVisibleNodes().indexOf(nodeThatMustBeVis), focusElement);
 	}
-		
+	
 	public void draw(Node nodeThatMustBeVis, int ioNodeThatMustBeVis, int focusElement) {
 		if (ioNodeThatMustBeVis <= ioFirstVisNode) {
 			drawingDirection = DOWN;
@@ -296,14 +296,14 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	}
 		
 	public void draw() {
-		//System.out.println("Draw Called: " + drawCount++);
+		//System.out.println("Draw Called: " + panel.getParent().getWidth());
 		numNodesDrawn = 0;
-
+		
 		// Precompute some values
 		OutlinerCellRendererImpl.pApplyFontStyleForComments = panel.doc.settings.getApplyFontStyleForComments().cur;
 		OutlinerCellRendererImpl.pApplyFontStyleForEditability = panel.doc.settings.getApplyFontStyleForEditability().cur;
 		OutlinerCellRendererImpl.pApplyFontStyleForMoveability = panel.doc.settings.getApplyFontStyleForMoveability().cur;
-
+		
 		OutlinerCellRendererImpl.textAreaWidth = 
 			panel.getParent().getWidth()
 			 - OutlinerCellRendererImpl.lineNumberOffset 
@@ -312,14 +312,14 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			 - Preferences.getPreferenceInt(Preferences.RIGHT_MARGIN).cur 
 			 - scrollBar.getWidth();
 		
-
+		
 		// Hide all the nodes from the previous draw
 		for (int i = 0; i < CACHE_SIZE; i++) {
 			if (textAreas[i].node != null) {
 				textAreas[i].node.setVisible(false);
 			}
 		}
-
+		
 		startPoint.x = OutlinerCellRendererImpl.lineNumberOffset + OutlineLineNumber.LINE_NUMBER_WIDTH;
 		
 		switch (drawingDirection) {
@@ -342,8 +342,8 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		
 		return;
 	}
-
-	private void drawDown() {		
+	
+	private void drawDown() {
 		// Now Draw as many nodes as neccessary.
 		startPoint.y = Preferences.getPreferenceInt(Preferences.TOP_MARGIN).cur;
 		
@@ -364,7 +364,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		if (OutlinerCellRendererImpl.pShowLineNumbers) {
 			// Increment the LineCountKey
 			panel.doc.tree.incrementLineCountKey();
-
+			
 			// Prep the line numbers since this will improve performance. Don't need to do this for UP since the order preps itself.
 			int index = nodeIndex + CACHE_SIZE;
 			if (index >= visibleNodesSize) {
@@ -373,7 +373,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 				visibleNodes.get(index).getLineNumber(panel.doc.tree.getLineCountKey());
 			}
 		}
-
+		
 		OutlinerCellRendererImpl renderer;
 		while (true) {
 			renderer = textAreas[numNodesDrawn];
@@ -388,7 +388,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 				partialCellDrawn = true;
 				break;
 			}
-
+			
 			// Make sure we dont' try to draw more nodes than the cache size
 			if (numNodesDrawn == CACHE_SIZE) {
 				break;
@@ -401,18 +401,18 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			}
 			node = visibleNodes.get(nodeIndex);
 		}
-
+		
 		// Hide any drawing elements that were not used.
 		for (int i = numNodesDrawn; i < CACHE_SIZE; i++) {
 			textAreas[i].setVisible(false);
 		}
-
+		
 		// Record Indexes and get things ready for the scrollbar
 		if (partialCellDrawn) {
 			numNodesDrawn--;
 			partialCellDrawn = false;
 		}
-
+		
 		ioLastVisNode = ioFirstVisNode + (numNodesDrawn - 1);
 		if (ioLastVisNode >= visibleNodesSize) {
 			ioLastVisNode = visibleNodesSize - 1;
@@ -422,22 +422,22 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	private void drawUp() {
 		// Now Draw as many nodes as neccessary.
 		startPoint.y = this.bottom - Preferences.getPreferenceInt(Preferences.BOTTOM_MARGIN).cur;
-
+		
 		Node node = getNodeToDrawFrom();
 		if (node == null) {return;}
-
+		
 		JoeNodeList visibleNodes = panel.doc.tree.getVisibleNodes();
 		int visibleNodesSize = visibleNodes.size();
-
+		
 		int nodeIndex = ioNodeToDrawFrom;
 		ioLastVisNode = ioNodeToDrawFrom;
-
+		
 		// Pre-compute some values
 		int effectiveTop = top + Preferences.getPreferenceInt(Preferences.TOP_MARGIN).cur;
-
+		
 		// Increment the LineCountKey
 		node.getTree().incrementLineCountKey();
-
+		
 		Node newNodeToDrawFrom = null;
 		int ioNewNodeToDrawFrom = nodeIndex;
 		int offset = 0;
@@ -449,14 +449,14 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			renderer.setVisible(true);
 			renderer.node.setVisible(true);
 			numNodesDrawn++;
-
+			
 			// Make sure we don't draw past the top. And don't count nodes that are partially drawn.
 			if (startPoint.y < effectiveTop) {
 				renderer.node.setVisible(false);
 				partialCellDrawn = true;
 				break;
 			}
-
+			
 			newNodeToDrawFrom = node;
 			ioNewNodeToDrawFrom = nodeIndex;
 			offset = startPoint.y;
@@ -465,7 +465,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			if (numNodesDrawn == CACHE_SIZE) {
 				break;
 			}
-
+			
 			// Get the Next Node to Draw
 			nodeIndex--;
 			if (nodeIndex == -1) {
@@ -473,18 +473,18 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			}
 			node = visibleNodes.get(nodeIndex);
 		}
-
+		
 		// Hide any drawing elements that were not used.
 		for (int i = numNodesDrawn; i < CACHE_SIZE; i++) {
 			textAreas[i].setVisible(false);
 		}
-
+		
 		// Record some values for the extra draw down.
 		int ioExtraNodeToDrawFrom = ioNodeToDrawFrom + 1;
 		
 		// Shift up so we are always drawing from the top
 		setNodeToDrawFrom(newNodeToDrawFrom, ioNewNodeToDrawFrom);
-
+		
 		int shiftAmount = effectiveTop - offset;
 		for (int i = 0; i < numNodesDrawn; i++) {
 			textAreas[i].verticalShift(shiftAmount);
@@ -500,7 +500,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		if (ioLastVisNode >= visibleNodesSize) {
 			ioLastVisNode = visibleNodesSize - 1;
 		}
-
+		
 		drawingDirection = DOWN;
 		
 		// Do the extraDrawDown
@@ -508,13 +508,13 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			drawDownExtraNodes(ioExtraNodeToDrawFrom);
 		}
 	}
-
+	
 	private void drawDownExtraNodes(int nodeIndex) {
 		JoeNodeList visibleNodes = panel.doc.tree.getVisibleNodes();
 		int visibleNodesSize = visibleNodes.size();
 		
 		Node node = visibleNodes.get(nodeIndex);
-	
+		
 		startPoint.x = OutlinerCellRendererImpl.lineNumberOffset + OutlineLineNumber.LINE_NUMBER_WIDTH;
 		startPoint.y = textAreas[0].getLocation().y + textAreas[0].getBestHeight() + Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).cur;
 		
@@ -535,7 +535,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 				partialCellDrawn = true;
 				break;
 			}
-
+			
 			// Make sure we dont' try to draw more nodes than the cache size
 			if (numNodesDrawn == CACHE_SIZE) {
 				break;
@@ -548,14 +548,14 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			}
 			node = visibleNodes.get(nodeIndex);
 		}
-
+		
 		// Record Indexes and get things ready for the scrollbar
 		if (partialCellDrawn) {
 			numNodesDrawn--;
 			partialCellDrawn = false;
 		}
 		
-		ioLastVisNode = ioFirstVisNode + (numNodesDrawn - 1);		
+		ioLastVisNode = ioFirstVisNode + (numNodesDrawn - 1);
 		if (ioLastVisNode >= visibleNodesSize) {
 			ioLastVisNode = visibleNodesSize - 1;
 		}
@@ -608,8 +608,8 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 				System.out.println("Focus Error: Not ICON or TEXT");
 		}
 	}
-
-
+	
+	
 	// AdjustmentListener Interface
 	public void adjustmentValueChanged(AdjustmentEvent e) {
 		if (drawBlock) {
@@ -621,14 +621,14 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		JoeNodeList list = panel.doc.tree.getVisibleNodes();
 		
 		if (value < list.size()) {
-			setNodeToDrawFrom(list.get(value), value);		
+			setNodeToDrawFrom(list.get(value), value);
 			drawingDirection = DOWN;
 			redraw();
 		}
 	}
 	
 	
-	// LayoutManager Interface	
+	// LayoutManager Interface
 	public void layoutContainer(Container container) {
 		Insets insets = panel.getInsets();
 		this.top = insets.top;
@@ -640,7 +640,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		Dimension d = scrollBar.getPreferredSize();
 		scrollBar.setBounds(right - d.width, top, d.width, bottom - top);
 	}
-
+	
 	public Dimension minimumLayoutSize(Container parent) {
 		return MINIMUM_DIMENSION;
 	}

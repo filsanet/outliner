@@ -47,7 +47,7 @@ import javax.swing.*;
  */
 
 public class OutlinerDesktopManager extends DefaultDesktopManager {
-
+	
 	// Direction Constants
 	private static final int NORTH = 1;
 	private static final int NORTHEAST = 2;
@@ -61,7 +61,7 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 	// Minimized Icon Constants
 	private static final int ICON_WIDTH = 150;
 	private static final int ICON_HEIGHT = 25;
-
+	
 	
 	private boolean isDragging = false;	
 	
@@ -71,9 +71,9 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 	private int startingWidth = 0;
 	private int startingY = 0;
 	private int startingHeight = 0;
-
+	
 	public static boolean activationBlock = false;
-
+	
 	
 	// The Constructor
 	public OutlinerDesktopManager() {
@@ -102,7 +102,7 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 		startingHeight = f.getHeight();
 		super.beginResizingFrame(f,direction);
 	}
-
+	
 	public void resizeFrame(JComponent f, int newX, int newY, int newWidth, int newHeight) {
 		//System.out.println("resizingFrame");
 		// Ensure a minimum size for the window.
@@ -139,11 +139,11 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 			newWidth += newX;
 			newX = 0;
 		}
-
+		
 		super.resizeFrame(f,newX,newY,newWidth,newHeight);
 		updateDesktopSize(false);
 	}
-
+	
 	public void endResizingFrame(JComponent f) {
 		//System.out.println("endResizingFrame");
 		super.endResizingFrame(f);
@@ -160,11 +160,11 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 		
 		// Prevent dragging of the frame above the visible area. To the left is ok though.
 		if (newY < 0) {newY = 0;}
-
+		
 		super.dragFrame(f,newX,newY);
 		updateDesktopSize(false);
 	}
-
+	
 	public void endDraggingFrame(JComponent f) {
 		//System.out.println("endDraggingFrame");
 		isDragging = false;
@@ -177,8 +177,8 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 		
 		//System.out.println("activateFrame " + f.getTitle());
 		super.activateFrame(f);
-
-
+		
+		
 		if (f instanceof Document) {
 			Outliner.documents.setMostRecentDocumentTouched((Document) f);
 		}
@@ -191,36 +191,36 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 			setBoundsForFrame(f, r.x + 5, r.y + 5, f.getWidth(), f.getHeight());			
 		}
 	}
-
+	
 	public void deactivateFrame(JInternalFrame f) {
 		//System.out.println("deactivateFrame");
 		super.deactivateFrame(f);
 	}
-
+	
 	public void openFrame(JInternalFrame f) {
 		//System.out.println("openFrame");
 		super.openFrame(f);
 		updateDesktopSize(false);
 	}
-
+	
 	public void closeFrame(JInternalFrame f) {
 		//System.out.println("closeFrame");
 		super.closeFrame(f);
 		updateDesktopSize(false);
 	}
-
+	
 	public void iconifyFrame(JInternalFrame f) {
 		//System.out.println("iconifyFrame");
 		super.iconifyFrame(f);
 		f.getDesktopIcon().setSize(ICON_WIDTH,ICON_HEIGHT);
 	}
-
+	
 	public void deiconifyFrame(JInternalFrame f) {
 		//System.out.println("deiconifyFrame");
 		super.deiconifyFrame(f);
 		updateDesktopSize(false);
 	}
-
+	
 	public void maximizeFrame(JInternalFrame f) {
 		//System.out.println("maximizeFrame");
 		setMaximized(true);
@@ -240,22 +240,22 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 		f.setSize(new Dimension(Outliner.jsp.getViewport().getWidth(), Outliner.jsp.getViewport().getHeight()));
 		updateDesktopSize(false);
 	}
-
+	
 	public void minimizeFrame(JInternalFrame f) {
 		//System.out.println("minimizeFrame");
 		setMaximized(false);
 		super.minimizeFrame(f);
-
+		
 		// Enable Stack Menu Item
 		JMenuItem item = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.STACK_MENU_ITEM);
 		item.setEnabled(true);
-
+		
 		// Restore the border
 		((OutlinerDocument) f).showBorder();
 		
 		updateDesktopSize(false);
 	}
-
+	
 	public void setBoundsForFrame(JComponent f, int newX, int newY, int newWidth, int newHeight) {
 		//System.out.println("setBoundsForFrame");
  		if (!(f instanceof JInternalFrame)) {
@@ -268,13 +268,13 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 		
 		super.setBoundsForFrame(f,newX,newY,newWidth,newHeight);
 	}
-
-		
+	
+	
 	// Utility Methods
 	private int findNearest(int value, int partition) {
 		return value/partition;
 	}
-
+	
 	private void updateDesktopSize(boolean repaint) {
 		// This is just flailing to get it to redraw itself.
 		Outliner.jsp.revalidate();

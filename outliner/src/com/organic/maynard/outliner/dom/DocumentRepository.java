@@ -56,7 +56,7 @@ public class DocumentRepository {
 	private ArrayList treeSelectionListeners = new ArrayList();
 	private ArrayList undoQueueListeners = new ArrayList();
 	
-
+	
 	// Constructors
 	public DocumentRepository() {}
 	
@@ -86,8 +86,8 @@ public class DocumentRepository {
 		// Cleanup
 		selectionChangedEvent.setTree(null);
 	}
-
-
+	
+	
 	// UndoQueueEvent Handling
 	public void addUndoQueueListener(UndoQueueListener l) {
 		undoQueueListeners.add(l);
@@ -109,12 +109,12 @@ public class DocumentRepository {
 		for (int i = 0, limit = undoQueueListeners.size(); i < limit; i++) {
 			((UndoQueueListener) undoQueueListeners.get(i)).undo(undoEvent);
 		}
-
+		
 		// Cleanup
 		undoEvent.setDocument(null);
 	}
-
-
+	
+	
 	// DocumentEvent Handling
 	public void addDocumentListener(DocumentListener l) {
 		documentListeners.add(l);
@@ -142,8 +142,8 @@ public class DocumentRepository {
 		// Cleanup
 		modifiedStateChangedEvent.setDocument(null);
 	}
-
-
+	
+	
 	// OutlinerDocumentEvent Handling
 	public void addOutlinerDocumentListener(DocumentListener l) {
 		outlinerDocumentListeners.add(l);
@@ -165,21 +165,21 @@ public class DocumentRepository {
 		for (int i = 0, limit = outlinerDocumentListeners.size(); i < limit; i++) {
 			((OutlinerDocumentListener) outlinerDocumentListeners.get(i)).attributesVisibilityChanged(attributesVisibilityChangedEvent);
 		}
-
+		
 		// Cleanup
 		attributesVisibilityChangedEvent.setDocument(null);
 	}
-
+	
 	public void fireHoistDepthChangedEvent(OutlinerDocument doc) {
 		hoistDepthChangedEvent.setOutlinerDocument(doc);
 		for (int i = 0, limit = outlinerDocumentListeners.size(); i < limit; i++) {
 			((OutlinerDocumentListener) outlinerDocumentListeners.get(i)).hoistDepthChanged(hoistDepthChangedEvent);
 		}
-
+		
 		// Cleanup
 		hoistDepthChangedEvent.setDocument(null);
 	}
-
+	
 	
 	// DocumentRepositoryEvent Handling
 	public void addDocumentRepositoryListener(DocumentRepositoryListener l) {
@@ -203,27 +203,27 @@ public class DocumentRepository {
 		for (int i = 0, limit = documentRepositoryListeners.size(); i < limit; i++) {
 			((DocumentRepositoryListener) documentRepositoryListeners.get(i)).documentAdded(addedEvent);
 		}
-
+		
 		// Cleanup
 		addedEvent.setDocument(null);
 	}
-
+	
 	protected void fireDocumentRemovedEvent(Document doc) {
 		removedEvent.setDocument(doc);
 		for (int i = 0, limit = documentRepositoryListeners.size(); i < limit; i++) {
 			((DocumentRepositoryListener) documentRepositoryListeners.get(i)).documentRemoved(removedEvent);
 		}
-
+		
 		// Cleanup
 		removedEvent.setDocument(null);
 	}
-
+	
 	protected void fireChangedMostRecentDocumentTouchedEvent(Document doc) {
 		changedMostRecentDocumentTouchedEvent.setDocument(doc);
 		for (int i = 0, limit = documentRepositoryListeners.size(); i < limit; i++) {
 			((DocumentRepositoryListener) documentRepositoryListeners.get(i)).changedMostRecentDocumentTouched(changedMostRecentDocumentTouchedEvent);
 		}
-
+		
 		// Cleanup
 		changedMostRecentDocumentTouchedEvent.setDocument(null);
 	}
@@ -236,21 +236,21 @@ public class DocumentRepository {
 	
 	public void setMostRecentDocumentTouched(Document doc) {
 		this.mostRecentDocumentTouched = doc;
-
+		
 		// Fire Event
 		fireChangedMostRecentDocumentTouchedEvent(doc);
 	}
-
+	
 	public void addDocument(Document doc) {
 		openDocuments.add(doc);
-
+		
 		// Register the Document
 		doc.setDocumentRepository(this);
-
+		
 		// Fire Event
 		fireDocumentAddedEvent(doc);
 	}
-
+	
 	
 	public int indexOfOpenDocument(Document doc) {
 		return openDocuments.indexOf(doc);
@@ -268,31 +268,31 @@ public class DocumentRepository {
 				return doc;
 			}
 		}
-		return null;	
+		return null;
 	}
 	
 	public void removeDocument(Document doc) {
 		openDocuments.remove(doc);
-
+		
 		// Fire Event
 		fireDocumentRemovedEvent(doc);
 		
 		// Unregister the Document
 		doc.setDocumentRepository(null);
-
+		
 		// Select the last non-iconified document in the window menu and 
-		// change to it. Otherwise, change to null.
-		IS_CURRENT_DOCUMENT: if (mostRecentDocumentTouched == doc) {
+		// change to it. Otherwise change to an iconified doc. Otherwise, change to null.
+		if (mostRecentDocumentTouched == doc) {
+			setMostRecentDocumentTouched(null);
 			if (openDocumentCount() > 0) {
 				for (int i = openDocumentCount() - 1; i >= 0; i--) {
 					Document newDoc = getDocument(i);
-					if (!newDoc.isIcon()) {
+					if (!newDoc.isIcon() || i == 0) {
 						Outliner.menuBar.windowMenu.changeToWindow((OutlinerDocument) newDoc);
-						break IS_CURRENT_DOCUMENT;
+						return;
 					}
 				}
 			}
-			setMostRecentDocumentTouched(null);
 		}
 	}
 	
@@ -305,12 +305,12 @@ public class DocumentRepository {
 			if (PlatformCompatibility.areFilenamesEquivalent(filename, getDocument(i).getFileName())) {
 				return false;
 			}
-		}		
-
+		}
+		
 		return true;
 	}
-
-
+	
+	
 	// Iterator Methods
 	public Iterator getOpenDocumentIterator(int index) {
 		ArrayList temp = new ArrayList();
@@ -322,12 +322,12 @@ public class DocumentRepository {
 	public Iterator getLoopedOpenDocumentIterator() {
 		return getOpenDocumentIterator(indexOfOpenDocument(mostRecentDocumentTouched));
 	}
-
+	
 	public Iterator getDefaultOpenDocumentIterator() {
 		return getOpenDocumentIterator(0);
 	}
-
-
+	
+	
 	// Misc Methods
 	public void redrawAllOpenDocuments() {
 		for (int i = 0, limit = openDocuments.size(); i < limit; i++) {
@@ -339,6 +339,6 @@ public class DocumentRepository {
 			} else {
 				doc.panel.layout.draw();
 			}
-		}		
+		}
 	}
 }

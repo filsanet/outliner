@@ -54,51 +54,51 @@ import com.organic.maynard.util.string.StanStringTools ;
  */
 
 public class OutlinerDocument extends JInternalFrame implements Document, ComponentListener, PropertyChangeListener {
-
+	
 	// Constants
 	private static final String UNTITLED_DOCUMENT_NAME = GUITreeLoader.reg.getText("untitled");
-
+	
 	public static final ImageIcon ICON_DOCUMENT_SAVED = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("graphics/document_saved.gif"));
 	public static final ImageIcon ICON_DOCUMENT_UNSAVED = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("graphics/document_unsaved.gif"));
-
+	
 	public static final int MIN_WIDTH = 300;
 	public static final int MIN_HEIGHT = 100;
- 
+	
  	public static final int INITIAL_WIDTH = 450;
 	public static final int INITIAL_HEIGHT = 450;
-
+	
  	public static final int INITIAL_X = 5; // Default starting location
 	public static final int INITIAL_Y = 5; // Default starting location
-
-
+	
+	
 	// Class Variables
 	private static int untitledDocumentCount = 0;
 	private static OutlinerWindowMonitor monitor = new OutlinerWindowMonitor();
-
-		
+	
+	
 	// document title name forms
 	private static final int FULL_PATHNAME = 0;
 	private static final int TRUNC_PATHNAME = 1;
 	private static final int JUST_FILENAME = 2;
 	
 	private static final String TRUNC_STRING = GUITreeLoader.reg.getText("trunc_string");
-
-
+	
+	
 	// Instance Variables
 	private int preferredCaretPosition = 0;
 	private boolean isShowingAttributes = false;
 	private int dividerPosition = 0;
 	private String fileName = "";
 	private boolean fileModified = true;
-
+	
 	private Border border = null;
-
+	
 	private DocumentRepository repository = null;
 	private DocumentInfo docInfo = null;
-
+	
 	public OutlinerPanel panel = new OutlinerPanel(this); // Needs to come before JoeTree declaration.
 	public DummyJScrollPane dummy = null;
-			
+	
 	public DocumentSettings settings = new DocumentSettings(this);
 	public JoeTree tree = Outliner.newTree(this); // Needs to come after OutlinerPanel declaration.
 	public HoistStack hoistStack = new HoistStack(this);
@@ -107,7 +107,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	
 	private JSplitPane splitPane = null;
 	private JScrollPane attJSP = new JScrollPane(attPanel);
-
+	
 	
 	// The Constructors
 	public OutlinerDocument(String title) {
@@ -120,7 +120,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		setDocumentInfo(docInfo);
 		
 		Outliner.desktop.add(this, JLayeredPane.DEFAULT_LAYER);
-
+		
 		// Set the window title
 		if (title.equals("")) {
 			untitledDocumentCount++;
@@ -138,18 +138,18 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		addComponentListener(this);
 		addInternalFrameListener(monitor);
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-			
+		
 		// Create the Layout
 		dummy = new DummyJScrollPane(panel, panel.layout.scrollBar);
 		
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, dummy, attJSP);
 		splitPane.setResizeWeight(1.0);
 		splitPane.addPropertyChangeListener(this);
-
+		
 		// Now let's resize since the panel and dummy panel are linked together so no NPE when we get the panel's size.
 		restoreWindowToInitialSize();
 		setLocation(INITIAL_X, INITIAL_Y);
-
+		
 		// Set the icon in the frame header.
 		setFrameIcon(ICON_DOCUMENT_UNSAVED);
 		
@@ -158,7 +158,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		
 		dividerPosition = getSize().height - 120;
 		splitPane.setDividerLocation(dividerPosition); // This sets the position in the event that we don't show the atts initially.
-
+		
 		if (Preferences.getPreferenceBoolean(Preferences.SHOW_ATTRIBUTES).cur) {
 			showAttributes(true);
 		} else {
@@ -167,12 +167,12 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		
 		// Need to validate and redraw one last time since everything wasn't all put together until now. And the redraw
 		// inside showAttributes wouldn't be kicked off since we're not visible yet.
+		setVisible(true);
+		
 		validate();
 		panel.layout.redraw();
-
-		setVisible(true);
 	}
-
+	
 	public void destroy() {
 		removeInternalFrameListener(monitor);
 		removeComponentListener(this);
@@ -201,7 +201,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		attPanel = null;
 		splitPane = null;
 		attJSP = null;
-
+		
 		getContentPane().removeNotify();
 		getContentPane().removeAll();
 		removeNotify();
@@ -224,7 +224,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	public DocumentRepository getDocumentRepository() {
 		return this.repository;
 	}
-
+	
 	public void setTree(JoeTree tree) {
 		this.tree = tree;
 	}
@@ -232,7 +232,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	public JoeTree getTree() {
 		return this.tree;
 	}
-
+	
 	public void setUndoQueue(UndoQueue queue) {
 		this.undoQueue = queue;
 	}
@@ -248,7 +248,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	public void setDocumentInfo(DocumentInfo docInfo) {
 		this.docInfo = docInfo;
 	}
-
+	
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
@@ -256,7 +256,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	public String getFileName() {
 		return this.fileName;
 	}
-
+	
 	static int getTitleNameForm() {
 		String currentSettingStrung = Preferences.getPreferenceString(Preferences.DOCUMENT_TITLES_NAME_FORM).cur;
 		int nameFormIndex = 0;
@@ -279,7 +279,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		
 		// Fire DocumentEvent
 		getDocumentRepository().fireModifiedStateChangedEvent(this);
-
+		
 		if (fileModified) {
 			setFrameIcon(ICON_DOCUMENT_UNSAVED);
 		} else {
@@ -292,14 +292,14 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	}
 	
 	
-	// Attributes Panel	
+	// Attributes Panel
 	public boolean isShowingAttributes() {
 		return this.isShowingAttributes;
 	}
 	
 	public void showAttributes(boolean b) {
 		isShowingAttributes = b;
-
+		
 		if (isShowingAttributes()) {
 			// Swap the components
 			getContentPane().remove(dummy);
@@ -317,7 +317,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 			getContentPane().remove(splitPane);
 			getContentPane().add(dummy, BorderLayout.CENTER);
 		}
-
+		
 		if (isVisible()) {
 			validate();
 			panel.layout.redraw();
@@ -331,9 +331,9 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	public void restoreWindowToInitialSize() {
 		setSize(INITIAL_WIDTH,INITIAL_HEIGHT);
 	}
-
-
-	// Border	
+	
+	
+	// Border
 	public void hideBorder() {
 		border = getBorder();
 		setBorder(null);
@@ -344,27 +344,34 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 			setBorder(border);
 		}
 	}
-
-
+	
+	
 	// This method taken from the workaround for bug #4309079.
-	public void moveToFront() {
+	/*public void moveToFront() {
 		Window window = SwingUtilities.getWindowAncestor(this);
 		Component focusOwner = (window != null) ? window.getFocusOwner() : null;
 		boolean descendant = false;
-
+		
 		if (window != null && focusOwner != null && SwingUtilities.isDescendingFrom(focusOwner, this)) {
 			descendant = true;
 			requestFocus();
 		}
-
+		
 		super.moveToFront();
-
+		
 		if (descendant) {
 			focusOwner.requestFocus();
 		}
+	}*/
+	
+	public void setSelected(boolean selected) throws java.beans.PropertyVetoException {
+		super.setSelected(selected);
+		if (selected) {
+			panel.layout.redraw();
+		}
 	}
-
-
+	
+	
 	// ComponentListener Interface
 	public void componentResized(ComponentEvent e) {
 		panel.layout.redraw();
@@ -373,8 +380,8 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	public void componentHidden(ComponentEvent e) {} 
 	public void componentMoved(ComponentEvent e) {}
 	public void componentShown(ComponentEvent e) {}
-
-
+	
+	
 	// Text Caret Positioning
 	public int getPreferredCaretPosition() {
 		return preferredCaretPosition;
@@ -410,7 +417,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		}
 	}
 	
-
+	
 	/**
 	 * Syncs up the titles of all open documents to the
 	 * Preferences setting for document titles.

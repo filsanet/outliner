@@ -55,7 +55,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 		closeInternalFrame(e.getInternalFrame());
 	}
 	
-	public static boolean closeInternalFrame(JInternalFrame w) {		
+	public static boolean closeInternalFrame(JInternalFrame w) {
 		// grab a copy of the document ref
 		OutlinerDocument doc = (OutlinerDocument) w;
 		
@@ -111,7 +111,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 				// set up dialog
 				msg = GUITreeLoader.reg.getText("error_window_monitor_untitled_save_changes");
 				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, doc.getFileName());
-			
+				
 				// run dialog
 				int result = JOptionPane.showConfirmDialog(doc, msg);
 				
@@ -131,13 +131,13 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 		if (docInfo != null) {
 			docInfo.recordWindowPositioning(doc);
 		}
-
+		
 		// Hide the document
 		doc.setVisible(false);
-
+		
 		// Remove the document.
 		Outliner.documents.removeDocument(doc);
-
+		
 		// Explicitly Destroy since Swing has problems letting go.
 		// Seems to make a difference when we also use -Xincgc.
 		Ginsu.sliceAndDice(doc);

@@ -53,8 +53,8 @@ public class WindowMenu extends AbstractOutlinerMenu implements DocumentReposito
 	// Class Fields
 	protected static int WINDOW_LIST_START = -1;
 	protected static int indexOfOldSelection = -1;
-
-
+	
+	
 	// DocumentRepositoryListener Interface
 	public void documentAdded(DocumentRepositoryEvent e) {
 		// Enable menu since we've got at least one document now.
@@ -80,20 +80,20 @@ public class WindowMenu extends AbstractOutlinerMenu implements DocumentReposito
 			setEnabled(false);
 		}
 	}
-
+	
 	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
 		if(e.getDocument() != null) {
 			// DeSelect Old Window
 			if ((WindowMenu.indexOfOldSelection >= WindowMenu.WINDOW_LIST_START) && (WindowMenu.indexOfOldSelection < getItemCount())) {
 				getItem(indexOfOldSelection).setSelected(false);
 			}
-
+			
 			// Select New Window
 			WindowMenu.indexOfOldSelection = getIndexOfDocument(e.getDocument());
 			getItem(indexOfOldSelection).setSelected(true);
-		}	
+		}
 	}
-
+	
 	private int getIndexOfDocument(Document doc) {
 		for (int i = 0; i < getItemCount(); i++) {
 			JMenuItem item = getItem(i);
@@ -106,66 +106,64 @@ public class WindowMenu extends AbstractOutlinerMenu implements DocumentReposito
 		}
 		return -1;
 	}
-
-
+	
+	
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
 		Outliner.menuBar.windowMenu = this;
-
+		
 		setEnabled(false);
 	}
 	
 	public void endSetup(AttributeList atts) {
 		WINDOW_LIST_START = getItemCount();
-
+		
 		Outliner.documents.addDocumentRepositoryListener(this);
 	}
 	
-
+	
 	// Misc Methods
 	public void updateWindow(OutlinerDocument doc) {
 		int index = getIndexOfDocument(doc);
 		Outliner.menuBar.windowMenu.getItem(index).setText(doc.getTitle());
 	}
-
-
+	
+	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		changeToWindow(((WindowMenuItem) e.getSource()).doc);
 	}
-
-	// Window Menu Methods	
+	
+	// Window Menu Methods
 	public static void changeToWindow(OutlinerDocument doc) {
-		if (doc == null) {return;}
+		if (doc == null) {
+			return;
+		}
 		
 		try {
-			OutlinerDocument prevDoc = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
-			
-			if (prevDoc == doc) {
-				return;
-			}
-			
 			// DeIconify if neccessary
 			if (doc.isIcon()) {
 				doc.setIcon(false);
 			}
 			
+			doc.moveToFront();
+			
 			if (Outliner.desktop.desktopManager.isMaximized()) {
+				// Minimize the previous document if it exists
+				OutlinerDocument prevDoc = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
 				if (prevDoc != null) {
-					//System.out.println("About to try and minimize");
 					OutlinerDesktopManager.activationBlock = true;
 					prevDoc.setMaximum(false);
 					prevDoc.setSelected(false);
 					OutlinerDesktopManager.activationBlock = false;
 				}
-				//System.out.println("About to try and maximize");
+				
+				// Maximize the current document.
 				doc.setMaximum(true);
 			}
-
+			
 			doc.setSelected(true);
-			doc.moveToFront();
-
 		} catch (java.beans.PropertyVetoException pve) {
 			pve.printStackTrace();
 		}
