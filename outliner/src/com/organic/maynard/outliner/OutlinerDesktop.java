@@ -133,6 +133,7 @@ public class OutlinerDesktop extends JDesktopPane implements Scrollable {
 	public boolean getScrollableTracksViewportWidth() {
 		//System.out.println("getScrollableTracksViewportWidth");
 		return false;
+	} // end method
 
 	Dimension getCurrentMaxDocSize () {
 		// see if we have scroll bar stuff to deal with
@@ -148,5 +149,5 @@ public class OutlinerDesktop extends JDesktopPane implements Scrollable {
 		
 		// return it
 		return gcmdsize ;
-	}
+	} // end method
 }
