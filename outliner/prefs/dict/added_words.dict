@@ -17,10 +17,12 @@ outliner's
 rendertime
 Unicode
 Steven
-OMPL
+OPML
 XML-RPC
 XMLRPC
+maximize
 maximized
+minimize
 minimized
 behaviour
 args
@@ -55,7 +57,7 @@ clipboard
 centered
 locale
 locales
-mneumonic
+mnemonic
 I've
 it's
 we've
