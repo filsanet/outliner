@@ -68,22 +68,26 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 		if (doc.isFileModified()) {
 			
 			// if it's untitled, do a Save As ...
-			if ( doc.getFileName().equals("")) {
-				// set up dialog
-				msg = GUITreeLoader.reg.getText("error_window_monitor_untitled_save_changes");
-				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, doc.getTitle());
-				
-				// run dialog
-				int result = JOptionPane.showConfirmDialog(doc, msg);
-				
-				// deal with dialog results
-				if (result == JOptionPane.YES_OPTION) {
-					SaveAsFileMenuItem.saveAsOutlinerDocument(doc, Outliner.fileProtocolManager.getDefault());
-				} else if (result == JOptionPane.NO_OPTION) {
-					// Do Nothing
-				} else if (result == JOptionPane.CANCEL_OPTION) {
-					return false;
-				} // end if-else chain
+			if (doc.getFileName().equals("")) {
+				if (doc.tree.isDocumentEmpty() && doc.undoQueue.isEmpty()) {
+					// Do Nothing since it doesn't look like the user has touched the document.
+				} else {
+					// set up dialog
+					msg = GUITreeLoader.reg.getText("error_window_monitor_untitled_save_changes");
+					msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, doc.getTitle());
+					
+					// run dialog
+					int result = JOptionPane.showConfirmDialog(doc, msg);
+					
+					// deal with dialog results
+					if (result == JOptionPane.YES_OPTION) {
+						SaveAsFileMenuItem.saveAsOutlinerDocument(doc, Outliner.fileProtocolManager.getDefault());
+					} else if (result == JOptionPane.NO_OPTION) {
+						// Do Nothing
+					} else if (result == JOptionPane.CANCEL_OPTION) {
+						return false;
+					} // end if-else chain
+				}
 				
 			// else if it's not imported, do a Save
 			} else if (! doc.getDocumentInfo().isImported()) {
