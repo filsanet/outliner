@@ -1,119 +1,126 @@
 <?xml version="1.0"?>
 <root id="outliner" class="com.organic.maynard.outliner.Outliner" title="JOE">
 	<!-- TEXT REPOSITORY -->
-		<asset type="text" key="yes" value="Yes"/>
-		<asset type="text" key="no" value="No"/>
-		<asset type="text" key="ok" value="OK"/>
-		<asset type="text" key="new" value="New"/>
-		<asset type="text" key="create" value="Create"/>
-		<asset type="text" key="update" value="Update"/>
-		<asset type="text" key="cancel" value="Cancel"/>
-		<asset type="text" key="delete" value="Delete"/>
 		<asset type="text" key="apply" value="Apply"/>
-		<asset type="text" key="mac" value="Macintosh"/>
-		<asset type="text" key="windows" value="Windows"/>
-		<asset type="text" key="unix" value="Unix"/>
-		<asset type="text" key="wrap_words" value="words"/>
-		<asset type="text" key="wrap_characters" value="characters"/>
-		<asset type="text" key="goto_dialog_go" value="Go"/>
-		<asset type="text" key="goto_dialog_line_and_column" value="Go to Line and Column"/>
-		<asset type="text" key="goto_dialog_enter_line" value="Enter a line number."/>
-		<asset type="text" key="goto_dialog_enter_column" value="Enter a column number."/>
-		<asset type="text" key="goto_dialog_count_indents" value="Count indents for column number."/>
-		<asset type="text" key="restore_defaults" value="Restore Defaults"/>
-		<asset type="text" key="restore_to_application_preferences" value="Restore to Application Preferences"/>
-		<asset type="text" key="encoding_when_saving" value="Encoding when saving."/>
-		<asset type="text" key="format_when_saving" value="Format when saving."/>
-		<asset type="text" key="owner_name" value="Owner Name"/>
-		<asset type="text" key="owner_email" value="Owner Email"/>
 		<asset type="text" key="apply_font_style_for_comments" value="Apply Font Style for Comments"/>
 		<asset type="text" key="apply_font_style_for_editability" value="Apply Font Style for Editability"/>
 		<asset type="text" key="apply_font_style_for_moveability" value="Apply Font Style for Moveability"/>
-		<asset type="text" key="creation_date" value="Creation Date:"/>
-		<asset type="text" key="modification_date" value="Modification Date:"/>
-		<asset type="text" key="is_using_application_prefs" value="Currently Using Application Preferences"/>
-		<asset type="text" key="is_using_document_prefs" value="Currently Using Document Preferences"/>
-		<asset type="text" key="untitled" value="Untitled"/>
-		<asset type="text" key="untitled_folder" value="untitled"/>
-		<asset type="text" key="url" value="URL"/>
-		<asset type="text" key="do_replacement" value="Do Replacement"/>
-		<asset type="text" key="xmlrpc_call" value="XML-RPC Call"/>
-		<asset type="text" key="bean_shell_code" value="Bean Shell Code"/>
-		<asset type="text" key="pattern" value="Pattern"/>
-		<asset type="text" key="encode" value="Encode"/>
-		<asset type="text" key="decode" value="Decode"/>
-		<asset type="text" key="escape" value="Escape"/>
-		<asset type="text" key="unescape" value="Un-Escape"/>
-		<asset type="text" key="comparator" value="Comparator"/>
-		<asset type="text" key="new_attribute" value="New Attribute"/>
 		<asset type="text" key="attribute" value="Attribute"/>
-		<asset type="text" key="macro_name" value="Macro Name"/>
-		<asset type="text" key="new_macro" value="New Macro"/>
-		<asset type="text" key="update_macro" value="Update Macro"/>
-		<asset type="text" key="macro_type" value="Macro Type"/>
-		<asset type="text" key="macros" value="Macros"/>
-		<asset type="text" key="sort_macros" value="Sort Macros"/>
-		<asset type="text" key="sort" value="Sort"/>
-		<asset type="text" key="sort_shallow" value="Shallow"/>
-		<asset type="text" key="sort_deep" value="Deep"/>
-		<asset type="text" key="sort_ascending" value="Ascending"/>
-		<asset type="text" key="sort_descending" value="Descending"/>
-		<asset type="text" key="line_terminator" value="Line Terminator"/>
+		<asset type="text" key="bean_shell_code" value="Bean Shell Code"/>
+		<asset type="text" key="cancel" value="Cancel"/>
+		<asset type="text" key="characters" value="Characters:"/>
+		<asset type="text" key="comparator" value="Comparator"/>
+		<asset type="text" key="confirm_dehoist" value="De-Hoisting requires that the undo queue be cleared.\nProceed anyway?"/>
+		<asset type="text" key="confirm_delete" value="Confirm Delete"/>
+		<asset type="text" key="confirm_hoist" value="Hoisting requires that the undo queue be cleared.\nProceed anyway?"/>
+		<asset type="text" key="confirm_open" value="Confirm Open"/>
+		<asset type="text" key="confirm_replacement" value="Confirm Replacement"/>
+		<asset type="text" key="confirm_save" value="Confirm Save"/>
+		<asset type="text" key="confirmation_inconsistent_heirarchy" value="The file {$value_1} has an inconsistent heirarchy.\nEmpty nodes will need to be inserted to open it.\nDo you want to open it anyway?"/>
+		<asset type="text" key="confirmation_operation_not_undoable" value="This operation is not undoable.\nProceed anyway?"/>
+		<asset type="text" key="confirmation_replace_file" value="The file {$value_1} already exists.\nDo you want to replace it?"/>
+		<asset type="text" key="confirmation_revert_file" value="Revert File? All Changes will be lost."/>
+		<asset type="text" key="create" value="Create"/>
+		<asset type="text" key="creation_date" value="Creation Date:"/>
+		<asset type="text" key="decode" value="Decode"/>
+		<asset type="text" key="delete" value="Delete"/>
+		<asset type="text" key="do_replacement" value="Do Replacement"/>
+		<asset type="text" key="do_you_want_to_delete" value="Do you want to delete the item."/>
+		<asset type="text" key="document" value="Document:"/>
+		<asset type="text" key="encode" value="Encode"/>
+		<asset type="text" key="encoding_when_saving" value="Encoding when saving."/>
+		<asset type="text" key="error_att_key_alpha" value="Error: key must be alpha-numeric."/>
+		<asset type="text" key="error_att_key_existance" value="Error: key cannot be empty."/>
+		<asset type="text" key="error_name_existance" value="Error: name cannot be empty."/>
+		<asset type="text" key="error_att_key_uniqueness" value="Error: key must be unique."/>
+		<asset type="text" key="error_could_not_open_file" value="An error occurred. Could not open file: {$value_1}"/>
+		<asset type="text" key="error_could_not_open_no_file_format" value="An error occurred. Could not open file: {$value_1} because I couldn't retrieve the file format: {$value_2}"/>
+		<asset type="text" key="error_could_not_revert_no_file_format" value="An error occurred. Could not revert file: {$value_1} because I couldn't retrieve the file format: {$value_2}"/>
+		<asset type="text" key="error_could_not_save_file" value="An error occurred. Could not save file: {$value_1}"/>
+		<asset type="text" key="error_could_not_save_no_file_format" value="An error occurred. Could not save file: {$value_1} because I couldn't retrieve the file format: {$value_2}"/>
+		<asset type="text" key="error_file_format_does_not_support_attributes" value="The file format you are saving with: {$value_1}, does not support attributes.\nThe document contains nodes with attribute name/value pairs that will NOT be saved.\nDo you want to save?"/>
+		<asset type="text" key="error_file_format_does_not_support_comments" value="The file format you are saving with: {$value_1}, does not support comments.\nThe document contains commented nodes whose commented status will NOT be saved.\nDo you want to save?"/>
+		<asset type="text" key="error_file_format_does_not_support_document_attributes" value="The file format you are saving with: {$value_1}, does not support document attributes.\nThe document contains document attribute name/value pairs that will NOT be saved.\nDo you want to save?"/>
+		<asset type="text" key="error_file_format_does_not_support_editability" value="The file format you are saving with: {$value_1}, does not support editability settings.\nThe document contains editable node settings that will NOT be saved.\nDo you want to save?"/>
+		<asset type="text" key="error_file_format_does_not_support_moveability" value="The file format you are saving with: {$value_1}, does not support moveability settings.\nThe document contains moveable node settings that will NOT be saved.\nDo you want to save?"/>
+		<asset type="text" key="error_file_not_found" value="An error occurred. File not found: {$value_1}"/>
+		<asset type="text" key="error_window_monitor_save_changes" value="The text in the {$value_1} file has changed.\nDo you want to save the changes?"/>
+		<asset type="text" key="error_window_monitor_untitled_save_changes" value="The text in the Untitled file has changed.\nDo you want to save the changes?"/>
+		<asset type="text" key="escape" value="Escape"/>
 		<asset type="text" key="file_encoding" value="File Encoding"/>
 		<asset type="text" key="file_format" value="File Format"/>
-		<asset type="text" key="value" value="Value"/>
-		<asset type="text" key="document" value="Document:"/>
+		<asset type="text" key="find" value="Find"/>
+		<asset type="text" key="format_when_saving" value="Format when saving."/>
+		<asset type="text" key="goto_dialog_count_indents" value="Count indents for column number."/>
+		<asset type="text" key="goto_dialog_enter_column" value="Enter a column number."/>
+		<asset type="text" key="goto_dialog_enter_line" value="Enter a line number."/>
+		<asset type="text" key="goto_dialog_go" value="Go"/>
+		<asset type="text" key="goto_dialog_line_and_column" value="Go to Line and Column"/>
+		<asset type="text" key="ignore_case" value="Ignore case"/>
+		<asset type="text" key="include_read_only_nodes" value="Include read-only nodes for replace"/>
+		<asset type="text" key="is_using_application_prefs" value="Currently Using Application Preferences"/>
+		<asset type="text" key="is_using_document_prefs" value="Currently Using Document Preferences"/>
+		<asset type="text" key="line_terminator" value="Line Terminator"/>
 		<asset type="text" key="lines" value="Lines:"/>
-		<asset type="text" key="characters" value="Characters:"/>
+		<asset type="text" key="mac" value="Macintosh"/>
+		<asset type="text" key="macro_name" value="Macro Name"/>
+		<asset type="text" key="macro_type" value="Macro Type"/>
+		<asset type="text" key="macros" value="Macros"/>
+		<asset type="text" key="message_an_error_occurred" value="An Error Occurred."/>
+		<asset type="text" key="message_cannot_save_file_already_open" value="Cannot save to file: {$value_1} it is currently open."/>
+		<asset type="text" key="message_could_not_save_find_replace_config" value="Could not save find/replace config file because of"/>
+		<asset type="text" key="message_could_not_save_macros_config" value="Could not save macros config file because of"/>
+		<asset type="text" key="message_could_not_save_preferences" value="Could not save preferences because of"/>
+		<asset type="text" key="message_could_not_save_recent_files_config" value="Could not save recent files config file because of"/>
+		<asset type="text" key="message_do_you_really_want_to_delete_this_macro" value="Do you really want to delete this macro?"/>
+		<asset type="text" key="message_file_already_open" value="The file: {$value_1} is already open."/>
+		<asset type="text" key="message_uh_oh" value="Uh Oh, something has gone wrong."/>
+		<asset type="text" key="modification_date" value="Modification Date:"/>
+		<asset type="text" key="name" value="Name"/>
+		<asset type="text" key="new" value="New"/>
+		<asset type="text" key="new_attribute" value="New Attribute"/>
+		<asset type="text" key="new_find_replace" value="New Find/Replace"/>
+		<asset type="text" key="new_macro" value="New Macro"/>
+		<asset type="text" key="no" value="No"/>
+		<asset type="text" key="ok" value="OK"/>
+		<asset type="text" key="owner_email" value="Owner Email"/>
+		<asset type="text" key="owner_name" value="Owner Name"/>
+		<asset type="text" key="pattern" value="Pattern"/>
+		<asset type="text" key="regexp" value="Regexp"/>
+		<asset type="text" key="rename_find_replace" value="Rename Find/Replace"/>
+		<asset type="text" key="replace" value="Replace"/>
+		<asset type="text" key="replace_all" value="Replace All"/>
 		<asset type="text" key="replacement" value="replacement"/>
 		<asset type="text" key="replacements" value="replacements"/>
 		<asset type="text" key="replacements_made" value="{$value_1} {$value_2} made."/>
-		<asset type="text" key="find" value="Find"/>
-		<asset type="text" key="replace" value="Replace"/>
-		<asset type="text" key="replace_all" value="Replace All"/>
-		<asset type="text" key="start_at_top" value="Start at top"/>
-		<asset type="text" key="wrap_around" value="Wrap around"/>
+		<asset type="text" key="restore_defaults" value="Restore Defaults"/>
+		<asset type="text" key="restore_to_application_preferences" value="Restore to Application Preferences"/>
 		<asset type="text" key="selection_only" value="Selection only"/>
-		<asset type="text" key="ignore_case" value="Ignore case"/>
-		<asset type="text" key="include_read_only_nodes" value="Include read-only nodes for replace"/>
-		<asset type="text" key="confirm_save" value="Confirm Save"/>
-		<asset type="text" key="confirm_open" value="Confirm Open"/>
-		<asset type="text" key="confirm_delete" value="Confirm Delete"/>
-		<asset type="text" key="confirm_replacement" value="Confirm Replacement"/>
-		<asset type="text" key="error_att_key_existance" value="Error: key cannot be empty."/>
-		<asset type="text" key="error_att_key_uniqueness" value="Error: key must be unique."/>
-		<asset type="text" key="error_att_key_alpha" value="Error: key must be alpha-numeric."/>
+		<asset type="text" key="sort" value="Sort"/>
+		<asset type="text" key="sort_ascending" value="Ascending"/>
+		<asset type="text" key="sort_deep" value="Deep"/>
+		<asset type="text" key="sort_descending" value="Descending"/>
+		<asset type="text" key="sort_macros" value="Sort Macros"/>
+		<asset type="text" key="sort_shallow" value="Shallow"/>
+		<asset type="text" key="start_at_top" value="Start at top"/>
 		<asset type="text" key="tooltip_restore_to_global" value="Sets this document's preferences to the current application preference values."/>
 		<asset type="text" key="tooltip_toggle_comment" value="Click to Toggle Comment"/>
 		<asset type="text" key="tooltip_toggle_editability" value="Click to Toggle Read-Only Mode"/>
 		<asset type="text" key="tooltip_toggle_moveability" value="Click to Toggle Moveability Mode"/>
-		<asset type="text" key="confirm_hoist" value="Hoisting requires that the undo queue be cleared.\nProceed anyway?"/>
-		<asset type="text" key="confirm_dehoist" value="De-Hoisting requires that the undo queue be cleared.\nProceed anyway?"/>
-		<asset type="text" key="error_window_monitor_untitled_save_changes" value="The text in the Untitled file has changed.\nDo you want to save the changes?"/>
-		<asset type="text" key="error_window_monitor_save_changes" value="The text in the {$value_1} file has changed.\nDo you want to save the changes?"/>
-		<asset type="text" key="confirmation_operation_not_undoable" value="This operation is not undoable.\nProceed anyway?"/>
-		<asset type="text" key="confirmation_revert_file" value="Revert File? All Changes will be lost."/>
-		<asset type="text" key="confirmation_replace_file" value="The file {$value_1} already exists.\nDo you want to replace it?"/>
-		<asset type="text" key="confirmation_inconsistent_heirarchy" value="The file {$value_1} has an inconsistent heirarchy.\nEmpty nodes will need to be inserted to open it.\nDo you want to open it anyway?"/>
-		<asset type="text" key="message_could_not_save_preferences" value="Could not save preferences because of"/>
-		<asset type="text" key="message_could_not_save_macros_config" value="Could not save macros config file because of"/>
-		<asset type="text" key="message_could_not_save_recent_files_config" value="Could not save recent files config file because of"/>
-		<asset type="text" key="message_cannot_save_file_already_open" value="Cannot save to file: {$value_1} it is currently open."/>
-		<asset type="text" key="message_file_already_open" value="The file: {$value_1} is already open."/>
-		<asset type="text" key="message_an_error_occurred" value="An Error Occurred."/>
-		<asset type="text" key="message_do_you_really_want_to_delete_this_macro" value="Do you really want to delete this macro?"/>
-		<asset type="text" key="message_uh_oh" value="Uh Oh, something has gone wrong."/>
-		<asset type="text" key="error_could_not_save_no_file_format" value="An error occurred. Could not save file: {$value_1} because I couldn't retrieve the file format: {$value_2}"/>
-		<asset type="text" key="error_could_not_open_no_file_format" value="An error occurred. Could not open file: {$value_1} because I couldn't retrieve the file format: {$value_2}"/>
-		<asset type="text" key="error_could_not_revert_no_file_format" value="An error occurred. Could not revert file: {$value_1} because I couldn't retrieve the file format: {$value_2}"/>
-		<asset type="text" key="error_file_format_does_not_support_comments" value="The file format you are saving with: {$value_1}, does not support comments.\nThe document contains commented nodes whose commented status will NOT be saved.\nDo you want to save?"/>
-		<asset type="text" key="error_file_format_does_not_support_editability" value="The file format you are saving with: {$value_1}, does not support editability settings.\nThe document contains editable node settings that will NOT be saved.\nDo you want to save?"/>
-		<asset type="text" key="error_file_format_does_not_support_moveability" value="The file format you are saving with: {$value_1}, does not support moveability settings.\nThe document contains moveable node settings that will NOT be saved.\nDo you want to save?"/>
-		<asset type="text" key="error_file_format_does_not_support_attributes" value="The file format you are saving with: {$value_1}, does not support attributes.\nThe document contains nodes with attribute name/value pairs that will NOT be saved.\nDo you want to save?"/>
-		<asset type="text" key="error_file_format_does_not_support_document_attributes" value="The file format you are saving with: {$value_1}, does not support document attributes.\nThe document contains document attribute name/value pairs that will NOT be saved.\nDo you want to save?"/>
-		<asset type="text" key="error_could_not_save_file" value="An error occurred. Could not save file: {$value_1}"/>
-		<asset type="text" key="error_could_not_open_file" value="An error occurred. Could not open file: {$value_1}"/>
-		<asset type="text" key="error_file_not_found" value="An error occurred. File not found: {$value_1}"/>
+		<asset type="text" key="unescape" value="Un-Escape"/>
+		<asset type="text" key="unix" value="Unix"/>
+		<asset type="text" key="untitled" value="Untitled"/>
+		<asset type="text" key="untitled_folder" value="untitled"/>
+		<asset type="text" key="update" value="Update"/>
+		<asset type="text" key="update_macro" value="Update Macro"/>
+		<asset type="text" key="url" value="URL"/>
+		<asset type="text" key="value" value="Value"/>
+		<asset type="text" key="windows" value="Windows"/>
+		<asset type="text" key="wrap_around" value="Wrap around"/>
+		<asset type="text" key="wrap_characters" value="characters"/>
+		<asset type="text" key="wrap_words" value="words"/>
+		<asset type="text" key="xmlrpc_call" value="XML-RPC Call"/>
+		<asset type="text" key="yes" value="Yes"/>
 	<preferences id="prefs" class="com.organic.maynard.outliner.Preferences">
 		<!-- MISC HIDDEN PREFS -->
 			<preference id="most_recent_open_dir" class="com.organic.maynard.outliner.PreferenceString" default="."/>
