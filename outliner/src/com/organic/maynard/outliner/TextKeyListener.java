@@ -130,6 +130,10 @@ public class TextKeyListener implements KeyListener, MouseListener {
 				toggleExpansion(tree, layout);
 				break;
 
+			case KeyEvent.VK_PAGE_UP:
+				toggleComment(tree, layout);
+				break;
+
 			case KeyEvent.VK_UP:
 				moveUp(tree, layout);
 				break;
@@ -282,6 +286,28 @@ public class TextKeyListener implements KeyListener, MouseListener {
 			currentNode.setExpanded(false);
 		} else {
 			currentNode.setExpanded(true);
+		}
+
+		// Redraw
+		layout.draw(currentNode, outlineLayoutManager.TEXT);
+	}
+
+	private void toggleComment(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		
+		if (!currentNode.isAncestorComment()) {
+			boolean oldValue = currentNode.isComment();
+			boolean newValue = false;
+			if (currentNode.isComment()) {
+				currentNode.setComment(false);
+			} else {
+				currentNode.setComment(true);
+				newValue = true;
+			}
+			
+			CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+			undoable.addPrimitive(new PrimitiveUndoableCommentChange(currentNode, oldValue, newValue));
+			tree.doc.undoQueue.add(undoable);
 		}
 
 		// Redraw

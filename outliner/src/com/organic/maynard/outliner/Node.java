@@ -62,6 +62,12 @@ public interface Node {
 	// Tree Accessor Methods
 	public TreeContext getTree();
 	
+	// Comment Methods
+	public void setComment(boolean comment);
+	public boolean isComment();
+	public boolean isAncestorComment();
+	public boolean isAncestorOrSelfComment();
+	
 	// Visibility Methods
 	public void setVisible(boolean visible);
 	public boolean isVisible();

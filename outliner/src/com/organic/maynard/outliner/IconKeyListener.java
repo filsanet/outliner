@@ -144,6 +144,10 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			case KeyEvent.VK_PAGE_DOWN:
 				toggleExpansion(tree,layout);
 				break;
+
+			case KeyEvent.VK_PAGE_UP:
+				toggleComment(tree,layout);
+				break;
 			
 			case KeyEvent.VK_DELETE:
 				delete(tree,layout);
@@ -303,6 +307,36 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			} else {
 				node.setExpanded(true);
 			}
+		}
+
+		layout.draw(currentNode, outlineLayoutManager.ICON);
+	}
+
+	private void toggleComment(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		
+		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+			Node node = (Node) tree.selectedNodes.get(i);
+			
+			if (!node.isAncestorComment()) {
+				boolean oldValue = node.isComment();
+				boolean newValue = false;
+
+				if (node.isComment()) {
+					node.setComment(false);
+				} else {
+					node.setComment(true);
+					newValue = true;
+				}
+				
+				undoable.addPrimitive(new PrimitiveUndoableCommentChange(node, oldValue, newValue));
+			}
+		}
+		
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
 		}
 
 		layout.draw(currentNode, outlineLayoutManager.ICON);

@@ -35,6 +35,7 @@ public class NodeImpl implements Node {
 	private boolean visible = false;
 	private boolean partiallyVisible = false;
 	private boolean selected = false;
+	private boolean comment = false;
 	
 	private int decendantCount = 0;
 	private int decendantCharCount = 0;
@@ -63,6 +64,7 @@ public class NodeImpl implements Node {
 		NodeImpl nodeImpl = new NodeImpl(tree,value);
 		nodeImpl.setParent(parent);
 		nodeImpl.setDepth(depth);
+		nodeImpl.setComment(comment);
 		
 		// And clone the children
 		for (int i = 0; i < numOfChildren(); i++) {
@@ -289,6 +291,28 @@ public class NodeImpl implements Node {
 	// Visibility Methods	
 	public void setVisible(boolean visible) {this.visible = visible;}
 	public boolean isVisible() {return visible;}
+
+	// Comment Methods	
+	public void setComment(boolean comment) {this.comment = comment;}
+	public boolean isComment() {return comment;}
+
+	public boolean isAncestorComment() {
+		if (isRoot()) {
+			return false;
+		} else {
+			return getParent().isAncestorOrSelfComment();
+		}
+	}
+
+	public boolean isAncestorOrSelfComment() {
+		if (isComment()) {
+			return true;
+		} else if (isRoot()) {
+			return false;
+		} else {
+			return getParent().isAncestorOrSelfComment();
+		}
+	}
 
 	// Selection Methods	
 	public void setSelected(boolean selected) {this.selected = selected;}

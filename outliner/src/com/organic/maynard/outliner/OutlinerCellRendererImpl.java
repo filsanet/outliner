@@ -186,7 +186,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 			setBackground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
 			lineNumber.setForeground(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
 			lineNumber.setBackground(Preferences.LINE_NUMBER_COLOR.cur);
-			button.setBackground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);	
+			button.setBackground(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
 		}	
 	}
 	
@@ -195,6 +195,12 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 			button.setSelected(true);
 		} else {
 			button.setSelected(false);
+		}
+
+		if (node.isAncestorOrSelfComment()) {
+			button.setComment(true);
+		} else {
+			button.setComment(false);
 		}
 		
 		if (node.isLeaf()) {

@@ -18,30 +18,35 @@
  
 package com.organic.maynard.outliner;
 
-public interface Undoable {
-	public void destroy();
+import java.util.*;
+import java.awt.*;
+
+public class PrimitiveUndoableCommentChange implements Undoable, PrimitiveUndoablePropertyChange {
+
+	private Node node = null;
+	private boolean oldState = false;
+	private boolean newState = false;
 	
-	public static final int EDIT_TYPE = 0;
+	
+	// The Constructors
+	public PrimitiveUndoableCommentChange(Node node, boolean oldState, boolean newState) {
+		this.node = node;
+		this.oldState = oldState;
+		this.newState = newState;
+	}
 
-	public static final int PRIMITIVE_DELETE_TYPE = 1;
-	public static final int COMPOUND_DELETE_TYPE = 2;
-
-	public static final int PRIMITIVE_INSERT_TYPE = 3;
-	public static final int COMPOUND_INSERT_TYPE = 4;
-
-	public static final int PRIMITIVE_MOVE_TYPE = 5;
-	public static final int COMPOUND_MOVE_TYPE = 6;
-
-	public static final int PRIMITIVE_EDIT_TYPE = 7;
-	public static final int COMPOUND_EDIT_TYPE = 8;
-
-	public static final int PRIMITIVE_REPLACE_TYPE = 9;
-	public static final int COMPOUND_REPLACE_TYPE = 10;
-
-	public static final int COMPOUND_PROPERTY_CHANGE_TYPE = 11;
-	public static final int PRIMITIVE_COMMENT_PROPERTY_CHANGE_TYPE = 12;
-
-	public void undo();
-	public void redo();
-	public int getType();
+	public void destroy() {
+		node = null;
+	}
+	
+	// Undoable Interface
+	public void undo() {
+		node.setComment(oldState);
+	}
+	
+	public void redo() {
+		node.setComment(newState);
+	}
+	
+	public int getType() {return Undoable.PRIMITIVE_COMMENT_PROPERTY_CHANGE_TYPE;}
 }

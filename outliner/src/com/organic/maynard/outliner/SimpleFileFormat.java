@@ -37,6 +37,8 @@ public class SimpleFileFormat implements SaveFileFormat, OpenFileFormat {
 		);
 	}
 	
+	public boolean supportsComments() {return false;}
+	
 	
 	// OpenFileFormat Interface
 	public int open(TreeContext tree, DocumentInfo docInfo) {

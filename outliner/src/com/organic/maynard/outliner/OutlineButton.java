@@ -32,6 +32,13 @@ public class OutlineButton extends JLabel {
 	public static final ImageIcon ICON_LEAF = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "leaf.gif");
 	public static final ImageIcon ICON_LEAF_SELECTED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "leaf_selected.gif");
 
+	public static final ImageIcon ICON_OPEN_NODE_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "open_node_commented.gif");
+	public static final ImageIcon ICON_OPEN_NODE_SELECTED_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "open_node_selected_commented.gif");
+	public static final ImageIcon ICON_CLOSED_NODE_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "closed_node_commented.gif");
+	public static final ImageIcon ICON_CLOSED_NODE_SELECTED_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "closed_node_selected_commented.gif");
+	public static final ImageIcon ICON_LEAF_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "leaf_commented.gif");
+	public static final ImageIcon ICON_LEAF_SELECTED_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "leaf_selected_commented.gif");
+
 	public static final ImageIcon ICON_DOWN_ARROW = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "down_arrow.gif");
 	public static final ImageIcon ICON_SE_ARROW = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "se_arrow.gif");
 	//public static final ImageIcon ICON_RIGHT_ARROW = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "right_arrow.gif");
@@ -50,6 +57,7 @@ public class OutlineButton extends JLabel {
 	private boolean node = true;
 	private boolean open = true;
 	private boolean selected = false;
+	private boolean comment = false;
 	
 	// The Constructor
 	public OutlineButton(OutlinerCellRendererImpl renderer) {
@@ -85,26 +93,53 @@ public class OutlineButton extends JLabel {
 	public boolean isSelected() {return selected;}
 	public void setSelected(boolean selected) {this.selected = selected;}
 
+	public boolean isComment() {return comment;}
+	public void setComment(boolean comment) {this.comment = comment;}
+
 	public void updateIcon() {
 		if(isNode()) {
 			if(isOpen()) {
 				if(isSelected()) {
-					setIcon(ICON_OPEN_NODE_SELECTED);
+					if(isComment()) {
+						setIcon(ICON_OPEN_NODE_SELECTED_COMMENTED);
+					} else {
+						setIcon(ICON_OPEN_NODE_SELECTED);
+					}
 				} else {
-					setIcon(ICON_OPEN_NODE);
+					if(isComment()) {
+						setIcon(ICON_OPEN_NODE_COMMENTED);
+					} else {
+						setIcon(ICON_OPEN_NODE);
+					}
 				}
 			} else {
 				if(isSelected()) {
-					setIcon(ICON_CLOSED_NODE_SELECTED);
+					if(isComment()) {
+						setIcon(ICON_CLOSED_NODE_SELECTED_COMMENTED);
+					} else {
+						setIcon(ICON_CLOSED_NODE_SELECTED);
+					}
 				} else {
-					setIcon(ICON_CLOSED_NODE);
+					if(isComment()) {
+						setIcon(ICON_CLOSED_NODE_COMMENTED);
+					} else {
+						setIcon(ICON_CLOSED_NODE);
+					}
 				}			
 			}	
 		} else {
 			if(isSelected()) {
-				setIcon(ICON_LEAF_SELECTED);
+				if(isComment()) {
+					setIcon(ICON_LEAF_SELECTED_COMMENTED);
+				} else {
+					setIcon(ICON_LEAF_SELECTED);
+				}
 			} else {
-				setIcon(ICON_LEAF);
+				if(isComment()) {
+					setIcon(ICON_LEAF_COMMENTED);
+				} else {
+					setIcon(ICON_LEAF);
+				}
 			}
 		}
 	}

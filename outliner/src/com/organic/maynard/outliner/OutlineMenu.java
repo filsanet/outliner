@@ -28,6 +28,7 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 	// Copy Used.
 	private static final String MENU_TITLE = "Outline";
 	
+	private static final String OUTLINE_TOGGLE_COMMENT = "Toggle Comment";
 	private static final String OUTLINE_TOGGLE_EXPANSION = "Toggle Expansion";
 	private static final String OUTLINE_EXPAND_ALL_SUBHEADS = "Expand All Subheads";
 	private static final String OUTLINE_EXPAND_EVERYTHING = "Expand Everything";
@@ -42,6 +43,8 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 
 
 	// The MenuItems.
+	public JMenuItem OUTLINE_TOGGLE_COMMENT_ITEM = new JMenuItem(OUTLINE_TOGGLE_COMMENT);
+	// Seperator
 	public JMenuItem OUTLINE_TOGGLE_EXPANSION_ITEM = new JMenuItem(OUTLINE_TOGGLE_EXPANSION);
 	// Seperator
 	public JMenuItem OUTLINE_EXPAND_ALL_SUBHEADS_ITEM = new JMenuItem(OUTLINE_EXPAND_ALL_SUBHEADS);
@@ -62,11 +65,17 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 	public OutlineMenu() {
 		super(MENU_TITLE);
 
+		OUTLINE_TOGGLE_COMMENT_ITEM.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0, false));
+		OUTLINE_TOGGLE_COMMENT_ITEM.addActionListener(this);
+		add(OUTLINE_TOGGLE_COMMENT_ITEM);
+			
+		insertSeparator(1);
+
 		OUTLINE_TOGGLE_EXPANSION_ITEM.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0, false));
 		OUTLINE_TOGGLE_EXPANSION_ITEM.addActionListener(this);
 		add(OUTLINE_TOGGLE_EXPANSION_ITEM);
 			
-		insertSeparator(1);
+		insertSeparator(3);
 
 		OUTLINE_EXPAND_ALL_SUBHEADS_ITEM.addActionListener(this);
 		add(OUTLINE_EXPAND_ALL_SUBHEADS_ITEM);
@@ -74,7 +83,7 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 		OUTLINE_EXPAND_EVERYTHING_ITEM.addActionListener(this);
 		add(OUTLINE_EXPAND_EVERYTHING_ITEM);
 
-		insertSeparator(4);
+		insertSeparator(6);
 
 		OUTLINE_COLLAPSE_TO_PARENT_ITEM.addActionListener(this);
 		add(OUTLINE_COLLAPSE_TO_PARENT_ITEM);
@@ -82,7 +91,7 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 		OUTLINE_COLLAPSE_EVERYTHING_ITEM.addActionListener(this);
 		add(OUTLINE_COLLAPSE_EVERYTHING_ITEM);
 
-		insertSeparator(7);
+		insertSeparator(9);
 
 		OUTLINE_MOVE_UP_ITEM.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_UP, Event.SHIFT_MASK, false));
 		OUTLINE_MOVE_UP_ITEM.addActionListener(this);
@@ -100,7 +109,7 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 		OUTLINE_MOVE_RIGHT_ITEM.addActionListener(this);
 		add(OUTLINE_MOVE_RIGHT_ITEM);
 
-		insertSeparator(12);
+		insertSeparator(14);
 
 		OUTLINE_PROMOTE_ITEM.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, Event.SHIFT_MASK, false));
 		OUTLINE_PROMOTE_ITEM.addActionListener(this);
@@ -117,6 +126,9 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(OUTLINE_TOGGLE_EXPANSION)) {
 			fireKeyEvent(Outliner.getMostRecentDocumentTouched(), 0, KeyEvent.VK_PAGE_DOWN, false);
+
+		} else if (e.getActionCommand().equals(OUTLINE_TOGGLE_COMMENT)) {
+			fireKeyEvent(Outliner.getMostRecentDocumentTouched(), 0, KeyEvent.VK_PAGE_UP, false);
 			
 		} else if (e.getActionCommand().equals(OUTLINE_EXPAND_ALL_SUBHEADS)) {
 			expandAllSubheads(Outliner.getMostRecentDocumentTouched());

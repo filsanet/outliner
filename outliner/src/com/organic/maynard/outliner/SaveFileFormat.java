@@ -26,4 +26,6 @@ public interface SaveFileFormat {
 		TreeContext tree,
 		DocumentInfo docInfo
 	);
+	
+	public boolean supportsComments();
 }

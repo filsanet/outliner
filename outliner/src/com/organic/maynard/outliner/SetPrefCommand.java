@@ -207,7 +207,8 @@ public class SetPrefCommand extends Command {
 						Integer.parseInt((String) signature.elementAt(15)),
 						Integer.parseInt((String) signature.elementAt(16)),
 						
-						(String) signature.elementAt(17)
+						(String) signature.elementAt(17),
+						(String) signature.elementAt(18)
 					);
 					RecentFilesList.docInfoList.addElement(docInfo);
 				} catch (ArrayIndexOutOfBoundsException e) {}
