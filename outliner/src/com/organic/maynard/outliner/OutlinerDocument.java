@@ -41,6 +41,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.beans.*;
 import gui.DummyJScrollPane;
+import com.organic.maynard.util.string.StanStringTools ;
 
 /**
  * @author  $Author$
@@ -67,6 +68,7 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	private static int untitledDocumentCount = 0;
 	private static OutlinerWindowMonitor monitor = new OutlinerWindowMonitor();
 
+	// title name form options stuff
 	private static int titleNameForm = 0 ;
 
 	// sets of choice strings for combo boxes
@@ -75,29 +77,17 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		GUITreeLoader.reg.getText(Preferences.RF_NF_TRUNC_PATHNAME), 
 		GUITreeLoader.reg.getText(Preferences.RF_NF_FILENAME) 
 		} ;
-
-	// some static initializer code
-	static {
-		int nameForm ;
-		int limit ;
-		String currentSetting ;
 		
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
-		// get a ref to it
-		PreferenceString pDT_Name_Form = (PreferenceString) prefs.getPreference(
-			Preferences.DOCUMENT_TITLES_NAME_FORM);
-			
-		// try to convert it to an int value
-		for (nameForm = 0, limit = DOCUMENT_TITLES_NAME_FORMS.length, currentSetting = pDT_Name_Form.getCur();
-			nameForm < limit ; nameForm++ ) {
-				if (currentSetting.equals(DOCUMENT_TITLES_NAME_FORMS[nameForm])) {
-					break ;
-				} // end if
-			} // end for
-			
-		if (nameForm < limit) {
-			titleNameForm = nameForm ;
-		}
+	// document title name forms
+	private static final int FULL_PATHNAME = 0 ;
+	private static final int TRUNC_PATHNAME = 1 ;
+	private static final int JUST_FILENAME = 2 ;
+	
+	private static final String TRUNC_STRING = GUITreeLoader.reg.getText("trunc_string");
+
+	// our static initializer code
+	static {
+		syncTitleNameForms() ; 
 	} // end static initializer code
 		
 	// Instance Variables
@@ -304,19 +294,12 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		FileMenu.updateFileMenuItems();
 	}
 	
+	// accessors
 	public String getFileName() {return fileName;}
 
+	static int getTitleNameForm() {	return titleNameForm ;}
 
-
-
-
-	public static int getTitleNameForm() {
-		return titleNameForm ;
-	}
-
-	public static void setTitleNameForm(int nameForm) {
-		titleNameForm = nameForm ;
-	}
+	static void setTitleNameForm(int nameForm) {titleNameForm = nameForm ;}
 
 
 
@@ -373,4 +356,88 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 			panel.layout.setFocus(panel.doc.tree.getEditingNode(), panel.doc.tree.getComponentFocus());
 		}
 	}
-}
+	// fills document title name form choices into combo box
+	// callable by outsiders
+	// currently called by preference panel endSetup methods
+	static void fillTitleNameFormCombo () {
+		
+		AbstractPreferencesPanel.addArrayToComboBox(DOCUMENT_TITLES_NAME_FORMS, 
+			GUITreeComponentRegistry.COMPONENT_DOCUMENT_TITLES_NAME_FORM);
+		} // end method fillTitleNameFormCombo
+		
+
+	// syncs up to the current user choice for title name form
+	// setting gets sucked in from user prefs
+	// any open docs get tweaked
+	// along with their entries in the Windows menu
+	// all future docs will open titled correctly
+	static void syncTitleNameForms() {
+		// local vars
+		int nameFormIndex = 0 ;
+		int limit = 0 ;
+		String currentSettingStrung = null ;
+		boolean titleNameFormChange = false ;
+		
+		// grab aholduv our prefs
+		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
+		
+		// deal with document titles name form widget
+		// get a ref to it
+		PreferenceString pDT_Name_Form = (PreferenceString) prefs.getPreference(
+			Preferences.DOCUMENT_TITLES_NAME_FORM);
+			
+		// try to convert it to an int value
+		for (nameFormIndex = 0, limit = DOCUMENT_TITLES_NAME_FORMS.length, currentSettingStrung = pDT_Name_Form.getCur();
+			nameFormIndex < limit ; nameFormIndex++ ) {
+				if (currentSettingStrung.equals(DOCUMENT_TITLES_NAME_FORMS[nameFormIndex])) {
+					break ;
+				} // end if
+			} // end for
+			
+		// were we able to convert, and is there a change in the titles name form ?
+		titleNameFormChange = (nameFormIndex < limit) && (nameFormIndex != titleNameForm) ;
+		
+		// if there was a change, 
+		if (titleNameFormChange) {
+			// let's remember the new value
+			titleNameForm = nameFormIndex ;
+
+			// for each open document ...
+			for (int i = 0; i < Outliner.openDocumentCount(); i++) {
+				// get the document, then its docInfo, then its pathname
+				OutlinerDocument doc = Outliner.getDocument(i);
+				DocumentInfo docInfo = doc.getDocumentInfo() ;
+				String pathname = docInfo.getPath () ;
+				
+				// case out on the form to build the title
+				String newTitle = null ;
+				switch (titleNameForm) {
+				
+				case FULL_PATHNAME:
+				default: 
+					newTitle = pathname ;
+					break ;
+					
+				case TRUNC_PATHNAME: 
+					newTitle = StanStringTools.getTruncatedPathName(pathname, TRUNC_STRING) ;
+					break ;
+					
+				case JUST_FILENAME: 
+					newTitle = StanStringTools.getFileNameFromPathName(pathname) ;
+					break ;
+					
+				} // end switch
+				
+				// set the title
+				doc.setTitle(newTitle) ;
+				
+				// update the entry in the windows menu
+				// TBD
+				
+			} // end for each open document
+			
+		} // end if we have a valid change in doc title name form
+				
+	} // end method syncTitleNameForms
+
+} // end class OutlinerDocument

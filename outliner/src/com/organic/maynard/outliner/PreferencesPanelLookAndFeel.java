@@ -48,33 +48,15 @@ public class PreferencesPanelLookAndFeel
 	extends AbstractPreferencesPanel 
 	implements PreferencesPanel, GUITreeComponent {
 
-	// sets of choice strings for combo boxes
-	private static final String [] DOCUMENT_TITLES_NAME_FORMS = {
-		GUITreeLoader.reg.getText(Preferences.RF_NF_FULL_PATHNAME), 
-		GUITreeLoader.reg.getText(Preferences.RF_NF_TRUNC_PATHNAME), 
-		GUITreeLoader.reg.getText(Preferences.RF_NF_FILENAME) 
-		} ;
-
-	// document title name forms
-	private static final int FULL_PATHNAME = 0 ;
-	private static final int TRUNC_PATHNAME = 1 ;
-	private static final int JUST_FILENAME = 2 ;
-	
-	// remembering how we're displaying document titles
-	private static int currentDocTitleNameForm = -1 ;
-
-	private static final String TRUNC_STRING = GUITreeLoader.reg.getText("trunc_string");
-
 
 	// at the end of our setup ...
 	public void endSetup(AttributeList atts) {
 		// call on the ancestors to their stuff
 		super.endSetup(atts);
 
-		// fill the combo boxes with choices
-		AbstractPreferencesPanel.addArrayToComboBox(DOCUMENT_TITLES_NAME_FORMS, 
-			GUITreeComponentRegistry.COMPONENT_DOCUMENT_TITLES_NAME_FORM);
-	
+		// fill title name form combo box with choices
+		OutlinerDocument.fillTitleNameFormCombo() ;
+		
 	} // end method endSetup
 
 
@@ -88,7 +70,7 @@ public class PreferencesPanelLookAndFeel
 		DocumentInfo docInfo = null ;
 		String pathname = null ;
 		
-		// grab what's been set in the panel
+		// grab aholduv our prefs
 		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
 
 		PreferenceColor pDesktopBackgroundColor = (PreferenceColor) prefs.getPreference(Preferences.DESKTOP_BACKGROUND_COLOR);
@@ -105,26 +87,6 @@ public class PreferencesPanelLookAndFeel
 		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
 			Outliner.getDocument(i).panel.setBackground(pPanelBackgroundColor.cur);
 		}
-
-		// deal with document titles name form widget
-		// get a ref to it
-		PreferenceString pDT_Name_Form = (PreferenceString) prefs.getPreference(
-			Preferences.DOCUMENT_TITLES_NAME_FORM);
-			
-		// try to convert it to an int value
-		for (nameForm = 0, limit = DOCUMENT_TITLES_NAME_FORMS.length, currentSetting = pDT_Name_Form.getCur();
-			nameForm < limit ; nameForm++ ) {
-				if (currentSetting.equals(DOCUMENT_TITLES_NAME_FORMS[nameForm])) {
-					break ;
-				} // end if
-			} // end for
-			
-		// were we able to convert, and is there a change in the doc titles name form ?
-		docTitleNameFormChange = (nameForm < limit) && (nameForm != currentDocTitleNameForm) ;
-		
-		// if there was a change, let's remember the new value
-		OutlinerDocument.setTitleNameForm(nameForm) ;
-
 		// for each open document ...
 		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
 			// get the document
@@ -136,40 +98,16 @@ public class PreferencesPanelLookAndFeel
 				doc.panel.layout.textAreas[j].setSelectedTextColor(pTextareaBackgroundColor.cur);
 				doc.panel.layout.textAreas[j].setCaretColor(pSelectedChildColor.cur);
 			} // end for
-			
-			// if we have a valid change in doc title name form
-			if (docTitleNameFormChange) {
-				// grab the doc's info, then its pathname
-				docInfo = doc.getDocumentInfo() ;
-				pathname = docInfo.getPath () ;
-				
-				// case out on the form to build the title
-				switch (nameForm) {
-				
-				case FULL_PATHNAME:
-				default: 
-					newTitle = pathname ;
-					break ;
-					
-				case TRUNC_PATHNAME: 
-					newTitle = StanStringTools.getTruncatedPathName(pathname, TRUNC_STRING) ;
-					break ;
-					
-				case JUST_FILENAME: 
-					newTitle = StanStringTools.getFileNameFromPathName(pathname) ;
-					break ;
-					
-				} // end switch
-				
-				// set the title
-				doc.setTitle(newTitle) ;
-			} // end if we have a valid change in doc title name form
-			
-		} // end for
+		} // end for each open document
 		
 		// Update the Comment Icons
 		OutlineCommentIndicator.createIcons();
 		OutlineEditableIndicator.createIcons();
 		OutlineMoveableIndicator.createIcons();	
-	} // end method
-} // end class
+		
+		// sync up with any title name form changes
+		OutlinerDocument.syncTitleNameForms() ;
+		
+	} // end method applyCurrentToApplication
+	
+} // end class PreferencesPanelLookAndFeel.java
