@@ -39,9 +39,57 @@
  */
 
 // constants
+
+// international versions can be created by translating
+// the string constants in this section
+
 #define MAX_LINE 1024
-#define JOE_HOME "JOE_HOME"
-#define APP_VERSION_STRING "JOE 1.8.8"
+
+#define EXE_NAME  "JOE.pif"
+
+#define APP_NAME_STRING  "JOE"
+#define APP_VERSION_STRING  "1.8.8"
+#define WELCOME_STRING  "Windows Setup Program"
+
+#define APP_HOME_REM  "\n\nrem Java Outline Editor [JOE] home directory\n"
+#define APP_HOME  "JOE_HOME"
+
+#define OS_FEEDBACK_STRING_0  "Your computer is running the "
+#define OS_FEEDBACK_STRING_1  " operating system."
+
+#define SEV_FEEDBACK_STRING_0  "Successfully "
+#define SEV_FEEDBACK_STRING_1  "Failed to "
+#define SEV_FEEDBACK_STRING_2  "set the environment variable "
+#define SEV_FEEDBACK_STRING_3  "to the value "
+
+#define SUCCESS_FEEDBACK_0  "JOE installed successfully on your system."
+#define SUCCESS_FEEDBACK_1  "Press the Enter key to finish: "
+#define REBOOT_SUGGESTION  "You'll need to reboot your system before running JOE."
+
+#define FAILURE_FEEDBACK_0  "INSTALLATION FAILED."
+#define FAILURE_FEEDBACK_1  "Press Enter key to finish: "
+
+#define NO_JAVA_0  "There's no Java 2 Runtime Environment"
+#define NO_JAVA_1  "for this OS. JOE cannot run on this system."
+
+const char * WINDOWS_VERSION_STRINGS [] = {
+	"<cannot determine Windows version>",
+	"Windows 95",
+	"Windows 95 OSR2",
+	"Windows 98",
+	"Windows 98 SE",
+	"Windows ME",
+	"Windows XP",
+	"Windows NT 3.51",
+	"Windows NT 4",
+	"Windows 2000",
+	"Windows .Net Server",
+	"Unknown V3 Windows",
+	"Unknown V4 Windows",
+	"Unknown V5 Windows",
+	"Unknown V6 Windows",
+	"Unknown V7 Windows",
+	"Very Unknown Windows" }; 
 
 
 // ---------- datatypes
@@ -76,25 +124,6 @@ windows_version g_Windows_Version = CANNOT_DETERMINE;
 
 int g_NT_4_SP_Num = 0 ;	// NT 4 Service Pack #
 
-char * g_Windows_Version_Strings [] = {
-	"<cannot determine Windows version>",
-	"Windows 95",
-	"Windows 95 OSR2",
-	"Windows 98",
-	"Windows 98 SE",
-	"Windows ME",
-	"Windows XP",
-	"Windows NT 3.51",
-	"Windows NT 4",
-	"Windows 2000",
-	"Windows .Net Server",
-	"Unknown V3 Windows",
-	"Unknown V4 Windows",
-	"Unknown V5 Windows",
-	"Unknown V6 Windows",
-	"Unknown V7 Windows",
-	"Very Unknown Windows" }; 
-		
 
 // ---------- functions
 
@@ -105,10 +134,12 @@ int getWord(int, char *, char *) ;
 int java2available(windows_version) ;
 int machineHasNuffOomph() ;
 int osFeedback(windows_version) ;
+int rebootRequired(windows_version) ;
 int setAutoExecEnvVar(char *, char *, char *);
+int setAllEnvVars() ;
 int setEnvVar(char *, char *, char *, windows_version);
 int setRegistryEnvVar(char *, char *);
-int set_JOE_HOME() ;
+int set_APP_HOME() ;
 int sevFeedback(int, char *, char *) ;
 int strToUpper(char *) ;
 int trimFileOffPath(char *) ;

@@ -1,7 +1,7 @@
 /*
  * windows_setup.cpp
  * 
- * installs JOE on a Win32 system
+ * installs a Java 2 application on a Win32 system
  * 
  * Copyright (C) 2002  Stan Krute <Stan@StanKrute.com>
  * All rights reserved.
@@ -55,6 +55,9 @@
 // returns 1 if all goes well, 0 if it doesn't
 int main(int argc, char* argv[]){
 	
+	// set up a log file
+	// TBD
+	
 	// say hello to the people
 	welcome() ;
 	
@@ -77,7 +80,10 @@ int main(int argc, char* argv[]){
 		// we failed
 		failureFeedback () ;
 		return 0 ;
-		
+	
+	// close the log file
+	// TBD
+	
 	} // end if-else
 
 } // end function main
@@ -88,8 +94,12 @@ void welcome () {
 	char welcomeString [MAX_LINE] ;
 	
 	// build welcome string
-	strcpy (welcomeString, APP_VERSION_STRING) ;
-	strcat (welcomeString, " Windows Setup Program\n\n") ;
+	strcpy (welcomeString, APP_NAME_STRING) ;
+	strcat (welcomeString, " ") ;
+	strcat (welcomeString, APP_VERSION_STRING) ;
+	strcat (welcomeString, " - ") ;
+	strcat (welcomeString, WELCOME_STRING) ;
+	strcat (welcomeString, "\n\n") ;
 	
 	// print welcome
 	printf (welcomeString) ;
@@ -97,7 +107,7 @@ void welcome () {
 	// done
 	return ;
 
-} // end function successFeedback
+} // end function welcome
 
 
 // see if this system meets the requirements for running the app
@@ -133,11 +143,14 @@ int weHaveJ2RE () {
 	// check registry for J2RE vars
 	// check for std location of j2re
 	// check for other env vars
-	// if not here, suggest a download
-	// run download
-	// run install
-	// do check again
+	// if not here
+		// if there's a JRE in Outliner dir
+			// suggest install from there
+		
+		// else suggest a download off of net
+			// suggest install once downloaded
 
+		// do check again
 	return 1 ;
 	
 } // end weHaveJ2RE
@@ -146,14 +159,31 @@ int weHaveJ2RE () {
 // Plug app into the system
 int wePlugIntoSystem () {
 	
+	// if we're running from a CD,
+	// copy folder to hard drive
+	// TBD
+	
+	// if we're running on another machine
+	// copy folder to local hard drive
+	// TBD
+	
 	// set up any environment variables
-	if ( set_JOE_HOME()   // TBD setAllEnvVars()
+	if ( setAllEnvVars() 
 	
 	// per user choices place icon copies
 	// TBD
+		// Programs menu
+		// upper half of Start menu
+		// desktop
+		// desktop folder
+		// Taskbar's Quick Launch Toolbar
+		// user browse/type choice[s]
 	
 	// per user choice set JOE as OPML handler 
 	// TBD
+		// anyone currently handling ?
+		// if so, check with user RE switch
+		// set to JOE
 	
 	// add to Add/Remove Programs listing
 	// wiring up windows_uninstall.exe
@@ -170,11 +200,18 @@ int wePlugIntoSystem () {
 void successFeedback () {
 	char feedbackString [MAX_LINE] ;
 	
-	// build feedback string
-	strcpy (feedbackString, "JOE installed successfully on your system.") ;
+	// start to build feedback string
+	strcpy (feedbackString, SUCCESS_FEEDBACK_0) ;
+	
 	// add a reboot suggestion to string if warranted
-	// TBD
-	strcat (feedbackString, "\n\nPress the Enter key to finish: ") ;
+	if (rebootRequired(g_Windows_Version)){
+		strcat (feedbackString, "\n\n") ;
+		strcat (feedbackString, REBOOT_SUGGESTION) ;
+	} // end if
+	
+	// finish 'er up
+	strcat (feedbackString, "\n\n") ;
+	strcat (feedbackString, SUCCESS_FEEDBACK_1) ;
 	
 	// print feedback
 	printf (feedbackString) ;
@@ -194,7 +231,9 @@ void failureFeedback () {
 	char feedbackString [MAX_LINE] ;
 
 	// build the feedback string
-	strcpy (feedbackString, "INSTALLATION FAILED.\n\nPress Enter key to finish: ") ;
+	strcpy (feedbackString, FAILURE_FEEDBACK_0) ;
+	strcat (feedbackString, "\n\n") ;
+	strcat (feedbackString, FAILURE_FEEDBACK_1) ;
 	
 	// print the feedback string
 	printf (feedbackString) ;
@@ -407,8 +446,10 @@ int java2available (windows_version windowsVersion) {
 			result = 0 ;
 			
 			// build up a feedback string
-			strcpy (feedbackString, "There's no Java 2 Runtime Environment") ;
-			strcat (feedbackString, "\nfor this OS. JOE cannot run on this system.\n\n") ;
+			strcpy (feedbackString, NO_JAVA_0) ;
+			strcat (feedbackString, "\n") ;
+			strcat (feedbackString, NO_JAVA_1) ;
+			strcat (feedbackString, "\n\n") ;
 
 			// print the feedback string
 			printf (feedbackString) ;
@@ -443,12 +484,25 @@ int machineHasNuffOomph () {
 } // end function machineHasNuffOomph
 
 
-// set up the JOE_HOME environment variable
+// sets up all environment variables
+// we try to keep to a minimal set
+int setAllEnvVars () {
+	
+	return ( set_APP_HOME() 
+		// & set_xxx_YYY()
+		// & set_xxx_YYY()
+		// & set_xxx_YYY() 
+		) ;
+	
+} // end function setAllEnvVars
+
+
+// set up the APP_HOME environment variable
 // returns 1 if it succeeds, 0 if it fails
-int set_JOE_HOME () {
+int set_APP_HOME () {
 	// local vars
 	char shortPathBuffer[MAX_PATH] ;
-	char introLines[] = "\n\nrem Java Outline Editor [JOE] home directory\n";
+	char introLines[] = APP_HOME_REM;
 	
 	// if we can't obtain short pathname for current directory
 	if (! getShortPathCurDir (shortPathBuffer))
@@ -460,9 +514,9 @@ int set_JOE_HOME () {
 	
 	// return result of trying to set 
 	// environment var JOE_HOME to that value
-	return setEnvVar(JOE_HOME, shortPathBuffer, introLines, g_Windows_Version);
+	return setEnvVar(APP_HOME, shortPathBuffer, introLines, g_Windows_Version);
 	
-} // end set_JOE_HOME
+} // end set_app_HOME
 
 
 // get a shortpath version of the current directory
@@ -954,9 +1008,10 @@ int osFeedback (windows_version windowsVersion) {
 	int result = 1 ;
 	
 	// build the feedback string
-	strcpy (feedbackString, "Your computer is running the ") ;
-	strcat (feedbackString, g_Windows_Version_Strings[windowsVersion]) ;
-	strcat (feedbackString, " operating system.\n\n") ;
+	strcpy (feedbackString, OS_FEEDBACK_STRING_0) ;
+	strcat (feedbackString, WINDOWS_VERSION_STRINGS[windowsVersion]) ;
+	strcat (feedbackString, OS_FEEDBACK_STRING_1) ;
+	strcat (feedbackString, "\n\n") ;
 
 	// print the feedback string
 	printf (feedbackString) ;
@@ -973,12 +1028,14 @@ int sevFeedback (int result, char * varName, char * varValue) {
 	char feedbackString [MAX_LINE] ;
 	
 	if (result) 
-		strcpy (feedbackString, "Successfully ") ;
+		strcpy (feedbackString, SEV_FEEDBACK_STRING_0) ;
 	else 
-		strcpy (feedbackString, "Failed to ") ;
-	strcat (feedbackString, "set the environment variable ") ;
+		strcpy (feedbackString, SEV_FEEDBACK_STRING_1) ;
+		
+	strcat (feedbackString, SEV_FEEDBACK_STRING_2) ;
 	strcat (feedbackString, varName) ;
-	strcat (feedbackString, "\nto the value ") ;
+	strcat (feedbackString, "\n  ") ;
+	strcat (feedbackString, SEV_FEEDBACK_STRING_3) ;
 	strcat (feedbackString, varValue) ;
 	strcat (feedbackString, "\n\n") ;
 	printf (feedbackString) ;
@@ -997,43 +1054,40 @@ int ensureSuitableEnvironment () {
 } // end function ensureSuitableEnvironment
 
 
-//
-//	
-//
-//
-//
-//	// make sure the OS supports Java 2
-//	// switch out on windows version
-//	switch (windowsVersion) {
-//		case WIN_95:
-//		case WIN_95_OSR2:
-//		case WIN_98:
-//		case WIN_98_SE:
-//		case WIN_ME:
-//		case WIN_XP:
-//		case WIN_NT_4:
-//		case WIN_2K:
-//		case WIN_DOT_NET_SERVER:
-//		case WIN_UNKNOWN_V4:
-//		case WIN_UNKNOWN_V5:
-//		case WIN_UNKNOWN_V6:
-//		case WIN_UNKNOWN_V7:
-//			
-//			// all these are cool
-//			result = 1 ;
-//			break ;
-//			
-//		case WIN_NT_351:
-//		case WIN_UNKNOWN_V3:
-//		case WIN_VERY_UNKNOWN:
-//		default:
-//			// problems
-//			result = 0 ;
-//			
-//			// build up a feedback string
-//			strcat (feedbackString, "Since there's no Java 2 Runtime Environment") ;
-//			strcat (feedbackString, "\nfor that OS, JOE cannot run on this system.\n\n") ;
-//						
-//			break ;
-//			
-//		} // end switch out on Windows version
+// do we need to reboot ??
+// (we do if we've written to autoexec.bat)
+int rebootRequired (windows_version windowsVersion) {
+	int result = 0 ;
+	
+	switch (windowsVersion) {
+		case WIN_95:
+		case WIN_95_OSR2:
+		case WIN_98:
+		case WIN_98_SE:
+			// win 9x use autoexec.bat and a reboot
+			result = 1 ;
+			break ;
+			
+		case WIN_ME:
+		case WIN_XP:
+		case WIN_NT_4:
+		case WIN_2K:
+		case WIN_DOT_NET_SERVER:
+		case WIN_UNKNOWN_V4:
+		case WIN_UNKNOWN_V5:
+		case WIN_UNKNOWN_V6:
+		case WIN_UNKNOWN_V7:
+			// these use registry, broadcast, no reboot
+			result = 0 ;
+			break;
+			
+		default: // should never get here
+			result = 0 ;
+			break ;
+		
+	} // end switch
+	
+	// done
+	return result ;
+	
+} // end function rebootRequired
