@@ -440,8 +440,23 @@ public class TextKeyListener implements KeyListener, MouseListener {
 				} else {
 					newCaretPosition = startSelection - 1;
 					newMarkPosition = startSelection - 1;
+					// TBD [srk] bug here: 2nd arg to substring can have the value -1
+					//	causing a StringIndexOutOfBoundsException
+					// that's newCaretPosition
+					// which means that startSelection has the value 0
+					//	-- this needs to be investigated
+					// set a bug trap
+					if (newCaretPosition == -1) {
+						String msg = "Error at TextKeyListener:keyTyped():\n" ;
+						msg = msg + "startSelection: 0\n" ;
+						msg = msg + "newCaretPosition: -1" ;
+						msg = msg + "oldCaretPosition: -1" + oldCaretPosition + "\n" ;
+						msg = msg + "oldMarkPosition: " + oldMarkPosition ;
+						System.out.println("Stan_Debug:\t" + msg); 
+						return ;
+					} // end bug trap
 					newText = oldText.substring(0, newCaretPosition) + oldText.substring(newCaretPosition + 1, oldText.length());				
-				}
+				} // end else
 
 				UndoableEdit undoable = tree.doc.undoQueue.getIfEdit();
 				if ((undoable != null) && (undoable.getNode() == currentNode) && (!undoable.isFrozen())) {
