@@ -293,6 +293,10 @@ public class DocumentRepository {
 					}
 				}
 			}
+			
+			// We've closed the last document. We need to set focus 
+			// somewhere, otherwise the ctrl-q, ctrl-n keys, etc. won't work correctly.
+			Outliner.desktop.requestFocus();
 		}
 	}
 	
