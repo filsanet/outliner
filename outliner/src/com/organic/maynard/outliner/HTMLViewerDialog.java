@@ -35,15 +35,18 @@
 package com.organic.maynard.outliner;
 
 import com.organic.maynard.outliner.guitree.*;
+import org.xml.sax.*;
+import java.util.ArrayList;
+import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
-import java.awt.event.*;
-import org.xml.sax.*;
-
+import javax.swing.event.HyperlinkListener;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.Document;
 import java.net.URL;
-import java.io.*;
-import com.organic.maynard.swing.HTMLViewer;
-
+import java.net.MalformedURLException;
+import java.io.IOException;
 import java.beans.*;
 
 /**
@@ -51,23 +54,32 @@ import java.beans.*;
  * @version $Revision$, $Date$
  */
 
-public class HTMLViewerDialog extends AbstractGUITreeJDialog implements PropertyChangeListener, ActionListener {
+public class HTMLViewerDialog extends AbstractGUITreeJDialog implements HyperlinkListener, PropertyChangeListener, ActionListener {
 	
 	// Constants
-	private static final int INITIAL_WIDTH = 400;
+	private static final int INITIAL_WIDTH = 500;
 	private static final int INITIAL_HEIGHT = 400;
 	private static final int MINIMUM_WIDTH = 200;
 	private static final int MINIMUM_HEIGHT = 125;
 	
-	private static String CLOSE = null;
+	private static String LOCATION = null;
+	private static String NEXT = "next_action";
+	private static String PREV = "prev_action";
 	
 	// Instance Fields
 	private boolean initialized = false;
 	
+	private DefaultComboBoxModel history = null;
+	private int history_location = -1;
+	
+	
 	// GUI Components
 	private JScrollPane jsp = null;
-	private HTMLViewer viewer = null;
-	private JButton closeButton = null;
+	public JEditorPane viewer = null;
+	private JButton nextButton = null;
+	private JButton prevButton = null;
+	private JLabel location_label = null;
+	private JComboBox location = null;
 	
 	
 	// The Constructors
@@ -78,22 +90,76 @@ public class HTMLViewerDialog extends AbstractGUITreeJDialog implements Property
 	}
 	
 	private void initialize() {
-		this.viewer = new HTMLViewer();
+		this.history = new DefaultComboBoxModel();
+		
+		// Setup North Panel
+		JPanel north_panel = new JPanel();
+		
+		GridBagLayout gridbag = new GridBagLayout();
+		GridBagConstraints c = new GridBagConstraints();
+		north_panel.setLayout(gridbag);
+		
+		LOCATION = "Location"; // GUITreeLoader.reg.getText("location");
+		this.location_label = new JLabel(LOCATION + ":");
+		
+		c.weightx = 0.0;
+		c.fill = GridBagConstraints.NONE;
+		c.insets = new Insets(0,4,0,4);
+		
+		gridbag.setConstraints(this.location_label, c);
+        	north_panel.add(this.location_label);
+		
+		c.weightx = 1.0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.insets = new Insets(0,0,0,0);
+		
+		this.location = new JComboBox();
+		this.location.setModel(this.history);
+		this.location.setActionCommand(LOCATION);
+		this.location.setEditable(true);
+		this.location.addActionListener(this);
+		gridbag.setConstraints(this.location, c);
+        	north_panel.add(this.location);
+		
+		c.weightx = 0.0;
+		c.fill = GridBagConstraints.NONE;
+		
+		this.prevButton = new MyButton();
+		this.prevButton.setMargin(new Insets(5,7,5,9));
+		ImageIcon prevImage = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("graphics/prev.gif"));
+		this.prevButton.setIcon(prevImage);
+		this.prevButton.setToolTipText("Back");
+		this.prevButton.setActionCommand(PREV);
+		this.prevButton.addActionListener(this);
+		
+		gridbag.setConstraints(this.prevButton, c);
+        	north_panel.add(this.prevButton);
+		
+		this.nextButton = new MyButton();
+		this.nextButton.setMargin(new Insets(5,8,5,8));
+		ImageIcon nextImage = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("graphics/next.gif"));
+		this.nextButton.setIcon(nextImage);
+		this.nextButton.setToolTipText("Forward");
+		this.nextButton.setActionCommand(NEXT);
+		this.nextButton.addActionListener(this);
+		
+		gridbag.setConstraints(this.nextButton, c);
+        	north_panel.add(this.nextButton);
+		
+		getContentPane().add(north_panel, BorderLayout.NORTH);
+		
+		// Setup Center Panel
+		this.viewer = new JEditorPane();
+		this.viewer.setEditable(false);
+		HTMLEditorKit htmlKit = new HTMLEditorKit();
+		this.viewer.setEditorKit(htmlKit);
+		this.viewer.addHyperlinkListener(this);
 		this.viewer.addPropertyChangeListener(this);
 		this.jsp = new JScrollPane(this.viewer);
 		
 		getContentPane().add(this.jsp, BorderLayout.CENTER);
 		
-		CLOSE = GUITreeLoader.reg.getText("close");
-		this.closeButton = new JButton(CLOSE);
-		this.closeButton.addActionListener(this);
-		
-		JPanel closePanel = new JPanel();
-		closePanel.add(this.closeButton, BorderLayout.CENTER);
-		
-		getContentPane().add(closePanel, BorderLayout.SOUTH);
-		
-		getRootPane().setDefaultButton(this.closeButton);
+		setHistoryLocation(-1);
 		
 		this.initialized = true;
 	}
@@ -113,25 +179,6 @@ public class HTMLViewerDialog extends AbstractGUITreeJDialog implements Property
 	}
 	
 	public void setHTML(URL url) {
-		// DEBUG
-		/*try {
-			InputStream in = url.openConnection().getInputStream();
-			BufferedReader buffer = new BufferedReader(new InputStreamReader(in));
-			boolean eof = false;
-			while (!eof) {
-				String theLine = buffer.readLine();
-				if (theLine == null) {
-					eof = true;
-				} else {
-					System.out.println(theLine);
-				}
-			}
-			in.close();
-		} catch (IOException e) {
-			System.out.println("IOException: " + e.getMessage());
-		}*/
-		
-		
 		// Lazy Instantiation
 		if (!isInitialized()) {
 			initialize();
@@ -144,18 +191,157 @@ public class HTMLViewerDialog extends AbstractGUITreeJDialog implements Property
 		}
 	}
 	
+	
+	// History
+	public void trimHistory() {
+		while (history.getSize() > history_location + 1) {
+			history.removeElementAt(history.getSize() - 1);
+		}
+	}
+	
+	public void clearHistory() {
+		Object current = history.getElementAt(history_location);
+		history.removeAllElements();
+		history.addElement(current);
+		setHistoryLocation(0);
+	}
+	
+	public URL getCurrentURL() {
+		return (URL) history.getElementAt(history_location);
+	}
+	
+	public void addURL(URL url) {
+		// Verify were not adding a duplicate of the current url
+		if (this.history_location >= 0) {
+			URL current_url = ((MyListItemWrapper) history.getElementAt(this.history_location)).url;
+			if (url.equals(current_url)) {
+				return;
+			}
+		}
+		
+		trimHistory();
+		if (history.getSize() >= 0) {
+			setHistoryLocation(this.history_location + 1);
+		}
+		MyListItemWrapper item = new MyListItemWrapper(url);
+		history.addElement(item);
+		history.setSelectedItem(item);
+	}
+	
+	public void setHistoryLocation(int i) {
+		this.history_location = i;
+		
+		if (this.history_location <= 0) {
+			this.prevButton.setEnabled(false);
+		} else {
+			this.prevButton.setEnabled(true);
+		}
+		//System.out.println(this.history_location + ":" + history.getSize());
+		if (this.history_location >= history.getSize() - 1) {
+			this.nextButton.setEnabled(false);
+		} else {
+			this.nextButton.setEnabled(true);
+		}
+	}
+	
+	
+	// HyperlinkListener Interface
+	public void hyperlinkUpdate(HyperlinkEvent e) {
+		if (HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
+			URL url = e.getURL();
+			try {
+				viewer.setPage(url);
+				addURL(url);
+			} catch (IOException ex) {
+				System.out.println("IOException: " + ex.getMessage());
+			}
+		}
+	}
+	
+	
 	// PropertyChangeListener Interface
 	public void propertyChange(PropertyChangeEvent e) {
 		String name = e.getPropertyName();
 		if (name.equals("page")) {
-			setTitle(this.viewer.getTitle());
+			setTitle(getTitle());
 		}
 	}
 	
+	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand().equals(CLOSE)) {
-			this.hide();
+		if (e.getActionCommand().equals(NEXT)) {
+			this.location.setSelectedIndex(this.history_location + 1);
+		} else if (e.getActionCommand().equals(PREV)) {
+			this.location.setSelectedIndex(this.history_location - 1);
+		} else if (e.getActionCommand().equals(LOCATION)) {
+			Object path = this.location.getSelectedItem();
+			
+			try {
+				if (path instanceof MyListItemWrapper) {
+					int index = this.location.getSelectedIndex();
+					if (index >= 0) {
+						setHistoryLocation(index);
+					}
+					
+					this.viewer.setPage(((MyListItemWrapper) path).url);
+				} else if (path instanceof String) {
+					URL url = new URL((String) path);
+					
+					addURL(url);
+					this.viewer.setPage(url);
+				}
+			} catch (MalformedURLException ex) {
+				System.out.println("MalformedURLException: " + ex.getMessage());
+			} catch (IOException ex) {
+				System.out.println("IOException: " + ex.getMessage());
+			}
+		}
+	}
+	
+	
+	// Other Methods
+	public String getTitle() {
+		Document doc = this.viewer.getDocument();
+		return (String) doc.getProperty(Document.TitleProperty);
+	}
+	
+	// Inner Classes
+	private class MyButton extends JButton implements MouseListener {
+		public MyButton() {
+			super();
+			
+			setBorderPainted(false);
+			setFocusPainted(false);
+			
+			addMouseListener(this);
+		}
+		
+		// MouseListener Interface
+		public void mouseClicked(MouseEvent e) {}
+		
+		public void mouseEntered(MouseEvent e) {
+			setBorderPainted(true);
+		}
+		
+		public void mouseExited(MouseEvent e) {
+			setBorderPainted(false);
+		}
+		
+		public void mousePressed(MouseEvent e) {}
+		
+		public void mouseReleased(MouseEvent e) {}
+	}
+	
+	private class MyListItemWrapper {
+		public URL url;
+		
+		public MyListItemWrapper(URL url) {
+			this.url = url;
+		}
+		
+		public String toString() {
+			return(url.toString());
 		}
 	}
 }

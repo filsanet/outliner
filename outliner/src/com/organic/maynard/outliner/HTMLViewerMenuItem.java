@@ -44,6 +44,8 @@ package com.organic.maynard.outliner;
 import com.organic.maynard.outliner.guitree.*;
 import java.awt.event.*;
 import org.xml.sax.*;
+import java.net.URL;
+import java.io.IOException;
 
 public class HTMLViewerMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent, JoeReturnCodes {
 	
@@ -79,11 +81,12 @@ public class HTMLViewerMenuItem extends AbstractOutlinerMenuItem implements Acti
 		return this.resource_path;
 	}
 	
-	// "rsrc/about.html"
-	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		Outliner.html_viewer.setHTML(Thread.currentThread().getContextClassLoader().getResource(getResourcePath()));
 		Outliner.html_viewer.show();
+		
+		URL url = Thread.currentThread().getContextClassLoader().getResource(getResourcePath());
+		Outliner.html_viewer.addURL(url);
+
 	}
 }
