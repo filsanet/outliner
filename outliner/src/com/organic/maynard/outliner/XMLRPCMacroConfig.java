@@ -29,42 +29,41 @@ import javax.swing.event.*;
 
 public class XMLRPCMacroConfig extends JPanel implements MacroConfig {
 	
-	public static final String NAME = "Macro Name";
-	public static final String SERVER = "Server";
-	public static final String PORT = "Port";
-	public static final String DO_REPLACEMENT = "Do Replacement";
+	private static final String NAME = "Macro Name";
+	private static final String URL = "URL";
+	private static final String DO_REPLACEMENT = "Do Replacement";
 	
-	protected JLabel nameLabel = new JLabel(NAME);
-	protected JLabel serverLabel = new JLabel(SERVER);
-	protected JLabel portLabel = new JLabel(PORT);
-	protected JLabel doReplacementLabel = new JLabel(DO_REPLACEMENT);
+	private JLabel nameLabel = new JLabel(NAME);
+	private JLabel urlLabel = new JLabel(URL);
+	private JLabel doReplacementLabel = new JLabel(DO_REPLACEMENT);
 
-	protected JTextField nameField = new JTextField();
-	protected JTextField serverField = new JTextField();
-	protected JTextField portField = new JTextField();
+	private JTextField nameField = new JTextField();
+	private JTextField urlField = new JTextField();
 
-	protected ButtonGroup buttonGroup = new ButtonGroup();
-	protected JRadioButton yesRadio = new JRadioButton("Yes");
-	protected JRadioButton noRadio = new JRadioButton("No");
+	private ButtonGroup buttonGroup = new ButtonGroup();
+	private JRadioButton yesRadio = new JRadioButton("Yes");
+	private JRadioButton noRadio = new JRadioButton("No");
 
 	// The Constructor
 	public XMLRPCMacroConfig() {
 		
 		// Create the layout
 		this.setLayout(new BorderLayout());
+		
+		Insets insets = new Insets(1,3,1,3);
+		nameField.setMargin(insets);
+		urlField.setMargin(insets);
 
 		Box mainBox = Box.createVerticalBox();
+		
 		mainBox.add(nameLabel);
-		nameField.setMargin(new Insets(1,3,1,3));
 		mainBox.add(nameField);
+		
 		mainBox.add(Box.createVerticalStrut(5));
-		mainBox.add(serverLabel);
-		serverField.setMargin(new Insets(1,3,1,3));
-		mainBox.add(serverField);
-		mainBox.add(Box.createVerticalStrut(5));
-		mainBox.add(portLabel);
-		portField.setMargin(new Insets(1,3,1,3));
-		mainBox.add(portField);
+		
+		mainBox.add(urlLabel);
+		mainBox.add(urlField);
+		
 		mainBox.add(Box.createVerticalStrut(5));
 
 		buttonGroup.add(yesRadio);
@@ -85,13 +84,12 @@ public class XMLRPCMacroConfig extends JPanel implements MacroConfig {
 
 	
 	// MacroConfig Interface
-	protected XMLRPCMacro macro = null;
+	private XMLRPCMacro macro = null;
 	
 	public void init(Macro xmlrpcMacro) {
 		this.macro = (XMLRPCMacro) xmlrpcMacro;
 		nameField.setText(macro.getName());
-		serverField.setText(macro.getServerName());
-		portField.setText(Integer.toString(macro.getPort()));
+		urlField.setText(macro.getURL());
 		if (this.macro.isReplacing()) {
 			yesRadio.setSelected(true);
 		} else {
@@ -103,26 +101,17 @@ public class XMLRPCMacroConfig extends JPanel implements MacroConfig {
 	
 	public boolean create() {
 		String name = nameField.getText();
-		String serverName = serverField.getText();
-		int port = 8088;
+		String url = urlField.getText();
 		
-		// Validate ServerName
-		if (serverName.equals("")) {
-			return false;
-		}
-		
-		// Validate Port
-		try {
-			port = Integer.parseInt(portField.getText());
-		} catch (NumberFormatException nfe) {
+		// Validate URL
+		if (url.equals("")) {
 			return false;
 		}
 		
 		// Validate Name and do the create
-		if (validateExistence(name) && validateUniqueness(name)) {
+		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name)) {
 			macro.setName(name);
-			macro.setServerName(serverName);
-			macro.setPort(port);
+			macro.setURL(url);
 			if (yesRadio.isSelected()) {
 				macro.setReplacing(true);
 			} else {
@@ -136,36 +125,26 @@ public class XMLRPCMacroConfig extends JPanel implements MacroConfig {
 	
 	public boolean update() {
 		String name = nameField.getText();
-		String serverName = serverField.getText();
-		int port = 8088;
+		String url = urlField.getText();
 		
-		// Validate ServerName
-		if (serverName.equals("")) {
-			return false;
-		}
-		
-		// Validate Port
-		try {
-			port = Integer.parseInt(portField.getText());
-		} catch (NumberFormatException nfe) {
+		// Validate URL
+		if (url.equals("")) {
 			return false;
 		}
 		
 		// Validate Name and do the update
-		if (validateExistence(name)) {
+		if (MacroPopupMenu.validateExistence(name)) {
 			if (name.equals(macro.getName())) {
-				macro.setServerName(serverName);
-				macro.setPort(port);
+				macro.setURL(url);
 				if (yesRadio.isSelected()) {
 					macro.setReplacing(true);
 				} else {
 					macro.setReplacing(false);			
 				}
 				return true;
-			} else if (validateUniqueness(name)) {
+			} else if (MacroPopupMenu.validateUniqueness(name)) {
 				macro.setName(name);
-				macro.setServerName(serverName);
-				macro.setPort(port);
+				macro.setURL(url);
 				if (yesRadio.isSelected()) {
 					macro.setReplacing(true);
 				} else {
@@ -185,21 +164,5 @@ public class XMLRPCMacroConfig extends JPanel implements MacroConfig {
 	public boolean delete() {
 		// Should Always return true.
 		return true;
-	}
-	
-	private boolean validateExistence(String name) {
-		if (name.equals("")) {
-			return false;
-		} else {
-			return true;
-		}	
-	}
-
-	private boolean validateUniqueness(String name) {
-		if (Outliner.macroPopup.isNameUnique(name)) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 }

@@ -78,7 +78,7 @@ public class EnhancedTextMacroConfig extends JPanel implements MacroConfig {
 	public boolean create() {
 		String name = nameField.getText();
 
-		if (validateExistence(name) && validateUniqueness(name)) {
+		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name)) {
 			textMacro.setName(name);
 			textMacro.setReplacementPattern(patternTextArea.getText());
 			return true;
@@ -90,11 +90,11 @@ public class EnhancedTextMacroConfig extends JPanel implements MacroConfig {
 	public boolean update() {
 		String name = nameField.getText();
 
-		if (validateExistence(name)) {
+		if (MacroPopupMenu.validateExistence(name)) {
 			if (name.equals(textMacro.getName())) {
 				textMacro.setReplacementPattern(patternTextArea.getText());
 				return true;
-			} else if (validateUniqueness(name)) {
+			} else if (MacroPopupMenu.validateUniqueness(name)) {
 				textMacro.setName(name);
 				textMacro.setReplacementPattern(patternTextArea.getText());
 				return true;
@@ -111,21 +111,5 @@ public class EnhancedTextMacroConfig extends JPanel implements MacroConfig {
 	public boolean delete() {
 		// Should Always return true.
 		return true;
-	}
-	
-	private boolean validateExistence(String name) {
-		if (name.equals("")) {
-			return false;
-		} else {
-			return true;
-		}	
-	}
-
-	private boolean validateUniqueness(String name) {
-		if (Outliner.macroPopup.isNameUnique(name)) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 }

@@ -361,4 +361,20 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		}
 		comp.setVisible(false);
 	}
+
+	public static boolean validateExistence(String name) {
+		if (name.equals("")) {
+			return false;
+		} else {
+			return true;
+		}	
+	}
+
+	public static boolean validateUniqueness(String name) {
+		if (Outliner.macroPopup.isNameUnique(name)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

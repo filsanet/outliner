@@ -83,7 +83,7 @@ public class HTMLEscapeMacroConfig extends JPanel implements MacroConfig {
 	public boolean create() {
 		String name = nameField.getText();
 
-		if (validateExistence(name) && validateUniqueness(name)) {
+		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name)) {
 			macro.setName(name);
 			if (escapeRadio.isSelected()) {
 				macro.setEscaping(true);
@@ -100,7 +100,7 @@ public class HTMLEscapeMacroConfig extends JPanel implements MacroConfig {
 	public boolean update() {
 		String name = nameField.getText();
 
-		if (validateExistence(name)) {
+		if (MacroPopupMenu.validateExistence(name)) {
 			if (name.equals(macro.getName())) {
 				if (escapeRadio.isSelected()) {
 					macro.setEscaping(true);
@@ -109,7 +109,7 @@ public class HTMLEscapeMacroConfig extends JPanel implements MacroConfig {
 				}
 				
 				return true;
-			} else if (validateUniqueness(name)) {
+			} else if (MacroPopupMenu.validateUniqueness(name)) {
 				macro.setName(name);
 				if (escapeRadio.isSelected()) {
 					macro.setEscaping(true);
@@ -131,21 +131,5 @@ public class HTMLEscapeMacroConfig extends JPanel implements MacroConfig {
 	public boolean delete() {
 		// Should Always return true.
 		return true;
-	}
-	
-	private boolean validateExistence(String name) {
-		if (name.equals("")) {
-			return false;
-		} else {
-			return true;
-		}	
-	}
-
-	private boolean validateUniqueness(String name) {
-		if (Outliner.macroPopup.isNameUnique(name)) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 }

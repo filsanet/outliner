@@ -31,19 +31,17 @@ import com.organic.maynard.xml.XMLTools;
 public class XMLRPCMacro extends HandlerBase implements Macro {
 
 	// Constants
-	public static final String E_XMLRPC = "xmlrpc";
-	public static final String E_SERVER_NAME = "server_name";
-	public static final String E_PORT = "port";
-	public static final String E_REPLACE = "replace";
+	private static final String E_XMLRPC = "xmlrpc";	
+	private static final String E_URL = "url";
+	private static final String E_REPLACE = "replace";
 	
 	// Instance Fields
 	private String name = null;
 	private boolean undoable = true;
 	private int undoableType = Macro.COMPLEX_UNDOABLE;
 		
-	protected String serverName = "127.0.0.1";
-	protected int port = 8088;
-	protected boolean replace = false;
+	private boolean replace = false;
+	private String url = "http://127.0.0.1/RPC2";
 
 	// Class Fields
 	public static XMLRPCMacroConfig macroConfig = new XMLRPCMacroConfig();
@@ -65,11 +63,8 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 
 
 	// Accessors
-	public String getServerName() {return serverName;}
-	public void setServerName(String serverName) {this.serverName = serverName;}
-
-	public int getPort() {return port;}
-	public void setPort(int port) {this.port = port;}
+	public String getURL() {return url;}
+	public void setURL(String url) {this.url = url;}
 
 	public boolean isReplacing() {return this.replace;}
 	public void setReplacing(boolean replace) {this.replace = replace;}
@@ -101,7 +96,7 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 		
 		// Instantiate a Client and make the request
 		try {
-			XmlRpcClient client = new XmlRpcClient(serverName,port);
+			XmlRpcClient client = new XmlRpcClient(url);
 			Object obj = client.execute(requestXmlString);
 			Node replacementNode = PadSelection.pad(obj.toString(), nodeRangePair.node.getTree(), nodeRangePair.node.getDepth(), Preferences.LINE_END_UNIX).getFirstChild();
 			nodeRangePair.node = replacementNode;
@@ -148,8 +143,7 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 		
 		buf.append(XMLTools.getElementStart(E_XMLRPC) + "\n");
 		
-		buf.append(XMLTools.getElementStart(E_SERVER_NAME) + XMLTools.escapeXMLText(getServerName()) + XMLTools.getElementEnd(E_SERVER_NAME)+ "\n");
-		buf.append(XMLTools.getElementStart(E_PORT) + getPort() + XMLTools.getElementEnd(E_PORT)+ "\n");
+		buf.append(XMLTools.getElementStart(E_URL) + XMLTools.escapeXMLText(getURL()) + XMLTools.getElementEnd(E_URL)+ "\n");
 		buf.append(XMLTools.getElementStart(E_REPLACE) + isReplacing() + XMLTools.getElementEnd(E_REPLACE)+ "\n");
 
 		buf.append(XMLTools.getElementEnd(E_XMLRPC) + "\n");
@@ -177,10 +171,8 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 		String text = new String(ch, start, length);
 		String elementName = (String) elementStack.get(elementStack.size() - 1);
 		
-		if (elementName.equals(E_SERVER_NAME)) {
-			setServerName(text);
-		} else if (elementName.equals(E_PORT)) {
-			setPort(Integer.parseInt(text));
+		if (elementName.equals(E_URL)) {
+			setURL(text);
 		} else if (elementName.equals(E_REPLACE)) {
 			setReplacing(Boolean.valueOf(text).booleanValue());
 		}
