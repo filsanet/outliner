@@ -181,19 +181,8 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 	}
 
 	protected static void saveAsOutlinerDocument(OutlinerDocument document) {
-		// Setup comboBoxes from settings
-		Outliner.chooser.setAccessory(Outliner.saveAccessory);
-		Outliner.lineEndComboBox.setSelectedItem(document.settings.lineEnd.cur);
-		Outliner.encodingComboBox.setSelectedItem(document.settings.saveEncoding.cur);
-		Outliner.saveFormatComboBox.setSelectedItem(document.settings.saveFormat.cur);
-		
-		// Set the current directory location.
-		String currentFileName = document.getFileName();
-		if (!currentFileName.equals("")) {
-			Outliner.chooser.setSelectedFile(new File(currentFileName));
-		} else {
-			Outliner.chooser.setCurrentDirectory(new File(Preferences.MOST_RECENT_SAVE_DIR.cur));
-		}
+		// Setup the File Chooser
+		Outliner.chooser.configureForSave(document);
 
 		int option = Outliner.chooser.showSaveDialog(document);
 		
@@ -204,15 +193,15 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		// Handle User Input
 		if (option == JFileChooser.APPROVE_OPTION) {
 			String filename = Outliner.chooser.getSelectedFile().getPath();
-			if (!Outliner.isFileNameUnique(filename) && (!filename.equals(currentFileName))) {
+			if (!Outliner.isFileNameUnique(filename) && (!filename.equals(document.getFileName()))) {
 				JOptionPane.showMessageDialog(document, "Cannot save to file: " + filename + " it is currently open.");
 				return;
 			}
 			
 			// Pull Preference Values from the file chooser
-			String lineEnd = (String) Outliner.lineEndComboBox.getSelectedItem();
-			String encoding = (String) Outliner.encodingComboBox.getSelectedItem();
-			String fileFormat = (String) Outliner.saveFormatComboBox.getSelectedItem();
+			String lineEnd = Outliner.chooser.getLineEnding();
+			String encoding = Outliner.chooser.getSaveEncoding();
+			String fileFormat = Outliner.chooser.getSaveFileFormat();
 
 			// Update the document settings
 			document.settings.lineEnd.def = lineEnd;
@@ -230,15 +219,8 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 	}
 	
 	protected static void openOutlinerDocument(OutlinerDocument document) {
-		// Setup comboBoxes from global settings
-		Outliner.chooser.setAccessory(Outliner.openAccessory);
-		Outliner.lineEndComboBox.setSelectedItem(Preferences.LINE_END.cur);
-		Outliner.openEncodingComboBox.setSelectedItem(Preferences.OPEN_ENCODING.cur);
-		Outliner.openFormatComboBox.setSelectedItem(Preferences.OPEN_FORMAT.cur);
-
-		// Set the current directory location.
-		Outliner.chooser.setCurrentDirectory(new File(Preferences.MOST_RECENT_OPEN_DIR.cur));
-		Outliner.chooser.setSelectedFile(null);
+		// Setup the File Chooser
+		Outliner.chooser.configureForOpen(null, Preferences.OPEN_ENCODING.cur, Preferences.OPEN_FORMAT.cur);
 		
 		int option = Outliner.chooser.showOpenDialog(document);
 
@@ -255,8 +237,8 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 			}
 			
 			// Pull Preference Values from the file chooser
-			String encoding = (String) Outliner.openEncodingComboBox.getSelectedItem();
-			String fileFormat = (String) Outliner.openFormatComboBox.getSelectedItem();
+			String encoding = Outliner.chooser.getOpenEncoding();
+			String fileFormat = Outliner.chooser.getOpenFileFormat();
 
 			DocumentInfo docInfo = new DocumentInfo();
 			docInfo.setPath(filename);

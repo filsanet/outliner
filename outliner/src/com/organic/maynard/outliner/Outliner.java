@@ -62,6 +62,7 @@ public class Outliner extends JFrame {
 	public static OutlinerDesktop desktop = new OutlinerDesktop();
 	public static JScrollPane jsp;
 	public static OutlinerDesktopMenuBar menuBar;
+	public static OutlinerFileChooser chooser = null;
 
 	static {
 		jsp = new JScrollPane(desktop,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED ,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -124,9 +125,9 @@ public class Outliner extends JFrame {
 		// Set the Desktop Color
 		jsp.getViewport().setBackground(Preferences.DESKTOP_BACKGROUND_COLOR.cur);
 		desktop.setBackground(Preferences.DESKTOP_BACKGROUND_COLOR.cur);
-
+		
 		// Setup the File Chooser
-		setupFileChooser();
+		chooser = new OutlinerFileChooser();
 
 		setVisible(true);
 
@@ -230,86 +231,6 @@ public class Outliner extends JFrame {
 
 
 	// File Opening and Saving
-	public static JFileChooser chooser = new JFileChooser();
-	public static PreferenceString chooserLineEnd = null;
-	public static PreferenceString chooserEncoding = null;
-	public static PreferenceString chooserFileFormat = null;
-
-	public static JPanel openAccessory = new JPanel();
-	public static JPanel saveAccessory = new JPanel();
-	
-	public static JComboBox lineEndComboBox = new JComboBox(Preferences.PLATFORM_IDENTIFIERS);
-	public static JComboBox encodingComboBox = new JComboBox();
-	public static JComboBox openEncodingComboBox = new JComboBox();
-	public static JComboBox openFormatComboBox = new JComboBox();
-	public static JComboBox saveFormatComboBox = new JComboBox();
-
-	private static void setupFileChooser() {
-		chooserLineEnd = new PreferenceString(Preferences.LINE_END.cur,Preferences.LINE_END.cur,"");
-		chooserEncoding = new PreferenceString(Preferences.SAVE_ENCODING.cur,Preferences.SAVE_ENCODING.cur,"");
-		chooserFileFormat = new PreferenceString(Preferences.SAVE_FORMAT.cur,Preferences.SAVE_FORMAT.cur,"");
-
-		lineEndComboBox.addItemListener(new ComboBoxListener(lineEndComboBox, chooserLineEnd));
-		encodingComboBox.addItemListener(new ComboBoxListener(encodingComboBox, chooserEncoding));
-		openEncodingComboBox.addItemListener(new ComboBoxListener(openEncodingComboBox, chooserEncoding));
-		openFormatComboBox.addItemListener(new ComboBoxListener(openFormatComboBox, chooserFileFormat));
-		saveFormatComboBox.addItemListener(new ComboBoxListener(saveFormatComboBox, chooserFileFormat));
-		
-		for (int i = 0; i < Preferences.ENCODINGS.size(); i++) {
-			String encoding = (String) Preferences.ENCODINGS.elementAt(i);
-			encodingComboBox.addItem(encoding);
-			openEncodingComboBox.addItem(encoding);
-		}
-		
-		for (int i = 0; i < Preferences.FILE_FORMATS_OPEN.size(); i++) {
-			openFormatComboBox.addItem((String) Preferences.FILE_FORMATS_OPEN.elementAt(i));
-		}
-
-		for (int i = 0; i < Preferences.FILE_FORMATS_SAVE.size(); i++) {
-			saveFormatComboBox.addItem((String) Preferences.FILE_FORMATS_SAVE.elementAt(i));
-		}
-		
-		// Layout save panel
-		Box box = Box.createVerticalBox();
-
-		addSingleItemCentered(new JLabel("Line Terminator"), box);
-		addSingleItemCentered(lineEndComboBox, box);
-
-		box.add(Box.createVerticalStrut(5));
-
-		addSingleItemCentered(new JLabel("File Encoding"), box);
-		addSingleItemCentered(encodingComboBox, box);
-
-		box.add(Box.createVerticalStrut(5));
-
-		addSingleItemCentered(new JLabel("File Format"), box);
-		addSingleItemCentered(saveFormatComboBox, box);
-
-		saveAccessory.add(box,BorderLayout.CENTER);
-		
-		// Layout open panel
-		Box box2 = Box.createVerticalBox();
-
-		addSingleItemCentered(new JLabel("File Encoding"), box2);
-		addSingleItemCentered(openEncodingComboBox, box2);
-
-		box2.add(Box.createVerticalStrut(5));
-
-		addSingleItemCentered(new JLabel("File Format"), box2);
-		addSingleItemCentered(openFormatComboBox, box2);
-
-		openAccessory.add(box2,BorderLayout.CENTER);
-	}
-
-	private static void addSingleItemCentered(JComponent component, Container container) {
-		Box box = Box.createHorizontalBox();
-		box.add(Box.createHorizontalGlue());
-		component.setMaximumSize(component.getPreferredSize());
-		box.add(component);
-		box.add(Box.createHorizontalGlue());
-		container.add(box);
-	}
-	
 	public static void updateSaveMenuItem() {
 		if (getMostRecentDocumentTouched() == null) {
 			Outliner.menuBar.fileMenu.FILE_SAVE_ITEM.setEnabled(false);
