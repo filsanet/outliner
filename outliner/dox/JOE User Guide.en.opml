@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE User Guide.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Mon, 13 Aug 2001 02:34:29 GMT</dateModified>
+<dateModified>Wed, 15 Aug 2001 11:15:32 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
-<expansionState>20</expansionState>
+<expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>51</windowTop>
-<windowLeft>358</windowLeft>
-<windowBottom>686</windowBottom>
-<windowRight>908</windowRight>
+<windowTop>25</windowTop>
+<windowLeft>442</windowLeft>
+<windowBottom>660</windowBottom>
+<windowRight>992</windowRight>
 </head>
 <body>
 <outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="JOE User Guide [JUG]"/>
@@ -82,7 +82,7 @@
 <outline isEditable="true" isMoveable="true" text="Send content contributions">
 <outline isEditable="true" isMoveable="true" text="Study the JUG style, write up a node or two, stick the OPML up on the web, and send us a link to it"/>
 </outline>
-<outline isEditable="true" isMoveable="true" text="Send to Jughead@JavaOutlineEditor.org"/>
+<outline isEditable="true" isMoveable="true" text="Send 'em to DocHelp@JavaOutlineEditor.org"/>
 </outline>
 </outline>
 </outline>

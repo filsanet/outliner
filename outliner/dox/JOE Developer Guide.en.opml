@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide.en.opml</title>
 <dateCreated>Tue, 17 Jul 2001 02:49:03 GMT</dateCreated>
-<dateModified>Mon, 13 Aug 2001 08:55:03 GMT</dateModified>
+<dateModified>Wed, 15 Aug 2001 11:16:52 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
 <windowTop>47</windowTop>
 <windowLeft>322</windowLeft>
-<windowBottom>699</windowBottom>
-<windowRight>998</windowRight>
+<windowBottom>434</windowBottom>
+<windowRight>922</windowRight>
 </head>
 <body>
 <outline isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="JOE Developer Guide [JDG]"/>
@@ -537,7 +537,7 @@
 <outline isEditable="true" isMoveable="true" text="note: this is Stan-the-Novice-cvs-Guy's approach">
 <outline isEditable="true" isMoveable="true" text="I'm sure it's a bit of a way-too-blunt bludgeon"/>
 <outline isEditable="true" isMoveable="true" text="Better info earnestly solicited">
-<outline isEditable="true" isMoveable="true" text="Send it to Stan@JavaOutlineEditor.org"/>
+<outline isEditable="true" isMoveable="true" text="Send it to DocHelp@JavaOutlineEditor.org"/>
 <outline isEditable="true" isMoveable="true" text="Lookin' for those 'surgical' tools/techniques"/>
 </outline>
 </outline>
