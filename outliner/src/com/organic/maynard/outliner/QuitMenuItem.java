@@ -82,7 +82,9 @@ public class QuitMenuItem extends AbstractOutlinerMenuItem implements ActionList
 		// Save config and quit
 		Preferences.saveConfigFile(Outliner.CONFIG_FILE);
 		RecentFilesList.saveConfigFile(Outliner.RECENT_FILES_FILE);
-		Outliner.findReplace.model.saveConfigFile();
+		if (Outliner.findReplace.isInitialized()) {
+			Outliner.findReplace.model.saveConfigFile();
+		}
 		LoadScriptCommand.saveConfigFile(new File(Outliner.SCRIPTS_FILE));
 
 		// Run shutdown scripts. This is the last thing we do before quitting.

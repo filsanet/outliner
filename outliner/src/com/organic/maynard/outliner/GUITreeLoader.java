@@ -53,8 +53,7 @@ public class GUITreeLoader extends HandlerBase implements JoeXMLConstants {
 	
 	
 	// Class Fields
-    private static Parser parser = new com.jclark.xml.sax.Driver();
-	private static boolean errorOccurred = false;
+    private static boolean errorOccurred = false;
 
 	public static GUITreeComponentRegistry reg = new GUITreeComponentRegistry();
 	public static ArrayList elementStack = new ArrayList(); // Holds the created objects.
@@ -63,8 +62,8 @@ public class GUITreeLoader extends HandlerBase implements JoeXMLConstants {
 	
 	// Constructors
 	public GUITreeLoader() {
-		parser.setDocumentHandler(this);
-		parser.setErrorHandler(this);	
+		Outliner.XML_PARSER.setDocumentHandler(this);
+		Outliner.XML_PARSER.setErrorHandler(this);	
 	}
 
 	/**
@@ -116,8 +115,7 @@ public class GUITreeLoader extends HandlerBase implements JoeXMLConstants {
 	// OpenFileFormat Interface
 	public boolean load(String file) {
 		try {
-			FileInputStream fileInputStream = new FileInputStream(file);
-			parser.parse(new InputSource(fileInputStream));
+			Outliner.XML_PARSER.parse(new InputSource(new BufferedInputStream(new FileInputStream(file))));
 			if (errorOccurred) {
 				return false;
 			}
@@ -161,18 +159,14 @@ public class GUITreeLoader extends HandlerBase implements JoeXMLConstants {
 			e.printStackTrace();
 			return;
 		}
-				
-		// Get Standard Attributes
-		String componentName = atts.getValue(A_ID);
-		String className = atts.getValue(A_CLASS);
 
 		// Process Elements
 		try {
 			//System.out.println("Setting component: " + className);
-			GUITreeComponent obj = (GUITreeComponent) Class.forName(className).newInstance();
+			GUITreeComponent obj = (GUITreeComponent) Class.forName(atts.getValue(A_CLASS)).newInstance();
 			
 			// Set the GUITreeComponent's name
-			obj.setGUITreeComponentID(componentName);
+			obj.setGUITreeComponentID(atts.getValue(A_ID));
 
 			// Update Stack
 			elementStack.add(obj);
@@ -185,7 +179,7 @@ public class GUITreeLoader extends HandlerBase implements JoeXMLConstants {
 			obj.startSetup(atts);
 			
 		} catch (ClassNotFoundException cnfe) {
-			System.out.println("Exception: " + className + " " + cnfe);
+			System.out.println("Exception: " + atts.getValue(A_CLASS) + " " + cnfe);
 		} catch (Exception e) {
 			System.out.println("Exception: Something went wrong during processing in the GUITreeLoader.java.");
 			e.printStackTrace();

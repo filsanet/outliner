@@ -36,7 +36,7 @@ import com.organic.maynard.util.string.*;
 
 public class CommandParser{
 
-	private Hashtable commands = new Hashtable();
+	private HashMap commands = new HashMap();
 
 	public static final String WHITESPACE = " \t\r\n";
 	public static final char DEFAULT_ESCAPE_CHAR = '\\';
@@ -44,7 +44,8 @@ public class CommandParser{
 
 	private String delimiters = null;
 	private char escapeChar = DEFAULT_ESCAPE_CHAR;
-	
+
+
 	// The Constructors
 	public CommandParser() {
 		this(WHITESPACE);
@@ -58,6 +59,7 @@ public class CommandParser{
 		this.delimiters = delimiters;
 		this.escapeChar = escapeChar;
 	}
+
 
 	// Parse Methods
 	public void parse(String input) throws UnknownCommandException {
@@ -81,12 +83,7 @@ public class CommandParser{
 		
 		// Break it down into pieces
 		commandSignature = StringTools.split(input, escapeChar, delimiters.toCharArray());
-			/*StringTokenizer tok = new StringTokenizer(input,delimiters);
-			while (tok.hasMoreElements()) {
-				commandSignature.addElement(tok.nextElement());
-			}*/
 
-		
 		// Find the appropriate command and execute it
 		if (commandSignature.size() > 0) {
 			// Lookup the command
@@ -101,23 +98,23 @@ public class CommandParser{
 	}
 	
 	// The Accessors
-	public synchronized void addCommand(Command command) {
-		commands.put(command.getName(),command);
+	public void addCommand(Command command) {
+		commands.put(command.getName(), command);
 	}
 	
-	public synchronized void removeCommand(Command command) {
+	public void removeCommand(Command command) {
 		removeCommand(command.getName());
 	}
 	
-	public synchronized void removeCommand(String key) {
+	public void removeCommand(String key) {
 		commands.remove(key);
 	}
 	
-	public synchronized Command getCommand(String key) {
+	public Command getCommand(String key) {
 		return (Command) commands.get(key);
 	}
 	
-	public synchronized void setDelimiters(String delimiters) {
+	public void setDelimiters(String delimiters) {
 		if (delimiters.length() > 0) {
 			this.delimiters = delimiters;
 		} else {
@@ -125,7 +122,7 @@ public class CommandParser{
 		}
 	}
 	
-	public synchronized String getDelimiters() {
+	public String getDelimiters() {
 		return this.delimiters;
 	}
 }

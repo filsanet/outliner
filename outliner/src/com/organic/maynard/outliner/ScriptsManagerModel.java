@@ -71,7 +71,7 @@ public class ScriptsManagerModel extends AbstractTableModel {
 
 	// Static Methods
 	public static void runStartupScripts() {
-		for (int i = 0; i < Outliner.scriptsManager.model.getSize(); i++) {
+		for (int i = 0, limit = Outliner.scriptsManager.model.getSize(); i < limit; i++) {
 			Script script = Outliner.scriptsManager.model.get(i);
 			
 			if (script.isStartupScript()) {
@@ -81,7 +81,7 @@ public class ScriptsManagerModel extends AbstractTableModel {
 	}
 
 	public static void runShutdownScripts() {
-		for (int i = 0; i < Outliner.scriptsManager.model.getSize(); i++) {
+		for (int i = 0, limit = Outliner.scriptsManager.model.getSize(); i < limit; i++) {
 			Script script = Outliner.scriptsManager.model.get(i);
 			
 			if (script.isShutdownScript()) {
@@ -111,7 +111,7 @@ public class ScriptsManagerModel extends AbstractTableModel {
 	public int getSize() {return scripts.size();}
 
 	public boolean isNameUnique(String name) {
-		for (int i = 0; i < scripts.size(); i++) {
+		for (int i = 0, limit = scripts.size(); i < limit; i++) {
 			if (name.equals(get(i).getName())) {
 				return false;
 			}
@@ -120,7 +120,7 @@ public class ScriptsManagerModel extends AbstractTableModel {
 	}
 	
 	public int indexOf(String name) {
-		for (int i = 0; i < scripts.size(); i++) {
+		for (int i = 0, limit = scripts.size(); i < limit; i++) {
 			Script script = get(i);
 			if (script.getName().equals(name)) {
 				return i;
@@ -147,8 +147,8 @@ public class ScriptsManagerModel extends AbstractTableModel {
 	// Add/Insert
 	public int add(Script script) {
 		// Find the correct spot to add it alphabetically
-		int i;
-		for (i = 0; i < scripts.size(); i++) {
+		int i, limit;
+		for (i = 0, limit = scripts.size(); i < limit; i++) {
 			Script scriptTemp = (Script) scripts.get(i);
 			if (scriptTemp.getName().compareTo(script.getName()) >= 0) {
 				break;

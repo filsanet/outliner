@@ -90,10 +90,10 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 
 	
 	// Perl Regex
-	private static Perl5Util util = new Perl5Util();
+	private static Perl5Util util = null;
 	private static PatternMatcherInput input = null;
 	private static MatchResult result = null;
-	private static Perl5Compiler compiler = new Perl5Compiler();
+	private static Perl5Compiler compiler = null;
 
         	
 	// Button Text and Other Copy
@@ -185,7 +185,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 	private static JCheckBox CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE = null;
 
 	// Define the left panel
-	protected static JList LIST = new JList();
+	protected static JList LIST = null;
 	private static JScrollPane jsp = null;
 
 	private static JButton BUTTON_NEW = null;
@@ -198,7 +198,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 	private static FindReplaceDialog findReplaceDialog = null;
 	
 	// File Chooser
-	private static final JFileChooser fileChooser = new JFileChooser();
+	private static JFileChooser fileChooser = null;
 	
 	// Static Methods
 	private static boolean documentRadiosEnabled = true;
@@ -310,6 +310,16 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 	// The Constructor
 	public FindReplaceFrame() {
 		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+		
+		Outliner.findReplace = this;
+	}
+	
+	private void initialize() {
+		util = new Perl5Util();
+		compiler = new Perl5Compiler();
+		LIST = new JList();
+		monitor = new ProgressDialog();
+
 
 		FIND = GUITreeLoader.reg.getText("find");
 		FIND_ALL = "Find All"; //TBD: update gui tree and use: GUITreeLoader.reg.getText("find_all");
@@ -444,37 +454,10 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		disableButtons();
 		
 		// Setup JFileChooser
+		fileChooser = new JFileChooser();
 		fileChooser.setFileHidingEnabled(false);
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		fileChooser.setApproveButtonText(SELECT);
-
-	}
-	
-	public void show() {
-		TEXTAREA_FIND.requestFocus();
-		super.show();
-	}
-
-
-	// DocumentRepositoryListener Interface
-	public void documentAdded(DocumentRepositoryEvent e) {}
-	
-	public void documentRemoved(DocumentRepositoryEvent e) {}
-	
-	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
-		if(e.getDocument() == null) {
-			disableButtons();
-		} else {
-			enableButtons();
-		}		
-	}
-
-
-	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
-		super.startSetup(atts);
-		
-		Outliner.findReplace = this;
 
 		model = new FindReplaceModel();
 		findReplaceDialog = new FindReplaceDialog();
@@ -626,6 +609,43 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		syncToModel();
 		
 		pack();
+
+		if (Outliner.documents.openDocumentCount() <= 0) {
+			disableButtons();
+		} else {
+			enableButtons();
+		}
+	}
+	
+	private boolean initialized = false;
+	
+	public boolean isInitialized() {
+		return this.initialized;
+	}
+	
+	public void show() {
+		// Lazy Instantiation
+		if (!initialized) {
+			initialize();
+			initialized = true;
+		}
+		
+		TEXTAREA_FIND.requestFocus();
+		super.show();
+	}
+
+
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {}
+	
+	public void documentRemoved(DocumentRepositoryEvent e) {}
+	
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
+		if (e.getDocument() == null) {
+			disableButtons();
+		} else {
+			enableButtons();
+		}		
 	}
 
 
@@ -710,11 +730,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 	}
 
 	public void hide() {
-		model.setPath(TEXTFIELD_PATH.getText());
-		model.setFileFilterInclude(TEXTFIELD_FILE_FILTER_INCLUDE.getText());
-		model.setFileFilterExclude(TEXTFIELD_FILE_FILTER_EXCLUDE.getText());
-		model.setDirFilterInclude(TEXTFIELD_DIR_FILTER_INCLUDE.getText());
-		model.setDirFilterExclude(TEXTFIELD_DIR_FILTER_EXCLUDE.getText());
+		if (initialized) {
+			model.setPath(TEXTFIELD_PATH.getText());
+			model.setFileFilterInclude(TEXTFIELD_FILE_FILTER_INCLUDE.getText());
+			model.setFileFilterExclude(TEXTFIELD_FILE_FILTER_EXCLUDE.getText());
+			model.setDirFilterInclude(TEXTFIELD_DIR_FILTER_INCLUDE.getText());
+			model.setDirFilterExclude(TEXTFIELD_DIR_FILTER_EXCLUDE.getText());
+		}
 		super.hide();
 	}
 	
@@ -976,7 +998,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 	}
 
 	private static FindReplaceResultsModel results = null;
-	protected static com.organic.maynard.swing.ProgressMonitor monitor = new ProgressDialog();
+	protected static com.organic.maynard.swing.ProgressMonitor monitor = null;
 	
 	private static void find_all(OutlinerDocument doc) {
 		int mode = getFindReplaceMode();

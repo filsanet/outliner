@@ -54,18 +54,26 @@ public class DocumentStatistics extends AbstractGUITreeJDialog {
 	
 	// GUI Components
 	private static JLabel documentTitleName = null;
-	private static JLabel documentTitleValue = new JLabel("");
+	private static JLabel documentTitleValue = null;
 
 	private static JLabel lineCountName = null;
-	private static JLabel lineCountValue = new JLabel("");
+	private static JLabel lineCountValue = null;
 
 	private static JLabel charCountName = null;
-	private static JLabel charCountValue = new JLabel("");
+	private static JLabel charCountValue = null;
 	
 	
 	// The Constructors
 	public DocumentStatistics() {
 		super(true, true, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+
+		Outliner.statistics = this;
+	}
+
+	private void initialize() {
+		documentTitleValue = new JLabel("");
+		lineCountValue = new JLabel("");
+		charCountValue = new JLabel("");
 
 		documentTitleName = new JLabel(GUITreeLoader.reg.getText("document") + " ");
 		lineCountName = new JLabel(GUITreeLoader.reg.getText("lines") + " ");
@@ -93,17 +101,22 @@ public class DocumentStatistics extends AbstractGUITreeJDialog {
 		charCountBox.add(charCountValue);
 		vBox.add(charCountBox);
 		
-		getContentPane().add(vBox,BorderLayout.CENTER);
+		getContentPane().add(vBox,BorderLayout.CENTER);	
 	}
-
-
-	// GUITreeComponent Interface
-	public void startSetup(AttributeList atts) {
-		super.startSetup(atts);
-		Outliner.statistics = this;
+	
+	private boolean initialized = false;
+	
+	public boolean isInitialized() {
+		return this.initialized;
 	}
 	
 	public void show() {
+		// Lazy Instantiation
+		if (!initialized) {
+			initialize();
+			initialized = true;
+		}
+
 		OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
 		documentTitleValue.setText(doc.getTitle());
 		

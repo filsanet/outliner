@@ -46,7 +46,9 @@ import javax.swing.*;
  */
 
 public class LoadMacroCommand extends Command {
-	
+
+	private static final boolean VERBOSE = false;
+
 	// Constants
 	private static final String EXTENSION_SEPARATOR = ".";
 	
@@ -57,19 +59,22 @@ public class LoadMacroCommand extends Command {
 	}
 
 
-	public synchronized void execute(Vector signature) {
+	public void execute(Vector signature) {
 		String path = (String) signature.elementAt(1);
 		String className = (String) signature.elementAt(2);
+		
 		try {
 			// Turn path into a File
-			File file = new File(Outliner.MACROS_DIR + path);
+			File file = new File(new StringBuffer().append(Outliner.MACROS_DIR).append(path).toString());
 
 			// Create Instance
 			Macro obj = (Macro) Class.forName(className).newInstance();
 			
 			// Initialize it
 			int end = path.lastIndexOf(EXTENSION_SEPARATOR);
-			if (end == -1) {end = path.length();}
+			if (end == -1) {
+				end = path.length();
+			}
 			obj.setName(path.substring(0, end));
 			boolean success = obj.init(file);
 			
@@ -79,7 +84,9 @@ public class LoadMacroCommand extends Command {
 
 			// Add it to the MacroPopupMenu
 			if (MacroPopupMenu.validateUniqueness(obj.getName()) && MacroPopupMenu.validateRestrictedChars(obj.getName())) {
-				System.out.println("  " + path);
+				if (VERBOSE) {
+					System.out.println(new StringBuffer().append("  ").append(path).toString());
+				}
 				int i = Outliner.macroPopup.addMacro(obj);
 				
 				// Add it to the list in the MacroManager
@@ -112,7 +119,7 @@ public class LoadMacroCommand extends Command {
 	// Need to fix. [md] I don't see what's wrong anymore?
 	private static String prepareConfigFile() {
 		StringBuffer buffer = new StringBuffer();
-		for (int i = 0; i < MacroPopupMenu.macros.size(); i++) {
+		for (int i = 0, limit = MacroPopupMenu.macros.size(); i < limit; i++) {
 			Macro macro = (Macro) MacroPopupMenu.macros.get(i);
 			
 			buffer.append(Outliner.COMMAND_MACRO);
@@ -123,7 +130,7 @@ public class LoadMacroCommand extends Command {
 			buffer.append(System.getProperty("line.separator"));
 		}
 
-		for (int i = 0; i < MacroPopupMenu.sortMacros.size(); i++) {
+		for (int i = 0, limit = MacroPopupMenu.sortMacros.size(); i < limit; i++) {
 			Macro macro = (Macro) MacroPopupMenu.sortMacros.get(i);
 			
 			buffer.append(Outliner.COMMAND_MACRO);

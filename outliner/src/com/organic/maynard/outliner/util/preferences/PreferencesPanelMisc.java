@@ -39,9 +39,7 @@ import com.organic.maynard.outliner.*;
 public class PreferencesPanelMisc extends AbstractPreferencesPanel implements PreferencesPanel, GUITreeComponent {
 	
 	public void applyCurrentToApplication() {		
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
-
-		PreferenceInt pScrollSpeed = (PreferenceInt) prefs.getPreference(Preferences.MOUSE_WHEEL_SCROLL_SPEED);
+		PreferenceInt pScrollSpeed = (PreferenceInt) Outliner.prefs.getPreference(Preferences.MOUSE_WHEEL_SCROLL_SPEED);
 
 		// Set the scroll speed on outliner. This will be inherited by all GUI elements contained within.
 		Outliner.outliner.setScrollSpeed(pScrollSpeed.cur); 

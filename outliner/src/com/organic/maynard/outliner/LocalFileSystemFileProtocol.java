@@ -74,15 +74,17 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 			case FileProtocol.SAVE:
 				chooser.configureForSave(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
 				approveButtonText = "Save" ;
-				break ;
+				break;
+				
 			case FileProtocol.EXPORT:
 				chooser.configureForExport(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
 				approveButtonText = "Export" ;
-				break ;
+				break;
+				
 			default:
 				System.out.println("ERROR: invalid save/export type used. (" + type +")");
 				return false;
-		} // end switch
+		}
 
 		// run the File Chooser
 		int option = chooser.showDialog(Outliner.outliner, approveButtonText);
@@ -96,9 +98,9 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 		if (option == JFileChooser.APPROVE_OPTION) {
 			String filename = chooser.getSelectedFile().getPath();
 
-			String lineEnd ;
-			String encoding ;
-			String fileFormat ;
+			String lineEnd;
+			String encoding;
+			String fileFormat;
 
 			if (!Outliner.documents.isFileNameUnique(filename) && (!filename.equals(document.getFileName()))) {
 				String msg = GUITreeLoader.reg.getText("message_cannot_save_file_already_open");
@@ -115,16 +117,18 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 					lineEnd = chooser.getSaveLineEnding();
 					encoding = chooser.getSaveEncoding();
 					fileFormat = chooser.getSaveFileFormat();
-					break ;
+					break;
+					
 				case FileProtocol.EXPORT:
 					lineEnd = chooser.getExportLineEnding();
 					encoding = chooser.getExportEncoding();
 					fileFormat = chooser.getExportFileFormat();
-					break ;
+					break;
+					
 				default:
 					System.out.println("ERROR: invalid save/export type used. (" + type +")");
 					return false;
-			} // end switch
+			}
 
 
 			// Update the document settings
@@ -155,7 +159,7 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 	public boolean selectFileToOpen(DocumentInfo docInfo, int type) {
 		// we'll customize the approve button
 		// [srk] this is done here, rather than in configureForOpen/Import, to workaround a bug
-		String approveButtonText = null ;
+		String approveButtonText = null;
 
 		// make sure we're all set up
 		lazyInstantiation();
@@ -165,15 +169,17 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 			case FileProtocol.OPEN:
 				chooser.configureForOpen(getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
 				approveButtonText = "Open" ;
-				break ;
+				break;
+				
 			case FileProtocol.IMPORT:
 				chooser.configureForImport(getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
 				approveButtonText = "Import" ;
-				break ;
+				break;
+				
 			default:
 				System.out.println("ERROR: invalid open/import type used. (" + type +")");
 				return false;
-		} // end switch
+		}
 
 		// run the File Chooser
 		int option = chooser.showDialog(Outliner.outliner, approveButtonText) ;
@@ -192,18 +198,21 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 
 			// pull proper preference values from the file chooser
 			switch (type) {
+			
 				case FileProtocol.OPEN:
 					encoding = chooser.getOpenEncoding();
 					fileFormat = chooser.getOpenFileFormat();
-					break ;
+					break;
+					
 				case FileProtocol.IMPORT:
 					encoding = chooser.getImportEncoding();
 					fileFormat = chooser.getImportFileFormat();
-					break ;
+					break;
+					
 				default:
 					System.out.println("ERROR: invalid open/import type used. (" + type +")");
 					return false;
-			} // end switch
+			}
 
 
 			// store data into docInfo structure
@@ -219,9 +228,19 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 
 
 	public boolean saveFile(DocumentInfo docInfo) {
-		return FileFormatManager.writeFile(docInfo.getPath(), docInfo.getOutputBytes());
-	}
+		try {
+			FileOutputStream fileOutputStream = new FileOutputStream(docInfo.getPath());
+			fileOutputStream.write(docInfo.getOutputBytes());
+			fileOutputStream.flush();
+			fileOutputStream.close();
 
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	public boolean openFile(DocumentInfo docInfo) {
 		String msg = null;
 

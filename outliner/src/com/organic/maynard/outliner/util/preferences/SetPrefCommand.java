@@ -41,6 +41,9 @@ import java.util.*;
 
 public class SetPrefCommand extends Command {
 	
+	
+	private static final boolean VERBOSE = false;
+	
 	// Constants
 	public static final String COMMAND_ENCODING = "encoding";
 
@@ -51,13 +54,15 @@ public class SetPrefCommand extends Command {
 	}
 
 
-	public synchronized void execute(Vector signature) {
+	public void execute(Vector signature) {
 		String variableName = (String) signature.elementAt(1);
 		String value = (String) signature.elementAt(2);
 		
 		if (variableName.equals(COMMAND_ENCODING)) {
 			Preferences.ENCODINGS.add(value);
-			System.out.println("  Adding encoding type: " + value);
+			if (VERBOSE) {
+				System.out.println(new StringBuffer().append("  Adding encoding type: ").append(value).toString());
+			}
 			
 		} else {
 			Preference pref = Outliner.prefs.getPreference(variableName);
@@ -65,7 +70,9 @@ public class SetPrefCommand extends Command {
 			try {
 				pref.setCur(value);
 				pref.restoreTemporaryToCurrent();
-				System.out.println("  Setting Pref: " + variableName + " : " + value);
+				if (VERBOSE) {
+					System.out.println(new StringBuffer().append("  Setting Pref: ").append(variableName).append(" : ").append(value).toString());
+				}
 				
 			} catch (ArrayIndexOutOfBoundsException e) {
 				System.out.println("Error Setting Preference, ArrayIndexOutOfBoundsException: " + e.getMessage());

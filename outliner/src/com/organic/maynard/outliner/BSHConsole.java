@@ -54,15 +54,26 @@ public class BSHConsole extends AbstractGUITreeJDialog {
 	public BSHConsole() {
 		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
 	}
-
-	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	
+	private void initialize() {
 		JConsole console = new JConsole();
 		Interpreter interpreter = new Interpreter(console);
 
 		Thread thread = new Thread(interpreter);
 		thread.start();
 					
-		getContentPane().add(console, BorderLayout.CENTER);
+		getContentPane().add(console, BorderLayout.CENTER);	
+	}
+
+	private boolean initialized = false;
+	
+	public void show() {
+		// Lazy Instantiation
+		if (!initialized) {
+			initialize();
+			initialized = true;
+		}
+		
+		super.show();
 	}
 }

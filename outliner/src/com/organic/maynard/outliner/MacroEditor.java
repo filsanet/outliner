@@ -63,10 +63,10 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 	
 	private static String MACRO_TYPE = null;
 	
-	private Box createButtonBox = Box.createHorizontalBox();
-	private Box updateButtonBox = Box.createHorizontalBox();
+	private Box createButtonBox = null;
+	private Box updateButtonBox = null;
 
-	private JLabel macroTypeName = new JLabel();
+	private JLabel macroTypeName = null;
 	
 	private JButton createButton = null;
 	private JButton saveButton = null;
@@ -90,6 +90,16 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 	public MacroEditor() {
 		super(false, false, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
 
+		frame = Outliner.macroManager;
+		frame.macroEditor = this;
+	}
+
+	private void initialize() {
+		createButtonBox = Box.createHorizontalBox();
+		updateButtonBox = Box.createHorizontalBox();
+
+		macroTypeName = new JLabel();
+
 		BUTTON_MODE_CREATE_TITLE = GUITreeLoader.reg.getText("new_macro");
 		BUTTON_MODE_UPDATE_TITLE = GUITreeLoader.reg.getText("update_macro");
 
@@ -107,16 +117,6 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 		deleteButton = new JButton(DELETE);
 		cancelCreateButton = new JButton(CANCEL);
 		cancelUpdateButton = new JButton(CANCEL);
-
-	}
-
-
-	// GUITreeComponentInterface
-	public void startSetup(AttributeList atts) {
-		super.startSetup(atts);
-		
-		frame = Outliner.macroManager;
-		frame.macroEditor = this;
 
 		addWindowListener(
 			new WindowAdapter() {
@@ -152,9 +152,21 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 		// Put it all together
 		this.getContentPane().add(macroTypeName,BorderLayout.NORTH);
 	}
-
+	
+	private boolean initialized = false;
+	
+	public boolean isInitialized() {
+		return this.initialized;
+	}
 
 	public void setMacroConfigAndShow(MacroConfig macroConfig, int buttonMode) {
+
+		// Lazy Instantiation
+		if (!initialized) {
+			initialize();
+			initialized = true;
+		}
+
 		// Swap in the new MacroConfig Panel
 		if (this.macroConfig != null) {
 			this.remove((Component) this.macroConfig);

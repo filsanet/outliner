@@ -141,11 +141,6 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 		super.endSetup(atts);		
 	}
 
-	
-	//public void addPanelToTree(String name) {
-	//	rootNode.add(new DefaultMutableTreeNode(name));
-	//}
-
 	private DefaultMutableTreeNode lastNode = rootNode;
 	private int lastNodeDepth = -1;
 	

@@ -76,11 +76,11 @@ public class GoToDialog extends AbstractGUITreeJDialog implements ActionListener
 	// The Constructor
 	public GoToDialog() {
 		super(false, true, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+		
+		dialog = this;
 	}
-
-
-	// GUITreeComponentInterface
-	public void endSetup(AttributeList atts) {
+	
+	private void initialize() {
 		GO = GUITreeLoader.reg.getText("goto_dialog_go");
 		GOTO_LINE_AND_COLUMN = GUITreeLoader.reg.getText("goto_dialog_line_and_column");
 		CANCEL = GUITreeLoader.reg.getText("cancel");
@@ -127,9 +127,6 @@ public class GoToDialog extends AbstractGUITreeJDialog implements ActionListener
 
 		// Set the default button
 		getRootPane().setDefaultButton(goButton);
-		
-		// Assign ourselves to the static field. Basically were like a singleton.
-		dialog = this;
 
 		// This let's us actually set the focus in our modal dialog.
 		addWindowListener(new WindowAdapter() {
@@ -142,13 +139,23 @@ public class GoToDialog extends AbstractGUITreeJDialog implements ActionListener
 			}
 		});
 
-		dialog.pack();
-
-		super.endSetup(atts);
+		dialog.pack();	
 	}
 
+	private boolean initialized = false;
+	
+	public boolean isInitialized() {
+		return this.initialized;
+	}
 
 	public static void setStateAndShow(OutlinerDocument document) {
+
+		// Lazy Instantiation
+		if (!dialog.initialized) {
+			dialog.initialize();
+			dialog.initialized = true;
+		}
+
 		doc = document;
 		
 		// Populate Column Number

@@ -124,15 +124,11 @@ public class OutlineButton extends JLabel {
 
 	// Static Methods
 	public static void createIcons() {
-		System.out.println("Start Creating Icons...");
-		
 		// Create a buffered image from the closed node image.
 		Image closedImage = ICON_CLOSED_NODE.getImage();
 		BufferedImage image = new BufferedImage(BUTTON_WIDTH, BUTTON_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = image.createGraphics();
 		g.drawImage(closedImage,0,0,Outliner.outliner);
-
-		System.out.println("  prototype icon loaded: closedNode");
 
 		// Create Buffered Image for the derived images.
 		BufferedImage openImage = new BufferedImage(BUTTON_WIDTH, BUTTON_HEIGHT, image.getType());
@@ -142,7 +138,6 @@ public class OutlineButton extends JLabel {
 		at.filter(image, openImage);
 		
 		ICON_OPEN_NODE.setImage(openImage);
-		System.out.println("  icon: openNode");
 		
 		// Lighten color to create leaf
 		lightenFilter lightenFilter = new lightenFilter(0x00999999);
@@ -150,15 +145,13 @@ public class OutlineButton extends JLabel {
 		Image leafImage = Outliner.outliner.createImage(leafSource);
 
 		ICON_LEAF.setImage(leafImage);
-		System.out.println("  icon: leaf");
-
+		
 		// Darken color for selected leaf
 		lightenFilter lightenFilter2 = new lightenFilter(0x00333333);
 		FilteredImageSource leafSelectedSource = new FilteredImageSource(leafImage.getSource(), lightenFilter2);
 		Image leafSelectedImage = Outliner.outliner.createImage(leafSelectedSource);
 
 		ICON_LEAF_SELECTED.setImage(leafSelectedImage);
-		System.out.println("  icon: leafSelected");
 		
 		// Invert color for selected images
 		inversionFilter inversionFilter = new inversionFilter();
@@ -168,13 +161,7 @@ public class OutlineButton extends JLabel {
 		Image closedSelectedImage = Outliner.outliner.createImage(closedSource);
 		
 		ICON_OPEN_NODE_SELECTED.setImage(openSelectedImage);
-		System.out.println("  icon: openNodeSelected");
 		ICON_CLOSED_NODE_SELECTED.setImage(closedSelectedImage);
-		System.out.println("  icon: closedNodeSelected");
-
-		System.out.println("End Creating Icons");
-		System.out.println("");
-
 	}
 }
 

@@ -49,28 +49,16 @@ public class PreferencesPanelLookAndFeel extends AbstractPreferencesPanel implem
 
 	// GUITreeComponent Interface
 	public void endSetup(AttributeList atts) {
-		// call on the ancestors to their stuff
 		super.endSetup(atts);
 
 		// fill title name form combo box with choices
-		OutlinerDocument.fillTitleNameFormCombo() ;
-		
-	} // end method endSetup
+		OutlinerDocument.fillTitleNameFormCombo();
+	}
 
 
 	// PreferencePanel Interface
 	public void applyCurrentToApplication() {
-		// local vars
-		boolean docTitleNameFormChange = false ;
-		int nameForm = -1;
-		int limit = 0;
-		String currentSetting = null;
-		String newTitle = null ;
-		DocumentInfo docInfo = null ;
-		String pathname = null ;
-		
-		// grab aholduv our prefs
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
+		Preferences prefs = Outliner.prefs;
 
 		PreferenceColor pDesktopBackgroundColor = (PreferenceColor) prefs.getPreference(Preferences.DESKTOP_BACKGROUND_COLOR);
 		PreferenceColor pPanelBackgroundColor = (PreferenceColor) prefs.getPreference(Preferences.PANEL_BACKGROUND_COLOR);
@@ -82,27 +70,27 @@ public class PreferencesPanelLookAndFeel extends AbstractPreferencesPanel implem
 		Outliner.jsp.getViewport().setBackground(pDesktopBackgroundColor.cur);
 		Outliner.desktop.setBackground(pDesktopBackgroundColor.cur);
 
-		// Set the Panel Background color.
-		for (int i = 0; i < Outliner.documents.openDocumentCount(); i++) {
-			((OutlinerDocument) Outliner.documents.getDocument(i)).panel.setBackground(pPanelBackgroundColor.cur);
-		}
 		// for each open document ...
-		for (int i = 0; i < Outliner.documents.openDocumentCount(); i++) {
+		for (int i = 0, limit = Outliner.documents.openDocumentCount(); i < limit; i++) {
 			// get the document
 			OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getDocument(i);
+			
+			// Set the Panel Background color.
+			doc.panel.setBackground(pPanelBackgroundColor.cur);
 
 			// Update the cellRenderers
 			for (int j = 0; j < OutlineLayoutManager.CACHE_SIZE; j++) {
-				doc.panel.layout.textAreas[j].setSelectionColor(pTextareaForegroundColor.cur);
-				doc.panel.layout.textAreas[j].setSelectedTextColor(pTextareaBackgroundColor.cur);
-				doc.panel.layout.textAreas[j].setCaretColor(pSelectedChildColor.cur);
-			} // end for
-		} // end for each open document
+				OutlinerCellRendererImpl renderer = doc.panel.layout.textAreas[j];
+				renderer.setSelectionColor(pTextareaForegroundColor.cur);
+				renderer.setSelectedTextColor(pTextareaBackgroundColor.cur);
+				renderer.setCaretColor(pSelectedChildColor.cur);
+			}
+		}
 		
 		// Update the Comment Icons
 		OutlineCommentIndicator.createIcons();
 		OutlineEditableIndicator.createIcons();
-		OutlineMoveableIndicator.createIcons();	
+		OutlineMoveableIndicator.createIcons();
 		
 		// sync up with any title name form changes
 		OutlinerDocument.syncTitleNameForms();

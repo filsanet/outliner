@@ -195,10 +195,7 @@ public class Preferences implements GUITreeComponent {
 	public void startSetup(AttributeList atts) {}
 	
 	public void endSetup(AttributeList atts) {
-		System.out.println("Loading Config...");
 		Outliner.loadPrefsFile(Outliner.PARSER, Outliner.CONFIG_FILE);
-		System.out.println("Done Loading Config.");
-		System.out.println("");
 		
 		// Sync the GUI to the prefs
 		Iterator it = getPreferencesPanelKeys();

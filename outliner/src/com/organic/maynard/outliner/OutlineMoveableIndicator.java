@@ -80,15 +80,11 @@ public class OutlineMoveableIndicator extends AbstractOutlineIndicator {
 	
 	// Static Methods
 	public static void createIcons() {
-		System.out.println("Start Creating Moveable Indicators...");
-		
 		// Create a buffered image from the is not property image.
 		Image isNotPropertyImage = ICON_IS_NOT_PROPERTY.getImage();
 		BufferedImage isNotImage = new BufferedImage(TRUE_WIDTH, BUTTON_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D gIsNotImage = isNotImage.createGraphics();
 		gIsNotImage.drawImage(isNotPropertyImage,0,0,Outliner.outliner);
-
-		System.out.println("  prototype icon loaded: is not moveable");
 
 		// Create a buffered image from the is property image.
 		Image isPropertyImage = ICON_IS_PROPERTY.getImage();
@@ -96,8 +92,6 @@ public class OutlineMoveableIndicator extends AbstractOutlineIndicator {
 		Graphics2D gIsImage = isImage.createGraphics();
 		gIsImage.drawImage(isPropertyImage,0,0,Outliner.outliner);
 
-		System.out.println("  prototype icon loaded: is moveable");
-			
 		// Lighten color to inherited versions
 		lightenFilter lightenFilter = new lightenFilter(0x00cccccc);
 		FilteredImageSource isNotPropertyInheritedSource = new FilteredImageSource(isNotImage.getSource(), lightenFilter);
@@ -106,12 +100,6 @@ public class OutlineMoveableIndicator extends AbstractOutlineIndicator {
 		Image isPropertyInheritedImage = Outliner.outliner.createImage(isPropertyInheritedSource);
 
 		ICON_IS_NOT_PROPERTY_INHERITED = new ImageIcon(isNotPropertyInheritedImage);
-		System.out.println("  icon: is not moveable inherited");
-
 		ICON_IS_PROPERTY_INHERITED = new ImageIcon(isPropertyInheritedImage);
-		System.out.println("  icon: is moveable inherited");
-
-		System.out.println("End Creating Moveable Indicators");
-		System.out.println("");
 	}
 }

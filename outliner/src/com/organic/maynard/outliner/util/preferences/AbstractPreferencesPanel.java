@@ -89,8 +89,7 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 		pf.addPanelToTree(title, depth);
 		
 		// Add this panel to the PreferencesPanel Registry
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
-		prefs.addPreferencesPanel(id, this);
+		Outliner.prefs.addPreferencesPanel(id, this);
 
 		// Start setting up box
 		JLabel label = new JLabel(atts.getValue(A_TITLE));
@@ -147,7 +146,7 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 
 	public void setToCurrent() {
 
-		for (int i = 0; i < getPreferenceListSize(); i++) {
+		for (int i = 0, limit = getPreferenceListSize(); i < limit; i++) {
 			PreferencesGUITreeComponent comp = getPreference(i);
 			Preference pref = comp.getPreference();
 			
@@ -218,11 +217,13 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 		}	
 	}
 	
+	private static Dimension prefDim = new Dimension(3,1);
+	
 	public static void addPreferenceItem(String text, JComponent field, Container container) {
 		Box box = Box.createHorizontalBox();
 		box.add(Box.createHorizontalGlue());
 		box.add(new JLabel(text));
-		box.add(Box.createRigidArea(new Dimension(3,1)));
+		box.add(Box.createRigidArea(prefDim));
 		field.setMaximumSize(field.getPreferredSize());
 		box.add(field);
 		container.add(box);

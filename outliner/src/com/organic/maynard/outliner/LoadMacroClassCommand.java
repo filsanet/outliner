@@ -44,7 +44,7 @@ public class LoadMacroClassCommand extends Command {
 		super(name,numOfArgs);
 	}
 
-	public synchronized void execute(Vector signature) {
+	public void execute(Vector signature) {
 		String className = (String) signature.elementAt(1);
 		String name = (String) signature.elementAt(2);
 		

@@ -51,7 +51,7 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 	protected static String OK = null;
 
 	// GUI Elements
-	protected Box box = Box.createVerticalBox();
+	protected Box box = null;
 	
 	protected DocumentAttributesPanel attPanel = null;
 
@@ -60,17 +60,16 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 	// The Constructors
 	public DocumentAttributesView() {
 		super(false, false, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+		
+		Outliner.documentAttributes = this;
 	}
 
-	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
-		super.startSetup(atts);
-
+	private void initialize() {
+		box = Box.createVerticalBox();
+		
 		OK = GUITreeLoader.reg.getText("ok");
 		
 		buttonOK= new JButton(OK);
-		
-		Outliner.documentAttributes = this;
 		
 		// Define the Bottom Panel
 		JPanel bottomPanel = new JPanel();
@@ -89,14 +88,25 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 		getContentPane().add(jsp,BorderLayout.CENTER);
 	
 		// Set the default button
-		getRootPane().setDefaultButton(buttonOK);
+		getRootPane().setDefaultButton(buttonOK);	
 	}
 	
+	private boolean initialized = false;
+	
+	public boolean isInitialized() {
+		return this.initialized;
+	}
 
 	// Configuration 
 	protected JoeTree tree = null;
 	
 	public void configureAndShow(JoeTree tree) {
+		// Lazy Instantiation
+		if (!initialized) {
+			initialize();
+			initialized = true;
+		}
+
 		this.tree = tree;
 		
 		attPanel.update(this);
@@ -115,21 +125,4 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 	private void ok() {
 		hide();
 	}
-
-	/*private void applyChanges() {
-		tree.clearAttributes();
-		
-		AttributeTableModel model = attPanel.model;
-		
-		for (int i = 0; i < model.keys.size(); i++) {
-			String key = (String) model.keys.get(i);
-			Object value = model.values.get(i);
-			Boolean editable = (Boolean) model.readOnly.get(i);
-			
-			tree.setAttribute(key, value);
-			tree.setReadOnly(key, editable.booleanValue());
-		}
-		
-		tree.getDocument().setFileModified(true);
-	}*/
 }

@@ -46,7 +46,9 @@ import javax.swing.*;
  */
 
 public class LoadScriptCommand extends Command {
-	
+
+	private static final boolean VERBOSE = false;
+
 	// Constants
 	private static final String EXTENSION_SEPARATOR = ".";
 	
@@ -57,22 +59,18 @@ public class LoadScriptCommand extends Command {
 	}
 
 
-	public synchronized void execute(Vector signature) {
+	public void execute(Vector signature) {
 		String path = (String) signature.elementAt(1);
 		String className = (String) signature.elementAt(2);
 		
 		boolean isStartupScript = false;
-		try {
+		if (signature.size() > 3) {
 			isStartupScript = (new Boolean((String) signature.elementAt(3))).booleanValue();
-		} catch (ArrayIndexOutOfBoundsException e) {
-			isStartupScript = false;
 		}
 
 		boolean isShutdownScript = false;
-		try {
+		if (signature.size() > 4) {
 			isShutdownScript = (new Boolean((String) signature.elementAt(4))).booleanValue();
-		} catch (ArrayIndexOutOfBoundsException e) {
-			isShutdownScript = false;
 		}
 		
 		try {
@@ -86,7 +84,9 @@ public class LoadScriptCommand extends Command {
 			
 			// Initialize it
 			int end = path.lastIndexOf(EXTENSION_SEPARATOR);
-			if (end == -1) {end = path.length();}
+			if (end == -1) {
+				end = path.length();
+			}
 			obj.setName(path.substring(0, end));
 			boolean success = obj.init(file);
 			
@@ -96,14 +96,18 @@ public class LoadScriptCommand extends Command {
 
 			// Add it to the Model
 			if (ScriptsManagerModel.validateUniqueness(obj.getName()) && MacroPopupMenu.validateRestrictedChars(obj.getName())) {
-				System.out.println("  " + path);
+				if (VERBOSE) {
+					System.out.println(new StringBuffer().append("  ").append(path).toString());
+				}
 				int i = Outliner.scriptsManager.model.add(obj);			
 			} else {
 				System.out.println("  WARNING: duplicate script entry: " + path);			
 			}
 		} catch (ClassNotFoundException cnfe) {
+		
 			System.out.println("Exception: " + className + " " + cnfe);
 		} catch (Exception e) {
+		
 			System.out.println(e);
 		}
 	}

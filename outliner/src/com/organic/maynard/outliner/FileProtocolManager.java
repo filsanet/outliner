@@ -44,6 +44,9 @@ import java.awt.event.*;
 
 public class FileProtocolManager {
 
+	private static final boolean VERBOSE = false;
+
+	// Instance Fields
 	private ArrayList protocols = new ArrayList();
 	private FileProtocol defaultProtocol = null;
 
@@ -61,7 +64,9 @@ public class FileProtocolManager {
 			boolean success = addProtocol(fileProtocol);
 			
 			if (success) {
-				System.out.println("  File Protocol: " + className + " -> " + protocolName);
+				if (VERBOSE) {
+					System.out.println("  File Protocol: " + className + " -> " + protocolName);
+				}
 			} else {
 				System.out.println("  Duplicate File Protocol Name: " + protocolName);
 			}
@@ -95,7 +100,7 @@ public class FileProtocolManager {
 	}
 	
 	public FileProtocol getProtocol(String protocolName) {
-		for (int i = 0; i < protocols.size(); i++) {
+		for (int i = 0, limit = protocols.size(); i < limit; i++) {
 			FileProtocol protocol = (FileProtocol) protocols.get(i);
 			if (protocol.getName().equals(protocolName)) {
 				return protocol;
@@ -105,7 +110,7 @@ public class FileProtocolManager {
 	}
 	
 	public boolean removeProtocol(String protocolName) {
-		for (int i = 0; i < protocols.size(); i++) {
+		for (int i = 0, limit = protocols.size(); i < limit; i++) {
 			FileProtocol protocol = (FileProtocol) protocols.get(i);
 			if (protocol.getName().equals(protocolName)) {
 				protocols.remove(i);
@@ -152,64 +157,50 @@ public class FileProtocolManager {
 
 	// Menu Synchronization
 	public void synchronizeMenus() {
+		// Get SubMenu Items
+		OutlinerSubMenuItem openMenuItem = (OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.OPEN_MENU_ITEM);
+		OutlinerSubMenuItem importMenuItem = (OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.IMPORT_MENU_ITEM);
+		OutlinerSubMenuItem saveAsMenuItem = (OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
+		OutlinerSubMenuItem exportMenuItem = (OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_MENU_ITEM);
+		OutlinerSubMenuItem exportSelectionMenuItem = (OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_SELECTION_MENU_ITEM);
+
 		// Add Default Protocol
 		FileProtocol def = getDefault();
 		
 		if (def != null) {
-			addDefaultMenuItems(def);
+			JMenuItem openItem = new OpenFileMenuItem(def);
+			openItem.setAccelerator(KeyStroke.getKeyStroke('O', Event.CTRL_MASK, false));
+			openMenuItem.add(openItem);
+			importMenuItem.add(new ImportFileMenuItem(def));
+			saveAsMenuItem.add(new SaveAsFileMenuItem(def));
+			exportMenuItem.add(new ExportFileMenuItem(def));
+			exportSelectionMenuItem.add(new ExportSelectionFileMenuItem(def));
 		}
 		
-		// Add separator
-		addSeparators();
+		// Add separators
+		openMenuItem.addSeparator();
+		importMenuItem.addSeparator();
+		saveAsMenuItem.addSeparator();
+		exportMenuItem.addSeparator();
+		exportSelectionMenuItem.addSeparator();
+
 		
 		// Add list of all protocols
-		for (int i = 0; i < protocols.size(); i++) {
+		for (int i = 0, limit = protocols.size(); i < limit; i++) {
 			FileProtocol protocol = (FileProtocol) protocols.get(i);
-			addMenuItems(protocol);
-		}
-	}
-
-	private void addDefaultMenuItems(FileProtocol protocol) {
-		addDefaultMenuItem(GUITreeComponentRegistry.OPEN_MENU_ITEM, new OpenFileMenuItem(protocol), 'O');
-		addDefaultMenuItem(GUITreeComponentRegistry.IMPORT_MENU_ITEM, new ImportFileMenuItem(protocol), ' ');
-		addDefaultMenuItem(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM, new SaveAsFileMenuItem(protocol), ' ');
-		addDefaultMenuItem(GUITreeComponentRegistry.EXPORT_MENU_ITEM, new ExportFileMenuItem(protocol), ' ');
-		addDefaultMenuItem(GUITreeComponentRegistry.EXPORT_SELECTION_MENU_ITEM, new ExportSelectionFileMenuItem(protocol), ' ');
-	}
-
-	private void addDefaultMenuItem(String menuName,  JMenuItem item, char c) {
-		OutlinerSubMenuItem menu = (OutlinerSubMenuItem) GUITreeLoader.reg.get(menuName);
-		if (c != ' ') {
-			item.setAccelerator(KeyStroke.getKeyStroke(c, Event.CTRL_MASK, false));
-		}
-		menu.add(item);
-	}
 			
-	private void addMenuItems(FileProtocol protocol) {
-		addMenuItem(GUITreeComponentRegistry.OPEN_MENU_ITEM, new OpenFileMenuItem(protocol));
-		addMenuItem(GUITreeComponentRegistry.IMPORT_MENU_ITEM, new ImportFileMenuItem(protocol));
-		addMenuItem(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM, new SaveAsFileMenuItem(protocol));
-		addMenuItem(GUITreeComponentRegistry.EXPORT_MENU_ITEM, new ExportFileMenuItem(protocol));
-		addMenuItem(GUITreeComponentRegistry.EXPORT_SELECTION_MENU_ITEM, new ExportSelectionFileMenuItem(protocol));
-	}
-	
-	private void addMenuItem(String menuName, JMenuItem item) {
-		OutlinerSubMenuItem menu = (OutlinerSubMenuItem) GUITreeLoader.reg.get(menuName);
-		menu.add(item);
+			openMenuItem.add(new OpenFileMenuItem(protocol));
+			importMenuItem.add(new ImportFileMenuItem(protocol));
+			saveAsMenuItem.add(new SaveAsFileMenuItem(protocol));
+			exportMenuItem.add(new ExportFileMenuItem(protocol));
+			exportSelectionMenuItem.add(new ExportSelectionFileMenuItem(protocol));
+		}
 	}
 
-	private void addSeparators() {
-		((OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.OPEN_MENU_ITEM)).addSeparator();
-		((OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.IMPORT_MENU_ITEM)).addSeparator();
-		((OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM)).addSeparator();
-		((OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_MENU_ITEM)).addSeparator();
-		((OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_SELECTION_MENU_ITEM)).addSeparator();
-	}
-	
-	
+
 	// Utility Methods
-	public boolean isNameUnique(FileProtocol protocolToCheck) {
-		for (int i = 0; i < protocols.size(); i++) {
+	private boolean isNameUnique(FileProtocol protocolToCheck) {
+		for (int i = 0, limit = protocols.size(); i < limit; i++) {
 			FileProtocol protocol = (FileProtocol) protocols.get(i);
 			if (protocol.getName().equals(protocolToCheck.getName())) {
 				return false;

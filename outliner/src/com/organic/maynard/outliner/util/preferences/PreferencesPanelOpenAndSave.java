@@ -32,7 +32,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
- 
 
 package com.organic.maynard.outliner.util.preferences;
 
@@ -68,12 +67,6 @@ public class PreferencesPanelOpenAndSave extends AbstractPreferencesPanel implem
 	}
 
 	public void applyCurrentToApplication() {
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
-		PreferenceString pFileProtocol = (PreferenceString) prefs.getPreference(Preferences.FILE_PROTOCOL);
-		PreferenceLineEnding pLineEnd = (PreferenceLineEnding) prefs.getPreference(Preferences.SAVE_LINE_END);
-		PreferenceString pSaveEncoding = (PreferenceString) prefs.getPreference(Preferences.SAVE_ENCODING);
-		PreferenceString pSaveFormat = (PreferenceString) prefs.getPreference(Preferences.SAVE_FORMAT);
-
 		// Synchronize default protocol in model.
 		Outliner.fileProtocolManager.synchronizeDefault();
 		Outliner.fileProtocolManager.synchonizeDefaultMenuItem();

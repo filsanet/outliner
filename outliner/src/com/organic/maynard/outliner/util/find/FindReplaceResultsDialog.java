@@ -62,8 +62,8 @@ public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements
 	
 	
 	// GUI
-	private JTable table = new JTable();
-	private JLabel totalMatches = new JLabel(TOTAL_MATCHES + "0");
+	private JTable table = null;
+	private JLabel totalMatches = null;
 
 	
 	// Model
@@ -73,8 +73,14 @@ public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements
 	// The Constructor
 	public FindReplaceResultsDialog() {
 		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
-		
+	}
+	
+	private void initialize() {
+		totalMatches = new JLabel(TOTAL_MATCHES + "0");
+
+		table = new JTable();
 		table.addMouseListener(this);
+		
 		Outliner.documents.addDocumentRepositoryListener(this);
 		
 		JScrollPane jsp = new JScrollPane(table);
@@ -84,6 +90,12 @@ public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements
 		setTitle("Find/Replace All Results");
 
 		setVisible(false);
+	}
+	
+	private boolean initialized = false;
+	
+	public boolean isInitialized() {
+		return this.initialized;
 	}
 
 
@@ -100,9 +112,17 @@ public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements
 
 
 
-	public FindReplaceResultsModel getModel() {return this.model;}
+	public FindReplaceResultsModel getModel() {
+		return this.model;
+	}
 	
 	public void show(FindReplaceResultsModel model) {
+		// Lazy Instantiation
+		if (!initialized) {
+			initialize();
+			initialized = true;
+		}
+
 		this.model = model;
 		model.setView(this);
 		
@@ -165,5 +185,4 @@ public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements
 	private void handleFileClick(FindReplaceResult result) {
 	
 	}
-
 }

@@ -73,20 +73,17 @@ public class ScriptsManager extends AbstractGUITreeJDialog implements ActionList
 	// The Constructors
 	public ScriptsManager() {
 		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+		Outliner.scriptsManager = this;
+	}
+
+	private void initialize() {
 
 		NEW = GUITreeLoader.reg.getText("new");
 
 		newButton = new JButton(NEW);
 		scriptLabel = new JLabel(GUITreeLoader.reg.getText("script"));
 		threadLabel = new JLabel(GUITreeLoader.reg.getText("thread"));
-	}
 
-	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
-		super.startSetup(atts);
-		
-		Outliner.scriptsManager = this;
-		
 		// Define New Script Pulldown area
 		newButton.addActionListener(this);
 		
@@ -110,7 +107,22 @@ public class ScriptsManager extends AbstractGUITreeJDialog implements ActionList
 		getContentPane().add(newBox, BorderLayout.NORTH);
 		getContentPane().add(scriptBox, BorderLayout.CENTER);
 	}
-
+	
+	private boolean initialized = false;
+	
+	public boolean isInitialized() {
+		return this.initialized;
+	}
+	
+	public void show() {
+		// Lazy Instantiation
+		if (!initialized) {
+			initialize();
+			initialized = true;
+		}
+		
+		super.show();
+	}
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
@@ -144,7 +156,7 @@ public class ScriptsManager extends AbstractGUITreeJDialog implements ActionList
 	
 	// Utility Functions
 	public String getClassNameFromScriptTypeName(String scriptTypeName) {
-		for (int i = 0; i < scriptNames.size(); i++) {
+		for (int i = 0, limit = scriptNames.size(); i < limit; i++) {
 			if (((String) scriptNames.get(i)).equals(scriptTypeName)) {
 				return (String) scriptClassNames.get(i);
 			}
@@ -154,7 +166,7 @@ public class ScriptsManager extends AbstractGUITreeJDialog implements ActionList
 	}
 
 	public String getScriptTypeNameFromClassName(String className) {
-		for (int i = 0; i < scriptClassNames.size(); i++) {
+		for (int i = 0, limit = scriptClassNames.size(); i < limit; i++) {
 			if (((String) scriptClassNames.get(i)).equals(className)) {
 				return (String) scriptNames.get(i);
 			}

@@ -56,40 +56,36 @@ public class OutlinerDesktop extends JDesktopPane implements Scrollable {
 
 	public Dimension getPreferredSize() {
 		if (desktopManager.isMaximized()) {
-			return new Dimension(getParent().getWidth(),getParent().getHeight());
+			return new Dimension(getParent().getWidth(), getParent().getHeight());
 		}
-		
-		Component[] children = getComponents();
 		
 		int scrollBarWidth = Outliner.jsp.getVerticalScrollBar().getWidth();
 		int maxWidth = getParent().getWidth() - scrollBarWidth;
 		int maxHeight = getParent().getHeight() - scrollBarWidth;
+
+		Component[] children = getComponents();
 		
 		for (int i = 0; i < children.length; i++) {
-			boolean isIcon = true;
-			if (children[i] instanceof JInternalFrame) {
-				JInternalFrame child = (JInternalFrame) children[i];
-				if (!child.isIcon()) {
-					isIcon = false;
-				}
-			}
+			Component component = children[i];
 			
-			if (!isIcon) {
-				Point p = children[i].getLocation();
-				int x = children[i].getWidth() + p.x;
-				int y = children[i].getHeight() + p.y;
-				
-				if (x > maxWidth) {
-					maxWidth = x;
-				}
-				
-				if (y > maxHeight) {
-					maxHeight = y;
+			if (component instanceof JInternalFrame) {
+				if (!((JInternalFrame) component).isIcon()) {
+					Point p = component.getLocation();
+					int x = component.getWidth() + p.x;
+					int y = component.getHeight() + p.y;
+					
+					if (x > maxWidth) {
+						maxWidth = x;
+					}
+					
+					if (y > maxHeight) {
+						maxHeight = y;
+					}
 				}
 			}
 		}
 		//System.out.println(maxWidth + " : " + maxHeight);
-		return (new Dimension(maxWidth,maxHeight));
+		return new Dimension(maxWidth, maxHeight);
 	}
 	
 	
@@ -134,39 +130,27 @@ public class OutlinerDesktop extends JDesktopPane implements Scrollable {
 	public boolean getScrollableTracksViewportWidth() {
 		//System.out.println("getScrollableTracksViewportWidth");
 		return false;
-	} // end method
+	}
 
 	// useful for filling the available space
-	Dimension getCurrentAvailableSpace () {
-
-		// build a new Dimension
-		Dimension curAvailSpace = new Dimension(
-			getParent().getWidth(),getParent().getHeight());
-		
-		// return it
-		return curAvailSpace ;
-		
-	} // end method getCurrentAvailableSpace
+	public Dimension getCurrentAvailableSpace() {
+		return new Dimension(getParent().getWidth(), getParent().getHeight());
+	}
 	
 	// add any visible scrollbars to available space value
 	// useful before tiling, since scrollbars melt away post-tile
-	void addScrollbarsToAvailSpace (Dimension availSpace) {
+	public void addScrollbarsToAvailSpace(Dimension availSpace) {
 	
 		// if a vertical scrollbar is showing ...
 		JScrollBar scrollbar = Outliner.jsp.getVerticalScrollBar();
-		if (scrollbar.isVisible()){
-			availSpace.setSize((int)availSpace.getWidth() + scrollbar.getWidth(),
-				(int) availSpace.getHeight()) ;
-		}  // end if
+		if (scrollbar.isVisible()) {
+			availSpace.width += scrollbar.getWidth();
+		}
 			
 		// if a horizontal scrollbar is showing ...
 		scrollbar = Outliner.jsp.getHorizontalScrollBar();
-		if (scrollbar.isVisible()){
-			availSpace.setSize((int)availSpace.getWidth(),
-				(int)availSpace.getHeight() + scrollbar.getHeight()) ;
-		} // end if
-	
-	} // end method adjustForScrollbar	
-
-	
-} // end class OutlinerDesktop.java
+		if (scrollbar.isVisible()) {
+			availSpace.height += scrollbar.getHeight();
+		}
+	}
+}

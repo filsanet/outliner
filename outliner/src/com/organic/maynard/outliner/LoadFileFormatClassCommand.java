@@ -39,30 +39,23 @@ import java.util.*;
 import com.organic.maynard.util.string.StringTools;
 
 public class LoadFileFormatClassCommand extends Command {
+
 	// Constants
-	private char[] DELIMITERS = {' ','\t'};
+	private static final char[] DELIMITERS = {' ','\t'};
 	
 	// The Constructors
 	public LoadFileFormatClassCommand(String name, int numOfArgs) {
 		super(name,numOfArgs);
 	}
 
-	public synchronized void execute(Vector signature) {
-		String formatType = null;
-		String className = null;
-		String formatName = null;
+	public void execute(Vector signature) {
+		String formatType = (String) signature.elementAt(1);
+		String className = (String) signature.elementAt(2);
+		String formatName = (String) signature.elementAt(3);
 		Vector extensions = null;
 
-		try {
-			formatType = (String) signature.elementAt(1);
-			className = (String) signature.elementAt(2);
-			formatName = (String) signature.elementAt(3);
-			String extStr = (String) signature.elementAt(4);
-			
-			extensions = StringTools.split(extStr, '\\', DELIMITERS);
-		} catch (ArrayIndexOutOfBoundsException e) {
-			// Say nothing since this will happen during normal operation since not all 
-			// formats will have extensions set.
+		if (signature.size() > 4) {
+			extensions = StringTools.split((String) signature.elementAt(4), '\\', DELIMITERS);
 		}
 		
 		Outliner.fileFormatManager.createFileFormat(formatType, formatName, className, extensions);

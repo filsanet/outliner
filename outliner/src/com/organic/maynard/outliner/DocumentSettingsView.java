@@ -71,7 +71,7 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 	private static String IS_USING_DOCUMENT_PREFS = null;
 
 	// GUI Elements
-	protected Box box = Box.createVerticalBox();
+	protected Box box = null;
 
 	protected JButton buttonOK = null;
 	protected JButton buttonCancel = null;
@@ -106,7 +106,11 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 	// The Constructors
 	public DocumentSettingsView() {
 		super(false, false, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+	}
 
+	private void initialize() {
+		box = Box.createVerticalBox();
+		
 		OK = GUITreeLoader.reg.getText("ok");
 		CANCEL = GUITreeLoader.reg.getText("cancel");
 		RESTORE_TO_GLOBAL = GUITreeLoader.reg.getText("restore_to_application_preferences");
@@ -156,11 +160,6 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		applyFontStyleForMoveabilityCheckBoxListener = new CheckboxListener(applyFontStyleForMoveabilityCheckBox, null);
 		useCreateModDatesCheckBoxListener = new CheckboxListener(useCreateModDatesCheckBox, null);
 		createModDatesFormatTextFieldListener = new TextFieldListener(createModDatesFormatField, null);
-	}
-
-	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
-		super.startSetup(atts);
 
 		// Define the Bottom Panel
 		JPanel bottomPanel = new JPanel();
@@ -273,11 +272,24 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		// Set the default button
 		getRootPane().setDefaultButton(buttonOK);
 	}
+	
+	private boolean initialized = false;
+	
+	public boolean isInitialized() {
+		return this.initialized;
+	}
 
 	// Configuration
 	private DocumentSettings docSettings = null;
 
 	public void configureAndShow(DocumentSettings docSettings) {
+
+		// Lazy Instantiation
+		if (!initialized) {
+			initialize();
+			initialized = true;
+		}
+
 		this.docSettings = docSettings;
 
 		// Set the Preference Objects on the Listeners so that changes are always sent to the document level Preferences.

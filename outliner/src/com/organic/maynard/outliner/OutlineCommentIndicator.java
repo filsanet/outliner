@@ -80,16 +80,12 @@ public class OutlineCommentIndicator extends AbstractOutlineIndicator {
 	}
 	
 	// Static Methods
-	public static void createIcons() {
-		System.out.println("Start Creating Comment Indicators...");
-		
+	public static void createIcons() {		
 		// Create a buffered image from the commented image.
 		Image notCommentedImage = ICON_IS_NOT_PROPERTY.getImage();
 		BufferedImage image = new BufferedImage(TRUE_WIDTH, BUTTON_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = image.createGraphics();
 		g.drawImage(notCommentedImage,0,0,Outliner.outliner);
-
-		System.out.println("  prototype icon loaded: uncommented");
 
 		// Create Buffered Image for the derived images.
 		BufferedImage commentedImage = new BufferedImage(TRUE_WIDTH, BUTTON_HEIGHT, image.getType());
@@ -106,7 +102,6 @@ public class OutlineCommentIndicator extends AbstractOutlineIndicator {
 		Image commentedImage2 = Outliner.outliner.createImage(commentedSource);
 
 		ICON_IS_PROPERTY = new ImageIcon(commentedImage2);
-		System.out.println("  icon: commented");
 		
 		// Lighten color to inherited versions
 		lightenFilter lightenFilter = new lightenFilter(0x00cccccc);
@@ -116,12 +111,6 @@ public class OutlineCommentIndicator extends AbstractOutlineIndicator {
 		Image notCommentedInheritedImage = Outliner.outliner.createImage(notCommentedInheritedSource);
 
 		ICON_IS_PROPERTY_INHERITED = new ImageIcon(commentedInheritedImage);
-		System.out.println("  icon: commented inherited");
-
 		ICON_IS_NOT_PROPERTY_INHERITED = new ImageIcon(notCommentedInheritedImage);
-		System.out.println("  icon: uncommented inherited");
-
-		System.out.println("End Creating Comment Indicators");
-		System.out.println("");
 	}
 }

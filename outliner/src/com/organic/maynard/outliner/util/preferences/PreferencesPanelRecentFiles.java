@@ -53,19 +53,19 @@ import org.xml.sax.*;
 public class PreferencesPanelRecentFiles extends AbstractPreferencesPanel implements PreferencesPanel, GUITreeComponent {
 
 	// sets of choice strings for combo boxes
-	private static final String [] RECENT_FILES_ORDERINGS = {
+	private static final String[] RECENT_FILES_ORDERINGS = {
 		GUITreeLoader.reg.getText(Preferences.RF_O_CHRONOLOGICAL), 
 		GUITreeLoader.reg.getText(Preferences.RF_O_ALPHABETICAL), 
 		GUITreeLoader.reg.getText(Preferences.RF_O_ASCII) 
 	};
 
-	private static final String [] RECENT_FILES_NAME_FORMS = {
+	private static final String[] RECENT_FILES_NAME_FORMS = {
 		GUITreeLoader.reg.getText(Preferences.RF_NF_FULL_PATHNAME), 
 		GUITreeLoader.reg.getText(Preferences.RF_NF_TRUNC_PATHNAME), 
 		GUITreeLoader.reg.getText(Preferences.RF_NF_FILENAME) 
 	};
 
-	private static final String [] RECENT_FILES_DIRECTIONS = {
+	private static final String[] RECENT_FILES_DIRECTIONS = {
 		GUITreeLoader.reg.getText(Preferences.RF_D_TOPTOBOTTOM), 
 		GUITreeLoader.reg.getText(Preferences.RF_D_BOTTOMTOTOP) 
 	};
@@ -75,15 +75,9 @@ public class PreferencesPanelRecentFiles extends AbstractPreferencesPanel implem
 		super.endSetup(atts);
 
 		// fill the combo boxes with choices
-		AbstractPreferencesPanel.addArrayToComboBox(RECENT_FILES_ORDERINGS, 
-			GUITreeComponentRegistry.COMPONENT_RECENT_FILES_ORDERING);
-			
-		AbstractPreferencesPanel.addArrayToComboBox(RECENT_FILES_NAME_FORMS, 
-			GUITreeComponentRegistry.COMPONENT_RECENT_FILES_NAME_FORM);
-			
-		AbstractPreferencesPanel.addArrayToComboBox(RECENT_FILES_DIRECTIONS, 
-			GUITreeComponentRegistry.COMPONENT_RECENT_FILES_DIRECTION);
-	
+		AbstractPreferencesPanel.addArrayToComboBox(RECENT_FILES_ORDERINGS, GUITreeComponentRegistry.COMPONENT_RECENT_FILES_ORDERING);
+		AbstractPreferencesPanel.addArrayToComboBox(RECENT_FILES_NAME_FORMS, GUITreeComponentRegistry.COMPONENT_RECENT_FILES_NAME_FORM);
+		AbstractPreferencesPanel.addArrayToComboBox(RECENT_FILES_DIRECTIONS, GUITreeComponentRegistry.COMPONENT_RECENT_FILES_DIRECTION);
 	}
 
 	public void applyCurrentToApplication() {
@@ -98,46 +92,45 @@ public class PreferencesPanelRecentFiles extends AbstractPreferencesPanel implem
 		RecentFilesList.syncSize();
 
 		// grab what's been set in the panel
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
+		Preferences prefs = Outliner.prefs;
 
 		PreferenceString pRF_Ordering = (PreferenceString) prefs.getPreference(Preferences.RECENT_FILES_ORDERING);
 		PreferenceString pRF_Name_Form = (PreferenceString) prefs.getPreference(Preferences.RECENT_FILES_NAME_FORM);
 		PreferenceString pRF_Direction = (PreferenceString) prefs.getPreference(Preferences.RECENT_FILES_DIRECTION);
 		
 		// find the position of those strings in their arrays
-		for (ordering = 0, limit = RECENT_FILES_ORDERINGS.length, currentSetting = pRF_Ordering.getCur(); ordering < limit ; ordering++ ) {
+		for (ordering = 0, limit = RECENT_FILES_ORDERINGS.length, currentSetting = pRF_Ordering.getCur(); ordering < limit ; ordering++) {
 			if (currentSetting.equals(RECENT_FILES_ORDERINGS[ordering])) {
 				break;
-			} // end if
-		} // end for
+			}
+		}
 			
 		if (ordering == limit) {
 			coolToApply = false;
-		} // end if
+		}
 		
-		for (nameForm = 0, limit = RECENT_FILES_NAME_FORMS.length, currentSetting = pRF_Name_Form.getCur(); nameForm < limit ; nameForm++ ) {
+		for (nameForm = 0, limit = RECENT_FILES_NAME_FORMS.length, currentSetting = pRF_Name_Form.getCur(); nameForm < limit ; nameForm++) {
 			if (currentSetting.equals(RECENT_FILES_NAME_FORMS[nameForm])) {
 				break;
-			} // end if
-		} // end for
+			}
+		}
 			
 		if (nameForm == limit) {
 			coolToApply = false;
-		} // end if
+		}
 		
-		for (direction = 0, limit = RECENT_FILES_DIRECTIONS.length, currentSetting = pRF_Direction.getCur(); direction < limit ; direction++ ) {
+		for (direction = 0, limit = RECENT_FILES_DIRECTIONS.length, currentSetting = pRF_Direction.getCur(); direction < limit ; direction++) {
 			if (currentSetting.equals(RECENT_FILES_DIRECTIONS[direction])) {
 				break;
-			} // end if
-		} // end for
+			}
+		}
 			
 		if (direction == limit) {
 			coolToApply = false;
-		} // end if
+		}
 		
 		// if we've got a set of valid values
 		if (coolToApply) {
-
 			// grab a ref to the recent files list menu item
 			RecentFilesList rflmi = (RecentFilesList) GUITreeLoader.reg.get(GUITreeComponentRegistry.RECENT_FILE_MENU);
 

@@ -63,10 +63,10 @@ public class ScriptEditor extends AbstractGUITreeJDialog implements ActionListen
 	
 	private static String SCRIPT_TYPE = null;
 	
-	private Box createButtonBox = Box.createHorizontalBox();
-	private Box updateButtonBox = Box.createHorizontalBox();
+	private Box createButtonBox = null;
+	private Box updateButtonBox = null;
 
-	private JLabel scriptTypeName = new JLabel();
+	private JLabel scriptTypeName = null;
 	
 	private JButton createButton = null;
 	private JButton saveButton = null;
@@ -89,6 +89,15 @@ public class ScriptEditor extends AbstractGUITreeJDialog implements ActionListen
 	// The Constructor
 	public ScriptEditor() {
 		super(false, false, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+		frame = Outliner.scriptsManager;
+		frame.scriptEditor = this;
+	}
+
+	private void initialize() {
+		createButtonBox = Box.createHorizontalBox();
+		updateButtonBox = Box.createHorizontalBox();
+
+		scriptTypeName = new JLabel();
 
 		BUTTON_MODE_CREATE_TITLE = GUITreeLoader.reg.getText("new_script");
 		BUTTON_MODE_UPDATE_TITLE = GUITreeLoader.reg.getText("update_script");
@@ -107,16 +116,6 @@ public class ScriptEditor extends AbstractGUITreeJDialog implements ActionListen
 		deleteButton = new JButton(DELETE);
 		cancelCreateButton = new JButton(CANCEL);
 		cancelUpdateButton = new JButton(CANCEL);
-
-	}
-
-
-	// GUITreeComponentInterface
-	public void startSetup(AttributeList atts) {
-		super.startSetup(atts);
-		
-		frame = Outliner.scriptsManager;
-		frame.scriptEditor = this;
 
 		addWindowListener(
 			new WindowAdapter() {
@@ -152,9 +151,21 @@ public class ScriptEditor extends AbstractGUITreeJDialog implements ActionListen
 		// Put it all together
 		this.getContentPane().add(scriptTypeName,BorderLayout.NORTH);
 	}
-
+	
+	private boolean initialized = false;
+	
+	public boolean isInitialized() {
+		return this.initialized;
+	}
 
 	public void setScriptConfigAndShow(ScriptConfig scriptConfig, int buttonMode) {
+
+		// Lazy Instantiation
+		if (!initialized) {
+			initialize();
+			initialized = true;
+		}
+
 		// Swap in the new ScriptConfig Panel
 		if (this.scriptConfig != null) {
 			this.remove((Component) this.scriptConfig);

@@ -88,39 +88,46 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 		int mask = 0;
 		
 		String keyBindingModifiers = atts.getValue(A_KEY_BINDING_MODIFIERS);
-		if (keyBindingModifiers != null) {
-			if (keyBindingModifiers.indexOf(CTRL) != -1) {mask += Event.CTRL_MASK;}
-			if (keyBindingModifiers.indexOf(SHIFT) != -1) {mask += Event.SHIFT_MASK;}
-			if (keyBindingModifiers.indexOf(ALT) != -1) {mask += Event.ALT_MASK;}
+		if ((keyBindingModifiers != null) && (keyBindingModifiers.length() > 0)) {
+			if (keyBindingModifiers.indexOf(CTRL) != -1) {
+				mask += Event.CTRL_MASK;
+			}
+			if (keyBindingModifiers.indexOf(SHIFT) != -1) {
+				mask += Event.SHIFT_MASK;
+			}
+			if (keyBindingModifiers.indexOf(ALT) != -1) {
+				mask += Event.ALT_MASK;
+			}
 		}
 
 		
 		String keyBinding = atts.getValue(A_KEY_BINDING);
-		if (keyBinding != null) {	
-			char keyBindingChar = keyBinding.charAt(0);
-			if (keyBinding.equals(TAB)) {
-				keyBindingChar = KeyEvent.VK_TAB;
-			} else if (keyBinding.equals(UP)) {
-				keyBindingChar = KeyEvent.VK_UP;
-			} else if (keyBinding.equals(DOWN)) {
-				keyBindingChar = KeyEvent.VK_DOWN;
-			} else if (keyBinding.equals(LEFT)) {
-				keyBindingChar = KeyEvent.VK_LEFT;
-			} else if (keyBinding.equals(RIGHT)) {
-				keyBindingChar = KeyEvent.VK_RIGHT;
-			} else if (keyBinding.equals(PAGE_UP)) {
-				keyBindingChar = KeyEvent.VK_PAGE_UP;
-			} else if (keyBinding.equals(PAGE_DOWN)) {
-				keyBindingChar = KeyEvent.VK_PAGE_DOWN;
-			} else if (keyBinding.equals(DELETE)) {
-				keyBindingChar = KeyEvent.VK_DELETE;
-			} else if (keyBinding.equals(F11)) {
-				keyBindingChar = KeyEvent.VK_F11;
-			} else if (keyBinding.equals(F12)) {
-				keyBindingChar = KeyEvent.VK_F12;
+		if (keyBinding != null) {
+			if (keyBinding.length() == 1) {
+				setAccelerator(KeyStroke.getKeyStroke(keyBinding.charAt(0), mask, false));
+			} else {
+				if (keyBinding.equals(TAB)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, mask, false));
+				} else if (keyBinding.equals(UP)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_UP, mask, false));
+				} else if (keyBinding.equals(DOWN)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, mask, false));
+				} else if (keyBinding.equals(LEFT)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, mask, false));
+				} else if (keyBinding.equals(RIGHT)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, mask, false));
+				} else if (keyBinding.equals(PAGE_UP)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, mask, false));
+				} else if (keyBinding.equals(PAGE_DOWN)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, mask, false));
+				} else if (keyBinding.equals(DELETE)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, mask, false));
+				} else if (keyBinding.equals(F11)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, mask, false));
+				} else if (keyBinding.equals(F12)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F12, mask, false));
+				}	
 			}
-			
-			setAccelerator(KeyStroke.getKeyStroke(keyBindingChar, mask, false));
 		}
 
 		// Add this menuItem to the parent menu.

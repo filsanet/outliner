@@ -39,20 +39,20 @@ import java.util.*;
 import com.organic.maynard.util.string.StringTools;
 
 public class LoadFileProtocolClassCommand extends Command {
+
 	// The Constructors
 	public LoadFileProtocolClassCommand(String name, int numOfArgs) {
 		super(name,numOfArgs);
 	}
 
-	public synchronized void execute(Vector signature) {
-		String className = null;
-		String protocolName = null;
-
+	public void execute(Vector signature) {
 		try {
-			className = (String) signature.elementAt(1);
-			protocolName = (String) signature.elementAt(2);
-		} catch (ArrayIndexOutOfBoundsException e) {}
-		
-		Outliner.fileProtocolManager.createFileProtocol(protocolName, className);
+			String className = (String) signature.elementAt(1);
+			String protocolName = (String) signature.elementAt(2);
+			
+			Outliner.fileProtocolManager.createFileProtocol(protocolName, className);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			System.out.println("ERROR: loading FileProtocolClass: " + e.getMessage());
+		}
 	}
 }

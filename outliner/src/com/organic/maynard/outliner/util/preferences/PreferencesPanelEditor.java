@@ -45,7 +45,7 @@ import org.xml.sax.*;
 
 public class PreferencesPanelEditor extends AbstractPreferencesPanel implements PreferencesPanel, GUITreeComponent {
 	
-	private final GraphicsEnvironment GRAPHICS_ENVIRONEMNT = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	// Constants
 	private final String[] LINE_WRAP_OPTIONS = {Preferences.TXT_WORDS, Preferences.TXT_CHARACTERS};
 
 
@@ -53,14 +53,14 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 	public void endSetup(AttributeList atts) {
 		super.endSetup(atts);
 		
-		AbstractPreferencesPanel.addArrayToComboBox(GRAPHICS_ENVIRONEMNT.getAvailableFontFamilyNames(), GUITreeComponentRegistry.COMPONENT_FONT_FACE);
+		AbstractPreferencesPanel.addArrayToComboBox(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames(), GUITreeComponentRegistry.COMPONENT_FONT_FACE);
 		AbstractPreferencesPanel.addArrayToComboBox(LINE_WRAP_OPTIONS, GUITreeComponentRegistry.COMPONENT_LINE_WRAP);
 	}
 	
 	
 	// PreferencePanel Interface
 	public void applyCurrentToApplication() {
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
+		Preferences prefs = Outliner.prefs;
 		
 		PreferenceInt pUndoQueueSize = (PreferenceInt) prefs.getPreference(Preferences.UNDO_QUEUE_SIZE);
 		PreferenceBoolean pShowLineNumbers = (PreferenceBoolean) prefs.getPreference(Preferences.SHOW_LINE_NUMBERS);
@@ -71,15 +71,6 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		PreferenceBoolean pUseCreateModDates = (PreferenceBoolean) prefs.getPreference(Preferences.USE_CREATE_MOD_DATES);
 		PreferenceString pCreateModDatesFormat = (PreferenceString) prefs.getPreference(Preferences.CREATE_MOD_DATES_FORMAT);
 
-		// Update Dates For Node Atts
-		//NodeImpl.isSettingCreateModDates = pUseCreateModDates.cur;
-		//NodeImpl.updateSimpleDateFormat(pCreateModDatesFormat.cur);
-		
-		// Update the undo queue for all the documents immediatly if it is being downsized.
-		for (int i = 0; i < Outliner.documents.openDocumentCount(); i++) {
-			Outliner.documents.getDocument(i).getUndoQueue().trim();
-		}
-		
 		// Update the line numbers
 		if (pShowLineNumbers.cur) {
 			OutlineLineNumber.LINE_NUMBER_WIDTH = OutlineLineNumber.LINE_NUMBER_WIDTH_DEFAULT;
@@ -108,15 +99,21 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		OutlinerCellRendererImpl.updateFonts();
 		
 		// Update renderers in existing docs
-		for (int i = 0; i < Outliner.documents.openDocumentCount(); i++) {
+		for (int i = 0, limit = Outliner.documents.openDocumentCount(); i < limit; i++) {
 			OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getDocument(i);
+
+			// Update the undo queue for all the documents immediatly if it is being downsized.
+			doc.getUndoQueue().trim();
+
 			for (int j = 0; j < OutlineLayoutManager.CACHE_SIZE; j++) {
-				doc.panel.layout.textAreas[j].setWrapStyleWord(line_wrap);
+				OutlinerCellRendererImpl renderer = doc.panel.layout.textAreas[j];
+				
+				renderer.setWrapStyleWord(line_wrap);
 				
 				// Hide line numbers if both indicators and line numbers are turned off.
 				// We leave them showing otherwise, because it creates a better visual
 				// representation in the display when there are indented nodes.
-				OutlineLineNumber lineNumber = doc.panel.layout.textAreas[j].lineNumber;
+				OutlineLineNumber lineNumber = renderer.lineNumber;
 				
 				if (pShowLineNumbers.cur || pShowIndicators.cur) {
 					lineNumber.setOpaque(true);

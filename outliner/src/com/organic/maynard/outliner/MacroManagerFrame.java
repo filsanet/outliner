@@ -77,19 +77,17 @@ public class MacroManagerFrame extends AbstractGUITreeJDialog implements ActionL
 	public MacroManagerFrame() {
 		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
 		
+		Outliner.macroManager = this;
+		macroList.setModel(new DefaultListModel());
+		sortMacroList.setModel(new DefaultListModel());
+	}
+
+	private void initialize() {
 		NEW = GUITreeLoader.reg.getText("new");
 
 		newButton = new JButton(NEW);
 		macroLabel = new JLabel(GUITreeLoader.reg.getText("macros"));
 		sortMacroLabel = new JLabel(GUITreeLoader.reg.getText("sort_macros"));
-	}
-	
-	
-	// GUITreeComponentInterface
-	public void startSetup(AttributeList atts) {
-		super.startSetup(atts);
-		
-		Outliner.macroManager = this;
 		
 		// Define New Macro Pulldown area
 		newButton.addActionListener(this);
@@ -104,7 +102,7 @@ public class MacroManagerFrame extends AbstractGUITreeJDialog implements ActionL
 		
 		// Define Macro List
 		macroBox.add(macroLabel);
-		macroList.setModel(new DefaultListModel());
+		//macroList.setModel(new DefaultListModel());
 		macroList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		macroList.addMouseListener(
@@ -125,7 +123,7 @@ public class MacroManagerFrame extends AbstractGUITreeJDialog implements ActionL
 
 		// Define SortMacro List
 		macroBox.add(sortMacroLabel);
-		sortMacroList.setModel(new DefaultListModel());
+		//sortMacroList.setModel(new DefaultListModel());
 		sortMacroList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		sortMacroList.addMouseListener(
@@ -146,9 +144,24 @@ public class MacroManagerFrame extends AbstractGUITreeJDialog implements ActionL
 		
 		// Put it all together
 		getContentPane().add(newBox, BorderLayout.NORTH);
-		getContentPane().add(macroBox, BorderLayout.CENTER);		
+		getContentPane().add(macroBox, BorderLayout.CENTER);
 	}
-
+	
+	private boolean initialized = false;
+	
+	public boolean isInitialized() {
+		return this.initialized;
+	}
+	
+	public void show() {
+		// Lazy Instantiation
+		if (!initialized) {
+			initialize();
+			initialized = true;
+		}
+		
+		super.show();
+	}
 
 	private void updateMacro(String macroName) {
 		Macro macro = Outliner.macroPopup.getMacro(macroName);
@@ -179,7 +192,7 @@ public class MacroManagerFrame extends AbstractGUITreeJDialog implements ActionL
 		} catch (ClassNotFoundException cnfe) {
 			System.out.println("Exception: " + className + " " + cnfe);
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 	
@@ -192,7 +205,7 @@ public class MacroManagerFrame extends AbstractGUITreeJDialog implements ActionL
 
 	// Utility Functions
 	public String getClassNameFromMacroTypeName(String macroTypeName) {
-		for (int i = 0; i < macroNames.size(); i++) {
+		for (int i = 0, limit = macroNames.size(); i < limit; i++) {
 			if (((String) macroNames.get(i)).equals(macroTypeName)) {
 				return (String) macroClassNames.get(i);
 			}
@@ -202,7 +215,7 @@ public class MacroManagerFrame extends AbstractGUITreeJDialog implements ActionL
 	}
 
 	public String getMacroTypeNameFromClassName(String className) {
-		for (int i = 0; i < macroClassNames.size(); i++) {
+		for (int i = 0, limit = macroClassNames.size(); i < limit; i++) {
 			if (((String) macroClassNames.get(i)).equals(className)) {
 				return (String) macroNames.get(i);
 			}
