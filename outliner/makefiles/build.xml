@@ -13,6 +13,9 @@
 			<property name="lib" value="lib"/>
 			<property name="doc" value="doc"/>
 			<property name="doc-api" value="${doc}/api"/>
+			<property name="path-release" value="release"/>
+			<property name="path-release-dist" value="release/outliner"/>
+			<property name="dist" value="outliner-1.8.9.3"/>
 			<property name="jar_libpath" value="."/>
 			<property name="jar_modulepath" value="../modules"/>
 		<target name="init">
@@ -159,4 +162,45 @@
 				</fileset>
 			</delete>
 		</target>
-	</project>
+	<!-- RELEASE TARGET -->
+		<target name="release" depends="init" description="Creates a release.">
+			<antcall target="jar"/>
+			<antcall target="clean"/>
+			<delete dir="${path-release-dist}"/>
+			<mkdir  dir="${path-release-dist}"/>
+			<antcall target="release-copy"/>
+			<antcall target="release-compress"/>
+		</target>
+		<target name="release-copy" depends="init" description="Copies file for a release.">
+			<copy todir="${path-release-dist}/extras">
+				<fileset dir="extras" excludes="CVS"/>
+			</copy>
+			<copy todir="${path-release-dist}/lib">
+				<fileset dir="lib">
+					<exclude name="CVS"/>
+					<exclude name="license-xerces.txt"/>
+					<exclude name="xerces.jar"/>
+					<exclude name="sax.jar"/>
+				</fileset>
+			</copy>
+			<copy todir="${path-release-dist}/makefiles">
+				<fileset dir="makefiles" excludes="CVS"/>
+			</copy>
+			<copy todir="${path-release-dist}/prefs">
+				<fileset dir="prefs" excludes="CVS"/>
+			</copy>
+			<copy todir="${path-release-dist}/src">
+				<fileset dir="src" excludes="CVS"/>
+			</copy>
+			<copy file="installation.txt" tofile="${path-release-dist}/installation.txt"/>
+			<copy file="license.txt" tofile="${path-release-dist}/license.txt"/>
+			<copy file="run.bat" tofile="${path-release-dist}/run.bat"/>
+			<copy file="run_joe.sh" tofile="${path-release-dist}/run_joe.sh"/>
+			<copy file="sendto.bat" tofile="${path-release-dist}/sendto.bat"/>
+		</target>
+		<target name="release-compress" depends="init" description="Tar and Gzips the release.">
+			<tar tarfile="${path-release}/${dist}.tar" basedir="${path-release-dist}"/>
+			<gzip zipfile="${path-release}/${dist}.tar.gz" src="${path-release}/${dist}.tar"/>
+			<delete file="${path-release}/${dist}.tar"/>
+		</target>
+</project>
