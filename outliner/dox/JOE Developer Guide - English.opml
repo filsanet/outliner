@@ -3,10 +3,10 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide - English.opml</title>
 <dateCreated>Tue, 17 Jul 2001 02:49:03 GMT</dateCreated>
-<dateModified>Wed, 25 Jul 2001 02:16:31 GMT</dateModified>
+<dateModified>Fri, 27 Jul 2001 05:51:42 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
-<expansionState>1</expansionState>
+<expansionState>4,5,9</expansionState>
 <vertScrollState>1</vertScrollState>
 <windowTop>59</windowTop>
 <windowLeft>40</windowLeft>
@@ -14,10 +14,8 @@
 <windowRight>525</windowRight>
 </head>
 <body>
-<outline text="Linux/Unix"/>
 <outline text="Windows">
 <outline text="Setting Up the JOE Open Source Project on a Windows System">
-<outline text="a Step-by-Simple-Step Guide"/>
 <outline text="Front Matter">
 <outline text="This Version">
 <outline text="2001-07-21"/>
@@ -356,6 +354,7 @@
 <outline text="Removing a directory from the project"/>
 </outline>
 </outline>
+<outline text="Linux/Unix"/>
 <outline text="Macintosh"/>
 <outline text="CVS Survival">
 <outline text="CVS Update and Commit Result Codes">

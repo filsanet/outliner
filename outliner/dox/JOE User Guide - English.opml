@@ -3,15 +3,15 @@
 <head>
 <title>e:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Thu, 26 Jul 2001 08:50:29 GMT</dateModified>
+<dateModified>Thu, 26 Jul 2001 04:07:46 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>27</windowTop>
-<windowLeft>99</windowLeft>
-<windowBottom>455</windowBottom>
-<windowRight>493</windowRight>
+<windowTop>23</windowTop>
+<windowLeft>179</windowLeft>
+<windowBottom>424</windowBottom>
+<windowRight>555</windowRight>
 </head>
 <body>
 <outline text="&lt;this is a work in perpetual progress&gt;">
@@ -19,7 +19,7 @@
 </outline>
 <outline text="Front End">
 <outline text="About JOE"/>
-<outline text="Using This Guide"/>
+<outline text="About JUG"/>
 <outline text="Authors">
 <outline text="Stan Krute"/>
 </outline>
@@ -31,13 +31,13 @@
 </outline>
 <outline text="Thanks To">
 <outline text="Dave Winer">
-<outline text="outlining fountainhead &amp; mensch"/>
+<outline text="the fountainhead of outlining"/>
 <outline text="http://www.scripting.com"/>
 </outline>
 <outline text="SourceForge">
 <outline text="23,000 projects"/>
 <outline text="230,000 developers"/>
-<outline text="the path is clear"/>
+<outline text="JOE's happy project home"/>
 </outline>
 <outline text="the Java community"/>
 </outline>
@@ -53,7 +53,7 @@
 </outline>
 <outline text="Copyright"/>
 <outline text="Version">
-<outline text="versionStamp: 2001.07.25.001"/>
+<outline text="JUG versionStamp: 2001.07.25.001"/>
 </outline>
 <outline text="Cataloging Info"/>
 </outline>
