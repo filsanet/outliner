@@ -3,7 +3,7 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide - English.opml</title>
 <dateCreated>Tue, 17 Jul 2001 02:49:03 GMT</dateCreated>
-<dateModified>Mon, 30 Jul 2001 09:04:59 GMT</dateModified>
+<dateModified>Mon, 30 Jul 2001 09:09:36 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
@@ -96,7 +96,9 @@
 <outline text="Stan@JavaOutlineEditor.org"/>
 </outline>
 </outline>
-<outline text="Thanks To"/>
+<outline text="Thanks To">
+<outline text="links to other Thanks To nodes"/>
+</outline>
 <outline text="Copyright"/>
 <outline text="Version">
 <outline text="JDG versionStamp: 2001.07.30.001"/>
