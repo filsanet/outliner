@@ -136,13 +136,13 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 			
 		// Create the Layout
-		
 		dummy = new DummyJScrollPane(panel, panel.layout.scrollBar);
 		
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, dummy, attJSP);
 		splitPane.setResizeWeight(1.0);
 		splitPane.addPropertyChangeListener(this);
 
+		// Now let's resize since the panel and dummy panel are linked together so no NPE when we get the panel's size.
 		restoreWindowToInitialSize();
 		setLocation(INITIAL_X, INITIAL_Y);
 
@@ -161,6 +161,8 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 			showAttributes(false);
 		}
 		
+		// Need to validate and redraw one last time since everything wasn't all put together until now. And the redraw
+		// inside showAttributes wouldn't be kicked off since we're not visible yet.
 		validate();
 		panel.layout.redraw();
 
