@@ -53,7 +53,17 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 		// Add this panel to the PreferencesFrame.
 		PreferencesFrame.RIGHT_PANEL.add(this, title);
 		PreferencesFrame pf = (PreferencesFrame) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_FRAME);
-		pf.addPanelToTree(title);
+		
+		// Add the preference panel at the appropriate depth.
+		int depth = 0;
+		while (true) {
+			GUITreeComponent c = (GUITreeComponent) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - ++depth);
+			if(!(c instanceof PreferencesPanel)) {
+				depth--;
+				break;
+			}
+		}
+		pf.addPanelToTree(title, depth);
 		
 		// Add this panel to the PreferencesPanel Registry
 		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);

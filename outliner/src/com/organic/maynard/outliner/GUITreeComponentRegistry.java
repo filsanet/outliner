@@ -39,6 +39,7 @@ public class GUITreeComponentRegistry {
 	public static final String SAVE_ALL_MENU_ITEM = "save_all";
 	public static final String REVERT_MENU_ITEM = "revert";
 	public static final String EXPORT_MENU_ITEM = "export";
+	public static final String EXPORT_SELECTION_MENU_ITEM = "export_selection";
 	public static final String IMPORT_MENU_ITEM = "import";
 	public static final String CLOSE_MENU_ITEM = "close";
 	public static final String CLOSE_ALL_MENU_ITEM = "close_all";

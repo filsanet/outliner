@@ -184,6 +184,7 @@ public class TreeContext extends AttributeContainerImpl {
 	private static JMenuItem copyItem = null;
 	private static JMenuItem deleteItem = null;
 	private static JMenuItem selectInverseItem = null;
+	private static JMenuItem exportSelectionItem = null;
 
 	public void updateEditMenu() {
 		if (cutItem == null) {
@@ -191,6 +192,7 @@ public class TreeContext extends AttributeContainerImpl {
 			copyItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.COPY_MENU_ITEM);
 			deleteItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.DELETE_MENU_ITEM);
 			selectInverseItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SELECT_INVERSE_MENU_ITEM);
+			exportSelectionItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_SELECTION_MENU_ITEM);
 		}
 
 		if (getComponentFocus() == OutlineLayoutManager.TEXT) {
@@ -200,10 +202,12 @@ public class TreeContext extends AttributeContainerImpl {
 				copyItem.setEnabled(false);
 				cutItem.setEnabled(false);
 				deleteItem.setEnabled(false);
+				exportSelectionItem.setEnabled(false);
 			} else {
 				copyItem.setEnabled(true);
 				cutItem.setEnabled(true);
 				deleteItem.setEnabled(true);
+				exportSelectionItem.setEnabled(true);
 			}
 		} else if (getComponentFocus() == OutlineLayoutManager.ICON) {
 			selectInverseItem.setEnabled(true);
@@ -212,10 +216,12 @@ public class TreeContext extends AttributeContainerImpl {
 				copyItem.setEnabled(false);
 				cutItem.setEnabled(false);
 				deleteItem.setEnabled(false);
+				exportSelectionItem.setEnabled(false);
 			} else {
 				copyItem.setEnabled(true);
 				cutItem.setEnabled(true);
 				deleteItem.setEnabled(true);
+				exportSelectionItem.setEnabled(true);
 			}			
 		}	
 	}

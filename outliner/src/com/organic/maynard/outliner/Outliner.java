@@ -617,12 +617,14 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		JMenuItem closeItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CLOSE_MENU_ITEM);
 		JMenuItem closeAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CLOSE_ALL_MENU_ITEM);
 		JMenuItem exportItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_MENU_ITEM);
+		JMenuItem exportSelectionItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_SELECTION_MENU_ITEM);
 	
 		if (getMostRecentDocumentTouched() == null) {
 			saveItem.setEnabled(false);
 			saveAsItem.setEnabled(false);
 			revertItem.setEnabled(false);
 			exportItem.setEnabled(false);
+			exportSelectionItem.setEnabled(false);
 			closeItem.setEnabled(false);
 			closeAllItem.setEnabled(false);
 		} else if (getMostRecentDocumentTouched().getFileName().equals("")) {
@@ -630,6 +632,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 			saveAsItem.setEnabled(true);
 			revertItem.setEnabled(false);
 			exportItem.setEnabled(true);
+			exportSelectionItem.setEnabled(true);
 			closeItem.setEnabled(true);
 			closeAllItem.setEnabled(true);
 		} else if (getMostRecentDocumentTouched().isFileModified()) {
@@ -637,6 +640,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 			saveAsItem.setEnabled(true);
 			revertItem.setEnabled(true);
 			exportItem.setEnabled(true);
+			exportSelectionItem.setEnabled(true);
 			closeItem.setEnabled(true);
 			closeAllItem.setEnabled(true);
 		} else {
@@ -644,6 +648,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 			saveAsItem.setEnabled(true);
 			revertItem.setEnabled(false);
 			exportItem.setEnabled(true);
+			exportSelectionItem.setEnabled(true);
 			closeItem.setEnabled(true);
 			closeAllItem.setEnabled(true);
 		}

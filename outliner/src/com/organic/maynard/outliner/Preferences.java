@@ -106,6 +106,10 @@ public class Preferences implements GUITreeComponent {
 		public static final String OPEN_FORMAT = "open_format";
 		public static final String SAVE_FORMAT = "save_format";
 		
+			// File Format: Justified Plaintext
+			public static final String JUSTIFIED_PLAINTEXT_COL_WIDTH = "justified_plaintext_col_width";
+			public static final String JUSTIFIED_PLAINTEXT_DRAW_LINES = "justified_plaintext_draw_lines";
+		
 		// Misc Panel
 		public static final String PRINT_ENVIRONMENT = "print_environment";
 		public static final String NEW_DOC_ON_STARTUP = "new_doc_on_startup";
@@ -150,17 +154,12 @@ public class Preferences implements GUITreeComponent {
 
 		
 		// Sync the GUI to the prefs
-		PreferencesPanelEditor pEditor = (PreferencesPanelEditor) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_PANEL_EDITOR);
-		pEditor.setToCurrent();
-
-		PreferencesPanelOpenAndSave pOpenAndSave = (PreferencesPanelOpenAndSave) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_PANEL_OPEN_AND_SAVE);
-		pOpenAndSave.setToCurrent();
-
-		PreferencesPanelLookAndFeel pLookAndFeel = (PreferencesPanelLookAndFeel) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_PANEL_LOOK_AND_FEEL);
-		pLookAndFeel.setToCurrent();
-
-		PreferencesPanelMisc pMisc = (PreferencesPanelMisc) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_PANEL_MISC);
-		pMisc.setToCurrent();
+		Iterator it = getPreferencesPanelKeys();
+		while (it.hasNext()) {
+			String key = (String) it.next();
+			PreferencesPanel panel = getPreferencesPanel(key);
+			panel.setToCurrent();
+		}
 	}
 	
 	

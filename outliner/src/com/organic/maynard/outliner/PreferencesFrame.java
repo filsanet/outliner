@@ -24,6 +24,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 import org.xml.sax.*;
+import java.util.*;
 
 /**
  * @author  $Author$
@@ -123,10 +124,34 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 	}
 
 	
-	public void addPanelToTree(String name) {
-		rootNode.add(new DefaultMutableTreeNode(name));
-	}
+	//public void addPanelToTree(String name) {
+	//	rootNode.add(new DefaultMutableTreeNode(name));
+	//}
 
+	private DefaultMutableTreeNode lastNode = rootNode;
+	private int lastNodeDepth = -1;
+	
+	public void addPanelToTree(String name, int depth) {
+		DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(name);
+		
+		if (depth > lastNodeDepth) {
+			lastNode.add(newNode);
+		} else if (depth == lastNodeDepth) {
+			((DefaultMutableTreeNode) lastNode.getParent()).add(newNode);
+		} else {
+			int depthDifference = lastNodeDepth - depth;
+			
+			TreeNode parent = lastNode.getParent();
+			for (int i = 0; i < depthDifference; i++) {
+				parent = parent.getParent();
+			}
+			
+			((DefaultMutableTreeNode) parent).add(newNode);
+		}
+
+		lastNode = newNode;
+		lastNodeDepth = depth;
+	}
 	
 	// TreeSelectionListener interface
 	public void valueChanged(TreeSelectionEvent e) {
@@ -162,19 +187,17 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 	public void main_cancel() {
 		// Restore Prefs
 		Preferences.restoreTemporaryToCurrent();
-		
+
 		// Restore GUI
-		PreferencesPanelOpenAndSave ppos = (PreferencesPanelOpenAndSave) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_PANEL_OPEN_AND_SAVE);
-		ppos.setToCurrent();
+		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
 
-		PreferencesPanelLookAndFeel pplf = (PreferencesPanelLookAndFeel) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_PANEL_LOOK_AND_FEEL);
-		pplf.setToCurrent();
-
-		PreferencesPanelMisc ppm = (PreferencesPanelMisc) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_PANEL_MISC);
-		ppm.setToCurrent();
-
-		PreferencesPanelEditor ppe = (PreferencesPanelEditor) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_PANEL_EDITOR);
-		ppe.setToCurrent();
+		Iterator it = prefs.getPreferencesPanelKeys();
+		while (it.hasNext()) {
+			String key = (String) it.next();
+			PreferencesPanel panel = prefs.getPreferencesPanel(key);
+			panel.setToCurrent();
+		}
+				
 
 		hide();
 	}

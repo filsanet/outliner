@@ -27,8 +27,9 @@ import java.text.*;
 public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, JoeReturnCodes {
 
 	// Constants
-	private static final int COLS = 80;
+	private static int COLS = 80;
 	private static final int INDENT = 2;
+	private static boolean DRAW_LINES = true;
 	
 	// Constructors
 	public JustifiedPlaintextExportFileFormat() {}
@@ -42,6 +43,9 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 	public boolean supportsDocumentAttributes() {return false;}
 	
 	public byte[] save(TreeContext tree, DocumentInfo docInfo) {
+		COLS = Preferences.getPreferenceInt(Preferences.JUSTIFIED_PLAINTEXT_COL_WIDTH).cur;
+		DRAW_LINES = Preferences.getPreferenceBoolean(Preferences.JUSTIFIED_PLAINTEXT_DRAW_LINES).cur;
+	
 		StringBuffer buf = prepareFile(tree, docInfo);
 		
 		try {
@@ -76,7 +80,13 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 	}
 	
 	private void splitNode(Node node, String lineEnding, StringBuffer buf) {
-		int spaceCount = (node.getDepth() + 1) * INDENT;
+		int spaceCount = -1;
+		if (DRAW_LINES) {
+			spaceCount = (node.getDepth() + 1) * INDENT;
+		} else {
+			spaceCount = node.getDepth() * INDENT;
+		}
+		
 		int textCount = COLS - spaceCount;
 		
 		// Catch situation where indenting exceeds the available columns
@@ -90,14 +100,26 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 		for (int i = 0; i < lines.size(); i++) {
 			//indent(spaceCount, buf);
 			if (i == 0) {
-				indentHeirarchy(node, buf, FIRST_LINE);
+				if (DRAW_LINES) {
+					indentHeirarchy(node, buf, FIRST_LINE);
+				} else {
+					indent(spaceCount, buf);
+				}
 			} else {
-				indentHeirarchy(node, buf, MIDDLE_LINE);
+				if (DRAW_LINES) {
+					indentHeirarchy(node, buf, MIDDLE_LINE);
+				} else {
+					indent(spaceCount, buf);
+				}
 			}
 			buf.append((String) lines.get(i)).append(lineEnding);
 		}
-		
-		indentHeirarchy(node, buf, AFTER_LINE);
+
+		if (DRAW_LINES) {
+			indentHeirarchy(node, buf, AFTER_LINE);
+		} else {
+			indent(spaceCount, buf);
+		}
 		buf.append(lineEnding);
 	}
 	
