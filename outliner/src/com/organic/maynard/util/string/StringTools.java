@@ -34,8 +34,7 @@ package com.organic.maynard.util.string;
 import java.util.*;
 
 public class StringTools {
-
-
+	
 	// Constructor
 	public StringTools() {}
 	
@@ -54,12 +53,10 @@ public class StringTools {
 	
 	// Class Methods
 	public static String replace(String in, String match, String replacement) {
-		// [srk] bug fix
 		// check for null refs
 		if (in == null || match == null || replacement == null) {
-			return null ; 
-		} // end if
-		// [srk] end bug fix
+			return in;
+		}
 		
 		StringBuffer out = new StringBuffer();
 		
@@ -67,7 +64,7 @@ public class StringTools {
 		int inLength = in.length();
 		
 		for (int i = 0; i < inLength; i++) {
-			int upperSearhLimit = i + matchLength;			
+			int upperSearhLimit = i + matchLength;
 			if ((upperSearhLimit <= inLength) && (in.substring(i,upperSearhLimit).equals(match))) {
 				out.append(replacement);
 				i = upperSearhLimit - 1;
@@ -88,7 +85,7 @@ public class StringTools {
 		}
 		return count;
 	}
-
+	
 	public static int contains(String text, String match) {
 		int matchLength = match.length();
 		int count = 0;
@@ -126,7 +123,7 @@ public class StringTools {
 		}
 		return text.substring(substringStart, text.length());
 	}
-
+	
 	public static String trimExtension(String text, String separator) {
 		int index = text.lastIndexOf(separator);
 		if (index == -1) {
@@ -138,9 +135,9 @@ public class StringTools {
 	
 	public static String escape(String text, char escapeChar,  char[] reserved) {
 		StringBuffer buf = new StringBuffer();
-
+		
 		for (int i = 0; i < text.length(); i++) {
-			char c = text.charAt(i);		
+			char c = text.charAt(i);
 			
 			// Is the char reserved
 			boolean isReserved = false;
@@ -174,7 +171,7 @@ public class StringTools {
 		StringBuffer part = new StringBuffer();
 		
 		for (int i = 0; i < text.length(); i++) {
-			char c = text.charAt(i);		
+			char c = text.charAt(i);
 			
 			// Is the char a delimiter
 			boolean isDelimiter = false;
@@ -189,7 +186,7 @@ public class StringTools {
 			if (c == escapeChar) {
 				if (isEscaped) {
 					part.append(c);
-					isEscaped = false;				
+					isEscaped = false;
 				} else {
 					isEscaped = true;
 				}			
@@ -204,10 +201,10 @@ public class StringTools {
 			} else {
 				if (isEscaped) {
 					part.append(c);
-					isEscaped = false;				
+					isEscaped = false;
 				} else {
 					part.append(c);
-				}			
+				}
 			}
 		}
 		
@@ -216,14 +213,14 @@ public class StringTools {
 		
 		return parts;
 	}
-
+	
 	public static void split(ArrayList parts, String text, char escapeChar, char[] delimiters) {
 		boolean isEscaped = false;
 		boolean isDelimiter = false;
 		StringBuffer part = new StringBuffer();
 		
 		for (int i = 0, limit = text.length(); i < limit; i++) {
-			char c = text.charAt(i);		
+			char c = text.charAt(i);
 			
 			// Is the char a delimiter
 			for (int j = 0; j < delimiters.length; j++) {
@@ -246,15 +243,15 @@ public class StringTools {
 			} else if (c == escapeChar) {
 				if (isEscaped) {
 					part.append(c);
-					isEscaped = false;				
+					isEscaped = false;
 				} else {
 					isEscaped = true;
 				}
 			} else {
 				if (isEscaped) {
-					isEscaped = false;				
+					isEscaped = false;
 				}
-				part.append(c);			
+				part.append(c);
 			}
 		}
 		
