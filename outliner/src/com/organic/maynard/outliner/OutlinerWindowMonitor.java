@@ -67,10 +67,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 				
 				int result = JOptionPane.showConfirmDialog(doc, msg);
 				if (result == JOptionPane.YES_OPTION) {
-					// SaveAsFileMenuItem item = (SaveAsFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
-					// next line is temporary, for debugging
-					fp = Outliner.fileProtocolManager.getDefault() ;
-					SaveAsFileMenuItem.saveAsOutlinerDocument(doc, fp);
+					SaveAsFileMenuItem.saveAsOutlinerDocument(doc, Outliner.fileProtocolManager.getDefault());
 				} else if (result == JOptionPane.NO_OPTION) {
 					// Do Nothing
 				} else if (result == JOptionPane.CANCEL_OPTION) {
@@ -98,10 +95,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 			
 				int result = JOptionPane.showConfirmDialog(doc, msg);
 				if (result == JOptionPane.YES_OPTION) {
-					// SaveAsFileMenuItem item = (SaveAsFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
-					// next line is temporary, for debugging
-					fp = Outliner.fileProtocolManager.getProtocol(doc.getDocumentInfo().getProtocolName()) ;
-					SaveAsFileMenuItem.saveAsOutlinerDocument(doc, fp);
+					SaveAsFileMenuItem.saveAsOutlinerDocument(doc, Outliner.fileProtocolManager.getProtocol(doc.getDocumentInfo().getProtocolName()));
 				} else if (result == JOptionPane.NO_OPTION) {
 					// Do Nothing
 				} else if (result == JOptionPane.CANCEL_OPTION) {
