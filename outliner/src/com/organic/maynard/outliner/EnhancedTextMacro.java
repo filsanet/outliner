@@ -50,7 +50,7 @@ public class EnhancedTextMacro extends MacroImpl {
 	private String replacementPattern = "";
 
 	// Class Fields
-	private static BSHMacroConfig macroConfig = new BSHMacroConfig();
+	private static EnhancedTextMacroConfig macroConfig = new EnhancedTextMacroConfig();
 
 	
 	// The Constructors
