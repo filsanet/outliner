@@ -808,7 +808,30 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		}
 		
 		tree.clearSelection();
-		TextKeyListener.doInsert(node, tree, layout);
+
+		Node newNode = new NodeImpl(tree,"");
+		int newNodeIndex = node.currentIndex() + 1;
+		Node newNodeParent = node.getParent();
+
+		newNode.setDepth(node.getDepth());
+		newNodeParent.insertChild(newNode, newNodeIndex);
+
+		//int visibleIndex = tree.insertNodeAfter(node, newNode);
+		tree.insertNode(newNode);
+
+		// Record the EditingNode and CursorPosition and ComponentFocus
+		tree.setEditingNode(newNode);
+		tree.setCursorPosition(0);
+		tree.getDocument().setPreferredCaretPosition(0);
+		tree.setComponentFocus(OutlineLayoutManager.TEXT);
+
+		// Put the Undoable onto the UndoQueue
+		CompoundUndoableInsert undoable = new CompoundUndoableInsert(newNodeParent);
+		undoable.addPrimitive(new PrimitiveUndoableInsert(newNodeParent, newNode, newNodeIndex));
+		tree.getDocument().undoQueue.add(undoable);
+		
+		// Redraw and Set Focus
+		layout.draw(newNode, OutlineLayoutManager.TEXT);	
 	}
 
 	private void promote(JoeTree tree, OutlineLayoutManager layout) {
@@ -948,19 +971,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 		// Figure out where to do the insert
 		Node oldestNode = tree.getOldestInSelection();
-		Node parentForNewNode = null;
-		int indexForNewNode = 0;
-		int depth = 0;
-
-		if ((!oldestNode.isLeaf()) && (oldestNode.isExpanded())) {
-			parentForNewNode = oldestNode;
-			depth = parentForNewNode.getDepth() + 1;
-			indexForNewNode = 0;
-		} else {
-			parentForNewNode = oldestNode.getParent();
-			depth = oldestNode.getDepth();
-			indexForNewNode = oldestNode.currentIndex() + 1;
-		}
+		Node parentForNewNode = oldestNode.getParent();
+		int indexForNewNode = oldestNode.currentIndex() + 1;
+		int depth = oldestNode.getDepth();
 
 		tree.clearSelection();
 		tree.setSelectedNodesParent(parentForNewNode);
