@@ -68,11 +68,6 @@ import org.apache.oro.text.regex.MatchResult;
 public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionListener, KeyListener, ListSelectionListener {
 
 	// Constants
-	private static final int MODE_CURRENT_DOCUMENT = 1;
-	private static final int MODE_ALL_OPEN_DOCUMENTS = 2;
-	private static final int MODE_FILE_SYSTEM = 3;
-	private static final int MODE_UNKNOWN = -1;
-
 	private static final int MINIMUM_WIDTH = 550;
 	private static final int MINIMUM_HEIGHT = 650;
  	private static final int INITIAL_WIDTH = 550;
@@ -674,17 +669,17 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setSelected(model.getDirFilterExcludeIgnoreCase());
 
 		int mode = model.getSelectionMode();
-		if (mode == MODE_CURRENT_DOCUMENT) {
+		if (mode == FindReplaceModel.MODE_CURRENT_DOCUMENT) {
 			RADIO_CURRENT_DOCUMENT.setSelected(true);
 			if (Outliner.openDocumentCount() > 0) {
 				updateForCurrentDocumentRadio();
 			}
-		} else if (mode == MODE_ALL_OPEN_DOCUMENTS) {
+		} else if (mode == FindReplaceModel.MODE_ALL_OPEN_DOCUMENTS) {
 			RADIO_ALL_OPEN_DOCUMENTS.setSelected(true);
 			if (Outliner.openDocumentCount() > 0) {
 				updateForAllOpenDocumentsRadio();
 			}
-		} else if (mode == MODE_FILE_SYSTEM) {
+		} else if (mode == FindReplaceModel.MODE_FILE_SYSTEM) {
 			RADIO_FILE_SYSTEM.setSelected(true);
 			updateForSelectFileSystemRadio();
 		} else {
@@ -774,15 +769,15 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		
 		// RadioButtons
 		} else if (e.getActionCommand().equals(CURRENT_DOCUMENT)) {
-			model.setSelectionMode(MODE_CURRENT_DOCUMENT);
+			model.setSelectionMode(FindReplaceModel.MODE_CURRENT_DOCUMENT);
 			updateForCurrentDocumentRadio();
 
 		} else if (e.getActionCommand().equals(ALL_OPEN_DOCUMENTS)) {
-			model.setSelectionMode(MODE_ALL_OPEN_DOCUMENTS);
+			model.setSelectionMode(FindReplaceModel.MODE_ALL_OPEN_DOCUMENTS);
 			updateForAllOpenDocumentsRadio();
 			
 		} else if (e.getActionCommand().equals(FILE_SYSTEM)) {
-			model.setSelectionMode(MODE_FILE_SYSTEM);
+			model.setSelectionMode(FindReplaceModel.MODE_FILE_SYSTEM);
 			updateForSelectFileSystemRadio();
 		}
 	}
@@ -889,13 +884,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	
 	private static int getFindReplaceMode() {
 		if (RADIO_CURRENT_DOCUMENT.isSelected()) {
-			return MODE_CURRENT_DOCUMENT;
+			return FindReplaceModel.MODE_CURRENT_DOCUMENT;
 		} else if (RADIO_ALL_OPEN_DOCUMENTS.isSelected()) {
-			return MODE_ALL_OPEN_DOCUMENTS;
+			return FindReplaceModel.MODE_ALL_OPEN_DOCUMENTS;
 		} else if (RADIO_FILE_SYSTEM.isSelected()) {
-			return MODE_FILE_SYSTEM;
+			return FindReplaceModel.MODE_FILE_SYSTEM;
 		} else {
-			return MODE_UNKNOWN;
+			return FindReplaceModel.MODE_UNKNOWN;
 		}
 	}
 	
@@ -925,7 +920,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		int mode = getFindReplaceMode();
 		
 		switch (mode) {
-			case MODE_CURRENT_DOCUMENT:
+			case FindReplaceModel.MODE_CURRENT_DOCUMENT:
 				find(
 					doc, 
 					TEXTAREA_FIND.getText(), 
@@ -939,7 +934,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				);
 				break;
 			
-			case MODE_ALL_OPEN_DOCUMENTS:
+			case FindReplaceModel.MODE_ALL_OPEN_DOCUMENTS:
 				findAllOpenDocuments(
 					TEXTAREA_FIND.getText(), 
 					TEXTAREA_REPLACE.getText(), 
@@ -952,7 +947,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				);
 				break;
 			
-			case MODE_UNKNOWN:
+			case FindReplaceModel.MODE_UNKNOWN:
 				System.out.println("ERROR: Unknown Find/Replace mode.");
 				break;
 		}
@@ -967,7 +962,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		results = new FindReplaceResultsModel();
 		
 		switch (mode) {
-			case MODE_CURRENT_DOCUMENT:
+			case FindReplaceModel.MODE_CURRENT_DOCUMENT:
 				findAll(
 					results,
 					doc, 
@@ -983,7 +978,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				
 				break;
 			
-			case MODE_ALL_OPEN_DOCUMENTS:
+			case FindReplaceModel.MODE_ALL_OPEN_DOCUMENTS:
 				findAllAllOpenDocuments(
 					results,
 					TEXTAREA_FIND.getText(), 
@@ -998,7 +993,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				
 				break;
 			
-			case MODE_FILE_SYSTEM:
+			case FindReplaceModel.MODE_FILE_SYSTEM:
 				Thread t = new Thread(new Runnable() { 
 					public void run() { 
 						findAllFileSystem(
@@ -1024,7 +1019,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				monitor.show(); // Modal dialog, blocks thread.
 				break;
 			
-			case MODE_UNKNOWN:
+			case FindReplaceModel.MODE_UNKNOWN:
 				System.out.println("ERROR: Unknown Find/Replace mode.");
 				break;
 		}
@@ -1044,7 +1039,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		int mode = getFindReplaceMode();
 
 		switch (mode) {
-			case MODE_CURRENT_DOCUMENT:
+			case FindReplaceModel.MODE_CURRENT_DOCUMENT:
 				replace(
 					doc, 
 					TEXTAREA_FIND.getText(), 
@@ -1058,7 +1053,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				);
 				break;
 			
-			case MODE_ALL_OPEN_DOCUMENTS:
+			case FindReplaceModel.MODE_ALL_OPEN_DOCUMENTS:
 				replaceAllOpenDocuments(
 					TEXTAREA_FIND.getText(), 
 					TEXTAREA_REPLACE.getText(), 
@@ -1071,7 +1066,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				);
 				break;
 			
-			case MODE_UNKNOWN:
+			case FindReplaceModel.MODE_UNKNOWN:
 				System.out.println("ERROR: Unknown Find/Replace mode.");
 				break;
 		}
@@ -1083,7 +1078,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		results = new FindReplaceResultsModel();
 		
 		switch (mode) {
-			case MODE_CURRENT_DOCUMENT:
+			case FindReplaceModel.MODE_CURRENT_DOCUMENT:
 				replaceAll(
 					results,
 					doc, 
@@ -1100,7 +1095,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				doc.panel.layout.redraw();
 				break;
 			
-			case MODE_ALL_OPEN_DOCUMENTS:
+			case FindReplaceModel.MODE_ALL_OPEN_DOCUMENTS:
 				replaceAllAllOpenDocuments(
 					results,
 					TEXTAREA_FIND.getText(), 
@@ -1116,7 +1111,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				Outliner.redrawAllOpenDocuments();
 				break;
 			
-			case MODE_FILE_SYSTEM:
+			case FindReplaceModel.MODE_FILE_SYSTEM:
 				Thread t = new Thread(new Runnable() { 
 					public void run() { 
 						replaceAllFileSystem(
@@ -1144,7 +1139,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				monitor.show(); // Modal dialog, blocks thread.
 				break;
 			
-			case MODE_UNKNOWN:
+			case FindReplaceModel.MODE_UNKNOWN:
 				System.out.println("ERROR: Unknown Find/Replace mode.");
 				break;
 		}
