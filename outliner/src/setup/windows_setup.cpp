@@ -52,7 +52,6 @@
 //	program goes thru main's setup steps
 
 int main(int argc, char* argv[]){
-	
 	// if any of these steps fail, we leave immediately, returning 0
 	// if we make it thru all the steps, we return 1
 	
@@ -71,13 +70,15 @@ int main(int argc, char* argv[]){
 	// per user choice, set up JOE as the handler of OPML files
 	// if (! setJoeAsOpmlHandler()) return 0 ;
 	
-	// per user choice, copy JOE.pif to
+	// per user choice, copy JOE.pif to 0 or more of:
 	// Programs menu, Start menu top, desktop, 
 	// quickstart toolbar of taskbar, folders on desktop
 	// if (! copyJoePifPerUserPrefs()) return 0 ;
-	
+
+	// give user a chance to look at results
 	// suggest a reboot for systems that need one
-	// if (! suggestWindowsReboot()) return 0 ;
+	if (! userReport(1)) return 0 ;
+	
 	
 	return 1 ;
 
@@ -165,6 +166,9 @@ int setEnvVar (char * varName, char * varValue, char * introLines) {
 			break ;
 	} // end switch
 		
+	// provide feedback
+	sevFeedback(result, varName, varValue) ;
+	
 	// done
 	return result ;
 	
@@ -206,18 +210,18 @@ int setAutoExecEnvVar (char * varName, char * varValue, char * introLines) {
 	
 	// local vars
 	char autoExecPathBuffer [MAX_PATH] ;
-	char lineBuffer [LINE_MAX] ;
-	char lineTestBuffer [LINE_MAX] ;
-	char tempFilePathBuffer [LINE_MAX] ;
-	char wordBuffer [LINE_MAX] ;
+	char lineBuffer [MAX_LINE] ;
+	char lineTestBuffer [MAX_LINE] ;
+	char tempFilePathBuffer [MAX_LINE] ;
+	char wordBuffer [MAX_LINE] ;
 	int result = 0 ;
 	int position ;
 	int coolAsIs = 0 ;
 	int madeAChange = 0 ;
 	int writeToTemp = 1 ;
 	int tempIndex ;
-	char newSettingBuffer [LINE_MAX] ;
-	char oldAutoExecNewNameBuffer [LINE_MAX] ;
+	char newSettingBuffer [MAX_LINE] ;
+	char oldAutoExecNewNameBuffer [MAX_LINE] ;
 	
 	// if we can't get autoexec.bat's path, leave in failure
 	if (getAutoExecPath(autoExecPathBuffer) == 0) return result ;
@@ -244,7 +248,7 @@ int setAutoExecEnvVar (char * varName, char * varValue, char * introLines) {
 	// okay, everybody's open
 	
 	// for each line in autoexec.bat
-	while (fgets(lineBuffer, LINE_MAX, autoExec)) {
+	while (fgets(lineBuffer, MAX_LINE, autoExec)) {
 		
 		// make a copy of the line
 		strcpy (lineTestBuffer, lineBuffer) ;
@@ -432,6 +436,7 @@ int getAutoExecPath(char * pathBuffer) {
 } // end function getAutoExecPath
 
 
+// uppercase a string
 int strToUpper (char * someString) {
 	
 	int pointer = 0 ;
@@ -449,6 +454,9 @@ int strToUpper (char * someString) {
 } // end function  strToUpper
 
 
+// get a word from an autoexec.bat file line
+// within a line, words are separated by spaces, tabs, or equal signs
+// equal signs are considered words
 int getWord (int whichWord, char * sourceString, char * wordBuffer) {
 	
 	// note: whichWord is a 1-based selector 
@@ -578,6 +586,8 @@ int trimFileOffPath (char * path) {
 
 
 // figure out what version of Windows we're running
+// returns 0 if it can't determine anything, 1 otherwise
+// sets the global var gWindowsVersion
 int determineWindowsVersion () {
 	// local vars
 	OSVERSIONINFOEX osvi;
@@ -708,14 +718,75 @@ int determineWindowsVersion () {
 			break ;
 		
 		// very unknown
+		// majorVersion < 3 or > 7
 		default:
 			gWindowsVersion = WIN_VERY_UNKNOWN ;
 			break ;
 			
 	} // end switch on major version #
 
-	// done
-	return 1 ;
+	// done with determination
+	
+	// provide some feedback RE the Windows version
+	// TBD returns 0 if the OS is unsuitable for JOE
+	return osFeedback ();
 	
 } // end function determineWindowsVersion
 
+
+// provide some feedback RE the OS we're installing under
+int osFeedback () {
+	char feedbackString [MAX_LINE] ;
+	
+	strcpy (feedbackString, "Installing JOE on a computer system running ");
+	strcat (feedbackString, windows_version_strings[gWindowsVersion]) ;
+	strcat (feedbackString, "\n\n") ;
+	printf (feedbackString) ;
+	
+	return 1 ;
+	
+	// TBD have this bail if the os is unsuitable, and return 0 in that case
+	
+} // end function osFeedback 
+
+
+// provide some feedback RE setting an environment variable
+int sevFeedback (int result, char * varName, char * varValue) {
+	
+	char feedbackString [MAX_LINE] ;
+	
+	if (result) 
+		strcpy (feedbackString, "Successfully ensured ") ;
+	else 
+		strcpy (feedbackString, "Unable to ensure ") ;
+	strcat (feedbackString, "that the environment variable ") ;
+	strcat (feedbackString, varName) ;
+	strcat (feedbackString, "\nhas the value ") ;
+	strcat (feedbackString, varValue) ;
+	strcat (feedbackString, "\n\n") ;
+	printf (feedbackString) ;
+	
+	return 1 ;
+
+} // end sevFeedback
+
+
+int userReport (int result) {
+	char feedbackString [MAX_LINE] ;
+	
+	if (result) 
+		strcpy (feedbackString, "All went well") ;
+	else 
+		strcpy (feedbackString, "There was a problem") ;
+	// TBD
+	// add a reboot suggestion to string if warranted
+	
+	strcat (feedbackString, "\n\nPress the Enter key to finish") ;
+	
+	printf (feedbackString) ;
+	
+	getchar() ;
+	
+	return 1 ;
+
+} // end function userReport

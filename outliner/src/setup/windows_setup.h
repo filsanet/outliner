@@ -49,9 +49,12 @@ int setRegistryEnvVar (char *, char *);
 int set_JOE_HOME () ;
 int strToUpper (char *) ;
 int trimFileOffPath (char *) ;
+int osFeedback () ;
+int sevFeedback (int, char *, char *) ;
+int userReport (int) ;
 
 // constants
-#define LINE_MAX 1024
+#define MAX_LINE 1024
 #define JOE_HOME "JOE_HOME"
 
 // windows version info
@@ -74,5 +77,23 @@ enum windows_version {	// these are the major functionally-different versions
 	WIN_VERY_UNKNOWN } gWindowsVersion = WIN_VERY_UNKNOWN;
 
 int g_NT_4_SP_Num = 0 ;	// NT 4 Service Pack #
+
+char * windows_version_strings [] = {
+	"Windows 95",
+	"Windows 95 OSR2",
+	"Windows 98",
+	"Windows 98 SE",
+	"Windows ME",
+	"Windows XP",
+	"Windows NT 3.51",
+	"Windows NT 4",
+	"Windows 2000",
+	"Windows .Net Server",
+	"Unknown V3 Windows",
+	"Unknown V4 Windows",
+	"Unknown V5 Windows",
+	"Unknown V6 Windows",
+	"Unknown V7 Windows",
+	"Very Unknown Windows" }; 
 		
 
