@@ -618,10 +618,12 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 
 	private void replace_all(OutlinerDocument doc) {
 		int mode = getFindReplaceMode();
-
+		
+		int count = 0;
+		
 		switch (mode) {
 			case MODE_CURRENT_DOCUMENT:
-				replaceAll(
+				count = replaceAll(
 					doc, 
 					TEXTAREA_FIND.getText(), 
 					TEXTAREA_REPLACE.getText(), 
@@ -635,6 +637,16 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				break;
 			
 			case MODE_ALL_OPEN_DOCUMENTS:
+				count = replaceAllAllOpenDocuments(
+					TEXTAREA_FIND.getText(), 
+					TEXTAREA_REPLACE.getText(), 
+					CHECKBOX_SELECTION_ONLY.isSelected(), 
+					CHECKBOX_START_AT_TOP.isSelected(),
+					CHECKBOX_IGNORE_CASE.isSelected(), 
+					CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
+					CHECKBOX_WRAP_AROUND.isSelected(),
+					CHECKBOX_REGEXP.isSelected()
+				);
 				break;
 			
 			case MODE_FILE_SYSTEM:
@@ -644,6 +656,18 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				System.out.println("ERROR: Unknown Find/Replace mode.");
 				break;
 		}
+
+		if (count == 0) {
+			// Beep to alert user no result found.
+			Outliner.outliner.getToolkit().beep();
+			return;
+		}
+
+		// Bring the window to the front
+		Outliner.outliner.requestFocus();
+		WindowMenu.changeToWindow(doc);
+		
+		popCountDialog(count);
 	}
 		
 	// This method is public and should have no direct dependancy on 
@@ -1012,8 +1036,41 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			);
 		}
 	}
+
+	public int replaceAllAllOpenDocuments(
+		String sFind,
+		String sReplace,
+		boolean selectionOnly,
+		boolean startAtTop,
+		boolean ignoreCase,
+		boolean includeReadOnlyNodes,
+		boolean wrapAround,
+		boolean isRegexp
+	) {
+		Iterator openDocuments = Outliner.getLoopedOpenDocumentIterator();
+		
+		int count = 0;
+		
+		while (openDocuments.hasNext()) {
+			OutlinerDocument doc = (OutlinerDocument) openDocuments.next();
+			
+			count += replaceAll(	
+				doc, 
+				sFind,
+				sReplace,
+				false,
+				true,
+				ignoreCase,
+				includeReadOnlyNodes,
+				false,
+				isRegexp
+			);
+		}
+		
+		return count;
+	}
 	
-	public void replaceAll(
+	public int replaceAll(
 		OutlinerDocument doc, 
 		String sFind,
 		String sReplace,
@@ -1032,7 +1089,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			// Beep to alert user no result found.
 			Outliner.outliner.getToolkit().beep();
 
-			return;
+			return count;
 		}
 		
 		CompoundUndoableEdit undoable = new CompoundUndoableEdit(doc.tree);
@@ -1042,11 +1099,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			if (doc.tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
 				if (doc.tree.getCursorPosition() == doc.tree.getCursorMarkPosition()) {
 					// No selection, so return.
-					
-					// Beep to alert user no result found.
-					Outliner.outliner.getToolkit().beep();
-
-					return;
+					return count;
 				} else {
 					int cursor = doc.tree.getCursorPosition();
 					int mark = doc.tree.getCursorMarkPosition();
@@ -1077,10 +1130,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						
 						if (location == null) {
 							if (count == 0) {
-								// Beep to alert user no result found.
-								Outliner.outliner.getToolkit().beep();
-
-								return;
+								return count;
 							} else {
 								break;
 							}
@@ -1214,10 +1264,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				
 				if (location == null) {
 					if (count == 0) {
-						// Beep to alert user no result found.
-						Outliner.outliner.getToolkit().beep();
-
-						return;
+						return count;
 					} else {
 						break;
 					}
@@ -1256,25 +1303,14 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			}
 		}
 		
+		return count;
+	}
+	
+	private void popCountDialog(int count) {
 		if (count == 0) {
-			// Beep to alert user no result found.
-			Outliner.outliner.getToolkit().beep();
-
-			return;
-		}
-
-		// Bring the window to the front
-		try {
-			Outliner.outliner.requestFocus();
-			doc.setSelected(true);
-		} catch (java.beans.PropertyVetoException pve) {
-			pve.printStackTrace();
+			return; // No dialog if we made no changes.
 		}
 		
-		// Redraw and Set Focus
-		doc.panel.layout.draw(doc.tree.getEditingNode(),doc.tree.getComponentFocus());
-		
-		// Popup a dialogue with the replacement count.
 		String replacementText = GUITreeLoader.reg.getText("replacements");
 		if (count == 1) {
 			replacementText = GUITreeLoader.reg.getText("replacement");
@@ -1283,7 +1319,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, "" + count);
 		msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_2, replacementText);
 
-		JOptionPane.showMessageDialog(doc, msg);
+		JOptionPane.showMessageDialog(Outliner.getMostRecentDocumentTouched(), msg);	
 	}
 	
 	
