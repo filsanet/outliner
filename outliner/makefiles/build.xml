@@ -13,39 +13,10 @@
 			<property name="lib" value="lib"/>
 			<property name="doc" value="doc"/>
 			<property name="doc-api" value="${doc}/api"/>
+			<property name="jar_libpath" value="."/>
+			<property name="jar_modulepath" value="../modules"/>
 		<target name="init">
 			<tstamp/>
-		</target>
-	<!-- HELP MESSAGE -->
-		<target name="help" description="Prints a help message to the console">
-			<echo><![CDATA[
-Useage: ant <target>
-Targets:
-                 help: Prints this help message to the console.
-                  jar: Cleans, compiles, and jars all everything 
-		       for JOE.
-		clean: Cleans calls clean for each sub-project.
-              javadoc: Generates source code documentation in the 
-	               javadoc format.
-
-		 init: Sets a timestamp.
-
-       clean-outliner: Removes all .class files for the outliner src tree.
-     compile-outliner: Compiles all class files for the outliner src tree.
-         jar-outliner: Creates outliner.jar
-
-     clean-webfilephp: Removes all .class files for the webfilephp src tree.
-   compile-webfilephp: Compiles all class files for the webfilephp src tree.
-       jar-webfilephp: Creates com.yearahead.io.webfile.jar
-
-         clean-wikiff: Removes all .class files for the wikiff src tree.
-       compile-wikiff: Compiles all class files for the wikiff src tree.
-           jar-wikiff: Creates com.psm.wiki.jar
-
-        clean-maynard: Removes all .class files for the maynard src tree.
-      compile-maynard: Compiles all class files for the maynard src tree.
-          jar-maynard: Creates com.organic.maynard.jar
-			]]></echo>
 		</target>
 	<!-- GLOBAL TARGETS -->
 		<target name="jar" depends="init" description="Cleans, compiles, and jars everything for JOE.">
@@ -77,7 +48,6 @@ Targets:
 					<pathelement path="${lib}/com.yearahead.io.webfile.jar"/>
 					<pathelement path="${lib}/xmlrpc.jar"/>
 					<pathelement path="${lib}/jakarta-oro.jar"/>
-					<pathelement path="${lib}/sax.jar"/>
 					<pathelement path="${lib}/xp.jar"/>
 					<pathelement path="${lib}/jazzy-core.jar"/>
 				</classpath>
@@ -89,12 +59,11 @@ Targets:
 				<classpath>
 					<pathelement path="${lib}/com.organic.maynard.jar"/>
 					<pathelement path="${lib}/outliner.jar"/>
-					<pathelement path="${lib}/sax.jar"/>
 				</classpath>
 			</javac>
 		</target>
 		<target name="jar-webfilephp" depends="compile-webfilephp" description="Creates com.yearahead.io.webfile.jar">
-			<jar basedir="${src}" compress="true" jarfile="${lib}/com.yearahead.io.webfile.jar">
+			<jar basedir="${src}" compress="true" index="true" jarfile="${lib}/com.yearahead.io.webfile.jar">
 				<include name="com/yearahead/**"/>
 				<exclude name="**/*.java"/>
 			</jar>
@@ -112,12 +81,11 @@ Targets:
 				<classpath>
 					<pathelement path="${lib}/com.organic.maynard.jar"/>
 					<pathelement path="${lib}/outliner.jar"/>
-					<pathelement path="${lib}/sax.jar"/>
 				</classpath>
 			</javac>
 		</target>
 		<target name="jar-wikiff" depends="compile-wikiff" description="Creates com.psm.wiki.jar">
-			<jar basedir="${src}" compress="true" jarfile="${lib}/com.psm.wiki.jar">
+			<jar basedir="${src}" compress="true" index="true" jarfile="${lib}/com.psm.wiki.jar">
 				<include name="com/psm/wiki/**"/>
 				<exclude name="**/*.java"/>
 			</jar>
@@ -133,23 +101,21 @@ Targets:
 		<target name="compile-maynard" depends="init, clean-maynard" description="Compiles all class files for the maynard src tree.">
 			<javac debug="false" optimize="true" deprecation="false" srcdir="${src-maynard}">
 				<classpath>
-					<pathelement path="${lib}/bsh.jar"/>
-					<pathelement path="${lib}/xmlrpc.jar"/>
 					<pathelement path="${lib}/jakarta-oro.jar"/>
-					<pathelement path="${lib}/sax.jar"/>
-					<pathelement path="${lib}/xerces.jar"/>
-					<pathelement path="${lib}/xp.jar"/>
-					<pathelement path="${lib}/outliner.jar"/>
 				</classpath>
 				<exclude name="outliner/**"/>
 			</javac>
 		</target>
 		<target name="jar-maynard" depends="compile-maynard" description="Creates com.organic.maynard.jar">
-			<jar basedir="${src}" compress="true" jarfile="${lib}/com.organic.maynard.jar">
+			<jar basedir="${src}" compress="true" index="true" jarfile="${lib}/com.organic.maynard.jar">
+				<exclude name="com/psm/**"/>
+				<exclude name="com/wiki/**"/>
+				<exclude name="com/yearahead/**"/>
 				<exclude name="com/organic/maynard/outliner/**"/>
 				<exclude name="**/*.java"/>
 				<exclude name="graphics/**"/>
 				<exclude name="rsrc/**"/>
+				<exclude name="setup/**"/>
 			</jar>
 		</target>
 		<target name="clean-maynard" description="Removes all .class files for the maynard src tree.">
@@ -169,25 +135,20 @@ Targets:
 					<pathelement path="${lib}/com.yearahead.io.webfile.jar"/>
 					<pathelement path="${lib}/xmlrpc.jar"/>
 					<pathelement path="${lib}/jakarta-oro.jar"/>
-					<pathelement path="${lib}/sax.jar"/>
 					<pathelement path="${lib}/xp.jar"/>
 					<pathelement path="${lib}/jazzy-core.jar"/>
 				</classpath>
 			</javac>
 		</target>
 		<target name="jar-outliner" depends="compile-outliner" description="Creates outliner.jar">
-			<jar basedir="${src}" compress="true" jarfile="${lib}/outliner.jar">
-				<include name="com/organic/maynard/outliner/**"/>
-				<include name="graphics/**"/>
-				<include name="rsrc/**"/>
+			<jar basedir="${src}" compress="true" index="true" jarfile="${lib}/outliner.jar">
+				<include name="com/organic/maynard/outliner/**" />
+				<include name="graphics/**" />
+				<include name="rsrc/**" />
 				<exclude name="**/*.java"/>
 				<manifest>
-					<attribute name="Built-By" value="${user.name}"/>
-					<attribute name="Class-Path" value="com.organic.maynard.jar com.yearahead.io.webfile.jar com.psm.wiki.jar sax.jar xp.jar xmlrpc.jar bsh.jar jakarta-oro.jar jazzy-core.jar"/>
-					<attribute name="Main-Class" value="com.organic.maynard.outliner.Outliner"/>
-					<section name="common/class1.class">
-						<attribute name="Sealed" value="false"/>
-					</section>
+				<attribute name="Main-Class" value="com.organic.maynard.outliner.Outliner"/>
+				<attribute name="Class-Path" value="${jar_libpath}/com.organic.maynard.jar ${jar_libpath}/com.yearahead.io.webfile.jar ${jar_libpath}/com.psm.wiki.jar ${jar_libpath}/xp.jar ${jar_libpath}/xmlrpc.jar ${jar_libpath}/bsh.jar ${jar_libpath}/jakarta-oro.jar ${jar_libpath}/jazzy-core.jar"/>
 				</manifest>
 			</jar>
 		</target>
