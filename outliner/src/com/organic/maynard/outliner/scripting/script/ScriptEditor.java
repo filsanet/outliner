@@ -50,13 +50,18 @@ import org.xml.sax.*;
  */
 
 public class ScriptEditor extends AbstractGUITreeJDialog implements ActionListener, JoeReturnCodes {
-
+	
 	// Constants
 	private static final int INITIAL_WIDTH = 450;
 	private static final int INITIAL_HEIGHT = 400;
  	private static final int MINIMUM_WIDTH = 350;
 	private static final int MINIMUM_HEIGHT = 300;
 	
+	public static final int BUTTON_MODE_CREATE = 0;
+	public static final int BUTTON_MODE_UPDATE = 1;
+	
+	
+	// Pseudo Constants
 	private static String CREATE = null;
 	private static String SAVE = null;
 	private static String SAVE_AND_CLOSE = null;
@@ -65,28 +70,24 @@ public class ScriptEditor extends AbstractGUITreeJDialog implements ActionListen
 	
 	private static String SCRIPT_TYPE = null;
 	
+	private static String BUTTON_MODE_CREATE_TITLE = null;
+	private static String BUTTON_MODE_UPDATE_TITLE = null;
+	
+	
+	// Instance Fields
+	private boolean initialized = false;
+	private ScriptConfig scriptConfig = null;
+	private ScriptsManager frame = null;
 	private Box createButtonBox = null;
 	private Box updateButtonBox = null;
-
 	private JLabel scriptTypeName = null;
-	
 	private JButton createButton = null;
 	private JButton saveButton = null;
 	private JButton saveAndCloseButton = null;
 	private JButton deleteButton = null;
 	private JButton cancelCreateButton = null;
 	private JButton cancelUpdateButton = null;
-
-	private ScriptConfig scriptConfig = null;
-	private ScriptsManager frame = null;
 	
-	// Button Mode
-	private static String BUTTON_MODE_CREATE_TITLE = null;
-	private static String BUTTON_MODE_UPDATE_TITLE = null;
-
-	public static final int BUTTON_MODE_CREATE = 0;
-	public static final int BUTTON_MODE_UPDATE = 1;
-
 	
 	// The Constructor
 	public ScriptEditor() {
@@ -94,31 +95,31 @@ public class ScriptEditor extends AbstractGUITreeJDialog implements ActionListen
 		frame = Outliner.scriptsManager;
 		frame.scriptEditor = this;
 	}
-
+	
 	private void initialize() {
 		createButtonBox = Box.createHorizontalBox();
 		updateButtonBox = Box.createHorizontalBox();
-
+		
 		scriptTypeName = new JLabel();
-
+		
 		BUTTON_MODE_CREATE_TITLE = GUITreeLoader.reg.getText("new_script");
 		BUTTON_MODE_UPDATE_TITLE = GUITreeLoader.reg.getText("update_script");
-
+		
 		CREATE = GUITreeLoader.reg.getText("create");
 		SAVE = GUITreeLoader.reg.getText("save");
 		SAVE_AND_CLOSE = GUITreeLoader.reg.getText("save_and_close");
 		CANCEL = GUITreeLoader.reg.getText("cancel");
 		DELETE = GUITreeLoader.reg.getText("delete");
-
+		
 		SCRIPT_TYPE = GUITreeLoader.reg.getText("script_type");
-
+		
 		createButton = new JButton(CREATE);
 		saveButton = new JButton(SAVE);
 		saveAndCloseButton = new JButton(SAVE_AND_CLOSE);
 		deleteButton = new JButton(DELETE);
 		cancelCreateButton = new JButton(CANCEL);
 		cancelUpdateButton = new JButton(CANCEL);
-
+		
 		addWindowListener(
 			new WindowAdapter() {
 				public void windowClosing(WindowEvent e) {
@@ -137,11 +138,11 @@ public class ScriptEditor extends AbstractGUITreeJDialog implements ActionListen
 		deleteButton.addActionListener(this);
 		cancelCreateButton.addActionListener(this);
 		cancelUpdateButton.addActionListener(this);
-
+		
 		createButtonBox.add(createButton);
 		createButtonBox.add(Box.createHorizontalStrut(5));
 		createButtonBox.add(cancelCreateButton);
-
+		
 		updateButtonBox.add(saveAndCloseButton);
 		updateButtonBox.add(Box.createHorizontalStrut(5));
 		updateButtonBox.add(saveButton);
@@ -149,33 +150,32 @@ public class ScriptEditor extends AbstractGUITreeJDialog implements ActionListen
 		updateButtonBox.add(deleteButton);
 		updateButtonBox.add(Box.createHorizontalStrut(5));
 		updateButtonBox.add(cancelUpdateButton);
-
+		
 		// Put it all together
 		this.getContentPane().add(scriptTypeName,BorderLayout.NORTH);
 	}
 	
-	private boolean initialized = false;
-	
 	public boolean isInitialized() {
 		return this.initialized;
 	}
-
+	
+	
 	public void setScriptConfigAndShow(ScriptConfig scriptConfig, int buttonMode) {
-
+		
 		// Lazy Instantiation
 		if (!initialized) {
 			initialize();
 			initialized = true;
 		}
-
+		
 		// Swap in the new ScriptConfig Panel
 		if (this.scriptConfig != null) {
 			this.remove((Component) this.scriptConfig);
 		}
 		this.getContentPane().add((Component) scriptConfig,BorderLayout.CENTER);
-
+		
 		this.scriptConfig = scriptConfig;
-
+		
 		if (buttonMode == BUTTON_MODE_CREATE) {
 			this.remove(updateButtonBox);
 			this.getContentPane().add(createButtonBox,BorderLayout.SOUTH);
@@ -188,11 +188,11 @@ public class ScriptEditor extends AbstractGUITreeJDialog implements ActionListen
 		
 		// Update the macroTypeName text with the name of the class of the macroConfig.
 		this.scriptTypeName.setText(SCRIPT_TYPE + ": " + Outliner.scriptsManager.getScriptTypeNameFromClassName(scriptConfig.getScript().getClass().getName()));
-
+		
 		show();
 	}
 	
-
+	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(CREATE)) {
@@ -217,25 +217,23 @@ public class ScriptEditor extends AbstractGUITreeJDialog implements ActionListen
 			
 			// Save it to disk as a serialized object.
 			saveScript(script);
-		
+			
 			hide();
 		} else {
 			JOptionPane.showMessageDialog(this, GUITreeLoader.reg.getText("message_an_error_occurred"));
 		}
-
 	}
 	
 	private void saveAndClose() {
 		save();
 		hide();
 	}
-
+	
 	private void save() {
 		Script script = scriptConfig.getScript();
 		String oldName = script.getFileName();
-
+		
 		if (scriptConfig.update()) {
-
 			// Update the popup menu.
 			int oldIndex = Outliner.scriptsManager.model.remove(script.getName());
 			int newIndex = Outliner.scriptsManager.model.add(script);
@@ -247,12 +245,12 @@ public class ScriptEditor extends AbstractGUITreeJDialog implements ActionListen
 			JOptionPane.showMessageDialog(this, GUITreeLoader.reg.getText("message_an_error_occurred"));
 		}
 	}
-
+	
 	private void delete() {
 		if (USER_ABORTED == promptUser(GUITreeLoader.reg.getText("message_do_you_really_want_to_delete_this_script"))) {
 			return;
 		}
-
+		
 		if (scriptConfig.delete()) {
 			Script script = scriptConfig.getScript();
 			
@@ -261,7 +259,7 @@ public class ScriptEditor extends AbstractGUITreeJDialog implements ActionListen
 			
 			// Remove it from disk
 			deleteScript(new File(Outliner.SCRIPTS_DIR + script.getFileName()));
-		
+			
 			hide();
 		} else {
 			JOptionPane.showMessageDialog(this, GUITreeLoader.reg.getText("message_an_error_occurred"));
@@ -275,26 +273,26 @@ public class ScriptEditor extends AbstractGUITreeJDialog implements ActionListen
 		
 		hide();
 	}
-
-
+	
+	
 	// Script Saving and Loading Methods
 	private void deleteScript(File file) {
 		file.delete();
 		LoadScriptCommand.saveConfigFile(new File(Outliner.SCRIPTS_FILE));
 	}
-		
+	
 	private void saveScript(Script script) {
 		script.save(new File(Outliner.SCRIPTS_DIR + script.getFileName()));
 		LoadScriptCommand.saveConfigFile(new File(Outliner.SCRIPTS_FILE));
 	}
-
-
+	
+	
 	// Utility Methods
 	private static int promptUser(String msg) {
 		String yes = GUITreeLoader.reg.getText("yes");
 		String no = GUITreeLoader.reg.getText("no");
 		String confirm_delete = GUITreeLoader.reg.getText("confirm_delete");
-
+		
 		Object[] options = {yes, no};
 		int result = JOptionPane.showOptionDialog(Outliner.macroManager.macroEditor,
 			msg,

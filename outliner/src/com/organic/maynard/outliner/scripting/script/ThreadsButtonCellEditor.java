@@ -37,9 +37,7 @@ package com.organic.maynard.outliner.scripting.script;
 import com.organic.maynard.outliner.*;
 import java.awt.*;
 import java.awt.event.*;
-
 import java.util.*;
-
 import javax.swing.*;
 import javax.swing.table.*;
 import javax.swing.event.*;
@@ -50,7 +48,7 @@ public class ThreadsButtonCellEditor extends ButtonCellEditor {
 	public ThreadsButtonCellEditor() {
 		super(new JCheckBox());
 	}
-
+	
 	protected void doEditing() {
 		if (this.col == 0) {
 			ThreadsTable.killThread(this.row);

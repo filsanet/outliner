@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner.scripting.script;
 
+import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.*;
 import java.util.*;
 import java.io.*;
@@ -48,26 +49,31 @@ import com.organic.maynard.xml.XMLTools;
  */
 
 public class ScriptsManagerModel extends AbstractTableModel {
+	
 	// Constants
 	public static final int STARTUP_SCRIPT = 0;
 	public static final int SHUTDOWN_SCRIPT = 1;
 	public static final int USER_SCRIPT = 2;
 	
-	public static final String STARTUP_SCRIPT_TEXT = "Startup";
-	public static final String SHUTDOWN_SCRIPT_TEXT = "Shutdown";
-	public static final String USER_SCRIPT_TEXT = "User";
-	public static final String UNKNOWN_SCRIPT_TEXT = "Unknown";
+	
+	// Pseudo Constants
+	protected static String STARTUP_SCRIPT_TEXT = GUITreeLoader.reg.getText("startup");
+	protected static String SHUTDOWN_SCRIPT_TEXT = GUITreeLoader.reg.getText("shutdown");
+	protected static String USER_SCRIPT_TEXT = GUITreeLoader.reg.getText("user");
+	protected static String UNKNOWN_SCRIPT_TEXT = GUITreeLoader.reg.getText("unknown");
+	private static String TEXT_SCRIPT = GUITreeLoader.reg.getText("script");
+	private static String TEXT_ERROR = GUITreeLoader.reg.getText("error");
+	private static String TEXT_RUN = GUITreeLoader.reg.getText("run");
+	private static String TEXT_EDIT = GUITreeLoader.reg.getText("edit");
 	
 	
-	// Fields
+	// Instance Fields
 	private ArrayList scripts = new ArrayList(); // Strings
+	private static final int SCRIPT_EVENT_COUNT = 2; // Should be equal to the number of boolean isX ArrayLists.
 	
-	private static final int SCRIPT_EVENT_COUNT = 2; // Should be equal to the number of boolean isX ArrayLists.	
 	
 	// Constructors
-	public ScriptsManagerModel() {
-		
-	}
+	public ScriptsManagerModel() {}
 	
 	
 	// Static Methods
@@ -117,15 +123,17 @@ public class ScriptsManagerModel extends AbstractTableModel {
 	
 	
 	// Misc Accessors
-	public int getSize() {return scripts.size();}
-
+	public int getSize() {
+		return scripts.size();
+	}
+	
 	public boolean isNameUnique(String name) {
 		for (int i = 0, limit = scripts.size(); i < limit; i++) {
 			if (name.equals(get(i).getName())) {
 				return false;
 			}
 		}
-		return true;	
+		return true;
 	}
 	
 	public int indexOf(String name) {
@@ -138,10 +146,10 @@ public class ScriptsManagerModel extends AbstractTableModel {
 		
 		return -1;
 	}
-
+	
 	// Getters
 	public Script get(int i) {
-		return (Script) scripts.get(i);	
+		return (Script) scripts.get(i);
 	}
 	
 	public Script get(String name) {
@@ -169,9 +177,9 @@ public class ScriptsManagerModel extends AbstractTableModel {
 		// Update the table
 		fireTableRowsInserted(i, i);
 		
-		return i;		
+		return i;
 	}
-
+	
 	// Remove
 	public void remove(int i) {
 		scripts.remove(i);
@@ -187,9 +195,11 @@ public class ScriptsManagerModel extends AbstractTableModel {
 		
 		return i;
 	}
-
+	
 	// Boolean Accessors
-	public String getName(int i) {return get(i).getName();}
+	public String getName(int i) {
+		return get(i).getName();
+	}
 	
 	public boolean getIsStartup(int i) {
 		return get(i).isStartupScript();
@@ -206,8 +216,8 @@ public class ScriptsManagerModel extends AbstractTableModel {
 	public void setIsStartup(int i, String b) {
 		get(i).setStartupScript((new Boolean(b)).booleanValue());
 	}
-
-
+	
+	
 	public boolean getIsShutdown(int i) {
 		return get(i).isShutdownScript();
 	}
@@ -240,21 +250,21 @@ public class ScriptsManagerModel extends AbstractTableModel {
 		if (col == 0 || col == 1) {
 			return "";
 		} else if (col == 2) {
-			return "Script";
+			return TEXT_SCRIPT;
 		} else if (col == 3) {
-			return "Startup";
+			return STARTUP_SCRIPT_TEXT;
 		} else if (col == 4) {
-			return "Shutdown";
+			return SHUTDOWN_SCRIPT_TEXT;
 		} else {
-			return "error";
+			return TEXT_ERROR;
 		}
 	}
-
-
-    public Class getColumnClass(int c) {
-        return getValueAt(0, c).getClass();
-    }
-    	
+	
+	
+	public Class getColumnClass(int c) {
+			return getValueAt(0, c).getClass();
+	}
+	
 	public int getColumnCount() {
 		return 3 + SCRIPT_EVENT_COUNT;
 	}
@@ -265,9 +275,9 @@ public class ScriptsManagerModel extends AbstractTableModel {
 	
 	public Object getValueAt(int row, int col) {
 		if (col == 0) {
-			return "run";
+			return TEXT_RUN;
 		} else if (col == 1) {
-			return "edit";
+			return TEXT_EDIT;
 		} else if (col == 2) {
 			return getName(row);
 		} else if (col == 3) {
@@ -275,7 +285,7 @@ public class ScriptsManagerModel extends AbstractTableModel {
 		} else if (col == 4) {
 			return new Boolean(getIsShutdown(row));
 		} else {
-			return "error";
+			return TEXT_ERROR;
 		}
 	}
 	
@@ -298,6 +308,6 @@ public class ScriptsManagerModel extends AbstractTableModel {
 			
 		} else {
 			// Shouldn't happen.
-		}	
+		}
 	}
 }

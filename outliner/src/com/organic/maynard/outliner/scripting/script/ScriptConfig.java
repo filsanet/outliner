@@ -35,13 +35,14 @@
 package com.organic.maynard.outliner.scripting.script;
 
 import com.organic.maynard.outliner.*;
+
 /**
  * @author  $Author$
  * @version $Revision$, $Date$
  */
 
 public interface ScriptConfig extends java.io.Serializable {
-
+	
 	public boolean create();
 	public boolean update();
 	public boolean cancel();

@@ -111,19 +111,19 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 	private static String INCLUDE_READ_ONLY_NODES = null;
 	private static String REGEXP = null;
 	
-	private static String CURRENT_DOCUMENT = "Current Document";
-	private static String ALL_OPEN_DOCUMENTS = "All Open Documents";
-	private static String FILE_SYSTEM = "File System";
+	private static String CURRENT_DOCUMENT = GUITreeLoader.reg.getText("current_document");
+	private static String ALL_OPEN_DOCUMENTS = GUITreeLoader.reg.getText("all_open_documents");
+	private static String FILE_SYSTEM = GUITreeLoader.reg.getText("file_system");
 	
-	private static String PATH = "Path";
-	private static String SELECT = "Select";
-	private static String SELECT_DOTS = SELECT + "...";
-	private static String INCLUDE_SUB_DIRECTORIES = "Include Sub Directories";
-	private static String MAKE_BACKUPS = "Make Backups";
-	private static String FILE_FILTER = "File Filter";
-	private static String DIR_FILTER = "Directory Filter";
-	private static String INCLUDE = "Include";
-	private static String EXCLUDE = "Exclude";
+	private static String PATH = GUITreeLoader.reg.getText("path");
+	private static String SELECT = GUITreeLoader.reg.getText("select");
+	private static String SELECT_DOTS = SELECT + GUITreeLoader.reg.getText("ellipsis");
+	private static String INCLUDE_SUB_DIRECTORIES = GUITreeLoader.reg.getText("include_sub_directories");
+	private static String MAKE_BACKUPS = GUITreeLoader.reg.getText("make_backups");
+	private static String FILE_FILTER = GUITreeLoader.reg.getText("file_filter");
+	private static String DIR_FILTER = GUITreeLoader.reg.getText("dir_filter");
+	private static String INCLUDE = GUITreeLoader.reg.getText("include");
+	private static String EXCLUDE = GUITreeLoader.reg.getText("exclude");
 	
 	private static String FILE_FILTER_INCLUDE = "file_filter_include";
 	private static String FILE_FILTER_INCLUDE_IGNORE_CASE = "file_filter_include_ignore_case";
@@ -135,8 +135,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 	private static String DIR_FILTER_EXCLUDE_IGNORE_CASE = "dir_filter_exclude_ignore_case";
 	
 	// ToolTip Text
-	private static String TT_FILTER = "Use ';' to seperate globs.";
-	
+	private static String TT_FILTER = GUITreeLoader.reg.getText("instruction_type_globs");
 	
 	// Define Fields and Buttons
 	private static JCheckBox CHECKBOX_START_AT_TOP = null;
@@ -321,7 +320,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		
 		
 		FIND = GUITreeLoader.reg.getText("find");
-		FIND_ALL = "Find All"; //TBD: update gui tree and use: GUITreeLoader.reg.getText("find_all");
+		FIND_ALL = GUITreeLoader.reg.getText("find_all");
 		REPLACE = GUITreeLoader.reg.getText("replace");
 		REPLACE_ALL = GUITreeLoader.reg.getText("replace_all");
 		
@@ -470,7 +469,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		// Match Options
 		JPanel matchOptionsPanel = new JPanel();
 		matchOptionsPanel.setLayout(new BorderLayout());
-		matchOptionsPanel.setBorder(new TitledBorder(" Match "));
+		matchOptionsPanel.setBorder(new TitledBorder(GUITreeLoader.reg.getText("border_title_match")));
 		Box matchOptionsBox = Box.createVerticalBox();
 		matchOptionsBox.add(CHECKBOX_REGEXP);
 		matchOptionsBox.add(CHECKBOX_IGNORE_CASE);
@@ -479,7 +478,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		// Scope Options
 		JPanel scopeOptionsPanel = new JPanel();
 		scopeOptionsPanel.setLayout(new BorderLayout());
-		scopeOptionsPanel.setBorder(new TitledBorder(" Scope "));
+		scopeOptionsPanel.setBorder(new TitledBorder(GUITreeLoader.reg.getText("border_title_scope")));
 		
 		Box scopeOptionsBox = Box.createVerticalBox();
 		
@@ -1190,7 +1189,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 				});
 				monitor.setCanceled(false);
 				t.start();
-				monitor.setTitle("File System Replace");
+				monitor.setTitle(GUITreeLoader.reg.getText("file_system_replace"));
 				monitor.show(); // Modal dialog, blocks thread.
 				break;
 			
@@ -1326,7 +1325,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		
 		if (success == FAILURE) {
 			Outliner.findReplace.monitor.close();
-			JOptionPane.showMessageDialog(Outliner.outliner, "File or Directory does not exist: " + startingPath, "Error", JOptionPane.ERROR_MESSAGE);
+			String msg = GUITreeLoader.reg.getText("file_or_dir_does_not_exist");
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, startingPath);
+			JOptionPane.showMessageDialog(Outliner.outliner, msg, GUITreeLoader.reg.getText("error_title"), JOptionPane.ERROR_MESSAGE);
 			
 		}
 	}
@@ -1378,7 +1379,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		
 		if (success == FAILURE) {
 			Outliner.findReplace.monitor.close();
-			JOptionPane.showMessageDialog(Outliner.outliner, "File or Directory does not exist: " + startingPath, "Error", JOptionPane.ERROR_MESSAGE);
+			String msg = GUITreeLoader.reg.getText("file_or_dir_does_not_exist");
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, startingPath);
+			JOptionPane.showMessageDialog(Outliner.outliner, msg, GUITreeLoader.reg.getText("error_title"), JOptionPane.ERROR_MESSAGE);
 			
 		}
 	}

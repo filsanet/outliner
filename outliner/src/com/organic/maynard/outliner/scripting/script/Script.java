@@ -46,18 +46,18 @@ public interface Script extends Serializable {
 	
 	// Undoable Types
 	public String getFileName();
-
+	
 	public String getName();
 	public void setName(String name);
 	
 	public boolean isStartupScript();
 	public void setStartupScript(boolean b);
-
+	
 	public boolean isShutdownScript();
 	public void setShutdownScript(boolean b);	
 	
 	public void process() throws Exception; // TODO: should probably have a success/failure return type.
-
+	
 	public ScriptConfig getScriptConfigurator();
 	public void setScriptConfigurator(ScriptConfig configurator);
 	

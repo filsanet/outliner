@@ -37,9 +37,7 @@ package com.organic.maynard.outliner.scripting.script;
 import com.organic.maynard.outliner.*;
 import java.awt.*;
 import java.awt.event.*;
-
 import java.util.*;
-
 import javax.swing.*;
 import javax.swing.table.*;
 import javax.swing.event.*;
@@ -55,7 +53,7 @@ public class ScriptsTable extends JTable {
 		setIntercellSpacing(new Dimension(0,1));
 		
 		getTableHeader().setReorderingAllowed(false);
-
+		
 		ScriptsButtonCellEditor editor = new ScriptsButtonCellEditor();
 		
 		TableColumn runColumn = getColumnModel().getColumn(0);
@@ -64,7 +62,7 @@ public class ScriptsTable extends JTable {
 		runColumn.setMinWidth(60);
 		runColumn.setMaxWidth(60);
 		runColumn.setResizable(false);
-
+		
 		TableColumn editColumn = getColumnModel().getColumn(1);
 		editColumn.setCellRenderer(editor);
 		editColumn.setCellEditor(editor);
@@ -72,8 +70,8 @@ public class ScriptsTable extends JTable {
 		editColumn.setMaxWidth(60);
 		editColumn.setResizable(false);
 	}
-
-
+	
+	
 	// Static Methods
 	protected static void runScript(int index) {
 		Script script = Outliner.scriptsManager.model.get(index);

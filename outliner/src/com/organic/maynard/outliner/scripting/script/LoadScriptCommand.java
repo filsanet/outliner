@@ -115,9 +115,9 @@ public class LoadScriptCommand extends Command {
 				if (VERBOSE) {
 					System.out.println(new StringBuffer().append("  ").append(path).toString());
 				}
-				int i = Outliner.scriptsManager.model.add(obj);			
+				int i = Outliner.scriptsManager.model.add(obj);
 			} else {
-				System.out.println("  WARNING: duplicate script entry: " + path);			
+				System.out.println("  WARNING: duplicate script entry: " + path);
 			}
 		} catch (ClassNotFoundException cnfe) {
 			System.out.println("Exception: " + className + " " + cnfe);

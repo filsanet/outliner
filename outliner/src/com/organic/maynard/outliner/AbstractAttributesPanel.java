@@ -36,14 +36,10 @@ package com.organic.maynard.outliner;
 
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.util.preferences.*;
-
 import com.organic.maynard.xml.XMLTools;
-
 import java.awt.*;
 import java.awt.event.*;
-
 import java.util.*;
-
 import javax.swing.*;
 import javax.swing.table.*;
 import javax.swing.event.*;
@@ -51,10 +47,10 @@ import javax.swing.tree.*;
 
 public abstract class AbstractAttributesPanel extends JTable {
 	
+	// Instance Fields
 	private RemoveColumnHeaderRenderer removeColumnHeaderRenderer = new RemoveColumnHeaderRenderer();
-	
-	// GUI Fields
 	protected AttributeTableModel model = null;
+	
 	
 	// The Constructor
 	public AbstractAttributesPanel() {
@@ -87,8 +83,8 @@ public abstract class AbstractAttributesPanel extends JTable {
 		editableColumn.setCellEditor(editor2);
 		
 		// Setup Table Header
-		getTableHeader().addMouseListener(model);   
-		getTableHeader().setReorderingAllowed(false); 
+		getTableHeader().addMouseListener(model);
+		getTableHeader().setReorderingAllowed(false);
 	}
 	
 	// Data Display
@@ -113,8 +109,14 @@ public abstract class AbstractAttributesPanel extends JTable {
 
 
 class RemoveColumnHeaderRenderer extends JButton implements TableCellRenderer {
+	
+	// Pseudo Constants
+	private static String TEXT_NEW_ELLIPSIS = GUITreeLoader.reg.getText("new_ellipsis");
+	
+	
+	// Constructor
 	public RemoveColumnHeaderRenderer() {
-		super("New...");
+		super(TEXT_NEW_ELLIPSIS);
 	}
 	
 	public Component getTableCellRendererComponent(
@@ -132,8 +134,14 @@ class RemoveColumnHeaderRenderer extends JButton implements TableCellRenderer {
 
 class AttributeTableModel extends AbstractTableModel implements MouseListener {
 	
+	// Pseudo Constants
+	private static String TEXT_ATTRIBUTE = GUITreeLoader.reg.getText("attribute");
+	private static String TEXT_VALUE = GUITreeLoader.reg.getText("value");
+	private static String TEXT_DELETE = GUITreeLoader.reg.getText("delete");
+	
 	private static NewAttributeDialog dialog = new NewAttributeDialog();
 	
+	// Instance Fields
 	public AbstractAttributesPanel panel = null;
 	
 	public Vector keys = new Vector();
@@ -141,15 +149,16 @@ class AttributeTableModel extends AbstractTableModel implements MouseListener {
 	public Vector readOnly = new Vector();
 	
 	
+	// Constructor
 	public AttributeTableModel(AbstractAttributesPanel panel) {
 		super();
 		this.panel = panel;
 	}
 	
+	
 	public int getColumnCount() {
 		return 4;
 	}
-	
 	
 	public int getRowCount() {
 		return keys.size();
@@ -158,7 +167,7 @@ class AttributeTableModel extends AbstractTableModel implements MouseListener {
 	public Object getValueAt(int row, int col) {
 		if (col == 0) {
 			if (panel.isCellEditable(row)) {
-				return "Delete";
+				return TEXT_DELETE;
 			} else {
 				return "";
 			}
@@ -199,9 +208,9 @@ class AttributeTableModel extends AbstractTableModel implements MouseListener {
 		} else if (col == 1) {
 			return "";
 		} else if (col == 2) {
-			return "Attribute";
+			return TEXT_ATTRIBUTE;
 		} else {
-			return "Value";
+			return TEXT_VALUE;
 		}
 	}
 	

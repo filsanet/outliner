@@ -34,34 +34,43 @@
  
 package com.organic.maynard.outliner.scripting.script;
 
+import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.*;
 import java.awt.*;
 import java.awt.event.*;
-
 import java.util.*;
-
 import javax.swing.*;
 import javax.swing.table.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 
 public class ThreadsTableModel extends AbstractTableModel {
-
-	// Fields
+	
+	// Pseudo Constants
+	private static String TEXT_KILL = GUITreeLoader.reg.getText("kill");
+	private static String TEXT_ID = GUITreeLoader.reg.getText("id");
+	private static String TEXT_SCRIPT_NAME = GUITreeLoader.reg.getText("script_name");
+	private static String TEXT_STARTED_BY = GUITreeLoader.reg.getText("started_by");
+	private static String TEXT_START_TIME = GUITreeLoader.reg.getText("start_time");
+	private static String TEXT_ERROR = GUITreeLoader.reg.getText("error");
+	
+	
+	// Instance Fields
 	private ArrayList threads = new ArrayList(); // Threads
 	private ArrayList threadIDs = new ArrayList(); // Threads
 	private ArrayList startedBy = new ArrayList(); // Threads
 	private ArrayList startedAt = new ArrayList(); // Threads
-	
 	private int threadIDCount = 0;
-
-	// Constructors
-	public ThreadsTableModel() {
-
-	}
 	
-	// Misc Accessors
-	public int getSize() {return threads.size();}
+	
+	// Constructors
+	public ThreadsTableModel() {}
+	
+	
+	// Methods
+	public int getSize() {
+		return threads.size();
+	}
 	
 	public int indexOf(String name) {
 		for (int i = 0; i < threads.size(); i++) {
@@ -73,7 +82,7 @@ public class ThreadsTableModel extends AbstractTableModel {
 		
 		return -1;
 	}
-
+	
 	public int indexOfThreadID(int threadID) {
 		for (int i = 0; i < threadIDs.size(); i++) {
 			Integer currentThreadID = getThreadID(i);
@@ -87,12 +96,13 @@ public class ThreadsTableModel extends AbstractTableModel {
 	
 	// Getters
 	public Thread get(int i) {
-		return (Thread) threads.get(i);	
+		return (Thread) threads.get(i);
 	}
-
+	
 	public Integer getThreadID(int i) {
-		return (Integer) threadIDs.get(i);	
-	}	
+		return (Integer) threadIDs.get(i);
+	}
+	
 	public Thread get(String name) {
 		int i = indexOf(name);
 		if (i != -1) {
@@ -125,16 +135,16 @@ public class ThreadsTableModel extends AbstractTableModel {
 				startedByString = ScriptsManagerModel.UNKNOWN_SCRIPT_TEXT;
 		}
 		
-		this.startedBy.add(i, startedByString); 
-
-		this.startedAt.add(i, startedAt); 
+		this.startedBy.add(i, startedByString);
+		
+		this.startedAt.add(i, startedAt);
 		
 		// Update the table
 		fireTableRowsInserted(i, i);
 		
-		return threadID;		
+		return threadID;
 	}
-
+	
 	// Remove
 	public void remove(int i) {
 		threads.remove(i);
@@ -153,7 +163,7 @@ public class ThreadsTableModel extends AbstractTableModel {
 		
 		return i;
 	}
-
+	
 	public int removeThread(int threadID) {
 		int i = indexOfThreadID(threadID);
 		if (i != -1) {
@@ -163,11 +173,17 @@ public class ThreadsTableModel extends AbstractTableModel {
 		return i;
 	}
 	
-	public String getName(int i) {return get(i).getName();}
-
-	public String getStartedBy(int i) {return (String) startedBy.get(i);}
-
-	public String getStartedAt(int i) {return (String) startedAt.get(i);}
+	public String getName(int i) {
+		return get(i).getName();
+	}
+	
+	public String getStartedBy(int i) {
+		return (String) startedBy.get(i);
+	}
+	
+	public String getStartedAt(int i) {
+		return (String) startedAt.get(i);
+	}
 	
 	
 	// TableModel Interface
@@ -175,23 +191,23 @@ public class ThreadsTableModel extends AbstractTableModel {
 		if (col == 0) {
 			return "";
 		} else if (col == 1) {
-			return "ID";
+			return TEXT_ID;
 		} else if (col == 2) {
-			return "Script Name";
+			return TEXT_SCRIPT_NAME;
 		} else if (col == 3) {
-			return "Started By";
+			return TEXT_STARTED_BY;
 		} else if (col == 4) {
-			return "Start Time";
+			return TEXT_START_TIME;
 		} else {
-			return "error";
+			return TEXT_ERROR;
 		}
 	}
-
-
-    public Class getColumnClass(int c) {
-        return getValueAt(0, c).getClass();
-    }
-    	
+	
+	
+	public Class getColumnClass(int c) {
+			return getValueAt(0, c).getClass();
+	}
+  
 	public int getColumnCount() {
 		return 5;
 	}
@@ -202,7 +218,7 @@ public class ThreadsTableModel extends AbstractTableModel {
 	
 	public Object getValueAt(int row, int col) {
 		if (col == 0) {
-			return "kill";
+			return TEXT_KILL;
 		} else if (col == 1) {
 			return getThreadID(row).toString();
 		} else if (col == 2) {
@@ -212,7 +228,7 @@ public class ThreadsTableModel extends AbstractTableModel {
 		} else if (col == 4) {
 			return getStartedAt(row);
 		} else {
-			return "error";
+			return TEXT_ERROR;
 		}
 	}
 	

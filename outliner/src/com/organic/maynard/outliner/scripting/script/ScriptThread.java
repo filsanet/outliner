@@ -45,16 +45,19 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 
 public class ScriptThread extends Thread {
+	
+	// Instance Fields
 	private Script script = null;
 	private int threadID = -1;
 	
+	
+	// Constructor
 	ScriptThread(Script script, int startedBy) {
 		this.script = script;
 		setName(script.getName());
 		
 		// Register the thread
 		this.threadID = Outliner.scriptsManager.threadsTableModel.add(this, startedBy, DocumentInfo.getCurrentDateTimeString());
-		
 	}
 	
 	public void run() {

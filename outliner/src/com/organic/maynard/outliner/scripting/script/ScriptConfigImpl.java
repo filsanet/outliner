@@ -45,22 +45,26 @@ import javax.swing.*;
 
 public abstract class ScriptConfigImpl extends JPanel implements ScriptConfig {
 	
+	// Pseudo Constants
 	public static String NAME = null;
+	
 	
 	// The Constructor
 	public ScriptConfigImpl() {
 		NAME = GUITreeLoader.reg.getText("script_name");
 	}
-
+	
 	
 	// ScriptConfig Interface
 	private Script script = null;
-
+	
 	public void init(Script script) {
 		this.script = script;
 	}
 	
-	public Script getScript() {return this.script;}
+	public Script getScript() {
+		return this.script;
+	}
 	
 	public boolean cancel() {
 		// Should Always return true.

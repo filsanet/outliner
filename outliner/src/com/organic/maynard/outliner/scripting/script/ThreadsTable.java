@@ -37,9 +37,7 @@ package com.organic.maynard.outliner.scripting.script;
 import com.organic.maynard.outliner.*;
 import java.awt.*;
 import java.awt.event.*;
-
 import java.util.*;
-
 import javax.swing.*;
 import javax.swing.table.*;
 import javax.swing.event.*;
@@ -53,7 +51,7 @@ public class ThreadsTable extends JTable {
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		getTableHeader().setReorderingAllowed(false);
-
+		
 		ThreadsButtonCellEditor editor = new ThreadsButtonCellEditor();
 		
 		TableColumn killColumn = getColumnModel().getColumn(0);
@@ -62,14 +60,14 @@ public class ThreadsTable extends JTable {
 		killColumn.setMinWidth(60);
 		killColumn.setMaxWidth(60);
 		killColumn.setResizable(false);
-
+		
 		TableColumn idColumn = getColumnModel().getColumn(1);
 		idColumn.setMinWidth(25);
 		idColumn.setPreferredWidth(25);
 		idColumn.setMaxWidth(75);
 	}
-
-
+	
+	
 	// Static Methods
 	protected static void killThread(int index) {
 		Thread thread = Outliner.scriptsManager.threadsTableModel.get(index);

@@ -56,9 +56,10 @@ import com.organic.maynard.util.string.Replace;
 
 public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 	
-	// private instance vars
+	// Instance Fields
 	private OutlinerFileChooser chooser = null;
 	private boolean isInitialized = false;
+	
 	
 	// Constructors
 	public LocalFileSystemFileProtocol() {}
@@ -73,6 +74,7 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 		isInitialized = true;
 	}
 	
+	
 	// select a file to save or export
 	public boolean selectFileToSave(OutlinerDocument document, int type) {
 		// we'll customize the approve button
@@ -86,12 +88,12 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 		switch (type) {
 			case FileProtocol.SAVE:
 				chooser.configureForSave(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
-				approveButtonText = "Save" ;
+				approveButtonText = GUITreeLoader.reg.getText("save");
 				break;
 				
 			case FileProtocol.EXPORT:
 				chooser.configureForExport(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
-				approveButtonText = "Export" ;
+				approveButtonText = GUITreeLoader.reg.getText("export");
 				break;
 				
 			default:

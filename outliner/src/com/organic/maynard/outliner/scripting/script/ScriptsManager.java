@@ -36,7 +36,6 @@ package com.organic.maynard.outliner.scripting.script;
 
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.guitree.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -50,43 +49,43 @@ public class ScriptsManager extends AbstractGUITreeJDialog implements ActionList
 	private static final int INITIAL_HEIGHT = 400;
 	private static final int MINIMUM_WIDTH = 400;
 	private static final int MINIMUM_HEIGHT = 300;
-
+	
+	
+	// Pseudo Constants
 	private static String NEW = null;
-
+	
+	
+	// Instance Fields
+	private boolean initialized = false;
 	public ScriptsManagerModel model = new ScriptsManagerModel();
 	public ThreadsTableModel threadsTableModel = new ThreadsTableModel();
-	
 	protected ScriptEditor scriptEditor = null;
-
+	
 	// Define Fields and Buttons
-	protected ArrayList scriptNames = new ArrayList();	
+	protected ArrayList scriptNames = new ArrayList();
 	protected ArrayList scriptClassNames = new ArrayList();
-
 	private JButton newButton = null;
-	protected JComboBox scriptType = new JComboBox();	
-
+	protected JComboBox scriptType = new JComboBox();
 	private JLabel scriptLabel = null;
-
 	private JLabel threadLabel = null;
-
+	
 	
 	// GUI Elements
-
-
+	
+	
 	// The Constructors
 	public ScriptsManager() {
 		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
 		Outliner.scriptsManager = this;
 	}
-
+	
 	private void initialize() {
-
 		NEW = GUITreeLoader.reg.getText("new");
-
+		
 		newButton = new JButton(NEW);
 		scriptLabel = new JLabel(GUITreeLoader.reg.getText("script"));
 		threadLabel = new JLabel(GUITreeLoader.reg.getText("thread"));
-
+		
 		// Define New Script Pulldown area
 		newButton.addActionListener(this);
 		
@@ -94,29 +93,29 @@ public class ScriptsManager extends AbstractGUITreeJDialog implements ActionList
 		newBox.add(scriptType);
 		newBox.add(Box.createHorizontalStrut(5));
 		newBox.add(newButton);
-
+		
 		// Setup Script Box
 		Box scriptBox = Box.createVerticalBox();
-
-		scriptBox.add(scriptLabel);		
+		
+		scriptBox.add(scriptLabel);
 		scriptBox.add(new JScrollPane(new ScriptsTable()));
 		
 		scriptBox.add(Box.createVerticalStrut(5));
-
-		scriptBox.add(threadLabel);		
+		
+		scriptBox.add(threadLabel);
 		scriptBox.add(new JScrollPane(new ThreadsTable()));
-				
+		
 		// Put it all together
 		getContentPane().add(newBox, BorderLayout.NORTH);
 		getContentPane().add(scriptBox, BorderLayout.CENTER);
 	}
 	
-	private boolean initialized = false;
-	
 	public boolean isInitialized() {
 		return this.initialized;
 	}
 	
+	
+	// Methods
 	public void show() {
 		// Lazy Instantiation
 		if (!initialized) {
@@ -126,7 +125,7 @@ public class ScriptsManager extends AbstractGUITreeJDialog implements ActionList
 		
 		super.show();
 	}
-
+	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		// File Menu
@@ -150,7 +149,7 @@ public class ScriptsManager extends AbstractGUITreeJDialog implements ActionList
 			System.out.println(e);
 		}
 	}
-
+	
 	protected void displayScriptEditor(Script script, int buttonMode) {
 		ScriptConfig scriptConfig = (ScriptConfig) script.getScriptConfigurator();
 		scriptConfig.init(script);
@@ -167,7 +166,7 @@ public class ScriptsManager extends AbstractGUITreeJDialog implements ActionList
 		
 		return null;
 	}
-
+	
 	public String getScriptTypeNameFromClassName(String className) {
 		for (int i = 0, limit = scriptClassNames.size(); i < limit; i++) {
 			if (((String) scriptClassNames.get(i)).equals(className)) {
