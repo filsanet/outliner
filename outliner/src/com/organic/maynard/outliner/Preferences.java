@@ -88,6 +88,9 @@ public class Preferences implements GUITreeComponent {
 			public static final String TUTORIALS_PATH = "tutorials_path";
 			public static final String ABOUT_PATH = "about_path";
 
+			// InnerFrame State Maintenance [srk]
+			public static final String FRAME_INFO_LIST_SIZE = "frame_info_list_size";
+
 
 		// Editor Panel
 		public static final String FONT_FACE = "font_face";
@@ -144,6 +147,8 @@ public class Preferences implements GUITreeComponent {
 		public static final String JUSTIFIED_PLAINTEXT_DRAW_LINES = "justified_plaintext_draw_lines";
 		
 		// Recent Files List Options
+		public static final String RECENT_FILES_LIST_SIZE = "recent_files_list_size";
+
 		public static final String RECENT_FILES_ORDERING = "recent_files_ordering";
 		public static final String RECENT_FILES_DIRECTION = "recent_files_direction";
 		public static final String RECENT_FILES_NAME_FORM= "recent_files_name_form";
@@ -162,7 +167,6 @@ public class Preferences implements GUITreeComponent {
 		// Misc Panel
 		public static final String PRINT_ENVIRONMENT = "print_environment";
 		public static final String NEW_DOC_ON_STARTUP = "new_doc_on_startup";
-		public static final String RECENT_FILES_LIST_SIZE = "recent_files_list_size";
 		public static final String MOUSE_WHEEL_SCROLL_SPEED = "mouse_wheel_scroll_speed";
 		public static final String OWNER_NAME = "owner_name";
 		public static final String OWNER_EMAIL = "owner_email";

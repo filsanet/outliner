@@ -79,6 +79,7 @@ public class DocumentInfo implements Serializable, Cloneable {
 	private boolean applyFontStyleForEditability = true;
 	private boolean applyFontStyleForMoveability = true;
 	private String protocolName = null;
+	private boolean helpFile = false; // help system docs set this true [srk]
 	
 	// The Constructors
 	public DocumentInfo() {
@@ -103,7 +104,8 @@ public class DocumentInfo implements Serializable, Cloneable {
 			Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur,
 			Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur,
 			Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur,
-			""
+			"",
+			false
 		);
 	}
 	
@@ -128,7 +130,8 @@ public class DocumentInfo implements Serializable, Cloneable {
 		boolean applyFontStyleForComments,
 		boolean applyFontStyleForEditability,
 		boolean applyFontStyleForMoveability,
-		String protocolName
+		String protocolName,
+		boolean helpFile 
 		) 
 	{
 		setFileFormat(fileFormat);
@@ -152,6 +155,7 @@ public class DocumentInfo implements Serializable, Cloneable {
 		setApplyFontStyleForEditability(applyFontStyleForEditability);
 		setApplyFontStyleForMoveability(applyFontStyleForMoveability);
 		setProtocolName(protocolName);
+		setHelpFile(helpFile) ;
 	}
 
 	// clone ourself
@@ -178,7 +182,8 @@ public class DocumentInfo implements Serializable, Cloneable {
 			applyFontStyleForComments,
 			applyFontStyleForEditability,
 			applyFontStyleForMoveability,
-			new String (protocolName)) ;
+			new String (protocolName),
+			helpFile) ;
 	} // end method clone
 	
 	
@@ -203,6 +208,9 @@ public class DocumentInfo implements Serializable, Cloneable {
 	}
 
 	// Accessors
+	public boolean isHelpFile() {return helpFile ; }
+	public void setHelpFile(boolean setting) {helpFile = setting; }
+	
 	public String getFileFormat() {return this.fileFormat;}
 	public void setFileFormat(String fileFormat) {this.fileFormat = fileFormat;}
 

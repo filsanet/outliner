@@ -95,7 +95,7 @@ public class PreferencesPanelRecentFiles
 		int direction = 0 ;
 		
 		// first, deal with any possible size changes
-		RecentFilesList.trim();
+		RecentFilesList.syncSize();
 
 		// grab what's been set in the panel
 		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);

@@ -84,7 +84,6 @@ public class HelpDocumentsManager
 	public static final int ABOUT = 4 ;
 	public static final int HELP_DOX_COUNT = 5 ;
 	
-	
 	// constructor method
 	public HelpDocumentsManager() {
 		// call the ancestor's constructor
@@ -116,39 +115,6 @@ public class HelpDocumentsManager
 		
 		} // end method startSetup	
 
-
-	// a document just opened
-	// if it's one of ours, mark it so
-	public void someDocumentJustOpened (OutlinerDocument document) {	
-		
-		// local vars
-		int whichOne = isThisOneOfOurs(document.getTitle());
-		
-		// if it's one of ours ...
-		if (whichOne != DOCUMENT_NOT_FOUND) {
-			
-			// mark it open
-			docOpenStates[whichOne] = true ;
-			} // END if
-		
-		} // end method someDocumentJustOpened
-
-		
-	// a document just closed
-	// if it's one of ours, mark it so
-	public void someDocumentJustClosed (OutlinerDocument document) {	
-		
-		// local vars
-		int whichOne = isThisOneOfOurs(document.getTitle());
-		
-		// if it's one of ours ...
-		if (whichOne != DOCUMENT_NOT_FOUND) {
-			
-			// mark it closed
-			docOpenStates[whichOne] = false ;
-			} // END if
-		
-		} // end method someDocumentJustClosed
 
 		
 	} // end class HelpDocumentsManager

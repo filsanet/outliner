@@ -10,6 +10,7 @@
  *				void moveElementToTail (Vector)
  *				void moveElementToHead (Vector)
  *				void swapElements (Vector, int, int)
+ *				void ensureSizeSaveTail (Vector, int)
  *
  *		
  * Copyright (C) 2002 Stan Krute <Stan@StanKrute.com>
@@ -50,7 +51,7 @@
  */
 
 // we're part of this
-package com.organic.maynard.util.string;
+package com.organic.maynard.util.vector;
 
 // we use these
 import java.util.Vector ;
@@ -76,7 +77,7 @@ public class StanVectorTools {
 		Object theNewTail = someVector.get(index) ;
 		
 		// move everyone further tailward one spot headward
-		for (int position = index + 1; position < limit; position ++) {
+		for (int position = index, stop = limit - 1; position < stop; position ++) {
 			someVector.set(position, someVector.get(position + 1)) ;
 		} // end for
 		
@@ -86,7 +87,7 @@ public class StanVectorTools {
 		// done
 		return ;
 		
-	} // end method moveElementToTil 
+	} // end method moveElementToTail 
 		
 		
 	// move an element to the head end of a vector
@@ -147,5 +148,37 @@ public class StanVectorTools {
 		return ;
 		
 	} // end method swapElements
+
+
+	// trim's a vector's size
+	// if method has to eliminate entries, it eliminates them from the head
+	public static void trimSizeSaveTail(Vector someVector, int goalSize) {
 	
+	// get our current size
+	int curSize = someVector.size() ;
+	
+	// compare with the goal size
+	int diff = curSize - goalSize ;
+	
+	// if we're just right ...
+	if (diff == 0) {
+		// leave
+		return ;
+	} // end if
+	
+	// if we're too large
+	if (diff > 0) {
+		
+		// move goalSize entries headward
+		for (int i = 0, j = diff ; i < goalSize; i++, j++) {
+			someVector.set(i, someVector.get(j)) ;
+		} // end for
+
+		// this'll chop off excess entries
+		someVector.setSize(goalSize) ;
+		
+	} // end if
+	
+	} // end method trimSizeSaveTail
+
 } // end class StanVectorTools

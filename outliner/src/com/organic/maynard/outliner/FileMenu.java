@@ -611,9 +611,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				break ;
 		} // end switch
 
-		// remove any old instance of the file in the recent files list,
-		// then add it to the bottom of the list
-		RecentFilesList.updateFileNameInList(docInfo.getPath(), docInfo);
+		// make sure we're in the Recent Files list
+		RecentFilesList.addFileNameToList(docInfo);
 
 		// perform final setup and draw the suckah
 		setupAndDraw(docInfo, newDoc, openOrImportResult);

@@ -76,13 +76,11 @@ public class DocumentManager
 	extends Object 
 	implements JoeReturnCodes {
 	
-	// protected instance vars
-	protected boolean [] docOpenStates ;
-	
 	// private instance vars
+	private boolean [] docOpenStates ;
 	private String [] docPaths ;
 	private int [] docAlfaOrder ;
-	
+	private int ourDocsOpen = 0 ;
 	
 	// constructor 
 	public DocumentManager(int sizeOfDocSet) {
@@ -188,5 +186,48 @@ public class DocumentManager
 		
 		} // end method getDocPath
 
+
+	// a document just opened
+	// if it's one of ours, mark it so
+	public void someDocumentJustOpened (OutlinerDocument document) {	
+		
+		// local vars
+		int whichOne = isThisOneOfOurs(document.getDocumentInfo().getPath());
+		
+		// if it's one of ours ...
+		if (whichOne != DOCUMENT_NOT_FOUND) {
+			
+			// mark it open
+			docOpenStates[whichOne] = true ;
+			} // END if
+			
+			// increment ourDocsOpen counter
+			ourDocsOpen ++ ;
+		
+		} // end method someDocumentJustOpened
+
+		
+	// a document just closed
+	// if it's one of ours, mark it so
+	public void someDocumentJustClosed (OutlinerDocument document) {	
+		
+		// local vars
+		int whichOne = isThisOneOfOurs(document.getDocumentInfo().getPath());
+		
+		// if it's one of ours ...
+		if (whichOne != DOCUMENT_NOT_FOUND) {
+			
+			// mark it closed
+			docOpenStates[whichOne] = false ;
+			
+			// decrement ourDocsOpen counter
+			ourDocsOpen -- ;
+			} // END if
+		
+		} // end method someDocumentJustClosed
+
+	// -------------------- accessors
+	
+	int getOurDocsOpen () { return ourDocsOpen ; }
 
 	} // END DocumentManager class

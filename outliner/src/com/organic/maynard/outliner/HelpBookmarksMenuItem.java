@@ -107,11 +107,16 @@ public class HelpBookmarksMenuItem
 		docInfo.setPath(Outliner.helpDoxMgr.getDocPath (Outliner.helpDoxMgr.BOOKMARKS));
 		docInfo.setEncodingType(encoding);
 		docInfo.setFileFormat(fileFormat);
+
+		// we are a help file
+		docInfo.setHelpFile(true) ;
 		
 		// TODO fix this once FileMenu returns a jrc code
 		// return (FileMenu.openFile(docInfo);
 		// we be tres fakey for now
 		FileMenu.openFile(docInfo, Outliner.fileProtocolManager.getDefault());
+		
+		// done
 		return SUCCESS ;
 
 		} // end openHelpBookmarksDocument

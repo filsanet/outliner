@@ -1,14 +1,10 @@
 /**
  * StanStringTools class
  * 
- * A few useful string tools
+ * A few useful vector tools
  * 
  * members
  *	methods
- *		instance
- *			public
- *				constructor
- *					StanStringTools ()
  *		class
  *			public
  *				String trimFileExtension (String)
@@ -62,10 +58,6 @@ import java.io.File ;
 // Stan's string tools
 public class StanStringTools {
 
-	// Constructor
-	// public StanStringTools() {}
-	
-	
 	// Class Methods
 	
 	// trim off last four characters if there's a dot three chars before the end

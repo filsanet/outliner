@@ -51,9 +51,10 @@ import org.xml.sax.*;
 import com.organic.maynard.util.string.StringTools;
 import com.organic.maynard.util.string.Replace;
 import com.organic.maynard.util.string.StanStringTools ;
+import com.organic.maynard.util.vector.StanVectorTools ;
 
-/* NOTICE  [srk] Currently undergoing as-gentle-as-possible minor decoupling and reconstructive surgery
- * while implementing alfa/ascii menu item orderings -- due to complete  * 1-23-02
+/* NOTICE  [srk] Currently undergoing as-gentle-as-possible minor decoupling 
+/* of frameInfoList AKA docInfoList from menu -- due to complete  * 2-1-02
 */
 
 public class RecentFilesList extends JMenu implements ActionListener, GUITreeComponent, JoeReturnCodes {
@@ -76,39 +77,60 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	private static final int TOP_TO_BOTTOM = 0 ;
 	private static final int BOTTOM_TO_TOP = 1 ;
 	
-	// Static Fields
-	private static ArrayList docInfoList = null;
-	/* [srk] docInfoList holds DocumentInfo data for a number of documents
-		currently that's the number of items shown in the recent files list
-		2B decoupled, so it'll have it's own value, >= # recent files
-		that way, one can slide from lotsa files shown to few files shown 
-		and back to lotsa again without losing everybody   */
+	// presence in frameInfoList
+	private static final int NOT_THERE = -1 ;
 	
-	private static TreeSet alfaAsciiTree = null ; // [srk] for alfa/ascii ordering, we store filename strings here
-//	private static TreeSet pathnameTree = null ; // [srk] for alfa/ascii ordering, we store pathname strings here
+	// Static Fields
+	private static Vector frameInfoList = null;
+	/*  TBD  
+	 * [srk] implement list as a Vector, for synchro
+	 *
+	 * [srk] frameInfoList should be moved into its own class for cleanth/power/flexibility
+	
+	 * 	its job is state maintenance for ALL internal frames opened in JOE
+	 *	not just std. outline docs, which go up on recent files list,
+	 *	but modeless dialogs and help doc outlines while they're open
+	 *	
+	 *	that will let it restore ALL were-open frames after a crash
+	 *	or at startup if desired
+	 *	
+	 *	for now, just make sure to use it in this class in simple ways: 
+	 *	add an item, retrieve an item, move items around
+	 *	
+	 *	original change thought note, here temp for history
+	 *
+	 * [srk] frameInfoList holds DocumentInfo data for a number of documents
+	 * 	currently that's the number of items shown in the recent files list
+	 * 	2B decoupled, so it'll have it's own value, >= # recent files
+	 * 	that way, one can slide from lotsa files shown to few files shown 
+	 * 	and back to lotsa again without losing everybody  
+	 */
+	
+	private static TreeSet alfaAsciiTree = null ; // [srk] for alfa/ascii ordering, we store filename/pathname strings here
 	
 	private static int currentDisplayOrdering = -1 ; // [srk] we start with these values to force a menu population
 	private static int currentDisplayNameForm = -1 ;
 	private static int currentDisplayDirection = -1 ;
+	private static int currentRecentFilesListSize = 0 ;
 	
 	// The Constructors
 	public RecentFilesList() {}
 	
 	// Static Accessors
-	static ArrayList getDocInfoList() {
-		return docInfoList;
+	static Vector getFrameInfoList() {
+		return frameInfoList;
 	}
 	
-	static int getSizeOfDocInfoList() {
-		return docInfoList.size();
+	static int getSizeOfFrameInfoList() {
+		return frameInfoList.size();
 	}
 	
-	static void setDocInfoList(ArrayList list) {
-		docInfoList = list;
+	static void setFrameInfoList(Vector list) {
+		frameInfoList = list;
 	}
 	
 	static void addDocumentInfo(DocumentInfo docInfo) {
-		docInfoList.add(docInfo);
+		frameInfoList.add(docInfo);
 	}
 
 	// GUITreeComponent interface
@@ -126,14 +148,50 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		JMenu menu = (JMenu) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 2);
 		menu.add(this);
 		
-		// Try to load the docInfoList from disk.
-		docInfoList = (ArrayList) ReadObjectFromFile(Outliner.RECENT_FILES_FILE);
+		// grab some preferences
+		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
 		
-		// if nothing was read from disk
-		if (docInfoList == null) {
-			// start a new docInfoList
-			docInfoList = new ArrayList();
-		} // end if
+		// set size of Recent Files list
+		currentRecentFilesListSize = ((PreferenceInt)prefs.getPreference(Preferences.RECENT_FILES_LIST_SIZE)).cur;
+
+		// Try to load the frameInfoList from disk
+		// TBD [srk] rename RECENT_FILES_FILE to FRAME_INFO_LIST_FILE
+		Object obj = ReadObjectFromFile(Outliner.RECENT_FILES_FILE);
+		
+		// we need to make sure we have a Vector
+		// because we used to use an ArrayList
+		if (obj != null) {
+			Vector testVector = new Vector() ;
+			
+			// if we're pointin' to a vector, we're cool
+			if (testVector.getClass().isInstance(obj)) {
+				frameInfoList = (Vector)obj ;
+			} else {
+				frameInfoList = null ;
+			} // end if-else
+		} else {
+			frameInfoList = null; 
+		} //end else
+		
+		int filSize = ((PreferenceInt)prefs.getPreference(Preferences.FRAME_INFO_LIST_SIZE)).def ;
+		
+		// testing wipeout frameInfoList = null ;
+		
+		// if frameInfoList is null ...
+		if (frameInfoList == null) {
+			// start a new frameInfoList
+			frameInfoList = new Vector();
+		// else we're non-null
+		} else {
+			// if we're too large ...
+			if (frameInfoList.size() > filSize) {
+				
+				// trim back
+				StanVectorTools.trimSizeSaveTail(frameInfoList, filSize) ;
+				
+			} // end if we're too large
+			
+		} // end if-else
 		
 		// apply our display settings
 		// this also populates the menu correctly
@@ -152,10 +210,12 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		prefsPanel.applyCurrentToApplication() ;
 		
 	} // end method applyDisplaySettings
+
 	
 	// set display options -- adjust menu and treeset structures as necessary
-	// called from PreferencesPanelRecentFiles
+	// called from PreferencesPanelRecentFiles.applyCurrentToApplication
 	void setDisplayOptions (int ordering, int nameForm, int direction) {
+		
 		// we are lazy, only work on change
 		boolean change = (currentDisplayOrdering != ordering)
 			|| (currentDisplayNameForm !=nameForm)
@@ -163,7 +223,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		
 		// if there's change ...
 		if (change) {
-			// apply the new values
+			// store the new values
 			currentDisplayOrdering = ordering ;
 			currentDisplayNameForm = nameForm ;
 			currentDisplayDirection = direction ;
@@ -178,38 +238,56 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		
 	} // end method setDisplayOptions
 	
+	
 	// ensure that the treeset contains the necessary info
 	private void syncTreeSet () {
 		
-		// if we don't have tree, leave
+		// if we don't have a treeset, leave
 		if ( ! ensureAlfaAsciiTree() ) {
 			return ;
 		} // end if
 		
 		// empty it out
+		// note that syncTreeSet 
+		// ALWAYS clears the tree if it exists
 		alfaAsciiTree.clear() ;
 		
-		// if this ordering does not use the tree, leave
+		// if this ordering does not use the tree ...
 		if ( (currentDisplayOrdering != ALFA_ORDER)  
 			&&  (currentDisplayOrdering != ASCII_ORDER) ) {
+			// leave
 			return ;
 		} // end if
 		
-		// if docInfoList is empty, leave
-		int numEntries = docInfoList.size() ;
-		if (numEntries == 0) {
+		// if frameInfoList is empty ...
+		int frameInfoListSize = frameInfoList.size() ;
+		if (frameInfoListSize == 0) {
+			// leave
 			return ;
 		} // end if
 				
-		// okay, we have some docInfoList entries
-		// let's go mine their data
+		// if Recent Files size is zero, leave
+		int recentFilesListSize = Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur ;
+		if (recentFilesListSize == 0) {
+			return;
+		} // end if
+
+		// set up some local vars
 		DocumentInfo docInfo = null ;
 		StrungDocumentInfo strungDocInfo = null ;
 		
-		// for each item in docInfoList
-		for (int i = 0; i < numEntries; i++) {
-			// grab the docInfo
-			docInfo = (DocumentInfo) docInfoList.get(i) ;
+		// let's go mine some data
+
+		// until we get to the bottom of frameInfoList or hit RECENT_FILES_LIST_SIZE ...
+		for (int i = frameInfoListSize - 1, j = 0; (i >= 0) && (j < recentFilesListSize); i--) {
+			
+			// grab docInfo from frameInfoList
+			docInfo = (DocumentInfo) frameInfoList.get(i) ;
+			
+			// if we're a Help file, try the next frame
+			if (docInfo.isHelpFile()) {
+				continue ;
+			} // end if
 			
 			// switch on name form
 			switch (currentDisplayNameForm) {
@@ -243,6 +321,9 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 			// add item to the alfaAscii tree
 			alfaAsciiTree.add(strungDocInfo) ;
 			
+			// up the Recent Files list counter
+			j++ ;
+			
 		} // end for
 		
 	} // end method syncTreeSet
@@ -252,38 +333,73 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	private void syncMenuItems () {
 		// local vars
 		StrungDocumentInfo sdi = null ;
+		DocumentInfo docInfo = null ;
 		
-		// start with a clean slate
+		// start with a clean slate by removing all menu items
 		removeAll() ;
 		
 		// [srk] this removal does NOT shrink the
 		// displayed width of the menu back to 
 		// a small number
-		// perhaps this is a bug in Sun's jMenu code
+		// perhaps this is a bug in Sun's JMenu code
 		// looking for a workaround or fix
 		
-		// if docInfoList is empty, leave
-		if (docInfoList.size() == 0) {
+		// if frameInfoList is empty, leave
+		int frameInfoListSize = frameInfoList.size() ;
+		if (frameInfoListSize == 0) {
 			return ;
 		} // end if
 		
+		// if Recent Files size is zero, leave
+		int recentFilesListSize = Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur ;
+		if (recentFilesListSize == 0) {
+			return;
+		} // end if
+
 		// switch on ordering
 		switch (currentDisplayOrdering) {
 			
 		case CHRONO_ORDER:
 		default:
-			// add each item in doc list order to the menu
-			for (int i = 0, size=docInfoList.size(); i < size; i++) {
-				addMenuItemForFileToMenu((DocumentInfo) docInfoList.get(i));
+			
+			
+			// we send these out in reverse order
+			reverseDisplayDirection() ;
+			
+			for (int j= 0, i = frameInfoListSize - 1; (i >= 0) && (j < recentFilesListSize); i--) {
+
+				// grab docInfo from frameInfoList
+				docInfo = (DocumentInfo) frameInfoList.get(i) ;
+				
+				if (docInfo == null) {
+					continue ;
+				}
+				
+				// if we're a Help file, try the next frame
+				if (docInfo.isHelpFile()) {
+					continue ;
+				} // end if
+	
+				// okay, we're to be shown -- do it
+				addMenuItemForFileToMenu(docInfo);
+	
+				// up the Recent Files list counter
+				j++ ;
+
 			} // end for
+
+			// go back to our entry direction state
+			reverseDisplayDirection() ;
 
 			break ; // case CHRONO_ORDER, default
 			
 		case ALFA_ORDER:
 		case ASCII_ORDER:
-			// add each item in alfaAscii tree order to the menu 
-			for (Iterator i = alfaAsciiTree.iterator(); i.hasNext();) {
-				sdi = (StrungDocumentInfo) i.next();
+			// add each item in alfaAscii tree order to the menu
+			// note that we don't check whether item's to be shown on menu
+			// that's because only showing items get added to the tree 
+			for (Iterator iter = alfaAsciiTree.iterator(); iter.hasNext();) {
+				sdi = (StrungDocumentInfo) iter.next();
 				addMenuItemForFileToMenu(sdi.getDocumentInfo());
 			} // end for
 			
@@ -294,7 +410,9 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	} // end method syncMenuItems
 		
 
+	// in case we need to do something at the end of setup
 	public void endSetup(AttributeList atts) {}
+
 
 	// add a menu item for a file to the menu
 	private void addMenuItemForFileToMenu(DocumentInfo docInfo) {
@@ -327,10 +445,10 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		
 		} // end switch on nameform
 		
-		// we want this menu to listen to the menu item
+		// tell the menu item to listen to its menu
 		menuItem.addActionListener(this);
 		
-		// switch out on direction
+		// switch out on menu's item orientation
 		switch (currentDisplayDirection) {
 			
 		case TOP_TO_BOTTOM:
@@ -351,7 +469,8 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 
 	} // end method addMenuItemForFileToMenu
 
-
+	// make sure we have an alfaAsciiTree
+	// it's needed for alfa/ascii ordering
 	private static boolean ensureAlfaAsciiTree () {
 		// local var
 		TreeSet test = new TreeSet() ;
@@ -364,7 +483,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		// if not, let's try to create one
 		alfaAsciiTree = new TreeSet() ;
 		
-		// return a result
+		// return a result by running the same test
 		return ( (alfaAsciiTree != null)  &&  (test.getClass().isInstance(alfaAsciiTree)) ) ;
 		
 	} // end method ensureAlfaAsciiTree
@@ -372,218 +491,115 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	// Static methods
 	
 	// this method is called by outsiders when a file is open or imported
-	// the file gets added to the docInfoList, the menu, and, if necessary, the alfaAscii tree
-	static void addFileNameToList(DocumentInfo docInfo) {
-		// local vars
-		String filename = docInfo.getPath();
-		StrungDocumentInfo strungDocInfo = null ;
-		
-		// Short Circuit if user-set size of list is zero
-		if (Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur == 0) {
-			return;
-		} // end if
-		
-		// TBD [srk] maintain a list of non-document windows, nonDocInfoList
-		// and add help windows, dialogs, all other non-doc windows to that list
-		// for complete startup state regeneration
-		// to be done elsewhere in the code, by the way
-		
-		// if it's a Help system file ... 		[srk] 8/12/01 12:26AM
-		if (Outliner.helpDoxMgr.isThisOneOfOurs(filename) != DOCUMENT_NOT_FOUND) {
-			// fuhgedabowdit
-			return;
-		} // end if
-		
-		// if this item is not yet in the list
-		if (isFileNameUnique(filename)) {
-			
-			// grab the menu
-			RecentFilesList menu = (RecentFilesList) GUITreeLoader.reg.get(GUITreeComponentRegistry.RECENT_FILE_MENU);
-			
-			// if the docInfoList is too long ...
-			if (docInfoList.size() >= Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur) {
-				// remove the oldest item
-				removeOldestFileNameFromList(menu) ;
-			} // end if the list is too long
-			
-			// Add the item's docInfo to the docInfoList
-			docInfoList.add(docInfo);
+	// they're asking RFL to add the doc to the Recent Files List
 	
-			// switch on ordering
-			switch (currentDisplayOrdering) {
-				
-			case CHRONO_ORDER:
-			default:
-				// Add item to menus
-				menu.addMenuItemForFileToMenu(docInfo);
-				break ; // case CHRONO_ORDER
-				
-			case ASCII_ORDER:
-			case ALFA_ORDER:
-				// switch on name form
-				switch (currentDisplayNameForm) {
-					
-				case FULL_PATHNAME: 
-				default:
-				
-					// package the docInfo up with the full pathname
-					strungDocInfo= new StrungDocumentInfo(docInfo.getPath(), docInfo) ;
-					break ;
-					
-				case TRUNC_PATHNAME:
-					// package the docInfo up with a truncated pathname
-					strungDocInfo= new StrungDocumentInfo(
-						StanStringTools.getTruncatedPathName(docInfo.getPath(),TRUNC_STRING),
-						docInfo) ; 
-					break ;
-					
-				case JUST_FILENAME:
-					// package the docInfo up with the filename
-					strungDocInfo= new StrungDocumentInfo(
-						StanStringTools.getFileNameFromPathName(docInfo.getPath()),
-						docInfo) ;
-					break ;
-				
-				} // end switch on name form	
-				
-				// set ascii/alfa switch
-				strungDocInfo.setIgnoreCase(currentDisplayOrdering==ALFA_ORDER) ;
-				
-				// add it to the alfaAscii tree
-				alfaAsciiTree.add(strungDocInfo) ;
-				
-				// adjust the menu items to reflect the new alfaAscii ordering
-				menu.syncMenuItems() ;
-				
-				break ;
-				
-			} // end switch on ordering
+	// if the file is not in frameInfoList, it gets added to it
+	// if the file is already in frameInfoList, it get moves to the tail of the list
+	
+	// we then sync up treeset and the menu
+	static void addFileNameToList(DocumentInfo docInfo) {
+//		// local vars
+		String filename = docInfo.getPath();
+//		StrungDocumentInfo strungDocInfo = null ;
+		
+		// check to see if this file is in frameInfoList 
+		int position = filePositionInFrameInfoList (filename) ;
+		
+		// if it's not in frameInfoList ...
+		if (position == NOT_THERE) {
 			
-		} // end if this item is not yet in the list	
+			// if the frameInfoList is too long ...
+			if (frameInfoList.size() >= Preferences.getPreferenceInt(Preferences.FRAME_INFO_LIST_SIZE).cur) {
+				
+				// remove the oldest item
+				frameInfoList.remove(0) ;
+				// removeOldestFileNameFromFrameInfoList() ;
+			
+			} // end if the frameInfoList is too long
+			
+			// add the file's docInfo to frameInfoList
+			frameInfoList.add(docInfo);
+			
+		// else it IS in frameInfoList 
+		} else {
+			// update its doc info
+			frameInfoList.set(position, docInfo) ;
+			
+			// move that to the top of the list
+			StanVectorTools.moveElementToTail(frameInfoList, position) ;
+		} // end else
+
+		RecentFilesList menu = (RecentFilesList) GUITreeLoader.reg.get(GUITreeComponentRegistry.RECENT_FILE_MENU);
+
+		// sync up the tree set
+		menu.syncTreeSet() ;
+					
+		// sync up the menu items
+		menu.syncMenuItems() ;
+			
+
 		
 	} // end method addFileNameToList
 
-	// remove the oldest item from docInfoList, the menu, and, if necessary, alfaAscii tree
-	private static void removeOldestFileNameFromList (RecentFilesList menu) {
-		// local vars
-		DocumentInfo docInfo = null ;
-		StrungDocumentInfo strungDocInfo = null ;
-		boolean removeResult = false ;
-		
-		// switch on our ordering
-		switch (currentDisplayOrdering) {
-			
-		case ALFA_ORDER:
-		case ASCII_ORDER:
-			// if we've got an alfa-ascii ordering tree 
-			if (ensureAlfaAsciiTree()) {
-			
-				// grab the oldest files's docInfo
-				docInfo = (DocumentInfo) docInfoList.get(0) ;
-				
-				// we're going to package that up
-				
-				// switch on name form
-				switch (currentDisplayNameForm) {
-					
-				case FULL_PATHNAME: 
-				default:
-				
-					// package the docInfo up with the full pathname
-					strungDocInfo= new StrungDocumentInfo(docInfo.getPath(), docInfo) ;
-					break ;
-					
-				case TRUNC_PATHNAME:
-					// package the docInfo up with a truncated pathname
-					strungDocInfo= new StrungDocumentInfo(
-						StanStringTools.getTruncatedPathName(docInfo.getPath(),TRUNC_STRING),
-						docInfo) ; 
-					break ;
-					
-				case JUST_FILENAME:
-					// package the docInfo up with the filename
-					strungDocInfo= new StrungDocumentInfo(
-						StanStringTools.getFileNameFromPathName(docInfo.getPath()),
-						docInfo) ;
-					break ;
-				
-				} // end switch on name form	
-				
-				// remove the oldest item's entry from the alfaAscii tree
-				removeResult = alfaAsciiTree.remove(strungDocInfo) ;
-				
-			} // end if we're got an alfaAscii tree
-			
-			// remove the oldest item's entry from the docInfoList
-			(docInfoList.remove(0)) ;
-
-			// adjust the menu items to reflect the new alfaAscii ordering
-			menu.syncMenuItems() ;
-			
-			break ;
-							
-		case CHRONO_ORDER:
-		default:
-			// depending on our ordering, remove it from menu
-			// switch out on direction
-			switch (currentDisplayDirection) {
-				
-			case TOP_TO_BOTTOM:
-			default:
-				// oldest item is at the top
-				menu.remove(0);
-				break ;
-				
-			case BOTTOM_TO_TOP:
-				// oldest item is at the bottom
-				menu.remove(menu.getItemCount() - 1) ;
-				break ;
-				
-			}  // end switch on direction
-			
-			// Remove the oldest item in the list
-			docInfoList.remove(0);
-			
-			break ;
-		} // end switch on ordering
-		
-	} // end method 	
 
 	// called by outsiders when the size of the recent files list may have been changed
-	static void trim() {
+	static void syncSize() {
+		 
 		// grab a handle to this menu
 		RecentFilesList menu = (RecentFilesList) GUITreeLoader.reg.get(GUITreeComponentRegistry.RECENT_FILE_MENU);
 		
 		// grab the size that's been set
-		int sizeGoal = Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur ;
+		int sizeSet = Preferences.getPreferenceInt(Preferences.RECENT_FILES_LIST_SIZE).cur ;
 		
-		// while we're too big ...
-		while (docInfoList.size() > sizeGoal) {
+		// if it's different than our stored setting ...
+		if (sizeSet != menu.currentRecentFilesListSize) {
 			
-			// remove the oldest
-			removeOldestFileNameFromList (menu) ;
-		} // end while
+			// store new setting
+			menu.currentRecentFilesListSize = sizeSet ;
+			
+			// sync up the tree set
+			menu.syncTreeSet() ;
+						
+			// sync up the menu items
+			menu.syncMenuItems() ;
+			
+		} // end if it's different than our stored setting
 		
-		// if the menu's empty ...
-		if (menu.getItemCount() <= 0) {
-			// disable it
-			menu.setEnabled(false);
-		} // end if		
-	} // end method trim
+	} // end method syncSize
 
-	private static boolean isFileNameUnique(String filename) {
+
+	// is a file in frameInfoList ?  
+	// if it is, returns position in list
+	// if it is not, returns NOT_THERE (-1)
+	private static int filePositionInFrameInfoList(String pathname) {
 		
-		for (int i = 0; i < docInfoList.size(); i++) {
-			if (filename.equals(((DocumentInfo) docInfoList.get(i)).getPath())) {
-				return false;
-			}
-		}
-		return true;
-	}
+		// for each item in frameInfoList ...
+		for (int i = 0; i < frameInfoList.size(); i++) {
+			
+			// does its path match pathname ?
+			if (pathname.equals(((DocumentInfo) frameInfoList.get(i)).getPath())) {
+				
+				// it does
+				// return position in frameInfoList
+				return i;
+				
+			} // end if
+			
+		} // end for each item in frameInfoList
+		
+		// if we get here, no match, we be unique
+		return NOT_THERE;
+		
+	} // end method isFileNameUnique
 	
 	public static DocumentInfo getDocumentInfo(String filename) {
-		for (int i = 0; i < docInfoList.size(); i++) {
-			DocumentInfo docInfo = (DocumentInfo) docInfoList.get(i);
+		
+		for (int i = 0; i < frameInfoList.size(); i++) {
+			DocumentInfo docInfo = (DocumentInfo) frameInfoList.get(i);
+			if (docInfo == null) {
+				continue ;
+			} // end if
+			
 			if (filename.equals(docInfo.getPath())) {
 				return docInfo;
 			}
@@ -596,7 +612,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		addFileNameToList(docInfo);		
 	}
 
-	// remove an item from the docInfoList, menu, and, if necessary, alfaAscii tree
+	// remove an item from the frameInfoList, menu, and, if necessary, alfaAscii tree
 	public static void removeFileNameFromList(String pathname) {
 		// local vars
 		int position = -1;
@@ -604,9 +620,9 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		StrungDocumentInfo strungDocInfo = null ;
 		RecentFilesList menu = null ;
 		
-		// is this item in the docInfoList ?
-		for (int i = 0; i < docInfoList.size(); i++) {
-			docInfo = (DocumentInfo) docInfoList.get(i) ;
+		// is this item in the frameInfoList ?
+		for (int i = 0; i < frameInfoList.size(); i++) {
+			docInfo = (DocumentInfo) frameInfoList.get(i) ;
 			String text = docInfo.getPath();
 			if (text.equals(pathname)) {
 				position = i;
@@ -669,8 +685,8 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 				
 			} // end if we're got an alfaAscii tree
 
-			// Remove item from docInfoList
-			docInfoList.remove(position);
+			// Remove item from frameInfoList
+			frameInfoList.remove(position);
 			
 			// adjust the menu items to reflect the new alfaAscii ordering
 			menu.syncMenuItems() ;
@@ -680,8 +696,8 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		case CHRONO_ORDER:
 		default:
 
-			// Remove from docInfoList
-			docInfoList.remove(position);
+			// Remove from frameInfoList
+			frameInfoList.remove(position);
 
 			// now to nail down our position in the menu
 			// switch out on direction
@@ -716,7 +732,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	
 	// Config File
 	public static void saveConfigFile(String filename) {
-		writeObjectToFile(docInfoList, filename);
+		writeObjectToFile(frameInfoList, filename);
 	} // end method saveConfigFile
 
 	// ActionListener Interface
@@ -791,4 +807,25 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		
 		return obj;
 	}
+	
+	
+		private void reverseDisplayDirection () {
+		
+			// so we temporarily change the direction of the menu
+			switch (currentDisplayDirection){
+				
+			case TOP_TO_BOTTOM:
+				currentDisplayDirection = BOTTOM_TO_TOP ;
+				break ;
+				
+			case BOTTOM_TO_TOP:
+				currentDisplayDirection = TOP_TO_BOTTOM ;
+				break ;
+				
+			default:
+				break ;
+			} // end switch
+		} // end method reverseDisplayDirection
+			
+
 }
