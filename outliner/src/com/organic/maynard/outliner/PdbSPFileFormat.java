@@ -1,7 +1,7 @@
 /**
  * PdbSPFileFormat class
  * 
- * Handles Palm Pilot pdb files created by ShadowPlan
+ * Handles Palm Pilot pdb files created by Shadow Plan
  * 
  * extends PdbFileFormat 
  * 
@@ -15,7 +15,6 @@
  *
  *		
  * Copyright (C) 2001 Stan Krute <Stan@StanKrute.com>
- * Last Touched: 12/29/01 2:18PM
  *
  * Redistribution and use in source and binary forms, with or 
  * without modification, are permitted provided that the 
@@ -46,11 +45,16 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  */ 
- 
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
 // we're part of this
 package com.organic.maynard.outliner;
 
-// we read and write Palm pdb files created by Brain Forest 
+// we read and write Palm pdb files created by Shadow Plan
 public class PdbSPFileFormat 
 	
 	extends PdbFileFormat { 

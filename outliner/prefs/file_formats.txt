@@ -5,7 +5,7 @@ file_format|open|com.organic.maynard.outliner.OPMLFileFormat|OPML|opm opml
 file_format|export|com.organic.maynard.outliner.HTMLExportFileFormat|HTML
 file_format|export|com.organic.maynard.outliner.JustifiedPlaintextExportFileFormat|Justified Plaintext
 file_format|import|com.organic.maynard.outliner.PdbBFImportFileFormat|Brain Forest Palm pdb|pdb
-file_format|import|com.organic.maynard.outliner.PdbSPImportFileFormat|ShadowPlan Palm pdb|pdb
+file_format|import|com.organic.maynard.outliner.PdbSPImportFileFormat|Shadow Plan Palm pdb|pdb
 file_format|import|com.organic.maynard.outliner.PdbTMImportFileFormat|Thought Manager Palm pdb|pdb
 file_protocol|com.organic.maynard.outliner.LocalFileSystemFileProtocol|Local File System
 file_protocol|com.yearahead.io.WebFilePHPFileProtocol|PHP:Web File

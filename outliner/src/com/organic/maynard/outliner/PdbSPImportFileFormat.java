@@ -1,7 +1,7 @@
 /**
  * PdbSPImportFileFormat class
  * 
- * Reads in Palm Pilot pdb files created by ShadowPlan
+ * Reads in Palm Pilot pdb files created by Shadow Plan
  * 
  * extends PdbFileFormat 
  * 
@@ -15,7 +15,6 @@
  *
  *		
  * Copyright (C) 2001 Stan Krute <Stan@StanKrute.com>
- * Last Touched: 1/6/02 2:14 AM PST
  *
  * Redistribution and use in source and binary forms, with or 
  * without modification, are permitted provided that the 
