@@ -1,3 +1,18 @@
+1.8.6 - 10/19/01
+	Bug Fixes:
+		1) Fixed bug #465943 where windows would scroll to the top when the window was resized, loses focus, etc.
+		2) It's no longer possible to cause the main outliner window to be loaded offscreen by manually editing config.txt and setting large or negative values.
+		3) Added a PlatformCompatibility class which wraps platform/java version specific code. This fixes the issue with OutlinerScrollBarUI causing startup to barf on MacOSX.
+		4) Re-fixed bug #458868 which was about text selection not being registered for macro use.
+		5) Fixed the way preference panels are loaded so that a tree heirarchy of panels can be created.
+	Feature Enhancements:
+		1) Added a new preference for mouse wheel speed to the misc preferences panel. Now you can scroll faster if you need more speed in your life.
+		2) Added file export functionality.
+			Added export a selection.
+			Added a simple HTML export as an example of how these might work.
+			Added a justified plaintext export format. These release notes are now output using this format. Added prefs to control the column width and if lines are drawn.
+	Notes:
+		1) Added a shell script for Unix, run_joe.sh. Thanks to tswoam for providing the script.
 1.8.5 - 09/21/01
 	Bug Fixes:
 		1) If you select the first child node and then select another sibling node, doing a select all wouldn't work right. Now it does.
