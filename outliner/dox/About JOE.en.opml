@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\About JOE.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Tue, 5 Feb 2002 12:28:46 GMT</dateModified>
+<dateModified>Sat, 9 Feb 2002 07:00:51 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>15</windowTop>
-<windowLeft>301</windowLeft>
-<windowBottom>450</windowBottom>
-<windowRight>664</windowRight>
+<windowTop>0</windowTop>
+<windowLeft>439</windowLeft>
+<windowBottom>564</windowBottom>
+<windowRight>889</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -685,7 +685,15 @@
 </outline>
 <outline text="------------"/>
 <outline text="Download Sites">
-	<outline text="JOE"/>
+	<outline text="JOE">
+		<outline text="http://JavaOutlineEditor.org/downloads"/>
+	</outline>
+	<outline text="---"/>
+	<outline text="Installation">
+		<outline text="http://JavaOutlineEditor.org/dox/installation.opml"/>
+		<outline text="http://JavaOutlineEditor.org/dox/installation.html"/>
+		<outline text="http://JavaOutlineEditor.org/dox/installation.txt"/>
+	</outline>
 	<outline text="---"/>
 	<outline text="About JOE">
 		<outline text="http://JavaOutlineEditor.org/dox/About_JOE.en.opml"/>
