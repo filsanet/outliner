@@ -6,12 +6,14 @@ INSTALL_DIR=/home/simon/.bin/outliner
 
 CWD=`pwd` 
 
-FILENAME=`echo $1 | sed -e 's/.*\/\([^\/]*\)/\1/'` 
-if [ "$FILENAME" != "" ]; then 
-FILENAME="$CWD/$FILENAME" 
-else 
-FILENAME="" 
-fi 
+# Make the filename absolute if it isn't already, and then normalize
+# it, such that a//b, a/./b and a/foo/../b all become a/b.
+if [ $# != 0 ]; then
+FILENAME=`(echo "$1" | grep "^/" || echo "$CWD/$1") | \
+    sed -e "s:/\{1,\}:/:g" \
+        -e "s:/\./:/:g" \
+        -e "s:/[^/]*/\.\./:/:g"`
+fi
 
 cd $INSTALL_DIR 
 
