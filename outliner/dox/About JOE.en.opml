@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\About JOE.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Wed, 30 Jan 2002 10:22:32 GMT</dateModified>
+<dateModified>Sun, 3 Feb 2002 07:41:12 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>45</windowTop>
-<windowLeft>214</windowLeft>
-<windowBottom>680</windowBottom>
-<windowRight>791</windowRight>
+<windowTop>0</windowTop>
+<windowLeft>574</windowLeft>
+<windowBottom>713</windowBottom>
+<windowRight>1149</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -24,50 +24,109 @@
 </outline>
 <outline isEditable="true" isMoveable="true" text="------------" isMoveableInherited="true" isEditableInherited="true"/>
 <outline isEditable="true" isMoveable="true" text="Version" isMoveableInherited="true" isEditableInherited="true">
-	<outline isEditable="true" isMoveable="true" text="1.8.7.dev"/>
+	<outline text="1.8.7"/>
+	<outline text="sub-version">
+		<outline isEditable="true" isMoveable="true" text="2002.02.03.000"/>
+	</outline>
 	<outline text="Version ReadMe ">
-		<outline text="&lt;under construction/&gt;"/>
-		<outline text="Bug Fixes">
-			<outline text="StringTools.replace null pointer crash"/>
-			<outline text=""/>
+		<outline text="Fixed">
+			<outline text="Help Files Kill AutoSave"/>
+			<outline text="OutlinerCellRendererImpl Null Pointer Exception"/>
+			<outline text="StringTools.replace Null Pointer Exception"/>
+			<outline text="TextKeyListener String Indices Out Of Bounds Exceptions"/>
 		</outline>
-		<outline text="New Features">
-			<outline text="Document Window Titles"/>
+		<outline text="New">
+			<outline text="Document Window Titles">
+				<outline text="You can now set outline document window titles to show a file's full pathname, a truncated version of the full pathname, or just the file name."/>
+				<outline text="Here's how:">
+					<outline text="Give the Edit:Application Preferences menu command"/>
+					<outline text="Open up the Look &amp; Feel panel"/>
+					<outline text="Find the Document Titles widget, at the bottom of the panel."/>
+					<outline text="Set it as desired."/>
+					<outline text="Click the OK button."/>
+				</outline>
+			</outline>
 			<outline text="Import">
-				<outline text="There's a new File menu command: Import "/>
-				<outline text="Import opens a file that's in a format that JOE can read but not write"/>
-				<outline text="JOE v187 can import 3 formats, all of them Palm OS outliner formats">
-					<outline text="Thought Manager Palm pdb format">
-						<outline text="Reads node and note text"/>
+				<outline text="There's a new File menu submenu: Import "/>
+				<outline text="Import contains three menu commands: Import:&lt;defaultFileSpace&gt;, Import:Local File System, and Import:PHP:Web file. "/>
+				<outline text="Import opens up a file that's in a format that JOE can read but cannot write"/>
+				<outline text="JOE 1.8.7 can import 3 formats. Each is a Palm OS outliner format.">
+					<outline text="Brain Forest Palm pdb format">
+						<outline text="Import reads node and note text"/>
 						<outline text="Ignores other data"/>
 						<outline text="version 1.0 of this reader/writer"/>
 					</outline>
 					<outline text="Shadow Plan Palm pdb format">
-						<outline text="Reads node and note text"/>
+						<outline text="Import reads node and note text"/>
 						<outline text="Ignores other data"/>
 						<outline text="version 1.0 of this reader/writer"/>
 					</outline>
-					<outline text="Brain Forest Palm pdb format">
-						<outline text="Reads node and note text"/>
+					<outline text="Thought Manager Palm pdb format">
+						<outline text="Import reads node and note text"/>
 						<outline text="Ignores other data"/>
 						<outline text="version 1.0 of this reader/writer"/>
 					</outline>
 				</outline>
 			</outline>
 			<outline text="Maximize Horizontal and Vertical">
-				<outline text="There are two new Window menu commands: Maximize:Horizontal and Maximize:Vertical"/>
-				<outline text="They resize the topmost window so that it is maximized along the specified axis"/>
+				<outline text="There's a new Window menu submenu: Maximize"/>
+				<outline text="Maximize contains two menu commands: Maximize:Horizontal and Maximize:Vertical"/>
+				<outline text="These commands resize the topmost window so that it is made as large as fits within JOE along the specified axis. The window size does not change along the other axis.  "/>
+				<outline text="Note that the window remains in what is known as the non-Maximized, or normal, state. The user can thus move the window about and resize it by dragging its borders."/>
+				<outline text="These commands are grayed out when a window is in the Maximized state."/>
 			</outline>
-			<outline text="Preference Panels">
-				<outline text="Application">
-					<outline text=""/>
+			<outline text="Application Preferences Panels">
+				<outline text="There are several additions/changes to the set of Application Preferences panels ">
+					<outline text="the Look &amp; Feel panel">
+						<outline text="There's a new widget at the bottom, Document Titles, which lets you specify the form of document window titles"/>
+					</outline>
+					<outline text="the Open &amp; Save panel">
+						<outline text="There are new widgets that let you specify Default Encoding and Default Format separately for Open, Import, Save, and Export operations. "/>
+					</outline>
+					<outline text="the Open &amp; Save folder">
+						<outline text="There's a new panel, Recent Files List, that lets you specify properties of the Recent Files submenu of the File Menu."/>
+					</outline>
 				</outline>
 			</outline>
-			<outline text="Recent Files UI"/>
+			<outline text="Recent Files List UI">
+				<outline text="You can now set four UI properties of the Recent Files submenu of the File menu:">
+					<outline text="1. Size">
+						<outline text="Specifies the maximum number of files shown in the list."/>
+					</outline>
+					<outline text="2. Ordering">
+						<outline text="Specifies the ordering of the file names: alphabetical, ASCII, or chronological."/>
+					</outline>
+					<outline text="3. Direction">
+						<outline text="Specifies whether the ordering runs from the bottom of the submenu to the top, or from top to bottom."/>
+					</outline>
+					<outline text="4. Name Form">
+						<outline text="Specifies whether the submenu shows a file's full pathname, a truncated version of the full pathname, or just the file name."/>
+					</outline>
+				</outline>
+				<outline text="How">
+					<outline text="Give the Edit:Application Preferences menu command"/>
+					<outline text="Open up the Open &amp; Save folder"/>
+					<outline text="Open up the Recent Files List panel"/>
+					<outline text="You'll find a widget for each of the four settable properties."/>
+					<outline text="Set each as desired."/>
+					<outline text="Click the OK button."/>
+				</outline>
+			</outline>
 			<outline text="Tile Horizontal, Vertical, and Grid">
-				<outline text="There are three new Window menu commands: Tile:Horizontal, Tile:Vertical, and Tile:Grid"/>
-				<outline text="They tile several open windows, maximized along the specified axis."/>
-				<outline text="The number of windows tiled depends on available real estate and user settings"/>
+				<outline text="There's a new Window menu submenu: Tile"/>
+				<outline text="Tile contains three menu commands: Tile:Horizontal, Tile:Vertical, and Tile:Grid"/>
+				<outline text="Each command tiles all non-iconified document windows. "/>
+				<outline text="Tile:Horizontal">
+					<outline text="The windows are maximized along their horizontal axes. The windows share the vertical space equally."/>
+				</outline>
+				<outline text="Tile:Vertical">
+					<outline text="The windows are maximized along their vertical axes. The windows share the horizontal space equally."/>
+				</outline>
+				<outline text="Tile:Grid">
+					<outline text="The windows are tiled in a balanced arrangement. "/>
+					<outline text="The windows all have the same height."/>
+					<outline text="The windows may have the same width, or have either of two distinct widths, depending on the number of windows tiled. "/>
+				</outline>
 			</outline>
 		</outline>
 	</outline>
