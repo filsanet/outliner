@@ -1,4 +1,4 @@
-1.8.9.2 - ???
+1.8.9.2 - 09/01/02
 	New Features:
 		1) Added text actions for moving the current selection. Ctrl-Right Arrow will move the current selection to the right one character, or down to the next line if the selection is at the end of the current text area. Left Arrow works similarly.
 		2) Added text actions for expanding a selection within a text area with the keyboard. Shift-Up Arrow Selects to the start of the text area. Shift-Down Arrow selects to the end of the text area.
@@ -14,6 +14,7 @@
 		4) Fixed an obscure bug with CompoundUndoableReplace where deleting the first node in the tree when it is expanded could cause an exception when you did a "redo" where the previous redo selected a node.
 		5) Fixed a bug where adjusting the max size of the undo cache to a smaller number than the current undo cache size would leave an extra redo hanging around thus causing an exception if you redid it.
 		6) Fixed a bug where redoing a Node Attribute modification would cause it to become readonly.
+		7) XML-RPC Macros now remove the last line ending for the {$value} replacement when a node is selected. Fix for bug #601682.
 1.8.9.1 - 08/24/02
 	New Features:
 		1) Added a splash screen that displays at startup, giving a user a bit more feedback that something is happening while they wait for the GUI to set itself up.
