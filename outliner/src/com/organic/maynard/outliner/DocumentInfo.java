@@ -57,6 +57,7 @@ public class DocumentInfo implements Serializable {
 	
 	// Instance Fields		
 	private String fileFormat = null;
+	private boolean imported = false ;
 	private String encodingType = null;
 	private String lineEnding = null;
 	private String padding = null;
@@ -81,6 +82,7 @@ public class DocumentInfo implements Serializable {
 	public DocumentInfo() {
 		this(
 			"",
+			false,
 			"",
 			"",
 			"",
@@ -105,6 +107,7 @@ public class DocumentInfo implements Serializable {
 	
 	public DocumentInfo(
 		String fileFormat,
+		boolean imported,
 		String encodingType,
 		String lineEnding,
 		String padding,
@@ -127,6 +130,7 @@ public class DocumentInfo implements Serializable {
 		) 
 	{
 		setFileFormat(fileFormat);
+		setImported(imported) ;
 		setEncodingType(encodingType);
 		setLineEnding(lineEnding);
 		setPadding(padding);
@@ -171,6 +175,9 @@ public class DocumentInfo implements Serializable {
 	// Accessors
 	public String getFileFormat() {return this.fileFormat;}
 	public void setFileFormat(String fileFormat) {this.fileFormat = fileFormat;}
+
+	public boolean getImported() {return this.imported;}
+	public void setImported(boolean imported) {this.imported = imported;}
 
 	public String getEncodingType() {return this.encodingType;}
 	public void setEncodingType(String encodingType) {this.encodingType = encodingType;}

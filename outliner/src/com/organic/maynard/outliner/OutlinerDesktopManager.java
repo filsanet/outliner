@@ -177,7 +177,7 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 			Outliner.setMostRecentDocumentTouched(doc);
 			
 			// Update the Menus
-			FileMenu.updateSaveMenuItem();
+			FileMenu.updateFileMenuItems();
 			FileMenu.updateSaveAllMenuItem();
 			
 			EditMenu.updateEditMenu(doc);

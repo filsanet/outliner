@@ -24,15 +24,22 @@
  *				void saveFile(String, OutlinerDocument, boolean) 
  *				void saveFile(String, OutlinerDocument, FileProtocol, boolean)
  *				void saveFile(String, OutlinerDocument, FileProtocol, boolean, int)
+ *				void updateSaveAllMenuItem()
+ *				void updateFileMenuItems()
+ *				
+ *				
+ *				
+ *				
  *			protected
  *				void importFile(DocumentInfo, FileProtocol) 
  *				void openFile(DocumentInfo, FileProtocol) 
  *				void openFile(DocumentInfo, FileProtocol, int) 
- *				void importFile(DocumentInfo, FileProtocol) 
+ *				void importFile(DocumentInfo, FileProtocol)
+ *				void revertFile(OutlinerDocument document)  
  *			private
  *				int openOrImportFileAndGetTree(TreeContext, DocumentInfo, FileProtocol, int)
- *				
- *				
+ *				void setupAndDraw(DocumentInfo, OutlinerDocument, int)
+ *				int promptUser(String) 
  *				
  *				
  *				
@@ -71,9 +78,16 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+// we're part of this 
 package com.organic.maynard.outliner;
 
+// we use these
 import java.io.*;
 import java.util.*;
 import java.text.SimpleDateFormat;
@@ -81,11 +95,6 @@ import java.awt.*;
 import javax.swing.*;
 import org.xml.sax.*;
 import com.organic.maynard.util.string.Replace;
-
-/**
- * @author  $Author$
- * @version $Revision$, $Date$
- */
 
 // this class implements the meat of several File Menu commands: New, Open, Import, Save, Revert, Close
 public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, JoeReturnCodes {
@@ -521,32 +530,25 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 		newDoc.settings.useDocumentSettings = true;
 
-		// make adjustments for each mode
+		// make some modal adjustments
 		switch (mode) {
 			
-			case MODE_IMPORT: 
+		case MODE_IMPORT: 
+			// we were imported
+			docInfo.setImported(true) ;
+			break ;
 			
-				// imports imply that we don't know how to save in the format
-				// therefore, we should set up OPML as default save/export format
-				// thought: perhaps default save/export format for imports could be user settable
-				
-				// Save should be set up to act as SaveAs
-				
-				// we don't get added to the recent files list
-				break ;
+		case MODE_OPEN:
 			
-			case MODE_OPEN:
+			// Move it to the bottom of the recent files list
+			RecentFilesList.updateFileNameInList(docInfo.getPath(), docInfo);
 			
-				// Move it to the bottom of the recent files list
-				RecentFilesList.updateFileNameInList(docInfo.getPath(), docInfo);
-			
-			}
+		} // end switch
 		
-		
-		
-		
+		// okay, do final setup and draw the suckah
 		setupAndDraw(docInfo, newDoc, openOrImportResult);
-	}
+	
+	} // end method openFile
 
 	// revert a file to it's previous state
 	// TBD get this to work with IMPORTs
@@ -596,7 +598,9 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 	
 	
 	private static void setupAndDraw(DocumentInfo docInfo, OutlinerDocument doc, int openOrImportResult) {
+		// grab a ref to the tree
 		TreeContext tree = doc.tree;
+		// grab the path
 		String filename = docInfo.getPath();
 		
 		// Clear current selection
@@ -686,7 +690,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 	
 	
 	// Menu Updates
-	public static void updateSaveMenuItem() {
+	public static void updateFileMenuItems() {
+		// grab the menu items
 		JMenuItem saveItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_MENU_ITEM);
 		JMenuItem saveAsItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
 		JMenuItem revertItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.REVERT_MENU_ITEM);
@@ -695,7 +700,11 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		JMenuItem exportItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_MENU_ITEM);
 		JMenuItem exportSelectionItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_SELECTION_MENU_ITEM);
 	
-		if (Outliner.getMostRecentDocumentTouched() == null) {
+		// try to grab the topmost doc
+		OutlinerDocument topmostDoc = Outliner.getMostRecentDocumentTouched();
+		
+		// if there was none ...
+		if (topmostDoc == null) {
 			saveItem.setEnabled(false);
 			saveAsItem.setEnabled(false);
 			revertItem.setEnabled(false);
@@ -703,7 +712,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			exportSelectionItem.setEnabled(false);
 			closeItem.setEnabled(false);
 			closeAllItem.setEnabled(false);
-		} else if (Outliner.getMostRecentDocumentTouched().getFileName().equals("")) {
+		// else if it has no name (e.g., it's a new doc, not yet saved) ...
+		} else if (topmostDoc.getFileName().equals("")) {
 			saveItem.setEnabled(true);
 			saveAsItem.setEnabled(true);
 			revertItem.setEnabled(false);
@@ -711,14 +721,16 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			exportSelectionItem.setEnabled(true);
 			closeItem.setEnabled(true);
 			closeAllItem.setEnabled(true);
-		} else if (Outliner.getMostRecentDocumentTouched().isFileModified()) {
-			saveItem.setEnabled(true);
+		// else if it has a name, thus it's not a new doc, and it's been modified
+		} else if (topmostDoc.isFileModified()) {
+			saveItem.setEnabled(! topmostDoc.getDocumentInfo().getImported());
 			saveAsItem.setEnabled(true);
 			revertItem.setEnabled(true);
 			exportItem.setEnabled(true);
 			exportSelectionItem.setEnabled(true);
 			closeItem.setEnabled(true);
 			closeAllItem.setEnabled(true);
+		// else it has a name, but has not been modified
 		} else {
 			saveItem.setEnabled(false);
 			saveAsItem.setEnabled(true);
@@ -731,12 +743,28 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 	}
 	
 	public static void updateSaveAllMenuItem() {
+		// start out disabled
 		boolean enabledState = false;
+		
+		// for each open document ...
 		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
+			
+			// get its doc reference
 			OutlinerDocument doc = Outliner.getDocument(i);
-			if (doc.isFileModified() || doc.getFileName().equals("")) {
-				enabledState = true;
-				break;
+			
+			// if it wasn't imported ....
+			if (! doc.getDocumentInfo().getImported()) {
+				
+				// if it's been modified or it's a new and unsaved doc
+				if (doc.isFileModified() || doc.getFileName().equals("")) {
+					
+					// enable Save All
+					enabledState = true;
+					
+					// break outta the loop, we're done
+					break;
+				} // end if modified or not yet saved
+				
 			}
 		}
 

@@ -535,7 +535,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		} else {
 			FindReplaceFrame.disableButtons();
 			
-			FileMenu.updateSaveMenuItem();
+			FileMenu.updateFileMenuItems();
 			FileMenu.updateSaveAllMenuItem();
 			
 			UndoQueue.updateMenuBar(doc);
@@ -601,7 +601,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		}
 		
 		// Update the Save All Menu Item
-		FileMenu.updateSaveMenuItem();
+		FileMenu.updateFileMenuItems();
 		FileMenu.updateSaveAllMenuItem();
 
 		// Notify the Help documents manager	[srk 8/5/01 1:23PM]
