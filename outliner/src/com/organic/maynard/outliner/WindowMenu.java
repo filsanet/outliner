@@ -156,6 +156,8 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 	}
 	
 	public static void changeToWindow(OutlinerDocument doc) {
+		if (doc == null) {return;}
+		
 		try {
 			OutlinerDocument prevDoc = Outliner.getMostRecentDocumentTouched();
 			

@@ -119,7 +119,7 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		} else if (e.getActionCommand().equals(FILE_REVERT)) {
 			revertOutlinerDocument(Outliner.getMostRecentDocumentTouched());
 		} else if (e.getActionCommand().equals(FILE_OPEN)) {
-			openOutlinerDocument(Outliner.getMostRecentDocumentTouched());
+			openOutlinerDocument();
 		} else if (e.getActionCommand().equals(FILE_CLOSE)) {
 			closeOutlinerDocument(Outliner.getMostRecentDocumentTouched());
 		} else if (e.getActionCommand().equals(FILE_CLOSE_ALL)) {
@@ -184,7 +184,7 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		// Setup the File Chooser
 		Outliner.chooser.configureForSave(document);
 
-		int option = Outliner.chooser.showSaveDialog(document);
+		int option = Outliner.chooser.showSaveDialog(Outliner.outliner);
 		
 		// Update the most recent save dir preference
 		Preferences.MOST_RECENT_SAVE_DIR.cur = Outliner.chooser.getCurrentDirectory().getPath();
@@ -194,7 +194,8 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		if (option == JFileChooser.APPROVE_OPTION) {
 			String filename = Outliner.chooser.getSelectedFile().getPath();
 			if (!Outliner.isFileNameUnique(filename) && (!filename.equals(document.getFileName()))) {
-				JOptionPane.showMessageDialog(document, "Cannot save to file: " + filename + " it is currently open.");
+				JOptionPane.showMessageDialog(Outliner.outliner, "Cannot save to file: " + filename + " it is currently open.");
+				// We might want to move this test into the approveSelection method of the file chooser.
 				return;
 			}
 			
@@ -218,11 +219,11 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		}
 	}
 	
-	protected static void openOutlinerDocument(OutlinerDocument document) {
+	protected static void openOutlinerDocument() {
 		// Setup the File Chooser
 		Outliner.chooser.configureForOpen(null, Preferences.OPEN_ENCODING.cur, Preferences.OPEN_FORMAT.cur);
 		
-		int option = Outliner.chooser.showOpenDialog(document);
+		int option = Outliner.chooser.showOpenDialog(Outliner.outliner);
 
 		// Update the most recent save dir preference
 		Preferences.MOST_RECENT_OPEN_DIR.cur = Outliner.chooser.getCurrentDirectory().getPath();
@@ -232,7 +233,10 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		if (option == JFileChooser.APPROVE_OPTION) {
 			String filename = Outliner.chooser.getSelectedFile().getPath();
 			if (!Outliner.isFileNameUnique(filename)) {
-				JOptionPane.showMessageDialog(document, "The file: " + filename + " is already open.");
+				JOptionPane.showMessageDialog(Outliner.outliner, "The file: " + filename + " is already open.");
+				
+				// Change to the open window.
+				Outliner.menuBar.windowMenu.changeToWindow(Outliner.getDocument(filename));
 				return;
 			}
 			

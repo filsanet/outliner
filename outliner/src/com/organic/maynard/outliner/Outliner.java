@@ -195,6 +195,16 @@ public class Outliner extends JFrame {
 		return (OutlinerDocument) openDocuments.elementAt(i);
 	}
 	
+	public static OutlinerDocument getDocument(String filename) {
+		for (int i = 0; i < openDocuments.size(); i++) {
+			OutlinerDocument doc = getDocument(i);
+			if (filename.equals(doc.getFileName())) {
+				return doc;
+			}
+		}
+		return null;	
+	}
+	
 	public static void removeDocument(OutlinerDocument document) {
 		openDocuments.removeElement(document);
 		IS_CURRENT_DOCUMENT: if (mostRecentDocumentTouched == document) {

@@ -153,4 +153,42 @@ public class OutlinerFileChooser extends JFileChooser {
 	public String getSaveEncoding() {return (String) saveEncodingComboBox.getSelectedItem();}
 	public String getOpenFileFormat() {return (String) openFormatComboBox.getSelectedItem();}
 	public String getSaveFileFormat() {return (String) saveFormatComboBox.getSelectedItem();}
+	
+	
+	// Overriden Methods of JFileChooser
+    public void approveSelection() {
+    	File file = Outliner.chooser.getSelectedFile();
+    	
+		if (getDialogType() == JFileChooser.OPEN_DIALOG) {
+			// Alert if file does not exist.
+			if (!file.exists()) {
+				JOptionPane.showMessageDialog(this, "The file: " + file.getPath() + " does not exist.");
+				return;
+			}
+		} else if (getDialogType() == JFileChooser.SAVE_DIALOG) {
+			// Alert if file exists.
+			if (file.exists()) {
+				//Custom button text
+				Object[] options = {"Yes","No"};
+				int result = JOptionPane.showOptionDialog(this,
+					"The file " + file.getPath() + " already exists.\nDo you want to replace it?",
+					"Confirm Replacement",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE,
+					null,
+					options,
+					options[1]
+				);
+				if (result == JOptionPane.YES_OPTION) {
+					// Proceed normally.
+				} else if (result == JOptionPane.NO_OPTION) {
+					return;
+				} else {
+					return;
+				}
+			}
+		}
+		
+		super.approveSelection();
+    }
 }
