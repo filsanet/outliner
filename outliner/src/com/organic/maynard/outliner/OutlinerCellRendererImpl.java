@@ -25,6 +25,8 @@ import javax.swing.*;
 public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellRenderer {
 
 	private static Font font = null;
+	private static Font commentFont = null;
+	
 	private static Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
 	private static Insets marginInsets = new Insets(1,3,1,3);
 	
@@ -32,12 +34,13 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	
 	public Node node = null;
 	public OutlineButton button = new OutlineButton(this);
+	public OutlineCommentIndicator iComment = new OutlineCommentIndicator(this);
 	public OutlineLineNumber lineNumber = new OutlineLineNumber(this);
 	
 	public int height = 0;
 	
 	static {
-		updateFont();
+		updateFonts();
 	}
 	
 	// The Constructors
@@ -75,8 +78,9 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		return true;
 	}
 
-	public static void updateFont() {
+	public static void updateFonts() {
 		font = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.PLAIN, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
+		commentFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.ITALIC, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
 	}
 
 	// Used to fire key events
@@ -89,6 +93,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	public void setVisible(boolean visibility) {
 		super.setVisible(visibility);
 		button.setVisible(visibility);
+		iComment.setVisible(visibility);
 		lineNumber.setVisible(visibility);
 	}
 	
@@ -104,6 +109,10 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		Point bp = button.getLocation();
 		bp.y += amount;
 		button.setLocation(bp);
+
+		Point icp = iComment.getLocation();
+		icp.y += amount;
+		iComment.setLocation(icp);
 	}
 	
 	public void drawUp(Point p, Node node) {
@@ -114,6 +123,12 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		
 		// Update the button
 		updateButton();
+
+		// Update the Indicators
+		updateCommentIndicator();
+		
+		// Update font
+		updateFont();
 		
 		// Draw the TextArea
 		setText(node.getValue());
@@ -142,15 +157,37 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		} else {
 			lineNumber.setText("");
 		}
-		lineNumber.setBounds(Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur, p.y, OutlineLineNumber.LINE_NUMBER_WIDTH + indent, height);
+		lineNumber.setBounds(
+			Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur + OutlineCommentIndicator.BUTTON_WIDTH, 
+			p.y, 
+			OutlineLineNumber.LINE_NUMBER_WIDTH + indent, 
+			height
+		);
+
+		// Draw the CommentIndicator
+		iComment.setBounds(Preferences.getPreferenceInt(
+			Preferences.LEFT_MARGIN).cur, 
+			p.y, 
+			OutlineCommentIndicator.BUTTON_WIDTH, 
+			height
+		);
 	}
 		
 	public void drawDown(Point p, Node node) {
 		this.node = node;
-		
+
+		// Adjust color when we are selected
+		updateColors();
+				
 		// Update the button
 		updateButton();
 		
+		// Update the Indicators
+		updateCommentIndicator();
+
+		// Update font
+		updateFont();
+				
 		// Draw the TextArea
 		setText(node.getValue());
 		
@@ -177,35 +214,68 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		} else {
 			lineNumber.setText("");
 		}
-		lineNumber.setBounds(Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur, p.y, OutlineLineNumber.LINE_NUMBER_WIDTH + indent, height);
-		
+		lineNumber.setBounds(
+			Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur + OutlineCommentIndicator.BUTTON_WIDTH, 
+			p.y, 
+			OutlineLineNumber.LINE_NUMBER_WIDTH + indent, 
+			height
+		);
+
+		// Draw the CommentIndicator
+		iComment.setBounds(Preferences.getPreferenceInt(
+			Preferences.LEFT_MARGIN).cur, 
+			p.y, 
+			OutlineCommentIndicator.BUTTON_WIDTH, 
+			height
+		);
+				
 		p.y += height + Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).cur;	
-		
-		// Adjust color when we are selected
-		updateColors();
+
+	}
+	
+	private void updateFont() {
+		if (node.isComment()) {
+			setFont(commentFont);
+		} else {
+			setFont(font);
+		}	
 	}
 	
 	private void updateColors() {
 		if (node.isAncestorSelected()) {
-			if (node.isSelected()) {
-				setForeground(Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).cur);
-				setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
-				lineNumber.setForeground(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur);
-				lineNumber.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR).cur);
-				button.setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
+			if (node.isComment()) {
+				setForeground(Preferences.getPreferenceColor(Preferences.TEXTAREA_COMMENT_COLOR).cur);				
 			} else {
 				setForeground(Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).cur);
+			}
+			
+			lineNumber.setForeground(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur);
+
+			if (node.isSelected()) {
+				setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
+				lineNumber.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR).cur);
+				button.setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
+				iComment.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR).cur);
+				
+			} else {
 				setBackground(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur);
-				lineNumber.setForeground(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur);
 				lineNumber.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR).cur);
 				button.setBackground(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur);
+				iComment.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR).cur);
 			}
+			
 		} else {
-			setForeground(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
+			if (node.isComment()) {
+				setForeground(Preferences.getPreferenceColor(Preferences.TEXTAREA_COMMENT_COLOR).cur);				
+			} else {
+				setForeground(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
+			}
+			
 			setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).cur);
 			lineNumber.setForeground(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
 			lineNumber.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_COLOR).cur);
 			button.setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).cur);
+			iComment.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_COLOR).cur);
 		}	
 	}
 	
@@ -214,12 +284,6 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 			button.setSelected(true);
 		} else {
 			button.setSelected(false);
-		}
-
-		if (node.isAncestorOrSelfComment()) {
-			button.setComment(true);
-		} else {
-			button.setComment(false);
 		}
 		
 		if (node.isLeaf()) {
@@ -236,7 +300,24 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		button.updateIcon();
 	}
 	
-	public int getBestHeight() {
-		return Math.max(Math.max(getPreferredSize().height, OutlineButton.BUTTON_HEIGHT), OutlineLineNumber.LINE_NUMBER_HEIGHT);
+	private void updateCommentIndicator() {
+		if (node.getCommentState() == Node.COMMENT_TRUE) {
+			iComment.setCommentInherited(false);
+			iComment.setComment(true);
+			
+		} else if (node.getCommentState() == Node.COMMENT_FALSE) {
+			iComment.setCommentInherited(false);
+			iComment.setComment(false);
+		
+		} else {
+			iComment.setCommentInherited(true);
+			iComment.setComment(node.isComment());
+		}
+		
+		iComment.updateIcon();
+	}
+	
+	public int getBestHeight() { // This could be optimized so that the only comparison is the textarea, and everything else is already worked out.
+		return Math.max(Math.max(Math.max(getPreferredSize().height, OutlineButton.BUTTON_HEIGHT), OutlineLineNumber.LINE_NUMBER_HEIGHT),  OutlineCommentIndicator.BUTTON_HEIGHT);
 	}
 }

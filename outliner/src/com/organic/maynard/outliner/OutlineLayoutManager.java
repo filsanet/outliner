@@ -39,6 +39,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	// Event Listeners
 	private TextKeyListener textListener = new TextKeyListener();
 	private IconKeyListener iconListener = new IconKeyListener();
+	private IndicatorMouseListener indicatorMouseListener = new IndicatorMouseListener();
 	protected InternalDragAndDropListener dndListener = new InternalDragAndDropListener();
 		
 	// Widgit Cache
@@ -79,6 +80,9 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			renderer.lineNumber.addKeyListener(iconListener);
 			renderer.lineNumber.addMouseListener(iconListener);
 			renderer.lineNumber.addMouseListener(dndListener);
+			
+			panel.add(renderer.iComment);
+			renderer.iComment.addMouseListener(indicatorMouseListener);
 		}
 		
 		// Initialized the hidden components
@@ -105,6 +109,9 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			textAreas[i].lineNumber.removeKeyListener(iconListener);
 			textAreas[i].lineNumber.removeMouseListener(iconListener);
 			textAreas[i].lineNumber.destroy();
+			
+			textAreas[i].iComment.removeMouseListener(dndListener);
+			textAreas[i].iComment.destroy();
 
 			textAreas[i].removeMouseListener(dndListener);
 			textAreas[i].removeKeyListener(textListener);
@@ -185,7 +192,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		numNodesDrawn = 0;
 		
 		// Compute the textArea width.
-		OutlinerCellRendererImpl.textAreaWidth = panel.getWidth() - OutlineLineNumber.LINE_NUMBER_WIDTH - OutlineButton.BUTTON_WIDTH - scrollBar.getWidth() - Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur - Preferences.getPreferenceInt(Preferences.RIGHT_MARGIN).cur;
+		OutlinerCellRendererImpl.textAreaWidth = panel.getWidth() - OutlineLineNumber.LINE_NUMBER_WIDTH - OutlineButton.BUTTON_WIDTH - OutlineCommentIndicator.BUTTON_WIDTH - scrollBar.getWidth() - Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur - Preferences.getPreferenceInt(Preferences.RIGHT_MARGIN).cur;
 		
 		// Draw the visible components
 		switch (drawingDirection) {
@@ -218,7 +225,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		}
 
 		// Now Draw as many nodes as neccessary.
-		startPoint.x = Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur + OutlineLineNumber.LINE_NUMBER_WIDTH;
+		startPoint.x = Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur + OutlineLineNumber.LINE_NUMBER_WIDTH + OutlineCommentIndicator.BUTTON_WIDTH;
 		startPoint.y = Preferences.getPreferenceInt(Preferences.TOP_MARGIN).cur;
 		
 		Node node = getNodeToDrawFrom();
@@ -286,7 +293,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		}
 
 		// Now Draw as many nodes as neccessary.
-		startPoint.x = Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur + OutlineLineNumber.LINE_NUMBER_WIDTH;
+		startPoint.x = Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur + OutlineLineNumber.LINE_NUMBER_WIDTH + OutlineCommentIndicator.BUTTON_WIDTH;;
 		startPoint.y = this.bottom - Preferences.getPreferenceInt(Preferences.BOTTOM_MARGIN).cur;
 
 		Node node = getNodeToDrawFrom();
@@ -381,7 +388,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			return;
 		}
 		
-		startPoint.x = Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur + OutlineLineNumber.LINE_NUMBER_WIDTH;
+		startPoint.x = Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur + OutlineLineNumber.LINE_NUMBER_WIDTH + OutlineCommentIndicator.BUTTON_WIDTH;;
 		startPoint.y = textAreas[0].getLocation().y + textAreas[0].getBestHeight() + Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).cur;
 		
 		// Pre-compute some values

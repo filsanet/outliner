@@ -136,7 +136,17 @@ public class TextKeyListener implements KeyListener, MouseListener {
 				break;
 
 			case KeyEvent.VK_PAGE_UP:
-				toggleComment(tree, layout);
+				if (e.isControlDown()) {
+					if (e.isShiftDown()) {
+						clearComment(tree, layout);
+					} else {
+						toggleCommentInheritance(tree,layout);
+					}
+				} else if (e.isShiftDown()) {
+					toggleComment(tree,layout);
+				} else {
+					toggleCommentAndClear(tree, layout);
+				}
 				break;
 
 			case KeyEvent.VK_UP:
@@ -462,21 +472,12 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		layout.draw(currentNode, OutlineLayoutManager.TEXT);
 	}
 
-	private void toggleComment(TreeContext tree, OutlineLayoutManager layout) {
+	private void clearComment(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
-		
-		if (!currentNode.isAncestorComment()) {
-			boolean oldValue = currentNode.isComment();
-			boolean newValue = false;
-			if (currentNode.isComment()) {
-				currentNode.setComment(false);
-			} else {
-				currentNode.setComment(true);
-				newValue = true;
-			}
-			
-			CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
-			undoable.addPrimitive(new PrimitiveUndoableCommentChange(currentNode, oldValue, newValue));
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		IconKeyListener.clearCommentForSingleNode(currentNode, undoable);
+
+		if (!undoable.isEmpty()) {
 			tree.doc.undoQueue.add(undoable);
 		}
 
@@ -484,6 +485,45 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		layout.draw(currentNode, OutlineLayoutManager.TEXT);
 	}
 
+	private void toggleCommentAndClear(TreeContext tree, OutlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		IconKeyListener.toggleCommentAndClearForSingleNode(currentNode, undoable);
+
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+
+		// Redraw
+		layout.draw(currentNode, OutlineLayoutManager.TEXT);
+	}
+
+	private void toggleComment(TreeContext tree, OutlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		IconKeyListener.toggleCommentForSingleNode(currentNode, undoable);
+
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+
+		// Redraw
+		layout.draw(currentNode, OutlineLayoutManager.TEXT);
+	}
+
+	private void toggleCommentInheritance(TreeContext tree, OutlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		IconKeyListener.toggleCommentInheritanceForSingleNode(currentNode, undoable);
+
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+
+		// Redraw
+		layout.draw(currentNode, OutlineLayoutManager.TEXT);
+	}
+	
 	private void moveUp(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 

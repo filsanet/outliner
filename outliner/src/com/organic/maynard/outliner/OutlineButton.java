@@ -43,13 +43,6 @@ public class OutlineButton extends JLabel {
 	// Note: icons are initialized by the createIcons() method below. This method
 	// is called from Outliner during it's endSetup() method.
 
-	public static final ImageIcon ICON_OPEN_NODE_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + "open_node_commented.gif");
-	public static final ImageIcon ICON_OPEN_NODE_SELECTED_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + "open_node_selected_commented.gif");
-	public static final ImageIcon ICON_CLOSED_NODE_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + "closed_node_commented.gif");
-	public static final ImageIcon ICON_CLOSED_NODE_SELECTED_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + "closed_node_selected_commented.gif");
-	public static final ImageIcon ICON_LEAF_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + "leaf_commented.gif");
-	public static final ImageIcon ICON_LEAF_SELECTED_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + "leaf_selected_commented.gif");
-
 	public static final ImageIcon ICON_DOWN_ARROW = new ImageIcon(Outliner.GRAPHICS_DIR + "down_arrow.gif");
 	public static final ImageIcon ICON_SE_ARROW = new ImageIcon(Outliner.GRAPHICS_DIR + "se_arrow.gif");
 	//public static final ImageIcon ICON_RIGHT_ARROW = new ImageIcon(Outliner.GRAPHICS_DIR + "right_arrow.gif");
@@ -61,7 +54,6 @@ public class OutlineButton extends JLabel {
 	private boolean node = true;
 	private boolean open = true;
 	private boolean selected = false;
-	private boolean comment = false;
 	
 	// The Constructor
 	public OutlineButton(OutlinerCellRendererImpl renderer) {
@@ -97,53 +89,26 @@ public class OutlineButton extends JLabel {
 	public boolean isSelected() {return selected;}
 	public void setSelected(boolean selected) {this.selected = selected;}
 
-	public boolean isComment() {return comment;}
-	public void setComment(boolean comment) {this.comment = comment;}
-
 	public void updateIcon() {
 		if(isNode()) {
 			if(isOpen()) {
 				if(isSelected()) {
-					if(isComment()) {
-						setIcon(ICON_OPEN_NODE_SELECTED_COMMENTED);
-					} else {
-						setIcon(ICON_OPEN_NODE_SELECTED);
-					}
+					setIcon(ICON_OPEN_NODE_SELECTED);
 				} else {
-					if(isComment()) {
-						setIcon(ICON_OPEN_NODE_COMMENTED);
-					} else {
-						setIcon(ICON_OPEN_NODE);
-					}
+					setIcon(ICON_OPEN_NODE);
 				}
 			} else {
 				if(isSelected()) {
-					if(isComment()) {
-						setIcon(ICON_CLOSED_NODE_SELECTED_COMMENTED);
-					} else {
-						setIcon(ICON_CLOSED_NODE_SELECTED);
-					}
+					setIcon(ICON_CLOSED_NODE_SELECTED);
 				} else {
-					if(isComment()) {
-						setIcon(ICON_CLOSED_NODE_COMMENTED);
-					} else {
-						setIcon(ICON_CLOSED_NODE);
-					}
+					setIcon(ICON_CLOSED_NODE);
 				}			
 			}	
 		} else {
 			if(isSelected()) {
-				if(isComment()) {
-					setIcon(ICON_LEAF_SELECTED_COMMENTED);
-				} else {
-					setIcon(ICON_LEAF_SELECTED);
-				}
+				setIcon(ICON_LEAF_SELECTED);
 			} else {
-				if(isComment()) {
-					setIcon(ICON_LEAF_COMMENTED);
-				} else {
-					setIcon(ICON_LEAF);
-				}
+				setIcon(ICON_LEAF);
 			}
 		}
 	}
@@ -154,7 +119,7 @@ public class OutlineButton extends JLabel {
 		
 		// Create a buffered image from the closed node image.
 		Image closedImage = ICON_CLOSED_NODE.getImage();
-		BufferedImage image = new BufferedImage(15, 15, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage image = new BufferedImage(BUTTON_WIDTH, BUTTON_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = image.createGraphics();
 		g.drawImage(closedImage,0,0,Outliner.outliner);
 
@@ -226,7 +191,7 @@ class lightenFilter extends RGBImageFilter {
 	
 	public int filterRGB(int x, int y, int rgb) {
 		return (
-			(rgb & 0xff000000) | (amount + (rgb & 0x00ffffff))
+			(rgb & 0xff000000) | (amount | (rgb & 0x00ffffff))
 		);
 	}
 }
@@ -240,7 +205,7 @@ class darkenFilter extends RGBImageFilter {
 
 	public int filterRGB(int x, int y, int rgb) {
 		return (
-			(rgb & 0xff000000) | ((rgb & 0x00ffffff) - amount)
+			(rgb & 0xff000000) | (amount & (rgb & 0x00ffffff))
 		);
 	}
 }

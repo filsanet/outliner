@@ -37,7 +37,8 @@ public class NodeImpl implements Node {
 	private boolean visible = false;
 	private boolean partiallyVisible = false;
 	private boolean selected = false;
-	private boolean comment = false;
+	//private boolean comment = false;
+	private int commentState = Node.COMMENT_INHERITED;
 	private boolean hoisted = false;
 	
 	private int decendantCount = 0;
@@ -67,7 +68,7 @@ public class NodeImpl implements Node {
 		NodeImpl nodeImpl = new NodeImpl(tree,value);
 		nodeImpl.setParent(parent);
 		nodeImpl.setDepth(depth);
-		nodeImpl.setComment(comment);
+		nodeImpl.setCommentState(commentState);
 		
 		// clone the attributes
 		Iterator it = getAttributeKeys();
@@ -302,10 +303,28 @@ public class NodeImpl implements Node {
 	public boolean isVisible() {return visible;}
 
 	// Comment Methods	
-	public void setComment(boolean comment) {this.comment = comment;}
-	public boolean isComment() {return comment;}
+	public void setCommentState(int commentState) {
+		this.commentState = commentState;
+	}
 
-	public boolean isAncestorComment() {
+	public int getCommentState() {return commentState;}
+	
+	public boolean isComment() {
+		if (getCommentState() == Node.COMMENT_TRUE) {
+			return true;
+		} else if (getCommentState() == Node.COMMENT_FALSE) {
+			return false;
+		} else {
+			if (isRoot()) {
+				return false;
+			} else {
+				return getParent().isComment();
+			}
+		}
+	}
+	
+
+	/*public boolean isAncestorComment() {
 		if (isRoot()) {
 			return false;
 		} else {
@@ -321,7 +340,7 @@ public class NodeImpl implements Node {
 		} else {
 			return getParent().isAncestorOrSelfComment();
 		}
-	}
+	}*/
 
 	// Hoisting Methods
 	public void setHoisted(boolean hoisted) {this.hoisted = hoisted;}

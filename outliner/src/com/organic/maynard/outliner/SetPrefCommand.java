@@ -61,8 +61,7 @@ public class SetPrefCommand extends Command {
 						Integer.parseInt((String) signature.elementAt(15)),
 						Integer.parseInt((String) signature.elementAt(16)),
 						
-						(String) signature.elementAt(17),
-						(String) signature.elementAt(18)
+						(String) signature.elementAt(17)
 					);
 					RecentFilesList.docInfoList.addElement(docInfo);
 					System.out.println("  Adding recent file: " + signature.elementAt(6));

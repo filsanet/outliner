@@ -24,12 +24,12 @@ import java.awt.*;
 public class PrimitiveUndoableCommentChange implements Undoable, PrimitiveUndoablePropertyChange {
 
 	private Node node = null;
-	private boolean oldState = false;
-	private boolean newState = false;
+	private int oldState = 0;
+	private int newState = 0;
 	
 	
 	// The Constructors
-	public PrimitiveUndoableCommentChange(Node node, boolean oldState, boolean newState) {
+	public PrimitiveUndoableCommentChange(Node node, int oldState, int newState) {
 		this.node = node;
 		this.oldState = oldState;
 		this.newState = newState;
@@ -46,11 +46,11 @@ public class PrimitiveUndoableCommentChange implements Undoable, PrimitiveUndoab
 	
 	// Undoable Interface
 	public void undo() {
-		node.setComment(oldState);
+		node.setCommentState(oldState);
 	}
 	
 	public void redo() {
-		node.setComment(newState);
+		node.setCommentState(newState);
 	}
 	
 	public int getType() {return Undoable.PRIMITIVE_COMMENT_PROPERTY_CHANGE_TYPE;}

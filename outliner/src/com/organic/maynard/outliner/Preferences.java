@@ -75,6 +75,7 @@ public class Preferences implements GUITreeComponent {
 		public static final String LINE_WRAP = "line_wrap";
 		public static final String UNDO_QUEUE_SIZE = "undo_queue_size";
 		public static final String SHOW_LINE_NUMBERS = "show_line_numbers";
+		public static final String SHOW_INDICATORS = "show_indicators";
 		public static final String SHOW_ATTRIBUTES = "show_attributes";
 	
 		// Look & Feel Panel
@@ -82,6 +83,7 @@ public class Preferences implements GUITreeComponent {
 		public static final String PANEL_BACKGROUND_COLOR = "panel_background_color";
 		public static final String TEXTAREA_BACKGROUND_COLOR = "textarea_background_color";
 		public static final String TEXTAREA_FOREGROUND_COLOR = "textarea_foreground_color";
+		public static final String TEXTAREA_COMMENT_COLOR = "textarea_comment_color";
 		public static final String SELECTED_CHILD_COLOR = "selected_child_color";
 		public static final String LINE_NUMBER_COLOR = "line_number_color";
 		public static final String LINE_NUMBER_SELECTED_COLOR = "line_number_selected_color";

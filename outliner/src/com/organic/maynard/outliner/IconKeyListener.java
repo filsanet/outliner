@@ -53,6 +53,8 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			textArea = ((OutlineButton) c).renderer;
 		} else if (c instanceof OutlineLineNumber) {
 			textArea = ((OutlineLineNumber) c).renderer;
+		} else if (c instanceof OutlineCommentIndicator) {
+			textArea = ((OutlineCommentIndicator) c).renderer;
 		}
 	}
 
@@ -164,7 +166,17 @@ public class IconKeyListener implements KeyListener, MouseListener {
 				break;
 
 			case KeyEvent.VK_PAGE_UP:
-				toggleComment(tree,layout);
+				if (e.isControlDown()) {
+					if (e.isShiftDown()) {
+						clearComment(tree, layout);
+					} else {
+						toggleCommentInheritance(tree,layout);
+					}
+				} else if (e.isShiftDown()) {
+					toggleComment(tree,layout);
+				} else {
+					toggleCommentAndClear(tree, layout);
+				}
 				break;
 			
 			case KeyEvent.VK_DELETE:
@@ -373,27 +385,13 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		layout.draw(currentNode, OutlineLayoutManager.ICON);
 	}
 
-	private void toggleComment(TreeContext tree, OutlineLayoutManager layout) {
+	private void clearComment(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		
 		for (int i = 0; i < tree.selectedNodes.size(); i++) {
-			Node node = (Node) tree.selectedNodes.get(i);
-			
-			if (!node.isAncestorComment()) {
-				boolean oldValue = node.isComment();
-				boolean newValue = false;
-
-				if (node.isComment()) {
-					node.setComment(false);
-				} else {
-					node.setComment(true);
-					newValue = true;
-				}
-				
-				undoable.addPrimitive(new PrimitiveUndoableCommentChange(node, oldValue, newValue));
-			}
+			clearCommentForSingleNode((Node) tree.selectedNodes.get(i), undoable);
 		}
 		
 		if (!undoable.isEmpty()) {
@@ -403,6 +401,123 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		layout.draw(currentNode, OutlineLayoutManager.ICON);
 	}
 
+	protected static void clearCommentForSingleNode(Node node, CompoundUndoable undoable) {
+		int oldValue = node.getCommentState();
+		int newValue = Node.COMMENT_INHERITED;
+		
+		if (oldValue != Node.COMMENT_INHERITED) {
+			node.setCommentState(Node.COMMENT_INHERITED);
+			undoable.addPrimitive(new PrimitiveUndoableCommentChange(node, oldValue, newValue));
+		}
+				
+		for (int i = 0; i < node.numOfChildren(); i++) {
+			clearCommentForSingleNode(node.getChild(i), undoable);
+		}
+	}
+	
+	private void toggleCommentAndClear(TreeContext tree, OutlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		
+		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+			toggleCommentAndClearForSingleNode((Node) tree.selectedNodes.get(i), undoable);
+		}
+		
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+
+		layout.draw(currentNode, OutlineLayoutManager.ICON);
+	}
+
+	protected static void toggleCommentAndClearForSingleNode(Node node, CompoundUndoable undoable) {
+		toggleCommentForSingleNode(node, undoable);
+		
+		for (int i = 0; i < node.numOfChildren(); i++) {
+			clearCommentForSingleNode(node.getChild(i), undoable);
+		}		
+	}
+			
+	private void toggleComment(TreeContext tree, OutlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		
+		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+			toggleCommentForSingleNode((Node) tree.selectedNodes.get(i), undoable);
+		}
+		
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+
+		layout.draw(currentNode, OutlineLayoutManager.ICON);
+	}
+
+	protected static void toggleCommentForSingleNode(Node node, CompoundUndoable undoable) {
+		int oldValue = node.getCommentState();
+		int newValue = Node.COMMENT_INHERITED;
+		boolean isComment = node.isComment();
+		
+		if (oldValue == Node.COMMENT_FALSE) {
+			node.setCommentState(Node.COMMENT_TRUE);
+			newValue = Node.COMMENT_TRUE;
+					
+		} else if (oldValue == Node.COMMENT_TRUE) {
+			node.setCommentState(Node.COMMENT_FALSE);
+			newValue = Node.COMMENT_FALSE;
+		
+		} else {
+			if (isComment) {
+				node.setCommentState(Node.COMMENT_FALSE);
+				newValue = Node.COMMENT_FALSE;
+			} else {
+				node.setCommentState(Node.COMMENT_TRUE);
+				newValue = Node.COMMENT_TRUE;
+			}
+		}
+				
+		undoable.addPrimitive(new PrimitiveUndoableCommentChange(node, oldValue, newValue));
+	}
+	
+	private void toggleCommentInheritance(TreeContext tree, OutlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		
+		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+			toggleCommentInheritanceForSingleNode((Node) tree.selectedNodes.get(i), undoable);
+		}
+		
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+
+		layout.draw(currentNode, OutlineLayoutManager.ICON);
+	}
+	
+	protected static void toggleCommentInheritanceForSingleNode(Node node, CompoundUndoable undoable) {
+		int oldValue = node.getCommentState();
+		int newValue = Node.COMMENT_INHERITED;
+		boolean isComment = node.isComment();
+		
+		if (oldValue == Node.COMMENT_INHERITED) {
+			if (isComment) {
+				node.setCommentState(Node.COMMENT_TRUE);
+				newValue = Node.COMMENT_TRUE;
+			} else {
+				node.setCommentState(Node.COMMENT_FALSE);
+				newValue = Node.COMMENT_FALSE;
+			}
+								
+		} else {
+			node.setCommentState(Node.COMMENT_INHERITED);
+		}
+				
+		undoable.addPrimitive(new PrimitiveUndoableCommentChange(node, oldValue, newValue));
+	}
+	
 	private void changeFocusToTextArea(TreeContext tree, OutlineLayoutManager layout, int positionType) {
 		Node currentNode = textArea.node;
 		
@@ -881,7 +996,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	private void merge(TreeContext tree, OutlineLayoutManager layout, boolean withSpaces) {
 		Node youngestNode = tree.getYoungestInSelection();
 		int youngestNodeDepth = youngestNode.getDepth();
-		boolean youngestNodeIsComment = youngestNode.isComment();
+		int youngestNodeIsComment = youngestNode.getCommentState();
 		Node parent = tree.getEditingNode().getParent();
 		CompoundUndoableReplace undoable = new CompoundUndoableReplace(parent);
 
@@ -900,7 +1015,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 		Node newNode = new NodeImpl(tree,buf.toString());
 		newNode.setDepth(youngestNodeDepth);
-		newNode.setComment(youngestNodeIsComment);
+		newNode.setCommentState(youngestNodeIsComment);
 		undoable.addPrimitive(new PrimitiveUndoableReplace(parent, youngestNode, newNode));
 
 		// Iterate over the remaining selected nodes deleting each one

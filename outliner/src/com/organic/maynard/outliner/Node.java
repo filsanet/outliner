@@ -65,10 +65,15 @@ public interface Node {
 	public TreeContext getTree();
 	
 	// Comment Methods
-	public void setComment(boolean comment);
+	public static final int COMMENT_INHERITED = 0;
+	public static final int COMMENT_TRUE = 1;
+	public static final int COMMENT_FALSE = 2;
+	
+	public void setCommentState(int commentState);
+	public int getCommentState();
 	public boolean isComment();
-	public boolean isAncestorComment();
-	public boolean isAncestorOrSelfComment();
+	//public boolean isAncestorComment();
+	//public boolean isAncestorOrSelfComment();
 
 	// Hoisting Methods
 	public void setHoisted(boolean hoisted);

@@ -45,6 +45,7 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		
 		PreferenceInt pUndoQueueSize = (PreferenceInt) prefs.getPreference(Preferences.UNDO_QUEUE_SIZE);
 		PreferenceBoolean pShowLineNumbers = (PreferenceBoolean) prefs.getPreference(Preferences.SHOW_LINE_NUMBERS);
+		PreferenceBoolean pShowIndicators = (PreferenceBoolean) prefs.getPreference(Preferences.SHOW_INDICATORS);
 		PreferenceString pFontFace = (PreferenceString) prefs.getPreference(Preferences.FONT_FACE);
 		PreferenceInt pFontSize = (PreferenceInt) prefs.getPreference(Preferences.FONT_SIZE);
 		PreferenceString pLineWrap = (PreferenceString) prefs.getPreference(Preferences.LINE_WRAP);
@@ -61,14 +62,21 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		} else {
 			OutlineLineNumber.LINE_NUMBER_WIDTH = OutlineLineNumber.LINE_NUMBER_WIDTH_MIN;
 		}
-
+		
+		// Update the Indicators
+		if (pShowIndicators.cur) {
+			OutlineCommentIndicator.BUTTON_WIDTH = OutlineCommentIndicator.WIDTH_DEFAULT;
+		} else {
+			OutlineCommentIndicator.BUTTON_WIDTH = 0;
+		}
+		
 		// Update the cellRenderers
 		boolean line_wrap = true;
 		if (pLineWrap.cur.equals(Preferences.TXT_CHARACTERS)) {
 			line_wrap = false;
 		}
 
-		OutlinerCellRendererImpl.updateFont(); // Updates fonts for new docs.
+		OutlinerCellRendererImpl.updateFonts(); // Updates fonts for new docs.
 		
 		// Update fonts for existing docs.
 		Font font = new Font(pFontFace.cur, Font.PLAIN, pFontSize.cur);
@@ -76,15 +84,15 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
 			OutlinerDocument doc = Outliner.getDocument(i);
 			for (int j = 0; j < OutlineLayoutManager.CACHE_SIZE; j++) {
-				doc.panel.layout.textAreas[j].setFont(font);
+				//doc.panel.layout.textAreas[j].setFont(font);
 				doc.panel.layout.textAreas[j].setWrapStyleWord(line_wrap);
 				
 				// Updated line number visibility
-				if (pShowLineNumbers.cur) {
+				//if (pShowLineNumbers.cur) {
 					doc.panel.layout.textAreas[j].lineNumber.setOpaque(true);
-				} else {
-					doc.panel.layout.textAreas[j].lineNumber.setOpaque(false);
-				}
+				//} else {
+				//	doc.panel.layout.textAreas[j].lineNumber.setOpaque(false);
+				//}
 			}
 		}
 	}

@@ -229,6 +229,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		
 		// Generate Icons
 		OutlineButton.createIcons();
+		OutlineCommentIndicator.createIcons();
 		
 		// WebFile
 		// Note the outliner will have to be restarted if user switches

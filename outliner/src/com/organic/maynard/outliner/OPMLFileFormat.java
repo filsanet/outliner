@@ -45,6 +45,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 
 	public static final String ATTRIBUTE_TEXT = "text";
 	public static final String ATTRIBUTE_IS_COMMENT = "isComment";
+	public static final String ATTRIBUTE_IS_COMMENT_INHERITED = "isCommentInherited";
 
 	// Open File Settings
     private org.xml.sax.Parser parser = new com.jclark.xml.sax.Driver();
@@ -98,44 +99,48 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 
 		buf.append("</").append(ELEMENT_HEAD).append(">").append(lineEnding);
 
-		buildOutliner(tree.getRootNode(),lineEnding, buf);
+		buf.append("<").append(ELEMENT_BODY).append(">").append(lineEnding);
+		Node node = tree.getRootNode();
+		for (int i = 0; i < node.numOfChildren(); i++) {
+			buildOutlineElement(node.getChild(i), lineEnding, buf);
+		}
+		buf.append("</").append(ELEMENT_BODY).append(">").append(lineEnding);
 		
 		buf.append("</").append(ELEMENT_OPML).append(">").append(lineEnding);
 		return buf;
 	}
-
-	private void buildOutliner(Node node, String lineEnding, StringBuffer buf) {
-		if (node.isRoot()) {
-			buf.append("<").append(ELEMENT_BODY).append(">").append(lineEnding);
-			for (int i = 0; i < node.numOfChildren(); i++) {
-				buildOutliner(node.getChild(i), lineEnding, buf);
-			}
-			buf.append("</").append(ELEMENT_BODY).append(">").append(lineEnding);
-		} else if (node.isLeaf()) {
-			if (node.isComment()) {
-				buf.append("<").append(ELEMENT_OUTLINE).append(" ").append(ATTRIBUTE_IS_COMMENT).append("=\"true\" ").append(ATTRIBUTE_TEXT).append("=\"").append(escapeXMLAttribute(node.getValue())).append("\"");
-				buildAttributes(node, buf);
-				buf.append("/>").append(lineEnding);
-			} else {
-				buf.append("<").append(ELEMENT_OUTLINE).append(" ").append(ATTRIBUTE_TEXT).append("=\"").append(escapeXMLAttribute(node.getValue())).append("\"");
-				buildAttributes(node, buf);
-				buf.append("/>").append(lineEnding);
-			}
+	
+	private void buildOutlineElement(Node node, String lineEnding, StringBuffer buf) {
+		buf.append("<").append(ELEMENT_OUTLINE).append(" ");
+		
+		if (node.getCommentState() == Node.COMMENT_TRUE) {
+			buf.append(ATTRIBUTE_IS_COMMENT).append("=\"true\" ");
+			buf.append(ATTRIBUTE_IS_COMMENT_INHERITED).append("=\"true\" ");
+			
+		} else if (node.getCommentState() == Node.COMMENT_FALSE) {
+			buf.append(ATTRIBUTE_IS_COMMENT).append("=\"false\" ");
+			buf.append(ATTRIBUTE_IS_COMMENT_INHERITED).append("=\"true\" ");
+			
 		} else {
 			if (node.isComment()) {
-				buf.append("<").append(ELEMENT_OUTLINE).append(" ").append(ATTRIBUTE_IS_COMMENT).append("=\"true\" ").append(ATTRIBUTE_TEXT).append("=\"").append(escapeXMLAttribute(node.getValue())).append("\"");
-				buildAttributes(node, buf);
-				buf.append(">").append(lineEnding);
-			} else {
-				buf.append("<").append(ELEMENT_OUTLINE).append(" ").append(ATTRIBUTE_TEXT).append("=\"").append(escapeXMLAttribute(node.getValue())).append("\"");
-				buildAttributes(node, buf);
-				buf.append(">").append(lineEnding);
+				buf.append(ATTRIBUTE_IS_COMMENT).append("=\"true\" ");
 			}
-			for (int i = 0; i < node.numOfChildren(); i++) {
-				buildOutliner(node.getChild(i), lineEnding, buf);
-			}
-			buf.append("</").append(ELEMENT_OUTLINE).append(">").append(lineEnding);		
 		}
+		
+		buf.append(ATTRIBUTE_TEXT).append("=\"").append(escapeXMLAttribute(node.getValue())).append("\"");
+		buildAttributes(node, buf);
+		
+		if (node.isLeaf()) {
+			buf.append("/>").append(lineEnding);
+		} else {
+			buf.append(">").append(lineEnding);
+			
+			for (int i = 0; i < node.numOfChildren(); i++) {
+				buildOutlineElement(node.getChild(i), lineEnding, buf);
+			}
+			
+			buf.append("</").append(ELEMENT_OUTLINE).append(">").append(lineEnding);		
+		}	
 	}
 	
 	private void buildAttributes(Node node, StringBuffer buf) {
@@ -213,12 +218,17 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	private Vector elementStack = new Vector();
 	private Node currentParent = null;
 	
+	private boolean anyIsCommentInheritedAttributesFound = false; // used to provide for better interop with outliners that don't support isCommentInherited.
+	
 	public void startElement (String name, AttributeList atts) {
 		//System.out.println("Start element: " + name);
 		elementStack.add(name);
 		
 		if (name.equals(ELEMENT_OUTLINE)) {
 			NodeImpl node = new NodeImpl(tree, "");
+			
+			boolean isComment = false;
+			boolean isCommentInherited = false;
 			
 			for (int i = 0; i < atts.getLength(); i++) {
 				String attName = atts.getName(i);
@@ -228,12 +238,29 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 					node.setValue(attValue);
 				} else if (attName.equals(ATTRIBUTE_IS_COMMENT)) {
 					if (attValue != null && attValue.equals("true")) {
-						node.setComment(true);
-					} else {
-						node.setComment(false);
+						isComment = true;;
 					}
+				} else if (attName.equals(ATTRIBUTE_IS_COMMENT_INHERITED)) {
+					if (attValue != null && attValue.equals("true")) {
+						isCommentInherited = true;;
+					}
+					anyIsCommentInheritedAttributesFound = true;
 				} else {
 					node.setAttribute(attName, attValue);
+				}
+			}
+			
+			if (anyIsCommentInheritedAttributesFound) {
+				if (isCommentInherited) {
+					if (isComment) {
+						node.setCommentState(Node.COMMENT_TRUE);
+					} else {
+						node.setCommentState(Node.COMMENT_FALSE);
+					}
+				}
+			} else {
+				if (isComment) {
+					node.setCommentState(Node.COMMENT_TRUE);
 				}
 			}
 			

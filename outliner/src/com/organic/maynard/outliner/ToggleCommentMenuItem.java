@@ -35,6 +35,48 @@ public class ToggleCommentMenuItem extends AbstractOutlinerMenuItem implements A
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
+		OutlineMenu.fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.SHIFT_MASK, KeyEvent.VK_PAGE_UP, false);
+	}
+}
+
+class ToggleCommentInheritanceMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		addActionListener(this);
+	}
+
+
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		OutlineMenu.fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.CTRL_MASK, KeyEvent.VK_PAGE_UP, false);
+	}
+}
+
+class ClearCommentsMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		addActionListener(this);
+	}
+
+
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		OutlineMenu.fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.CTRL_MASK + Event.SHIFT_MASK, KeyEvent.VK_PAGE_UP, false);
+	}
+}
+
+class ToggleCommentAndClearMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		addActionListener(this);
+	}
+
+
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
 		OutlineMenu.fireKeyEvent(Outliner.getMostRecentDocumentTouched(), 0, KeyEvent.VK_PAGE_UP, false);
 	}
 }

@@ -78,7 +78,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 			}
 		}
 		
-		docInfo.getCommentedNodes().clear();
 		boolean commentExists = false;
 		boolean attributesExist = false;
 		
@@ -93,7 +92,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 			}
 			
 			if (node.isComment()) {
-				docInfo.addCommentedNodeNum(lineCount);
 				commentExists = true;
 			}
 			
@@ -416,32 +414,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 			} catch (Exception e) {
 				break;
 			}
-		}
-		
-		// Comment Nodes
-		Vector commentedNodes = docInfo.getCommentedNodes();
-		
-		Node node = doc.tree.getRootNode();
-		int lineCount = -1;
-		int vectorCount = 0;
-		try {
-			int vectorValue = ((Integer) commentedNodes.get(vectorCount)).intValue();
-			while (true) {
-				node = node.nextNode();
-				lineCount++;
-				
-				if (node.isRoot()) {
-					break;
-				}
-				
-				if (lineCount == vectorValue) {
-					node.setComment(true);
-					vectorCount++;
-					vectorValue = ((Integer) commentedNodes.get(vectorCount)).intValue();
-				}
-			}
-		} catch (Exception e) {
-		
 		}
 		
 		// Record the current location

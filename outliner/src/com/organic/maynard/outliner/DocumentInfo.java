@@ -45,7 +45,6 @@ public class DocumentInfo {
 	private int windowBottom = 0;
 	private int windowRight = 0;
 	private Vector expandedNodes = new Vector(); // Should only store Integers
-	private Vector commentedNodes = new Vector(); // Should only store Integers
 	
 	// The Constructors
 	public DocumentInfo() {
@@ -65,7 +64,6 @@ public class DocumentInfo {
 			OutlinerDocument.INITIAL_X,
 			OutlinerDocument.INITIAL_Y + OutlinerDocument.INITIAL_HEIGHT,
 			OutlinerDocument.INITIAL_X + OutlinerDocument.INITIAL_WIDTH,
-			"",
 			""
 		);
 	}
@@ -86,8 +84,7 @@ public class DocumentInfo {
 		int windowLeft,
 		int windowBottom,
 		int windowRight,
-		String expandedNodesString,
-		String commentedNodesString) 
+		String expandedNodesString) 
 	{
 		setFileFormat(fileFormat);
 		setEncodingType(encodingType);
@@ -105,7 +102,6 @@ public class DocumentInfo {
 		setWindowBottom(windowBottom);
 		setWindowRight(windowRight);
 		setExpandedNodesString(expandedNodesString);
-		setCommentedNodesString(commentedNodesString);
 	}
 
 	// Accessors
@@ -254,77 +250,6 @@ public class DocumentInfo {
 		return false;
 	}
 
-	// Commented Nodes
-	// These methods should probably be combined with the methods for expanded nodes since they are basically identical.
-	public Vector getCommentedNodes() {return this.commentedNodes;}
-	public boolean setCommentedNodes(Vector commentedNodes) {
-		// Make sure all values are Integers
-		for (int i = 0; i < commentedNodes.size(); i++) {
-			try {
-				Integer temp = (Integer) commentedNodes.elementAt(i);
-			} catch (ClassCastException e) {
-				return false;
-			}
-		}
-		
-		this.commentedNodes = commentedNodes;
-		return true;
-	}
-	
-	public String getCommentedNodesString() {
-		return getCommentedNodesStringShifted(0);
-	}
-	
-	public String getCommentedNodesStringShifted(int shift) {
-		StringBuffer buf = new StringBuffer();
-		for (int i = 0; i < commentedNodes.size(); i++) {
-			buf.append("" + (((Integer) commentedNodes.elementAt(i)).intValue() + shift));
-			if (i < commentedNodes.size() - 1) {
-				buf.append(COMMENTED_NODE_SEPERATOR);
-			}
-		}
-		return buf.toString();
-	}	
-	
-	public void setCommentedNodesString(String nodeList) {
-		setCommentedNodesStringShifted(nodeList, 0);
-	}
-
-	public void setCommentedNodesStringShifted(String nodeList, int shift) {
-		// Clear out the current expandedNodes Vector
-		getCommentedNodes().clear();
-		
-		// Load it up with Integers
-		StringSplitter splitter = new StringSplitter(nodeList,COMMENTED_NODE_SEPERATOR); 
-		while (splitter.hasMoreElements()) {
-			addCommentedNodeNumShifted((String) splitter.nextElement(), shift);
-		}
-	}
-	
-	public boolean addCommentedNodeNum(String nodeNum) {
-		return addCommentedNodeNumShifted(nodeNum, 0);
-	}
-
-	public boolean addCommentedNodeNumShifted(String nodeNum, int shift) {
-		try {
-			return addCommentedNodeNum(Integer.parseInt(nodeNum) + shift);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-	}
-	
-	public boolean addCommentedNodeNum(int nodeNum) {
-		int lastIntOnList = -1;
-		try {
-			lastIntOnList = ((Integer) commentedNodes.lastElement()).intValue();
-		} catch (NoSuchElementException e) {}
-		if (nodeNum > lastIntOnList) {
-			commentedNodes.add(new Integer(nodeNum));
-			return true;
-		}
-		return false;
-	}
-
 
 	// Additional Accessors
 	public int getWidth() {return getWindowRight() - getWindowLeft();}
@@ -380,9 +305,6 @@ public class DocumentInfo {
 		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
 
 		buffer.append(StringTools.escape("" + getExpandedNodesString(), escapeChar, null));
-		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-
-		buffer.append(StringTools.escape("" + getCommentedNodesString(), escapeChar, null));
 		
 		return buffer.toString();
 	}
