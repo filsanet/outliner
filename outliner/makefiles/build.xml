@@ -121,6 +121,7 @@
 			<jar basedir="${src}" compress="true" jarfile="${lib}/com.organic.maynard.jar">
 				<exclude name="com/organic/maynard/outliner/**"/>
 				<exclude name="**/*.java"/>
+				<exclude name="graphics/**"/>
 			</jar>
 		</target>
 		<target name="clean-maynard" description="Clean all .class files for maynard.">
