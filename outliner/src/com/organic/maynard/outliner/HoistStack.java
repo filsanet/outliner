@@ -223,14 +223,18 @@ public class HoistStack {
 	}
 	
 	public void updateOutlinerMenuHoisting() {
+		JMenuItem hoistItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.OUTLINE_HOIST_MENU_ITEM);
+		JMenuItem dehoistItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.OUTLINE_DEHOIST_MENU_ITEM);
+		JMenuItem dehoistAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.OUTLINE_DEHOIST_ALL_MENU_ITEM);
+		
 		if (isHoisted()) {
-			Outliner.menuBar.outlineMenu.OUTLINE_DEHOIST_ITEM.setEnabled(true);
-			Outliner.menuBar.outlineMenu.OUTLINE_DEHOIST_ALL_ITEM.setEnabled(true);
+			dehoistItem.setEnabled(true);
+			dehoistAllItem.setEnabled(true);
 		} else {
-			Outliner.menuBar.outlineMenu.OUTLINE_DEHOIST_ITEM.setEnabled(false);
-			Outliner.menuBar.outlineMenu.OUTLINE_DEHOIST_ALL_ITEM.setEnabled(false);
+			dehoistItem.setEnabled(false);
+			dehoistAllItem.setEnabled(false);
 		}
-		Outliner.menuBar.outlineMenu.OUTLINE_HOIST_ITEM.setText(OutlineMenu.OUTLINE_HOIST + " (" + getHoistDepth() + ")");
+		hoistItem.setText(OutlineMenu.OUTLINE_HOIST + " (" + getHoistDepth() + ")");
 	}
 }
 

@@ -31,6 +31,13 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 	public static final String CTRL = "control";
 	public static final String SHIFT = "shift";
 	public static final String ALT = "alt";
+	public static final String TAB = "tab";
+	public static final String UP = "up";
+	public static final String DOWN = "down";
+	public static final String LEFT = "left";
+	public static final String RIGHT = "right";
+	public static final String PAGE_UP = "page_up";
+	public static final String PAGE_DOWN = "page_down";
 	
 	public static final String A_TEXT = "text";
 	public static final String A_KEY_BINDING = "keybinding";
@@ -50,17 +57,39 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 		setText(title);
 		
 		// Set KeyBinding
-		try {		
-			char keyBinding = (atts.getValue(A_KEY_BINDING)).charAt(0);
+		int mask = 0;
+		try {
 			String keyBindingModifiers = atts.getValue(A_KEY_BINDING_MODIFIERS);
-
-			// Compute the mask
-			int mask = 0;
 			if (keyBindingModifiers.indexOf(CTRL) != -1) {mask += Event.CTRL_MASK;}
 			if (keyBindingModifiers.indexOf(SHIFT) != -1) {mask += Event.SHIFT_MASK;}
 			if (keyBindingModifiers.indexOf(ALT) != -1) {mask += Event.ALT_MASK;}
+		} catch (NullPointerException e) {
+			//e.printStackTrace();
+		} catch (StringIndexOutOfBoundsException e) {
+			//e.printStackTrace();
+		}
+		
+		try {		
+			String keyBinding = atts.getValue(A_KEY_BINDING);
 			
-			setAccelerator(KeyStroke.getKeyStroke(keyBinding, mask, false));
+			char keyBindingChar = keyBinding.charAt(0);
+			if (keyBinding.equals(TAB)) {
+				keyBindingChar = KeyEvent.VK_TAB;
+			} else if (keyBinding.equals(UP)) {
+				keyBindingChar = KeyEvent.VK_UP;
+			} else if (keyBinding.equals(DOWN)) {
+				keyBindingChar = KeyEvent.VK_DOWN;
+			} else if (keyBinding.equals(LEFT)) {
+				keyBindingChar = KeyEvent.VK_LEFT;
+			} else if (keyBinding.equals(RIGHT)) {
+				keyBindingChar = KeyEvent.VK_RIGHT;
+			} else if (keyBinding.equals(PAGE_UP)) {
+				keyBindingChar = KeyEvent.VK_PAGE_UP;
+			} else if (keyBinding.equals(PAGE_DOWN)) {
+				keyBindingChar = KeyEvent.VK_PAGE_DOWN;
+			}
+			
+			setAccelerator(KeyStroke.getKeyStroke(keyBindingChar, mask, false));
 		} catch (NullPointerException e) {
 			//e.printStackTrace();
 		} catch (StringIndexOutOfBoundsException e) {

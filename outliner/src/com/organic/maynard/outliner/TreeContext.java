@@ -140,21 +140,24 @@ public class TreeContext {
 	public int getCursorPosition() {return cursorPosition;}
 
 	private void updateForCopyAndCut() {
+		JMenuItem cutItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CUT_MENU_ITEM);
+		JMenuItem copyItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.COPY_MENU_ITEM);
+
 		if (getComponentFocus() == outlineLayoutManager.TEXT) {
 			if (getCursorPosition() == getCursorMarkPosition()) {
-				Outliner.menuBar.editMenu.EDIT_COPY_ITEM.setEnabled(false);
-				Outliner.menuBar.editMenu.EDIT_CUT_ITEM.setEnabled(false);
+				copyItem.setEnabled(false);
+				cutItem.setEnabled(false);
 			} else {
-				Outliner.menuBar.editMenu.EDIT_COPY_ITEM.setEnabled(true);
-				Outliner.menuBar.editMenu.EDIT_CUT_ITEM.setEnabled(true);
+				copyItem.setEnabled(true);
+				cutItem.setEnabled(true);
 			}
 		} else if (getComponentFocus() == outlineLayoutManager.ICON) {
 			if (selectedNodes.size() == 0) {
-				Outliner.menuBar.editMenu.EDIT_COPY_ITEM.setEnabled(false);
-				Outliner.menuBar.editMenu.EDIT_CUT_ITEM.setEnabled(false);
+				copyItem.setEnabled(false);
+				cutItem.setEnabled(false);
 			} else {
-				Outliner.menuBar.editMenu.EDIT_COPY_ITEM.setEnabled(true);
-				Outliner.menuBar.editMenu.EDIT_CUT_ITEM.setEnabled(true);
+				copyItem.setEnabled(true);
+				cutItem.setEnabled(true);
 			}			
 		}	
 	}

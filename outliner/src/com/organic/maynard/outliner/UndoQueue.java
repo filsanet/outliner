@@ -167,26 +167,30 @@ public class UndoQueue {
 
 	// Static Methods
 	public static void updateMenuBar(OutlinerDocument doc) {
+		JMenuItem undoItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.UNDO_MENU_ITEM);
+		JMenuItem redoItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.REDO_MENU_ITEM);
+		JMenuItem undoAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.UNDO_ALL_MENU_ITEM);
+		JMenuItem redoAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.REDO_ALL_MENU_ITEM);
 		if (doc == null) {
-			Outliner.menuBar.editMenu.EDIT_UNDO_ITEM.setEnabled(false);
-			Outliner.menuBar.editMenu.EDIT_UNDO_ALL_ITEM.setEnabled(false);
-			Outliner.menuBar.editMenu.EDIT_REDO_ITEM.setEnabled(false);
-			Outliner.menuBar.editMenu.EDIT_REDO_ALL_ITEM.setEnabled(false);
+			undoItem.setEnabled(false);
+			undoAllItem.setEnabled(false);
+			redoItem.setEnabled(false);
+			redoAllItem.setEnabled(false);
 		} else {
 			if(doc.undoQueue.isUndoable()) {
-				Outliner.menuBar.editMenu.EDIT_UNDO_ITEM.setEnabled(true);
-				Outliner.menuBar.editMenu.EDIT_UNDO_ALL_ITEM.setEnabled(true);
+				undoItem.setEnabled(true);
+				undoAllItem.setEnabled(true);
 			} else {
-				Outliner.menuBar.editMenu.EDIT_UNDO_ITEM.setEnabled(false);
-				Outliner.menuBar.editMenu.EDIT_UNDO_ALL_ITEM.setEnabled(false);
+				undoItem.setEnabled(false);
+				undoAllItem.setEnabled(false);
 			}
 	
 			if(doc.undoQueue.isRedoable()) {
-				Outliner.menuBar.editMenu.EDIT_REDO_ITEM.setEnabled(true);
-				Outliner.menuBar.editMenu.EDIT_REDO_ALL_ITEM.setEnabled(true);
+				redoItem.setEnabled(true);
+				redoAllItem.setEnabled(true);
 			} else {
-				Outliner.menuBar.editMenu.EDIT_REDO_ITEM.setEnabled(false);
-				Outliner.menuBar.editMenu.EDIT_REDO_ALL_ITEM.setEnabled(false);
+				redoItem.setEnabled(false);
+				redoAllItem.setEnabled(false);
 			}
 		}
 	}

@@ -36,7 +36,8 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 		if (doc.getFileName().equals("") && doc.isFileModified()) {
 			int result = JOptionPane.showConfirmDialog(doc, "The text in the Untitled file has changed.\nDo you want to save the changes?");
 			if (result == JOptionPane.YES_OPTION) {
-				FileMenu.saveAsOutlinerDocument(doc);
+				SaveAsFileMenuItem item = (SaveAsFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
+				item.saveAsOutlinerDocument(doc);
 			} else if (result == JOptionPane.NO_OPTION) {
 				// Do Nothing
 			} else if (result == JOptionPane.CANCEL_OPTION) {
@@ -45,7 +46,8 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 		} else if (doc.isFileModified()) {
 			int result = JOptionPane.showConfirmDialog(doc, "The text in the " + doc.getFileName() + " file has changed.\nDo you want to save the changes?");
 			if (result == JOptionPane.YES_OPTION) {
-				FileMenu.saveOutlinerDocument(doc);
+				SaveFileMenuItem item = (SaveFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
+				item.saveOutlinerDocument(doc);
 			} else if (result == JOptionPane.NO_OPTION) {
 				// Do Nothing
 			} else if (result == JOptionPane.CANCEL_OPTION) {

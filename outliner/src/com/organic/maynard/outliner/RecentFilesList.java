@@ -24,26 +24,48 @@ import java.io.*;
 import java.util.*;
 import javax.swing.*;
 
+import org.xml.sax.*;
+
 import com.organic.maynard.util.string.StringTools;
 
-public class RecentFilesList extends JMenu implements ActionListener {
+public class RecentFilesList extends JMenu implements ActionListener, GUITreeComponent {
+
+	// Constants
+	public static final String A_TEXT = "text";
 	
-	private OutlinerDocument doc = null;
+	//private OutlinerDocument doc = null;
 		
 	public static Vector docInfoList = new Vector();
 	
 	
 	// The Constructors
-	public RecentFilesList(String text, OutlinerDocument doc) {
-		super(text);
-		this.doc = doc;
+	public RecentFilesList() {
+		//super(text);
+		//this.doc = doc;
+	}
+
+	// GUITreeComponent interface
+	private String id = null;
+	public String getGUITreeComponentID() {return this.id;}
+	public void setGUITreeComponentID(String id) {this.id = id;}
+	
+	public void startSetup(AttributeList atts) {
+		String title = atts.getValue(A_TEXT);
+		setText(title);
+		
 		setEnabled(false);
+
+		// Add this menuItem to the parent menu.
+		JMenu menu = (JMenu) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 2);
+		menu.add(this);
 		
 		// Populate the Menu with the existing filenames
 		for (int i = 0; i < docInfoList.size(); i++) {
 			addFileName((DocumentInfo) docInfoList.elementAt(i));
 		}
 	}
+	
+	public void endSetup() {}
 
 	private void addFileName(DocumentInfo docInfo) {
 		RecentFilesListItem item = new RecentFilesListItem(docInfo.getPath(), docInfo);
@@ -66,32 +88,35 @@ public class RecentFilesList extends JMenu implements ActionListener {
 		if (Preferences.RECENT_FILES_LIST_SIZE.cur == 0) {return;}
 
 		if (isFileNameUnique(filename)) {
+			RecentFilesList menu = (RecentFilesList) GUITreeLoader.reg.get(GUITreeComponentRegistry.RECENT_FILE_MENU);
 			if (docInfoList.size() >= Preferences.RECENT_FILES_LIST_SIZE.cur) {
 				// Remove from the lists
 				docInfoList.removeElementAt(0);
 				
 				// Remove from menus
-				Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.remove(0);
+				menu.remove(0);
 			}
 			// Add to the lists
 			docInfoList.addElement(docInfo);
 
 			// Add to menus
-			Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.addFileName(docInfo);
+			menu.addFileName(docInfo);
 		}	
 	}
 
 	public static void trim() {
+		RecentFilesList menu = (RecentFilesList) GUITreeLoader.reg.get(GUITreeComponentRegistry.RECENT_FILE_MENU);
+		
 		while (docInfoList.size() > Preferences.RECENT_FILES_LIST_SIZE.cur) {
 			// Trim lists
 			docInfoList.removeElementAt(0);
 
 			// Trim menus
-			Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.remove(0);
+			menu.remove(0);
 		}
 		
-		if (Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.getItemCount() <= 0) {
-			Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.setEnabled(false);
+		if (menu.getItemCount() <= 0) {
+			menu.setEnabled(false);
 		}		
 	}
 
@@ -137,9 +162,10 @@ public class RecentFilesList extends JMenu implements ActionListener {
 		docInfoList.removeElementAt(index);
 		
 		// Remove from menus
-		Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.remove(index);
-		if (Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.getItemCount() <= 0) {
-			Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.setEnabled(false);
+		RecentFilesList menu = (RecentFilesList) GUITreeLoader.reg.get(GUITreeComponentRegistry.RECENT_FILE_MENU);
+		menu.remove(index);
+		if (menu.getItemCount() <= 0) {
+			menu.setEnabled(false);
 		}
 	}
 
@@ -183,7 +209,7 @@ public class RecentFilesList extends JMenu implements ActionListener {
 		DocumentInfo docInfo = ((RecentFilesListItem) e.getSource()).getDocumentInfo();
 		String filename = docInfo.getPath();
 		if (!Outliner.isFileNameUnique(filename)) {
-			JOptionPane.showMessageDialog(this.doc, "The file: " + filename + " is already open.");
+			JOptionPane.showMessageDialog(Outliner.outliner, "The file: " + filename + " is already open.");
 			return;
 		}
 

@@ -29,87 +29,11 @@ import javax.swing.*;
 
 import org.xml.sax.*;
 
-public class FileMenu extends AbstractOutlinerMenu implements ActionListener, GUITreeComponent {
-
-	// Copy Used
-	private static final String FILE_NEW = "New";
-	private static final String FILE_OPEN = "Open...";
-	private static final String FILE_OPEN_RECENT = "Open Recent";
-	private static final String FILE_SAVE = "Save";
-	private static final String FILE_SAVE_ALL = "Save All";
-	private static final String FILE_SAVE_AS = "Save As...";
-	private static final String FILE_REVERT = "Revert";
-	private static final String FILE_CLOSE = "Close";
-	private static final String FILE_CLOSE_ALL = "Close All";
-	private static final String FILE_QUIT = "Quit";
-
-
-	// The MenuItems.
-	public JMenuItem FILE_NEW_ITEM = new JMenuItem(FILE_NEW);
-	public JMenuItem FILE_OPEN_ITEM = new JMenuItem(FILE_OPEN);
-	public RecentFilesList FILE_OPEN_RECENT_MENU;
-	// Seperator	
-	public JMenuItem FILE_SAVE_ITEM = new JMenuItem(FILE_SAVE);
-	public JMenuItem FILE_SAVE_ALL_ITEM = new JMenuItem(FILE_SAVE_ALL);
-	public JMenuItem FILE_SAVE_AS_ITEM = new JMenuItem(FILE_SAVE_AS);
-	public JMenuItem FILE_REVERT_ITEM = new JMenuItem(FILE_REVERT);
-	// Seperator	
-	public JMenuItem FILE_CLOSE_ITEM = new JMenuItem(FILE_CLOSE);
-	public JMenuItem FILE_CLOSE_ALL_ITEM = new JMenuItem(FILE_CLOSE_ALL);
-	// Seperator	
-	public JMenuItem FILE_QUIT_ITEM = new JMenuItem(FILE_QUIT);
+public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 	
 	// The Constructors
 	public FileMenu() {
 		super();
-
-		FILE_NEW_ITEM.setAccelerator(KeyStroke.getKeyStroke('N', Event.CTRL_MASK, false));
-		FILE_NEW_ITEM.addActionListener(this);
-		add(FILE_NEW_ITEM);
-
-		FILE_OPEN_ITEM.setAccelerator(KeyStroke.getKeyStroke('O', Event.CTRL_MASK, false));
-		FILE_OPEN_ITEM.addActionListener(this);
-		add(FILE_OPEN_ITEM);
-
-		FILE_OPEN_RECENT_MENU = new RecentFilesList(FILE_OPEN_RECENT,Outliner.getMostRecentDocumentTouched());
-		add(FILE_OPEN_RECENT_MENU);
-
-		insertSeparator(3);
-
-		FILE_SAVE_ITEM.setAccelerator(KeyStroke.getKeyStroke('S', Event.CTRL_MASK, false));
-		FILE_SAVE_ITEM.addActionListener(this);
-		FILE_SAVE_ITEM.setEnabled(false);
-		add(FILE_SAVE_ITEM);
-
-		FILE_SAVE_ALL_ITEM.addActionListener(this);
-		FILE_SAVE_ALL_ITEM.setEnabled(false);
-		add(FILE_SAVE_ALL_ITEM);
-		
-
-		FILE_SAVE_AS_ITEM.addActionListener(this);
-		FILE_SAVE_AS_ITEM.setEnabled(false);
-		add(FILE_SAVE_AS_ITEM);
-
-		FILE_REVERT_ITEM.addActionListener(this);
-		FILE_REVERT_ITEM.setEnabled(false);
-		add(FILE_REVERT_ITEM);
-
-		insertSeparator(8);
-
-		FILE_CLOSE_ITEM.setAccelerator(KeyStroke.getKeyStroke('W', Event.CTRL_MASK, false));
-		FILE_CLOSE_ITEM.addActionListener(this);
-		FILE_CLOSE_ITEM.setEnabled(false);
-		add(FILE_CLOSE_ITEM);
-
-		FILE_CLOSE_ALL_ITEM.addActionListener(this);
-		FILE_CLOSE_ALL_ITEM.setEnabled(false);
-		add(FILE_CLOSE_ALL_ITEM);
-
-		insertSeparator(11);
-
-		FILE_QUIT_ITEM.setAccelerator(KeyStroke.getKeyStroke('Q', Event.CTRL_MASK, false));
-		FILE_QUIT_ITEM.addActionListener(this);
-		add(FILE_QUIT_ITEM);
 	}
 
 
@@ -117,172 +41,6 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener, GU
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
 		Outliner.menuBar.fileMenu = this;
-	}
-
-
-	// ActionListener Interface
-	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand().equals(FILE_NEW)) {
-			newOutlinerDocument();
-			
-		} else if (e.getActionCommand().equals(FILE_SAVE)) {
-			saveOutlinerDocument(Outliner.getMostRecentDocumentTouched());
-			
-		} else if (e.getActionCommand().equals(FILE_SAVE_ALL)) {
-			saveAllOutlinerDocuments();
-			
-		} else if (e.getActionCommand().equals(FILE_SAVE_AS)) {
-			saveAsOutlinerDocument(Outliner.getMostRecentDocumentTouched());
-			
-		} else if (e.getActionCommand().equals(FILE_REVERT)) {
-			revertOutlinerDocument(Outliner.getMostRecentDocumentTouched());
-			
-		} else if (e.getActionCommand().equals(FILE_OPEN)) {
-			openOutlinerDocument();
-			
-		} else if (e.getActionCommand().equals(FILE_CLOSE)) {
-			closeOutlinerDocument(Outliner.getMostRecentDocumentTouched());
-			
-		} else if (e.getActionCommand().equals(FILE_CLOSE_ALL)) {
-			closeAllOutlinerDocuments();
-			
-		} else if (e.getActionCommand().equals(FILE_QUIT)) {
-			quit();
-		}
-	}
-
-
-	// File Menu Methods
-	public static void quit() {
-		if (!closeAllOutlinerDocuments()) {
-			return;
-		}
-
-		// Hide Desktop
-		Outliner.outliner.setVisible(false);
-		Outliner.outliner.dispose();
-		
-		// Save config and quit
-		Preferences.saveConfigFile(Outliner.CONFIG_FILE);
-		RecentFilesList.saveConfigFile(Outliner.RECENT_FILES_FILE);
-		System.exit(0);
-		
-	}
-	
-	protected static void closeOutlinerDocument(OutlinerDocument document) {
-		OutlinerWindowMonitor.closeInternalFrame(document);
-	}
-
-	protected static boolean closeAllOutlinerDocuments() {
-		for (int i = Outliner.openDocumentCount() - 1; i >= 0; i--) {
-			if (!OutlinerWindowMonitor.closeInternalFrame(Outliner.getDocument(i))) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	protected static void newOutlinerDocument() {
-		new OutlinerDocument("");
-	}
-
-	protected static void saveOutlinerDocument(OutlinerDocument document) {
-		if (!document.getFileName().equals("")) {
-			saveFile(document.getFileName(),document,false);
-		} else {
-			saveAsOutlinerDocument(document);
-		}
-	}
-
-	protected static void saveAllOutlinerDocuments() {
-		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
-			OutlinerDocument doc = Outliner.getDocument(i);
-			if (doc.isFileModified()) {
-				saveOutlinerDocument(doc);
-			}
-		}
-	}
-
-	protected static void saveAsOutlinerDocument(OutlinerDocument document) {
-		// Setup the File Chooser
-		Outliner.chooser.configureForSave(document);
-
-		int option = Outliner.chooser.showSaveDialog(Outliner.outliner);
-		
-		// Update the most recent save dir preference
-		Preferences.MOST_RECENT_SAVE_DIR.cur = Outliner.chooser.getCurrentDirectory().getPath();
-		Preferences.MOST_RECENT_SAVE_DIR.restoreTemporaryToCurrent();
-				
-		// Handle User Input
-		if (option == JFileChooser.APPROVE_OPTION) {
-			String filename = Outliner.chooser.getSelectedFile().getPath();
-			if (!Outliner.isFileNameUnique(filename) && (!filename.equals(document.getFileName()))) {
-				JOptionPane.showMessageDialog(Outliner.outliner, "Cannot save to file: " + filename + " it is currently open.");
-				// We might want to move this test into the approveSelection method of the file chooser.
-				return;
-			}
-			
-			// Pull Preference Values from the file chooser
-			String lineEnd = Outliner.chooser.getLineEnding();
-			String encoding = Outliner.chooser.getSaveEncoding();
-			String fileFormat = Outliner.chooser.getSaveFileFormat();
-
-			// Update the document settings
-			document.settings.lineEnd.def = lineEnd;
-			document.settings.lineEnd.cur = lineEnd;
-			document.settings.lineEnd.tmp = lineEnd;
-			document.settings.saveEncoding.def = encoding;
-			document.settings.saveEncoding.cur = encoding;
-			document.settings.saveEncoding.tmp = encoding;
-			document.settings.saveFormat.def = fileFormat;
-			document.settings.saveFormat.cur = fileFormat;
-			document.settings.saveFormat.tmp = fileFormat;
-			
-			saveFile(filename,document,true);
-		}
-	}
-	
-	protected static void openOutlinerDocument() {
-		// Setup the File Chooser
-		Outliner.chooser.configureForOpen(null, Preferences.OPEN_ENCODING.cur, Preferences.OPEN_FORMAT.cur);
-		
-		int option = Outliner.chooser.showOpenDialog(Outliner.outliner);
-
-		// Update the most recent save dir preference
-		Preferences.MOST_RECENT_OPEN_DIR.cur = Outliner.chooser.getCurrentDirectory().getPath();
-		Preferences.MOST_RECENT_OPEN_DIR.restoreTemporaryToCurrent();
-
-		// Handle User Input
-		if (option == JFileChooser.APPROVE_OPTION) {
-			String filename = Outliner.chooser.getSelectedFile().getPath();
-			if (!Outliner.isFileNameUnique(filename)) {
-				JOptionPane.showMessageDialog(Outliner.outliner, "The file: " + filename + " is already open.");
-				
-				// Change to the open window.
-				Outliner.menuBar.windowMenu.changeToWindow(Outliner.getDocument(filename));
-				return;
-			}
-			
-			// Pull Preference Values from the file chooser
-			String encoding = Outliner.chooser.getOpenEncoding();
-			String fileFormat = Outliner.chooser.getOpenFileFormat();
-
-			DocumentInfo docInfo = new DocumentInfo();
-			docInfo.setPath(filename);
-			docInfo.setEncodingType(encoding);
-			docInfo.setFileFormat(fileFormat);
-			
-			openFile(docInfo);
-		}
-	}
-
-	protected static void revertOutlinerDocument(OutlinerDocument document) {
-		int result = JOptionPane.showConfirmDialog(document, "Revert File? All Changes will be lost.","",JOptionPane.YES_NO_OPTION);
-		if (result == JOptionPane.YES_OPTION) {
-			revertFile(document.getFileName(),document);
-		} else if (result == JOptionPane.NO_OPTION) {
-			return;
-		}
 	}
 
 	
@@ -608,3 +366,298 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener, GU
 		layout.setFocus(firstVisibleNode, outlineLayoutManager.TEXT);
 	}
 }
+
+
+public class NewFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		
+		addActionListener(this);
+	}
+
+
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		new OutlinerDocument("");
+	}
+}
+
+
+public class OpenFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		
+		addActionListener(this);
+	}
+
+
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		openOutlinerDocument();
+	}
+
+	protected static void openOutlinerDocument() {
+		// Setup the File Chooser
+		Outliner.chooser.configureForOpen(null, Preferences.OPEN_ENCODING.cur, Preferences.OPEN_FORMAT.cur);
+		
+		int option = Outliner.chooser.showOpenDialog(Outliner.outliner);
+
+		// Update the most recent save dir preference
+		Preferences.MOST_RECENT_OPEN_DIR.cur = Outliner.chooser.getCurrentDirectory().getPath();
+		Preferences.MOST_RECENT_OPEN_DIR.restoreTemporaryToCurrent();
+
+		// Handle User Input
+		if (option == JFileChooser.APPROVE_OPTION) {
+			String filename = Outliner.chooser.getSelectedFile().getPath();
+			if (!Outliner.isFileNameUnique(filename)) {
+				JOptionPane.showMessageDialog(Outliner.outliner, "The file: " + filename + " is already open.");
+				
+				// Change to the open window.
+				Outliner.menuBar.windowMenu.changeToWindow(Outliner.getDocument(filename));
+				return;
+			}
+			
+			// Pull Preference Values from the file chooser
+			String encoding = Outliner.chooser.getOpenEncoding();
+			String fileFormat = Outliner.chooser.getOpenFileFormat();
+
+			DocumentInfo docInfo = new DocumentInfo();
+			docInfo.setPath(filename);
+			docInfo.setEncodingType(encoding);
+			docInfo.setFileFormat(fileFormat);
+			
+			FileMenu.openFile(docInfo);
+		}
+	}
+}
+
+
+public class SaveFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		
+		addActionListener(this);
+		
+		setEnabled(false);
+	}
+
+
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		saveOutlinerDocument(Outliner.getMostRecentDocumentTouched());
+	}
+
+	protected static void saveOutlinerDocument(OutlinerDocument document) {
+		if (!document.getFileName().equals("")) {
+			FileMenu.saveFile(document.getFileName(),document,false);
+		} else {
+			SaveAsFileMenuItem.saveAsOutlinerDocument(document);
+		}
+	}
+
+}
+
+
+public class SaveAllFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		
+		addActionListener(this);
+		
+		setEnabled(false);
+	}
+
+
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		saveAllOutlinerDocuments();
+	}
+
+	protected static void saveAllOutlinerDocuments() {
+		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
+			OutlinerDocument doc = Outliner.getDocument(i);
+			if (doc.isFileModified()) {
+				SaveFileMenuItem.saveOutlinerDocument(doc);
+			}
+		}
+	}
+}
+
+
+public class SaveAsFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		
+		addActionListener(this);
+		
+		setEnabled(false);
+	}
+
+
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		saveAsOutlinerDocument(Outliner.getMostRecentDocumentTouched());
+	}
+
+	protected static void saveAsOutlinerDocument(OutlinerDocument document) {
+		// Setup the File Chooser
+		Outliner.chooser.configureForSave(document);
+
+		int option = Outliner.chooser.showSaveDialog(Outliner.outliner);
+		
+		// Update the most recent save dir preference
+		Preferences.MOST_RECENT_SAVE_DIR.cur = Outliner.chooser.getCurrentDirectory().getPath();
+		Preferences.MOST_RECENT_SAVE_DIR.restoreTemporaryToCurrent();
+				
+		// Handle User Input
+		if (option == JFileChooser.APPROVE_OPTION) {
+			String filename = Outliner.chooser.getSelectedFile().getPath();
+			if (!Outliner.isFileNameUnique(filename) && (!filename.equals(document.getFileName()))) {
+				JOptionPane.showMessageDialog(Outliner.outliner, "Cannot save to file: " + filename + " it is currently open.");
+				// We might want to move this test into the approveSelection method of the file chooser.
+				return;
+			}
+			
+			// Pull Preference Values from the file chooser
+			String lineEnd = Outliner.chooser.getLineEnding();
+			String encoding = Outliner.chooser.getSaveEncoding();
+			String fileFormat = Outliner.chooser.getSaveFileFormat();
+
+			// Update the document settings
+			document.settings.lineEnd.def = lineEnd;
+			document.settings.lineEnd.cur = lineEnd;
+			document.settings.lineEnd.tmp = lineEnd;
+			document.settings.saveEncoding.def = encoding;
+			document.settings.saveEncoding.cur = encoding;
+			document.settings.saveEncoding.tmp = encoding;
+			document.settings.saveFormat.def = fileFormat;
+			document.settings.saveFormat.cur = fileFormat;
+			document.settings.saveFormat.tmp = fileFormat;
+			
+			FileMenu.saveFile(filename,document,true);
+		}
+	}
+}
+
+
+public class RevertFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		
+		addActionListener(this);
+		
+		setEnabled(false);
+	}
+
+
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		revertOutlinerDocument(Outliner.getMostRecentDocumentTouched());
+	}
+
+	protected static void revertOutlinerDocument(OutlinerDocument document) {
+		int result = JOptionPane.showConfirmDialog(document, "Revert File? All Changes will be lost.","",JOptionPane.YES_NO_OPTION);
+		if (result == JOptionPane.YES_OPTION) {
+			FileMenu.revertFile(document.getFileName(),document);
+		} else if (result == JOptionPane.NO_OPTION) {
+			return;
+		}
+	}
+}
+
+
+public class CloseFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		
+		addActionListener(this);
+		
+		setEnabled(false);
+	}
+
+
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		closeOutlinerDocument(Outliner.getMostRecentDocumentTouched());
+	}
+
+	protected static void closeOutlinerDocument(OutlinerDocument document) {
+		OutlinerWindowMonitor.closeInternalFrame(document);
+	}
+}
+
+
+public class CloseAllFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		
+		addActionListener(this);
+		
+		setEnabled(false);
+	}
+
+
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		closeAllOutlinerDocuments();
+	}
+
+	protected static boolean closeAllOutlinerDocuments() {
+		for (int i = Outliner.openDocumentCount() - 1; i >= 0; i--) {
+			if (!OutlinerWindowMonitor.closeInternalFrame(Outliner.getDocument(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+}
+
+
+public class QuitMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		
+		addActionListener(this);
+	}
+
+
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		quit();
+	}
+
+	public static void quit() {
+		if (!CloseAllFileMenuItem.closeAllOutlinerDocuments()) {
+			return;
+		}
+
+		// Hide Desktop
+		Outliner.outliner.setVisible(false);
+		Outliner.outliner.dispose();
+		
+		// Save config and quit
+		Preferences.saveConfigFile(Outliner.CONFIG_FILE);
+		RecentFilesList.saveConfigFile(Outliner.RECENT_FILES_FILE);
+		System.exit(0);
+	}
+}
+
+

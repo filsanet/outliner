@@ -175,7 +175,8 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		addWindowListener(
 			new WindowAdapter() {
 				public void windowClosing(WindowEvent e) {
-					FileMenu.quit();
+					QuitMenuItem item = (QuitMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.QUIT_MENU_ITEM);
+					item.quit();
 				}
 			}
 		);
@@ -290,8 +291,11 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		WindowMenu.addWindow(document);
 		
 		// Update the close menu item
-		menuBar.fileMenu.FILE_CLOSE_ITEM.setEnabled(true);
-		menuBar.fileMenu.FILE_CLOSE_ALL_ITEM.setEnabled(true);
+		CloseFileMenuItem closeItem = (CloseFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CLOSE_MENU_ITEM);
+		CloseAllFileMenuItem closeAllItem = (CloseAllFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CLOSE_ALL_MENU_ITEM);
+		
+		closeItem.setEnabled(true);
+		closeAllItem.setEnabled(true);
 	}
 	
 	public static OutlinerDocument getDocument(int i) {
@@ -358,30 +362,36 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 
 	// File Opening and Saving
 	public static void updateSaveMenuItem() {
+		JMenuItem saveItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_MENU_ITEM);
+		JMenuItem saveAsItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
+		JMenuItem revertItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.REVERT_MENU_ITEM);
+		JMenuItem closeItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CLOSE_MENU_ITEM);
+		JMenuItem closeAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CLOSE_ALL_MENU_ITEM);
+	
 		if (getMostRecentDocumentTouched() == null) {
-			Outliner.menuBar.fileMenu.FILE_SAVE_ITEM.setEnabled(false);
-			Outliner.menuBar.fileMenu.FILE_SAVE_AS_ITEM.setEnabled(false);
-			Outliner.menuBar.fileMenu.FILE_REVERT_ITEM.setEnabled(false);
-			Outliner.menuBar.fileMenu.FILE_CLOSE_ITEM.setEnabled(false);
-			Outliner.menuBar.fileMenu.FILE_CLOSE_ALL_ITEM.setEnabled(false);
+			saveItem.setEnabled(false);
+			saveAsItem.setEnabled(false);
+			revertItem.setEnabled(false);
+			closeItem.setEnabled(false);
+			closeAllItem.setEnabled(false);
 		} else if (getMostRecentDocumentTouched().getFileName().equals("")) {
-			Outliner.menuBar.fileMenu.FILE_SAVE_ITEM.setEnabled(true);
-			Outliner.menuBar.fileMenu.FILE_SAVE_AS_ITEM.setEnabled(true);
-			Outliner.menuBar.fileMenu.FILE_REVERT_ITEM.setEnabled(false);
-			Outliner.menuBar.fileMenu.FILE_CLOSE_ITEM.setEnabled(true);
-			Outliner.menuBar.fileMenu.FILE_CLOSE_ALL_ITEM.setEnabled(true);
+			saveItem.setEnabled(true);
+			saveAsItem.setEnabled(true);
+			revertItem.setEnabled(false);
+			closeItem.setEnabled(true);
+			closeAllItem.setEnabled(true);
 		} else if (getMostRecentDocumentTouched().isFileModified()) {
-			Outliner.menuBar.fileMenu.FILE_SAVE_ITEM.setEnabled(true);
-			Outliner.menuBar.fileMenu.FILE_SAVE_AS_ITEM.setEnabled(true);
-			Outliner.menuBar.fileMenu.FILE_REVERT_ITEM.setEnabled(true);
-			Outliner.menuBar.fileMenu.FILE_CLOSE_ITEM.setEnabled(true);
-			Outliner.menuBar.fileMenu.FILE_CLOSE_ALL_ITEM.setEnabled(true);
+			saveItem.setEnabled(true);
+			saveAsItem.setEnabled(true);
+			revertItem.setEnabled(true);
+			closeItem.setEnabled(true);
+			closeAllItem.setEnabled(true);
 		} else {
-			Outliner.menuBar.fileMenu.FILE_SAVE_ITEM.setEnabled(false);
-			Outliner.menuBar.fileMenu.FILE_SAVE_AS_ITEM.setEnabled(true);
-			Outliner.menuBar.fileMenu.FILE_REVERT_ITEM.setEnabled(false);
-			Outliner.menuBar.fileMenu.FILE_CLOSE_ITEM.setEnabled(true);
-			Outliner.menuBar.fileMenu.FILE_CLOSE_ALL_ITEM.setEnabled(true);
+			saveItem.setEnabled(false);
+			saveAsItem.setEnabled(true);
+			revertItem.setEnabled(false);
+			closeItem.setEnabled(true);
+			closeAllItem.setEnabled(true);
 		}
 	}
 	
@@ -395,7 +405,8 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 			}
 		}
 
-		Outliner.menuBar.fileMenu.FILE_SAVE_ALL_ITEM.setEnabled(enabledState);
+		JMenuItem saveAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_ALL_MENU_ITEM);
+		saveAllItem.setEnabled(enabledState);
 	}
 
 
