@@ -22,6 +22,7 @@ import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.net.Authenticator;
 import java.util.HashMap;
+import com.organic.maynard.outliner.GUITreeLoader;
 
 /**
  * A plugin to a JFileChooser so that a directory on a web server will
@@ -34,7 +35,7 @@ public class WebFileSystemView extends FileSystemView
 	public static boolean DEBUG = false;
 
 	/** Default name of a new folder. */
-	private static String NEW_FOLDER = "untitled";
+	private static String NEW_FOLDER = null;
 
 	private HashMap fileMap = new HashMap();
 	private WebFile rootDir;
@@ -65,6 +66,7 @@ public class WebFileSystemView extends FileSystemView
 	 */
 	public WebFileSystemView(String url, String user, String pw)
 	{
+		NEW_FOLDER = GUITreeLoader.reg.getText("untitled_folder");
 		int len = "http://".length();
 		String host = url.substring(len, url.indexOf("/", len));
 
