@@ -4,9 +4,9 @@
 
 int set_JOE_HOME () ;
 int getShortPathCurDir (char *) ;
-int setEnvVar (char *, char *);
-int setEnvVarWin9x (char *, char *);
-int setAutoExecEnvVar (char *, char *);
+int setEnvVar (char *, char *, char *);
+int setEnvVarWin9x (char *, char *, char *);
+int setAutoExecEnvVar (char *, char *, char *);
 int getAutoExecPath(char *);
 int strToUpper (char *) ;
 int getWord (int, char *, char *) ;

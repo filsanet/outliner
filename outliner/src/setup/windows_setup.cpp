@@ -83,6 +83,7 @@ int main(int argc, char* argv[]){
 int set_JOE_HOME () {
 	// local vars
 	char shortPathBuffer[MAX_PATH] ;
+	char introLines[] = "\n\nrem Java Outline Editor [JOE] home directory\n";
 	
 	// if we can't obtain short pathname for current directory
 	if (! getShortPathCurDir (shortPathBuffer))
@@ -92,9 +93,11 @@ int set_JOE_HOME () {
 	// add a slash
 	strcat (shortPathBuffer, "\\") ;
 	
+	// an introductory line for autoexec.bat verbosity 
+	
 	// return result of trying to set 
 	// environment var JOE_HOME to that value
-	return setEnvVar(JOE_HOME, shortPathBuffer);
+	return setEnvVar(JOE_HOME, shortPathBuffer, introLines);
 	
 } // end set_JOE_HOME
 
@@ -119,11 +122,11 @@ int getShortPathCurDir (char * shortPathBuffer) {
 
 
 // set an environment variable
-int setEnvVar (char * varName, char * varValue) {
+int setEnvVar (char * varName, char * varValue, char * introLines) {
 	
 	// switch out on windows version
 		// for win 9x, use autoexec.bat
-		return setEnvVarWin9x (varName, varValue) ;
+		return setEnvVarWin9x (varName, varValue, introLines) ;
 		// for win nt, ???
 //		return setEnvVarWinNT (varName, varValue) ;
 //		// for win 2k, ???
@@ -137,16 +140,16 @@ int setEnvVar (char * varName, char * varValue) {
 
 
 // set an environment variable on Windows 95, 98, 98 SE
-int setEnvVarWin9x (char * varName, char * varValue) {
+int setEnvVarWin9x (char * varName, char * varValue, char* introLines) {
 	
 	// set up the name/value in autoexec.bat
-	return setAutoExecEnvVar (varName, varValue) ;
+	return setAutoExecEnvVar (varName, varValue, introLines) ;
 	
 } // end function setEnvVarWin9x
 
 
 // set an autoexec.bat environment variable
-int setAutoExecEnvVar (char * varName, char * varValue) {
+int setAutoExecEnvVar (char * varName, char * varValue, char * introLines) {
 	
 	// local vars
 	char autoExecPathBuffer [MAX_PATH] ;
@@ -306,7 +309,7 @@ int setAutoExecEnvVar (char * varName, char * varValue) {
 	if (! (coolAsIs || madeAChange)) {
 		
 		// write some intro lines
-		fputs("\n\nrem Java Outline Editor [JOE] home directory\n", tempFile) ;
+		fputs(introLines, tempFile) ;
 
 		// create new setting string
 		strcpy (newSettingBuffer, "SET ") ;
