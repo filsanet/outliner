@@ -1,2 +1,0 @@
-set|recent_file|Plaintext|ISO-8859-1|||C:\\Program Files\\Metrowerks\\projects\\driving\\dev\\src\\xsl\\generate_documentation.xsl||||||1|54|33|417|559|2,12,14|
-set|recent_file|Plaintext|ISO-8859-1|Windows||C:\\cvsroot\\outliner\\www\\index.html|||Sun, 10 Jun 2001 09:11:53 GMT|||5|5|5|455|455|0,1,4,6,7,10|
