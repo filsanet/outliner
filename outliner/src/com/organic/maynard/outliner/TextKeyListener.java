@@ -254,7 +254,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 				if (e.isControlDown()) {
 					split(tree,layout);
 				} else {
-					insert(tree,layout);
+					doInsert(textArea.node, tree,layout);
 				}
 				break;
 
@@ -682,26 +682,18 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		// Redraw and Set Focus
 		layout.draw(currentNode,OutlineLayoutManager.ICON);
 	}
-
-	private void insert(TreeContext tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-
-		// Create a new node and insert it as a sibling immediatly after the last selected node.
-		Node node = currentNode;
-		int nodeIndex = -1;
-		
+	
+	protected static void doInsert(Node node, TreeContext tree, OutlineLayoutManager layout) {
 		Node newNode = new NodeImpl(tree,"");
-		int newNodeIndex = -1;
+		int newNodeIndex = 0;
 		Node newNodeParent = null;
 		
 		if ((!node.isLeaf()) && (node.isExpanded())) {
-			newNodeIndex = 0;
 			newNodeParent = node;
 			newNode.setDepth(node.getDepth() + 1);
 			node.insertChild(newNode, newNodeIndex);
 		} else {
-			nodeIndex = node.currentIndex();
-			newNodeIndex = nodeIndex + 1;
+			newNodeIndex = node.currentIndex() + 1;
 			newNodeParent = node.getParent();
 			newNode.setDepth(node.getDepth());
 			newNodeParent.insertChild(newNode, newNodeIndex);
@@ -721,7 +713,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		tree.doc.undoQueue.add(undoable);
 		
 		// Redraw and Set Focus
-		layout.draw(newNode, visibleIndex, OutlineLayoutManager.TEXT);
+		layout.draw(newNode, visibleIndex, OutlineLayoutManager.TEXT);	
 	}
 
 	private void mergeWithPrevVisibleNode(TreeContext tree, OutlineLayoutManager layout) {

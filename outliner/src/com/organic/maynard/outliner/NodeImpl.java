@@ -66,8 +66,9 @@ public class NodeImpl implements Node {
 	// Explicit Cloning Method
 	public Node cloneClean() {
 		NodeImpl nodeImpl = new NodeImpl(tree,value);
-		nodeImpl.setParent(parent);
+		
 		nodeImpl.setDepth(depth);
+		
 		nodeImpl.setCommentState(commentState);
 		
 		// clone the attributes

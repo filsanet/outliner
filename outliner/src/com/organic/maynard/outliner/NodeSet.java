@@ -58,6 +58,7 @@ public class NodeSet implements Cloneable {
 		for (int i = 0; i < nodes.size(); i++) {
 			Node node = (Node) nodes.get(i);
 			Node newNode = node.cloneClean();
+			
 			nodeSet.addNode(newNode);
 		}
 		
