@@ -1,3 +1,6 @@
+1.8.10 - ???
+	Feature Enhancements:
+		1) Document Attributes Panel is now non-modal so you can leave it open and it updates as you change from document to document.
 1.8.9.2 - 09/01/02
 	New Features:
 		1) Added text actions for moving the current selection. Ctrl-Right Arrow will move the current selection to the right one character, or down to the next line if the selection is at the end of the current text area. Left Arrow works similarly.
