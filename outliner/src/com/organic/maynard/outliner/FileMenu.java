@@ -260,7 +260,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		}
 		
 		// Update DocumentSettings
-		newDoc.settings.syncPrefs();
+		//newDoc.settings.syncPrefs();
 		newDoc.settings.saveEncoding.def = encoding;
 		newDoc.settings.saveEncoding.cur = encoding;
 		newDoc.settings.saveEncoding.tmp = encoding;

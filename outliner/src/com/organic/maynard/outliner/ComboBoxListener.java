@@ -25,11 +25,23 @@ public class ComboBoxListener implements ItemListener {
 	private JComboBox box = null;
 	private Preference pref = null;
 	
+	// Constructors
 	public ComboBoxListener(JComboBox box, Preference pref) {
-		this.box = box;
-		this.pref = pref;
+		setComboBox(box);
+		setPreference(pref);
 	}
 	
+	
+	// Accessors
+	public void setPreference(Preference pref) {
+		this.pref = pref;
+	}
+
+	public void setComboBox(JComboBox box) {
+		this.box = box;
+	}
+	
+		
 	// ItemListener Interface
 	public void itemStateChanged(ItemEvent e) {
 		handleUpdate();

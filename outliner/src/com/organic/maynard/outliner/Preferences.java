@@ -89,6 +89,9 @@ public class Preferences implements GUITreeComponent {
 		public static final String SHOW_LINE_NUMBERS = "show_line_numbers";
 		public static final String SHOW_INDICATORS = "show_indicators";
 		public static final String SHOW_ATTRIBUTES = "show_attributes";
+		public static final String APPLY_FONT_STYLE_FOR_COMMENTS = "apply_font_style_for_comments";
+		public static final String APPLY_FONT_STYLE_FOR_EDITABILITY = "apply_font_style_for_editability";
+		public static final String APPLY_FONT_STYLE_FOR_MOVEABILITY = "apply_font_style_for_moveability";
 	
 		// Look & Feel Panel
 		public static final String DESKTOP_BACKGROUND_COLOR = "desktop_background_color";

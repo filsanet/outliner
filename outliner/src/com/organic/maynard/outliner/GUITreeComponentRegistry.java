@@ -87,6 +87,8 @@ public class GUITreeComponentRegistry {
 	public static final String COMPONENT_ENCODING_WHEN_SAVING = "save_encoding_component";
 	public static final String COMPONENT_FORMAT_WHEN_OPENING = "open_format_component";
 	public static final String COMPONENT_FORMAT_WHEN_SAVING = "save_format_component";
+
+	public static final String JDIALOG_DOCUMENT_SETTINGS_VIEW = "document_settings_view";
 	
 	private HashMap reg = new HashMap();
 

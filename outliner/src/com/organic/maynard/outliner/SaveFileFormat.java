@@ -1,5 +1,25 @@
 /**
- * Copyright (C) 2001 Maynard Demmon, maynard@organic.com
+ * SaveFileFormat interface
+ * 
+ * an interface for saving files
+ * 
+ * extends the FileFormat interface
+ * 
+ * members
+ *	interfaces
+ * 		instance
+ * 			public
+ * 				byte[] save(TreeContext, DocumentInfo docInfo)
+ * 				boolean supportsComments();
+ * 				boolean supportsEditability();
+ * 				boolean supportsMoveability();
+ * 				boolean supportsAttributes();
+ * 	
+ * 	
+ * Portions copyright (C) 2001 Maynard Demmon <maynard@organic.com>
+ * Portions copyright (C) 2001 Stan Krute <Stan@StanKrute.com>
+ *
+ * Most recent changes: 8/15/01 5:04PM
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,22 +36,32 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
  
+// we're part of this 
 package com.organic.maynard.outliner;
 
-import javax.swing.*;
-import java.io.*;
+// the interface
+public interface SaveFileFormat 
 
-public interface SaveFileFormat {
+	extends FileFormat {
+	
+	// methods
+	
+	// save an outline to a file
 	public byte[] save(
 		TreeContext tree,
 		DocumentInfo docInfo
-	);
+		);
 	
+	// can we store comment attributes in this file format ?	[srk]
 	public boolean supportsComments();
 
+	// can we store editability attributes in this file format ?	[srk]
 	public boolean supportsEditability();
 
+	// can we store moveability attributes in this file format ?	[srk]
 	public boolean supportsMoveability();
 	
+	// can we store node attributes in this file format ?		[srk]
 	public boolean supportsAttributes();
-}
+	
+	} // end interface SaveFileFormat

@@ -35,11 +35,23 @@ public class CheckboxListener implements ActionListener {
 	private JCheckBox checkbox = null;
 	private Preference pref = null;
 	
+	// Constructors
 	public CheckboxListener(JCheckBox checkbox, Preference pref) {
-		this.checkbox = checkbox;
-		this.pref = pref;
+		setCheckBox(checkbox);
+		setPreference(pref);
 	}
 	
+	
+	// Accessors
+	public void setPreference(Preference pref) {
+		this.pref = pref;
+	}
+
+	public void setCheckBox(JCheckBox checkbox) {
+		this.checkbox = checkbox;
+	}
+	
+		
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		handleUpdate();

@@ -1,21 +1,22 @@
 /**
- * OpenFileFormat interface	
+ * FileFormat interface		
  * 
- * an interface for opening files
+ * Interface for file format stuff that's common to both OpenFileFormat and SaveFileFormat interfaces
  * 
- * extends the FileFormat interface
- * 
- * members
+  * members
  *	interfaces
  * 		instance
  * 			public
- * 				int open(TreeContext, DocumentInfo, InputStream)
- * 
+ * 				void addExtension(String, boolean)
+ * 				void removeExtension(String);
+ * 				String getDefaultExtension();
+ * 				Iterator getExtensions();
+ * 				boolean extensionExists(String);
  * 
  * Portions copyright (C) 2001 Maynard Demmon <maynard@organic.com>
  * Portions copyright (C) 2001 Stan Krute <Stan@StanKrute.com>
- *
- * Most recent changes: 8/15/01 5:04PM
+  * 
+ * Most recent changes: 8/15/01 10:10PM
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,24 +33,23 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-// [srk] we're part of this 
+// we're part of this 
 package com.organic.maynard.outliner;
 
-// [srk] we need access to this
-import java.io.*;
+// we use this
+import java.util.*;
 
-// the interface
-public interface OpenFileFormat 
+
+public interface FileFormat { 
 	
-	extends FileFormat {
-		
-	// Methods
+	// File Extension methods
 	
-	// open a file as an outline	[srk]
-	public int open(
-		TreeContext tree,
-		DocumentInfo docInfo,
-		InputStream stream
-		); 
+	public void addExtension(String ext, boolean isDefault);
+	public void removeExtension(String ext);
 	
-	} // end interface OpenFileFormat
+	public Iterator getExtensions();
+	public String getDefaultExtension();
+
+	public boolean extensionExists(String ext);
+	
+	} // end interface FileFormat

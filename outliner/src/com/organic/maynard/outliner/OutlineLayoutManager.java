@@ -207,6 +207,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		OutlinerCellRendererImpl.pIndent = Preferences.getPreferenceInt(Preferences.INDENT).cur;
 		OutlinerCellRendererImpl.pVerticalSpacing = Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).cur;
 		OutlinerCellRendererImpl.pShowLineNumbers = Preferences.getPreferenceBoolean(Preferences.SHOW_LINE_NUMBERS).cur;
+		OutlinerCellRendererImpl.pApplyFontStyleForComments = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur;
 		
 		OutlinerCellRendererImpl.pCommentColor = Preferences.getPreferenceColor(Preferences.TEXTAREA_COMMENT_COLOR).cur;				
 		OutlinerCellRendererImpl.pForegroundColor = Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur;

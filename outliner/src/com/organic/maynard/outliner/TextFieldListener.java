@@ -35,10 +35,23 @@ public class TextFieldListener implements FocusListener {
 	private JTextField field = null;
 	private Preference pref = null;
 	
+	
+	// Constructors
 	public TextFieldListener(JTextField field, Preference pref) {
-		this.field = field;
+		setTextField(field);
+		setPreference(pref);
+	}
+	
+	
+	// Accessors
+	public void setPreference(Preference pref) {
 		this.pref = pref;
 	}
+
+	public void setTextField(JTextField field) {
+		this.field = field;
+	}
+
 	
 	// FocusListener Interface
 	public void focusGained(FocusEvent e) {

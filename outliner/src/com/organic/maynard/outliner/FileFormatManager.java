@@ -1,5 +1,56 @@
 /**
- * Copyright (C) 2001 Maynard Demmon, maynard@organic.com
+ * FileFormatManager class		[srk] added this header info	
+ * 
+ * Manages file formats
+ * 
+ * members
+ *	constants
+ *		class
+ *			public
+ *				String FORMAT_TYPE_OPEN
+ *				String FORMAT_TYPE_SAVE
+ *				String FORMAT_TYPE_OPEN_DEFAULT
+ *				String FORMAT_TYPE_SAVE_DEFAULT
+ *	variables
+ *		instance
+ *			private
+ *				Vector openers
+ *				Vector openerNames
+ *				Vector savers
+ *				Vector saverNames
+ *				OpenFileFormat defaultOpenFileFormat
+ *				SaveFileFormat defaultSaveFileFormat
+ * 				void setExtensions(FileFormat, Vector) {
+ *	methods
+ * 		instance
+ * 			public
+ * 				FileFormatManager ()  // constructor
+ * 				void createFileFormat(String, String, String, Vector) 
+ * 				
+ * 				String getOpenFileFormatNameForExtension(String)
+ * 				OpenFileFormat getDefaultOpenFileFormat()
+ * 				void setDefaultOpenFileFormat(OpenFileFormat) 
+ * 				boolean addOpenFormat(String, OpenFileFormat) 
+ * 				OpenFileFormat getOpenFormat(String formatName) 
+ * 				boolean removeOpenFormat(String formatName)
+ * 				
+ * 				String getSaveFileFormatNameForExtension(String)
+ * 				SaveFileFormat getDefaultSaveFileFormat()
+ * 				void setDefaultSaveFileFormat(SaveFileFormat) 
+ * 				boolean addSaveFormat(String, SaveFileFormat) 
+ * 				SaveFileFormat getSaveFormat(String) 
+ * 				boolean removeSaveFormat(String) 
+ * 		class
+ *			public
+ * 				boolean isNameUnique(String, Vector)
+ * 				int indexOfName(String, Vector) 
+ * 				String loadFile(String filename, String encoding) 
+ * 				boolean writeFile(String, byte[]) 
+ * 				
+ * Portions copyright (C) 2001 Maynard Demmon <maynard@organic.com>
+ * Portions copyright (C) 2001 Stan Krute <Stan@StanKrute.com>
+ *
+ * Most recent changes: 8/15/01 10:20PM
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,22 +67,23 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
  
+// we're a part of this 
 package com.organic.maynard.outliner;
 
-import java.lang.reflect.*;
-
+// we use these 
 import java.io.*;
 import java.util.*;
 
+// the class
 public class FileFormatManager {
 	
-	// Constants
+	// public class constants	[srk]
 	public static final String FORMAT_TYPE_OPEN = "open";
 	public static final String FORMAT_TYPE_SAVE = "save";
 	public static final String FORMAT_TYPE_OPEN_DEFAULT = "open_default";
 	public static final String FORMAT_TYPE_SAVE_DEFAULT = "save_default";
 
-
+	// private instance variables	[srk]
 	private Vector openers = new Vector();
 	private Vector openerNames = new Vector();
 	
@@ -41,70 +93,158 @@ public class FileFormatManager {
 	private OpenFileFormat defaultOpenFileFormat = null;
 	private SaveFileFormat defaultSaveFileFormat = null;
 	
+	// public methods
+	
 	// The Constructor
 	public FileFormatManager() {}
 
+	// create a new file format object, of the OPEN or SAVE flavor	[srk]
 	public void createFileFormat(String formatType, String formatName, String className, Vector extensions) {
 		try {
+			// obtain the class object for className		[srk]
 			Class theClass = Class.forName(className);
+			
+			// TBD add a bit of cleanth and use a switch statement here  [srk]
+		
+			// if this is an Open format spec .... 	[srk]
 			if (formatType.equals(FORMAT_TYPE_OPEN)) {
+				
+				// create an OpenFileFormat object to hold it
 				OpenFileFormat openFileFormat = (OpenFileFormat) theClass.newInstance();
+			
+				// set filename extensions for the format	[srk]
 				setExtensions(openFileFormat, extensions);
+		
+				// try to add this format to our set of Open formats	[srk]
 				boolean success = addOpenFormat(formatName, openFileFormat);
+				
+				// supply some feedback	[srk]
+				// if we succeed ...	[srk]
 				if (success) {
 					System.out.println("  Open: " + className + " -> " + formatName);
-				} else {
+					} // end if
+				else {
+					// failure comes from duplication
 					System.out.println("  Duplicate File Format Name: " + formatName);
-				}
-			} else if (formatType.equals(FORMAT_TYPE_SAVE)) {
+					
+					} // end else
+				
+				} // end if FORMAT_TYPE_OPEN
+			
+			// else if it's a Save format spec ....	[srk]
+			else if (formatType.equals(FORMAT_TYPE_SAVE)) {
+				
+				// create a SaveFileFormat object to hold it
 				SaveFileFormat saveFileFormat = (SaveFileFormat) theClass.newInstance();
+				
+				// set filename extensions for the Save format 	[srk]
+				setExtensions(saveFileFormat, extensions) ;
+				
+				// try to add this format to our set of Save formats		[srk]
 				boolean success = addSaveFormat(formatName, saveFileFormat);
+				
+				// supply some feedback	[srk]
+				// if we succeed ...	[srk]
 				if (success) {
 					System.out.println("  Save: " + className + " -> " + formatName);
-				} else {
+					} // end if
+				else {
+					// failure comes from duplication
 					System.out.println("  Duplicate File Format Name: " + formatName);
-				}
-			} else if (formatType.equals(FORMAT_TYPE_OPEN_DEFAULT)) {
+					} // end else
+				
+				} // end if FORMAT_TYPE_SAVE
+			
+			// else if it's a Default Open format type ... 
+			 else if (formatType.equals(FORMAT_TYPE_OPEN_DEFAULT)) {
+			 	
+			 	// create an OpenFileFormat object to hold it
 				OpenFileFormat openFileFormat = (OpenFileFormat) theClass.newInstance();
+				
+				// set filename extensions for the format	[srk]
 				setExtensions(openFileFormat, extensions);
+				
+				// set this format as our OPEN default		[srk]
 				setDefaultOpenFileFormat(openFileFormat);
+				
+				// try to add this format to our set of Open formats	[srk]
 				boolean success = addOpenFormat(formatName, openFileFormat);
+				
+				// supply some feedback	[srk]
+				// if we succeed ...	[srk]
 				if (success) {
 					System.out.println("  Open: " + className + " -> " + formatName);
-				} else {
+					} // end if
+				else {
+					// failure comes from duplication
 					System.out.println("  Duplicate File Format Name: " + formatName);
-				}
-			} else if (formatType.equals(FORMAT_TYPE_SAVE_DEFAULT)) {
+					}  // end else
+				
+				} // end if FORMAT_TYPE_OPEN_DEFAULT
+			
+			// else if it's a Default Save format type ...
+			else if (formatType.equals(FORMAT_TYPE_SAVE_DEFAULT)) {
+				
+				// create a SaveFileFormat object to hold it
 				SaveFileFormat saveFileFormat = (SaveFileFormat) theClass.newInstance();
+				
+				// set filename extensions for the format	[srk]
+				setExtensions(saveFileFormat, extensions);
+				
+				// set this format as our SAVE default		[srk]
 				setDefaultSaveFileFormat(saveFileFormat);
+				
+				// try to add this format to our set of Save formats	[srk]
 				boolean success = addSaveFormat(formatName, saveFileFormat);
+				
+				// supply some feedback	[srk]
+				// if we succeed ...	[srk]
 				if (success) {
 					System.out.println("  Save: " + className + " -> " + formatName);
-				} else {
+					} // end if
+				else {
+					// failure comes from duplication
 					System.out.println("  Duplicate File Format Name: " + formatName);
-				}		
-			}
-		} catch (ClassNotFoundException cnfe) {
+					} // end else	
+				} // end if FORMAT_TYPE_SAVE _DEFAULT
+				
+			} // end try
+			
+		catch (ClassNotFoundException cnfe) {
 			System.out.println("Exception: " + className + " " + cnfe);
-		} catch (Exception e) {
+			} // end catch
+		
+		catch (Exception e) {
 			e.printStackTrace();
-		}
-	}
+			} // end catch
+		
+		}  // end method CreateFileFormat
 	
-	private void setExtensions(OpenFileFormat format, Vector extensions) {
+	// set a format's set of filename extensions
+	private void setExtensions(FileFormat format, Vector extensions) {
+
+		// check for a null set
 		if (extensions == null) {
 			return;
-		}
+			} // end if
 		
+		// for each extension in the set ....
 		for (int i = 0; i < extensions.size(); i++) {
+			
+			// force it to lowercase
 			String ext = ((String) extensions.get(i)).toLowerCase();
+			
+			// the first extension in the set is the default
 			if (i == 0) {
 				format.addExtension(ext, true);
-			} else {
+				} // end if
+			else {
 				format.addExtension(ext, false);
-			}
-		}
-	}
+				} // end else
+			
+		} // end for
+		
+		} // end method setExtensions
 
 	// Open Accessors
 	public String getOpenFileFormatNameForExtension(String extension) {
@@ -164,6 +304,19 @@ public class FileFormatManager {
 	
 	
 	// Save Accessors
+	public String getSaveFileFormatNameForExtension(String extension) {
+		for (int i = 0; i < savers.size(); i++) {
+			SaveFileFormat format = (SaveFileFormat) savers.get(i);
+			if (format.extensionExists(extension.toLowerCase())) {
+				return (String) saverNames.get(i);
+			}
+		}
+		
+		int index = savers.indexOf(getDefaultSaveFileFormat());
+		return (String) saverNames.get(index);
+		
+		} // end getSaveFileFormatNameForExtension
+	
 	public SaveFileFormat getDefaultSaveFileFormat() {
 		return defaultSaveFileFormat;
 	}
