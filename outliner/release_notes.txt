@@ -9,12 +9,14 @@
 	Enhanced Features:
 		1) Autosave agent frequency can now be set from the misc panel.
 		2) Added a "ding" when a search/replace finds no matches.
+		3) Andreas Hochsteger (highstick) has provided a German translation of the gui_tree file so that JOE can be run with a German Text in the interface.
 	Bug Fixes:
 		1) Fixed a bug where new documents would often have the text area hidden until the next redraw.
 	Notes:
 		1) If you have a previous version of JOE on your system you will probably need to manually copy the updated autosave agent script from "<install_dir>/prefs/scripts/Autosave Agent.txt" to "<user_home>/outliner/scripts/Autosave Agent.txt". If you don't do this it just means the autosave agent won't work.
 		2) The sources for com.organic.maynard.jar have been put in CVS. Xerces.jar is required to compile com.organic.maynard.jar, but I'm leaving it out of the builds because it is very large (1.7M) and is not used by JOE. I will check in the license and a copy the copy of xerces.jar I'm currently using, so you can download it from CVS or instead get it directly from Apache: http://xml.apache.org/xerces-j/index.html. I'm currently using xerces 1.4.3, but any recent release should be fine.
 		3) We've updated the way the recent files list works, so your current recent files will get blown away if you use the new version.
+		4) We're now using Ant to build.
 1.8.6.1 - 10/20/01
 	Bug Fixes:
 		1) Fixed bug #472934, where macros applied to node selections were not working.
