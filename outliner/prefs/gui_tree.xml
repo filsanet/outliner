@@ -1,14 +1,97 @@
 <?xml version="1.0"?>
 <root id="outliner" class="com.organic.maynard.outliner.Outliner" title="JOE">
-	<preferences id="preferences" class="com.organic.maynard.outliner.Preferences">
+	<preferences id="prefs" class="com.organic.maynard.outliner.Preferences">
+		<preference id="most_recent_open_dir" class="com.organic.maynard.outliner.PreferenceString" default="."/>
+		<preference id="most_recent_save_dir" class="com.organic.maynard.outliner.PreferenceString" default="."/>
+		<preference id="is_maximized" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
+			<validator id="is_maximized_validator" class="com.organic.maynard.outliner.BooleanValidator">
+			</validator>
+		</preference>
+		<preference id="time_zone_for_saving_dates" class="com.organic.maynard.outliner.PreferenceString" default="GMT"/>
+		<preference id="renderer_widgit_cache_size" class="com.organic.maynard.outliner.PreferenceInt" default="40">
+			<validator id="renderer_widgit_cache_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="4" max="256" default="40">
+			</validator>
+		</preference>
 		<preferencesframe id="preferences_frame" class="com.organic.maynard.outliner.PreferencesFrame" title="Preferences">
 			<preferencepanel id="preferences_panel_editor" class="com.organic.maynard.outliner.PreferencesPanelEditor" title="Editor">
+				<preference id="font_face" class="com.organic.maynard.outliner.PreferenceString" default="SansSerif"/>
+				<preference id="font_size" class="com.organic.maynard.outliner.PreferenceInt" default="12">
+					<validator id="font_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="6" max="36" default="12">
+					</validator>
+				</preference>
+				<preference id="line_wrap" class="com.organic.maynard.outliner.PreferenceString" default="words"/>
+				<preference id="undo_queue_size" class="com.organic.maynard.outliner.PreferenceInt" default="100">
+					<validator id="undo_queue_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="100000" default="100">
+					</validator>
+				</preference>
+				<preference id="show_line_numbers" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+					<validator id="show_line_numbers_validator" class="com.organic.maynard.outliner.BooleanValidator">
+					</validator>
+				</preference>
 			</preferencepanel>
 			<preferencepanel id="preferences_panel_look_and_feel" class="com.organic.maynard.outliner.PreferencesPanelLookAndFeel" title="Look &amp; Feel">
+				<preference id="desktop_background_color" class="com.organic.maynard.outliner.PreferenceColor" default="-16777216"/>
+				<preference id="panel_background_color" class="com.organic.maynard.outliner.PreferenceColor" default="-1"/>
+				<preference id="textarea_background_color" class="com.organic.maynard.outliner.PreferenceColor" default="-986896"/>
+				<preference id="textarea_foreground_color" class="com.organic.maynard.outliner.PreferenceColor" default="-16777216"/>
+				<preference id="selected_child_color" class="com.organic.maynard.outliner.PreferenceColor" default="-10987432"/>
+				<preference id="line_number_color" class="com.organic.maynard.outliner.PreferenceColor" default="-1315861"/>
+				<preference id="line_number_selected_color" class="com.organic.maynard.outliner.PreferenceColor" default="-2960686"/>
+				<preference id="line_number_selected_child_color" class="com.organic.maynard.outliner.PreferenceColor" default="-2302756"/>
+				<preference id="vertical_spacing" class="com.organic.maynard.outliner.PreferenceInt" default="2">
+					<validator id="vertical_spacing_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="2">
+					</validator>
+				</preference>
+				<preference id="indent" class="com.organic.maynard.outliner.PreferenceInt" default="15">
+					<validator id="indent_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="1" max="99" default="15">
+					</validator>
+				</preference>
+				<preference id="left_margin" class="com.organic.maynard.outliner.PreferenceInt" default="5">
+					<validator id="left_margin_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="5">
+					</validator>
+				</preference>
+				<preference id="top_margin" class="com.organic.maynard.outliner.PreferenceInt" default="5">
+					<validator id="top_margin_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="5">
+					</validator>
+				</preference>
+				<preference id="right_margin" class="com.organic.maynard.outliner.PreferenceInt" default="5">
+					<validator id="right_margin_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="5">
+					</validator>
+				</preference>
+				<preference id="bottom_margin" class="com.organic.maynard.outliner.PreferenceInt" default="5">
+					<validator id="bottom_margin_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="5">
+					</validator>
+				</preference>
 			</preferencepanel>
 			<preferencepanel id="preferences_panel_open_and_save" class="com.organic.maynard.outliner.PreferencesPanelOpenAndSave" title="Open &amp; Save">
+				<preference id="line_end" class="com.organic.maynard.outliner.PreferenceLineEnding"/>
+				<preference id="open_encoding" class="com.organic.maynard.outliner.PreferenceString" default="ISO-8859-1"/>
+				<preference id="save_encoding" class="com.organic.maynard.outliner.PreferenceString" default="ISO-8859-1"/>
+				<preference id="open_format" class="com.organic.maynard.outliner.PreferenceString" default="Plaintext"/>
+				<preference id="save_format" class="com.organic.maynard.outliner.PreferenceString" default="Plaintext"/>
 			</preferencepanel>
 			<preferencepanel id="preferences_panel_misc" class="com.organic.maynard.outliner.PreferencesPanelMisc" title="Misc.">
+				<preference id="print_environment" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
+					<validator id="print_environment_validator" class="com.organic.maynard.outliner.BooleanValidator">
+					</validator>
+				</preference>
+				<preference id="new_doc_on_startup" class="com.organic.maynard.outliner.PreferenceBoolean" default="true">
+					<validator id="new_doc_on_startup_validator" class="com.organic.maynard.outliner.BooleanValidator">
+					</validator>
+				</preference>
+				<preference id="recent_files_list_size" class="com.organic.maynard.outliner.PreferenceInt" default="10">
+					<validator id="recent_files_list_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="10">
+					</validator>
+				</preference>
+				<preference id="owner_name" class="com.organic.maynard.outliner.PreferenceString" default=""/>
+				<preference id="owner_email" class="com.organic.maynard.outliner.PreferenceString" default=""/>
+				<preference id="web_file_system" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
+					<validator id="web_file_system_validator" class="com.organic.maynard.outliner.BooleanValidator">
+					</validator>
+				</preference>
+				<preference id="web_file_url" class="com.organic.maynard.outliner.PreferenceString" default="http://localhost/outliner.php"/>
+				<preference id="web_file_user" class="com.organic.maynard.outliner.PreferenceString" default=""/>
+				<preference id="web_file_password" class="com.organic.maynard.outliner.PreferenceString" default=""/>
 			</preferencepanel>
 		</preferencesframe>
 	</preferences>
