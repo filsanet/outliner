@@ -2,6 +2,9 @@
 <root id="outliner" class="com.organic.maynard.outliner.Outliner" title="JOE">
 	<!-- COMPATIBLE WITH JOE VERSION: 1.8.10.4 -->
 	<!-- TEXT REPOSITORY -->
+		<asset type="text" key="tt_find_replace_scope_document" value="Scope options for Find/Replace actions on the current document."/>
+		<asset type="text" key="tt_find_replace_scope_documents" value="Scope options for Find/Replace actions on all open documents."/>
+		<asset type="text" key="tt_find_replace_scope_file_system" value="Scope options for Find/Replace actions on the file system."/>
 		<asset type="text" key="export" value="Export"/>
 		<asset type="text" key="new_ellipsis" value="New..."/>
 		<asset type="text" key="file_or_dir_does_not_exist" value="File or Directory does not exist: {$value_1}"/>

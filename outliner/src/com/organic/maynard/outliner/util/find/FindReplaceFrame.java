@@ -617,9 +617,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		
 		// Setup Tabs
 		tabs = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
-		tabs.addTab(CURRENT_DOCUMENT, null, tabDocument, "Scope options for Find/Replace actions on the current document."); // FIXME: i18n
-		tabs.addTab(ALL_OPEN_DOCUMENTS, null, tabAllDocuments, "Scope options for Find/Replace actions on all open documents."); // FIXME: i18n
-		tabs.addTab(FILE_SYSTEM, null, tabFileSystem, "Scope options for Find/Replace actions on the file system."); // FIXME: i18n
+		tabs.addTab(CURRENT_DOCUMENT, null, tabDocument, GUITreeLoader.reg.getText("tt_find_replace_scope_document"));
+		tabs.addTab(ALL_OPEN_DOCUMENTS, null, tabAllDocuments, GUITreeLoader.reg.getText("tt_find_replace_scope_documents"));
+		tabs.addTab(FILE_SYSTEM, null, tabFileSystem, GUITreeLoader.reg.getText("tt_find_replace_scope_file_system"));
 		
 		tabs.addChangeListener(
 			new ChangeListener() {
