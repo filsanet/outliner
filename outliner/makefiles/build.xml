@@ -62,6 +62,16 @@ Targets:
 				use="true"
 				windowtitle="Java Outline Editor (JOE) API"
 			>
+				<classpath>
+					<pathelement path="${lib}/bsh.jar"/>
+					<pathelement path="${lib}/com.organic.maynard.jar"/>
+					<pathelement path="${lib}/com.yearahead.io.webfile.jar"/>
+					<pathelement path="${lib}/xmlrpc.jar"/>
+					<pathelement path="${lib}/jakarta-oro.jar"/>
+					<pathelement path="${lib}/sax.jar"/>
+					<pathelement path="${lib}/xp.jar"/>
+					<pathelement path="${lib}/jazzy-core.jar"/>
+				</classpath>
 			</javadoc>
 		</target>
 	<!-- webfilephp TARGETS -->
