@@ -2,13 +2,14 @@
 	Feature Enhancements:
 		1) Undo/Redo now displays informative text in the MenuItems about what you are undoing and redoing.
 		2) Undo All/Redo All now displays your current location within the undo queue, as well as the maximum size of the undo queue.
-		3) Resizing the max undo queue size no longer clears out the redoables unless the current queue size is larger than the new max size.
+		3) Resizing the max undo queue size no longer clears out the redoables unless unless it proves neccessary.
 	Bug Fixes:
 		1) Fixed a bug with JDK1.4 where focus wouldn't change to the hidden component, causing the cursor to track with you as you scroll, rather than staying with the node you were editing.
 		2) Fixed a bug introduced in 1.8.9.1 where the default text action wasn't working in JTextAreas. This made it impossible to enter text in various places, such as find/replace and some of the preferences panels.
 		3) Fixed some StackOverflow issues with demoting thousands of nodes at the same time, by unwinding more of the recursive methods in NodeImpl.
 		4) Fixed an obscure bug with CompoundUndoableReplace where deleting the first node in the tree when it is expanded could cause an exception when you did a "redo" where the previous redo selected a node.
 		5) Fixed a bug where adjusting the max size of the undo cache to a smaller number than the current undo cache size would leave an extra redo hanging around thus causing an exception if you redid it.
+		6) Fixed a bug where redoing a Node Attribute modification would cause it to become readonly.
 1.8.9.1 - 08/24/02
 	New Features:
 		1) Added a splash screen that displays at startup, giving a user a bit more feedback that something is happening while they wait for the GUI to set itself up.
