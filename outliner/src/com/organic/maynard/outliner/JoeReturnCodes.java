@@ -5,7 +5,7 @@
  * 
  *		
  * Copyright (C) 2001 Stan Krute <Stan@StanKrute.com>
- * Last Touched: 8/14/01 10:03PM
+ * Last Touched: 8/15/01 12:07PM
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -68,5 +68,8 @@ public interface JoeReturnCodes {
 	
 	// -7xx internet errors
 	public static final int URL_NOT_FOUND = -700 ;
+
+	// -8xx nullness errors
+	public static final int NULL_OBJECT_REFERENCE = -800 ;
 	
 	} // end interface JoeReturnCodes
