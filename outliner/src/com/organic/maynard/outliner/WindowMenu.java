@@ -125,6 +125,10 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener, 
 		try {
 			OutlinerDocument prevDoc = Outliner.getMostRecentDocumentTouched();
 			
+			if (prevDoc == doc) {
+				return;
+			}
+			
 			// DeIconify if neccessary
 			if (doc.isIcon()) {
 				doc.setIcon(false);
