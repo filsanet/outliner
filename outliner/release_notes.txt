@@ -1,3 +1,33 @@
+1.8.1 - ???
+	Enhanced Features:
+		1) Now the GUI tree also does the labels, textfields, combo boxes, etc. in the preference panels.
+		2) Cleaned up the startup console spewage a bit.
+		3) The main window now remembers it's size and location between sessions.
+		4) Copy/Cut/Paste now supports objects internally while still maintaining StringSelection compatibility with the outside world. This allows attributes to be pasted along with the node when nodes are copied or cut. This also preserves comment state as well.
+		5) Added supportsAttributes() method to SaveFileFormat interface. Now the user is warned if the file format does not support saving attributes.
+	New Features:
+		1) Added the first visible beginnings of multiple language support. The command line now takes a lang arg which controls which gui_tree.xml file is loaded. For japanese it is also important to set the locale. This has been REMed out in the batch files, but is there as an example. 
+			The gui_tree.en.xml is the version I will make sure is up to date. I added a gui_tree.en.xml (Spanish) with a few babelfish translations to make sure it works. 
+			I also added a gui_tree.ja.xml to see if I could get japanese working. It too has a few babelfish translations just to see that it works. 
+			Apparently there are issues with win2k and CJK support as it relates to java. From what I've read on the bug parade it seems that if you set the current and default locales in your system settings you will be able to edit text, otherwise the IME text entry thingy doesn't work. I've been able to copy and paste in though so in principal it works. Also, I've got a Unicode font that supports CJK so that I can see the japanese in the editor.
+	Bug Fixes:
+		1) Fixed bug where changing the font face/size would not effect new documents.
+		2) Somehow I forgot the code that made it possible to add new attributes. This may or may not have been messed up in the last build, but it was definitly messed up in CVS, but now it's fixed.
+1.8.0 - 07/26/01
+	New Features:
+		1) Feature Request #443665. Implemented "Select None" for nodes and textareas.
+		2) Feature Request #443665. Implemented "Select Inverse" for nodes.
+	Enhanced Features:
+		1) Modified backspace/delete for node selections to work consistently as per Stanley Krute's suggestions. Backspace/delete no longer tries to stay in the current node set, but instead works closer to what you would expect in a standard text editor.
+		2) You can now add and remove attributes from nodes.
+		3) Feature Request #444519. Renamed menus and window titles.
+		4) Feature Request #444531. Added a "delete" menuitem.
+	Bug Fixes:
+		1) Fixed the split pane in the Preferences Panel so that the tree won't get squeezed out. Also made sure that extra space goes to the right panel by default. Also increased the minimum and initial height of the frame by 5 pixels so that the scrollbar will not be neccessary.
+		2) Added catch in preferences config file parsing. Now if you have a preference that is no longer used it won't barf and die.
+		3) The "copy", "paste" and "select inverse" menu items are now correctly activated/deactived when changing between docuements.
+		4) Fixed a bug where focus would not always be set correctly when a draw up had just occurred. This would occur when a user clicked on a nodes button to select it.
+		5) I finally realized why I implemented the custome ScrollBarUI. My custom UI lets me update the thumb even when it's being dragged. This stops the jitters that occur with unequally sized nodes.
 1.0.7a - 07/20/01
 	Notes:
 		1) Put all the release notes into one file like they should be.
