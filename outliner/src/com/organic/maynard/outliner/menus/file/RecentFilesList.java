@@ -554,6 +554,10 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 		String line_ending = "\n";
 		buf.append(line_ending);
 		PropertyContainerUtil.writeXML(buf, frameInfoList, 0, line_ending);
-		FileTools.dumpStringToFile(new File(filename), buf.toString(), "UTF-8");
+		try {
+			FileTools.dumpStringToFile(new File(filename), buf.toString(), "UTF-8");
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
 	}
 }

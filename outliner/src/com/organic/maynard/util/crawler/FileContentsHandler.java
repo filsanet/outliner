@@ -35,6 +35,9 @@ import java.io.*;
 import com.organic.maynard.io.*;
 import java.util.*;
 
+/**
+ * Handles the contents of each file processed by a crawler.
+ */
 public class FileContentsHandler implements FileHandler {
 	// Constants
 	public static final int MODE_UNKNOWN = -1;
@@ -53,7 +56,7 @@ public class FileContentsHandler implements FileHandler {
 	public FileContentsHandler(String lineEnding) {
 		this(lineEnding, true);
 	}
-
+	
 	public FileContentsHandler(String lineEnding, boolean lineEndingAtEnd) {
 		this(lineEnding, lineEndingAtEnd, MODE_BIG_CHUNK, "UTF-8", "UTF-8");
 	}
@@ -74,21 +77,46 @@ public class FileContentsHandler implements FileHandler {
 	
 	
 	// Accessors
-	public String getLineEnding() {return lineEnding;}
-	public void setLineEnding(String lineEnding) {this.lineEnding = lineEnding;}
-
-	public boolean getLineEndingAtEnd() {return lineEndingAtEnd;}
-	public void setLineEndingAtEnd(boolean lineEndingAtEnd) {this.lineEndingAtEnd = lineEndingAtEnd;}
-
-	public int getProcessMode() {return processMode;}
-	public void setProcessMode(int processMode) {this.processMode = processMode;}
-
-	public String getOpenEncoding() {return openEncoding;}
-	public void setOpenEncoding(String openEncoding) {this.openEncoding = openEncoding;}
-
-	public String getSaveEncoding() {return saveEncoding;}
-	public void setSaveEncoding(String saveEncoding) {this.saveEncoding = saveEncoding;}
-
+	public String getLineEnding() {
+		return lineEnding;
+	}
+	
+	public void setLineEnding(String lineEnding) {
+		this.lineEnding = lineEnding;
+	}
+	
+	public boolean getLineEndingAtEnd() {
+		return lineEndingAtEnd;
+	}
+	
+	public void setLineEndingAtEnd(boolean lineEndingAtEnd) {
+		this.lineEndingAtEnd = lineEndingAtEnd;
+	}
+	
+	public int getProcessMode() {
+		return processMode;
+	}
+	
+	public void setProcessMode(int processMode) {
+		this.processMode = processMode;
+	}
+	
+	public String getOpenEncoding() {
+		return openEncoding;
+	}
+	
+	public void setOpenEncoding(String openEncoding) {
+		this.openEncoding = openEncoding;
+	}
+	
+	public String getSaveEncoding() {
+		return saveEncoding;
+	}
+	
+	public void setSaveEncoding(String saveEncoding) {
+		this.saveEncoding = saveEncoding;
+	}
+	
 	
 	// FileHandler Interface
 	public void handleFile(File file) {
@@ -108,7 +136,11 @@ public class FileContentsHandler implements FileHandler {
 				contents = contents.substring(0, contentsLength - lineEndingLength);
 			}
 			
-			FileTools.dumpStringToFile(file, contents, getSaveEncoding());
+			try {
+				FileTools.dumpStringToFile(file, contents, getSaveEncoding());
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			}
 		} else if (getProcessMode() == MODE_ARRAYS) {
 			ArrayList lines = new ArrayList();
 			ArrayList lineEndings = new ArrayList();
@@ -128,7 +160,7 @@ public class FileContentsHandler implements FileHandler {
 		System.out.println("Contents: " + contents);
 		return contents;
 	}
-
+	
 	protected boolean processContents(File file, ArrayList lines, ArrayList lineEndings) {
 		return false;
 	}

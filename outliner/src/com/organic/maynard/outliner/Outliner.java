@@ -109,7 +109,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	public static String SCRIPTS_FILE =      new StringBuffer().append(USER_PREFS_DIR).append("scripts.txt").toString();
 	public static String FIND_REPLACE_FILE = new StringBuffer().append(USER_PREFS_DIR).append("find_replace.xml").toString();
 	public static String CONFIG_FILE =       new StringBuffer().append(USER_PREFS_DIR).append("config.txt").toString();
-	public static String RECENT_FILES_FILE = new StringBuffer().append(USER_PREFS_DIR).append("recent_files.ser").toString();
+	public static String RECENT_FILES_FILE = new StringBuffer().append(USER_PREFS_DIR).append("recent_files.xml").toString();
 	
 	// These dirs/files should always be under the apps prefs dir.
 	public static String MACRO_CLASSES_FILE =  new StringBuffer().append(PREFS_DIR).append("macro_classes.txt").toString();
@@ -284,7 +284,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	}
 	
 	// XML Parser
-	public static final Parser XML_PARSER = new com.jclark.xml.sax.Driver();
+	//public static final Parser XML_PARSER = new com.jclark.xml.sax.Driver();
 	public static final GUITreeLoader GUI_TREE_LOADER = new GUITreeLoader();
 	
 	
