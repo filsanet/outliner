@@ -571,7 +571,6 @@ int setEnvVar (char * varName, char * varValue, char * introLines, windows_versi
 			if (! (result = setRegistryEnvVar (varName, varValue, SYSTEM)))
 				
 				// we'll set it for just the current user
-				result = setRegistryEnvVar (varName, varValue, USER);
 			
 			// if we succeeded
 			if (result) 
