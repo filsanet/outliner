@@ -31,7 +31,7 @@ import javax.swing.tree.*;
 
 import org.xml.sax.*;
 
-public class PreferencesFrame extends JFrame implements TreeSelectionListener, ActionListener, GUITreeComponent {
+public class PreferencesFrame extends JInternalFrame implements TreeSelectionListener, ActionListener, GUITreeComponent {
 
 	// Constants
 	static final int MIN_WIDTH = 450;
@@ -60,7 +60,9 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 
 
 	// The Constructor
-	public PreferencesFrame() {}
+	public PreferencesFrame() {
+		super("",true,true,false,false);	
+	}
 
 
 	// GUITreeComponent interface
@@ -72,12 +74,19 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 		setTitle(atts.getValue(A_TITLE));
 		setVisible(false);
 		
-		addComponentListener(new WindowSizeManager(MIN_WIDTH,MIN_HEIGHT));
-		addWindowListener(new PreferencesFrameWindowMonitor());
+		Outliner.desktop.add(this, JLayeredPane.PALETTE_LAYER);
+
+		// Set the Component & Window Listeners
+		addInternalFrameListener(new PreferencesFrameWindowMonitor());
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 			
 		// Create the Layout
+		setLocation(5,5);
 		setSize(INITIAL_WIDTH,INITIAL_HEIGHT);
 		setResizable(true);
+
+		// Try to get rid of the icon in the frame header.
+		setFrameIcon(null);
 		
 		// Define the Bottom Panel
 		BOTTOM_PANEL.setLayout(new FlowLayout());
@@ -147,7 +156,9 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 	
 	private void main_ok() {
 		main_apply();
-		this.setVisible(false);
+		
+		// Hide Window
+		hideAndSwitch();
 	}
 
 	private void main_apply() {
@@ -174,6 +185,17 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 		ppe.setToCurrent();
 		
 		// Hide Window
+		hideAndSwitch();
+	}
+	
+	private void hideAndSwitch() {
+		// Hide
 		this.setVisible(false);
+		
+		// Switch to most recent document window
+		OutlinerDocument doc = Outliner.getMostRecentDocumentTouched();
+		if (doc != null) {
+			WindowMenu.changeToWindow(doc);
+		}	
 	}
 }

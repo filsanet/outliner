@@ -31,6 +31,16 @@ public class MacrosMenuItem extends AbstractOutlinerMenuItem implements ActionLi
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		Outliner.macroManager.setVisible(true);
+		MacroManagerFrame mmf = Outliner.macroManager;
+
+		mmf.setVisible(true);
+		Outliner.desktop.desktopManager.activateFrame(mmf);
+		
+		// Select the frame
+		try {
+			mmf.setSelected(true);
+		} catch (java.beans.PropertyVetoException pve) {
+			pve.printStackTrace();
+		}
 	}
 }

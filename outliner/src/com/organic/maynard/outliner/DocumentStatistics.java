@@ -88,6 +88,9 @@ public class DocumentStatistics extends JDialog {
 		int charCount = doc.tree.getCharCount();
 		charCountValue.setText("" + charCount);
 
+		Rectangle r = Outliner.outliner.getBounds();
+		setLocation((int) (r.getCenterX() - getWidth()/2), (int) (r.getCenterY() - getHeight()/2));
+		
 		super.show();		
 	}
 }

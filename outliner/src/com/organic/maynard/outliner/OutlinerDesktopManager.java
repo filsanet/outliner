@@ -89,6 +89,12 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 			if (f instanceof FindReplaceFrame) {
 				minWidth = FindReplaceFrame.MIN_WIDTH;
 				minHeight = FindReplaceFrame.MIN_HEIGHT;
+			} else if (f instanceof PreferencesFrame) {
+				minWidth = PreferencesFrame.MIN_WIDTH;
+				minHeight = PreferencesFrame.MIN_HEIGHT;			
+			} else if (f instanceof MacroManagerFrame) {
+				minWidth = MacroManagerFrame.MIN_WIDTH;
+				minHeight = MacroManagerFrame.MIN_HEIGHT;			
 			}
 			
 			if (newWidth < minWidth) {
@@ -177,6 +183,22 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 			WindowMenu.updateWindowMenu();
 			
 			doc.hoistStack.updateOutlinerMenuHoisting();
+		}
+		
+		// Move the frame back so it's visible if it's outside the visible rect.
+		Rectangle r = Outliner.jsp.getViewport().getViewRect();
+		Rectangle r2 = f.getBounds();
+		
+		if (!r.intersects(r2)) {
+			if (f instanceof PreferencesFrame) {
+				setBoundsForFrame(f, r.x + 5, r.y + 5, PreferencesFrame.INITIAL_WIDTH, PreferencesFrame.INITIAL_HEIGHT);
+			} else 	if (f instanceof FindReplaceFrame) {
+				setBoundsForFrame(f, r.x + 5, r.y + 5, FindReplaceFrame.INITIAL_WIDTH, FindReplaceFrame.INITIAL_HEIGHT);
+			} else 	if (f instanceof MacroManagerFrame) {
+				setBoundsForFrame(f, r.x + 5, r.y + 5, MacroManagerFrame.INITIAL_WIDTH, MacroManagerFrame.INITIAL_HEIGHT);
+			} else 	if (f instanceof OutlinerDocument) {
+				setBoundsForFrame(f, r.x + 5, r.y + 5, f.getWidth(), f.getHeight());
+			}			
 		}
 	}
 

@@ -18,22 +18,10 @@
  
 package com.organic.maynard.outliner;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.Window;
-
-import java.io.*;
-import java.util.*;
-
-import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.tree.*;
 
-import org.xml.sax.*;
-
-public class PreferencesFrameWindowMonitor extends WindowAdapter {
-	public void windowClosing(WindowEvent e) {
-		PreferencesFrame pf = (PreferencesFrame) e.getWindow();
-		pf.main_cancel();
+public class PreferencesFrameWindowMonitor extends InternalFrameAdapter {
+	public void internalFrameClosing(InternalFrameEvent e) {
+		((PreferencesFrame) e.getInternalFrame()).main_cancel();
 	}
 }
