@@ -46,24 +46,29 @@
 #include <windows.h>
 #include <shlwapi.h>
 #include "windows_setup.h"
+#include "resource.h"
 
-// TBD [srk] make this a very simple GUI app
-// 	that uses a series of simple dialogs 
-// 	to communicate with the user as the 
-//	program goes thru main's setup steps
-
-// install the application on a Windows system
+// installs a Java 2 application on a Windows system
 // returns 1 if all goes well, 0 if it doesn't
-int main(int argc, char* argv[]){
+
+// if all goes well, the user may choose to reboot
+// the system if that's necessary, or the user may
+// choose to start the app
+
+int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
+PSTR szCmdLine, int iCmdShow) {
+	// local vars
+	int reboot = 0;
+	int startApp = 0;
 	
 	// set up a log file
 	// TBD
 	
-	// say hello to the people
-	welcome() ;
+	// if the user doesn't choose to Cancel at the welcome screen ...
+	if (welcome() 
 	
-	// if this system is suitable for running the app ...
-	if ( weCanRunOnThisSystem() 
+	// and this system is suitable for running the app ...
+	&& weCanRunOnThisSystem() 
 
 	// and we've got a proper Java 2 Runtime Environment
 	&& weHaveJ2RE()
@@ -73,50 +78,66 @@ int main(int argc, char* argv[]){
 		
 		// all went well, and we're installed
 		// give the user a chance to examine the results
-		// suggest a reboot for systems that need one
-		successFeedback();
-		return 1 ;
 		
+		// if the system needs a reboot to run the app
+		if (rebootRequired(g_Windows_Version))
+			// mention that in success message
+			reboot = successFeedbackReboot();
+			
+		// else the system does not need a reboot to run the app	
+		else
+			// mention option of starting the app in success message
+			startApp = successFeedbackNoReboot() ;
 	} else {
 		// we failed
 		failureFeedback () ;
 		return 0 ;
+		
+	} // end if-else
+
+	// if we're rebooting
+	if (reboot) {
+		
+		ExitWindowsEx(EWX_REBOOT, 0 ) ; 
+			// TBD -- get reason.h file,
+			// then use these instead of 0
+			// SHTDN_REASON_MAJOR_APPLICATION | SHTDN_REASON_MINOR_INSTALLATION) ;
+
+	// else if we're starting up the app
+	} else if (startApp) {
+		
+
+		
+	} // end else-if
 	
 	// close the log file
 	// TBD
 	
-	} // end if-else
+	// if we get here, we're cool
+	return 1 ;
+	
 
 } // end function main
 
 
-// say hi to ever'body
-void welcome () {
+int welcome () {
 	char welcomeString [MAX_LINE] ;
 	
-	// build welcome string
-	strcpy (welcomeString, APP_NAME_STRING) ;
-	strcat (welcomeString, " ") ;
-	strcat (welcomeString, APP_VERSION_STRING) ;
-	strcat (welcomeString, " - ") ;
-	strcat (welcomeString, WELCOME_STRING) ;
-	strcat (welcomeString, "\n\n") ;
+	// build up the string
+	strcpy(welcomeString, WELCOME_STRING_0) ;
+	strcat(welcomeString, WELCOME_STRING_1) ;
 	
-	// print welcome
-	printf (welcomeString) ;
+	// run the dialog
+	return DisplayInfoContCancel (welcomeString) ;
 	
-	// done
-	return ;
-
 } // end function welcome
-
 
 // see if this system meets the requirements for running the app
 // returns 1 if it does, 0 if it doesn't
 int weCanRunOnThisSystem () {
 	
 	// if we can determine the version of Windows that's running ...
-	if ( (int)(g_Windows_Version = determineWindowsVersion())
+	if ( determineWindowsVersion(& g_Windows_Version)
 	
 	// and that there's a Java 2 Runtime available for that version ...
 	&& java2available(g_Windows_Version) 
@@ -213,87 +234,84 @@ int wePlugIntoSystem () {
 //			return 0 ;
 	// TBD
 	
-	// determine paths
-	result &= setAllPaths() ;
+	// if we can determine paths
+	if (setAllPaths() 
 	
-	// set environment variables
-	result &= setAllEnvVars() ;
+	// and can set environment variables
+	&& setAllEnvVars() 
+	
+	// join the registry
+	&& joinRegistry() 
 	
 	// place shortcuts
-	result &= placeShortcuts() ;
+	&& placeShortcuts() 
 	
 	// per user choice set app to
 	// handle particular types of documents
-	result &= hookupAllDocTypes() ;
+	&& hookupAllDocTypes() )
+	
 	
 	// add to Add/Remove Programs listing
 	// wiring up windows_uninstall.exe
 	// TBD
 
-	// return the result of trying all the preceding steps
-	return result ;
-
+		return 1 ;
+	else
+		return 0 ;
+		
 } // end wePlugIntoSystem
 
 
-void successFeedback () {
+// returns 1 for a Reboot Now, 0 for a Reboot Later
+int successFeedbackReboot () {
 	char feedbackString [MAX_LINE] ;
 	
 	// start to build feedback string
 	strcpy (feedbackString, SUCCESS_FEEDBACK_0) ;
 	
-	// add a reboot suggestion to string if warranted
-	if (rebootRequired(g_Windows_Version)){
-		strcat (feedbackString, "\n\n") ;
-		strcat (feedbackString, REBOOT_SUGGESTION) ;
-	} // end if
-	
-	// finish 'er up
+	// add a reboot suggestion
 	strcat (feedbackString, "\n\n") ;
-	strcat (feedbackString, SUCCESS_FEEDBACK_1) ;
+	strcat (feedbackString, REBOOT_SUGGESTION) ;
 	
-	// print feedback
-	printf (feedbackString) ;
+	// return the dialog result
+	return DisplayInfoReboot (feedbackString) ;
 	
-	// wait for user to press Enter key
-	getchar() ;
-	
-	// done
-	return ;
+} // end function successFeedbackReboot
 
+
+// returns 1 for a Start Up, 0 for an Exit Setup
+int successFeedbackNoReboot () {
+	char feedbackString [MAX_LINE] ;
+	
+	// start to build feedback string
+	strcpy (feedbackString, SUCCESS_FEEDBACK_0) ;
+	
+	// return the dialog result
+	return DisplayInfoExitStart (feedbackString) ;
+	
 } // end function successFeedback
 
-
 // provide some feedback RE installation failure
-void failureFeedback () {
+int failureFeedback () {
 	// local vars
 	char feedbackString [MAX_LINE] ;
 
 	// build the feedback string
 	strcpy (feedbackString, FAILURE_FEEDBACK_0) ;
-	strcat (feedbackString, "\n\n") ;
-	strcat (feedbackString, FAILURE_FEEDBACK_1) ;
 	
 	// print the feedback string
-	printf (feedbackString) ;
-	
-	// wait for Enter keypress
-	getchar() ;
-	
-	// done
-	return ;
-	
+	return DisplayInfoExit (feedbackString) ;
+
 } // end function failureFeedback 
 
 
 // figure out what version of Windows we're running
 // returns a windows_version value
 // returns 0 aka CANNOT_DETERMINE if it cannot determine the Windows version
-windows_version determineWindowsVersion () {
+int determineWindowsVersion (windows_version * ptrWinVersion) {
 	// local vars
 	OSVERSIONINFOEX osvi;
 	BOOL bOsVersionInfoEx;
-	windows_version result ;
 
 	// clear the data structure
 	ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
@@ -310,7 +328,7 @@ windows_version determineWindowsVersion () {
 		if (! GetVersionEx ( (OSVERSIONINFO *) &osvi) ) 
 			// leave failing
 			// this means we're on a pre-NT_351/95 system
-			return CANNOT_DETERMINE;
+			* ptrWinVersion =  CANNOT_DETERMINE;
 	} // end if
 
 	// okay, we have version info in regular or EX form
@@ -323,10 +341,10 @@ windows_version determineWindowsVersion () {
 			// switch out on minor version #
 			switch (osvi.dwMinorVersion) {
 				case 51:
-					result = WIN_NT_351 ;
+					* ptrWinVersion = WIN_NT_351 ;
 					break ;
 				default:
-					result = WIN_UNKNOWN_V3 ;
+					* ptrWinVersion = WIN_UNKNOWN_V3 ;
 					break ;
 			} // end switch
 			break ;
@@ -345,13 +363,13 @@ windows_version determineWindowsVersion () {
 						// if it's a B or C
 						if ((osvi.szCSDVersion[1] == 'C')
 							|| (osvi.szCSDVersion[1] == 'B'))
-							result = WIN_95_OSR2 ;
+							* ptrWinVersion = WIN_95_OSR2 ;
 						else
-							result = WIN_95 ;
+							* ptrWinVersion = WIN_95 ;
 					} // end if it's not NT
 					else {
 						// it's NT 4
-						result = WIN_NT_4 ;
+						* ptrWinVersion = WIN_NT_4 ;
 						
 						// let's get any service pack
 						if (osvi.szCSDVersion[0] != 0) 
@@ -363,19 +381,19 @@ windows_version determineWindowsVersion () {
 				case 10:
 					// if it's SE
 					if (osvi.szCSDVersion[1] == 'A' )
-						result = WIN_98_SE ;
+						* ptrWinVersion = WIN_98_SE ;
 					else
-						result = WIN_98 ;
+						* ptrWinVersion = WIN_98 ;
 					break ;
 					
 				// ME
 				case 90:
-					result = WIN_ME ;
+					* ptrWinVersion = WIN_ME ;
 					break ;
 					
 				// unknown
 				default:
-					result = WIN_UNKNOWN_V4 ;
+					* ptrWinVersion = WIN_UNKNOWN_V4 ;
 					break ;
 					
 			} // end switch on minor version #
@@ -388,7 +406,7 @@ windows_version determineWindowsVersion () {
 				
 				// 2000
 				case 0:
-					result = WIN_2K ;
+					* ptrWinVersion = WIN_2K ;
 					break ;
 					
 				// XP or .Net Server
@@ -397,44 +415,44 @@ windows_version determineWindowsVersion () {
 					if (bOsVersionInfoEx) { 
 						// if we're nt workstation
 						if(osvi.wProductType == VER_NT_WORKSTATION)
-							result = WIN_XP ;
+							* ptrWinVersion = WIN_XP ;
 						else
-							result = WIN_DOT_NET_SERVER ;
+							* ptrWinVersion = WIN_DOT_NET_SERVER ;
 					} else 
-						result = WIN_UNKNOWN_V5 ;
+						* ptrWinVersion = WIN_UNKNOWN_V5 ;
 					break ;
 					
 				default:
-					result = WIN_UNKNOWN_V5;
+					* ptrWinVersion = WIN_UNKNOWN_V5;
 					break ;
 			} // end switch on minor version #
 			break ;
 			
 		// future stuff
 		case 6:
-			result = WIN_UNKNOWN_V6 ;
+			* ptrWinVersion = WIN_UNKNOWN_V6 ;
 			break ;
 			
 		case 7:
-			result = WIN_UNKNOWN_V7 ;
+			* ptrWinVersion = WIN_UNKNOWN_V7 ;
 			break ;
 		
 		case 8:
-			result = WIN_UNKNOWN_V8 ;
+			* ptrWinVersion = WIN_UNKNOWN_V8 ;
 			break ;
 		
 		case 9:
-			result = WIN_UNKNOWN_V9 ;
+			* ptrWinVersion = WIN_UNKNOWN_V9 ;
 			break ;
 		
 		case 10:
-			result = WIN_UNKNOWN_V10 ;
+			* ptrWinVersion = WIN_UNKNOWN_V10 ;
 			break ;
 		
 		// very unknown
 		// majorVersion < 3 or > 10
 		default:
-			result = WIN_VERY_UNKNOWN ;
+			* ptrWinVersion = WIN_VERY_UNKNOWN ;
 			break ;
 			
 	} // end switch on major version #
@@ -442,10 +460,7 @@ windows_version determineWindowsVersion () {
 	// done with determination
 	
 	// provide some feedback RE the Windows version
-	osFeedback (result);
-	
-	// done
-	return result ;
+	return osFeedback (* ptrWinVersion);
 	
 } // end function determineWindowsVersion
 
@@ -491,7 +506,7 @@ int java2available (windows_version windowsVersion) {
 			strcat (feedbackString, "\n\n") ;
 
 			// print the feedback string
-			printf (feedbackString) ;
+			DisplayInfoContCancel (feedbackString) ;
 						
 			break ;
 			
@@ -563,6 +578,80 @@ int setAllEnvVars () {
 } // end function setAllEnvVars
 
 
+// sets app up in the Windows registry
+// we try to keep to a minimal set of entries
+int joinRegistry () {
+	// local vars
+	HKEY rootKey = APP_REGISTRY_ROOT_KEY ;
+	char appKeyPath [MAX_REG_PATH] ;
+	
+	HKEY appKey = NULL ;
+	DWORD createKeyDisposition = 0 ;
+	
+	strcpy(appKeyPath, APP_REGISTRY_PATH) ;
+	strcat(appKeyPath, APP_REG_KEY_STRING) ;
+	
+	
+	return 1 ;
+	
+//	#define APP_REGISTRY_ROOT_KEY  HKEY_LOCAL_MACHINE
+//	#define APP_REGISTRY_KEY_PATH  "Software\\"
+//
+//	#define APP_REG_KEY_STRING  "JOE"
+	
+//	// local vars
+//	HKEY rootKey = NULL ;
+//	char keyPath [MAX_REG_PATH] ;
+//	
+//	HKEY enviroKey = NULL;
+//	DWORD createKeyDisposition = 0;
+//
+//	LONG setResult = 0;
+//	LONG closeResult = 0;
+//	
+//	// are we setting this for all users, or just the current user ?
+//	switch (envTarget) {
+//		case USER:
+//			rootKey = USER_ENVIRONMENT_ROOT_KEY ;
+//			strcpy (keyPath, USER_ENVIRONMENT_KEY_PATH) ;
+//			break ;
+//			
+//		case SYSTEM:
+//		default:
+//			rootKey = SYSTEM_ENVIRONMENT_ROOT_KEY ;
+//			strcpy (keyPath, SYSTEM_ENVIRONMENT_KEY_PATH) ;
+//			break ;
+//	} // end switch target
+//		
+//	// try to open up the environment key
+//	// if it doesn't exist, will try to create it
+//	if (RegCreateKeyEx (rootKey, keyPath, 0,
+//				0,REG_OPTION_NON_VOLATILE, KEY_WRITE, 0, 
+//				& enviroKey, & createKeyDisposition)== ERROR_SUCCESS) {
+//	
+//		// okay, we've got the environment key
+//		
+//		// try to write the name/value pair to it
+//		// will create n/v pair if it doesn't already exist
+//		setResult = RegSetValueEx (enviroKey, envVarName, 0, REG_SZ,
+//				(LPBYTE)envVarValue, strlen(envVarValue) + 1) ;
+//		
+//		// close the environment key
+//		closeResult = RegCloseKey (enviroKey) ;
+//		
+//		// done
+//		return ((setResult == ERROR_SUCCESS) & (closeResult == ERROR_SUCCESS)) ;
+//		
+//	// else we couldn't get at the environment key
+//	} else {
+//		// sigh
+//		return 0 ;
+//	} // end if-else
+
+		
+} // end function joinRegistry
+
+
 // place app shortcuts
 // this is based on user choices
 int placeShortcuts(){
@@ -577,26 +666,32 @@ int placeShortcuts(){
 	// if user chose to put shortcut in program menu
 	if (shortcutPlacement.programsMenu){
 		result &= shortcutToProgramsMenu() ;
-		shortcutCount ++ ;
+		if (! result) return result ;
 	} // end if
 	
 	// if user chose to put shortcut in upper part of start menu
 	if (shortcutPlacement.startMenu){
 		result &= shortcutToStartMenu() ;
-		shortcutCount ++ ;
+		if (! result) return result ;
 	} // end if
 	
 	// if user chose to put shortcut to desktop
-	if (shortcutPlacement.desktop) result &= shortcutToDesktop() ;
+	if (shortcutPlacement.desktop){
+		result &= shortcutToDesktop() ;
+		if (! result) return result ;
+	} // end if
 	
 	// if user chose to put shortcut in the Quick Launch toolbar of the Taskbar
-	if (shortcutPlacement.quickLaunch) result &= shortcutToQuickLaunch() ;
+	if (shortcutPlacement.quickLaunch){
+		result &= shortcutToQuickLaunch() ;
+		if (! result) return result ;
+	} // end if
 	
 	// if user chose to put shortcut in popup context menu
-	if (shortcutPlacement.contextMenu) result &= shortcutToContextMenu() ;
-	
-	// if we placed at least one shortcut, print some feedback padding
-	if (shortcutCount > 0) printf ("\n") ;
+	if (shortcutPlacement.contextMenu){
+		result &= shortcutToContextMenu() ;
+		if (! result) return result ;
+	} // end if
 	
 	// done
 	return result ;
@@ -638,6 +733,7 @@ int getShortPathCurDir (char * shortPathBuffer) {
 
 
 // set an environment variable
+// returns 1 if successfully set and user chooses to continue, 0 if not
 int setEnvVar (char * varName, char * varValue, char * introLines, windows_version windowsVersion) {
 	// local vars
 	int result ;
@@ -690,10 +786,7 @@ int setEnvVar (char * varName, char * varValue, char * introLines, windows_versi
 	} // end switch
 		
 	// provide feedback
-	sevFeedback(result, varName, varValue) ;
-	
-	// done
-	return result ;
+	return (result & sevFeedback(result, varName, varValue)) ;
 	
 } // end setEnvVar
 
@@ -1214,7 +1307,7 @@ int trimFileOffPath (char * path) {
 
 
 // provide some feedback RE the OS we're attempting to install under
-// returns 1 if OS is suitable, 0 if it's unsuitable
+// returns 1 if user chooses to continue, 0 if user chooses to cancel
 int osFeedback (windows_version windowsVersion) {
 	// local vars
 	char feedbackString [MAX_LINE] ;
@@ -1227,15 +1320,13 @@ int osFeedback (windows_version windowsVersion) {
 	strcat (feedbackString, "\n\n") ;
 
 	// print the feedback string
-	printf (feedbackString) ;
-	
-	// done
-	return result;
-	
+	return DisplayInfoContCancel (feedbackString) ;
+
 } // end function osFeedback 
 
 
 // provide some feedback RE setting an environment variable
+// returns 1 if user chooses to Continue, 0 if user chooses to Cancel
 int sevFeedback (int result, char * varName, char * varValue) {
 	
 	char feedbackString [MAX_LINE] ;
@@ -1251,10 +1342,8 @@ int sevFeedback (int result, char * varName, char * varValue) {
 	strcat (feedbackString, SEV_FEEDBACK_STRING_3) ;
 	strcat (feedbackString, varValue) ;
 	strcat (feedbackString, "\n\n") ;
-	printf (feedbackString) ;
+	return DisplayInfoContCancel (feedbackString) ;
 	
-	return 1 ;
-
 } // end sevFeedback
 
 
@@ -1327,7 +1416,7 @@ int getUserChoicesReShortcutPlacement (shortcut_placement * ptrShortcutPlacment)
 
 
 // add a shortcut to the app to the Programs menu
-// returns 1 if successful, 0 if not
+// returns 1 if successful and user chooses to continue, 0 if not
 int shortcutToProgramsMenu() {
 	// local vars
 	char programsMenuPath [MAX_PATH] ;
@@ -1342,27 +1431,16 @@ int shortcutToProgramsMenu() {
 	// build path to programs menu directory
 	strcat (programsMenuPath, PROGRAMS_MENU_SUBPATH) ;
 	
-	// if our app executable is a PIF file ...
-	if (EXE_IS_PIF) {
-		// add the filename to the programs menu path
-		strcat (programsMenuPath, EXE_NAME) ;
+	// add the shortcut filename to the programs menu path
+	strcat (programsMenuPath, SHORTCUT_NAME) ;
 		
-		// build the source path
-		strcpy (ourInvPath, g_App_Home_Path) ;
-		strcat (ourInvPath, EXE_NAME) ;
+	// build the source path to the shortcut
+	strcpy (ourInvPath, g_App_Home_Path) ;
+	strcat (ourInvPath, SHORTCUT_PATH) ;
+	strcat (ourInvPath, SHORTCUT_NAME) ;
 		
-		// store a copy of it in the programs menu dir
-		result = (CopyFile(ourInvPath, programsMenuPath, FALSE) != 0) ;
-		
-	} else if (EXE_IS_EXE) {
-		// create a shortcut to it
-		// TBD
-		
-		// store the shortcut in the programs menu dir
-		result = 1 ;
-		
-	} else
-		result = 0 ;
+	// store a copy of it in the programs menu dir
+	result = (CopyFile(ourInvPath, programsMenuPath, FALSE) != 0) ;
 		
 	// feedback
 	if (result) 
@@ -1372,16 +1450,14 @@ int shortcutToProgramsMenu() {
 	strcat(feedbackString, APP_NAME_STRING) ;
 	strcat(feedbackString, SHORTCUT_TO_PROG_MENU) ;
 	strcat(feedbackString, "\n") ;
-	printf(feedbackString) ;
-		
-	// done
-	return result ;
 	
+	return (result & DisplayInfoContCancel (feedbackString)) ;
+		
 } // end function shortCutToProgramsMenu
 
 
 // add a shortcut to the app to the top part of the Start menu
-// returns 1 if successful, 0 if not
+// returns 1 if successful and user chooses to continue, 0 if not
 int shortcutToStartMenu() {
 	// local vars
 	char startMenuPath [MAX_PATH] ;
@@ -1396,28 +1472,17 @@ int shortcutToStartMenu() {
 	// build path to start menu directory
 	strcat (startMenuPath, START_MENU_SUBPATH) ;
 	
-	// if our app executable is a PIF file ...
-	if (EXE_IS_PIF) {
-		// add the filename to the programs menu path
-		strcat (startMenuPath, EXE_NAME) ;
+	// add the shortcut filename 
+	strcat (startMenuPath, SHORTCUT_NAME) ;
 		
-		// build the source path
-		strcpy (ourInvPath, g_App_Home_Path) ;
-		strcat (ourInvPath, EXE_NAME) ;
+	// build the source path to the shortcut
+	strcpy (ourInvPath, g_App_Home_Path) ;
+	strcat (ourInvPath, SHORTCUT_PATH) ;
+	strcat (ourInvPath, SHORTCUT_NAME) ;
 		
-		// store a copy of it in the programs menu dir
-		result = (CopyFile(ourInvPath, startMenuPath, FALSE) != 0) ;
-			
-	} else if (EXE_IS_EXE) {
-		// create a shortcut to it
-		// TBD
-		
-		// store the shortcut in the programs menu dir
-		result = 1 ;
-		
-	} else
-		result = 0 ;
-		
+	// store a copy of it in the programs menu dir
+	result = (CopyFile(ourInvPath, startMenuPath, FALSE) != 0) ;
+
 	// feedback
 	if (result) 
 		strcpy (feedbackString, SHORTCUT_ADDED) ;
@@ -1426,10 +1491,8 @@ int shortcutToStartMenu() {
 	strcat(feedbackString, APP_NAME_STRING) ;
 	strcat(feedbackString, SHORTCUT_TO_START_MENU) ;
 	strcat(feedbackString, "\n") ;
-	printf(feedbackString) ;
 	
-	// done
-	return result ;
+	return (result & DisplayInfoContCancel (feedbackString)) ;
 	
 } // end function shortcutToStartMenu
 
@@ -1450,27 +1513,16 @@ int shortcutToDesktop() {
 	// build path to desktop directory
 	strcat (desktopMenuPath, DESKTOP_MENU_SUBPATH) ;
 	
-	// if our app executable is a PIF file ...
-	if (EXE_IS_PIF) {
-		// add the filename to the programs menu path
-		strcat (desktopMenuPath, EXE_NAME) ;
+	// add the shortcut filename 
+	strcat (desktopMenuPath, SHORTCUT_NAME) ;
 		
-		// build the source path
-		strcpy (ourInvPath, g_App_Home_Path) ;
-		strcat (ourInvPath, EXE_NAME) ;
+	// build the source path to the shortcut
+	strcpy (ourInvPath, g_App_Home_Path) ;
+	strcat (ourInvPath, SHORTCUT_PATH) ;
+	strcat (ourInvPath, SHORTCUT_NAME) ;
 		
-		// store a copy of it in the programs menu dir
-		result = (CopyFile(ourInvPath, desktopMenuPath, FALSE) != 0) ;
-			
-	} else if (EXE_IS_EXE) {
-		// create a shortcut to it
-		// TBD
-		
-		// store the shortcut in the programs menu dir
-		result = 1 ;
-		
-	} else
-		result = 0 ;
+	// store a copy of it in the programs menu dir
+	result = (CopyFile(ourInvPath, desktopMenuPath, FALSE) != 0) ;
 		
 	// feedback
 	if (result) 
@@ -1480,10 +1532,8 @@ int shortcutToDesktop() {
 	strcat(feedbackString, APP_NAME_STRING) ;
 	strcat(feedbackString, SHORTCUT_TO_DESKTOP) ;
 	strcat(feedbackString, "\n") ;
-	printf(feedbackString) ;
-	
-	// done
-	return result ;
+
+	return (result & DisplayInfoContCancel (feedbackString)) ;
 	
 } // end function shortcutToDesktop
 
@@ -1584,7 +1634,7 @@ int hookupDocType(doc_type_info * ptr2DocTypeInfo) {
 		// done
 		resultPartOne = (setResult == ERROR_SUCCESS) & (closeResult == ERROR_SUCCESS) ;
 		
-	// else we couldn't create a new .opml key
+	// else we couldn't create a new .doc key
 	} else {
 		// sigh
 		resultPartOne = 0 ;
@@ -1639,11 +1689,10 @@ int hookupDocType(doc_type_info * ptr2DocTypeInfo) {
 	strcat(feedbackString, APP_NAME_STRING) ;
 	strcat(feedbackString, ".") ;
 	strcat(feedbackString, "\n") ;
-	printf(feedbackString) ;
+	
+	return result & DisplayInfoContCancel (feedbackString) ;
 	
 	// done
-	return result ;
-	
 } // end function hookupDocType
 
 
@@ -1963,3 +2012,139 @@ int javaRegEntriesCool() {
 //
 //} // end function setRegistryEnvVar
 //
+
+
+int DisplayInfoContCancel(LPSTR info)
+{
+	// copy the string into global holding area	
+	strcpy(g_Current_Display_Message, info) ;
+	
+	// run the dialog box 
+	// returns 1 on Continue, 0 on Cancel
+	// WM_INITDIALOG handler will center it and pick up the string
+	return DialogBox (GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_CONT_CANCEL), 
+			NULL, DisplayMyMessageDlgProc) ;
+
+} // end function DisplayInfoContCancel
+
+
+int DisplayInfoReboot(LPSTR info){
+	// copy the string into global holding area	
+	strcpy(g_Current_Display_Message, info) ;
+	
+	// run the dialog box
+	// returns 1 for a Reboot Now, 0 for a Reboot Later
+	// WM_INITDIALOG handler will center it and pick up the string
+	return DialogBox (GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_REBOOT_LATER_NOW), 
+			NULL, DisplayMyMessageDlgProc) ;
+
+} // end function DisplayInfoReboot
+
+
+// returns 1 to start the app, 0 for a quiet exit
+int DisplayInfoExitStart(LPSTR info){
+	// copy the string into global holding area	
+	strcpy(g_Current_Display_Message, info) ;
+	
+	// run the dialog box
+	// WM_INITDIALOG handler will center it and pick up the string
+	return DialogBox (GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_EXIT_START), 
+			NULL, DisplayMyMessageDlgProc) ;
+			
+} // end function DisplayInfoFinish
+
+
+// returns 0 always
+int DisplayInfoExit(LPSTR info){
+	// copy the string into global holding area	
+	strcpy(g_Current_Display_Message, info) ;
+	
+	// run the dialog box
+	// WM_INITDIALOG handler will center it and pick up the string
+	return DialogBox (GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_EXIT), 
+			NULL, DisplayMyMessageDlgProc) ;
+			
+} // end function DisplayInfoFinish
+
+
+BOOL CALLBACK DisplayMyMessageDlgProc 
+	(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam){
+		
+	// case out on the message
+	switch (message) {
+
+	case WM_INITDIALOG :
+		// set the static text item
+		SetDlgItemText(hDlg, IDC_STATIC_01, g_Current_Display_Message) ;
+		
+		// center the dialog on the screen
+		centerWindowOnScreen(hDlg) ;
+		
+		return TRUE ;
+	
+	case WM_COMMAND :
+		// TBD: make these real
+		switch (LOWORD (wParam)){
+		
+		case ID_CONTINUE :
+			EndDialog (hDlg, 1) ;
+			return TRUE ;
+			
+		case IDCANCEL :
+			EndDialog (hDlg, 0) ;
+			return TRUE ;
+			
+		case ID_REBOOT_LATER :
+			EndDialog (hDlg, 0) ;
+			return TRUE ;
+			
+			
+		case ID_REBOOT_NOW :
+			EndDialog (hDlg, 1) ;
+			return TRUE ;
+
+		case ID_EXIT_SETUP :
+			EndDialog (hDlg, 0) ;
+			return TRUE ;
+			
+		case ID_START_APP :
+			EndDialog (hDlg, 1) ;
+			return TRUE ;
+			
+		} // end switch
+		
+	} // end switch 
+
+	// if we get here, we haven't handled anything
+	return FALSE ;
+
+} // end function
+
+
+int centerWindowOnScreen (HWND someWindow) {
+	
+	// local vars
+	RECT windowRect ;
+	int left, top, width, height ;
+	int screenWidth, screenHeight ;
+	
+	// get the window's rectangle
+	GetWindowRect(someWindow, &windowRect) ;
+	width = windowRect.right - windowRect.left ;
+	height = windowRect.bottom - windowRect.top ;
+	
+	// get the screen's rectangle
+	// TBD make this real
+	screenWidth = 1152 ;
+	screenHeight = 864 ;
+	
+	// set window positioning info
+	left = (screenWidth - width) / 2 ;
+	top = (screenHeight - height) / 2 ;
+	
+	SetWindowPos(someWindow, NULL, left, top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE) ;
+	
+	return 1 ;
+	
+} // end function 
+

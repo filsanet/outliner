@@ -45,11 +45,13 @@
 
 #define MAX_LINE 1024
 
-#define EXE_NAME  "JOE.pif"
-#define EXE_IS_PIF  1
-#define EXE_IS_EXE  0
+#define EXE_NAME  "JOE.exe"
+
+#define SHORTCUT_NAME  "JOE.lnk"
+#define SHORTCUT_PATH  "src\\setup\\"
 
 #define APP_NAME_STRING  "JOE"
+#define APP_REG_KEY_STRING  "JOE"
 #define APP_VERSION_STRING  "1.8.8"
 #define WELCOME_STRING  "Windows Setup Program"
 
@@ -78,14 +80,21 @@
 #define JRE_UPGRADE_1  "Would you like to install a newer JRE (version "
 
 
+// welcome
+#define WELCOME_STRING_0  "Welcome to Setup.\n\n"
+#define WELCOME_STRING_1  "You can leave at any time by clicking Cancel.\n\n"
+
+// byebye
+#define SHUTDOWN_STRING_0  "Rebooting system to finish JOE setup."
+#define SHUTDOWN_HANG_TIME  10 
 
 // operating system info
 #define OS_FEEDBACK_STRING_0  "Your computer is running the "
 #define OS_FEEDBACK_STRING_1  " operating system."
 
 // environment variables
-#define SEV_FEEDBACK_STRING_0  "Set "
-#define SEV_FEEDBACK_STRING_1  "Unable to set "
+#define SEV_FEEDBACK_STRING_0  "Setup set "
+#define SEV_FEEDBACK_STRING_1  "Setup was unable to set "
 #define SEV_FEEDBACK_STRING_2  "the environment variable "
 #define SEV_FEEDBACK_STRING_3  "to the value "
 
@@ -94,8 +103,7 @@
 #define SUCCESS_FEEDBACK_1  "Press the Enter key to finish: "
 #define REBOOT_SUGGESTION  "You'll need to reboot your system before running JOE."
 
-#define FAILURE_FEEDBACK_0  "INSTALLATION FAILED."
-#define FAILURE_FEEDBACK_1  "Press Enter key to finish: "
+#define FAILURE_FEEDBACK_0  "Aborting Setup."
 
 const char * WINDOWS_VERSION_STRINGS [] = {
 	"<cannot determine Windows version>",
@@ -149,6 +157,9 @@ const char * MS_DOS_SYS_SECTION_STRINGS [] = {
 #define JAVA_ROOT_KEY  HKEY_LOCAL_MACHINE
 #define JRE_HOME_PATH  "Software\\JavaSoft\\Java Runtime Environment"
 
+#define APP_REGISTRY_ROOT_KEY  HKEY_LOCAL_MACHINE
+#define APP_REGISTRY_PATH  "Software\\"
+
 #define MAX_REG_PATH 255
 
 #define DOC_TYPES_ROOT_KEY  HKEY_CLASSES_ROOT
@@ -157,16 +168,21 @@ const char * MS_DOS_SYS_SECTION_STRINGS [] = {
 #define DOC_TYPES_JOE_OPML_PATH  "JOE.OPML.document"
 #define DOC_TYPES_JOE_OPML_OPEN_CMD_PATH  "\\Shell\\Open\\Command"
 
-#define DOC_TYPE_HOOKED "Hooked up "
-#define DOC_TYPE_NOT_HOOKED "Unable to hook up "
+#define DOC_TYPE_HOOKED "Setup hooked up "
+#define DOC_TYPE_NOT_HOOKED "Setup was unable to hook up "
 #define DOC_TYPE_HOOKER_0 " documents to "
 
-#define SHORTCUT_ADDED  "Added a "
-#define SHORTCUT_NOT_ADDED  "Unable to add "
+#define SHORTCUT_ADDED  "Setup added a "
+#define SHORTCUT_NOT_ADDED  "Setup was unable to add "
 #define SHORTCUT_TO_PROG_MENU  " shortcut to the Programs menu."
 #define SHORTCUT_TO_START_MENU  " shortcut to the top of the Start menu."
 #define SHORTCUT_TO_DESKTOP  " shortcut to the Desktop."
 #define SHORTCUT_TO_QUICK_LAUNCH  " shortcut to the Quick Launch toolbar."
+
+
+// dialogs
+#define ID_HELP   150
+#define ID_TEXT   200
 
 
 // ---------- datatypes
@@ -230,13 +246,14 @@ int g_NT_4_SP_Num = 0 ;	// NT 4 Service Pack #
 
 char g_App_Home_Path [MAX_PATH] ;
 
+char g_Current_Display_Message [MAX_LINE] ;
 
 // ---------- functions
 
 int allWin32RegDeleteKey(HKEY, char*) ;
-windows_version determineWindowsVersion() ;
+int determineWindowsVersion(windows_version *) ;
 int ensureSuitableEnvironment() ;
-void failureFeedback() ;
+int failureFeedback() ;
 int fileExists(char *) ;
 int getAutoExecPath(char *);
 int getShortPathCurDir(char *) ;
@@ -248,6 +265,7 @@ int isPif() ;
 int java2available(windows_version) ;
 int javaAppLaunchersCool() ;
 int javaRegEntriesCool() ;
+int joinRegistry () ;
 int machineHasNuffOomph() ;
 int osFeedback(windows_version) ;
 int placeShortcuts() ;
@@ -265,10 +283,17 @@ int shortcutToProgramsMenu() ;
 int shortcutToQuickLaunch() ;
 int shortcutToStartMenu() ;
 int strToUpper(char *) ;
-void successFeedback() ;
+int successFeedbackReboot() ;
+int successFeedbackNoReboot() ;
 int trimFileOffPath(char *) ;
 int weCanRunOnThisSystem() ;
 int weHaveJ2RE() ;
-void welcome() ;
 int wePlugIntoSystem() ;
+int welcome() ;
 int msDosSysExtract(ms_dos_sys_section, char *, char *) ;
+int DisplayInfoContCancel(LPSTR) ;
+BOOL CALLBACK DisplayMyMessageDlgProc (HWND, UINT, WPARAM, LPARAM);
+int centerWindowOnScreen (HWND) ;
+int DisplayInfoReboot(LPSTR info);
+int DisplayInfoExitStart(LPSTR info);
+int DisplayInfoExit(LPSTR info);
