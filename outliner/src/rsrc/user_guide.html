@@ -1,9 +1,1622 @@
+<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd\">
 <html>
-	<head>
-		<title>JOE User Guide</title>
-	</head>
-	<body>
-		<h2>JOE User Guide</h2>
-		Nothing here yet.
-	</body>
+<head>
+<title>JOE User Guide</title>
+<meta http-equiv="Content-Type" content="text/html; charset="ISO-8859-1">
+<style type="text/css">
+
+body {
+	background-color: #ffffff; 
+	color: #000000; 
+	font: 12pt Courier New, Verdana, Geneva, Arial, Helvetica, sans-serif;
+} 
+
+.normal{
+	color: #000000; 
+	font: 11pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+
+.leaf0 {
+	margin-left: 0pt;
+	margin-top: 20pt;
+	margin-bottom: 0pt;
+	font: bold 14pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+
+.branch0 {
+	margin-left: 0pt;
+	margin-top: 20pt;
+	margin-bottom: 0pt;
+	font: bold 14pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+
+.leafcomment0 {
+	margin-left: 0pt;
+	margin-top: 20pt;
+	margin-bottom: 0pt;
+	font: bold 14pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+	color: #ff3300;
+}
+
+.branchcomment0 {
+	margin-left: 0pt;
+	margin-top: 20pt;
+	margin-bottom: 0pt;
+	font: bold 14pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+	color: #ff3300;
+}
+
+.leaf1 {
+	margin-left: 15pt;
+	margin-top: 10pt;
+	margin-bottom: 0pt;
+	font: italic 12pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+	color: #993300;
+}
+
+.branch1 {
+	margin-left: 15pt;
+	margin-top: 10pt;
+	margin-bottom: 0pt;
+	font: italic 12pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+	color: #993300;
+}
+
+.leafcomment1 {
+	margin-left: 15pt;
+	margin-top: 10pt;
+	margin-bottom: 0pt;
+	font: italic 12pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+	color: #ff3300;
+}
+
+.branchcomment1 {
+	margin-left: 15pt;
+	margin-top: 10pt;
+	margin-bottom: 0pt;
+	font: italic 12pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+	color: #ff3300;
+}
+
+.leaf {
+	margin-left: 15pt;
+	margin-top: 3pt;
+	margin-bottom: 0pt;
+	color: #000000; 
+	font: 9pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+
+.branch {
+	margin-left: 15pt;
+	margin-top: 3pt;
+	margin-bottom: 0pt;
+	color: #000000; 
+	font: 9pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+
+.leafcomment {
+	margin-left: 15pt;
+	margin-top: 3pt;
+	margin-bottom: 0pt;
+	color: #ff0000; 
+	font: 9pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+
+.branchcomment {
+	margin-left: 15pt;
+	margin-top: 3pt;
+	margin-bottom: 0pt;
+	color: #ff0000; 
+	font: 9pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+
+</style>
+</head>
+
+<body>
+<div class="leaf0">JOE   User Guide [JUG]
+</div>
+<div class="leaf0">-------------------------
+</div>
+<div class="branch0">Front End
+	<div class="branch1">About JOE - the Java Outline Editor
+		<div class="branch">What It Is
+			<div class="leaf">JOE is an outliner. 
+			</div>
+			<div class="leaf">JOE is programmed in Java.
+			</div>
+		</div>
+		<div class="branch">Notable Features
+			<div class="leaf">Open Source
+			</div>
+			<div class="branch">Supports Industry-Standard Data Formats
+				<div class="branch">OPML
+					<div class="branch">OPML 1.0
+						<div class="leaf">TODO: link to OPML spec
+						</div>
+					</div>
+					<div class="leaf">Userland node types and attributes
+					</div>
+					<div class="leaf">JOE node types and attributes
+					</div>
+					<div class="leaf">
+					</div>
+				</div>
+				<div class="leaf">Text 
+				</div>
+				<div class="leaf">XML
+				</div>
+				<div class="branch">Palm pdf formats [forthcoming]
+					<div class="leaf">Brain Forest
+					</div>
+					<div class="leaf">Thought Manager
+					</div>
+				</div>
+			</div>
+			<div class="branch">Net-Friendly
+				<div class="leaf">http support [forthcoming]
+				</div>
+				<div class="leaf">ftp support [forthcoming]
+				</div>
+				<div class="leaf">WebDav support [forthcoming]
+				</div>
+			</div>
+			<div class="branch">OS Platform-Agnostic
+				<div class="branch">JOE is programmed in Java, using the Swing UI classes
+					<div class="leaf">JOE supports native platform look and feel [forthcoming when Sun gets this stuff stable]
+					</div>
+				</div>
+				<div class="branch">JOE releases are available for these platforms
+					<div class="leaf">Windows
+					</div>
+					<div class="leaf">Linux/Unix [forthcoming]
+					</div>
+					<div class="leaf">Macintosh [forthcoming]
+					</div>
+				</div>
+			</div>
+			<div class="leaf">Smooth Nimble Solid Feel
+			</div>
+			<div class="branch">Standards-Respectful UI
+				<div class="branch">Userland-inspired outline-editing UI
+					<div class="leaf">link to Userland outliner site[s]
+					</div>
+				</div>
+				<div class="leaf">Best-practices File/Edit/Search/Window/Help menu command sets
+				</div>
+			</div>
+			<div class="branch">Multiple undo
+				<div class="leaf">limit [huge]: available memory
+				</div>
+			</div>
+			<div class="branch">Easy to Customize
+				<div class="leaf">Application Preferences
+				</div>
+				<div class="leaf">User Preferences [forthcoming]
+				</div>
+				<div class="leaf">Document Preferences
+				</div>
+			</div>
+			<div class="leaf">Multi-User Friendly
+			</div>
+		</div>
+	</div>
+	<div class="branch1">About JOE User Guide [JUG]
+		<div class="branch">help !!!!
+			<div class="leaf">This is a work in perpetual progress.
+			</div>
+			<div class="leaf">Empty andor missing nodes are not bugs, they're just things we just haven't gotten 'round to thinking andor writing about yet
+			</div>
+			<div class="branch">You can help:
+				<div class="leaf">Send suggestions for nodes
+				</div>
+				<div class="branch">Send content contributions
+					<div class="leaf">Study the JUG style, write up a node or two, stick the OPML up on the web, and send us a link to it
+					</div>
+				</div>
+				<div class="leaf">Send 'em to DocHelp@JavaOutlineEditor.org
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="leaf1">-----------
+	</div>
+	<div class="leaf1">Use JOE
+	</div>
+	<div class="branch1">Help Develop JOE
+		<div class="branch">JOE is an Open Source project
+			<div class="leaf">http://sourceforge.net/projects/outliner
+			</div>
+		</div>
+		<div class="branch">The JOE Developer Guide
+			<div class="leaf">Give the Help:Developer Guide menu command
+			</div>
+		</div>
+	</div>
+	<div class="leaf1">-----------
+	</div>
+	<div class="branch1">JOE People
+		<div class="branch">Maynard Demmon
+			<div class="leaf">mailto:maynard@organic.com
+			</div>
+		</div>
+		<div class="leaf">Philip Suh
+		</div>
+		<div class="leaf">Steven Spencer
+		</div>
+		<div class="branch">Stanley Krute
+			<div class="leaf">mailto:Stan@JavaOutlineEditor.org
+			</div>
+		</div>
+		<div class="leaf">Daniel Ericsson
+		</div>
+	</div>
+	<div class="branch1">JOE User Guide Authors
+		<div class="branch">Stanley Krute
+			<div class="leaf">mailto:Stan@JavaOutlineEditor.org
+			</div>
+		</div>
+		<div class="branch">Maynard Demmon
+			<div class="leaf">mailto:maynard@organic.com
+			</div>
+		</div>
+	</div>
+	<div class="branch1">Thanks To
+		<div class="branch">Dave Winer
+			<div class="leaf">http://Scripting.com
+			</div>
+		</div>
+		<div class="branch">SourceForge
+			<div class="leaf">http://SourceForge.net
+			</div>
+		</div>
+		<div class="branch">the Java community
+			<div class="leaf">http://java.sun.com
+			</div>
+		</div>
+	</div>
+	<div class="leaf1">-----------
+	</div>
+	<div class="branch1">Copyright Notices
+		<div class="leaf">Copyright 2001-2002 by Stanley Krute. All rights reserved.
+		</div>
+	</div>
+	<div class="branch1">Cataloging Info
+		<div class="leaf">Library of Congress Classification System
+		</div>
+		<div class="leaf">Dewey Decimal System
+		</div>
+	</div>
+	<div class="branch1">Versions
+		<div class="branch">JUG
+			<div class="branch">2002.02.03.08.20.00.GMT
+				<div class="leaf">yyyy.mm.dd.hh.mm.ss.timeSystem
+				</div>
+			</div>
+		</div>
+		<div class="branch">JOE
+			<div class="leaf">1.8.7
+			</div>
+		</div>
+	</div>
+	<div class="leaf1">-----------
+	</div>
+	<div class="branch1">Feedback
+		<div class="leaf">http://JavaOutlineEditor.org/feedback
+		</div>
+	</div>
+	<div class="branch1">Website
+		<div class="leaf">http://JavaOutlineEditor.org
+		</div>
+	</div>
+</div>
+<div class="branch0">Installation and Setup
+	<div class="leaf1">Muy Importante: if you encounter any problems following these installation and setup instructions, andor your installation just outandout fails, please contact us ASAP via http://JavaOutlineEditor.org/feedback
+	</div>
+	<div class="leaf1">---------
+	</div>
+	<div class="branch1">Prepare your system
+		<div class="branch">Windows
+			<div class="branch">Ensure that your system has an appropriate Java 2 Runtime Environment (JRE) installed
+				<div class="branch">Determine if you have a JRE, andor a Java 2 SDK (JSDK), and if so, which version(s) of each
+					<div class="leaf">Give the Start:Settings:Control Panel command
+					</div>
+					<div class="leaf">The Control Panel window appears 
+					</div>
+					<div class="leaf">Start up the Add/Remove Programs applet
+					</div>
+					<div class="leaf">Look for Java 2 Runtime... and Java 2 SDK... entries in the list of installed software
+					</div>
+					<div class="leaf">Note the version numbers on those items
+					</div>
+				</div>
+				<div class="branch">Analyze that information
+					<div class="branch">Two goals: 
+						<div class="leaf">a JRE that is version 1.3.1 or higher
+						</div>
+						<div class="leaf">if a JSDK is present, its version should match the JRE version 
+						</div>
+					</div>
+					<div class="leaf">If you have only a JRE, and it is version 1.3.1 or above, you're okay
+					</div>
+					<div class="branch">If you have both a JSDK and a JRE, the version numbers should match
+						<div class="leaf">If they don't, you'll need to uninstall them, and then install a 1.3.1 or higher JSDK, which will give you a matching JRE
+						</div>
+					</div>
+					<div class="leaf">If you have two or more entries for either the Runtime Environment or the SDK, you need to uninstall earlier versions, keeping only the highest-numbered version of each
+					</div>
+					<div class="leaf">If your JRE andor SDK is less than version 1.3.1, you need to uninstall those, and then install a 1.3.1 or higher version
+					</div>
+					<div class="branch">Download sites
+						<div class="branch">Java 2 SDK 1.3.1_02
+							<div class="leaf">http://java.sun.com/j2se/1.3/download-windows.html
+							</div>
+						</div>
+						<div class="branch">JRE 1.3.1_02
+							<div class="leaf">http://java.sun.com/j2se/1.3/jre/download-windows.html
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="branch">Uninstall and Install as necessary
+					<div class="branch">To uninstall:
+						<div class="leaf">Give the Start:Settings:Control Panel command
+						</div>
+						<div class="leaf">The Control Panel window appears 
+						</div>
+						<div class="leaf">Start up the Add/Remove Programs applet
+						</div>
+						<div class="leaf">Look for the Java 2 Runtime... or Java 2 SDK... entry you wish to remove in the list of installed software
+						</div>
+						<div class="leaf">Click the Add/Remove button
+						</div>
+					</div>
+					<div class="branch">To install:
+						<div class="leaf">Get the download from one of the download sites noted above.
+						</div>
+						<div class="leaf">Execute it.
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="branch">Ensure that there your system has sufficient environment space
+				<div class="leaf">Environment space is where DOS/Windows stores string constants
+				</div>
+				<div class="leaf">It can default to a very small amount, 256 bytes
+				</div>
+				<div class="branch">To increase environment space generally, add a line like this to the file c:\config.sys
+					<div class="leaf">shell=c:\windows\command.com /e2048 /p
+					</div>
+					<div class="leaf">In this example, Windows is installed on the c drive in a directory named windows, and we are setting the environment to 2048 bytes
+					</div>
+				</div>
+				<div class="leaf">You can skip this general increase and just increase the environment space of the run.bat file that starts up JOE
+				</div>
+			</div>
+		</div>
+		<div class="leaf">Macintosh OS/X
+		</div>
+		<div class="leaf">Linux/Unix/Solaris
+		</div>
+	</div>
+	<div class="branch1">Download the latest JOE
+		<div class="leaf">Go to http://sourceforge.net/projects/outliner
+		</div>
+		<div class="branch">Halfway down the page, in a section labeled &quot;File Releases&quot;, you'll find the latest release of JOE that's appropriate for your operating system
+			<div class="leaf">Windows: outliner-win
+			</div>
+			<div class="leaf">Mac OS X: outliner-macosx
+			</div>
+			<div class="leaf">Linux/Unix/Solaris: outliner-win for now &lt;more specific file forthcoming&gt;
+			</div>
+		</div>
+	</div>
+	<div class="branch1">Install the download
+		<div class="branch">Windows
+			<div class="leaf">Extract the Outliner directory and its contents from the download file.
+			</div>
+			<div class="branch">If you haven't increased environment space generally, you can instead increase it for the Outliner directory's run.bat file 
+				<div class="leaf">Find run.bat in the Outliner directory
+				</div>
+				<div class="leaf">Right-click on it and give the Properties menu command
+				</div>
+				<div class="leaf">Select the Memory tab in the run.bat Properties dialog
+				</div>
+				<div class="leaf">Set the Initial Environment widget to a minimum of 2048
+				</div>
+				<div class="leaf">Click OK
+				</div>
+			</div>
+		</div>
+		<div class="leaf">Mac OS X
+		</div>
+		<div class="leaf">Linux/Unix/Solaris
+		</div>
+	</div>
+	<div class="branch1">Create some startup shortcuts
+		<div class="branch">Windows
+			<div class="leaf">Create shortcuts to the Outliner directory's run.bat file.
+			</div>
+		</div>
+		<div class="leaf">Mac OS X
+		</div>
+		<div class="leaf">Linux/Unix/Solaris
+		</div>
+	</div>
+	<div class="branch1">Start JOE up
+		<div class="branch">Windows
+			<div class="leaf">Double-click one of your startup shortcuts
+			</div>
+			<div class="leaf">It'll take JOE 6-15 seconds to start up on a 900 mhz Windows system. The first startup of the day is the slowest.
+			</div>
+		</div>
+		<div class="leaf">Mac OS X
+		</div>
+		<div class="leaf">Linux/Unix/Solaris
+		</div>
+	</div>
+	<div class="branch1">Set JOE application preferences
+		<div class="leaf">Give the Edit:Application Preferences menu command
+		</div>
+		<div class="leaf">Go through the preference panels, and set items as desired.
+		</div>
+	</div>
+	<div class="leaf1">That's it. Give a File:New/Open/Import command, and start outlining !
+	</div>
+</div>
+<div class="leaf0">-------------------------
+</div>
+<div class="branch0">Your First Outline
+	<div class="leaf1">Some terminology
+	</div>
+	<div class="leaf1">Create a new outline
+	</div>
+	<div class="leaf1">Type in some info
+	</div>
+	<div class="leaf1">Move nodes around
+	</div>
+	<div class="leaf1">Delete nodes
+	</div>
+	<div class="leaf1">Save your outline
+	</div>
+</div>
+<div class="branch0">Creating New Outlines
+	<div class="leaf1">Options
+	</div>
+	<div class="leaf1">Menu commands
+	</div>
+	<div class="leaf1">Keystroke Shortcuts
+	</div>
+</div>
+<div class="branch0">Playing with Outlines
+	<div class="leaf1">Creating Nodes
+	</div>
+	<div class="leaf1">Destroying Nodes
+	</div>
+	<div class="leaf1">Read-Only Nodes
+	</div>
+	<div class="leaf1">Hidden Nodes
+	</div>
+	<div class="leaf1">Immoveable Nodes
+	</div>
+	<div class="leaf1">Copying Nodes
+	</div>
+	<div class="leaf1">Pasting Nodes
+	</div>
+	<div class="leaf1">Alphabetizing Nodes
+	</div>
+	<div class="leaf1">Promoting Nodes
+	</div>
+	<div class="leaf1">Demoting Nodes
+	</div>
+	<div class="leaf1">Expanding Nodes
+	</div>
+	<div class="leaf1">Collapsing Nodes
+	</div>
+	<div class="leaf1">Moving Nodes
+	</div>
+	<div class="leaf1">Merging Nodes
+	</div>
+	<div class="leaf1">Playing with Node Attributes
+	</div>
+	<div class="leaf1">Merging Outlines
+	</div>
+	<div class="leaf1">Hoisting Nodes
+	</div>
+	<div class="leaf1">Undoing Node Play
+	</div>
+	<div class="leaf1">Nodes by Reference
+	</div>
+	<div class="leaf1">Keyboard Shortcuts
+	</div>
+</div>
+<div class="leaf0">Saving  and Exporting Outlines
+</div>
+<div class="branch0">Printing Outlines
+	<div class="leaf1">Printing to a Printer
+	</div>
+	<div class="leaf1">Printing to a File
+	</div>
+</div>
+<div class="branch0">Closing Outlines
+	<div class="leaf1">File:Close
+	</div>
+	<div class="leaf1">File:Close All
+	</div>
+	<div class="leaf1">The X Box
+	</div>
+	<div class="leaf1">What Makes a File Dirty
+	</div>
+</div>
+<div class="leaf0">Opening and Importing Outlines
+</div>
+<div class="leaf0">-------------------------
+</div>
+<div class="leaf0">Notes
+</div>
+<div class="branch0">Hyperlinks
+	<div class="leaf1">Link Nodes
+	</div>
+	<div class="leaf1">Links Within Nodes
+	</div>
+</div>
+<div class="branch0">Node Attributes
+	<div class="branch1">isComment
+		<div class="leaf">originator
+		</div>
+		<div class="leaf">behavior
+		</div>
+		<div class="leaf">default
+		</div>
+		<div class="leaf">inheritance
+		</div>
+		<div class="leaf">setting
+		</div>
+		<div class="leaf">clearing
+		</div>
+	</div>
+	<div class="branch1">isEditable
+		<div class="leaf">originator
+		</div>
+		<div class="leaf">behavior
+		</div>
+		<div class="leaf">default
+		</div>
+		<div class="leaf">inheritance
+		</div>
+		<div class="leaf">setting
+		</div>
+		<div class="leaf">clearing
+		</div>
+	</div>
+	<div class="branch1">isMoveable
+		<div class="leaf">originator
+		</div>
+		<div class="leaf">behavior
+		</div>
+		<div class="leaf">default
+		</div>
+		<div class="leaf">inheritance
+		</div>
+		<div class="leaf">setting
+		</div>
+		<div class="leaf">clearing
+		</div>
+	</div>
+	<div class="branch1">url
+		<div class="leaf">originator
+		</div>
+		<div class="leaf">behavior
+		</div>
+		<div class="leaf">default
+		</div>
+		<div class="leaf">inheritance
+		</div>
+		<div class="leaf">setting
+		</div>
+		<div class="leaf">clearing
+		</div>
+	</div>
+	<div class="branch1">type
+		<div class="leaf">originator
+		</div>
+		<div class="leaf">behavior
+		</div>
+		<div class="leaf">default
+		</div>
+		<div class="leaf">inheritance
+		</div>
+		<div class="leaf">setting
+		</div>
+		<div class="leaf">clearing
+		</div>
+	</div>
+	<div class="branch1">Interop with Other Outliners
+		<div class="leaf">Radio Userland x.xx
+		</div>
+		<div class="leaf">Frontier y.yy
+		</div>
+		<div class="leaf">Thought Manager z.zz
+		</div>
+	</div>
+</div>
+<div class="leaf0">Nodes by Reference
+</div>
+<div class="leaf0">Connecting Outlines
+</div>
+<div class="leaf0">Sharing Outlines
+</div>
+<div class="leaf0">Outline Security
+</div>
+<div class="leaf0">-------------------------
+</div>
+<div class="branch0">Using JOE To ...
+	<div class="branch1">Blog
+		<div class="leaf">Blog Using the Blogger APIs
+		</div>
+		<div class="leaf">Blog Using the Manila APIs
+		</div>
+	</div>
+	<div class="leaf1">Connect with Palm OS Outliners
+	</div>
+	<div class="leaf1">Edit HTML Files
+	</div>
+	<div class="leaf1">Edit Java Files
+	</div>
+	<div class="leaf1">Edit XML Files
+	</div>
+	<div class="leaf1">Examine System Directories
+	</div>
+	<div class="leaf1">Maintain Bookmarks and Favorites
+	</div>
+	<div class="leaf1">Maintain Websites
+	</div>
+	<div class="leaf1">Portal Yourself
+	</div>
+</div>
+<div class="branch0">Custom JOE
+	<div class="branch1">Custom Help Files
+		<div class="branch">JOE's help files ...
+			<div class="leaf">JOE User Guide.**.opml
+			</div>
+			<div class="leaf">About JOE.**.opml
+			</div>
+			<div class="leaf">JOE Tutorials.**.opml [forthcoming]
+			</div>
+			<div class="leaf">JOE Developer Guide.**.opml
+			</div>
+		</div>
+		<div class="leaf">... are just OPML outlines.
+		</div>
+		<div class="leaf">So you can add information to them and save them, thereby gaining custom help files.
+		</div>
+	</div>
+	<div class="leaf1">Scripting
+	</div>
+	<div class="leaf1">Macros
+	</div>
+	<div class="branch1">XML-RPC
+		<div class="branch">About XML-RPC
+			<div class="leaf">XML-RPC lets you make remote procedure calls over HTTP.
+			</div>
+			<div class="branch">JOE uses Hannes Wallnoefer's Helma XML-RPC package. Thanks Hannes.
+				<div class="leaf">http://xmlrpc.helma.org
+				</div>
+			</div>
+			<div class="branch">Further info
+				<div class="leaf">Portal: : http://xmlrpc.org
+				</div>
+				<div class="leaf">Spec: http://xmlrpc.com/spec
+				</div>
+			</div>
+		</div>
+		<div class="branch">Creating an XML-RPC Macro 
+			<div class="leaf">Give the Script:Macro Manager... menu command. The Macro Manager window appears.
+			</div>
+			<div class="leaf">Select XMLRPC from the new macro category dropdown widget.
+			</div>
+			<div class="leaf">Click the New button. A New Macro dialog box appears.
+			</div>
+			<div class="branch">The dialog box prompts you for the following: 
+				<div class="branch">Macro Name
+					<div class="leaf">This is the name that shows up in the macro popup. 
+					</div>
+					<div class="leaf">I typically name my XML-RPC macros something like &quot;XMLRPC Servername&quot;.  [MD]
+					</div>
+				</div>
+				<div class="branch">Server
+					<div class="leaf">The server name or ip-address of the XML-RPC server this macro will talk to. 
+					</div>
+					<div class="leaf">This defaults to &quot;127.0.0.1&quot; the loopback address for accessing a server running locally.
+					</div>
+				</div>
+				<div class="branch">Port
+					<div class="leaf">The port the server is running on. 
+					</div>
+					<div class="leaf">This defaults to &quot;8088&quot; for no really good reason other than eights kind of go with HTTP.
+					</div>
+				</div>
+				<div class="branch">Do Replacement
+					<div class="leaf">If &quot;yes&quot; then the response from the server will replace the current selection. 
+					</div>
+					<div class="leaf">If &quot;no&quot; then the response will be shown in a dialog only. 
+					</div>
+					<div class="leaf">This defaults to &quot;no&quot;.
+					</div>
+				</div>
+			</div>
+			<div class="leaf">Click the Create button and you're done. 
+			</div>
+		</div>
+		<div class="branch">Using an XML-RPC Macro  
+			<div class="branch">Select an outline node.
+				<div class="branch">The selected node should contain text, or a sub-tree that looks something like the following: 
+					<div class="leaf">&lt;?xml version=&quot;1.0&quot;?&gt;
+					</div>
+					<div class="branch">&lt;methodCall&gt;
+						<div class="leaf">&lt;methodName&gt;method_name&lt;/methodName&gt;
+						</div>
+						<div class="branch">&lt;params&gt;
+							<div class="leaf">&lt;param&gt;&lt;value&gt;Some Value&lt;/value&gt;&lt;/param&gt;
+							</div>
+							<div class="leaf">&lt;/params&gt;
+							</div>
+						</div>
+						<div class="leaf">&lt;/methodCall&gt;
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="leaf">Right-click the selected node to bring up the macro popup menu. 
+			</div>
+			<div class="leaf">Select the macro you want to apply.
+			</div>
+			<div class="branch">You may have to wait a while, depending on how long the operation takes. 
+				<div class="leaf">The macro blocks the application, so the macro must complete before you can continue working.
+				</div>
+			</div>
+			<div class="branch">The current implementation of the XML-RPC macro requires that the selected node contain a valid XML-RPC call. 
+				<div class="leaf">At some point it would probably be good to create an XML-RPC macro that uses the selection as a parameter to a call stored in the macro itself, but that's not how things work currently. 
+				</div>
+			</div>
+		</div>
+		<div class="branch">Strategies
+			<div class="leaf">One strategy I use when I have a call that takes one dynamic argument, is to create a &quot;text replacement&quot; macro that constructs the XML-RPC call. I then call the XML-RPC macro. [MD]
+			</div>
+		</div>
+		<div class="leaf">XML-RPC Macro Examples
+		</div>
+	</div>
+	<div class="leaf1">Skins
+	</div>
+</div>
+<div class="leaf0">-------------------------
+</div>
+<div class="branch0">Menu Commands
+	<div class="branch1">File
+		<div class="branch">New
+			<div class="leaf">keystroke shortcut: Ctrl+N
+			</div>
+			<div class="leaf">Creates a new outline, and opens it up in a window for editing. The new outline has a name of the form Untitled &lt;#&gt;, where &lt;#&gt; is a number that tracks the number of new documents created during this JOE session. (Untitled 1, Untitled 2, Untitled 3, etc)
+			</div>
+		</div>
+		<div class="branch">Open
+			<div class="leaf">keystroke shortcut: Ctrl+O
+			</div>
+			<div class="branch">Opens an existing outline. The outline must be in a format that JOE can both read and write. JOE can currently read and write these formats:
+				<div class="leaf">OPML
+				</div>
+				<div class="leaf">Text (also known as Plaintext)
+				</div>
+			</div>
+			<div class="branch">You can open files via:
+				<div class="leaf">The local file system
+				</div>
+				<div class="leaf">The PHP web protocol
+				</div>
+				<div class="leaf">&lt;forthcoming&gt; The HTTP web protocol
+				</div>
+				<div class="leaf">&lt;forthcoming&gt; The FTP web protocol
+				</div>
+			</div>
+			<div class="leaf">Note: the Import command lets you open an existing outline that's in a format that JOE can read, but not write.
+			</div>
+		</div>
+		<div class="branch">Recent Files
+			<div class="leaf">
+			</div>
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="branch">Import
+			<div class="branch">Opens an existing outline that's in a format that JOE can read, but not write. JOE can currently import these formats:
+				<div class="leaf">Brain Forest Palm pdb
+				</div>
+				<div class="leaf">Shadow Plan Palm pdb
+				</div>
+				<div class="leaf">Thought Manager Palm pdb
+				</div>
+			</div>
+			<div class="branch">You can import files via:
+				<div class="leaf">The local file system
+				</div>
+				<div class="leaf">The PHP web protocol
+				</div>
+				<div class="leaf">&lt;forthcoming&gt; The HTTP web protocol
+				</div>
+				<div class="leaf">&lt;forthcoming&gt; The FTP web protocol
+				</div>
+			</div>
+			<div class="leaf">Note: Since JOE cannot write Import formats, the Save command is grayed out when an imported file is topmost. You must use Save As to save an imported file, since you must specify the format to write it to.
+			</div>
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Save
+		</div>
+		<div class="leaf">Save All
+		</div>
+		<div class="leaf">Save As...
+		</div>
+		<div class="leaf">Revert
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Export
+		</div>
+		<div class="leaf">Export Selection
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Close
+		</div>
+		<div class="leaf">Close All
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Quit
+		</div>
+	</div>
+	<div class="branch1">Edit
+		<div class="leaf">Undo
+		</div>
+		<div class="leaf">Redo
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Undo All
+		</div>
+		<div class="leaf">Redo All
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Cut
+		</div>
+		<div class="leaf">Copy
+		</div>
+		<div class="leaf">Paste
+		</div>
+		<div class="leaf">Delete
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Select All
+		</div>
+		<div class="leaf">Select None
+		</div>
+		<div class="leaf">Select Inverse
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Document Settings...
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="branch">Application Preferences...
+			<div class="branch">Editor Panel
+				<div class="leaf">Show Line Numbers
+				</div>
+				<div class="leaf">Show Attributes for new documents
+				</div>
+				<div class="leaf">Show Indicators
+				</div>
+				<div class="leaf">Apply Font Style for Comments
+				</div>
+				<div class="leaf">Apply Font Style for Editability
+				</div>
+				<div class="leaf">Apply Font Style for Moveability
+				</div>
+				<div class="leaf">Restore Defaults
+				</div>
+			</div>
+			<div class="branch">Look &amp; Feel Panel
+				<div class="leaf">Desktop Color
+				</div>
+				<div class="leaf">Background Color
+				</div>
+				<div class="leaf">Foreground Color
+				</div>
+				<div class="leaf">Text/Selection Color
+				</div>
+				<div class="leaf">Commented Text Color
+				</div>
+				<div class="leaf">Line Number Color
+				</div>
+				<div class="leaf">Line Number Selected Color
+				</div>
+				<div class="leaf">Line Number Selected Children Color
+				</div>
+				<div class="leaf">Vertical Spacing
+				</div>
+				<div class="leaf">Indent
+				</div>
+				<div class="leaf">Left Margin
+				</div>
+				<div class="leaf">Top Margin
+				</div>
+				<div class="leaf">Right Margin
+				</div>
+				<div class="leaf">Bottom Margin
+				</div>
+				<div class="branch">Document Titles
+					<div class="leaf">Specifies the form of document window titles
+					</div>
+				</div>
+				<div class="leaf">Restore Defaults
+				</div>
+			</div>
+			<div class="branch">Open &amp; Save Panel
+				<div class="leaf">File Protocol
+				</div>
+				<div class="leaf">Default Line Terminator
+				</div>
+				<div class="leaf">Default Encoding when opening
+				</div>
+				<div class="leaf">Default Encoding when importing
+				</div>
+				<div class="leaf">Default Encoding when saving
+				</div>
+				<div class="leaf">Default Encoding when exporting
+				</div>
+				<div class="leaf">Default Format when opening
+				</div>
+				<div class="leaf">Default Format when importing
+				</div>
+				<div class="leaf">Default Format when saving
+				</div>
+				<div class="leaf">Default Format when exporting
+				</div>
+				<div class="leaf">Restore Defaults
+				</div>
+			</div>
+			<div class="branch">Open &amp; Save Folder
+				<div class="branch">File Format: Justified Plaintext
+					<div class="leaf">Column Width
+					</div>
+					<div class="leaf">Draw Hierarchy Lines
+					</div>
+					<div class="leaf">Restore Defaults
+					</div>
+				</div>
+				<div class="branch">File Protocol: WebFile
+					<div class="leaf">Remote URL
+					</div>
+					<div class="leaf">Remote username
+					</div>
+					<div class="leaf">Remote password
+					</div>
+					<div class="leaf">Restore Defaults
+					</div>
+				</div>
+				<div class="branch">Recent Files List
+					<div class="branch">Size
+						<div class="leaf">The number of items to be shown in the File:Recent Files menu. Permissible values: 0..100
+						</div>
+					</div>
+					<div class="branch">Ordering
+						<div class="leaf">How the items in the Recent Files menu are to be organized.
+						</div>
+						<div class="branch">Permissible values are:
+							<div class="branch">Chronological
+								<div class="leaf">In chronological order as the files were opened/imported.
+								</div>
+							</div>
+							<div class="branch">[forthcoming] Alphabetical 
+								<div class="leaf">In alphabetical order. 
+								</div>
+								<div class="branch">For example:
+									<div class="leaf">A
+									</div>
+									<div class="leaf">a
+									</div>
+									<div class="leaf">b
+									</div>
+									<div class="leaf">B
+									</div>
+									<div class="leaf">C
+									</div>
+									<div class="leaf">c
+									</div>
+								</div>
+							</div>
+							<div class="branch">[forthcoming] ASCII
+								<div class="branch">In ASCII order. 
+									<div class="leaf">A
+									</div>
+									<div class="leaf">a
+									</div>
+									<div class="leaf">b
+									</div>
+									<div class="leaf">B
+									</div>
+									<div class="leaf">C
+									</div>
+									<div class="leaf">c
+									</div>
+								</div>
+								<div class="leaf">This differs from alphabetical order chiefly in that all lowercase characters come after all uppercase characters. 
+								</div>
+								<div class="branch">For example:
+									<div class="leaf">A
+									</div>
+									<div class="leaf">B
+									</div>
+									<div class="leaf">C
+									</div>
+									<div class="leaf">a
+									</div>
+									<div class="leaf">b
+									</div>
+									<div class="leaf">c
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="branch">Direction
+						<div class="leaf">The direction the names run on the menu.
+						</div>
+						<div class="branch">Permissible values are:
+							<div class="branch">Top to Bottom
+								<div class="branch">With chronological ordering
+									<div class="leaf">the oldest files are at the top, the newest at the bottom
+									</div>
+								</div>
+								<div class="branch">With alfa/ascii ordering
+									<div class="leaf">the A files are at the top, the Z files are at the bottom
+									</div>
+								</div>
+							</div>
+							<div class="branch">Bottom to Top
+								<div class="branch">With chronological ordering
+									<div class="leaf">the oldest files are at the bottom, the newest at the top
+									</div>
+								</div>
+								<div class="branch">With alfa/ascii ordering
+									<div class="leaf">the A files are at the bottom, the Z files are at the top
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="branch">Name Form
+						<div class="leaf">The form of file designation shown in the menu
+						</div>
+						<div class="branch">Permissible values are:
+							<div class="branch">Full Pathname
+								<div class="branch">example:
+									<div class="leaf">c:\my documents\fun\joe jokes.opml
+									</div>
+								</div>
+							</div>
+							<div class="branch">[forthcoming] Truncated Pathname
+								<div class="branch">example:
+									<div class="leaf">c:\my documents\...\joe jokes.opml
+									</div>
+								</div>
+							</div>
+							<div class="branch">Filename Only
+								<div class="branch">example:
+									<div class="leaf">joe jokes.opml
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="branch">Restore Defaults
+						<div class="leaf">Sets Size, Ordering, Direction, and Name Form to their default values.
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="branch">Misc Panel
+				<div class="leaf">Print environment to console on startup
+				</div>
+				<div class="leaf">New document on startup
+				</div>
+				<div class="leaf">Owner name
+				</div>
+				<div class="leaf">Owner email
+				</div>
+				<div class="leaf">Mouse Wheel Scroll Speed
+				</div>
+				<div class="leaf">Autosave Frequency (sec)
+				</div>
+			</div>
+		</div>
+		<div class="leaf">Document Preferences...
+		</div>
+		<div class="leaf">Document Attributes...
+		</div>
+	</div>
+	<div class="branch1">Outline
+		<div class="branch">Comments
+			<div class="leaf">Toggle Comment and Clear Subnodes
+			</div>
+			<div class="leaf">Clear Comments in Selected Nodes
+			</div>
+			<div class="leaf">---
+			</div>
+			<div class="leaf">Toggle Comment
+			</div>
+			<div class="leaf">Toggle Comment Inheritance
+			</div>
+		</div>
+		<div class="branch">Read-Only Node Settings
+			<div class="leaf">Toggle Read-Only State and Clear Subnodes
+			</div>
+			<div class="leaf">Clear Read-Only State in Selected Nodes
+			</div>
+			<div class="leaf">---
+			</div>
+			<div class="leaf">Toggle Read-Only State
+			</div>
+			<div class="leaf">Toggle Read-Only State Inheritance
+			</div>
+		</div>
+		<div class="branch">Moveable Node Settings
+			<div class="leaf">Toggle Moveable Settings and Clear Subnodes
+			</div>
+			<div class="leaf">Clear Moveable Settings in Selected Nodes
+			</div>
+			<div class="leaf">---
+			</div>
+			<div class="leaf">Toggle Moveable Settings
+			</div>
+			<div class="leaf">Toggle Moveable Settings Inheritance
+			</div>
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Toggle Expansion
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Expand All Subheads
+		</div>
+		<div class="leaf">Expand Everything
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Collapse to Parent
+		</div>
+		<div class="leaf">Collapse Everything
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Move Up
+		</div>
+		<div class="leaf">Move Down
+		</div>
+		<div class="leaf">Move Left
+		</div>
+		<div class="leaf">Move Right
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Promote
+		</div>
+		<div class="leaf">Demote
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Merge
+		</div>
+		<div class="leaf">Merge with Spaces
+		</div>
+		<div class="leaf">--- 
+		</div>
+		<div class="leaf">Hoist
+		</div>
+		<div class="leaf">De-Hoist
+		</div>
+		<div class="leaf">De-Hoist All
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Show Attributes
+		</div>
+	</div>
+	<div class="branch1">Search
+		<div class="leaf">Go To Line...
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Find/Replace...
+		</div>
+	</div>
+	<div class="branch1">Script
+		<div class="leaf">Macro Manager...
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Run as Bean Shell Script
+		</div>
+		<div class="leaf">Bean Shell Console
+		</div>
+		<div class="leaf">Scripts Manager
+		</div>
+	</div>
+	<div class="branch1">Window
+		<div class="leaf">Document Statistics...
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Stack
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Next
+		</div>
+		<div class="leaf">Previous
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">[list of currently-open windows]
+		</div>
+	</div>
+	<div class="branch1">Help
+		<div class="leaf">User Guide
+		</div>
+		<div class="leaf">Developer Guide
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">Tutorials
+		</div>
+		<div class="leaf">Bookmarks
+		</div>
+		<div class="leaf">---
+		</div>
+		<div class="leaf">About JOE
+		</div>
+	</div>
+</div>
+<div class="branch0">Default Keystroke Shortcuts
+	<div class="leaf1">Ctrl-A
+	</div>
+	<div class="branch1">Ctrl-C
+		<div class="leaf">Edit:Copy menu command
+		</div>
+	</div>
+	<div class="leaf1">Ctrl-D
+	</div>
+	<div class="leaf1">Ctrl-F
+	</div>
+	<div class="leaf1">Ctrl-G
+	</div>
+	<div class="leaf1">Ctrl-I
+	</div>
+	<div class="leaf1">Ctrl-M
+	</div>
+	<div class="branch1">Ctrl-N
+		<div class="leaf">File:New menu command
+		</div>
+	</div>
+	<div class="branch1">Ctrl-O
+		<div class="leaf">File:Open menu command
+		</div>
+	</div>
+	<div class="branch1">Ctrl-Q
+		<div class="leaf">File:Quit menu command
+		</div>
+	</div>
+	<div class="branch1">Ctrl-S
+		<div class="leaf">File:Save menu command
+		</div>
+	</div>
+	<div class="leaf1">Ctrl-T
+	</div>
+	<div class="branch1">Ctrl-X
+		<div class="leaf">Edit:Cut menu command
+		</div>
+	</div>
+	<div class="leaf1">Ctrl-V
+	</div>
+	<div class="branch1">Ctrl-W
+		<div class="leaf">File:Close menu command
+		</div>
+	</div>
+	<div class="branch1">Ctrl-Z
+		<div class="leaf">Edit:Undo menu command
+		</div>
+	</div>
+	<div class="leaf1">Ctrl-Shift-A
+	</div>
+	<div class="leaf1">Ctrl-Shift-M
+	</div>
+	<div class="leaf1">Ctrl-Shift-S
+	</div>
+	<div class="branch1">Ctrl-Shift-Z
+		<div class="leaf">Edit:Redo menu command
+		</div>
+	</div>
+	<div class="leaf1">Del/Delete
+	</div>
+	<div class="leaf1">PageDown
+	</div>
+	<div class="leaf1">Shift-uP
+	</div>
+	<div class="leaf1">Tab
+	</div>
+</div>
+<div class="branch0">Outline Formats JOE Knows
+	<div class="branch1">Plaintext
+		<div class="branch">tabbed text
+			<div class="leaf">Open and Save
+			</div>
+			<div class="branch">each node is terminated by one of these line-ending character sequences
+				<div class="leaf">0D 0A [CR LF] [DOS Windows standard]
+				</div>
+				<div class="leaf">0D [CR] [Mac standard]
+				</div>
+				<div class="leaf">0A [LF] [Linux/Unix standard] 
+				</div>
+			</div>
+			<div class="leaf">hierarchical position is signalled by tab [09] characters
+			</div>
+		</div>
+	</div>
+	<div class="branch1">OPML
+		<div class="leaf">Open and Save
+		</div>
+		<div class="branch">OPML 1.0
+			<div class="leaf">http://opml.org/spec
+			</div>
+		</div>
+		<div class="leaf">the Userland attribute extensions
+		</div>
+		<div class="leaf">the JOE attribute extensions
+		</div>
+	</div>
+	<div class="branch1">BrainForest Palm Pdb
+		<div class="leaf">Import
+		</div>
+		<div class="leaf">Brings in node text and notes
+		</div>
+	</div>
+	<div class="branch1">Thought Manager Palm pdb
+		<div class="leaf">Import
+		</div>
+		<div class="leaf">Brings in node text and notes
+		</div>
+	</div>
+	<div class="branch1">Shadow Plan Palm pdb
+		<div class="leaf">Import
+		</div>
+		<div class="leaf">Brings in node text and notes
+		</div>
+	</div>
+</div>
+<div class="branch0">Glossary
+	<div class="branch1">Abbreviations and Acronyms
+		<div class="branch">Three-Letter Acronyms [TLA's]
+			<div class="leaf">JOE
+			</div>
+			<div class="leaf">JUG
+			</div>
+			<div class="leaf">JDG
+			</div>
+		</div>
+		<div class="branch">Four-Letter Acronyms [FLAc's]
+			<div class="leaf">OPML
+			</div>
+		</div>
+		<div class="branch">Seven-Character Acronyms [SevChAc's]
+			<div class="leaf">XML-RPC
+			</div>
+		</div>
+	</div>
+	<div class="branch1">A-E
+		<div class="branch">A
+			<div class="leaf">ancestor
+			</div>
+		</div>
+		<div class="branch">B
+			<div class="leaf">branch
+			</div>
+		</div>
+		<div class="branch">C
+			<div class="leaf">child 
+			</div>
+			<div class="leaf">collapse
+			</div>
+		</div>
+		<div class="branch">D
+			<div class="leaf">descendant
+			</div>
+		</div>
+		<div class="branch">E
+			<div class="leaf">expand
+			</div>
+		</div>
+	</div>
+	<div class="branch1">F-J
+		<div class="leaf">F
+		</div>
+		<div class="leaf">G
+		</div>
+		<div class="branch">H
+			<div class="branch">hoist
+				<div class="leaf">
+				</div>
+			</div>
+		</div>
+		<div class="leaf">I
+		</div>
+		<div class="leaf">J
+		</div>
+	</div>
+	<div class="branch1">K-O
+		<div class="leaf">K
+		</div>
+		<div class="branch">L
+			<div class="leaf">leaf
+			</div>
+		</div>
+		<div class="leaf">M
+		</div>
+		<div class="branch">N
+			<div class="branch">node
+				<div class="leaf">One line in an outline. An outline consists of a set of nodes. 
+				</div>
+				<div class="leaf">see also: parent node, subnode, sibling node
+				</div>
+			</div>
+			<div class="leaf">nodeset
+			</div>
+		</div>
+		<div class="branch">O
+			<div class="leaf">older sibling
+			</div>
+			<div class="leaf">OPML
+			</div>
+			<div class="branch">outline
+				<div class="leaf">An outline is a collection of nodes that are organized in two dimensions: serial and hierarchic. The topmost level of an outline's hierarchic organization is called level 0. Nodes that are hierarchically subjunctive to a given node are called subnodes , or descendants, of that node. Subnodes one level down from a given node are called child nodes, and the given node is their parent. Nodes that share a parent node are called sibling nodes. The topmost set of sibling nodes is said to be at level 0 of the outline. Nodes contain arbitrary sorts of information, some of which is commonly displayed to the user. 
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="branch1">P-T
+		<div class="branch">P
+			<div class="branch">parent
+				<div class="leaf">
+				</div>
+				<div class="leaf">see also: node, subnode, sibling node
+				</div>
+			</div>
+		</div>
+		<div class="leaf">Q
+		</div>
+		<div class="branch">R
+			<div class="leaf">root
+			</div>
+		</div>
+		<div class="branch">S
+			<div class="leaf">sibling
+			</div>
+			<div class="leaf">subnode
+			</div>
+		</div>
+		<div class="branch">T
+			<div class="leaf">tree
+			</div>
+		</div>
+	</div>
+	<div class="branch1">U-Z
+		<div class="leaf">U
+		</div>
+		<div class="leaf">V
+		</div>
+		<div class="leaf">W
+		</div>
+		<div class="branch">X
+			<div class="leaf">XML-RPC
+			</div>
+		</div>
+		<div class="branch">Y
+			<div class="leaf">younger sibling
+			</div>
+		</div>
+		<div class="leaf">Z
+		</div>
+	</div>
+</div>
+<div class="branch0">Index
+	<div class="branch1">A-E
+		<div class="leaf">A
+		</div>
+		<div class="leaf">B
+		</div>
+		<div class="leaf">C
+		</div>
+		<div class="leaf">D
+		</div>
+		<div class="leaf">E
+		</div>
+	</div>
+	<div class="branch1">F-J
+		<div class="leaf">F
+		</div>
+		<div class="leaf">G
+		</div>
+		<div class="leaf">H
+		</div>
+		<div class="leaf">I
+		</div>
+		<div class="leaf">J
+		</div>
+	</div>
+	<div class="branch1">K-O
+		<div class="leaf">K
+		</div>
+		<div class="leaf">L
+		</div>
+		<div class="leaf">M
+		</div>
+		<div class="branch">N
+			<div class="branch">node
+				<div class="leaf">a set of links to nodes within this document that mention 'node'
+				</div>
+				<div class="leaf">for example
+				</div>
+				<div class="leaf">#someTerminology, #moveNodesAround, #deleteNodes
+				</div>
+			</div>
+		</div>
+		<div class="leaf">O
+		</div>
+	</div>
+	<div class="branch1">P-T
+		<div class="leaf">P
+		</div>
+		<div class="leaf">Q
+		</div>
+		<div class="leaf">R
+		</div>
+		<div class="leaf">S
+		</div>
+		<div class="leaf">T
+		</div>
+	</div>
+	<div class="branch1">U-Z
+		<div class="leaf">U
+		</div>
+		<div class="leaf">V
+		</div>
+		<div class="leaf">W
+		</div>
+		<div class="leaf">X
+		</div>
+		<div class="leaf">Y
+		</div>
+		<div class="leaf">Z
+		</div>
+	</div>
+</div>
+
+</body>
+
 </html>
+
+
