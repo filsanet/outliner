@@ -164,7 +164,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		setLocation(getX(), getY() + amount);
 		button.setLocation(button.getX(), button.getY() + amount);
 		if (pShowLineNumbers) {
-			lineNumber.setLocation(lineNumber.getX(), lineNumber.getY() + amount);
+			lineNumber.setLocation(lineNumber.getX(), lineNumber.getY() + amount); // Might want to take this out of the if.
 		}
 		if (pShowIndicators) {
 			iComment.setLocation(iComment.getX(), iComment.getY() + amount);
@@ -367,7 +367,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		} // end if
 		
 		if (node.isAncestorSelected()) {
-			if (node.isComment() && pApplyFontStyleForComments) {
+			if (pApplyFontStyleForComments && node.isComment()) {
 				setForeground(pCommentColor);				
 			} else {
 				setForeground(pBackgroundColor);
@@ -393,7 +393,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 			}
 			
 		} else {
-			if (node.isComment() && pApplyFontStyleForComments) {
+			if (pApplyFontStyleForComments && node.isComment()) {
 				setForeground(pCommentColor);				
 			} else {
 				setForeground(pForegroundColor);

@@ -451,6 +451,25 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		} else {
 			return getParent().isAncestorSelected();
 		}
+		
+		
+		
+		/*
+		// Is this a faster way to do things since it won't use as many stack calls since the method
+		// calls aren't recursive.
+		if (isSelected()) {
+			return true;
+		} else {
+			Node node = getParent();
+			while (!node.isRoot()) {
+				if (node.isSelected()) {
+					return true;
+				} else {
+					node = node.getParent();
+				}
+			}
+			return false;
+		}*/
 	}
 	
 	// Is this a decendant of node?

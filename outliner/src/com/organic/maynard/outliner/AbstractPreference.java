@@ -53,9 +53,7 @@ public abstract class AbstractPreference implements Preference, GUITreeComponent
 
 		setCommand(id);
 
-		// Add this menuItem to the parent menu.
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
-		prefs.addPreference(id, this);
+		Outliner.prefs.addPreference(id, this);
 	}
 	
 	public void endSetup(AttributeList atts) {}	

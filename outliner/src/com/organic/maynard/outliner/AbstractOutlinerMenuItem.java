@@ -86,20 +86,17 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 		
 		// Set KeyBinding
 		int mask = 0;
-		try {
-			String keyBindingModifiers = atts.getValue(A_KEY_BINDING_MODIFIERS);
+		
+		String keyBindingModifiers = atts.getValue(A_KEY_BINDING_MODIFIERS);
+		if (keyBindingModifiers != null) {
 			if (keyBindingModifiers.indexOf(CTRL) != -1) {mask += Event.CTRL_MASK;}
 			if (keyBindingModifiers.indexOf(SHIFT) != -1) {mask += Event.SHIFT_MASK;}
 			if (keyBindingModifiers.indexOf(ALT) != -1) {mask += Event.ALT_MASK;}
-		} catch (NullPointerException e) {
-			//e.printStackTrace();
-		} catch (StringIndexOutOfBoundsException e) {
-			//e.printStackTrace();
 		}
+
 		
-		try {		
-			String keyBinding = atts.getValue(A_KEY_BINDING);
-			
+		String keyBinding = atts.getValue(A_KEY_BINDING);
+		if (keyBinding != null) {	
 			char keyBindingChar = keyBinding.charAt(0);
 			if (keyBinding.equals(TAB)) {
 				keyBindingChar = KeyEvent.VK_TAB;
@@ -124,10 +121,6 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 			}
 			
 			setAccelerator(KeyStroke.getKeyStroke(keyBindingChar, mask, false));
-		} catch (NullPointerException e) {
-			//e.printStackTrace();
-		} catch (StringIndexOutOfBoundsException e) {
-			//e.printStackTrace();
 		}
 
 		// Add this menuItem to the parent menu.

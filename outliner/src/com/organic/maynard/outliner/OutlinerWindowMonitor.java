@@ -42,10 +42,12 @@
 package com.organic.maynard.outliner;
 
 // we use these
+import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.Rectangle;
 import com.organic.maynard.util.string.Replace;
+import com.organic.maynard.outliner.util.Ginsu;
 
 public class OutlinerWindowMonitor extends InternalFrameAdapter {
 	
@@ -56,8 +58,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 	
 	
 	// a window's closing -- deal with it
-	public static boolean closeInternalFrame(JInternalFrame w) {
-		
+	public static boolean closeInternalFrame(JInternalFrame w) {		
 		// grab a copy of the document ref
 		OutlinerDocument doc = (OutlinerDocument) w;
 		
@@ -142,12 +143,8 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 
 		// Explicitly Destroy since Swing has problems letting go.
 		// Seems to make a difference when we also use -Xincgc.
-		doc.destroy();
-		
-		doc.dispose();
-		
-		System.gc();
+		Ginsu.sliceAndDice(doc);
 		
 		return true;
-	} // end method
-} // end class
+	}
+}

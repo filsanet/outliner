@@ -77,7 +77,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		GUITreeLoader.reg.getText(Preferences.RF_NF_FULL_PATHNAME), 
 		GUITreeLoader.reg.getText(Preferences.RF_NF_TRUNC_PATHNAME), 
 		GUITreeLoader.reg.getText(Preferences.RF_NF_FILENAME) 
-		} ;
+	};
 		
 	// document title name forms
 	private static final int FULL_PATHNAME = 0 ;
@@ -235,7 +235,6 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	public void destroy() {
 		removeInternalFrameListener(monitor);
 		removeComponentListener(this);
-		getContentPane().remove(panel);
 		
 		docInfo = null;
 		
@@ -256,9 +255,18 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		
 		border = null;
 		fileName = null;
+		repository = null;
+		dummy = null;
+		attPanel = null;
+		splitPane = null;
+		attJSP = null;
 
+		getContentPane().removeNotify();
+		getContentPane().removeAll();
 		removeNotify();
 		removeAll();
+		
+		dispose();
 	}
 	
 	public void restoreWindowToInitialSize() {

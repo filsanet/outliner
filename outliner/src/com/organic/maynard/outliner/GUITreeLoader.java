@@ -214,7 +214,7 @@ public class GUITreeLoader extends HandlerBase implements JoeXMLConstants {
 	}
 	
 	public void characters(char ch[], int start, int length) throws SAXException {
-		String text = new String(ch, start, length);
+		//String text = new String(ch, start, length);
 		
 		// Does nothing right now.
 	}

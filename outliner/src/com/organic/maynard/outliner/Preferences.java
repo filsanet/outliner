@@ -179,6 +179,9 @@ public class Preferences implements GUITreeComponent {
 	public Preferences() {
 		TXT_WORDS = GUITreeLoader.reg.getText("wrap_words");
 		TXT_CHARACTERS = GUITreeLoader.reg.getText("wrap_characters");
+		
+		// Place a reference to this object in the outliner
+		Outliner.prefs = this;
 	}
 	
 
@@ -239,74 +242,64 @@ public class Preferences implements GUITreeComponent {
 	
 	// Static Registry Accessors
 	public static PreferenceBoolean getPreferenceBoolean(String key) {
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
-		return (PreferenceBoolean) prefs.getPreference(key);
+		return (PreferenceBoolean) Outliner.prefs.getPreference(key);
 	}
 
 	public static PreferenceInt getPreferenceInt(String key) {
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
-		return (PreferenceInt) prefs.getPreference(key);
+		return (PreferenceInt) Outliner.prefs.getPreference(key);
 	}
 
 	public static PreferenceString getPreferenceString(String key) {
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
-		return (PreferenceString) prefs.getPreference(key);
+		return (PreferenceString) Outliner.prefs.getPreference(key);
 	}
 
 	public static PreferenceColor getPreferenceColor(String key) {
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
-		return (PreferenceColor) prefs.getPreference(key);
+		return (PreferenceColor) Outliner.prefs.getPreference(key);
 	}
 
 	public static PreferenceLineEnding getPreferenceLineEnding(String key) {
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
-		return (PreferenceLineEnding) prefs.getPreference(key);
+		return (PreferenceLineEnding) Outliner.prefs.getPreference(key);
 	}
 	
 		
 	// Syncing Preferences	
 	public static void restoreCurrentToDefault() {
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
-		Iterator it = prefs.getPreferenceKeys();
+		Iterator it = Outliner.prefs.getPreferenceKeys();
 		while (it.hasNext()) {
 			String key = (String) it.next();
-			prefs.getPreference(key).restoreCurrentToDefault();
+			Outliner.prefs.getPreference(key).restoreCurrentToDefault();
 		}
 	}
 
 	public static void restoreTemporaryToDefault() {
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
-		Iterator it = prefs.getPreferenceKeys();
+		Iterator it = Outliner.prefs.getPreferenceKeys();
 		while (it.hasNext()) {
 			String key = (String) it.next();
-			prefs.getPreference(key).restoreTemporaryToDefault();
+			Outliner.prefs.getPreference(key).restoreTemporaryToDefault();
 		}
 	}
 
 	public static void restoreTemporaryToCurrent() {
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
-		Iterator it = prefs.getPreferenceKeys();
+		Iterator it = Outliner.prefs.getPreferenceKeys();
 		while (it.hasNext()) {
 			String key = (String) it.next();
-			prefs.getPreference(key).restoreTemporaryToCurrent();
+			Outliner.prefs.getPreference(key).restoreTemporaryToCurrent();
 		}
 	}
 
 	public static void applyTemporaryToCurrent() {
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
-		Iterator it = prefs.getPreferenceKeys();
+		Iterator it = Outliner.prefs.getPreferenceKeys();
 		while (it.hasNext()) {
 			String key = (String) it.next();
-			prefs.getPreference(key).applyTemporaryToCurrent();
+			Outliner.prefs.getPreference(key).applyTemporaryToCurrent();
 		}
 	}
 	
 	public static void applyCurrentToApplication() {
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
-		Iterator it = prefs.getPreferencesPanelKeys();
+		Iterator it = Outliner.prefs.getPreferencesPanelKeys();
 		while (it.hasNext()) {
 			String key = (String) it.next();
-			prefs.getPreferencesPanel(key).applyCurrentToApplication();
+			Outliner.prefs.getPreferencesPanel(key).applyCurrentToApplication();
 		}	
 	}
 
@@ -325,11 +318,10 @@ public class Preferences implements GUITreeComponent {
 	private static String prepareConfigFile() {
 		StringBuffer buffer = new StringBuffer();
 
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
-		Iterator it = prefs.getPreferenceKeys();
+		Iterator it = Outliner.prefs.getPreferenceKeys();
 		while (it.hasNext()) {
 			String key = (String) it.next();
-			Preference pref = prefs.getPreference(key);
+			Preference pref = Outliner.prefs.getPreference(key);
 			buffer.append(Outliner.COMMAND_SET);
 			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
 			buffer.append(pref.getCommand());

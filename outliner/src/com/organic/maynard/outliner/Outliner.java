@@ -300,6 +300,8 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	
 	// DOM Objects
 	public static DocumentRepository documents = new DocumentRepository();
+	
+	public static Preferences prefs = null;
 
 
 	// GUI Settings
