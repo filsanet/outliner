@@ -59,7 +59,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		}
 
 		// This is to block clicks when a right click is generated in windows.
-		if ((Outliner.isWindows()) && e.getModifiers() == InputEvent.BUTTON3_MASK) {
+		if ((PlatformCompatibility.isWindows()) && e.getModifiers() == InputEvent.BUTTON3_MASK) {
 			return;
 		}
 			

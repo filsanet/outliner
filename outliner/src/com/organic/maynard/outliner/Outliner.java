@@ -440,7 +440,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		
 	public static void main(String args[]) {
 		// This allows scrollbars to be resized while they are being dragged.
-		UIManager.put("ScrollBarUI", "com.organic.maynard.outliner.OutlinerScrollBarUI");
+		UIManager.put("ScrollBarUI", PlatformCompatibility.getScrollBarUIClassName());
 
 
 		// See if we've got a preferred language to use. 
@@ -500,24 +500,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		}
 	}
 	
-	// Utility Methods
-	public static boolean isWindows() {
-		String osName = System.getProperty("os.name");
-		if (osName.toLowerCase().startsWith("win")) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	public static boolean isJava131() {
-		String javaVersion = System.getProperty("java.version");
-		if (javaVersion.startsWith("1.3.1")) {
-			return true;
-		} else {
-			return false;
-		}	
-	}
+
 
 	
 	// Open Document Repository
@@ -615,20 +598,12 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	}
 	
 	public static boolean isFileNameUnique(String filename) {
-		// For windows we need to normalize the case.
-		if (isWindows()) {
-			for (int i = 0; i < openDocuments.size(); i++) {
-				if (filename.equalsIgnoreCase(getDocument(i).getFileName())) {
-					return false;
-				}
-			}		
-		} else {
-			for (int i = 0; i < openDocuments.size(); i++) {
-				if (filename.equals(getDocument(i).getFileName())) {
-					return false;
-				}
+		for (int i = 0; i < openDocuments.size(); i++) {
+			if (PlatformCompatibility.areFilenamesEquivalent(filename, getDocument(i).getFileName())) {
+				return false;
 			}
-		}
+		}		
+
 		return true;
 	}
 

@@ -79,7 +79,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		}
 
 		// This is to block clicks when a right click is generated in windows.
-		if ((Outliner.isWindows()) && e.getModifiers() == InputEvent.BUTTON3_MASK) {
+		if ((PlatformCompatibility.isWindows()) && e.getModifiers() == InputEvent.BUTTON3_MASK) {
 			return;
 		}
 				
@@ -847,7 +847,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		}
 		
 		// [md] This conditional is here since StringSelection subclassing seems to be broken in Java 1.3.1.
-		if (Outliner.isJava131()) {
+		if (PlatformCompatibility.isJava1_3_1()) {
 			java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(nodeSet.toString()), null);
 		} else {
 			Outliner.clipboard.setContents(new NodeSetTransferable(nodeSet), Outliner.outliner);
@@ -869,7 +869,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		
 		if (!nodeSet.isEmpty()) {
 			// [md] This conditional is here since StringSelection subclassing seems to be broken in Java 1.3.1.
-			if (Outliner.isJava131()) {
+			if (PlatformCompatibility.isJava1_3_1()) {
 				java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(nodeSet.toString()), null);
 			} else {
 				Outliner.clipboard.setContents(new NodeSetTransferable(nodeSet), Outliner.outliner);
