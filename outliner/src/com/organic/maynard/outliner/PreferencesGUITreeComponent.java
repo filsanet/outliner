@@ -38,8 +38,14 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.border.*;
 
 import org.xml.sax.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
 public interface PreferencesGUITreeComponent extends GUITreeComponent {
 
@@ -122,16 +128,17 @@ abstract class AbstractPreferencesGUITreeComponent implements PreferencesGUITree
 		if (style == null) {
 			style = STYLE_SIDE_BY_SIDE;
 		}
+		Container c = prefPanel.getCurrentContainer();
 		
 		if (style.equals(STYLE_SINGLE_CENTERED)) {
-			AbstractPreferencesPanel.addSingleItemCentered(new JLabel(getLabelText()), prefPanel.box);
-			AbstractPreferencesPanel.addSingleItemCentered(getComponent(), prefPanel.box);
+			AbstractPreferencesPanel.addSingleItemCentered(new JLabel(getLabelText()), c);
+			AbstractPreferencesPanel.addSingleItemCentered(getComponent(), c);
 		} else if (style.equals(STYLE_SIDE_BY_SIDE)) {
-			AbstractPreferencesPanel.addPreferenceItem(getLabelText(), getComponent(), prefPanel.box);		
+			AbstractPreferencesPanel.addPreferenceItem(getLabelText(), getComponent(), c);		
 		} else {
-			AbstractPreferencesPanel.addPreferenceItem(getLabelText(), getComponent(), prefPanel.box);
+			AbstractPreferencesPanel.addPreferenceItem(getLabelText(), getComponent(), c);
 		}
-		prefPanel.box.add(Box.createVerticalStrut(5));
+		c.add(Box.createVerticalStrut(5));
 	}
 }
 

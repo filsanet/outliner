@@ -42,6 +42,11 @@ import java.util.*;
 
 import org.xml.sax.*;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
 public abstract class AbstractPreferencesPanel extends JPanel implements PreferencesPanel, GUITreeComponent, ActionListener {
 	
 	// Constants
@@ -104,6 +109,26 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 	
 	
 	// PreferencesPanel Interface
+	private ArrayList containerStack = new ArrayList();
+	
+	public Container getCurrentContainer() {
+		if (containerStack.size() > 0) {
+			return (Container) containerStack.get(containerStack.size() - 1);
+		} else {
+			return this.box;
+		}
+	}
+	
+	public void startAddSubContainer(Container c) {
+		containerStack.add(c);
+	}
+	
+	public void endAddSubContainer(Container c) {
+		containerStack.remove(containerStack.size() - 1);
+		AbstractPreferencesPanel.addSingleItemCentered((JComponent) c, getCurrentContainer());
+		getCurrentContainer().add(Box.createVerticalStrut(5));
+	}
+
 	private ArrayList prefs = new ArrayList();
 	
 	public void addPreference(PreferencesGUITreeComponent pref) {
