@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<root id="outliner" class="com.organic.maynard.outliner.Outliner">
+<root id="outliner" class="com.organic.maynard.outliner.Outliner" title="JOE">
 	<preferences id="preferences" class="com.organic.maynard.outliner.Preferences">
 		<preferencesframe id="preferences_frame" class="com.organic.maynard.outliner.PreferencesFrame" title="Preferences">
 			<preferencepanel id="preferences_panel_editor" class="com.organic.maynard.outliner.PreferencesPanelEditor" title="Editor">
