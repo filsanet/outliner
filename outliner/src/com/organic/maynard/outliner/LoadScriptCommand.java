@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.menus.popup.*;
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.util.*;
 import java.util.*;
@@ -47,9 +48,9 @@ import javax.swing.*;
  */
 
 public class LoadScriptCommand extends Command {
-
+	
 	private static final boolean VERBOSE = false;
-
+	
 	// Constants
 	private static final String EXTENSION_SEPARATOR = ".";
 	
@@ -58,8 +59,8 @@ public class LoadScriptCommand extends Command {
 	public LoadScriptCommand(String name) {
 		super(name);
 	}
-
-
+	
+	
 	public void execute(ArrayList signature) {
 		String path = (String) signature.get(1);
 		String className = (String) signature.get(2);
@@ -68,7 +69,7 @@ public class LoadScriptCommand extends Command {
 		if (signature.size() > 3) {
 			isStartupScript = (new Boolean((String) signature.get(3))).booleanValue();
 		}
-
+		
 		boolean isShutdownScript = false;
 		if (signature.size() > 4) {
 			isShutdownScript = (new Boolean((String) signature.get(4))).booleanValue();
@@ -77,7 +78,7 @@ public class LoadScriptCommand extends Command {
 		try {
 			// Turn path into a File
 			File file = new File(Outliner.SCRIPTS_DIR + path);
-
+			
 			// Create Instance
 			Script obj = (Script) Class.forName(className).newInstance();
 			obj.setStartupScript(isStartupScript);
@@ -94,7 +95,7 @@ public class LoadScriptCommand extends Command {
 			if (!success) {
 				return;
 			}
-
+			
 			// Add it to the Model
 			if (ScriptsManagerModel.validateUniqueness(obj.getName()) && MacroPopupMenu.validateRestrictedChars(obj.getName())) {
 				if (VERBOSE) {
@@ -105,14 +106,14 @@ public class LoadScriptCommand extends Command {
 				System.out.println("  WARNING: duplicate script entry: " + path);			
 			}
 		} catch (ClassNotFoundException cnfe) {
-		
+			
 			System.out.println("Exception: " + className + " " + cnfe);
 		} catch (Exception e) {
-		
+			
 			System.out.println(e);
 		}
 	}
-
+	
 	// Config File
 	public static void saveConfigFile(File file) {
 		try {

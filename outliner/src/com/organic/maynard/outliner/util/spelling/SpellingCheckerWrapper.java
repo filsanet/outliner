@@ -50,7 +50,7 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 	private static final String IGNOREINTERNETADDRESSES = "ignore_inetadd";
 	private static final String IGNOREMIXEDCASE = "ignore_mixed_case";
 	private static final String IGNOREMULTIPLEWORDS = "ignore_multiple_words";
-	private static final String IGNORESENTANCECAPITALIZATION = "ignore_sentence_cap";
+	private static final String IGNORESENTENCECAPITALIZATION = "ignore_sentence_cap";
 	private static final String IGNOREUPPERCASE = "ignore_upper_case";
 	
 	// Pseudo Constants
@@ -59,7 +59,7 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 	// Instance fields
 	private SpellingCheckerDialog dialog = null;
 	private SpellChecker spellCheck = null;
-	private SpellDictionary dictionary = null;
+	private SpellDictionaryHashMap dictionary = null;
 	private boolean is_initialized = false;
 	
 	// Constructor
@@ -92,7 +92,7 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 				if (dictionary_file.isFile() && dictionary_file.canRead() && dictionary_file.getName().endsWith(".dict")) {
 					System.out.println("Loading Dictionary File: " + dictionary_file.getName());
 					if (first_file) {
-						this.dictionary = new SpellDictionary(dictionary_file);
+						this.dictionary = new SpellDictionaryHashMap(dictionary_file);
 						first_file = false;
 					} else {
 						this.dictionary.createDictionary(new BufferedReader(new FileReader(dictionary_file)));
@@ -125,7 +125,7 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 			config.setBoolean(Configuration.SPELL_IGNOREINTERNETADDRESSES, Preferences.getPreferenceBoolean(IGNOREINTERNETADDRESSES).cur);
 			config.setBoolean(Configuration.SPELL_IGNOREMIXEDCASE, Preferences.getPreferenceBoolean(IGNOREMIXEDCASE).cur);
 			config.setBoolean(Configuration.SPELL_IGNOREMULTIPLEWORDS, Preferences.getPreferenceBoolean(IGNOREMULTIPLEWORDS).cur);
-			config.setBoolean(Configuration.SPELL_IGNORESENTANCECAPITALIZATION, Preferences.getPreferenceBoolean(IGNORESENTANCECAPITALIZATION).cur);
+			config.setBoolean(Configuration.SPELL_IGNORESENTENCECAPITALIZATION, Preferences.getPreferenceBoolean(IGNORESENTENCECAPITALIZATION).cur);
 			config.setBoolean(Configuration.SPELL_IGNOREUPPERCASE, Preferences.getPreferenceBoolean(IGNOREUPPERCASE).cur);
 			
 			// Do the spellcheck
@@ -157,7 +157,7 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 			config.setBoolean(Configuration.SPELL_IGNOREINTERNETADDRESSES, Preferences.getPreferenceBoolean(IGNOREINTERNETADDRESSES).cur);
 			config.setBoolean(Configuration.SPELL_IGNOREMIXEDCASE, Preferences.getPreferenceBoolean(IGNOREMIXEDCASE).cur);
 			config.setBoolean(Configuration.SPELL_IGNOREMULTIPLEWORDS, Preferences.getPreferenceBoolean(IGNOREMULTIPLEWORDS).cur);
-			config.setBoolean(Configuration.SPELL_IGNORESENTANCECAPITALIZATION, Preferences.getPreferenceBoolean(IGNORESENTANCECAPITALIZATION).cur);
+			config.setBoolean(Configuration.SPELL_IGNORESENTENCECAPITALIZATION, Preferences.getPreferenceBoolean(IGNORESENTENCECAPITALIZATION).cur);
 			config.setBoolean(Configuration.SPELL_IGNOREUPPERCASE, Preferences.getPreferenceBoolean(IGNOREUPPERCASE).cur);
 			
 			// Do the spellcheck

@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.menus.popup.*;
 import com.organic.maynard.outliner.guitree.*;
 import java.awt.*;
 import javax.swing.*;
@@ -49,30 +50,30 @@ public class EnhancedTextMacroConfig extends MacroConfigImpl {
 	
 	private JLabel nameLabel = null;
 	private JLabel patternLabel = null;
-
+	
 	private JTextField nameField = new JTextField();
 	private JTextArea patternTextArea = new JTextArea();
-
-
+	
+	
 	// The Constructor
 	public EnhancedTextMacroConfig() {
 		super();
-
+		
 		PATTERN = GUITreeLoader.reg.getText("pattern");
-	
+		
 		nameLabel = new JLabel(NAME);
 		patternLabel = new JLabel(PATTERN);
 		
 		// Create the layout
 		this.setLayout(new BorderLayout());
-
+		
 		Box mainBox = Box.createVerticalBox();
 		mainBox.add(nameLabel);
 		nameField.setMargin(new Insets(1,3,1,3));
 		mainBox.add(nameField);
 		mainBox.add(Box.createVerticalStrut(10));
 		mainBox.add(patternLabel);
-
+		
 		// Prep the textarea
 		patternTextArea.setCursor(new Cursor(Cursor.TEXT_CURSOR));
 		patternTextArea.setTabSize(2);
@@ -84,23 +85,23 @@ public class EnhancedTextMacroConfig extends MacroConfigImpl {
 		this.add(mainBox,BorderLayout.NORTH);
 		this.add(patternScrollPane,BorderLayout.CENTER);
 	}
-
+	
 	
 	// MacroConfig Interface
 	public void init(Macro macro) {
 		super.init(macro);
 		
 		EnhancedTextMacro textMacro = (EnhancedTextMacro) getMacro();
-
+		
 		patternTextArea.setText(textMacro.getReplacementPattern());
 		nameField.setText(textMacro.getName());
 	}
 	
 	public boolean create() {
 		EnhancedTextMacro textMacro = (EnhancedTextMacro) getMacro();
-
+		
 		String name = nameField.getText();
-
+		
 		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name) && MacroPopupMenu.validateRestrictedChars(name)) {
 			textMacro.setName(name);
 			textMacro.setReplacementPattern(patternTextArea.getText());
@@ -112,9 +113,9 @@ public class EnhancedTextMacroConfig extends MacroConfigImpl {
 	
 	public boolean update() {
 		EnhancedTextMacro textMacro = (EnhancedTextMacro) getMacro();
-
+		
 		String name = nameField.getText();
-
+		
 		if (MacroPopupMenu.validateExistence(name)) {
 			if (name.equals(textMacro.getName())) {
 				textMacro.setReplacementPattern(patternTextArea.getText());

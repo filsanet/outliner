@@ -34,14 +34,13 @@
 
 package com.organic.maynard.outliner.util.preferences;
 
+import com.organic.maynard.outliner.menus.file.*;
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
-
 import org.xml.sax.*;
 
 /**
@@ -52,7 +51,7 @@ import org.xml.sax.*;
  */
 
 public class PreferencesPanelRecentFiles extends AbstractPreferencesPanel implements PreferencesPanel, GUITreeComponent {
-
+	
 	public void applyCurrentToApplication() {
 		int limit = 0;
 		String currentSetting = null;
@@ -63,10 +62,10 @@ public class PreferencesPanelRecentFiles extends AbstractPreferencesPanel implem
 		
 		// first, deal with any possible size changes
 		RecentFilesList.syncSize();
-
+		
 		// grab what's been set in the panel
 		Preferences prefs = Outliner.prefs;
-
+		
 		PreferenceString pRF_Ordering = (PreferenceString) prefs.getPreference(Preferences.RECENT_FILES_ORDERING);
 		PreferenceString pRF_Name_Form = (PreferenceString) prefs.getPreference(Preferences.RECENT_FILES_NAME_FORM);
 		PreferenceString pRF_Direction = (PreferenceString) prefs.getPreference(Preferences.RECENT_FILES_DIRECTION);
@@ -77,7 +76,7 @@ public class PreferencesPanelRecentFiles extends AbstractPreferencesPanel implem
 				break;
 			}
 		}
-			
+		
 		if (ordering == limit) {
 			coolToApply = false;
 		}
@@ -87,7 +86,7 @@ public class PreferencesPanelRecentFiles extends AbstractPreferencesPanel implem
 				break;
 			}
 		}
-			
+		
 		if (nameForm == limit) {
 			coolToApply = false;
 		}
@@ -97,7 +96,7 @@ public class PreferencesPanelRecentFiles extends AbstractPreferencesPanel implem
 				break;
 			}
 		}
-			
+		
 		if (direction == limit) {
 			coolToApply = false;
 		}
@@ -106,10 +105,9 @@ public class PreferencesPanelRecentFiles extends AbstractPreferencesPanel implem
 		if (coolToApply) {
 			// grab a ref to the recent files list menu item
 			RecentFilesList rflmi = (RecentFilesList) GUITreeLoader.reg.get(GUITreeComponentRegistry.RECENT_FILE_MENU);
-
+			
 			// apply 'em
-			rflmi.setDisplayOptions(ordering, nameForm, direction) ;
+			rflmi.setDisplayOptions(ordering, nameForm, direction);
 		}
 	}
 }
-

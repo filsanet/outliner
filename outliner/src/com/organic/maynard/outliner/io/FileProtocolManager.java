@@ -35,6 +35,8 @@
  
 package com.organic.maynard.outliner.io;
 
+import com.organic.maynard.outliner.menus.*;
+import com.organic.maynard.outliner.menus.file.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.util.preferences.*;
@@ -203,8 +205,8 @@ public class FileProtocolManager {
 			exportSelectionMenuItem.add(new ExportSelectionFileMenuItem(protocol));
 		}
 	}
-
-
+	
+	
 	// Utility Methods
 	private boolean isNameUnique(FileProtocol protocolToCheck) {
 		for (int i = 0, limit = protocols.size(); i < limit; i++) {

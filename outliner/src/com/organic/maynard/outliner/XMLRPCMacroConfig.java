@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.menus.popup.*;
 import com.organic.maynard.outliner.guitree.*;
 import java.awt.*;
 import javax.swing.*;
@@ -53,20 +54,20 @@ public class XMLRPCMacroConfig extends MacroConfigImpl {
 	private JLabel urlLabel = null;
 	private JLabel doReplacementLabel = null;
 	private JLabel callLabel = null;
-
+	
 	private JTextField nameField = new JTextField();
 	private JTextField urlField = new JTextField();
 	private JTextArea callTextArea = new JTextArea();
-
+	
 	private ButtonGroup buttonGroup = new ButtonGroup();
 	private JRadioButton yesRadio = null;
 	private JRadioButton noRadio = null;
-
-
+	
+	
 	// The Constructor
 	public XMLRPCMacroConfig() {
 		super();
-
+		
 		URL = GUITreeLoader.reg.getText("url");
 		DO_REPLACEMENT = GUITreeLoader.reg.getText("do_replacement");
 		CALL = GUITreeLoader.reg.getText("xmlrpc_call");
@@ -75,10 +76,10 @@ public class XMLRPCMacroConfig extends MacroConfigImpl {
 		urlLabel = new JLabel(URL);
 		doReplacementLabel = new JLabel(DO_REPLACEMENT);
 		callLabel = new JLabel(CALL);
-
+		
 		yesRadio = new JRadioButton(GUITreeLoader.reg.getText("yes"));
 		noRadio = new JRadioButton(GUITreeLoader.reg.getText("no"));
-
+		
 		
 		// Create the layout
 		this.setLayout(new BorderLayout());
@@ -86,13 +87,13 @@ public class XMLRPCMacroConfig extends MacroConfigImpl {
 		Insets insets = new Insets(1,3,1,3);
 		nameField.setMargin(insets);
 		urlField.setMargin(insets);
-
+		
 		// Prep the textarea
 		callTextArea.setCursor(new Cursor(Cursor.TEXT_CURSOR));
 		callTextArea.setTabSize(2);
 		callTextArea.setMargin(insets);
 		JScrollPane callScrollPane = new JScrollPane(callTextArea);
-
+		
 		// Setup mainBox
 		Box mainBox = Box.createVerticalBox();
 		
@@ -105,7 +106,7 @@ public class XMLRPCMacroConfig extends MacroConfigImpl {
 		mainBox.add(urlField);
 		
 		mainBox.add(Box.createVerticalStrut(5));
-
+		
 		buttonGroup.add(yesRadio);
 		buttonGroup.add(noRadio);
 		
@@ -115,25 +116,25 @@ public class XMLRPCMacroConfig extends MacroConfigImpl {
 		radioBox.add(yesRadio);
 		radioBox.add(Box.createHorizontalStrut(5));
 		radioBox.add(noRadio);
-
+		
 		mainBox.add(radioBox);
-
+		
 		mainBox.add(Box.createVerticalStrut(5));
-
+		
 		mainBox.add(callLabel);
 		
 		// Put it all together
 		this.add(mainBox,BorderLayout.NORTH);
 		this.add(callScrollPane,BorderLayout.CENTER);
 	}
-
+	
 	
 	// MacroConfig Interface
 	public void init(Macro xmlrpcMacro) {
 		super.init(xmlrpcMacro);
 		
 		XMLRPCMacro macro = (XMLRPCMacro) getMacro();
-
+		
 		nameField.setText(macro.getName());
 		urlField.setText(macro.getURL());
 		callTextArea.setText(macro.getCall());
@@ -146,7 +147,7 @@ public class XMLRPCMacroConfig extends MacroConfigImpl {
 	
 	public boolean create() {
 		XMLRPCMacro macro = (XMLRPCMacro) getMacro();
-
+		
 		String name = nameField.getText();
 		String url = urlField.getText();
 		
@@ -163,7 +164,7 @@ public class XMLRPCMacroConfig extends MacroConfigImpl {
 			if (yesRadio.isSelected()) {
 				macro.setReplacing(true);
 			} else {
-				macro.setReplacing(false);			
+				macro.setReplacing(false);
 			}
 			return true;
 		} else {
@@ -173,7 +174,7 @@ public class XMLRPCMacroConfig extends MacroConfigImpl {
 	
 	public boolean update() {
 		XMLRPCMacro macro = (XMLRPCMacro) getMacro();
-
+		
 		String name = nameField.getText();
 		String url = urlField.getText();
 		
@@ -190,7 +191,7 @@ public class XMLRPCMacroConfig extends MacroConfigImpl {
 				if (yesRadio.isSelected()) {
 					macro.setReplacing(true);
 				} else {
-					macro.setReplacing(false);			
+					macro.setReplacing(false);
 				}
 				return true;
 			} else if (MacroPopupMenu.validateUniqueness(name) && MacroPopupMenu.validateRestrictedChars(name)) {
@@ -200,7 +201,7 @@ public class XMLRPCMacroConfig extends MacroConfigImpl {
 				if (yesRadio.isSelected()) {
 					macro.setReplacing(true);
 				} else {
-					macro.setReplacing(false);			
+					macro.setReplacing(false);
 				}
 				return true;
 			}

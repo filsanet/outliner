@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.menus.popup.*;
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.util.*;
 import java.util.*;
@@ -47,9 +48,9 @@ import javax.swing.*;
  */
 
 public class LoadMacroCommand extends Command {
-
+	
 	private static final boolean VERBOSE = false;
-
+	
 	// Constants
 	private static final String EXTENSION_SEPARATOR = ".";
 	
@@ -58,8 +59,8 @@ public class LoadMacroCommand extends Command {
 	public LoadMacroCommand(String name) {
 		super(name);
 	}
-
-
+	
+	
 	public void execute(ArrayList signature) {
 		String path = (String) signature.get(1);
 		String className = (String) signature.get(2);
@@ -80,7 +81,7 @@ public class LoadMacroCommand extends Command {
 			if (!obj.init(new File(new StringBuffer().append(Outliner.MACROS_DIR).append(path).toString()))) {
 				return;
 			}
-
+			
 			// Add it to the MacroPopupMenu
 			if (MacroPopupMenu.validateUniqueness(obj.getName()) && MacroPopupMenu.validateRestrictedChars(obj.getName())) {
 				if (VERBOSE) {
@@ -93,9 +94,9 @@ public class LoadMacroCommand extends Command {
 					((DefaultListModel) Outliner.macroManager.sortMacroList.getModel()).insertElementAt(obj.getName(),i);
 				} else {
 					((DefaultListModel) Outliner.macroManager.macroList.getModel()).insertElementAt(obj.getName(),i);
-				}			
+				}
 			} else {
-				System.out.println("  WARNING: duplicate macro entry: " + path);			
+				System.out.println("  WARNING: duplicate macro entry: " + path);
 			}
 		} catch (ClassNotFoundException cnfe) {
 			System.out.println("Exception: " + className + " " + cnfe);
@@ -103,7 +104,7 @@ public class LoadMacroCommand extends Command {
 			System.out.println(e);
 		}
 	}
-
+	
 	// Config File
 	public static void saveConfigFile(File file) {
 		try {
@@ -128,7 +129,7 @@ public class LoadMacroCommand extends Command {
 			buffer.append(macro.getClass().getName());
 			buffer.append(System.getProperty("line.separator"));
 		}
-
+		
 		for (int i = 0, limit = MacroPopupMenu.sortMacros.size(); i < limit; i++) {
 			Macro macro = (Macro) MacroPopupMenu.sortMacros.get(i);
 			

@@ -46,41 +46,42 @@ import bsh.NameSpace;
  */
 
 public class BSHMacro extends MacroImpl implements Script {
-
+	
 	// Constants
 	private static final String E_SCRIPT = "script";
-
+	
+	
 	// Instance Fields
 	protected String script = "";
-
+	
+	
 	// Class Fields
 	private static BSHMacroConfig macroConfig = new BSHMacroConfig();
-
 	private static BSHScriptConfig scriptConfig = new BSHScriptConfig();
- 
+	
 	
 	// The Constructors
 	public BSHMacro() {
 		this("");
 	}
-
+	
 	public BSHMacro(String name) {
 		super(name, true, Macro.COMPLEX_UNDOABLE);
 	}
-
-
+	
+	
 	// Accessors
 	public String getScript() {return script;}
 	public void setScript(String script) {this.script = script;}
-
-
-	// Macro Interface	
+	
+	
+	// Macro Interface
 	public MacroConfig getConfigurator() {return this.macroConfig;}
 	public void setConfigurator(MacroConfig macroConfig) {}
 		
 	public NodeRangePair process(NodeRangePair nodeRangePair) {
 		Node node = nodeRangePair.node;
-
+		
 		// Create the mini tree from the replacement pattern
 		if (script.equals("")) {
 			return null;
@@ -90,7 +91,7 @@ public class BSHMacro extends MacroImpl implements Script {
 		
 		try {
 			Interpreter bsh = new Interpreter();
-			NameSpace nameSpace = new NameSpace("outliner");
+			NameSpace nameSpace = new NameSpace(bsh.getClassManager(), "outliner");
 			nameSpace.importPackage("com.organic.maynard.outliner");
 			
 			bsh.setNameSpace(nameSpace);
@@ -104,22 +105,22 @@ public class BSHMacro extends MacroImpl implements Script {
 			
 			return null;
 		}
-
+		
 		nodeRangePair.node = replacementNode;
 		nodeRangePair.startIndex = -1;
 		nodeRangePair.endIndex = -1;
 		
 		return nodeRangePair;
 	}
-
+	
 	
 	// Saving the Macro
 	protected void prepareFile (StringBuffer buf) {
 		buf.append(XMLTools.getXmlDeclaration(null) + "\n");
 		buf.append(XMLTools.getElementStart(E_SCRIPT) + XMLTools.escapeXMLText(getScript()) + XMLTools.getElementEnd(E_SCRIPT)+ "\n");
 	}
-
-
+	
+	
 	// Sax DocumentHandler Implementation
 	protected void handleCharacters(String elementName, String text) {
 		if (elementName.equals(E_SCRIPT)) {
@@ -134,13 +135,13 @@ public class BSHMacro extends MacroImpl implements Script {
 	
 	public boolean isStartupScript() {return isStartup;}
 	public void setStartupScript(boolean b) {this.isStartup = b;}
-
+	
 	public boolean isShutdownScript() {return isShutdown;}
 	public void setShutdownScript(boolean b) {this.isShutdown = b;}
 	
 	public ScriptConfig getScriptConfigurator() {return this.scriptConfig;}
 	public void setScriptConfigurator(ScriptConfig scriptConfig) {}
-
+	
 	private Interpreter bsh = new Interpreter();
 	
 	public void process() throws Exception {
@@ -148,8 +149,8 @@ public class BSHMacro extends MacroImpl implements Script {
 		if (script.equals("")) {
 			return;
 		}
-
-		NameSpace nameSpace = new NameSpace("outliner");
+		
+		NameSpace nameSpace = new NameSpace(bsh.getClassManager(), "outliner");
 		nameSpace.importPackage("com.organic.maynard.outliner");
 		bsh.setNameSpace(nameSpace);
 		bsh.eval(script);

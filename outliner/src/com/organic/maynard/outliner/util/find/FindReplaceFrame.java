@@ -34,22 +34,19 @@
 
 package com.organic.maynard.outliner.util.find;
 
+import com.organic.maynard.outliner.menus.window.WindowMenu;
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.util.preferences.*;
 import com.organic.maynard.outliner.util.undo.*;
 import com.organic.maynard.outliner.dom.*;
 import com.organic.maynard.outliner.event.DocumentRepositoryListener;
 import com.organic.maynard.outliner.event.DocumentRepositoryEvent;
-
 import com.organic.maynard.outliner.util.ProgressDialog;
 import com.organic.maynard.swing.ProgressMonitor;
-
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.util.crawler.*;
-
 import javax.swing.plaf.*;
 import javax.swing.plaf.basic.*;
-
 import java.io.*;
 import java.util.*;
 import java.awt.*;
@@ -60,6 +57,7 @@ import javax.swing.border.*;
 import org.xml.sax.*;
 import com.organic.maynard.util.string.*;
 
+// TBD: replace with JDK 1.4 functionality?
 import org.apache.oro.text.perl.Perl5Util;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.MalformedPatternException;

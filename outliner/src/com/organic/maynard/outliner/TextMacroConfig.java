@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.menus.popup.*;
 import com.organic.maynard.outliner.guitree.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -54,27 +55,27 @@ public class TextMacroConfig extends MacroConfigImpl implements KeyListener {
 	
 	private JTextField nameField = new JTextField();
 	private JTextArea patternTextArea = new JTextArea();
-
-
+	
+	
 	// The Constructor
 	public TextMacroConfig() {
 		super();
-
+		
 		PATTERN = GUITreeLoader.reg.getText("pattern");
-	
+		
 		nameLabel = new JLabel(NAME);
 		patternLabel = new JLabel(PATTERN);
 		
 		// Create the layout
 		this.setLayout(new BorderLayout());
-
+		
 		Box mainBox = Box.createVerticalBox();
 		mainBox.add(nameLabel);
 		nameField.setMargin(new Insets(1,3,1,3));
 		mainBox.add(nameField);
 		mainBox.add(Box.createVerticalStrut(10));
 		mainBox.add(patternLabel);
-
+		
 		// Prep the textarea
 		patternTextArea.setCursor(new Cursor(Cursor.TEXT_CURSOR));
 		patternTextArea.setLineWrap(true);
@@ -87,7 +88,7 @@ public class TextMacroConfig extends MacroConfigImpl implements KeyListener {
 		this.add(mainBox,BorderLayout.NORTH);
 		this.add(patternScrollPane,BorderLayout.CENTER);
 	}
-
+	
 	
 	// MacroConfig Interface
 	public void init(Macro macro) {
@@ -103,7 +104,7 @@ public class TextMacroConfig extends MacroConfigImpl implements KeyListener {
 		TextMacro textMacro = (TextMacro) getMacro();
 		
 		String name = nameField.getText();
-
+		
 		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name) && MacroPopupMenu.validateRestrictedChars(name)) {
 			textMacro.setName(name);
 			textMacro.setReplacementPattern(patternTextArea.getText());
@@ -117,7 +118,7 @@ public class TextMacroConfig extends MacroConfigImpl implements KeyListener {
 		TextMacro textMacro = (TextMacro) getMacro();
 		
 		String name = nameField.getText();
-
+		
 		if (MacroPopupMenu.validateExistence(name)) {
 			if (name.equals(textMacro.getName())) {
 				textMacro.setReplacementPattern(patternTextArea.getText());
@@ -130,7 +131,7 @@ public class TextMacroConfig extends MacroConfigImpl implements KeyListener {
 		}
 		return false;
 	}
-
+	
 	
 	// KeyListener Interface
 	public void keyPressed(KeyEvent e) {
@@ -139,7 +140,7 @@ public class TextMacroConfig extends MacroConfigImpl implements KeyListener {
 			return;
 		}
 	}
-
+	
 	public void keyTyped(KeyEvent e) {}
 	
 	public void keyReleased(KeyEvent e) {

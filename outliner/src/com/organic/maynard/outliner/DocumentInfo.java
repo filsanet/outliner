@@ -56,7 +56,7 @@ public class DocumentInfo implements Serializable, Cloneable {
 	private static final String EXPANDED_NODE_SEPERATOR = ",";
 	private static final String COMMENTED_NODE_SEPERATOR = ",";
 	
-	// Instance Fields		
+	// Instance Fields
 	private String fileFormat = null;
 	private boolean imported = false ;
 	private String encodingType = null;
@@ -167,7 +167,7 @@ public class DocumentInfo implements Serializable, Cloneable {
 	
 	// clone ourself
 	// this is used with Save As operations
-	protected Object clone () {
+	public Object clone () {
 		return new DocumentInfo(
 			new String (fileFormat),
 			imported,

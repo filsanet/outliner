@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.menus.popup.*;
 import com.organic.maynard.outliner.guitree.*;
 import java.awt.*;
 import javax.swing.*;
@@ -44,25 +45,25 @@ import javax.swing.*;
  */
 
 public class URLEncodeMacroConfig extends MacroConfigImpl {
-		
+	
 	private JLabel nameLabel = null;
 	private JTextField nameField = new JTextField();
 	private ButtonGroup buttonGroup = new ButtonGroup();
 	private JRadioButton encodeRadio = null;
 	private JRadioButton decodeRadio = null;
 	
-
+	
 	// The Constructor
 	public URLEncodeMacroConfig() {
 		super();
-
+		
 		nameLabel = new JLabel(NAME);
 		encodeRadio = new JRadioButton(GUITreeLoader.reg.getText("encode"));
 		decodeRadio = new JRadioButton(GUITreeLoader.reg.getText("decode"));
 		
 		// Create the layout
 		this.setLayout(new BorderLayout());
-
+		
 		buttonGroup.add(encodeRadio);
 		buttonGroup.add(decodeRadio);
 		
@@ -81,14 +82,14 @@ public class URLEncodeMacroConfig extends MacroConfigImpl {
 		this.add(mainBox,BorderLayout.NORTH);
 		this.add(radioBox,BorderLayout.CENTER);
 	}
-
+	
 	
 	// MacroConfig Interface
 	public void init(Macro urlEncodeMacro) {
 		super.init(urlEncodeMacro);
 		
 		URLEncodeMacro macro = (URLEncodeMacro) getMacro();
-
+		
 		if (macro.isEncoding()) {
 			encodeRadio.setSelected(true);
 		} else {
@@ -99,15 +100,15 @@ public class URLEncodeMacroConfig extends MacroConfigImpl {
 	
 	public boolean create() {
 		URLEncodeMacro macro = (URLEncodeMacro) getMacro();
-
+		
 		String name = nameField.getText();
-
+		
 		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name) && MacroPopupMenu.validateRestrictedChars(name)) {
 			macro.setName(name);
 			if (encodeRadio.isSelected()) {
 				macro.setEncoding(true);
 			} else {
-				macro.setEncoding(false);			
+				macro.setEncoding(false);
 			}
 			
 			return true;
@@ -118,15 +119,15 @@ public class URLEncodeMacroConfig extends MacroConfigImpl {
 	
 	public boolean update() {
 		URLEncodeMacro macro = (URLEncodeMacro) getMacro();
-
+		
 		String name = nameField.getText();
-
+		
 		if (MacroPopupMenu.validateExistence(name)) {
 			if (name.equals(macro.getName())) {
 				if (encodeRadio.isSelected()) {
 					macro.setEncoding(true);
 				} else {
-					macro.setEncoding(false);			
+					macro.setEncoding(false);
 				}
 				
 				return true;
@@ -135,9 +136,9 @@ public class URLEncodeMacroConfig extends MacroConfigImpl {
 				if (encodeRadio.isSelected()) {
 					macro.setEncoding(true);
 				} else {
-					macro.setEncoding(false);			
+					macro.setEncoding(false);
 				}
-
+				
 				return true;
 			}
 		}

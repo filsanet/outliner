@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.menus.popup.*;
 import com.organic.maynard.outliner.guitree.*;
 import java.awt.*;
 import javax.swing.*;
@@ -50,11 +51,11 @@ public class SortMacroConfig extends MacroConfigImpl {
 	private JLabel comparatorLabel = null;
 	private JTextField nameField = new JTextField();
 	private JTextArea comparatorTextArea = new JTextArea();
-
+	
 	// The Constructor
 	public SortMacroConfig() {
 		super();
-
+		
 		COMPARATOR = GUITreeLoader.reg.getText("comparator");
 		nameLabel = new JLabel(NAME);
 		comparatorLabel = new JLabel(COMPARATOR);
@@ -63,7 +64,7 @@ public class SortMacroConfig extends MacroConfigImpl {
 		this.setLayout(new BorderLayout());
 		
 		Insets insets = new Insets(1,3,1,3);
-
+		
 		Box mainBox = Box.createVerticalBox();
 		mainBox.add(nameLabel);
 		nameField.setMargin(insets);
@@ -71,7 +72,7 @@ public class SortMacroConfig extends MacroConfigImpl {
 		
 		mainBox.add(Box.createVerticalStrut(10));
 		mainBox.add(comparatorLabel);
-
+		
 		// Prep the textarea
 		comparatorTextArea.setCursor(new Cursor(Cursor.TEXT_CURSOR));
 		comparatorTextArea.setTabSize(2);
@@ -83,7 +84,7 @@ public class SortMacroConfig extends MacroConfigImpl {
 		this.add(mainBox,BorderLayout.NORTH);
 		this.add(comparatorScrollPane,BorderLayout.CENTER);
 	}
-
+	
 	
 	// MacroConfig Interface
 	public void init(Macro sortMacro) {
@@ -97,9 +98,9 @@ public class SortMacroConfig extends MacroConfigImpl {
 	
 	public boolean create() {
 		SortMacro macro = (SortMacro) getMacro();
-
+		
 		String name = nameField.getText();
-
+		
 		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name) && MacroPopupMenu.validateRestrictedChars(name)) {
 			macro.setName(name);
 			macro.setComparator(comparatorTextArea.getText());
@@ -111,9 +112,9 @@ public class SortMacroConfig extends MacroConfigImpl {
 	
 	public boolean update() {
 		SortMacro macro = (SortMacro) getMacro();
-
+		
 		String name = nameField.getText();
-
+		
 		if (MacroPopupMenu.validateExistence(name)) {
 			if (name.equals(macro.getName())) {
 				macro.setComparator(comparatorTextArea.getText());

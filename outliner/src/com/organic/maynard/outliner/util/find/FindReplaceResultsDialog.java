@@ -34,12 +34,12 @@
  
 package com.organic.maynard.outliner.util.find;
 
+import com.organic.maynard.outliner.menus.file.FileMenu;
+import com.organic.maynard.outliner.menus.window.WindowMenu;
 import com.organic.maynard.outliner.*;
-
 import com.organic.maynard.outliner.dom.*;
 import com.organic.maynard.outliner.event.*;
 import com.organic.maynard.outliner.util.preferences.*;
-
 import java.io.*;
 import java.util.*;
 import java.awt.*;
@@ -117,8 +117,6 @@ public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements
 	}
 	
 	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {}
-	
-	
 	
 	public FindReplaceResultsModel getModel() {
 		return this.model;

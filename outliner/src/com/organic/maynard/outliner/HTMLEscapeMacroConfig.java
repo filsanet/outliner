@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.menus.popup.*;
 import com.organic.maynard.outliner.guitree.*;
 import java.awt.*;
 import javax.swing.*;
@@ -50,19 +51,19 @@ public class HTMLEscapeMacroConfig extends MacroConfigImpl {
 	private ButtonGroup buttonGroup = new ButtonGroup();
 	private JRadioButton escapeRadio = null;
 	private JRadioButton unescapeRadio = null;
-
-
+	
+	
 	// The Constructor
 	public HTMLEscapeMacroConfig() {
 		super();
-
+		
 		nameLabel = new JLabel(NAME);
 		escapeRadio = new JRadioButton(GUITreeLoader.reg.getText("escape"));
 		unescapeRadio = new JRadioButton(GUITreeLoader.reg.getText("unescape"));
 		
 		// Create the layout
 		this.setLayout(new BorderLayout());
-
+		
 		buttonGroup.add(escapeRadio);
 		buttonGroup.add(unescapeRadio);
 		
@@ -81,14 +82,14 @@ public class HTMLEscapeMacroConfig extends MacroConfigImpl {
 		this.add(mainBox,BorderLayout.NORTH);
 		this.add(radioBox,BorderLayout.CENTER);
 	}
-
+	
 	
 	// MacroConfig Interface
 	public void init(Macro htmlEscapeMacro) {
 		super.init(htmlEscapeMacro);
 		
 		HTMLEscapeMacro macro = (HTMLEscapeMacro) getMacro();
-
+		
 		if (macro.isEscaping()) {
 			escapeRadio.setSelected(true);
 		} else {
@@ -99,15 +100,15 @@ public class HTMLEscapeMacroConfig extends MacroConfigImpl {
 	
 	public boolean create() {
 		HTMLEscapeMacro macro = (HTMLEscapeMacro) getMacro();
-
+		
 		String name = nameField.getText();
-
+		
 		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name) && MacroPopupMenu.validateRestrictedChars(name)) {
 			macro.setName(name);
 			if (escapeRadio.isSelected()) {
 				macro.setEscaping(true);
 			} else {
-				macro.setEscaping(false);			
+				macro.setEscaping(false);
 			}
 			
 			return true;
@@ -118,15 +119,15 @@ public class HTMLEscapeMacroConfig extends MacroConfigImpl {
 	
 	public boolean update() {
 		HTMLEscapeMacro macro = (HTMLEscapeMacro) getMacro();
-
+		
 		String name = nameField.getText();
-
+		
 		if (MacroPopupMenu.validateExistence(name)) {
 			if (name.equals(macro.getName())) {
 				if (escapeRadio.isSelected()) {
 					macro.setEscaping(true);
 				} else {
-					macro.setEscaping(false);			
+					macro.setEscaping(false);
 				}
 				
 				return true;
@@ -135,9 +136,9 @@ public class HTMLEscapeMacroConfig extends MacroConfigImpl {
 				if (escapeRadio.isSelected()) {
 					macro.setEscaping(true);
 				} else {
-					macro.setEscaping(false);			
+					macro.setEscaping(false);
 				}
-
+				
 				return true;
 			}
 		}

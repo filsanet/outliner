@@ -35,13 +35,15 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.menus.file.*;
+import com.organic.maynard.outliner.menus.popup.*;
+import com.organic.maynard.outliner.menus.*;
 import com.organic.maynard.outliner.io.*;
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.util.find.*;
 import com.organic.maynard.outliner.dom.*;
 import com.organic.maynard.outliner.util.preferences.*;
 import com.organic.maynard.outliner.util.spelling.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.datatransfer.*;
@@ -52,7 +54,6 @@ import org.xml.sax.*;
 import com.organic.maynard.util.*;
 import com.organic.maynard.io.FileTools;
 import com.organic.maynard.util.string.*;
-
 import com.organic.maynard.swing.SplashScreen;
 
 /**

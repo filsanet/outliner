@@ -73,7 +73,7 @@ public interface FileProtocol {
 	 * @return this protocol's unique name.
 	 */
 	public String getName();
-
+	
 	/**
 	 * Sets the name of this protocol. This name must be unique. The name is 
 	 * also used for protocol selection in the GUI.
@@ -96,7 +96,7 @@ public interface FileProtocol {
 	 *                indicates failure.
 	 */		
 	public boolean selectFileToOpen(DocumentInfo docInfo, int type);
-
+	
 	/**
 	 * Handles selection of a file to save. All GUI elements involved in the 
 	 * selection process must be managed by this method. The results of this 
@@ -113,7 +113,7 @@ public interface FileProtocol {
 	 *                 indicates failure.
 	 */	
 	public boolean selectFileToSave(OutlinerDocument document, int type);
-
+	
 	/**
 	 * Saves the data stored in the DocumentInfo. The <code>byte[]</code> data is pulled
 	 * from the DocumentInfo object's getOutputBytes method.
@@ -124,7 +124,7 @@ public interface FileProtocol {
 	 *                indicates failure.
 	 */		
 	public boolean saveFile(DocumentInfo docInfo);
-
+	
 	/**
 	 * Open a file and stores an <code>InputStream</code> in the <code>DocumentInfo</code>. 
 	 * The <code>InputStream</code> is stored by using the <code>DocumentInfo</code> 

@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.menus.popup.*;
 import com.organic.maynard.outliner.guitree.*;
 import java.awt.*;
 import javax.swing.*;
@@ -49,30 +50,30 @@ public class BSHScriptConfig extends ScriptConfigImpl {
 	
 	private JLabel nameLabel = null;
 	private JLabel patternLabel = null;
-
+	
 	private JTextField nameField = new JTextField();
 	private JTextArea patternTextArea = new JTextArea();
-
-
+	
+	
 	// The Constructor
 	public BSHScriptConfig() {
 		super();
-
+		
 		PATTERN = GUITreeLoader.reg.getText("bean_shell_code");
-	
+		
 		nameLabel = new JLabel(NAME);
 		patternLabel = new JLabel(PATTERN);
 		
 		// Create the layout
 		this.setLayout(new BorderLayout());
-
+		
 		Box mainBox = Box.createVerticalBox();
 		mainBox.add(nameLabel);
 		nameField.setMargin(new Insets(1,3,1,3));
 		mainBox.add(nameField);
 		mainBox.add(Box.createVerticalStrut(10));
 		mainBox.add(patternLabel);
-
+		
 		// Prep the textarea
 		patternTextArea.setCursor(new Cursor(Cursor.TEXT_CURSOR));
 		patternTextArea.setTabSize(2);
@@ -84,23 +85,23 @@ public class BSHScriptConfig extends ScriptConfigImpl {
 		this.add(mainBox,BorderLayout.NORTH);
 		this.add(patternScrollPane,BorderLayout.CENTER);
 	}
-
+	
 	
 	// MacroConfig Interface
 	public void init(Script script) {
 		super.init(script);
 		
 		BSHMacro bshmacro = (BSHMacro) getScript();
-
+		
 		patternTextArea.setText(bshmacro.getScript());
 		nameField.setText(bshmacro.getName());
 	}
 	
 	public boolean create() {
 		BSHMacro bshmacro = (BSHMacro) getScript();
-
+		
 		String name = nameField.getText();
-
+		
 		if (MacroPopupMenu.validateExistence(name) && ScriptsManagerModel.validateUniqueness(name) && MacroPopupMenu.validateRestrictedChars(name)) {
 			bshmacro.setName(name);
 			bshmacro.setScript(patternTextArea.getText());
@@ -112,9 +113,9 @@ public class BSHScriptConfig extends ScriptConfigImpl {
 	
 	public boolean update() {
 		BSHMacro bshmacro = (BSHMacro) getScript();
-
+		
 		String name = nameField.getText();
-
+		
 		if (MacroPopupMenu.validateExistence(name)) {
 			if (name.equals(bshmacro.getName())) {
 				bshmacro.setScript(patternTextArea.getText());

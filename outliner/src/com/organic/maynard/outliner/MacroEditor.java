@@ -49,7 +49,7 @@ import org.xml.sax.*;
  */
 
 public class MacroEditor extends AbstractGUITreeJDialog implements ActionListener, JoeReturnCodes {
-
+	
 	// Constants
 	private static final int INITIAL_WIDTH = 450;
 	private static final int INITIAL_HEIGHT = 400;
@@ -66,7 +66,7 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 	
 	private Box createButtonBox = null;
 	private Box updateButtonBox = null;
-
+	
 	private JLabel macroTypeName = null;
 	
 	private JButton createButton = null;
@@ -82,43 +82,43 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 	// Button Mode
 	private static String BUTTON_MODE_CREATE_TITLE = null;
 	private static String BUTTON_MODE_UPDATE_TITLE = null;
-
+	
 	public static final int BUTTON_MODE_CREATE = 0;
 	public static final int BUTTON_MODE_UPDATE = 1;
-
+	
 	
 	// The Constructor
 	public MacroEditor() {
 		super(false, false, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
-
+		
 		frame = Outliner.macroManager;
 		frame.macroEditor = this;
 	}
-
+	
 	private void initialize() {
 		createButtonBox = Box.createHorizontalBox();
 		updateButtonBox = Box.createHorizontalBox();
-
+		
 		macroTypeName = new JLabel();
-
+		
 		BUTTON_MODE_CREATE_TITLE = GUITreeLoader.reg.getText("new_macro");
 		BUTTON_MODE_UPDATE_TITLE = GUITreeLoader.reg.getText("update_macro");
-
+		
 		CREATE = GUITreeLoader.reg.getText("create");
 		SAVE = GUITreeLoader.reg.getText("save");
 		SAVE_AND_CLOSE = GUITreeLoader.reg.getText("save_and_close");
 		CANCEL = GUITreeLoader.reg.getText("cancel");
 		DELETE = GUITreeLoader.reg.getText("delete");
-
+		
 		MACRO_TYPE = GUITreeLoader.reg.getText("macro_type");
-
+		
 		createButton = new JButton(CREATE);
 		saveButton = new JButton(SAVE);
 		saveAndCloseButton = new JButton(SAVE_AND_CLOSE);
 		deleteButton = new JButton(DELETE);
 		cancelCreateButton = new JButton(CANCEL);
 		cancelUpdateButton = new JButton(CANCEL);
-
+		
 		addWindowListener(
 			new WindowAdapter() {
 				public void windowClosing(WindowEvent e) {
@@ -137,11 +137,11 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 		deleteButton.addActionListener(this);
 		cancelCreateButton.addActionListener(this);
 		cancelUpdateButton.addActionListener(this);
-
+		
 		createButtonBox.add(createButton);
 		createButtonBox.add(Box.createHorizontalStrut(5));
 		createButtonBox.add(cancelCreateButton);
-
+		
 		updateButtonBox.add(saveAndCloseButton);
 		updateButtonBox.add(Box.createHorizontalStrut(5));
 		updateButtonBox.add(saveButton);
@@ -149,7 +149,7 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 		updateButtonBox.add(deleteButton);
 		updateButtonBox.add(Box.createHorizontalStrut(5));
 		updateButtonBox.add(cancelUpdateButton);
-
+		
 		// Put it all together
 		this.getContentPane().add(macroTypeName,BorderLayout.NORTH);
 	}
@@ -159,23 +159,22 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 	public boolean isInitialized() {
 		return this.initialized;
 	}
-
+	
 	public void setMacroConfigAndShow(MacroConfig macroConfig, int buttonMode) {
-
 		// Lazy Instantiation
 		if (!initialized) {
 			initialize();
 			initialized = true;
 		}
-
+		
 		// Swap in the new MacroConfig Panel
 		if (this.macroConfig != null) {
 			this.remove((Component) this.macroConfig);
 		}
 		this.getContentPane().add((Component) macroConfig,BorderLayout.CENTER);
-
+		
 		this.macroConfig = macroConfig;
-
+		
 		if (buttonMode == BUTTON_MODE_CREATE) {
 			this.remove(updateButtonBox);
 			this.getContentPane().add(createButtonBox,BorderLayout.SOUTH);
@@ -188,11 +187,11 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 		
 		// Update the macroTypeName text with the name of the class of the macroConfig.
 		this.macroTypeName.setText(MACRO_TYPE + ": " + Outliner.macroManager.getMacroTypeNameFromClassName(macroConfig.getMacro().getClass().getName()));
-
+		
 		show();
 	}
 	
-
+	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(CREATE)) {
@@ -214,7 +213,7 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 			
 			// Add it to the Popup Menu
 			int i = Outliner.macroPopup.addMacro(macro);
-
+			
 			// Add it to the list in the MacroManager
 			if (macro instanceof SortMacro) {
 				((DefaultListModel) frame.sortMacroList.getModel()).insertElementAt(macro.getName(),i);
@@ -224,29 +223,28 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 			
 			// Save it to disk as a serialized object.
 			saveMacro(macro);
-		
+			
 			hide();
 		} else {
 			JOptionPane.showMessageDialog(this, GUITreeLoader.reg.getText("message_an_error_occurred"));
 		}
-
 	}
 	
 	private void saveAndClose() {
 		save();
 		hide();
 	}
-
+	
 	private void save() {
 		Macro macro = macroConfig.getMacro();
 		String oldName = macro.getFileName();
-
+		
 		if (macroConfig.update()) {
-
+			
 			// Update the popup menu.
 			int oldIndex = Outliner.macroPopup.removeMacro(macro);
 			int newIndex = Outliner.macroPopup.addMacro(macro);
-
+			
 			// Update the list
 			DefaultListModel model = null;
 			if (macro instanceof SortMacro) {
@@ -254,23 +252,23 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 			} else {
 				model = (DefaultListModel) frame.macroList.getModel();
 			}
-						
+			
 			model.remove(oldIndex);
 			model.insertElementAt(macro.getName(), newIndex);
 			
 			// Save it to disk as a serialized object.
 			deleteMacro(new File(Outliner.MACROS_DIR + oldName));
-			saveMacro(macro);			
+			saveMacro(macro);
 		} else {
 			JOptionPane.showMessageDialog(this, GUITreeLoader.reg.getText("message_an_error_occurred"));
 		}
 	}
-
+	
 	private void delete() {
 		if (USER_ABORTED == promptUser(GUITreeLoader.reg.getText("message_do_you_really_want_to_delete_this_macro"))) {
 			return;
 		}
-
+		
 		if (macroConfig.delete()) {
 			Macro macro = macroConfig.getMacro();
 			
@@ -286,7 +284,7 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 			
 			// Remove it from disk
 			deleteMacro(new File(Outliner.MACROS_DIR + macro.getFileName()));
-		
+			
 			hide();
 		} else {
 			JOptionPane.showMessageDialog(this, GUITreeLoader.reg.getText("message_an_error_occurred"));
@@ -300,26 +298,26 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 		
 		hide();
 	}
-
-
+	
+	
 	// Macro Saving and Loading Methods
 	private void deleteMacro(File file) {
 		file.delete();
 		LoadMacroCommand.saveConfigFile(new File(Outliner.MACROS_FILE));
 	}
-		
+	
 	private void saveMacro(Macro macro) {
 		macro.save(new File(Outliner.MACROS_DIR + macro.getFileName()));
 		LoadMacroCommand.saveConfigFile(new File(Outliner.MACROS_FILE));
 	}
-
-
+	
+	
 	// Utility Methods
 	private static int promptUser(String msg) {
 		String yes = GUITreeLoader.reg.getText("yes");
 		String no = GUITreeLoader.reg.getText("no");
 		String confirm_delete = GUITreeLoader.reg.getText("confirm_delete");
-
+		
 		Object[] options = {yes, no};
 		int result = JOptionPane.showOptionDialog(Outliner.macroManager.macroEditor,
 			msg,

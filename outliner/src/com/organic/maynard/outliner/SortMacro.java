@@ -48,7 +48,7 @@ import javax.swing.*;
  */
 
 public class SortMacro extends MacroImpl implements RawMacro {
-
+	
 	// Constants
 	private static final String E_COMPARATOR = "comparator";
 	
@@ -56,36 +56,36 @@ public class SortMacro extends MacroImpl implements RawMacro {
 	// Don't forget that 0 is basically the default for each independant property.
 	public static final int MODE_SHALLOW = 0;
 	public static final int MODE_DEEP = 1;
-
+	
 	public static final int MODE_ASCENDING = 0;
 	public static final int MODE_DECENDING = 2;
 	
 	// Instance Fields
 	private String comparator = ""; // BSH will turn this into a Comparator
-
+	
 	// Class Fields
 	private static SortMacroConfig macroConfig = new SortMacroConfig();
-
+	
 	
 	// The Constructors
 	public SortMacro() {
 		this("");
 	}
-
+	
 	public SortMacro(String name) {
 		super(name, true, Macro.RAW_MACRO_UNDOABLE);
 	}
-
-
+	
+	
 	// Accessors
 	public String getComparator() {return comparator;}
 	public void setComparator(String comparator) {this.comparator = comparator;}
-
-
-	// Macro Interface	
+	
+	
+	// Macro Interface
 	public MacroConfig getConfigurator() {return this.macroConfig;}
 	public void setConfigurator(MacroConfig macroConfig) {}
-
+	
 	public NodeRangePair process(NodeRangePair nodeRangePair) {
 		// This method should never get called.
 		return nodeRangePair;
@@ -99,24 +99,24 @@ public class SortMacro extends MacroImpl implements RawMacro {
 		// Shorthand
 		OutlinerDocument document = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
 		JoeTree tree = document.tree;
-
+		
 		// Abort if nodes aren't selected.
 		if (tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
 			return;
 		}
-
+		
 		// Instantiate the Undoable
 		CompoundUndoableImpl undoable = new CompoundUndoableImpl(true);
-
+		
 		// Create the Comparator using BSH
 		Comparator comparator = null; 
-
+		
 		try {
 			Interpreter bsh = new Interpreter();
-			NameSpace nameSpace = new NameSpace("outliner");
+			NameSpace nameSpace = new NameSpace(bsh.getClassManager(), "outliner");
 			nameSpace.importPackage("com.organic.maynard.outliner");
 			bsh.setNameSpace(nameSpace);
-
+			
 			StringBuffer textForEval = new StringBuffer();
 			textForEval.append("Comparator c = new Comparator() {");
 			textForEval.append("	int compare(Object objA, Object objB) {");
@@ -131,13 +131,13 @@ public class SortMacro extends MacroImpl implements RawMacro {
 			textForEval.append("	}");
 			textForEval.append("};");
 			textForEval.append("return this.c;");
-
+			
 			comparator = (Comparator) bsh.eval(textForEval.toString());
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(Outliner.outliner, "BSH Exception: " + e.getMessage());
 			return;
 		}
-
+		
 		ArrayList parentNodes = new ArrayList();
 		parentNodes.add(tree.getEditingNode().getParent());
 		
@@ -150,7 +150,7 @@ public class SortMacro extends MacroImpl implements RawMacro {
 			} else {
 				undoableMove = new CompoundUndoableMove(false, parent, parent);
 			}
-
+			
 			// Store the Before State
 			Object[] sortedNodes;
 			int[] indeces;
@@ -162,7 +162,7 @@ public class SortMacro extends MacroImpl implements RawMacro {
 				sortedNodes = ((NodeImpl) parent).children.toArray();
 				indeces = new int[parent.numOfChildren()];
 			}
-	
+			
 			for (int j = 0; j < sortedNodes.length; j++) {
 				Node node = (Node) sortedNodes[j];
 				indeces[j] = node.currentIndex();
@@ -193,7 +193,7 @@ public class SortMacro extends MacroImpl implements RawMacro {
 				PrimitiveUndoableMove primitive = new PrimitiveUndoableMove(undoableMove, sortedNode, oldIndex, newIndex);
 				
 				undoableMove.addPrimitive(primitive);
-
+				
 				if (i == 0) { // Only do this for the top level nodeset
 					tree.addNodeToSelection(sortedNode);
 				}
@@ -211,17 +211,17 @@ public class SortMacro extends MacroImpl implements RawMacro {
 			}
 		} else {
 			document.undoQueue.clear();
-		}	
+		}
 	}
-
+	
 	
 	// Saving the Macro
 	protected void prepareFile (StringBuffer buf) {
 		buf.append(XMLTools.getXmlDeclaration(null)).append("\n");
 		buf.append(XMLTools.getElementStart(E_COMPARATOR)).append(XMLTools.escapeXMLText(getComparator())).append(XMLTools.getElementEnd(E_COMPARATOR)).append("\n");
 	}
-
-
+	
+	
 	// Sax DocumentHandler Implementation
 	protected void handleCharacters(String elementName, String text) {
 		if (elementName.equals(E_COMPARATOR)) {

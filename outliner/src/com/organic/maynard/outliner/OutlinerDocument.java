@@ -38,7 +38,6 @@ import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.util.preferences.*;
 import com.organic.maynard.outliner.dom.*;
 import com.organic.maynard.outliner.util.undo.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -101,7 +100,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	public JoeTree tree = Outliner.newTree(this); // Needs to come after OutlinerPanel declaration.
 	public HoistStack hoistStack = new HoistStack(this);
 	public AttributesPanel attPanel = new AttributesPanel(this);
-	protected UndoQueue undoQueue = new UndoQueue(this);
+	public UndoQueue undoQueue = new UndoQueue(this);
 	
 	private JSplitPane splitPane = null;
 	private JScrollPane attJSP = new JScrollPane(attPanel);
@@ -251,7 +250,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		return this.fileName;
 	}
 	
-	static int getTitleNameForm() {
+	public static int getTitleNameForm() {
 		String currentSettingStrung = Preferences.getPreferenceString(Preferences.DOCUMENT_TITLES_NAME_FORM).cur;
 		int nameFormIndex = 0;
 		for (int i = Preferences.RECENT_FILES_NAME_FORMS.length - 1; i >= 0; i--) {

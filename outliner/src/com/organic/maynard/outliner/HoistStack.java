@@ -39,7 +39,7 @@ import java.util.*;
 import javax.swing.*;
 
 public class HoistStack {
-
+	
 	// Instance Variables
 	private OutlinerDocument doc = null;
 	
@@ -81,17 +81,17 @@ public class HoistStack {
 		for (int i = 0; i < stack.size(); i++) {
 			offset += ((HoistStackItem) stack.get(i)).getLineCountOffset();
 		}
-
+		
 		return offset;
 	}
 	
-	protected synchronized void temporaryHoistAll() {
+	public synchronized void temporaryHoistAll() {
 		for (int i = 0; i < stack.size(); i++) {
 			((HoistStackItem) stack.get(i)).hoist();
 		}
 	}
 	
-	protected synchronized void temporaryDehoistAll() {
+	public synchronized void temporaryDehoistAll() {
 		for (int i = stack.size() - 1; i >= 0; i--) {
 			((HoistStackItem) stack.get(i)).dehoist();
 		}
@@ -100,26 +100,26 @@ public class HoistStack {
 	public void hoist(HoistStackItem item) {
 		Node currentNode = item.getNode();
 		if (!currentNode.isLeaf() && !currentNode.isHoisted()) {
-
+			
 			// Shorthand
 			JoeTree tree = currentNode.getTree();
 			OutlineLayoutManager layout = tree.getDocument().panel.layout;
-
+			
 			// Clear the undoQueue
 			if (!doc.getUndoQueue().isEmpty()) {
 				String msg = GUITreeLoader.reg.getText("confirm_hoist");
-
+				
 				int result = JOptionPane.showConfirmDialog(doc, msg,"",JOptionPane.OK_CANCEL_OPTION);
 				if (result == JOptionPane.YES_OPTION) {
 					doc.getUndoQueue().clear();
 				} else if (result == JOptionPane.CANCEL_OPTION) {
 					return;
 				}
-			}	
-
+			}
+			
 			// Do the hoist
 			item.hoist();
-
+			
 			// Update Selection
 			tree.setSelectedNodesParent(currentNode);
 			tree.addNodeToSelection(currentNode.getFirstChild());
@@ -128,15 +128,15 @@ public class HoistStack {
 			tree.setEditingNode(currentNode.getFirstChild());
 			tree.setCursorPosition(0);
 			tree.setComponentFocus(OutlineLayoutManager.ICON);
-		
+			
 			// Throw it onto the stack
 			stack.push(item);
-
+			
 			// Redraw and Set Focus
 			Node nodeToDrawFrom = currentNode.getFirstChild();
 			int ioNodeToDrawFrom = tree.getVisibleNodes().indexOf(nodeToDrawFrom);
 			layout.setNodeToDrawFrom(nodeToDrawFrom, ioNodeToDrawFrom);
-	
+			
 			layout.redraw();
 			//layout.setFocus(nodeToDrawFrom, OutlineLayoutManager.ICON);
 			
@@ -152,39 +152,39 @@ public class HoistStack {
 			// Shorthand
 			JoeTree tree = doc.tree;
 			OutlineLayoutManager layout = doc.panel.layout;
-
+			
 			// Clear the undoQueue
 			if (!doc.getUndoQueue().isEmpty()) {
 				String msg = GUITreeLoader.reg.getText("confirm_dehoist");
-
+				
 				int result = JOptionPane.showConfirmDialog(doc, msg,"",JOptionPane.OK_CANCEL_OPTION);
 				if (result == JOptionPane.YES_OPTION) {
 					doc.getUndoQueue().clear();
 				} else if (result == JOptionPane.CANCEL_OPTION) {
 					return;
 				}
-			}		
-
+			}
+			
 			// Remove it from the stack
 			HoistStackItem item = (HoistStackItem) stack.pop();
-
+			
 			// Do the dehoist
 			item.dehoist();
-
+			
 			// Update Selection
 			tree.setSelectedNodesParent(item.getNodeParent());
 			tree.addNodeToSelection(item.getNode());
-	
+			
 			// Record the EditingNode and CursorPosition and ComponentFocus
 			tree.setEditingNode(item.getNode());
 			tree.setCursorPosition(0);
 			tree.setComponentFocus(OutlineLayoutManager.ICON);
-	
+			
 			// Redraw and Set Focus
 			Node nodeToDrawFrom = item.getNode();
 			int ioNodeToDrawFrom = tree.getVisibleNodes().indexOf(nodeToDrawFrom);
 			layout.setNodeToDrawFrom(nodeToDrawFrom, ioNodeToDrawFrom);
-	
+			
 			layout.redraw();
 			//layout.setFocus(nodeToDrawFrom, OutlineLayoutManager.ICON);
 			
@@ -199,11 +199,11 @@ public class HoistStack {
 			// Shorthand
 			JoeTree tree = doc.tree;
 			OutlineLayoutManager layout = doc.panel.layout;
-
+			
 			// Clear the undoQueue
 			if (!doc.getUndoQueue().isEmpty()) {
 				String msg = GUITreeLoader.reg.getText("confirm_dehoist");
-
+				
 				int result = JOptionPane.showConfirmDialog(doc, msg,"",JOptionPane.OK_CANCEL_OPTION);
 				if (result == JOptionPane.YES_OPTION) {
 					doc.getUndoQueue().clear();
@@ -217,25 +217,25 @@ public class HoistStack {
 			while (isHoisted()) {
 				// Remove it from the stack
 				item = (HoistStackItem) stack.pop();
-	
+				
 				// Do the dehoist
 				item.dehoist();
 			}
-
+			
 			// Update Selection
 			tree.setSelectedNodesParent(item.getNodeParent());
 			tree.addNodeToSelection(item.getNode());
-	
+			
 			// Record the EditingNode and CursorPosition and ComponentFocus
 			tree.setEditingNode(item.getNode());
 			tree.setCursorPosition(0);
 			tree.setComponentFocus(OutlineLayoutManager.ICON);
-	
+			
 			// Redraw and Set Focus
 			Node nodeToDrawFrom = item.getNode();
 			int ioNodeToDrawFrom = tree.getVisibleNodes().indexOf(nodeToDrawFrom);
 			layout.setNodeToDrawFrom(nodeToDrawFrom, ioNodeToDrawFrom);
-	
+			
 			layout.redraw();
 			//layout.setFocus(nodeToDrawFrom, OutlineLayoutManager.ICON);
 			
