@@ -49,6 +49,7 @@ import java.awt.datatransfer.*;
  
 public class TextKeyListener implements KeyListener, MouseListener, FocusListener {
 	
+	// Instance Fields
 	private OutlinerCellRendererImpl textArea = null;
 	
 	
@@ -182,7 +183,7 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 	public void keyPressed(KeyEvent e) {}
 	
 	public void keyTyped(KeyEvent e) {
-		if(e.paramString().indexOf("Backspace") != -1) {
+		if (e.getKeyChar() == '\b') {
 			// Need to consume backspace here since the action we
 			// added doesn't seem to supress the built-in backspace code.
 			e.consume();
