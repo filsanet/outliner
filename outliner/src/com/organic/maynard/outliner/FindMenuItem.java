@@ -18,19 +18,19 @@
  
 package com.organic.maynard.outliner;
 
-import java.awt.*;
 import java.awt.event.*;
-
-import javax.swing.*;
-
 import org.xml.sax.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
 public class FindMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
 
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
-		
 		addActionListener(this);
 	}
 
@@ -38,7 +38,5 @@ public class FindMenuItem extends AbstractOutlinerMenuItem implements ActionList
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		(Outliner.findReplace).show();
-		
-		FindReplaceFrame.TEXTAREA_FIND.requestFocus();
 	}
 }

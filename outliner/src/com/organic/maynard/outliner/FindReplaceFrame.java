@@ -32,54 +32,54 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 
 	// Constants
 	private static final int MINIMUM_WIDTH = 350;
-	private static final int MINIMUM_HEIGHT = 300;
+	private static final int MINIMUM_HEIGHT = 400;
  	private static final int INITIAL_WIDTH = 350;
-	private static final int INITIAL_HEIGHT = 300;
+	private static final int INITIAL_HEIGHT = 400;
 	
         	
 	// Button Text and Other Copy
-	public static final String FIND = "Find";
-	public static final String REPLACE = "Replace";
-	public static final String REPLACE_ALL = "Replace All";
+	private static final String FIND = "Find";
+	private static final String REPLACE = "Replace";
+	private static final String REPLACE_ALL = "Replace All";
 
-	public static final String START_AT_TOP = "Start at top";
-	public static final String WRAP_ARROUND = "Wrap around";
-	public static final String SELECTION_ONLY = "Selection only";
-	public static final String IGNORE_CASE = "Ignore case";
+	private static final String START_AT_TOP = "Start at top";
+	private static final String WRAP_ARROUND = "Wrap around";
+	private static final String SELECTION_ONLY = "Selection only";
+	private static final String IGNORE_CASE = "Ignore case";
+	private static final String INCLUDE_READ_ONLY_NODES = "Include read-only nodes for replace";	
 
 	// Define Fields and Buttons
-	public static final JCheckBox CHECKBOX_START_AT_TOP = new JCheckBox(START_AT_TOP);
-	public static final JCheckBox CHECKBOX_WRAP_AROUND = new JCheckBox(WRAP_ARROUND);
-	public static final JCheckBox CHECKBOX_SELECTION_ONLY = new JCheckBox(SELECTION_ONLY);
-	public static final JCheckBox CHECKBOX_IGNORE_CASE = new JCheckBox(IGNORE_CASE);
+	private static final JCheckBox CHECKBOX_START_AT_TOP = new JCheckBox(START_AT_TOP);
+	private static final JCheckBox CHECKBOX_WRAP_AROUND = new JCheckBox(WRAP_ARROUND);
+	private static final JCheckBox CHECKBOX_SELECTION_ONLY = new JCheckBox(SELECTION_ONLY);
+	private static final JCheckBox CHECKBOX_IGNORE_CASE = new JCheckBox(IGNORE_CASE);
+	private static final JCheckBox CHECKBOX_INCLUDE_READ_ONLY_NODES = new JCheckBox(INCLUDE_READ_ONLY_NODES);
 	
-	public static final JButton BUTTON_FIND = new JButton(FIND);
-	public static final JButton BUTTON_REPLACE = new JButton(REPLACE);
-	public static final JButton BUTTON_REPLACE_ALL = new JButton(REPLACE_ALL);
+	private static final JButton BUTTON_FIND = new JButton(FIND);
+	private static final JButton BUTTON_REPLACE = new JButton(REPLACE);
+	private static final JButton BUTTON_REPLACE_ALL = new JButton(REPLACE_ALL);
 
-	public static final JLabel LABEL_FIND = new JLabel(FIND);
-	public static final JTextArea TEXTAREA_FIND = new JTextArea();
+	private static final JLabel LABEL_FIND = new JLabel(FIND);
+	private static final JTextArea TEXTAREA_FIND = new JTextArea();
 
-	public static final JLabel LABEL_REPLACE = new JLabel(REPLACE);
-	public static final JTextArea TEXTAREA_REPLACE = new JTextArea();
+	private static final JLabel LABEL_REPLACE = new JLabel(REPLACE);
+	private static final JTextArea TEXTAREA_REPLACE = new JTextArea();
 	
 	static {
+		Insets insets = new Insets(1,3,1,3);
+		Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
+		
 		TEXTAREA_FIND.setName(FIND);
-		TEXTAREA_FIND.setCursor(new Cursor(Cursor.TEXT_CURSOR));
+		TEXTAREA_FIND.setCursor(cursor);
 		TEXTAREA_FIND.setLineWrap(true);
-		TEXTAREA_FIND.setMargin(new Insets(1,3,1,3));
+		TEXTAREA_FIND.setMargin(insets);
 	
 		TEXTAREA_REPLACE.setName(REPLACE);
-		TEXTAREA_REPLACE.setCursor(new Cursor(Cursor.TEXT_CURSOR));
+		TEXTAREA_REPLACE.setCursor(cursor);
 		TEXTAREA_REPLACE.setLineWrap(true);
-		TEXTAREA_REPLACE.setMargin(new Insets(1,3,1,3));
+		TEXTAREA_REPLACE.setMargin(insets);
 		
 		disableButtons();
-		
-		CHECKBOX_START_AT_TOP.setContentAreaFilled(false);
-		CHECKBOX_WRAP_AROUND.setContentAreaFilled(false);
-		CHECKBOX_SELECTION_ONLY.setContentAreaFilled(false);
-		CHECKBOX_IGNORE_CASE.setContentAreaFilled(false);
 	}
 	
 	// Static Methods
@@ -99,6 +99,11 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	public FindReplaceFrame() {
 		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
 	}
+	
+	public void show() {
+		TEXTAREA_FIND.requestFocus();
+		super.show();
+	}
 
 
 	// GUITreeComponent interface
@@ -115,14 +120,26 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			scopeOptionsBox.add(CHECKBOX_START_AT_TOP);
 			scopeOptionsBox.add(CHECKBOX_WRAP_AROUND);
 			scopeOptionsBox.add(CHECKBOX_SELECTION_ONLY);
+			scopeOptionsBox.add(CHECKBOX_INCLUDE_READ_ONLY_NODES);
 			
 			// Match Options
-			Box matchOptionsBox = Box.createVerticalBox();
-			matchOptionsBox.add(CHECKBOX_IGNORE_CASE);
+			scopeOptionsBox.add(CHECKBOX_IGNORE_CASE);
+			
+			// Define Button Box
+			BUTTON_FIND.addActionListener(this);
+			BUTTON_REPLACE.addActionListener(this);
+			BUTTON_REPLACE_ALL.addActionListener(this);
+
+			Box buttonBox = Box.createVerticalBox();
+			buttonBox.add(BUTTON_FIND);
+			buttonBox.add(Box.createVerticalStrut(5));
+			buttonBox.add(BUTTON_REPLACE);
+			buttonBox.add(Box.createVerticalStrut(5));
+			buttonBox.add(BUTTON_REPLACE_ALL);
 			
 			// Put it all together
 			optionsBox.add(scopeOptionsBox);
-			optionsBox.add(matchOptionsBox);
+			optionsBox.add(buttonBox);
 
 		// Set the default button.
 		getRootPane().setDefaultButton(BUTTON_FIND);
@@ -132,39 +149,24 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		TEXTAREA_REPLACE.addKeyListener(this);
 		
 		Box findReplaceBox = Box.createVerticalBox();
+		
 		findReplaceBox.add(LABEL_FIND);
 		JScrollPane findScrollPane = new JScrollPane(TEXTAREA_FIND);
 		findReplaceBox.add(findScrollPane);
+		
 		findReplaceBox.add(Box.createVerticalStrut(10));
+		
 		findReplaceBox.add(LABEL_REPLACE);
 		JScrollPane replaceScrollPane = new JScrollPane(TEXTAREA_REPLACE);
 		findReplaceBox.add(replaceScrollPane);
+		
 		findReplaceBox.add(Box.createVerticalStrut(10));
+		
 		findReplaceBox.add(optionsBox);
 		
-		// Define Button Box
-		BUTTON_FIND.addActionListener(this);
-		BUTTON_REPLACE.addActionListener(this);
-		BUTTON_REPLACE_ALL.addActionListener(this);
-
-		Box buttonBox = Box.createVerticalBox();
-		buttonBox.add(new JLabel(" "));
-		buttonBox.add(BUTTON_FIND);
-		buttonBox.add(Box.createVerticalStrut(5));
-		buttonBox.add(BUTTON_REPLACE);
-		buttonBox.add(Box.createVerticalStrut(5));
-		buttonBox.add(BUTTON_REPLACE_ALL);
-		
-		// Put it all together
-		Box mainBox = Box.createHorizontalBox();
-		mainBox.add(Box.createHorizontalStrut(5));
-		mainBox.add(findReplaceBox);
-		mainBox.add(Box.createHorizontalStrut(5));
-		mainBox.add(buttonBox);
-		mainBox.add(Box.createHorizontalStrut(5));
-		
-		getContentPane().add(mainBox, BorderLayout.CENTER);		
+		getContentPane().add(findReplaceBox, BorderLayout.CENTER);		
 	}
+	
 	
 	// KeyListener Interface
 	public void keyPressed(KeyEvent e) {
@@ -192,7 +194,6 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	}
 
 	public void keyTyped(KeyEvent e) {}
-	
 	public void keyReleased(KeyEvent e) {}
 
 
@@ -209,12 +210,11 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	}
 	
 	private void find(OutlinerDocument doc) {
-		NodeRangePair location = findLocation(doc);
+		NodeRangePair location = findLocation(doc, false);
 		
 		if (location != null) {
 			// Shorthand
 			TreeContext tree = doc.tree;
-			OutlineLayoutManager layout = doc.panel.layout;
 
 			// Insert the node into the visible nodes and clear the selection.
 			tree.insertNode(location.node);
@@ -234,23 +234,23 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			
 			// Bring the window to the front
 			try {
+				Outliner.outliner.requestFocus();
 				doc.setSelected(true);
 			} catch (java.beans.PropertyVetoException pve) {
 				pve.printStackTrace();
 			}
 
 			// Redraw and Set Focus
-			layout.draw(location.node,OutlineLayoutManager.TEXT);
+			doc.panel.layout.draw(location.node,OutlineLayoutManager.TEXT);
 		}
 	}
 
 	private void replace(OutlinerDocument doc) {
-		NodeRangePair location = findLocation(doc);
+		NodeRangePair location = findLocation(doc, true);
 		
 		if (location != null) {
 			// Shorthand
 			TreeContext tree = doc.tree;
-			OutlineLayoutManager layout = doc.panel.layout;
 
 			// Create the undoable
 			int difference = TEXTAREA_REPLACE.getText().length() - TEXTAREA_FIND.getText().length();
@@ -282,13 +282,14 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 
 			// Bring the window to the front
 			try {
+				Outliner.outliner.requestFocus();
 				doc.setSelected(true);
 			} catch (java.beans.PropertyVetoException pve) {
 				pve.printStackTrace();
 			}
 			
 			// Redraw and Set Focus
-			layout.draw(location.node,OutlineLayoutManager.TEXT);
+			doc.panel.layout.draw(location.node,OutlineLayoutManager.TEXT);
 		}
 	}
 
@@ -296,7 +297,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		int count = 0;
 
 		String textToMatch = TEXTAREA_FIND.getText();
-		if (textToMatch.equals("")) {return;}
+		if (textToMatch.equals("")) {
+			return;
+		}
 		
 		CompoundUndoableEdit undoable = new CompoundUndoableEdit(doc.tree);
 		boolean undoableAdded = false;
@@ -318,7 +321,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 					while (true) {
 						//System.out.println("range: " + cursorStart + " : " + cursorEnd);
 						if ((nodeStart == nodeEnd) && (cursorStart == cursorEnd)) {break;}
-						NodeRangePair location = findText(nodeStart,cursorStart,nodeEnd,cursorEnd,textToMatch,false,true);
+						NodeRangePair location = findText(nodeStart,cursorStart,nodeEnd,cursorEnd,textToMatch,false,true,true);
 						
 						if (location == null) {
 							if (count == 0) {
@@ -369,7 +372,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 					while (true) {
 						//System.out.println("range: " + cursorStart + " : " + cursorEnd);
 						if ((nodeStart == nodeEnd) && (cursorStart == cursorEnd)) {break;}
-						NodeRangePair location = findText(nodeStart,cursorStart,nodeEnd,cursorEnd,textToMatch,false,false);
+						NodeRangePair location = findText(nodeStart,cursorStart,nodeEnd,cursorEnd,textToMatch,false,false,true);
 						
 						if (location == null) {
 							break;
@@ -411,7 +414,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 
 			while (true) {
 				//System.out.println("range: " + cursorStart + " : " + cursorEnd);
-				NodeRangePair location = findText(nodeStart,cursorStart,nodeEnd,cursorEnd,textToMatch,false,false);
+				NodeRangePair location = findText(nodeStart,cursorStart,nodeEnd,cursorEnd,textToMatch,false,false,true);
 				
 				if (location == null) {
 					if (count == 0) {
@@ -452,7 +455,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 
 		// Bring the window to the front
 		try {
-			doc.setSelected(true);
+				Outliner.outliner.requestFocus();
+				doc.setSelected(true);
 		} catch (java.beans.PropertyVetoException pve) {
 			pve.printStackTrace();
 		}
@@ -468,7 +472,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		JOptionPane.showMessageDialog(doc, "" + count + " " + replacementText + " made.");
 	}
 	
-	private NodeRangePair findLocation (OutlinerDocument doc) {
+	
+	private NodeRangePair findLocation (OutlinerDocument doc, boolean isReplace) {
 		NodeRangePair location = null;
 		
 		// Match Value
@@ -488,7 +493,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 					int cursor = doc.tree.getCursorPosition();
 					int mark = doc.tree.getCursorMarkPosition();
 					
-					location = findText(node,Math.min(cursor,mark),node,Math.max(cursor,mark),textToMatch,false,true);
+					location = findText(node,Math.min(cursor,mark),node,Math.max(cursor,mark),textToMatch,false,true,isReplace);
 				}
 			} else {
 				for (int i = 0; i < doc.tree.selectedNodes.size(); i++) {
@@ -498,7 +503,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 					Node nodeEnd = nodeStart.getLastDecendent();
 					int cursorEnd = nodeEnd.getValue().length();
 					
-					location = findText(nodeStart,cursorStart,nodeEnd,cursorEnd,textToMatch,false,false);
+					location = findText(nodeStart,cursorStart,nodeEnd,cursorEnd,textToMatch,false,false,isReplace);
 					
 					if (location != null) {
 						break;
@@ -528,12 +533,22 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				cursorEnd = 0;
 			}
 			
-			location = findText(nodeStart,cursorStart,nodeEnd,cursorEnd,textToMatch,false,false);
+			location = findText(nodeStart,cursorStart,nodeEnd,cursorEnd,textToMatch,false,false,isReplace);
 		}
+		
 		return location;
 	}
 	
-	private NodeRangePair findText(Node startNode, int start, Node endNode, int end, String match, boolean loopedOver, boolean done) {
+	private NodeRangePair findText(
+		Node startNode, 
+		int start, 
+		Node endNode, 
+		int end, 
+		String match, 
+		boolean loopedOver, 
+		boolean done,
+		boolean isReplace
+	) {
 		String text = startNode.getValue();
 		
 		// Find the match
@@ -549,16 +564,23 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			matchStart = matchText(text.substring(start,text.length()),match);
 		}
 		
+		// Match Found		
 		if (matchStart != -1) {
-			matchStart += start;
-			int matchEnd = matchStart + match.length();
-			return new NodeRangePair(startNode,matchStart,matchEnd,loopedOver);
+			// Deal with read-only nodes for replace
+			if (isReplace && !CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected() && !startNode.isEditable()) {
+				// Do nothing so we keep Looking
+			} else {
+				matchStart += start;
+				int matchEnd = matchStart + match.length();
+				return new NodeRangePair(startNode,matchStart,matchEnd,loopedOver);
+			}
 		}
 		
+		// We rean out of places to look.
 		if (done) {
 			return null;
 		}
-		
+				
 		// No match found, so move on to the next node.
 		Node nextNodeToSearch = startNode.nextNode();
 		if (nextNodeToSearch.isRoot()) {
@@ -569,9 +591,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			loopedOver = true;
 		}
 		if (endNode == nextNodeToSearch) {
-			return findText(nextNodeToSearch,0,endNode,end,match,loopedOver,true);
+			return findText(nextNodeToSearch,0,endNode,end,match,loopedOver,true,isReplace);
 		} else {
-			return findText(nextNodeToSearch,0,endNode,end,match,loopedOver,false);
+			return findText(nextNodeToSearch,0,endNode,end,match,loopedOver,false,isReplace);
 		}
 	}
 	
