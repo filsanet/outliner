@@ -3,32 +3,20 @@
 		<title>JOE Release Notes</title>
 	</head>
 	<body>
-		<a name="todo"></a>
-		<h2>TODO</h2>
-			<ol>
-				<li>Make the rest of the icons, arrows use colors.</li>
-				<li>Make sure window size/position is preserved for recent files.</li>
-				<li>See if i can track down minimize/maximize bug.</li>
-				<li>Add a release target for ant.</li>
-				<li>Implement hyperlinks.</li>
-				<li>Implement markers.</li>
-				<li>Syntax highlighting.</li>
-				<li>Add mnemonics.</li>
-				<li>Fix bug with spell check where last entered word shows up in next suggestion.</li>
-				<li>Add an "Add Word" feature to spell checking.</li>
-				<li>Add a more informative html based "about JOE" screen.</li>
-			</ol>
-		<hr>
 		<a name="release_notes"></a>
-		<h2>1.8.10.1 - ???</h2>
+		<h2>1.8.10.1 - 02/17/03</h2>
 			<b>Bug Fixes:</b>
 			<ol>
 				<li>The Bean Shell console wasn't working so I upgraded to the latest version and it now works.</li>
 			</ol>
 			<b>Other Changes:</b>
 			<ol>
-				<li>The preferred languge is now taken from the default locale rather than a value passed in as an arg.</li>
-				<li>Extended support for mnemonics to menu items. Previously only menus were supported.</li>
+				<li>The preferred language is now taken from the default locale rather than a value passed in as an arg.</li>
+				<li>Extended support for mnemonics to menu items. Previously only menus were supported. Implemented menu items mnemonics for english language version of the gui.xml file.</li>
+				<li>Converted the release notes, about JOE, and other help docs to HTML and built an HTML based help viewer into JOE.</li>
+				<li>Removed some extraneous directories.</li>
+				<li>Rewrote the installation instructions.</li>
+				<li>Fixed some problems with the ANT buildfile.</li>
 			</ol>
 		<h2>1.8.10 - 12/22/02</h2>
 			<b>New Features:</b>
@@ -632,5 +620,19 @@
 				<ol>
 					<li>Fixed a bug where it was possible to drag/resize windows either up or to the left so that they would become inaccessible.<li>
 				</ol>
+		<hr>
+		<a name="todo"></a>
+		<h2>TODO</h2>
+			<ol>
+				<li>Make the rest of the icons, arrows use colors.</li>
+				<li>Make sure window size/position is preserved for recent files.</li>
+				<li>See if i can track down minimize/maximize bug.</li>
+				<li>Add a release target for ant.</li>
+				<li>Implement hyperlinks.</li>
+				<li>Implement markers.</li>
+				<li>Syntax highlighting.</li>
+				<li>Fix bug with spell check where last entered word shows up in next suggestion.</li>
+				<li>Add an "Add Word" feature to spell checking.</li>
+			</ol>
 	</body>
 </html>
