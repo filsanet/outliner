@@ -48,7 +48,7 @@
 #define EXE_NAME  "JOE.exe"
 
 #define SHORTCUT_NAME  "JOE.lnk"
-#define SHORTCUT_PATH  "src\\setup\\"
+#define SHORTCUT_PATH  "lib\\"
 
 #define APP_NAME_STRING  "JOE"
 #define APP_REG_KEY_STRING  "JOE"
