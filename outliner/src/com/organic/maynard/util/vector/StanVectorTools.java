@@ -77,7 +77,7 @@ public class StanVectorTools {
 		Object theNewTail = someVector.get(index) ;
 		
 		// move everyone further tailward one spot headward
-		for (int position = index, stop = limit - 1; position < stop; position ++) {
+		for (int position = index, stop = limit ; position < stop; position ++) {
 			someVector.set(position, someVector.get(position + 1)) ;
 		} // end for
 		
