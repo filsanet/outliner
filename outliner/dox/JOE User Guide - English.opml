@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Wed, 25 Jul 2001 02:43:38 GMT</dateModified>
+<dateModified>Wed, 25 Jul 2001 03:23:12 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
 <windowTop>60</windowTop>
 <windowLeft>35</windowLeft>
-<windowBottom>441</windowBottom>
-<windowRight>499</windowRight>
+<windowBottom>532</windowBottom>
+<windowRight>567</windowRight>
 </head>
 <body>
 <outline text="Introduction">
@@ -188,7 +188,8 @@
 <outline text="M"/>
 <outline text="N">
 <outline text="node">
-<outline text=""/>
+<outline text="One line in an outline. An outline consists of a set of nodes. "/>
+<outline text="see also: parent node, subnode, sibling node"/>
 </outline>
 </outline>
 <outline text="O">
@@ -200,12 +201,16 @@
 </outline>
 <outline text="P-T">
 <outline text="P">
-<outline text="parent "/>
+<outline text="parent node">
+<outline text=""/>
+<outline text="see also: node, subnode, sibling node"/>
+</outline>
 </outline>
 <outline text="Q"/>
 <outline text="R"/>
 <outline text="S">
-<outline text="sibling"/>
+<outline text="sibling node"/>
+<outline text="subnode"/>
 </outline>
 <outline text="T"/>
 </outline>
