@@ -602,14 +602,21 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		for (int i = 0; i < tree.selectedNodes.size(); i++) {
 			// Record the Insert in the undoable
 			Node nodeToMove = (Node) tree.selectedNodes.get(i);
+
+			// Abort if node is not moveable
+			if (!nodeToMove.isMoveable()) {
+				continue;
+			}
+		
 			int currentIndex = nodeToMove.currentIndex();
 			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, currentIndex, targetIndex));
 			targetIndex++;
 		}
 
-		tree.doc.undoQueue.add(undoable);
-		
-		undoable.redo();
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+			undoable.redo();
+		}
 	}
 	
 	private void moveDown(TreeContext tree, OutlineLayoutManager layout) {
@@ -627,14 +634,21 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		for (int i = tree.selectedNodes.size() - 1; i >= 0; i--) {
 			// Record the Insert in the undoable
 			Node nodeToMove = (Node) tree.selectedNodes.get(i);
+
+			// Abort if node is not moveable
+			if (!nodeToMove.isMoveable()) {
+				continue;
+			}
+		
 			int currentIndex = nodeToMove.currentIndex();
 			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, currentIndex, targetIndex));
 			targetIndex--;
 		}
 
-		tree.doc.undoQueue.add(undoable);
-		
-		undoable.redo();
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+			undoable.redo();
+		}
 	}
 
 	private void moveLeft(TreeContext tree, OutlineLayoutManager layout) {
@@ -653,6 +667,12 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		for (int i = 0; i < tree.selectedNodes.size(); i++) {
 			// Record the Insert in the undoable
 			Node nodeToMove = (Node) tree.selectedNodes.get(i);
+
+			// Abort if node is not moveable
+			if (!nodeToMove.isMoveable()) {
+				continue;
+			}
+		
 			int currentIndex = nodeToMove.currentIndex() + currentIndexAdj;
 			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, currentIndex, targetIndex));
 			
@@ -662,9 +682,10 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			targetIndex++;
 		}
 
-		tree.doc.undoQueue.add(undoable);
-		
-		undoable.redo();		
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+			undoable.redo();
+		}		
 	}
 
 
@@ -692,6 +713,12 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		for (int i = tree.selectedNodes.size() - 1; i >= 0; i--) {
 			// Record the Insert in the undoable
 			Node nodeToMove = (Node) tree.selectedNodes.get(i);
+
+			// Abort if node is not moveable
+			if (!nodeToMove.isMoveable()) {
+				continue;
+			}
+		
 			int currentIndex = nodeToMove.currentIndex();
 			
 			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, currentIndex, targetIndex));
@@ -703,13 +730,20 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			}
 		}
 
-		tree.doc.undoQueue.add(undoable);
-		
-		undoable.redo();
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+			undoable.redo();
+		}
 	}
 
 	private void insert(TreeContext tree, OutlineLayoutManager layout) {
 		Node node = tree.getOldestInSelection();
+
+		// Abort if node is not editable
+		if (!tree.getOldestInSelection().isEditable()) {
+			return;
+		}
+		
 		tree.clearSelection();
 		TextKeyListener.doInsert(node, tree, layout);
 	}
@@ -730,12 +764,19 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		for (int i = tree.selectedNodes.size() - 1; i >= 0; i--) {
 			// Record the Insert in the undoable
 			Node nodeToMove = (Node) tree.selectedNodes.get(i);
+
+			// Abort if node is not moveable
+			if (!nodeToMove.isMoveable()) {
+				continue;
+			}
+		
 			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), targetIndex));
 		}
 		
-		tree.doc.undoQueue.add(undoable);
-		
-		undoable.redo();
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+			undoable.redo();
+		}
 	}
 
 	private void demote(TreeContext tree, OutlineLayoutManager layout) {
@@ -744,7 +785,12 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		if (tree.getYoungestInSelection().isFirstChild()) {
 			return;
 		}
-		
+
+		// Abort if node is not moveable
+		if (!currentNode.isMoveable()) {
+			return;
+		}
+				
 		// Put the Undoable onto the UndoQueue
 		Node targetNode = tree.getYoungestInSelection().prevSibling();
 
@@ -754,12 +800,21 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		for (int i = tree.selectedNodes.size() - 1; i >= 0; i--) {
 			// Record the Insert in the undoable
 			Node nodeToMove = (Node) tree.selectedNodes.get(i);
+
+			// Abort if node is not moveable
+			if (!nodeToMove.isMoveable()) {
+				continue;
+			}
+
 			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), existingChildren));
 		}
+
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+			undoable.redo();
+		}
 		
-		tree.doc.undoQueue.add(undoable);
-		
-		undoable.redo();
+
 	}
 
 	private void copy(TreeContext tree, OutlineLayoutManager layout) {
@@ -794,6 +849,11 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	private void paste(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
+		// Abort if node is not editable
+		if (!tree.getOldestInSelection().isEditable()) {
+			return;
+		}
+			
 		// Put the Undoable onto the UndoQueue
 		CompoundUndoableInsert undoable = new CompoundUndoableInsert(currentNode.getParent());
 		tree.doc.undoQueue.add(undoable);

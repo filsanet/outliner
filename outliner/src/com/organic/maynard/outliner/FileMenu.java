@@ -97,11 +97,11 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 				commentExists = true;
 			}
 
-			if (node.isEditable()) {
+			if (!node.isEditable()) {
 				editableExists = true;
 			}
 
-			if (node.isMoveable()) {
+			if (!node.isMoveable()) {
 				moveableExists = true;
 			}
 			

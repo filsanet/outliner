@@ -61,7 +61,7 @@ public class InternalDragAndDropListener implements MouseListener {
 				} else if (componentType == TEXT) {
 					currentRenderer.button.setIcon(OutlineButton.ICON_SE_ARROW);
 				}
-			} else if (targetNode.isSelected() && !targetNode.isFirstChild() && (componentType == TEXT)) {
+			} else if (targetNode.isSelected() && (componentType == TEXT) && (!targetNode.prevSibling().isSelected())) {
 				OutlineLayoutManager layout = targetNode.getTree().doc.panel.layout;
 				OutlinerCellRendererImpl renderer = layout.getUIComponent(targetNode.prevSibling());
 				if (renderer != null) {
@@ -153,6 +153,12 @@ public class InternalDragAndDropListener implements MouseListener {
 		for (int i = 0; i < tree.selectedNodes.size(); i++) {
 			// Record the Insert in the undoable
 			Node nodeToMove = (Node) tree.selectedNodes.get(i);
+
+			// Abort if node is not moveable
+			if (!nodeToMove.isMoveable()) {
+				continue;
+			}
+		
 			int currentIndex = nodeToMove.currentIndex();
 			int targetIndex = targetNode.currentIndex();
 			
@@ -174,26 +180,41 @@ public class InternalDragAndDropListener implements MouseListener {
 			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, currentIndex, targetIndex));
 		}
 		
-		tree.doc.undoQueue.add(undoable);
-		
-		undoable.redo();
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+			undoable.redo();
+		}
 	}
 	
 	private void moveAsFirstChild() {
 		TreeContext tree = targetNode.getTree();
 
 		CompoundUndoableMove undoable = new CompoundUndoableMove(tree.getSelectedNodesParent(),targetNode);
+		int currentIndexAdj = 0;
 		
 		for (int i = tree.selectedNodes.size() - 1; i >= 0; i--) {
 			Node nodeToMove = (Node) tree.selectedNodes.get(i);
+
+			// Abort if node is not moveable
+			if (!nodeToMove.isMoveable()) {
+				continue;
+			}
+
 			int currentIndex = nodeToMove.currentIndex();
 			int targetIndex = 0;
+			
+			if (nodeToMove.getParent() == targetNode) {
+				currentIndex += currentIndexAdj;
+				currentIndexAdj++;
+			}
+			
 			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, currentIndex, targetIndex));
 		}
 		
-		tree.doc.undoQueue.add(undoable);
-		
-		undoable.redo();
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+			undoable.redo();
+		}
 	}
 	
 		

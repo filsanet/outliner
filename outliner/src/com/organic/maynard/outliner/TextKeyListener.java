@@ -742,6 +742,12 @@ public class TextKeyListener implements KeyListener, MouseListener {
 	}
 	
 	protected static void doInsert(Node node, TreeContext tree, OutlineLayoutManager layout) {
+
+		// Abort if node is not editable
+		if (!node.isEditable()) {
+			return;
+		}
+		
 		Node newNode = new NodeImpl(tree,"");
 		int newNodeIndex = 0;
 		Node newNodeParent = null;
@@ -780,7 +786,12 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		if (prevNode == null) {
 			return;
 		}
-		
+
+		// Abort if prevNode is not editable
+		if (!prevNode.isEditable()) {
+			return;
+		}
+				
 		Node parent = currentNode.getParent();
 
 		// Get Text for nodes.
@@ -819,7 +830,12 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		if (nextNode == null) {
 			return;
 		}
-		
+
+		// Abort if nextNode is not editable
+		if (!nextNode.isEditable()) {
+			return;
+		}
+				
 		Node parent = currentNode.getParent();
 
 		// Get Text for nodes.
@@ -918,6 +934,11 @@ public class TextKeyListener implements KeyListener, MouseListener {
 	private void promote(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
+		// Abort if node is not moveable
+		if (!currentNode.isMoveable()) {
+			return;
+		}
+
 		// Put the Undoable onto the UndoQueue
 		Node targetNode = currentNode.getParent().getParent();
 		int targetIndex = currentNode.getParent().currentIndex() + 1;
@@ -945,6 +966,12 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		if (currentNode.isFirstChild()) {
 			return;
 		}
+
+		// Abort if node is not moveable
+		if (!currentNode.isMoveable()) {
+			return;
+		}
+		
 		// Put the Undoable onto the UndoQueue
 		Node targetNode = currentNode.prevSibling();
 

@@ -30,7 +30,7 @@ public class OutlineCommentIndicator extends AbstractOutlineIndicator {
 	// Class Fields
 	public static String TOOL_TIP_TEXT = "Click to Toggle Comment";
 
-	public static final ImageIcon ICON_IS_NOT_PROPERTY = new ImageIcon(Outliner.GRAPHICS_DIR + "closed_node_commented.gif");
+	public static final ImageIcon ICON_IS_NOT_PROPERTY = new ImageIcon(Outliner.GRAPHICS_DIR + "is_not_commented.gif");
 	public static ImageIcon ICON_IS_PROPERTY = null;
 	public static ImageIcon ICON_IS_PROPERTY_INHERITED = null;
 	public static ImageIcon ICON_IS_NOT_PROPERTY_INHERITED = null;
