@@ -67,11 +67,11 @@ public class StrungDocumentInfo
 	
 	public String getString () {
 		return string ;
-	}
+	} // end method getString
 	
 	public DocumentInfo getDocumentInfo () {
 		return docInfo ;
-	}
+	} // end method getDocumentInfo
 	
 	public void setString (String someString) {
 		string = someString ;
@@ -85,55 +85,86 @@ public class StrungDocumentInfo
 		ignoreCase = newSetting ;
 	} // end method setIgnoreCase
 	
-	// Comparable interface methods
+	// Comparable interface method
 	public int compareTo(Object obj) {
+		// local vars
+		String objString = null ;
+		String ourString = null ;
 		
 		// if obj is not effectively one of us ...
 		if (! this.getClass().isInstance(obj)) {
 			throw new ClassCastException ();
 		} // end if
 		
-		// use the string component for the comparison
-		// switch on case-handling
+		// get the strings
+		objString = ((StrungDocumentInfo)obj).getString();
+		ourString = string ;
+		
+		// if we're ignoring case 
 		if (ignoreCase) {
-			return string.compareTo(((StrungDocumentInfo)obj).getString().toUpperCase()) ;
-		} else {
-			return string.compareTo(((StrungDocumentInfo)obj).getString()) ;
-		} // end if-else
+			// we'll compare in uppercase
+			objString = objString.toUpperCase() ;
+			ourString = ourString.toUpperCase() ;
+		} // end if
+
+		// compare
+		return ourString.compareTo(objString) ;
 		
 	} // end method compareTo
 	
+	
 	// Comparator interface methods
 	public int compare(Object obj01, Object obj02) {
+		// local vars
+		String obj01String = null ;
+		String obj02String = null ;
+		
 		// if obj01 or obj02 is not effectively one of us ...
 		if ( (! this.getClass().isInstance(obj01)) || (! this.getClass().isInstance(obj02)) ) {
 			throw new ClassCastException ();
 		} // end if
 		
-		// use the string component for the comparison
-		// switch on case-handling
-		if (ignoreCase) {
-			return ((StrungDocumentInfo)obj01).getString().compareTo(((StrungDocumentInfo)obj02).getString().toUpperCase()) ;
-		} else {
-			return ((StrungDocumentInfo)obj01).getString().compareTo(((StrungDocumentInfo)obj02).getString()) ;
-		} // end if-else
+		// get the objects' strings
+		obj01String = ((StrungDocumentInfo)obj01).getString();
+		obj02String = ((StrungDocumentInfo)obj02).getString();
 		
+		// if we're ignoring case 
+		if (ignoreCase) {
+			// we'll compare in uppercase
+			obj01String = obj01String.toUpperCase() ;
+			obj02String = obj02String.toUpperCase() ;
+		} // end if
+
+		// compare
+		return obj01String.compareTo(obj02String) ;
+
 	} // end method compare
 	
+	
 	public boolean equals(Object obj) {
+		
+		// local vars
+		String objString = null ;
+		String ourString = null ;
 		
 		// if obj is not effectively one of us ...
 		if (! this.getClass().isInstance(obj)) {
 			throw new ClassCastException ();
 		} // end if
 		
-		// use the string component for the comparison
-		// switch on case-handling
+		// get the strings
+		objString = ((StrungDocumentInfo)obj).getString();
+		ourString = string ;
+		
+		// if we're ignoring case 
 		if (ignoreCase) {
-			return string.equals(((StrungDocumentInfo)obj).getString().toUpperCase()) ;
-		} else {
-			return string.equals(((StrungDocumentInfo)obj).getString()) ;
-		} // end if-else
+			// we'll compare in uppercase
+			objString = objString.toUpperCase() ;
+			ourString = ourString.toUpperCase() ;
+		} // end if
+
+		// return test result
+		return ourString.equals(objString) ;
 		
 	} // end method equals
 	

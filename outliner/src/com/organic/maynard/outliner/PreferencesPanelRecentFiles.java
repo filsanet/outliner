@@ -54,9 +54,9 @@ public class PreferencesPanelRecentFiles
 
 	// sets of choice strings for combo boxes
 	private static final String [] RECENT_FILES_ORDERINGS = {
-		GUITreeLoader.reg.getText(Preferences.RF_O_CHRONOLOGICAL)/*, 
+		GUITreeLoader.reg.getText(Preferences.RF_O_CHRONOLOGICAL), 
 		GUITreeLoader.reg.getText(Preferences.RF_O_ALPHABETICAL), 
-		GUITreeLoader.reg.getText(Preferences.RF_O_ASCII)*/ 
+		GUITreeLoader.reg.getText(Preferences.RF_O_ASCII) 
 		} ;
 
 	private static final String [] RECENT_FILES_NAME_FORMS = {
