@@ -37,8 +37,11 @@
  * @last touched by $Author$
  * @version $Revision$, $Date$
  */
+
+// we're a part of this
 package com.organic.maynard.outliner;
 
+// we use these
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.Rectangle;
@@ -50,12 +53,13 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 		closeInternalFrame(e.getInternalFrame());
 	}
 	
+	// a window's closing -- deal with it
 	public static boolean closeInternalFrame(JInternalFrame w) {
-		// Confirm Close when the document is not saved.
+		
+		// grab a copy of the document ref
 		OutlinerDocument doc = (OutlinerDocument) w;
 		
 		String msg = null;
-		FileProtocol fp = null ; // temporary for debugging [srk]
 		
 		// if the document is modified ....
 		if (doc.isFileModified()) {

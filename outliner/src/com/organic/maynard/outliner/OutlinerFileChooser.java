@@ -33,8 +33,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+// we're part of this
 package com.organic.maynard.outliner;
 
+// we use these
 import java.io.*;
 import java.util.*;
 import java.awt.*;
@@ -42,6 +50,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import com.organic.maynard.util.string.Replace;
 import javax.swing.filechooser.*;
+import com.organic.maynard.util.string.StanStringTools;
 
 public class OutlinerFileChooser extends JFileChooser {
 
@@ -227,14 +236,38 @@ public class OutlinerFileChooser extends JFileChooser {
 		saveFormatComboBox.setSelectedItem(doc.settings.saveFormat.cur);
 
 		// Set the current directory location or selected file.
+		// grab the file's name
 		String currentFileName = doc.getFileName();
-		if (!currentFileName.equals("")) {
-			setSelectedFile(new File(currentFileName));
+		
+		// if it's an imported file ...
+		if (doc.getDocumentInfo().isImported()) {
+			// trim any extension off the file name
+			String trimmedFileName = StanStringTools.trimFileExtension(currentFileName) ;
+
+			// obtain the current default save format's extension
+			String extension = 	(Outliner.fileFormatManager.getSaveFormat(doc.settings.saveFormat.cur)).getDefaultExtension() ;
+			
+			// set up using the adjusted filename
+			setSelectedFile(new File(trimmedFileName + "." + extension)) ;
+		
+		// else it's not an imported file
 		} else {
-			setCurrentDirectory(new File(currentDirectory));
-			setSelectedFile(null);
-		}
-	}
+			// if it has a name ... 
+			if (!currentFileName.equals("")) {
+				
+				// set up using the filename
+				setSelectedFile(new File(currentFileName));
+				
+			// else it has no name (it's a new file)
+			} else {
+				setCurrentDirectory(new File(currentDirectory));
+				setSelectedFile(null);
+				// [srk] TBD -- use filename currentDirectory + Untitled #.ext, where ext is current default for saving
+			} // end else it has no name
+			
+		} // end else it's not imported
+		
+	} // end method configureForSave
 
 	public void configureForOpen(String protocolName, String currentDirectory) {
 		lazyInstantiate();

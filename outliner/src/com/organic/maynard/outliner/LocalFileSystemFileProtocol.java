@@ -142,6 +142,8 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 			docInfo.setLineEnding(lineEnd);
 			docInfo.setEncodingType(encoding);
 			docInfo.setFileFormat(fileFormat);
+                        // [srk] if we're saving/exporting, we don't want to be thought of as imported
+                        docInfo.setImported(false) ;
 									
 			return true;
 		} else {
