@@ -16,7 +16,7 @@
  * Portions copyright (C) 2001 Maynard Demmon <maynard@organic.com>
  * Portions copyright (C) 2001 Stan Krute <Stan@StanKrute.com>
   * 
- * Most recent changes: 8/15/01 10:10PM
+ * Most recent changes: 8/29/01 2:49PM
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -51,5 +51,25 @@ public interface FileFormat {
 	public String getDefaultExtension();
 
 	public boolean extensionExists(String ext);
+	
+	
+	// supportsXxxxx methods
+	
+	// can we store comment attributes in this file format ?	[srk]
+	public boolean supportsComments();
+
+	// can we store editability attributes in this file format ?	[srk]
+	public boolean supportsEditability();
+
+	// can we store moveability attributes in this file format ?	[srk]
+	public boolean supportsMoveability();
+	
+	// can we store node attributes in this file format ?		[srk]
+	public boolean supportsAttributes();
+
+	// can we store document attributes in this file format ?		[md]
+	public boolean supportsDocumentAttributes();
+	
+
 	
 	} // end interface FileFormat
