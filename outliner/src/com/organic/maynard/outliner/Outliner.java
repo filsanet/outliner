@@ -26,13 +26,15 @@ import java.util.*;
 
 import javax.swing.*;
 
+import org.xml.sax.*;
+
 import com.organic.maynard.util.*;
 
 // WebFile
 import javax.swing.filechooser.*;
 import com.yearahead.io.*;
 
-public class Outliner extends JFrame implements ClipboardOwner {
+public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent {
 	
 	// Directory setup
 	public static String GRAPHICS_DIR = "graphics";
@@ -81,6 +83,7 @@ public class Outliner extends JFrame implements ClipboardOwner {
 	public static String MACRO_CLASSES_FILE = PREFS_DIR + "macro_classes.txt";
 	public static String ENCODINGS_FILE = PREFS_DIR + "encodings.txt";
 	public static String FILE_FORMATS_FILE = PREFS_DIR + "file_formats.txt";
+	public static String GUI_TREE_FILE = PREFS_DIR + "gui_tree.xml";
 	
 	
 	// Command Parser
@@ -119,8 +122,16 @@ public class Outliner extends JFrame implements ClipboardOwner {
 	}
 
 	public Outliner() {
-		super();		
-		
+		super();
+	}
+
+
+	// GUITreeComponent interface	
+	private String id = null;
+	public String getGUITreeComponentID() {return this.id;}
+	public void setGUITreeComponentID(String id) {this.id = id;}
+
+	public void startSetup(AttributeList atts) {
 		outliner = this;
 		
 		// Load Preferences
@@ -160,7 +171,6 @@ public class Outliner extends JFrame implements ClipboardOwner {
 		macroPopup.init();
 		
 		// Setup the Desktop
-		menuBar = new OutlinerDesktopMenuBar();
 		addComponentListener(new WindowSizeManager(INITIAL_WIDTH,INITIAL_HEIGHT,MIN_WIDTH,MIN_HEIGHT));
 		addWindowListener(
 			new WindowAdapter() {
@@ -173,7 +183,6 @@ public class Outliner extends JFrame implements ClipboardOwner {
 
 		setTitle("Outliner");
 		setContentPane(jsp);
-		setJMenuBar(menuBar);
 		
 		// Set Frame Icon
 		ImageIcon icon = new ImageIcon(GRAPHICS_DIR + System.getProperty("file.separator") + "frame_icon.gif");
@@ -199,8 +208,10 @@ public class Outliner extends JFrame implements ClipboardOwner {
 		}
 
 		// Setup the File Chooser
-		chooser = new OutlinerFileChooser(fsv);
-
+		chooser = new OutlinerFileChooser(fsv);		
+	}
+	
+	public void endSetup() {
 		setVisible(true);
 
 		// Create a Document. This must come after visiblity otherwise the window won't be activated.
@@ -212,7 +223,14 @@ public class Outliner extends JFrame implements ClipboardOwner {
 	public static void main(String args[]) {
 		UIManager.put("ScrollBarUI", "com.organic.maynard.outliner.OutlinerScrollBarUI");
 
-		Outliner outliner = new Outliner();
+		GUITreeLoader loader = new GUITreeLoader();
+		boolean success = loader.load(Outliner.GUI_TREE_FILE);
+		if (!success) {
+			System.out.println("GUI Loading Error: exiting.");
+			System.exit(0);
+		}
+		
+		//Outliner outliner = new Outliner();
 		
 		// For Debug Purposes
 		if (Preferences.PRINT_ENVIRONMENT.cur) {

@@ -27,11 +27,11 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
+import org.xml.sax.*;
+
+public class FileMenu extends AbstractOutlinerMenu implements ActionListener, GUITreeComponent {
 
 	// Copy Used
-	private static final String MENU_TITLE = "File";
-	
 	private static final String FILE_NEW = "New";
 	private static final String FILE_OPEN = "Open...";
 	private static final String FILE_OPEN_RECENT = "Open Recent";
@@ -61,7 +61,7 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 	
 	// The Constructors
 	public FileMenu() {
-		super(MENU_TITLE);
+		super();
 
 		FILE_NEW_ITEM.setAccelerator(KeyStroke.getKeyStroke('N', Event.CTRL_MASK, false));
 		FILE_NEW_ITEM.addActionListener(this);
@@ -110,6 +110,13 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		FILE_QUIT_ITEM.setAccelerator(KeyStroke.getKeyStroke('Q', Event.CTRL_MASK, false));
 		FILE_QUIT_ITEM.addActionListener(this);
 		add(FILE_QUIT_ITEM);
+	}
+
+
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		Outliner.menuBar.fileMenu = this;
 	}
 
 

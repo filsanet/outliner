@@ -216,7 +216,8 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 		f.moveToFront();
 		
 		// Disable Stack Menu Item
-		Outliner.menuBar.windowMenu.windowStackItem.setEnabled(false);
+		JMenuItem item = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.STACK_MENU_ITEM);
+		item.setEnabled(false);
 		
 		// Remove the border
 		((OutlinerDocument) f).hideBorder();
@@ -232,7 +233,8 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 		super.minimizeFrame(f);
 
 		// Enable Stack Menu Item
-		Outliner.menuBar.windowMenu.windowStackItem.setEnabled(true);
+		JMenuItem item = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.STACK_MENU_ITEM);
+		item.setEnabled(true);
 
 		// Restore the border
 		((OutlinerDocument) f).showBorder();

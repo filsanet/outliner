@@ -20,21 +20,30 @@ package com.organic.maynard.outliner;
 
 import javax.swing.JMenuBar;
 
-public class OutlinerDesktopMenuBar extends JMenuBar {
+import org.xml.sax.*;
 
-	public FileMenu fileMenu = new FileMenu();
-	public EditMenu editMenu = new EditMenu();
-	public OutlineMenu outlineMenu = new OutlineMenu();
-	public SearchMenu searchMenu = new SearchMenu();
-	public WindowMenu windowMenu = new WindowMenu();
+public class OutlinerDesktopMenuBar extends JMenuBar implements GUITreeComponent {
+
+	public FileMenu fileMenu = null;
+	public EditMenu editMenu = null;
+	public OutlineMenu outlineMenu = null;
+	public SearchMenu searchMenu = null;
+	public WindowMenu windowMenu = null;
 	
 	
 	// Constructor
-	public OutlinerDesktopMenuBar() {
-		add(fileMenu);
-		add(editMenu);
-		add(outlineMenu);
-		add(searchMenu);
-		add(windowMenu);
+	public OutlinerDesktopMenuBar() {}
+
+
+	// GUITreeComponent interface
+	private String id = null;
+	public String getGUITreeComponentID() {return this.id;}
+	public void setGUITreeComponentID(String id) {this.id = id;}
+	
+	public void startSetup(AttributeList atts) {
+		Outliner.menuBar = this;
+		Outliner.outliner.setJMenuBar(this);
 	}
+	
+	public void endSetup() {}
 }

@@ -23,60 +23,65 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-public class SearchMenu extends AbstractOutlinerMenu implements ActionListener {
+import org.xml.sax.*;
 
-	// Copy Used
-	private static final String MENU_TITLE = "Search";
-	
-	private static final String SEARCH_GOTO_LINE = "Go to Line...";
-	private static final String SEARCH_FIND = "Find/Replace...";
+public class SearchMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 
-
-	// The MenuItems.
-	public JMenuItem SEARCH_FIND_ITEM = new JMenuItem(SEARCH_FIND);
-	// Seperator	
-	public JMenuItem SEARCH_GOTO_LINE_ITEM = new JMenuItem(SEARCH_GOTO_LINE);
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		Outliner.menuBar.searchMenu = this;
+	}
 
 
-	// The Constructors
-	public SearchMenu() {
-		super(MENU_TITLE);
+	// Misc Methods
+	public static void updateSearchMenu(OutlinerDocument doc) {
+		JMenuItem item = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.GOTO_MENU_ITEM);
+		if (doc == null) {
+			item.setEnabled(false);
+		} else {
+			item.setEnabled(true);
+		}
+	}
+}
 
-		SEARCH_FIND_ITEM.setAccelerator(KeyStroke.getKeyStroke('F', Event.CTRL_MASK, false));
-		SEARCH_FIND_ITEM.addActionListener(this);
-		add(SEARCH_FIND_ITEM);
 
-		insertSeparator(1);
+public class FindMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
 
-		SEARCH_GOTO_LINE_ITEM.setAccelerator(KeyStroke.getKeyStroke('G', Event.CTRL_MASK, false));
-		SEARCH_GOTO_LINE_ITEM.addActionListener(this);
-		SEARCH_GOTO_LINE_ITEM.setEnabled(false);
-		add(SEARCH_GOTO_LINE_ITEM);
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		
+		addActionListener(this);
 	}
 
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand().equals(SEARCH_FIND)) {
-			find();
-			
-		} else if (e.getActionCommand().equals(SEARCH_GOTO_LINE)) {
-			goto_line(Outliner.getMostRecentDocumentTouched());
-			
-		}
-	}
-
-
-	// Search Menu Methods
-	private static void find() {
 		// Make the preferences window visible and switch focus to it.
 		Outliner.findReplace.setVisible(true);
 		FindReplaceFrame.TEXTAREA_FIND.requestFocus();
 	}
+}
 
-	private static void goto_line(OutlinerDocument doc) {
+
+public class GoToMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+
+	// GUITreeComponent interface	
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+
+		setEnabled(false);
+		addActionListener(this);
+	}
+
+
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		OutlinerDocument doc = Outliner.getMostRecentDocumentTouched();
+		
 		// Abort if there is no open document.
-		if (Outliner.getMostRecentDocumentTouched() == null) {
+		if (doc == null) {
 			return;
 		}
 		
@@ -131,15 +136,5 @@ public class SearchMenu extends AbstractOutlinerMenu implements ActionListener {
 
 		// Redraw and Set Focus
 		doc.panel.layout.draw(currentNode, outlineLayoutManager.ICON);
-	}
-
-
-	// Misc Methods
-	public static void updateSearchMenu(OutlinerDocument doc) {
-		if (doc == null) {
-			Outliner.menuBar.searchMenu.SEARCH_GOTO_LINE_ITEM.setEnabled(false);
-		} else {
-			Outliner.menuBar.searchMenu.SEARCH_GOTO_LINE_ITEM.setEnabled(true);
-		}
 	}
 }

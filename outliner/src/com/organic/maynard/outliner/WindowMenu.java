@@ -23,56 +23,33 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
+import org.xml.sax.*;
 
-	// Copy Used
-	private static final String MENU_TITLE = "Window";
+public class WindowMenu extends AbstractOutlinerMenu implements ActionListener, GUITreeComponent {
 	
-	private static final String WINDOW_STATISTICS = "Statistics";
-	private static final String WINDOW_STACK = "Stack";
-	private static final String WINDOW_NEXT = "Next";
-	private static final String WINDOW_PREV = "Previous";
-	
-	
-	// The MenuItems
-	public JMenuItem WINDOW_STATISTICS_ITEM = new JMenuItem(WINDOW_STATISTICS);
-	// Seperator
-	public JMenuItem windowStackItem = new JMenuItem(WINDOW_STACK);
-	// Seperator
-	public JMenuItem WINDOW_NEXT_ITEM = new JMenuItem(WINDOW_NEXT);
-	public JMenuItem WINDOW_PREV_ITEM = new JMenuItem(WINDOW_PREV);
-	// Seperator
-	
-	private static final int WINDOW_LIST_START = 7;
+	public static int WINDOW_LIST_START = -1;
+
+	public static int indexOfOldSelection = -1;
 
 
 	// The Constructors
 	public WindowMenu() {
-		super(MENU_TITLE);
-
-		WINDOW_STATISTICS_ITEM.addActionListener(this);
-		add(WINDOW_STATISTICS_ITEM);
-
-		insertSeparator(1);
-		
-		windowStackItem.addActionListener(this);
-		add(windowStackItem);
-
-		insertSeparator(3);
-
-		WINDOW_NEXT_ITEM.setAccelerator(KeyStroke.getKeyStroke('S', Event.CTRL_MASK + Event.SHIFT_MASK, false));
-		WINDOW_NEXT_ITEM.addActionListener(this);
-		add(WINDOW_NEXT_ITEM);
-		
-		WINDOW_PREV_ITEM.setAccelerator(KeyStroke.getKeyStroke('A', Event.CTRL_MASK + Event.SHIFT_MASK, false));
-		WINDOW_PREV_ITEM.addActionListener(this);
-		add(WINDOW_PREV_ITEM);
-
-		insertSeparator(6);
-		
-		setEnabled(false);
+		super();
 	}	
 
+
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		Outliner.menuBar.windowMenu = this;
+
+		setEnabled(false);
+	}
+	
+	public void endSetup() {
+		WINDOW_LIST_START = getItemCount();
+	}
+	
 
 	// Accessors
 	public static void addWindow(OutlinerDocument doc) {
@@ -92,8 +69,6 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 		int index = getIndexOfDocument(doc);
 		Outliner.menuBar.windowMenu.getItem(index).setText(doc.getTitle());
 	}
-
-	private static int indexOfOldSelection = -1;
 	
 	public static void selectWindow(OutlinerDocument doc) {
 		// DeSelect Old Window
@@ -123,58 +98,11 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand().equals(WINDOW_STATISTICS)) {
-			showDocumentStatistics();
-
-		} else if (e.getActionCommand().equals(WINDOW_STACK)) {
-			if (!Outliner.desktop.desktopManager.isMaximized()) {
-				stack_windows();
-			}
-			
-		} else if (e.getActionCommand().equals(WINDOW_PREV)) {
-			changeToPrevWindow();
-			
-		} else if (e.getActionCommand().equals(WINDOW_NEXT)) {
-			changeToNextWindow();
-			
-		} else {
-			changeToWindow(((WindowMenuItem) e.getSource()).doc);
-			
-		}
+		changeToWindow(((WindowMenuItem) e.getSource()).doc);
 	}
 
 
-	// Window Menu Methods
-	private static void showDocumentStatistics() {
-		Outliner.statistics.show();
-	}
-	
-	private static void changeToNextWindow() {
-		WindowMenu menu = Outliner.menuBar.windowMenu;
-	
-		if (indexOfOldSelection != -1) {
-			int indexOfNewSelection = indexOfOldSelection + 1;
-			if (indexOfNewSelection >= menu.getItemCount()) {
-				indexOfNewSelection = WINDOW_LIST_START;
-			}
-			
-			changeToWindow(((WindowMenuItem) menu.getItem(indexOfNewSelection)).doc);
-		}
-	}
-
-	private static void changeToPrevWindow() {
-		WindowMenu menu = Outliner.menuBar.windowMenu;
-	
-		if (indexOfOldSelection != -1) {
-			int indexOfNewSelection = indexOfOldSelection - 1;
-			if (indexOfNewSelection < WINDOW_LIST_START) {
-				indexOfNewSelection = menu.getItemCount() - 1;
-			}
-			
-			changeToWindow(((WindowMenuItem) menu.getItem(indexOfNewSelection)).doc);
-		}	
-	}
-	
+	// Window Menu Methods	
 	public static void changeToWindow(OutlinerDocument doc) {
 		if (doc == null) {return;}
 		
@@ -206,55 +134,6 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 		}
 	}
 	
-	private static final int STACK_X_START = 5;
-	private static final int STACK_Y_START = 5;
-	private static final int STACK_X_STEP = 30;
-	private static final int STACK_Y_STEP = 30;
-
-	private static final int STACK_X_COLUMN_STEP = 45;
-	
-	private static void stack_windows() {
-		Point p = new Point(STACK_X_START,STACK_Y_START);
-		int rowCount = 1;
-		int columnCount = 1;
-		
-		int upperBound = getUpperScreenBoundary();
-		
-		OutlinerDocument mostRecentDocumentTouched = Outliner.getMostRecentDocumentTouched();
-		
-		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
-			OutlinerDocument doc = Outliner.getDocument(i);
-			
-			// Restore Size
-			doc.restoreWindowToInitialSize();
-			
-			// Set Location
-			doc.setLocation(p);
-			p.x += STACK_X_STEP;
-			p.y += STACK_Y_STEP;
-			
-			// Set Z Order
-			doc.toFront();
-			
-			// If we've gone down to far, then reset for a new column
-			if ((p.y + OutlinerDocument.INITIAL_HEIGHT) >= upperBound ) {
-				p.y = STACK_Y_START;
-				p.x = STACK_X_START + STACK_X_COLUMN_STEP * columnCount;
-				columnCount++;
-				rowCount = 0;
-			}
-			
-			rowCount++;
-		}
-		
-		if (mostRecentDocumentTouched != null) {
-			mostRecentDocumentTouched.toFront();
-		}		
-	}
-
-	private static int getUpperScreenBoundary() {
-		return Outliner.desktop.getHeight() - STACK_Y_START;
-	}
 
 
 	// Misc Methods
@@ -267,3 +146,149 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 		}
 	}
 }
+
+
+public class StatisticsMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		
+		addActionListener(this);
+	}
+
+
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		Outliner.statistics.show();
+	}
+}
+
+
+public class StackMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+
+	// Constants
+	private static final int STACK_X_START = 5;
+	private static final int STACK_Y_START = 5;
+	private static final int STACK_X_STEP = 30;
+	private static final int STACK_Y_STEP = 30;
+
+	private static final int STACK_X_COLUMN_STEP = 45;
+
+
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		
+		addActionListener(this);
+	}
+
+
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		if (!Outliner.desktop.desktopManager.isMaximized()) {
+			Point p = new Point(STACK_X_START,STACK_Y_START);
+			int rowCount = 1;
+			int columnCount = 1;
+			
+			int upperBound = getUpperScreenBoundary();
+			
+			OutlinerDocument mostRecentDocumentTouched = Outliner.getMostRecentDocumentTouched();
+			
+			for (int i = 0; i < Outliner.openDocumentCount(); i++) {
+				OutlinerDocument doc = Outliner.getDocument(i);
+				
+				// Restore Size
+				doc.restoreWindowToInitialSize();
+				
+				// Set Location
+				doc.setLocation(p);
+				p.x += STACK_X_STEP;
+				p.y += STACK_Y_STEP;
+				
+				// Set Z Order
+				doc.toFront();
+				
+				// If we've gone down to far, then reset for a new column
+				if ((p.y + OutlinerDocument.INITIAL_HEIGHT) >= upperBound ) {
+					p.y = STACK_Y_START;
+					p.x = STACK_X_START + STACK_X_COLUMN_STEP * columnCount;
+					columnCount++;
+					rowCount = 0;
+				}
+				
+				rowCount++;
+			}
+			
+			if (mostRecentDocumentTouched != null) {
+				mostRecentDocumentTouched.toFront();
+			}		
+		}
+	}
+
+	private static int getUpperScreenBoundary() {
+		return Outliner.desktop.getHeight() - STACK_Y_START;
+	}
+}
+
+
+public class NextWindowMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		
+		addActionListener(this);
+	}
+
+
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		changeToNextWindow();
+	}
+
+	private static void changeToNextWindow() {
+		WindowMenu menu = Outliner.menuBar.windowMenu;
+	
+		if (WindowMenu.indexOfOldSelection != -1) {
+			int indexOfNewSelection = WindowMenu.indexOfOldSelection + 1;
+			if (indexOfNewSelection >= menu.getItemCount()) {
+				indexOfNewSelection = WindowMenu.WINDOW_LIST_START;
+			}
+			
+			WindowMenu.changeToWindow(((WindowMenuItem) menu.getItem(indexOfNewSelection)).doc);
+		}
+	}
+}
+
+
+public class PrevWindowMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		
+		addActionListener(this);
+	}
+
+
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		changeToPrevWindow();
+	}
+
+	private static void changeToPrevWindow() {
+		WindowMenu menu = Outliner.menuBar.windowMenu;
+	
+		if (WindowMenu.indexOfOldSelection != -1) {
+			int indexOfNewSelection = WindowMenu.indexOfOldSelection - 1;
+			if (indexOfNewSelection < WindowMenu.WINDOW_LIST_START) {
+				indexOfNewSelection = menu.getItemCount() - 1;
+			}
+			
+			WindowMenu.changeToWindow(((WindowMenuItem) menu.getItem(indexOfNewSelection)).doc);
+		}	
+	}
+
+}
+

@@ -23,11 +23,11 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener {
+import org.xml.sax.*;
+
+public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener, GUITreeComponent {
 
 	// Copy Used.
-	private static final String MENU_TITLE = "Outline";
-	
 	private static final String OUTLINE_TOGGLE_COMMENT = "Toggle Comment";
 	private static final String OUTLINE_TOGGLE_EXPANSION = "Toggle Expansion";
 	private static final String OUTLINE_EXPAND_ALL_SUBHEADS = "Expand All Subheads";
@@ -75,7 +75,7 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 	
 	// The Constructors
 	public OutlineMenu() {
-		super(MENU_TITLE);
+		super();
 
 		OUTLINE_TOGGLE_COMMENT_ITEM.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0, false));
 		OUTLINE_TOGGLE_COMMENT_ITEM.addActionListener(this);
@@ -156,6 +156,14 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 		
 		setEnabled(false);
 	}
+
+
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		Outliner.menuBar.outlineMenu = this;
+	}
+
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {

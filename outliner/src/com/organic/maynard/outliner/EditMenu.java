@@ -23,11 +23,11 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-public class EditMenu extends AbstractOutlinerMenu implements ActionListener {
+import org.xml.sax.*;
 
-	// Copy Used
-	private static final String MENU_TITLE = "Edit";
-	
+public class EditMenu extends AbstractOutlinerMenu implements ActionListener, GUITreeComponent {
+
+	// Copy Used	
 	private static final String EDIT_UNDO = "Undo";
 	private static final String EDIT_REDO = "Redo";
 	private static final String EDIT_UNDO_ALL = "Undo All";
@@ -61,7 +61,7 @@ public class EditMenu extends AbstractOutlinerMenu implements ActionListener {
 
 	// The Constructors
 	public EditMenu() {
-		super(MENU_TITLE);
+		super();
 			
 		EDIT_UNDO_ITEM.setAccelerator(KeyStroke.getKeyStroke('Z', Event.CTRL_MASK, false));
 		EDIT_UNDO_ITEM.addActionListener(this);
@@ -118,6 +118,13 @@ public class EditMenu extends AbstractOutlinerMenu implements ActionListener {
 
 		EDIT_MACROS_ITEM.addActionListener(this);
 		add(EDIT_MACROS_ITEM);
+	}
+
+
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		Outliner.menuBar.editMenu = this;
 	}
 
 

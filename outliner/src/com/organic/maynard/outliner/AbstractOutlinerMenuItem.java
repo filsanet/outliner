@@ -25,12 +25,19 @@ import javax.swing.*;
 
 import org.xml.sax.*;
 
-public abstract class AbstractOutlinerMenu extends JMenu implements GUITreeComponent {
+public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUITreeComponent {
 
 	// Constants
+	public static final String CTRL = "control";
+	public static final String SHIFT = "shift";
+	public static final String ALT = "alt";
+	
 	public static final String A_TEXT = "text";
+	public static final String A_KEY_BINDING = "keybinding";
+	public static final String A_KEY_BINDING_MODIFIERS = "keybindingmodifiers";
 
-	public AbstractOutlinerMenu() {}
+	public AbstractOutlinerMenuItem() {}
+
 
 	// GUITreeComponent interface
 	private String id = null;
@@ -38,15 +45,32 @@ public abstract class AbstractOutlinerMenu extends JMenu implements GUITreeCompo
 	public void setGUITreeComponentID(String id) {this.id = id;}
 	
 	public void startSetup(AttributeList atts) {
+		// Set the title of the menuItem
 		String title = atts.getValue(A_TEXT);
 		setText(title);
 		
-		Outliner.menuBar.add(this);
+		// Set KeyBinding
+		try {		
+			char keyBinding = (atts.getValue(A_KEY_BINDING)).charAt(0);
+			String keyBindingModifiers = atts.getValue(A_KEY_BINDING_MODIFIERS);
+
+			// Compute the mask
+			int mask = 0;
+			if (keyBindingModifiers.indexOf(CTRL) != -1) {mask += Event.CTRL_MASK;}
+			if (keyBindingModifiers.indexOf(SHIFT) != -1) {mask += Event.SHIFT_MASK;}
+			if (keyBindingModifiers.indexOf(ALT) != -1) {mask += Event.ALT_MASK;}
+			
+			setAccelerator(KeyStroke.getKeyStroke(keyBinding, mask, false));
+		} catch (NullPointerException e) {
+			//e.printStackTrace();
+		} catch (StringIndexOutOfBoundsException e) {
+			//e.printStackTrace();
+		}
+
+		// Add this menuItem to the parent menu.
+		JMenu menu = (JMenu) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 2);
+		menu.add(this);
 	}
 	
 	public void endSetup() {}
-
-
-	// Fix for bug #4309156.
-	public void requestFocus() {}
 }
