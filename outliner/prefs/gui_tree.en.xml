@@ -106,7 +106,8 @@
 		<asset type="text" key="rf_d_bottomtotop" value="Bottom to Top"/>
 		<asset type="text" key="rf_d_toptobottom" value="Top to Bottom"/>
 		<asset type="text" key="rf_nf_filename" value="Filename Only"/>
-		<asset type="text" key="rf_nf_pathname" value="Full Pathname"/>
+		<asset type="text" key="rf_nf_full_pathname" value="Full Pathname"/>
+		<asset type="text" key="rf_nf_trunc_pathname" value="Truncated Pathname"/>
 		<asset type="text" key="rf_o_alphabetical" value="Alphabetical"/>
 		<asset type="text" key="rf_o_ascii" value="ASCII"/>
 		<asset type="text" key="rf_o_chronological" value="Chronological"/>
@@ -326,19 +327,24 @@
 							</preference>
 						</preferencepanel>
 						<preferencepanel id="preferences_panel_recent_files" class="com.organic.maynard.outliner.PreferencesPanelRecentFiles" title="Recent Files List">
+							<vertical_strut size="10"/>
 							<preference id="recent_files_list_size" class="com.organic.maynard.outliner.PreferenceInt" default="10">
 								<validator id="recent_files_list_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="10"/>
 								<preference_component id="recent_files_list_size_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Size" size="4" />
 							</preference>
+							<vertical_strut size="10"/>
 							<preference id="recent_files_ordering" class="com.organic.maynard.outliner.PreferenceString" default="Chronological">
 								<preference_component id="recent_files_ordering_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Ordering" />
 							</preference>
+							<vertical_strut size="10"/>
 							<preference id="recent_files_direction" class="com.organic.maynard.outliner.PreferenceString" default="Top to Bottom">
 								<preference_component id="recent_files_direction_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Direction" />
 							</preference>
+							<vertical_strut size="10"/>
 							<preference id="recent_files_name_form" class="com.organic.maynard.outliner.PreferenceString" default="Full Pathname">
 								<preference_component id="recent_files_name_form_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Name Form" />
 							</preference>
+							<vertical_strut size="20"/>
 						</preferencepanel>
 					</preferencepanel>
 					<preferencepanel id="preferences_panel_misc" class="com.organic.maynard.outliner.PreferencesPanelMisc" title="Misc.">

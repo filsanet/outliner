@@ -61,7 +61,9 @@ public class PreferencesPanelRecentFiles
 		} ;
 
 	private static final String [] RECENT_FILES_NAME_FORMS = {
-		GUITreeLoader.reg.getText(Preferences.RF_NF_PATHNAME), 
+		GUITreeLoader.reg.getText(Preferences.RF_NF_FULL_PATHNAME), 
+		/* [srk] enable these once RecentFilesList can handle truncated pathnames
+		GUITreeLoader.reg.getText(Preferences.RF_NF_TRUNC_PATHNAME), */
 		GUITreeLoader.reg.getText(Preferences.RF_NF_FILENAME) 
 		} ;
 

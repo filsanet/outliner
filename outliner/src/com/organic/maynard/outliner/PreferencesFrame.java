@@ -50,9 +50,9 @@ import java.util.*;
 public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSelectionListener, ActionListener, JoeXMLConstants {
 
 	// Constants
-	private static final int MINIMUM_WIDTH = 450;
+	private static final int MINIMUM_WIDTH = 525;
 	private static final int MINIMUM_HEIGHT = 430;
- 	private static final int INITIAL_WIDTH = 450;
+ 	private static final int INITIAL_WIDTH = 525;
 	private static final int INITIAL_HEIGHT = 430;
 
 
@@ -127,7 +127,7 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 
 		// Put it all together
 		JScrollPane jsp = new JScrollPane(tree);
-		jsp.setMinimumSize(new Dimension(100,0));
+		jsp.setMinimumSize(new Dimension(175,0));
 		JScrollPane jsp2 = new JScrollPane(RIGHT_PANEL);
 
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, jsp, jsp2);

@@ -68,6 +68,8 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	private static final int ASCII_ORDER = 2 ;
 	// name form
 	private static final int FULL_PATHNAME = 0 ;
+	// private static final int TRUNC_PATHNAME = 1 ;
+	// private static final int JUST_FILENAME = 2 ;
 	private static final int JUST_FILENAME = 1 ;
 	// direction
 	private static final int TOP_TO_BOTTOM = 0 ;
