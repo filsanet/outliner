@@ -704,8 +704,19 @@ public class NodeImpl implements Node {
 		}
 		
 		// Recursive Part
-		for (int i = 0; i < this.numOfChildren(); i++) {
-			this.getChild(i).depthPaddedValue(buf, lineEndString);
+		for (int i = 0; i < numOfChildren(); i++) {
+			getChild(i).depthPaddedValue(buf, lineEndString);
+		}
+	}
+
+	public void getRecursiveValue(StringBuffer buf, String lineEndString, boolean includeComments) {
+
+		if (includeComments || !isComment()) {
+			buf.append(getValue()).append(lineEndString);
+		}
+		
+		for (int i = 0; i < numOfChildren(); i++) {
+			getChild(i).getRecursiveValue(buf, lineEndString, includeComments);
 		}
 	}
 	
@@ -713,8 +724,8 @@ public class NodeImpl implements Node {
 		buf.append(getValue());
 		
 		// Recursive Part
-		for (int i = 0; i < this.numOfChildren(); i++) {
-			this.getChild(i).getMergedValue(buf);
+		for (int i = 0; i < numOfChildren(); i++) {
+			getChild(i).getMergedValue(buf);
 		}
 	}
 
@@ -730,8 +741,8 @@ public class NodeImpl implements Node {
 		}
 		
 		// Recursive Part
-		for (int i = 0; i < this.numOfChildren(); i++) {
-			this.getChild(i).getMergedValue(buf);
+		for (int i = 0; i < numOfChildren(); i++) {
+			getChild(i).getMergedValue(buf);
 		}
 	}
 }

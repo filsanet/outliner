@@ -89,6 +89,9 @@ public class GUITreeComponentRegistry {
 	public static final String COMPONENT_FORMAT_WHEN_SAVING = "save_format_component";
 
 	public static final String JDIALOG_DOCUMENT_SETTINGS_VIEW = "document_settings_view";
+
+	public static final String BSH_CONSOLE = "bsh_console";
+	public static final String RUN_AS_BSH_SCRIPT_MENU_ITEM = "run_as_bsh_script";
 	
 	private HashMap reg = new HashMap();
 

@@ -30,10 +30,6 @@ import bsh.NameSpace;
 
 public class BSHMacro extends HandlerBase implements Macro {
 
-	// The BSH Interpreter. One instance per macro since they are lightweight.
-	private final Interpreter bsh = new Interpreter();
-	
-
 	// Constants
 	public static final String E_SCRIPT = "script";
 	
@@ -95,6 +91,7 @@ public class BSHMacro extends HandlerBase implements Macro {
 		Node replacementNode = node.cloneClean();
 		
 		try {
+			Interpreter bsh = new Interpreter();
 			NameSpace nameSpace = new NameSpace("outliner");
 			nameSpace.importPackage("com.organic.maynard.outliner");
 			

@@ -33,7 +33,8 @@ public class OutlinerDesktopMenuBar extends JMenuBar implements GUITreeComponent
 	public OutlineMenu outlineMenu = null;
 	public SearchMenu searchMenu = null;
 	public WindowMenu windowMenu = null;
-	public HelpMenu helpMenu = null;	// [srk] 8/11/01 12:20PM
+	public HelpMenu helpMenu = null;
+	public ScriptMenu scriptMenu = null;
 	
 	
 	// Constructor

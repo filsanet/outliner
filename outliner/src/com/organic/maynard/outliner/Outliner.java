@@ -362,6 +362,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 			
 			OutlineMenu.updateOutlineMenu(doc);
 			SearchMenu.updateSearchMenu(doc);
+			ScriptMenu.updateScriptMenu(doc);
 			WindowMenu.updateWindowMenu();
 			HelpMenu.updateHelpMenu();	// [srk] 8/5/01 1:06PM
 		}

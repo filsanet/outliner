@@ -342,7 +342,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 	private static Cursor normalCursor = null;
 	private static Cursor waitCursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
 	
-	private static void startWaitCursor() {
+	protected static void startWaitCursor() {
 		Component comp = Outliner.outliner.getGlassPane();
 		
 		// Store the normal cursor
@@ -353,7 +353,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		comp.setCursor(waitCursor);
 	}
 	
-	private static void endWaitCursor() {
+	protected static void endWaitCursor() {
 		Component comp = Outliner.outliner.getGlassPane();
 		
 		if (normalCursor != null) {

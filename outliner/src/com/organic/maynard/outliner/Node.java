@@ -146,6 +146,7 @@ public interface Node {
 
 	// String Representation Methods
 	public void depthPaddedValue(StringBuffer buf, String lineEndString);
+	public void getRecursiveValue(StringBuffer buf, String lineEndString, boolean includeComments);
 	
 	public void getMergedValue(StringBuffer buf);
 	public void getMergedValueWithSpaces(StringBuffer buf);
