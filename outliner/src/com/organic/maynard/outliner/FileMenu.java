@@ -162,7 +162,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		boolean attributesExist = false;
 		boolean documentAttributesExist = false;
 		boolean wereImported = false ;
-
+		String savedDocsPrevName = null ;
+		
 		// set up the protocol
 		docInfo.setProtocolName(protocol.getName()) ;
 
@@ -173,6 +174,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 			case MODE_SAVE:
 				saveOrExportFileFormat = Outliner.fileFormatManager.getSaveFormat(fileFormatName);
+				savedDocsPrevName = document.getFileName () ;
 				document.setFileName(filename);
 				docInfo.updateDocumentInfoForDocument(document, saveAs); // Might not be neccessary anymore.
 				break ;
@@ -326,14 +328,21 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				UndoableEdit.freezeUndoEdit(document.tree.getEditingNode());
 
 				// Update the Recent File List
-				// if we changed our name on a save as operation
-				// or we're saving an imported doc
-				if (wereImported | (saveAs && !document.getFileName().equals(filename))) {
-					// add the new name to the list
+				
+				// if we were imported ...
+				if (wereImported) {
+					// [srk] this sorta works, but needs improvement
+					// RecentFilesList.updateFileNameInList(filename, docInfo) ;
 					RecentFilesList.addFileNameToList(docInfo);
-				// else we haven't changed our name on a save as op and weren't imported
+					
+				// else if we're doing a Save As and the name has changed ...
+				} else if ( saveAs && (! savedDocsPrevName.equals(filename))) {
+					
+					RecentFilesList.addFileNameToList(docInfo);
+					
+				// else we weren't imported and haven't changed our name on a Save As op
 				} else {
-					// adjust the name that's already in the list
+					
 					RecentFilesList.updateFileNameInList(filename, docInfo);
 				} // end else
 
@@ -573,7 +582,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				break ;
 		} // end switch
 
-		// add/move file to the bottom of the recent files list
+		// remove any old instance of the file in the recent files list,
+		// then add it to the bottom of the list
 		RecentFilesList.updateFileNameInList(docInfo.getPath(), docInfo);
 
 		// perform final setup and draw the suckah

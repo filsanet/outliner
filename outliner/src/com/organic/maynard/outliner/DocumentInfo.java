@@ -49,7 +49,7 @@ import javax.swing.*;
  * @version $Revision$, $Date$
  */
 
-public class DocumentInfo implements Serializable {
+public class DocumentInfo implements Serializable, Cloneable {
 	
 	// Constants
 	private static final String EXPANDED_NODE_SEPERATOR = ",";
@@ -152,6 +152,34 @@ public class DocumentInfo implements Serializable {
 		setProtocolName(protocolName);
 	}
 
+	// clone ourself
+	protected Object clone () {
+		
+		return new DocumentInfo(
+			new String (fileFormat),
+			imported,
+			new String (encodingType),
+			new String (lineEnding),
+			new String (padding),
+			new String (path), 
+			new String (title), 
+			new String (dateCreated),
+			new String (dateModified),
+			new String (ownerName),
+			new String (ownerEmail),
+			verticalScrollState,
+			windowTop,
+			windowLeft,
+			windowBottom,
+			windowRight,
+			new String (getExpandedNodesString()),
+			applyFontStyleForComments,
+			applyFontStyleForEditability,
+			applyFontStyleForMoveability,
+			new String (protocolName)) ;
+			
+		
+		} // end clone
 	// IO Data Accessors
 	private transient byte[] bytes;
 	private transient InputStream stream = null;

@@ -65,10 +65,29 @@ public class SaveAsFileMenuItem extends AbstractOutlinerMenuItem implements Acti
 	}
 
 	protected static void saveAsOutlinerDocument(OutlinerDocument document, FileProtocol protocol) {
-		if (!protocol.selectFileToSave(document, FileProtocol.SAVE)) {
-			return;
-		}
 		
+		// grab the current doc info
+		DocumentInfo currentDocInfo = document.getDocumentInfo() ;
+		
+		// clone it
+		DocumentInfo cloneDocInfo = (DocumentInfo) currentDocInfo.clone() ;
+		
+		// attach the clone to the document 
+		document.setDocumentInfo(cloneDocInfo) ;
+		
+		// if the user backs out on the operation 
+		if (!protocol.selectFileToSave(document, FileProtocol.SAVE)) {
+			
+			// restore the current doc info
+			document.setDocumentInfo(currentDocInfo) ;
+			
+			// leave
+			return;
+		} // end if the user backs out
+		
+		// go ahead and try the save  ;
 		FileMenu.saveFile(document.getDocumentInfo().getPath(), document, protocol, true);
-	}
-}
+		
+	} // end method saveAsOutlinerDocument
+	
+} // end class SaveAsFileMenuItem
