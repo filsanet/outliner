@@ -37,6 +37,8 @@ package com.organic.maynard.outliner.menus.outline;
 import com.organic.maynard.outliner.menus.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.guitree.*;
+import com.organic.maynard.outliner.event.*;
+import com.organic.maynard.outliner.dom.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -48,12 +50,19 @@ import com.organic.maynard.outliner.actions.*;
  * @version $Revision$, $Date$
  */
 
-public class MergeWithSpacesMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+public class MergeWithSpacesMenuItem 
+	extends AbstractOutlinerMenuItem 
+	implements ActionListener, TreeSelectionListener, GUITreeComponent 
+{
 	// GUITreeComponent interface
 	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		addActionListener(this);
+		Outliner.documents.addTreeSelectionListener(this);
+		
+		setEnabled(false);
 	}
+	
 	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
@@ -70,6 +79,26 @@ public class MergeWithSpacesMenuItem extends AbstractOutlinerMenuItem implements
 		
 		if (doc.tree.getComponentFocus() == OutlineLayoutManager.ICON) {
 			MergeAction.merge(node, tree, layout, true);
+		}
+	}
+	
+	
+	// TreeSelectionListener Interface
+	public void selectionChanged(TreeSelectionEvent e) {
+		calculateEnabledState(e.getTree());
+	}
+	
+	private void calculateEnabledState(JoeTree tree) {
+		Document doc = tree.getDocument();
+		
+		if (doc == Outliner.documents.getMostRecentDocumentTouched()) {
+			Node node = tree.getEditingNode();
+			
+			if (tree.getComponentFocus() == OutlineLayoutManager.ICON && tree.getNumberOfSelectedNodes() >= 2) {
+				setEnabled(true);
+			} else {
+				setEnabled(false);
+			}
 		}
 	}
 }

@@ -49,7 +49,40 @@ import org.xml.sax.*;
  * @version $Revision$, $Date$
  */
 
-public class HoistMenuItem extends AbstractOutlinerMenuItem implements OutlinerDocumentListener, DocumentRepositoryListener, TreeSelectionListener, ActionListener, GUITreeComponent {
+public class HoistMenuItem 
+	extends AbstractOutlinerMenuItem 
+	implements OutlinerDocumentListener, DocumentRepositoryListener, TreeSelectionListener, ActionListener, GUITreeComponent 
+{
+	// GUITreeComponent interface
+	public void startSetup(Attributes atts) {
+		super.startSetup(atts);
+		
+		addActionListener(this);
+		Outliner.documents.addOutlinerDocumentListener(this);
+		Outliner.documents.addDocumentRepositoryListener(this);
+		Outliner.documents.addTreeSelectionListener(this);
+		
+		setEnabled(false);
+	}
+	
+	
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		hoist((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched());
+	}
+	
+	private static void hoist(OutlinerDocument doc) {
+		try {
+			if (doc.tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
+				TextKeyListener.hoist(doc.tree.getEditingNode());
+			} else if (doc.tree.getComponentFocus() == OutlineLayoutManager.ICON) {
+				IconKeyListener.hoist(doc.tree);
+			}
+		} catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+	
 	
 	// OutlinerDocumentListener Interface
 	public void modifiedStateChanged(DocumentEvent e) {}
@@ -111,37 +144,6 @@ public class HoistMenuItem extends AbstractOutlinerMenuItem implements OutlinerD
 					}
 				}
 			}
-		}
-	}
-	
-	
-	// GUITreeComponent interface
-	public void startSetup(Attributes atts) {
-		super.startSetup(atts);
-		
-		addActionListener(this);
-		Outliner.documents.addOutlinerDocumentListener(this);
-		Outliner.documents.addDocumentRepositoryListener(this);
-		Outliner.documents.addTreeSelectionListener(this);
-		
-		setEnabled(false);
-	}
-	
-	
-	// ActionListener Interface
-	public void actionPerformed(ActionEvent e) {
-		hoist((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched());
-	}
-	
-	private static void hoist(OutlinerDocument doc) {
-		try {
-			if (doc.tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
-				TextKeyListener.hoist(doc.tree.getEditingNode());
-			} else if (doc.tree.getComponentFocus() == OutlineLayoutManager.ICON) {
-				IconKeyListener.hoist(doc.tree);
-			}
-		} catch (Exception e) {
-			System.out.println("Exception: " + e);
 		}
 	}
 }

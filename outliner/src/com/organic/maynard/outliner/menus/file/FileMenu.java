@@ -65,8 +65,9 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 	// Constants
 	private static final int MODE_SAVE = 0;
 	private static final int MODE_EXPORT = 1;
-	private static final int MODE_OPEN = 0;
-	private static final int MODE_IMPORT = 1;
+	private static final int MODE_OPEN = 2;
+	private static final int MODE_IMPORT = 3;
+	private static final int MODE_REVERT = 4;
 	
 	private static final String TRUNC_STRING = GUITreeLoader.reg.getText("trunc_string");
 	
@@ -376,7 +377,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 	 * @param protocol the Protocol to use when importing the document.
 	 */
 	protected static void importFile(DocumentInfo docInfo, FileProtocol protocol) {
-		openFile (docInfo, protocol, MODE_IMPORT) ;
+		openFile(docInfo, protocol, MODE_IMPORT) ;
 	}
 	
 	/**
@@ -387,7 +388,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 	 * @param protocol the Protocol to use when opening the document.
 	 */
 	public static void openFile(DocumentInfo docInfo, FileProtocol protocol) {
-		openFile (docInfo, protocol, MODE_OPEN) ;
+		openFile(docInfo, protocol, MODE_OPEN) ;
 	}
 	
 	/**
@@ -480,7 +481,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		
 		// Reset the document preferences
 		document.getSettings().setUseDocumentSettings(true);
-		syncDocumentToDocInfo(document, MODE_OPEN); // MODE_OPEN works becuase we're reverting so the existing values are correct.
+		syncDocumentToDocInfo(document, MODE_REVERT);
 		((DocumentSettingsView) GUITreeLoader.reg.get(GUITreeComponentRegistry.JDIALOG_DOCUMENT_SETTINGS_VIEW)).configure(document.getSettings());
 		
 		setupAndDraw(docInfo, document, openOrImportResult);
@@ -540,18 +541,19 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		doc.settings.setDateModified(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_DATE_MODIFIED));
 		
 		// Update size and location based off of DocumentInfo
-		int width = docInfo.getWidth();
-		int height = docInfo.getHeight();
-		int left = PropertyContainerUtil.getPropertyAsInt(docInfo, DocumentInfo.KEY_WINDOW_LEFT);
-		int top = PropertyContainerUtil.getPropertyAsInt(docInfo, DocumentInfo.KEY_WINDOW_TOP);
-		doc.setSize(width, height);
-		doc.setLocation(left, top);
+		if (mode != MODE_REVERT) {
+			int width = docInfo.getWidth();
+			int height = docInfo.getHeight();
+			int left = PropertyContainerUtil.getPropertyAsInt(docInfo, DocumentInfo.KEY_WINDOW_LEFT);
+			int top = PropertyContainerUtil.getPropertyAsInt(docInfo, DocumentInfo.KEY_WINDOW_TOP);
+			doc.setSize(width, height);
+			doc.setLocation(left, top);
+		}
 	}
 	
 	
 	// open/import a file and store its outline into a tree
 	private static int openOrImportFileAndGetTree(JoeTree tree, DocumentInfo docInfo, FileProtocol protocol, int mode) {
-		
 		String msg = null;
 		int openOrImportResult = FAILURE;
 		OpenFileFormat openOrImportFileFormat = null ;

@@ -48,32 +48,10 @@ import org.xml.sax.*;
  * @version $Revision$, $Date$
  */
 
-public class RevertFileMenuItem extends AbstractOutlinerMenuItem implements DocumentListener, DocumentRepositoryListener, ActionListener, GUITreeComponent {
-	
-	// DocumentListener Interface
-	public void modifiedStateChanged(DocumentEvent e) {
-		calculateEnabledState(e.getDocument());
-	}
-	
-	
-	// DocumentRepositoryListener Interface
-	public void documentAdded(DocumentRepositoryEvent e) {}
-	
-	public void documentRemoved(DocumentRepositoryEvent e) {}
-	
-	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
-		calculateEnabledState(e.getDocument());
-	}
-	
-	private void calculateEnabledState(Document doc) {
-		if (doc != null && doc.isModified() && !doc.getFileName().equals("")) {
-			setEnabled(true);
-		} else {
-			setEnabled(false);
-		}
-	}
-	
-	
+public class RevertFileMenuItem 
+	extends AbstractOutlinerMenuItem 
+	implements DocumentListener, DocumentRepositoryListener, ActionListener, GUITreeComponent 
+{
 	// GUITreeComponent interface
 	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
@@ -97,6 +75,30 @@ public class RevertFileMenuItem extends AbstractOutlinerMenuItem implements Docu
 			FileMenu.revertFile(document);
 		} else if (result == JOptionPane.NO_OPTION) {
 			return;
+		}
+	}
+	
+	
+	// DocumentListener Interface
+	public void modifiedStateChanged(DocumentEvent e) {
+		calculateEnabledState(e.getDocument());
+	}
+	
+	
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {}
+	
+	public void documentRemoved(DocumentRepositoryEvent e) {}
+	
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
+		calculateEnabledState(e.getDocument());
+	}
+	
+	private void calculateEnabledState(Document doc) {
+		if (doc != null && doc.isModified() && !doc.getFileName().equals("")) {
+			setEnabled(true);
+		} else {
+			setEnabled(false);
 		}
 	}
 }
