@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Wed, 25 Jul 2001 03:46:09 GMT</dateModified>
+<dateModified>Wed, 25 Jul 2001 04:53:02 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
-<expansionState></expansionState>
-<vertScrollState>5</vertScrollState>
-<windowTop>60</windowTop>
+<expansionState>14,16,19,20</expansionState>
+<vertScrollState>1</vertScrollState>
+<windowTop>35</windowTop>
 <windowLeft>35</windowLeft>
-<windowBottom>532</windowBottom>
-<windowRight>567</windowRight>
+<windowBottom>485</windowBottom>
+<windowRight>485</windowRight>
 </head>
 <body>
 <outline text="Introduction">
@@ -100,6 +100,7 @@
 <outline text="Save As..."/>
 <outline text="Save All"/>
 <outline text="Revert"/>
+<outline text="Rename..."/>
 <outline text="---"/>
 <outline text="Close"/>
 <outline text="Close All"/>
@@ -116,8 +117,11 @@
 <outline text="Cut"/>
 <outline text="Copy"/>
 <outline text="Paste"/>
+<outline text="Delete"/>
 <outline text="---"/>
 <outline text="Select All"/>
+<outline text="Select None"/>
+<outline text="Select Inverse"/>
 <outline text="---"/>
 <outline text="Document Settings..."/>
 <outline text="---"/>
@@ -178,7 +182,11 @@
 <outline text="F-J">
 <outline text="F"/>
 <outline text="G"/>
-<outline text="H"/>
+<outline text="H">
+<outline text="hoist">
+<outline text=""/>
+</outline>
+</outline>
 <outline text="I"/>
 <outline text="J"/>
 </outline>
