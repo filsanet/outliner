@@ -178,6 +178,7 @@ Targets:
 					<pathelement path="${lib}/jmousewheel.jar"/>
 					<pathelement path="${lib}/sax.jar"/>
 					<pathelement path="${lib}/xp.jar"/>
+					<pathelement path="${lib}/jazzy-core.jar"/>
 				</classpath>
 			</javac>
 		</target>

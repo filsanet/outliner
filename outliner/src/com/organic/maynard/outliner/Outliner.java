@@ -40,6 +40,7 @@ import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.util.find.*;
 import com.organic.maynard.outliner.dom.*;
 import com.organic.maynard.outliner.util.preferences.*;
+import com.organic.maynard.outliner.util.spelling.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -343,6 +344,8 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	// Help system	[srk] 8/5/01 1:28PM
 	public static HelpDocumentsManager helpDoxMgr = null;
 	
+	// Spell Checking
+	public static final SpellingCheckerWrapper spellChecker = new SpellingCheckerWrapper();
 	
 	// Main
 	public static void main(String args[]) {
