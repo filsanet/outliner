@@ -41,7 +41,16 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	private static final int MINIMUM_HEIGHT = 400;
  	private static final int INITIAL_WIDTH = 350;
 	private static final int INITIAL_HEIGHT = 400;
-	
+
+	private static final String REGEX_MATCH_START = "m/";
+	private static final String REGEX_MATCH_END = "/";
+	private static final String REGEX_MATCH_END_IGNORE_CASE = "/i";
+
+	private static final String REGEX_REPLACE_START = "s/";
+	private static final String REGEX_REPLACE_MIDDLE = "/";
+	private static final String REGEX_REPLACE_END = "/";
+	private static final String REGEX_REPLACE_END_IGNORE_CASE = "/i";
+
 	
 	// Perl Regex
 	private static Perl5Util util = new Perl5Util();
@@ -252,15 +261,71 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	}
 	
 	private void find(OutlinerDocument doc) {
-		NodeRangePair location = findLocation(
+		find(
 			doc, 
-			false, 
+			TEXTAREA_FIND.getText(), 
+			TEXTAREA_REPLACE.getText(), 
 			CHECKBOX_SELECTION_ONLY.isSelected(), 
 			CHECKBOX_START_AT_TOP.isSelected(),
 			CHECKBOX_IGNORE_CASE.isSelected(), 
 			CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
 			CHECKBOX_WRAP_AROUND.isSelected(),
 			CHECKBOX_REGEXP.isSelected()
+		);
+	}
+
+	private void replace(OutlinerDocument doc) {
+		replace(
+			doc, 
+			TEXTAREA_FIND.getText(), 
+			TEXTAREA_REPLACE.getText(), 
+			CHECKBOX_SELECTION_ONLY.isSelected(), 
+			CHECKBOX_START_AT_TOP.isSelected(),
+			CHECKBOX_IGNORE_CASE.isSelected(), 
+			CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
+			CHECKBOX_WRAP_AROUND.isSelected(),
+			CHECKBOX_REGEXP.isSelected()
+		);
+	}
+
+	private void replace_all(OutlinerDocument doc) {
+		replaceAll(
+			doc, 
+			TEXTAREA_FIND.getText(), 
+			TEXTAREA_REPLACE.getText(), 
+			CHECKBOX_SELECTION_ONLY.isSelected(), 
+			CHECKBOX_START_AT_TOP.isSelected(),
+			CHECKBOX_IGNORE_CASE.isSelected(), 
+			CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
+			CHECKBOX_WRAP_AROUND.isSelected(),
+			CHECKBOX_REGEXP.isSelected()
+		);
+	}
+		
+	// This method is public and should have no direct dependancy on 
+	// find/replace GUI so that it can be called from other classes.
+	public void find(
+		OutlinerDocument doc, 
+		String sFind,
+		String sReplace,
+		boolean selectionOnly,
+		boolean startAtTop,
+		boolean ignoreCase,
+		boolean includeReadOnlyNodes,
+		boolean wrapAround,
+		boolean isRegexp
+	) {
+		NodeRangePair location = findLocation(
+			doc, 
+			sFind, 
+			sReplace, 
+			false, 
+			selectionOnly, 
+			startAtTop,
+			ignoreCase, 
+			includeReadOnlyNodes, 
+			wrapAround,
+			isRegexp
 		);
 		
 		if (location != null) {
@@ -296,16 +361,28 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		}
 	}
 
-	private void replace(OutlinerDocument doc) {
+	public void replace(
+		OutlinerDocument doc, 
+		String sFind,
+		String sReplace,
+		boolean selectionOnly,
+		boolean startAtTop,
+		boolean ignoreCase,
+		boolean includeReadOnlyNodes,
+		boolean wrapAround,
+		boolean isRegexp
+	) {
 		NodeRangePair location = findLocation(
 			doc, 
+			sFind, 
+			sReplace, 
 			true, 
-			CHECKBOX_SELECTION_ONLY.isSelected(), 
-			CHECKBOX_START_AT_TOP.isSelected(),
-			CHECKBOX_IGNORE_CASE.isSelected(), 
-			CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
-			CHECKBOX_WRAP_AROUND.isSelected(),
-			CHECKBOX_REGEXP.isSelected()
+			selectionOnly, 
+			startAtTop,
+			ignoreCase, 
+			includeReadOnlyNodes, 
+			wrapAround,
+			isRegexp
 		);
 		
 		if (location != null) {
@@ -313,15 +390,15 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			TreeContext tree = doc.tree;
 
 			// Create the undoable
-			int difference = TEXTAREA_REPLACE.getText().length() - (location.endIndex - location.startIndex);
-			if (CHECKBOX_REGEXP.isSelected()) {
+			int difference = sReplace.length() - (location.endIndex - location.startIndex);
+			if (isRegexp) {
 				difference = this.difference;
 			}
 
 			String oldText = location.node.getValue();
-			String newText = oldText.substring(0,location.startIndex) + TEXTAREA_REPLACE.getText() + oldText.substring(location.endIndex,oldText.length());
+			String newText = oldText.substring(0,location.startIndex) + sReplace + oldText.substring(location.endIndex,oldText.length());
 
-			if (CHECKBOX_REGEXP.isSelected()) {
+			if (isRegexp) {
 				newText = oldText.substring(0,location.startIndex) + this.replacementText;
 			}
 										
@@ -361,10 +438,21 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		}
 	}
 
-	private void replace_all(OutlinerDocument doc) {
+	public void replaceAll(
+		OutlinerDocument doc, 
+		String sFind,
+		String sReplace,
+		boolean selectionOnly,
+		boolean startAtTop,
+		boolean ignoreCase,
+		boolean includeReadOnlyNodes,
+		boolean wrapAround,
+		boolean isRegexp
+	) {
 		int count = 0;
 
-		String textToMatch = TEXTAREA_FIND.getText();
+		String replacement = sReplace;
+		String textToMatch = sFind;
 		if (textToMatch.equals("")) {
 			return;
 		}
@@ -372,7 +460,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		CompoundUndoableEdit undoable = new CompoundUndoableEdit(doc.tree);
 		boolean undoableAdded = false;
 		
-		if (CHECKBOX_SELECTION_ONLY.isSelected()) {
+		if (selectionOnly) {
 			if (doc.tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
 				if (doc.tree.getCursorPosition() == doc.tree.getCursorMarkPosition()) {
 					// No selection, so return.
@@ -395,13 +483,14 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 							nodeEnd,
 							cursorEnd,
 							textToMatch,
+							replacement,
 							false,
 							true,
 							true, 
-							CHECKBOX_IGNORE_CASE.isSelected(), 
-							CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
-							CHECKBOX_WRAP_AROUND.isSelected(), 
-							CHECKBOX_REGEXP.isSelected()
+							ignoreCase, 
+							includeReadOnlyNodes, 
+							wrapAround, 
+							isRegexp
 						);
 						
 						if (location == null) {
@@ -420,8 +509,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						
 						// Replace the Text
 						String oldText = location.node.getValue();
-						String newText = oldText.substring(0,location.startIndex) + TEXTAREA_REPLACE.getText() + oldText.substring(location.endIndex,oldText.length()); //
-						if (CHECKBOX_REGEXP.isSelected()) {
+						String newText = oldText.substring(0,location.startIndex) + sReplace + oldText.substring(location.endIndex,oldText.length()); //
+						if (isRegexp) {
 							newText = oldText.substring(0,location.startIndex) + this.replacementText;
 						}
 						location.node.setValue(newText);
@@ -430,8 +519,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						undoable.addPrimitive(new PrimitiveUndoableEdit(location.node,oldText,newText));
 						
 						// Setup for next replacement
-						int difference = TEXTAREA_REPLACE.getText().length() - (location.endIndex - location.startIndex);
-						if (CHECKBOX_REGEXP.isSelected()) {
+						int difference = sReplace.length() - (location.endIndex - location.startIndex);
+						if (isRegexp) {
 							difference = this.difference;
 						}
 
@@ -466,13 +555,14 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 							nodeEnd,
 							cursorEnd,
 							textToMatch,
+							replacement,
 							false,
 							false,
 							true, 
-							CHECKBOX_IGNORE_CASE.isSelected(), 
-							CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
-							CHECKBOX_WRAP_AROUND.isSelected(), 
-							CHECKBOX_REGEXP.isSelected()
+							ignoreCase, 
+							includeReadOnlyNodes, 
+							wrapAround, 
+							isRegexp
 						);
 						
 						if (location == null) {
@@ -487,8 +577,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						
 						// Replace the Text
 						String oldText = location.node.getValue();
-						String newText = oldText.substring(0,location.startIndex) + TEXTAREA_REPLACE.getText() + oldText.substring(location.endIndex,oldText.length()); //
-						if (CHECKBOX_REGEXP.isSelected()) {
+						String newText = oldText.substring(0,location.startIndex) + sReplace + oldText.substring(location.endIndex,oldText.length()); //
+						if (isRegexp) {
 							newText = oldText.substring(0,location.startIndex) + this.replacementText;
 						}
 						location.node.setValue(newText);
@@ -497,8 +587,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						undoable.addPrimitive(new PrimitiveUndoableEdit(location.node,oldText,newText));
 						
 						// Setup for next replacement
-						int difference = TEXTAREA_REPLACE.getText().length() - (location.endIndex - location.startIndex);
-						if (CHECKBOX_REGEXP.isSelected()) {
+						int difference = sReplace.length() - (location.endIndex - location.startIndex);
+						if (isRegexp) {
 							difference = this.difference;
 						}
 		
@@ -527,13 +617,14 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 					nodeEnd,
 					cursorEnd,
 					textToMatch,
+					replacement,
 					false,
 					false,
 					true, 
-					CHECKBOX_IGNORE_CASE.isSelected(), 
-					CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
-					CHECKBOX_WRAP_AROUND.isSelected(), 
-					CHECKBOX_REGEXP.isSelected()
+					ignoreCase, 
+					includeReadOnlyNodes, 
+					wrapAround, 
+					isRegexp
 				);
 				
 				if (location == null) {
@@ -552,8 +643,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				
 				// Replace the Text
 				String oldText = location.node.getValue();
-				String newText = oldText.substring(0,location.startIndex) + TEXTAREA_REPLACE.getText() + oldText.substring(location.endIndex,oldText.length()); //
-				if (CHECKBOX_REGEXP.isSelected()) {
+				String newText = oldText.substring(0,location.startIndex) + sReplace + oldText.substring(location.endIndex,oldText.length()); //
+				if (isRegexp) {
 					newText = oldText.substring(0,location.startIndex) + this.replacementText;
 				}
 				location.node.setValue(newText);
@@ -562,8 +653,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				undoable.addPrimitive(new PrimitiveUndoableEdit(location.node,oldText,newText));
 				
 				// Setup for next replacement
-				int difference = TEXTAREA_REPLACE.getText().length() - (location.endIndex - location.startIndex);
-				if (CHECKBOX_REGEXP.isSelected()) {
+				int difference = sReplace.length() - (location.endIndex - location.startIndex);
+				if (isRegexp) {
 					difference = this.difference;
 				}
 
@@ -581,8 +672,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 
 		// Bring the window to the front
 		try {
-				Outliner.outliner.requestFocus();
-				doc.setSelected(true);
+			Outliner.outliner.requestFocus();
+			doc.setSelected(true);
 		} catch (java.beans.PropertyVetoException pve) {
 			pve.printStackTrace();
 		}
@@ -605,6 +696,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	
 	private NodeRangePair findLocation (
 		OutlinerDocument doc, 
+		String textToMatch,
+		String replacement,
 		boolean isReplace,
 		boolean selectionOnly,
 		boolean startAtTop,
@@ -614,9 +707,6 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		boolean isRegexp
 	) {
 		NodeRangePair location = null;
-		
-		// Match Value
-		String textToMatch = TEXTAREA_FIND.getText();
 		
 		if (textToMatch.equals("")) {
 			return null;
@@ -632,20 +722,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 					int cursor = doc.tree.getCursorPosition();
 					int mark = doc.tree.getCursorMarkPosition();
 					
-					location = findText(
-						node,
-						Math.min(cursor,mark),
-						node,
-						Math.max(cursor,mark),
-						textToMatch,
-						false,
-						true,
-						isReplace, 
-						ignoreCase, 
-						includeReadOnlyNodes, 
-						wrapAround,
-						isRegexp
-					);
+					location = findText(node, Math.min(cursor,mark), node, Math.max(cursor,mark), textToMatch, replacement, false, true, isReplace, ignoreCase, includeReadOnlyNodes, wrapAround, isRegexp);
 				}
 			} else {
 				for (int i = 0; i < doc.tree.selectedNodes.size(); i++) {
@@ -655,20 +732,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 					Node nodeEnd = nodeStart.getLastDecendent();
 					int cursorEnd = nodeEnd.getValue().length();
 					
-					location = findText(
-						nodeStart,
-						cursorStart,
-						nodeEnd,
-						cursorEnd,
-						textToMatch,
-						false,
-						false,
-						isReplace, 
-						ignoreCase, 
-						includeReadOnlyNodes, 
-						wrapAround,
-						isRegexp
-					);
+					location = findText(nodeStart, cursorStart, nodeEnd, cursorEnd, textToMatch, replacement, false, false, isReplace, ignoreCase, includeReadOnlyNodes, wrapAround, isRegexp);
 					
 					if (location != null) {
 						break;
@@ -686,7 +750,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	
 			if (startAtTop) {
 				nodeStart = doc.tree.rootNode.getFirstChild();
-				nodeEnd = doc.tree.rootNode.getLastChild();
+				nodeEnd = doc.tree.rootNode.getLastDecendent();
 				cursorStart = 0;
 			} else {
 				nodeStart = doc.tree.getEditingNode();
@@ -698,20 +762,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				cursorEnd = 0;
 			}
 			
-			location = findText(
-				nodeStart,
-				cursorStart,
-				nodeEnd,
-				cursorEnd,
-				textToMatch,
-				false,
-				false,
-				isReplace, 
-				ignoreCase, 
-				includeReadOnlyNodes, 
-				wrapAround,
-				isRegexp
-			);
+			location = findText(nodeStart, cursorStart, nodeEnd, cursorEnd, textToMatch, replacement, false, false, isReplace, ignoreCase, includeReadOnlyNodes, wrapAround, isRegexp);
 		}
 		
 		return location;
@@ -722,7 +773,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		int start, 
 		Node endNode, 
 		int end, 
-		String match, 
+		String match,
+		String replacement, 
 		boolean loopedOver, 
 		boolean done,
 		boolean isReplace,
@@ -737,34 +789,15 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		int matchStart = -1;
 		if (startNode == endNode) {
 			if (end > start) {
-				matchStart = matchText(
-					text.substring(start,end), 
-					match, 
-					ignoreCase, 
-					isRegexp,
-					isReplace
-				);
+				matchStart = matchText(text.substring(start,end), match, replacement, ignoreCase, isRegexp, isReplace);
 				done = true;
 			} else {
-				matchStart = matchText(
-					text.substring(start,
-					text.length()),
-					match, 
-					ignoreCase, 
-					isRegexp,
-					isReplace
-				);
+				matchStart = matchText(text.substring(start,text.length()), match, replacement, ignoreCase, isRegexp, isReplace);
 			}
 		} else {
-			matchStart = matchText(
-				text.substring(start,text.length()),
-				match, 
-				ignoreCase, 
-				isRegexp,
-				isReplace
-			);
+			matchStart = matchText(text.substring(start,text.length()), match, replacement, ignoreCase, isRegexp, isReplace);
 		}
-		
+				
 		// Match Found		
 		if (matchStart != -1) {
 			// Deal with read-only nodes for replace
@@ -796,55 +829,26 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			nextNodeToSearch = nextNodeToSearch.nextNode();
 			loopedOver = true;
 		}
+		
+		// We've gone as far as we can so stop.
 		if (endNode == nextNodeToSearch) {
-			return findText(
-				nextNodeToSearch,
-				0,
-				endNode,
-				end,
-				match,
-				loopedOver,
-				true,
-				isReplace, 
-				ignoreCase, 
-				includeReadOnlyNodes, 
-				wrapAround, 
-				isRegexp
-			);
-		} else {
-			return findText(
-				nextNodeToSearch,
-				0,
-				endNode,
-				end,
-				match,
-				loopedOver,
-				false,
-				isReplace, 
-				ignoreCase, 
-				includeReadOnlyNodes, 
-				wrapAround, 
-				isRegexp
-			);
+			done = true;
 		}
+
+		// Try it again
+		return findText(nextNodeToSearch, 0, endNode, end, match, replacement, loopedOver, done, isReplace, ignoreCase, includeReadOnlyNodes, wrapAround, isRegexp);
 	}
-	
+
+
 	private int matchLength = 0;
 	private int difference = 0;
 	private String replacementText = null;
 	
-	private static final String REGEX_MATCH_START = "m/";
-	private static final String REGEX_MATCH_END = "/";
-	private static final String REGEX_MATCH_END_IGNORE_CASE = "/i";
-
-	private static final String REGEX_REPLACE_START = "s/";
-	private static final String REGEX_REPLACE_MIDDLE = "/";
-	private static final String REGEX_REPLACE_END = "/";
-	private static final String REGEX_REPLACE_END_IGNORE_CASE = "/i";
 	
 	private int matchText(
 		String text, 
 		String match, 
+		String replacement, 
 		boolean ignoreCase,
 		boolean isRegexp,
 		boolean isReplace
@@ -852,22 +856,22 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		if (isRegexp) {
 			// Prepare input
 			input = new PatternMatcherInput(text);
-			
+
+			// Prepare the regex
+			String regex = null;
+			if (ignoreCase) {
+				regex = REGEX_MATCH_START + match + REGEX_MATCH_END_IGNORE_CASE;
+			} else {
+				regex = REGEX_MATCH_START + match + REGEX_MATCH_END;
+			}
+							
 			if (isReplace) {
-				// Prepare the regex
-				String replacement = TEXTAREA_REPLACE.getText();
+				// Prepare the replacement regex
 				String subRegex = null;
 				if (ignoreCase) {
 					subRegex = REGEX_REPLACE_START + match + REGEX_REPLACE_MIDDLE + replacement + REGEX_REPLACE_END_IGNORE_CASE;
 				} else {
 					subRegex = REGEX_REPLACE_START + match + REGEX_REPLACE_MIDDLE + replacement + REGEX_REPLACE_END;
-				}
-
-				String regex = null;
-				if (ignoreCase) {
-					regex = REGEX_MATCH_START + match + REGEX_MATCH_END_IGNORE_CASE;
-				} else {
-					regex = REGEX_MATCH_START + match + REGEX_MATCH_END;
 				}
 								
 				// Do the regex find and return result
@@ -892,14 +896,6 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				}
 				return -1;
 			} else {
-				// Prepare the regex
-				String regex = null;
-				if (ignoreCase) {
-					regex = REGEX_MATCH_START + match + REGEX_MATCH_END_IGNORE_CASE;
-				} else {
-					regex = REGEX_MATCH_START + match + REGEX_MATCH_END;
-				}
-				
 				// Do the regex find and return result
 				try {
 					if (util.match(regex, input)) {
