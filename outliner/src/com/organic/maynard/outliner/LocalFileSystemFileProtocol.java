@@ -171,7 +171,7 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 		// run the File Chooser
 		int option = chooser.showOpenDialog(Outliner.outliner);
 
-		// Update the most recent save dir preference
+		// Update the most recent open dir preference
 		// TBD [srk] set up a MOST_RECENT_IMPORT_DIR, then have this code act appropriately
 		Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur = chooser.getCurrentDirectory().getPath();
 		Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).restoreTemporaryToCurrent();
@@ -180,18 +180,21 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 		if (option == JFileChooser.APPROVE_OPTION) {
 			String filename = chooser.getSelectedFile().getPath();
 
+			String lineEnding ;
 			String encoding ;
 			String fileFormat ;
 
 			// pull proper preference values from the file chooser
 			switch (type) {
 				case FileProtocol.OPEN:
-					encoding = chooser.getSaveEncoding();
-					fileFormat = chooser.getSaveFileFormat();
+					// lineEnding = chooser.getLineEnding();
+					encoding = chooser.getOpenEncoding();
+					fileFormat = chooser.getOpenFileFormat();
 					break ;
 				case FileProtocol.IMPORT:
-					encoding = chooser.getExportEncoding();
-					fileFormat = chooser.getExportFileFormat();
+					// lineEnding = chooser.getLineEnding() ;
+					encoding = chooser.getImportEncoding();
+					fileFormat = chooser.getImportFileFormat();
 					break ;
 				default:
 					System.out.println("ERROR: invalid open/import type used. (" + type +")");
@@ -201,6 +204,7 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 			
 			// store data into docInfo structure
 			docInfo.setPath(filename);
+			// docInfo.setLineEnding(lineEnding);
 			docInfo.setEncodingType(encoding);
 			docInfo.setFileFormat(fileFormat);
 			
