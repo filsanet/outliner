@@ -2,6 +2,7 @@
 
 REM The path below needs to be changed to the directory
 REM you installed outliner into.
+REM cd c:\Progra~1\Metrowerks\projects\outliner\
 cd c:\cvsroot\outliner\
 
 set root_path=.\lib\
@@ -13,4 +14,5 @@ set CP=%CP%;%root_path%xp.jar
 set CP=%CP%;%root_path%xmlrpc.jar
 
 @echo on
-java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner %1
+REM java -cp %CP% -Duser.language=ja -Duser.region=JP -Xincgc com.organic.maynard.outliner.Outliner ja %1
+java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner  en %1
