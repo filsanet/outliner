@@ -92,7 +92,9 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 		
 	public NodeRangePair process(NodeRangePair nodeRangePair) {
 		// Create the XMLRPC Request String
-		String requestXmlString = nodeRangePair.node.depthPaddedValue(Preferences.LINE_END.cur);
+		StringBuffer buf = new StringBuffer();
+		nodeRangePair.node.depthPaddedValue(buf, Preferences.LINE_END.cur);
+		String requestXmlString = buf.toString();
 		
 		// Trim leading crap before the XML declaration
 		requestXmlString = requestXmlString.substring(requestXmlString.indexOf("<"),requestXmlString.length());

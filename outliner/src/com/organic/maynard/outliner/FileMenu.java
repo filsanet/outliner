@@ -29,6 +29,9 @@ import javax.swing.*;
 
 import org.xml.sax.*;
 
+// WebFile
+import com.yearahead.io.*;
+
 public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 	
 	// The Constructors
@@ -132,14 +135,52 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 		// Save the File
 		if (document.hoistStack.isHoisted()) {
 			document.hoistStack.temporaryDehoistAll();
-			boolean success = saveFileFormat.save(document.tree, docInfo);
+			
+			// WebFile
+			boolean success = false;
+			StringBuffer buf = saveFileFormat.save(document.tree, docInfo);
+			if (Preferences.WEB_FILE_SYSTEM.cur) {
+				try {
+					success = WebFile.save(Preferences.WEB_FILE_URL.cur, docInfo.getPath(), buf.toString());
+				} catch(IOException x) {
+					x.printStackTrace();
+					success = false;
+				}
+			} else {
+				success = FileFormatManager.writeFile(
+				    docInfo.getPath(), 
+					docInfo.getEncodingType(), 
+					buf.toString());
+			}
+
+			
+			
+			//boolean success = saveFileFormat.save(document.tree, docInfo);
 			if (!success) {
 				JOptionPane.showMessageDialog(document, "An error occurred. Could not save file: " + Outliner.chooser.getSelectedFile().getPath());
 				return;
 			}
 			document.hoistStack.temporaryHoistAll();
 		} else {
-			boolean success = saveFileFormat.save(document.tree, docInfo);
+
+			// WebFile
+			boolean success = false;
+			StringBuffer buf = saveFileFormat.save(document.tree, docInfo);
+			if (Preferences.WEB_FILE_SYSTEM.cur) {
+				try {
+					success = WebFile.save(Preferences.WEB_FILE_URL.cur, docInfo.getPath(), buf.toString());
+				} catch(IOException x) {
+					x.printStackTrace();
+					success = false;
+				}
+			} else {
+				success = FileFormatManager.writeFile(
+				    docInfo.getPath(), 
+					docInfo.getEncodingType(), 
+					buf.toString());
+			}
+
+			//boolean success = saveFileFormat.save(document.tree, docInfo);
 			if (!success) {
 				JOptionPane.showMessageDialog(document, "An error occurred. Could not save file: " + Outliner.chooser.getSelectedFile().getPath());
 				return;
@@ -178,8 +219,32 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 		
 		// Load the file
 		TreeContext tree = new TreeContext();
+		BufferedReader buf = null;
+		if (Preferences.WEB_FILE_SYSTEM.cur) {
+			try {
+				buf = WebFile.open(Preferences.WEB_FILE_URL.cur, filename);
+			} catch(IOException e) {
+				JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. Could not open file: " + filename);
+				RecentFilesList.removeFileNameFromList(filename);
+				return;
+			}
+		} else {
+			try {
+				FileInputStream fileInputStream = new FileInputStream(filename);
+				InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, encoding);
+				buf = new BufferedReader(inputStreamReader);
+			} catch (FileNotFoundException fnfe) {
+				JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. File not found: " + filename);
+				RecentFilesList.removeFileNameFromList(filename);
+				return;
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. Could not open file: " + filename);
+				RecentFilesList.removeFileNameFromList(filename);
+				return;
+			}
+		}
 
-		int success = openFileFormat.open(tree, docInfo);
+		int success = openFileFormat.open(tree, docInfo, buf);
 		if (success == OpenFileFormat.FAILURE) {
 			JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. Could not open file: " + filename);
 			RecentFilesList.removeFileNameFromList(filename);
@@ -249,7 +314,33 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 		docInfo.setPath(filename);
 		docInfo.setEncodingType(document.settings.saveEncoding.cur);
 
-		int success = openFileFormat.open(tree, docInfo);
+		BufferedReader buf = null;
+		if (Preferences.WEB_FILE_SYSTEM.cur) {
+			try {
+				buf = WebFile.open(Preferences.WEB_FILE_URL.cur, filename);
+			} catch(IOException e) {
+				JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. Could not open file: " + filename);
+				RecentFilesList.removeFileNameFromList(filename);
+				return;
+			}
+		} else {
+			try {
+				FileInputStream fileInputStream = new FileInputStream(filename);
+				InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, docInfo.getEncodingType());
+				buf = new BufferedReader(inputStreamReader);
+			} catch (FileNotFoundException fnfe) {
+				JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. File not found: " + filename);
+				RecentFilesList.removeFileNameFromList(filename);
+				return;
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. Could not open file: " + filename);
+				RecentFilesList.removeFileNameFromList(filename);
+				return;
+			}
+		}
+
+
+		int success = openFileFormat.open(tree, docInfo, buf);
 		if (success == OpenFileFormat.FAILURE) {
 			RecentFilesList.removeFileNameFromList(filename); // Not really sure this is appropriate.
 			return;

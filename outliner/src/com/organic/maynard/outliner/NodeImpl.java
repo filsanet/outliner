@@ -576,22 +576,22 @@ public class NodeImpl implements Node {
 
 
 	// String Representation Methods	
-	public String depthPaddedValue(String lineEndString) {
-		StringBuffer retVal = new StringBuffer();
+	public void depthPaddedValue(StringBuffer buf, String lineEndString) {
+		//StringBuffer retVal = new StringBuffer();
 		
 		if (!isRoot()) {
 			for (int i = 0; i < this.depth; i++) {
-				retVal.append(Preferences.DEPTH_PAD_STRING);
+				buf.append(Preferences.DEPTH_PAD_STRING);
 			}
-			retVal.append(getValue()).append(lineEndString);
+			buf.append(getValue()).append(lineEndString);
 		}
 		
 		// Recursive Part
 		for (int i = 0; i < this.numOfChildren(); i++) {
-			retVal.append(this.getChild(i).depthPaddedValue(lineEndString));
+			this.getChild(i).depthPaddedValue(buf, lineEndString);
 		}
 		
-		return retVal.toString();
+		//return retVal.toString();
 	}
 	
 	public void getMergedValue(StringBuffer buf) {

@@ -18,13 +18,8 @@
  
 package com.organic.maynard.outliner;
 
-//import java.awt.*;
 import javax.swing.*;
 import java.io.*;
-
-// WebFile
-import com.yearahead.io.*;
-import java.net.MalformedURLException;
 
 public class SimpleFileFormat implements SaveFileFormat, OpenFileFormat {
 	
@@ -33,69 +28,33 @@ public class SimpleFileFormat implements SaveFileFormat, OpenFileFormat {
 
 	
 	// SaveFileFormat Interface
-	public boolean save(TreeContext tree, DocumentInfo docInfo) {
-		String text = tree.rootNode.depthPaddedValue(Preferences.platformToLineEnding(docInfo.getLineEnding()));
-
-		// WebFile
-		if (Preferences.WEB_FILE_SYSTEM.cur)
-		{
-			try
-			{
-				return WebFile.save(Preferences.WEB_FILE_URL.cur,
-									docInfo.getPath(), text);
-			}
-			catch(IOException x)
-			{
-				x.printStackTrace();
-				return false;
-			}
-		}
-		else
-		{
-			return FileFormatManager.writeFile(
-			    docInfo.getPath(), 
-				docInfo.getEncodingType(), 
-				text);
-		}
+	public StringBuffer save(TreeContext tree, DocumentInfo docInfo) {
+		StringBuffer buf = new StringBuffer();
+		tree.rootNode.depthPaddedValue(buf, Preferences.platformToLineEnding(docInfo.getLineEnding()));
+		return buf;
 	}
 	
 	public boolean supportsComments() {return false;}
 	
 	
 	// OpenFileFormat Interface
-	public int open(TreeContext tree, DocumentInfo docInfo) {
+	public int open(TreeContext tree, DocumentInfo docInfo, BufferedReader buf) {
 		int success = OpenFileFormat.FAILURE;
 
-		// WebFile
 		String text = null;
 
-		if (Preferences.WEB_FILE_SYSTEM.cur)
-		{
-			try
-			{
-				BufferedReader r = WebFile.open(Preferences.WEB_FILE_URL.cur,
-												docInfo.getPath());
-
-				StringBuffer sb = new StringBuffer();
-				String s;
-				while((s = r.readLine()) != null)
-				{
-					sb.append(s);
-					sb.append(Preferences.LINE_END_STRING);
-				}
-
-				text = sb.toString();
+		try {
+			StringBuffer sb = new StringBuffer();
+			String s;
+			while((s = buf.readLine()) != null) {
+				sb.append(s);
+				sb.append(Preferences.LINE_END_STRING);
 			}
-			catch(IOException x)
-			{
-				x.printStackTrace();
-			}
-		}
-		else
-		{
-			text = FileFormatManager.loadFile(docInfo.getPath(), docInfo.getEncodingType());
-		}
 
+			text = sb.toString();
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 
 		if (text != null) {
 			Node newNode = new NodeImpl(tree,"");

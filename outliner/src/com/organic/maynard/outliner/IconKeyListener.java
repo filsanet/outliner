@@ -640,7 +640,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	private void copy(TreeContext tree, outlineLayoutManager layout) {
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < tree.selectedNodes.size(); i++) {
-			buffer.append(((Node) tree.selectedNodes.get(i)).depthPaddedValue(Preferences.LINE_END_STRING));
+			((Node) tree.selectedNodes.get(i)).depthPaddedValue(buffer, Preferences.LINE_END_STRING);
+			
+			//buffer.append(((Node) tree.selectedNodes.get(i)).depthPaddedValue(Preferences.LINE_END_STRING));
 		}
 		
 		// Put the text onto the clipboard
@@ -650,7 +652,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	private void cut(TreeContext tree, outlineLayoutManager layout) {
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < tree.selectedNodes.size(); i++) {
-			buffer.append(((Node) tree.selectedNodes.get(i)).depthPaddedValue(Preferences.LINE_END_STRING));
+			((Node) tree.selectedNodes.get(i)).depthPaddedValue(buffer, Preferences.LINE_END_STRING);
+			
+			//buffer.append(((Node) tree.selectedNodes.get(i)).depthPaddedValue(Preferences.LINE_END_STRING));
 		}
 		
 		// Put the text onto the clipboard

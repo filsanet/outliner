@@ -121,7 +121,7 @@ public interface Node {
 	public Iterator getAttributeKeys();
 
 	// String Representation Methods
-	public String depthPaddedValue(String lineEndString);
+	public void depthPaddedValue(StringBuffer buf, String lineEndString);
 	
 	public void getMergedValue(StringBuffer buf);
 	public void getMergedValueWithSpaces(StringBuffer buf);

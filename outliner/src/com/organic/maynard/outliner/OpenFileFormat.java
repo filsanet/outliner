@@ -31,6 +31,7 @@ public interface OpenFileFormat {
 
 	public int open(
 		TreeContext tree,
-		DocumentInfo docInfo
+		DocumentInfo docInfo,
+		BufferedReader buf
 	);
 }

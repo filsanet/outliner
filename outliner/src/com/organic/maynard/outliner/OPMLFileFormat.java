@@ -24,10 +24,6 @@ import com.organic.maynard.util.string.StringTools;
 
 import org.xml.sax.*;
 
-// WebFile
-import com.yearahead.io.*;
-import java.net.MalformedURLException;
-
 public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFileFormat {
 
 	// Constants
@@ -63,37 +59,13 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 
 	
 	// SaveFileFormat Interface
-	public boolean save(TreeContext tree, DocumentInfo docInfo) {
-
-		String text = prepareFile(tree, docInfo);
-
-		// WebFile
-		if (Preferences.WEB_FILE_SYSTEM.cur)
-		{
-			try
-			{
-				return WebFile.save(Preferences.WEB_FILE_URL.cur,
-									docInfo.getPath(), text);
-			}
-			catch(IOException x)
-			{
-				x.printStackTrace();
-				return false;
-			}
-		}
-		else
-		{
-			return FileFormatManager.writeFile(
-			    docInfo.getPath(), 
-			    docInfo.getEncodingType(),
-				text
-				);
-		}
+	public StringBuffer save(TreeContext tree, DocumentInfo docInfo) {
+		return prepareFile(tree, docInfo);
 	}
 	
 	public boolean supportsComments() {return true;}
 
-	private String prepareFile(TreeContext tree, DocumentInfo docInfo) {
+	private StringBuffer prepareFile(TreeContext tree, DocumentInfo docInfo) {
 		String lineEnding = Preferences.platformToLineEnding(docInfo.getLineEnding());
 		
 		StringBuffer buf = new StringBuffer();
@@ -120,7 +92,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		buildOutliner(tree.getRootNode(),lineEnding, buf);
 		
 		buf.append("</").append(ELEMENT_OPML).append(">").append(lineEnding);
-		return buf.toString();
+		return buf;
 	}
 
 	private void buildOutliner(Node node, String lineEnding, StringBuffer buf) {
@@ -186,7 +158,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	// OpenFileFormat Interface
 	private boolean errorOccurred = false;
 	
-	public int open(TreeContext tree, DocumentInfo docInfo) {
+	public int open(TreeContext tree, DocumentInfo docInfo, BufferedReader buf) {
 		// Set the objects we are going to populate.
 		this.docInfo = docInfo;
 		this.tree = tree;
@@ -196,22 +168,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		errorOccurred = false;
 		
 		try {
-
-			// WebFile
-			BufferedReader buffer;
-			if (Preferences.WEB_FILE_SYSTEM.cur)
-			{
-				buffer = WebFile.open(Preferences.WEB_FILE_URL.cur,
-									  docInfo.getPath());
-			}
-			else
-			{
-				FileInputStream fileInputStream = new FileInputStream(docInfo.getPath());
-				InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, docInfo.getEncodingType());
-				buffer = new BufferedReader(inputStreamReader);
-			}
-
-			parser.parse(new InputSource(buffer));
+			parser.parse(new InputSource(buf));
 			if (errorOccurred) {
 				success = OpenFileFormat.FAILURE;
 				return success;
