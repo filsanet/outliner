@@ -142,7 +142,7 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 		this.PANEL_MAIN = new JPanel();
 		this.PANEL_MAIN.setLayout(new BorderLayout());
 		this.PANEL_MAIN.add(this.WORD, BorderLayout.NORTH);
-		this.PANEL_MAIN.add(this.TEXT, BorderLayout.CENTER);
+		this.PANEL_MAIN.add(this.JSP, BorderLayout.CENTER);
 		this.PANEL_MAIN.add(this.SUGGESTIONS, BorderLayout.SOUTH);
 		
 		this.PANEL_BUTTONS = new JPanel();
