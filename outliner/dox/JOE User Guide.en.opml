@@ -3,7 +3,7 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE User Guide.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Wed, 29 Aug 2001 06:12:42 GMT</dateModified>
+<dateModified>Wed, 29 Aug 2001 06:53:00 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
@@ -284,9 +284,12 @@
 <outline isComment="false" isEditable="true" isMoveable="true" text="XML-RPC" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
 	<outline text="About XML-RPC">
 		<outline text="XML-RPC lets you make remote procedure calls over HTTP."/>
-		<outline text="Further info: http://xmlrpc.org"/>
 		<outline text="JOE uses Hannes Wallnoefer's Helma XML-RPC package. Thanks Hannes.">
 			<outline text="http://xmlrpc.helma.org"/>
+		</outline>
+		<outline text="Further info">
+			<outline text="Portal: : http://xmlrpc.org"/>
+			<outline text="Spec: http://xmlrpc.com/spec"/>
 		</outline>
 	</outline>
 	<outline text="Creating an XML-RPC Macro ">
@@ -315,13 +318,7 @@
 		<outline text="Click the Create button and you're done. "/>
 	</outline>
 	<outline text="Using an XML-RPC Macro  ">
-		<outline text="Select an outline node."/>
-		<outline text="Right-click the selected node to bring up the macro popup menu. "/>
-		<outline text="Select the macro you want to apply."/>
-		<outline text="You may have to wait a while, depending on how long the operation takes. ">
-			<outline text="The macro blocks the application, so it must complete before you can continue working."/>
-		</outline>
-		<outline text="The current implementation of the XML-RPC macro requires that the selected node contain a valid XML-RPC call. ">
+		<outline text="Select an outline node.">
 			<outline text="The selected node should contain text, or a sub-tree that looks something like the following: ">
 				<outline text="&lt;?xml version=&quot;1.0&quot;?&gt;"/>
 				<outline text="&lt;methodCall&gt;">
@@ -333,6 +330,13 @@
 					<outline text="&lt;/methodCall&gt;"/>
 				</outline>
 			</outline>
+		</outline>
+		<outline text="Right-click the selected node to bring up the macro popup menu. "/>
+		<outline text="Select the macro you want to apply."/>
+		<outline text="You may have to wait a while, depending on how long the operation takes. ">
+			<outline text="The macro blocks the application, so the macro must complete before you can continue working."/>
+		</outline>
+		<outline text="The current implementation of the XML-RPC macro requires that the selected node contain a valid XML-RPC call. ">
 			<outline text="At some point it would probably be good to create an XML-RPC macro that uses the selection as a parameter to a call stored in the macro itself, but that's not how things work currently. "/>
 		</outline>
 	</outline>
@@ -340,9 +344,6 @@
 		<outline text="One strategy I use when I have a call that takes one dynamic argument, is to create a &quot;text replacement&quot; macro that constructs the XML-RPC call. I then call the XML-RPC macro. [MD]"/>
 	</outline>
 	<outline text="XML-RPC Macro Examples"/>
-	<outline text="For more information on constructing XML-RPC calls see the XML-RPC Spec">
-		<outline text="http://xmlrpc.com/spec"/>
-	</outline>
 </outline>
 <outline isComment="false" isEditable="true" isMoveable="true" text="Menu Commands Reference" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="File">
