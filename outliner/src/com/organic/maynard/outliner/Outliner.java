@@ -63,18 +63,18 @@ import gui.*;
  */
 
 public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITreeComponent, JoeXMLConstants {
-
+	
 	// Constants
 	public static final boolean DEBUG = false;
-	    	
+	
 	// Language Handling
 	public static String LANGUAGE = "en"; // Defaults to English.
-
+	
 	// Splash Screen
 	public static SplashScreen splash = null;
 	static {
 		splash = new SplashScreen(Thread.currentThread().getContextClassLoader().getResource("graphics/splash_screen.gif"));
-	}	
+	}
 	
 	// Directory setup
 	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
@@ -91,7 +91,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	public static String LOGS_DIR =           new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.logsdir", "logs")).append(FILE_SEPARATOR).toString();
 	public static String MODULES_DIR =        new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.modulesdir", "modules")).append(FILE_SEPARATOR).toString();
 	
-
+	
 	// Find out if we've got a home directory to work with for user preferences, if
 	// not then we use the prefs dir as usual.
 	static {
@@ -100,7 +100,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 			USER_PREFS_DIR = new StringBuffer().append(userhome).append(FILE_SEPARATOR).append(USER_OUTLINER_DIR).append(FILE_SEPARATOR).toString();
 		}
 	}
-
+	
 	// These prefs should be under the users prefs dir, or if no user prefs dir exists then
 	// they should be under the apps prefs dir.
 	public static String MACROS_DIR =        new StringBuffer().append(USER_PREFS_DIR).append("macros").append(FILE_SEPARATOR).toString();
@@ -110,14 +110,14 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	public static String FIND_REPLACE_FILE = new StringBuffer().append(USER_PREFS_DIR).append("find_replace.xml").toString();
 	public static String CONFIG_FILE =       new StringBuffer().append(USER_PREFS_DIR).append("config.txt").toString();
 	public static String RECENT_FILES_FILE = new StringBuffer().append(USER_PREFS_DIR).append("recent_files.ser").toString();
-
+	
 	// These dirs/files should always be under the apps prefs dir.
 	public static String MACRO_CLASSES_FILE =  new StringBuffer().append(PREFS_DIR).append("macro_classes.txt").toString();
 	public static String SCRIPT_CLASSES_FILE = new StringBuffer().append(PREFS_DIR).append("script_classes.txt").toString();
 	public static String ENCODINGS_FILE =      new StringBuffer().append(PREFS_DIR).append("encodings.txt").toString();
 	public static String FILE_FORMATS_FILE =   new StringBuffer().append(PREFS_DIR).append("file_formats.txt").toString();
-
-
+	
+	
 	// This static block should be considered "installer" functionality. 
 	// At some point this could all be moved to an installer app.
 	// Make the directories in case they don't exist.
@@ -160,7 +160,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 			
 			// Second, copy macros that don't exist.
 			StringBuffer appendBuffer = new StringBuffer();
-
+			
 			File fromMacrosFile = new File(PREFS_DIR + "macros");
 			File[] macrosFiles = fromMacrosFile.listFiles();
 			
@@ -183,7 +183,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 					macrosFiles[i] = null; // Set to null, so later we know what got copied.
 				}
 			}
-		
+			
 			// Third, either copy over entire macros.txt file if it doesn't exist, or append new lines to existing macros.txt file.
 			File userMacrosFile = new File(MACROS_FILE);
 			if (!userMacrosFile.exists()) {
@@ -203,7 +203,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 					e.printStackTrace();
 				}
 			}
-
+			
 		// Create scripts directory it it doesn't exist.
 		File scriptsFile = new File(SCRIPTS_DIR);
 		isCreated = scriptsFile.mkdirs();
@@ -227,7 +227,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 			
 			// Second, copy macros that don't exist.
 			appendBuffer = new StringBuffer();
-
+			
 			File fromScriptsFile = new File(PREFS_DIR + "scripts");
 			File[] scriptsFiles = fromScriptsFile.listFiles();
 			
@@ -250,7 +250,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 					scriptsFiles[i] = null; // Set to null, so later we know what got copied.
 				}
 			}
-		
+			
 			// Third, either copy over entire macros.txt file if it doesn't exist, or append new lines to existing macros.txt file.
 			File userScriptsFile = new File(SCRIPTS_FILE);
 			if (!userScriptsFile.exists()) {
@@ -282,12 +282,12 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 			}
 		}
 	}
-
+	
 	// XML Parser
-    public static final Parser XML_PARSER = new com.jclark.xml.sax.Driver();
-    public static final GUITreeLoader GUI_TREE_LOADER = new GUITreeLoader();
-
-
+	public static final Parser XML_PARSER = new com.jclark.xml.sax.Driver();
+	public static final GUITreeLoader GUI_TREE_LOADER = new GUITreeLoader();
+	
+	
 	// Command Parser
 	public static final String COMMAND_PARSER_SEPARATOR = "|";
 	public static final String COMMAND_SET = "set";
@@ -297,7 +297,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	public static final String COMMAND_SCRIPT = "script";
 	public static final String COMMAND_FILE_FORMAT = "file_format";
 	public static final String COMMAND_FILE_PROTOCOL = "file_protocol";
-
+	
 	public static final Command SET_PREF_COMMAND =                 new SetPrefCommand(COMMAND_SET);
 	public static final Command LOAD_MACRO_CLASS_COMMAND =         new LoadMacroClassCommand(COMMAND_MACRO_CLASS);
 	public static final Command LOAD_MACRO_COMMAND =               new LoadMacroCommand(COMMAND_MACRO);
@@ -342,13 +342,13 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	
 	// Help system	[srk] 8/5/01 1:28PM
 	public static HelpDocumentsManager helpDoxMgr = null;
-
-
+	
+	
 	// Main
 	public static void main(String args[]) {
 		// This allows scrollbars to be resized while they are being dragged.
 		UIManager.put("ScrollBarUI", PlatformCompatibility.getScrollBarUIClassName());
-
+		
 		// See if we've got a preferred language to use. 
 		// lang should be a ISO 639 two letter lang code. 
 		// List at: http://www.ics.uci.edu/pub/ietf/http/related/iso639.txt
@@ -373,33 +373,40 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		if (modulesDirs != null) {
 			for (int i = 0; i < modulesDirs.length; i++) {
 				File moduleDir = modulesDirs[i];
-
+				
 				String moduleGuiTreeFileName = new StringBuffer().append(moduleDir.getPath()).append(FILE_SEPARATOR).append("gui_tree.").append(LANGUAGE).append(".xml").toString();
 				if (!GUI_TREE_LOADER.load(moduleGuiTreeFileName)) {
 					System.out.println("GUI Loading Error. Skipping Module: " + moduleGuiTreeFileName);
 					break;
-				}			
+				}
 			}
 		}
-
+		
 		// Run startup scripts. We're doing this just prior to opening any documents.
 		ScriptsManagerModel.runStartupScripts();
-
+		
 		// See if the command line included a file to be opened.
 		if (args.length > 1) {      // srk - put this test in -- 2002.09.03
-                    String filepath = args[1];
+			StringBuffer sb_filepath = new StringBuffer(args[1]);
+			for (int i = 2; i < args.length; i++) {
+				System.out.println("appending");
+				sb_filepath.append(" ").append(args[i]);
+			}
+			String filepath = sb_filepath.toString();
 			if ((filepath != null) && (!filepath.equals("")) && (!filepath.equals("%1")) ) {
 				// ensure that we have a full pathname [srk]
 				try {
 					filepath = new File(filepath).getCanonicalPath();
-				} catch (IOException e) {}
+				} catch (IOException e) {
+					System.out.println("IOException: " + e.getMessage());
+				}
 				
 				// grab the file's extension
 				String extension = filepath.substring(filepath.lastIndexOf(".") + 1, filepath.length());
 				
 				// use the extension to figure out the file's format
 				String fileFormat = Outliner.fileFormatManager.getOpenFileFormatNameForExtension(extension);
-	
+				
 				// crank up a fresh docInfo struct
 				DocumentInfo docInfo = new DocumentInfo();
 				docInfo.setPath(filepath);
@@ -412,10 +419,10 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 				// Create a Document. This must come after visiblity otherwise the window won't be activated.
 				if (Preferences.getPreferenceBoolean(Preferences.NEW_DOC_ON_STARTUP).cur) {
 					new OutlinerDocument("");
-				} // end if
-			} // end if-else
-		} // end if
-
+				}
+			}
+		}
+		
 		// For Debug Purposes
 		if (Preferences.getPreferenceBoolean(Preferences.PRINT_ENVIRONMENT).cur) {
 			Properties properties = System.getProperties();
@@ -427,12 +434,12 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		}
 	}
 	
-
-	// GUITreeComponent interface	
+	
+	// GUITreeComponent interface
 	private String id = null;
 	public String getGUITreeComponentID() {return this.id;}
 	public void setGUITreeComponentID(String id) {this.id = id;}
-
+	
 	public void startSetup(AttributeList atts) {
 		outliner = this;
 		
@@ -440,9 +447,9 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		if (PlatformCompatibility.isWindows()) {
 			JMouseWheelSupport.setMinScrollDistance(1);
 		}
-
+		
 		setTitle(atts.getValue(A_TITLE));
-
+		
 		// Load Preferences
 		loadPrefsFile(PARSER, ENCODINGS_FILE);
 		
@@ -473,7 +480,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 			int initialHeight = pHeight.cur;
 			int initialPositionX = pInitialPositionX.cur;
 			int initialPositionY = pInitialPositionY.cur;
-		
+			
 			// Make sure initial position isn't off screen, or even really close to the edge.
 			int bottom_left_inset = 100;
 			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -485,7 +492,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 			if (initialPositionX > (screenSize.width - bottom_left_inset)) {
 				initialPositionX = screenSize.width - bottom_left_inset;
 			}
-
+			
 			if (initialPositionY < minimumInitialPositionY) {
 				initialPositionY = minimumInitialPositionY;
 			}
@@ -493,10 +500,10 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 			if (initialPositionY > (screenSize.height - bottom_left_inset)) {
 				initialPositionY = screenSize.height - bottom_left_inset;
 			}
-						
+			
 			setLocation(initialPositionX, initialPositionY);
-
-
+			
+			
 		addComponentListener(new WindowSizeManager(initialWidth, initialHeight, minimumWidth, minimumHeight));
 		addWindowListener(
 			new WindowAdapter() {
@@ -508,16 +515,16 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		);
 		
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
+		
 		// Setup Desktop ScrollPane and set the ContentPane.
 		jsp = new JScrollPane(desktop, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		jsp.addComponentListener(new DesktopScrollPaneComponentListener());
 		setContentPane(jsp);
-
+		
 		// Set Frame Icon
 		ImageIcon icon = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("graphics/frame_icon.gif"));
 		setIconImage(icon.getImage());
-
+		
 		// Initialize open/save_as/export/export_selection menus.
 		fileProtocolManager.synchronizeDefault();
 		fileProtocolManager.synchronizeMenus();
@@ -536,24 +543,24 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		
 		// Apply the Preference Settings
 		Preferences.applyCurrentToApplication();
-
+		
 		setVisible(true); // Seems OK to do this now rather than at the end of this method.
 		
 		// Get rid of Splash Screen
 		Outliner.splash.dispose();
-
+		
 		// Generate Icons
 		OutlineButton.createIcons();
 	}
 	
-
+	
 	// ClipboardOwner Interface
 	public static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 	
 	public void lostOwnership(Clipboard clipboard, Transferable contents) {}
 	
 	
-	// Misc Methods	
+	// Misc Methods
 	public static void loadPrefsFile(CommandParser parser, String filename) {
 		try {
 			BufferedReader buffer = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
@@ -572,12 +579,12 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 			buffer.close();
 			
 		} catch (FileNotFoundException fnfe) {
-			System.err.println("File Not Found: " + filename + "\n" + fnfe);		
+			System.err.println("File Not Found: " + filename + "\n" + fnfe);
 		} catch (Exception e) {
 			System.err.println("Could not create FileReader: " + filename + "\n" + e);
 		}
 	}
-
+	
 	// all calls for a new JoeTree come thru here
 	// if changing the class that's implementing JoeTree, do so here
 	public static JoeTree newTree (OutlinerDocument document) {
@@ -588,8 +595,8 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 			return new TreeContext(document);
 		}
 	}
-
-
+	
+	
 	// all calls for a new JoeNodeList come thru here
 	// if changing the class that's implementing JoeNodeList, do so here
 	public static JoeNodeList newNodeList (int initialCapacity) {
