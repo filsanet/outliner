@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE User Guide.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Sun, 12 Aug 2001 03:01:34 GMT</dateModified>
+<dateModified>Sun, 12 Aug 2001 04:24:24 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState>20</expansionState>
-<vertScrollState>1</vertScrollState>
-<windowTop>35</windowTop>
-<windowLeft>78</windowLeft>
-<windowBottom>568</windowBottom>
-<windowRight>506</windowRight>
+<vertScrollState>7</vertScrollState>
+<windowTop>26</windowTop>
+<windowLeft>86</windowLeft>
+<windowBottom>661</windowBottom>
+<windowRight>636</windowRight>
 </head>
 <body>
 <outline text="JOE User Guide [JUG]"/>
@@ -321,6 +321,19 @@
 <outline text="Thought Manager .pdf"/>
 </outline>
 <outline text="Glossary">
+<outline text="Abbreviations and Acronyms">
+<outline text="Three-Letter Acronyms [TLA's]">
+<outline text="JOE"/>
+<outline text="JUG"/>
+<outline text="JDG"/>
+</outline>
+<outline text="Four-Letter Acronyms [FLAc's]">
+<outline text="OPML"/>
+</outline>
+<outline text="Seven-Character Acronyms [SevChAc's]">
+<outline text="XML-RPC"/>
+</outline>
+</outline>
 <outline text="A-E">
 <outline text="A">
 <outline text="ancestor"/>
