@@ -25,73 +25,41 @@ import javax.swing.*;
 import java.awt.image.*;
 import java.awt.geom.*;
 
-public class OutlineCommentIndicator extends JLabel {
+public class OutlineCommentIndicator extends AbstractOutlineIndicator {
 
 	// Class Fields
-	public static final ImageIcon ICON_IS_NOT_COMMENTED = new ImageIcon(Outliner.GRAPHICS_DIR + "closed_node_commented.gif");
-	
-	public static int SPACING = 4;
-	
-	public static int TRUE_WIDTH = ICON_IS_NOT_COMMENTED.getIconWidth();
-	
-	public static int WIDTH_DEFAULT = ICON_IS_NOT_COMMENTED.getIconWidth() + SPACING;
-	public static int BUTTON_WIDTH = WIDTH_DEFAULT;
-	public static int BUTTON_HEIGHT = ICON_IS_NOT_COMMENTED.getIconHeight();
-	
-	public static ImageIcon ICON_IS_COMMENTED = null;
-	public static ImageIcon ICON_IS_COMMENTED_INHERITED = null;
-	public static ImageIcon ICON_IS_NOT_COMMENTED_INHERITED = null;
+	public static String TOOL_TIP_TEXT = "Click to Toggle Comment";
 
+	public static final ImageIcon ICON_IS_NOT_PROPERTY = new ImageIcon(Outliner.GRAPHICS_DIR + "closed_node_commented.gif");
+	public static ImageIcon ICON_IS_PROPERTY = null;
+	public static ImageIcon ICON_IS_PROPERTY_INHERITED = null;
+	public static ImageIcon ICON_IS_NOT_PROPERTY_INHERITED = null;
 	
-	// Instance Fields
-	public OutlinerCellRendererImpl renderer = null;
+	public static int TRUE_WIDTH = ICON_IS_NOT_PROPERTY.getIconWidth();
 	
-	private boolean comment = false;
-	private boolean commentInherited = false;
+	public static int WIDTH_DEFAULT = ICON_IS_NOT_PROPERTY.getIconWidth() + AbstractOutlineIndicator.SPACING;
+	public static int BUTTON_WIDTH = WIDTH_DEFAULT;
+	public static int BUTTON_HEIGHT = ICON_IS_NOT_PROPERTY.getIconHeight();
+	
 	
 	// The Constructor
 	public OutlineCommentIndicator(OutlinerCellRendererImpl renderer) {
-		this.renderer = renderer;
-		
-		setVerticalAlignment(SwingConstants.TOP);
-		setOpaque(true);
-		setVisible(false);
-
-		setToolTipText("Click to Toggle Comment");
-		
-		updateIcon();
+		super(renderer, TOOL_TIP_TEXT);
 	}
-	
-	public void destroy() {
-		removeAll();
-		renderer = null;
-	}
-	
-	public boolean isManagingFocus() {return true;}
 
-	// Used to fire key events
-	public void fireKeyEvent(KeyEvent event) {
-		processKeyEvent(event);
-	}
-	
-	public boolean isComment() {return comment;}
-	public void setComment(boolean comment) {this.comment = comment;}
-
-	public boolean isCommentInherited() {return commentInherited;}
-	public void setCommentInherited(boolean commentInherited) {this.commentInherited = commentInherited;}
-
+	// Misc Methods
 	public void updateIcon() {
-		if(isComment()) {
-			if (isCommentInherited()) {
-				setIcon(ICON_IS_COMMENTED_INHERITED);
+		if(isProperty()) {
+			if (isPropertyInherited()) {
+				setIcon(ICON_IS_PROPERTY_INHERITED);
 			} else {
-				setIcon(ICON_IS_COMMENTED);
+				setIcon(ICON_IS_PROPERTY);
 			}
 		} else {
-			if (isCommentInherited()) {
-				setIcon(ICON_IS_NOT_COMMENTED_INHERITED);
+			if (isPropertyInherited()) {
+				setIcon(ICON_IS_NOT_PROPERTY_INHERITED);
 			} else {
-				setIcon(ICON_IS_NOT_COMMENTED);
+				setIcon(ICON_IS_NOT_PROPERTY);
 			}
 		}
 	}
@@ -101,7 +69,7 @@ public class OutlineCommentIndicator extends JLabel {
 		System.out.println("Start Creating Comment Indicators...");
 		
 		// Create a buffered image from the commented image.
-		Image notCommentedImage = ICON_IS_NOT_COMMENTED.getImage();
+		Image notCommentedImage = ICON_IS_NOT_PROPERTY.getImage();
 		BufferedImage image = new BufferedImage(TRUE_WIDTH, BUTTON_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = image.createGraphics();
 		g.drawImage(notCommentedImage,0,0,Outliner.outliner);
@@ -122,7 +90,7 @@ public class OutlineCommentIndicator extends JLabel {
 		FilteredImageSource commentedSource = new FilteredImageSource(commentedImage.getSource(), redFilter);
 		Image commentedImage2 = Outliner.outliner.createImage(commentedSource);
 
-		ICON_IS_COMMENTED = new ImageIcon(commentedImage2);
+		ICON_IS_PROPERTY = new ImageIcon(commentedImage2);
 		System.out.println("  icon: commented");
 		
 		// Lighten color to inherited versions
@@ -132,14 +100,13 @@ public class OutlineCommentIndicator extends JLabel {
 		Image commentedInheritedImage = Outliner.outliner.createImage(commentedInheritedSource);
 		Image notCommentedInheritedImage = Outliner.outliner.createImage(notCommentedInheritedSource);
 
-		ICON_IS_COMMENTED_INHERITED = new ImageIcon(commentedInheritedImage);
+		ICON_IS_PROPERTY_INHERITED = new ImageIcon(commentedInheritedImage);
 		System.out.println("  icon: commented inherited");
 
-		ICON_IS_NOT_COMMENTED_INHERITED = new ImageIcon(notCommentedInheritedImage);
+		ICON_IS_NOT_PROPERTY_INHERITED = new ImageIcon(notCommentedInheritedImage);
 		System.out.println("  icon: uncommented inherited");
 
 		System.out.println("End Creating Comment Indicators");
 		System.out.println("");
-
 	}
 }

@@ -302,16 +302,16 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	
 	private void updateCommentIndicator() {
 		if (node.getCommentState() == Node.COMMENT_TRUE) {
-			iComment.setCommentInherited(false);
-			iComment.setComment(true);
+			iComment.setPropertyInherited(false);
+			iComment.setProperty(true);
 			
 		} else if (node.getCommentState() == Node.COMMENT_FALSE) {
-			iComment.setCommentInherited(false);
-			iComment.setComment(false);
+			iComment.setPropertyInherited(false);
+			iComment.setProperty(false);
 		
 		} else {
-			iComment.setCommentInherited(true);
-			iComment.setComment(node.isComment());
+			iComment.setPropertyInherited(true);
+			iComment.setProperty(node.isComment());
 		}
 		
 		iComment.updateIcon();
