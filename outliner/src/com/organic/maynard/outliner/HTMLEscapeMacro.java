@@ -43,13 +43,13 @@ import com.organic.maynard.xml.XMLTools;
  */
 
 public class HTMLEscapeMacro extends MacroImpl {
-
+	
 	// Constants
 	private static final String E_ESCAPE = "escape";
 	
 	// Instance Fields
 	private boolean escape = true;
-
+	
 	// Class Fields
 	private static HTMLEscapeMacroConfig macroConfig = new HTMLEscapeMacroConfig();
 	
@@ -58,21 +58,21 @@ public class HTMLEscapeMacro extends MacroImpl {
 	public HTMLEscapeMacro() {
 		this("");
 	}
-
+	
 	public HTMLEscapeMacro(String name) {
 		super(name, true, Macro.SIMPLE_UNDOABLE);
 	}
-
-
+	
+	
 	// Accessors
 	public boolean isEscaping() {return this.escape;}
 	public void setEscaping(boolean escape) {this.escape = escape;}
-
-
-	// Macro Interface	
+	
+	
+	// Macro Interface
 	public MacroConfig getConfigurator() {return this.macroConfig;}
 	public void setConfigurator(MacroConfig macroConfig) {}
-		
+	
 	public NodeRangePair process(NodeRangePair nodeRangePair) {
 		Node node = nodeRangePair.node;
 		
@@ -95,7 +95,7 @@ public class HTMLEscapeMacro extends MacroImpl {
 		int lengthAfter = text.length();
 		
 		int difference = lengthAfter - lengthBefore;
-
+		
 		if (textSelection) {
 			nodeRangePair.endIndex += difference;
 			nodeRangePair.startIndex = nodeRangePair.endIndex;
@@ -107,40 +107,24 @@ public class HTMLEscapeMacro extends MacroImpl {
 	
 	private String transform(String text) {
 		if (isEscaping()) {
-			return escape(text);
+			return XMLTools.escapeHTML(text);
 		} else {
 			try {
-				return unescape(text);
+				return XMLTools.unescapeHTML(text);
 			} catch (Exception e) {
 				return text;
 			}
 		}
 	}
 	
-	private String escape(String text) {
-		text = Replace.replace(text,"&","&amp;");
-		text = Replace.replace(text,"<","&lt;");
-		text = Replace.replace(text,">","&gt;");
-		text = Replace.replace(text,"\"","&quot;");
-		return text;
-	}
-
-	private String unescape(String text) {
-		text = Replace.replace(text,"&amp;","&");
-		text = Replace.replace(text,"&lt;","<");
-		text = Replace.replace(text,"&gt;",">");
-		text = Replace.replace(text,"&quot;","\"");
-		return text;
-	}
-
 	
 	// Saving the Macro
 	protected void prepareFile (StringBuffer buf) {
 		buf.append(XMLTools.getXmlDeclaration(null) + "\n");
 		buf.append(XMLTools.getElementStart(E_ESCAPE) + isEscaping() + XMLTools.getElementEnd(E_ESCAPE)+ "\n");
 	}
-
-
+	
+	
 	// Sax DocumentHandler Implementation
 	protected void handleCharacters(String elementName, String text) {
 		if (elementName.equals(E_ESCAPE)) {

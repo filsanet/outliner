@@ -74,10 +74,7 @@ import com.organic.maynard.outliner.io.*;
 import java.io.*;
 
 // we read and write Palm pdb files created by Brain Forest 
-public class PdbBFReaderWriter  
-
-	extends PdbReaderWriter {
-	
+public class PdbBFReaderWriter extends PdbReaderWriter {
 	// private class constants
 	
 	// flavor-specific PDB file stuff

@@ -58,34 +58,20 @@ import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.io.*;
 
 // we read Palm pdb files created by Brain Forest 
-public class PdbBFImportFileFormat 
-	
-	extends PdbImportFileFormat { 
-
+public class PdbBFImportFileFormat extends PdbImportFileFormat { 
 	
 	// ======== flavor-specific methods ========
-
+	
 	// create a reader-writer for this format
 	
 	// NOTE this is PDB-flavor-specific
 	// NOTE failures should throw an appropriate JoeException
-	
-	
-	protected void createReaderWriter() 
-	
-		throws JoeException {
-	
+	protected void createReaderWriter() throws JoeException {
 		// try to create an appropriate reader-writer
 		ourReaderWriter = new PdbBFReaderWriter() ;
 		
-		// if we fail ...
 		if (ourReaderWriter == null) {
-			
 			throw new JoeException(UNABLE_TO_CREATE_OBJECT) ;
-			
-			} // end if 
-		
-		} // end protected method createReaderWriter
-	
-	} // end class PdbBFImportFileFormat
-	
+		}
+	}
+}

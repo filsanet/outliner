@@ -1,3 +1,4 @@
+file_format|open|com.organic.maynard.outliner.io.formats.AutoDetectFileFormat|Auto-Detect|
 file_format|save_default|com.organic.maynard.outliner.io.formats.SimpleFileFormat|Plaintext|txt htm html xml xsl
 file_format|open_default|com.organic.maynard.outliner.io.formats.SimpleFileFormat|Plaintext|txt htm html xml xsl
 file_format|save|com.organic.maynard.outliner.io.formats.OPMLFileFormat|OPML|opml opm

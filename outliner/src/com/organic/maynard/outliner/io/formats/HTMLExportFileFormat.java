@@ -47,6 +47,7 @@ import java.io.*;
 import java.util.*;
 import com.organic.maynard.util.string.StringTools;
 import com.organic.maynard.io.FileTools;
+import com.organic.maynard.xml.XMLTools;
 
 /**
  * @author  $Author$
@@ -54,7 +55,7 @@ import com.organic.maynard.io.FileTools;
  */
 
 class SelectHTMLExportStyleDialog extends AbstractOutlinerJDialog implements ActionListener {
-
+	
 	// Constants
 	private static final int INITIAL_WIDTH = 200;
 	private static final int INITIAL_HEIGHT = 125;
@@ -64,11 +65,11 @@ class SelectHTMLExportStyleDialog extends AbstractOutlinerJDialog implements Act
 	// Text Assets
 	private static String OK = null;
 	private static String CANCEL = null;
-
+	
 	// GUI Components
 	private static JButton bProceed = null;
 	private static JButton bCancel = null;
-
+	
 	private static JComboBox styles = new JComboBox();
 	
 	// Data
@@ -77,30 +78,30 @@ class SelectHTMLExportStyleDialog extends AbstractOutlinerJDialog implements Act
 	
 	// Directories
 	private static File CSS_DIR = null;
-
+	
 	// The Constructor
 	public SelectHTMLExportStyleDialog(Frame owner, String title) {
 		super(true, true, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
-
+		
 		// Initialize
 		CSS_DIR = new File(Outliner.PREFS_DIR + System.getProperty("com.organic.maynard.outliner.Outliner.cssdir", "css") + System.getProperty("file.separator"));
-
+		
 		OK = GUITreeLoader.reg.getText("ok");
 		CANCEL = GUITreeLoader.reg.getText("cancel");
 		
 		bProceed = new JButton(OK);
 		bCancel = new JButton(CANCEL);
-
+		
 		bProceed.addActionListener(this);
 		bCancel.addActionListener(this);
 		
 		// Create the Layout
 		Box vBox = Box.createVerticalBox();
-
+		
 		vBox.add(styles);
-
+		
 		vBox.add(Box.createVerticalStrut(5));
-
+		
 		Box buttonBox = Box.createHorizontalBox();
 		buttonBox.add(bProceed);
 		buttonBox.add(bCancel);
@@ -108,11 +109,11 @@ class SelectHTMLExportStyleDialog extends AbstractOutlinerJDialog implements Act
 		
 		getContentPane().add(vBox,BorderLayout.CENTER);
 	}
-
+	
 	public void show() {
 		// Get list of styles and populate comboBox.
 		styles.removeAllItems();
-
+		
 		File[] fileNames = CSS_DIR.listFiles();
 		
 		for (int i = 0; i < fileNames.length; i++) {
@@ -122,7 +123,7 @@ class SelectHTMLExportStyleDialog extends AbstractOutlinerJDialog implements Act
 			}
 		}
 		
-		super.show();		
+		super.show();
 	}
 	
 	// Accessors
@@ -133,7 +134,7 @@ class SelectHTMLExportStyleDialog extends AbstractOutlinerJDialog implements Act
 	public String getStyle(String lineEnding) {
 		return FileTools.readFileToString(this.styleName, lineEnding);
 	}
-
+	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(OK)) {
@@ -142,25 +143,25 @@ class SelectHTMLExportStyleDialog extends AbstractOutlinerJDialog implements Act
 			cancel();
 		}
 	}
-
+	
 	private void ok() {
 		this.styleName = (File) styles.getSelectedItem();
 		this.shouldProceed = true;
 		hide();
 	}
-
+	
 	private void cancel() {
 		this.shouldProceed = false;
 		hide();
 	}
 }
 
-public class HTMLExportFileFormat implements ExportFileFormat, JoeReturnCodes {
+public class HTMLExportFileFormat extends AbstractFileFormat implements ExportFileFormat, JoeReturnCodes {
 	
 	private SelectHTMLExportStyleDialog dialog = null;
 	// Constructors
 	public HTMLExportFileFormat() {}
-
+	
 	
 	// ExportFileFormat Interface
 	public boolean supportsComments() {return true;}
@@ -197,7 +198,7 @@ public class HTMLExportFileFormat implements ExportFileFormat, JoeReturnCodes {
 			return merged.getBytes();
 		}
 	}
-
+	
 	private String prepareFile(JoeTree tree, DocumentInfo docInfo, String lineEnding, String template) {
 		
 		// Figure out max_style_depth
@@ -218,12 +219,12 @@ public class HTMLExportFileFormat implements ExportFileFormat, JoeReturnCodes {
 		}
 		
 		// Do replacements on the template.
-		template = StringTools.replace(template, "{$encoding}", escape(docInfo.getEncodingType()));
-		template = StringTools.replace(template, "{$title}", escape(docInfo.getPath()));
-		template = StringTools.replace(template, "{$date_created}", escape(docInfo.getDateCreated()));
-		template = StringTools.replace(template, "{$date_modified}", escape(docInfo.getDateModified()));
-		template = StringTools.replace(template, "{$owner_name}", escape(docInfo.getOwnerName()));
-		template = StringTools.replace(template, "{$owner_email}", escape(docInfo.getOwnerEmail()));
+		template = StringTools.replace(template, "{$encoding}",      XMLTools.escapeHTML(docInfo.getEncodingType()));
+		template = StringTools.replace(template, "{$title}",         XMLTools.escapeHTML(docInfo.getPath()));
+		template = StringTools.replace(template, "{$date_created}",  XMLTools.escapeHTML(docInfo.getDateCreated()));
+		template = StringTools.replace(template, "{$date_modified}", XMLTools.escapeHTML(docInfo.getDateModified()));
+		template = StringTools.replace(template, "{$owner_name}",    XMLTools.escapeHTML(docInfo.getOwnerName()));
+		template = StringTools.replace(template, "{$owner_email}",   XMLTools.escapeHTML(docInfo.getOwnerEmail()));
 		
 		// Do Font and Color Replacements
 		String fontFace = Preferences.getPreferenceString(Preferences.FONT_FACE).cur;
@@ -234,42 +235,42 @@ public class HTMLExportFileFormat implements ExportFileFormat, JoeReturnCodes {
 		
 		String desktopBackgroundColor = convertColorToWebColorValue(Preferences.getPreferenceColor(Preferences.DESKTOP_BACKGROUND_COLOR).cur);
 		template = StringTools.replace(template, "{$desktop_background_color}", desktopBackgroundColor);
-
+		
 		String panelBackgroundColor = convertColorToWebColorValue(Preferences.getPreferenceColor(Preferences.PANEL_BACKGROUND_COLOR).cur);
 		template = StringTools.replace(template, "{$panel_background_color}", panelBackgroundColor);
-
+		
 		String textareaBackgroundColor = convertColorToWebColorValue(Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).cur);
 		template = StringTools.replace(template, "{$textarea_background_color}", textareaBackgroundColor);
-
+		
 		String textareaForegroundColor = convertColorToWebColorValue(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
 		template = StringTools.replace(template, "{$textarea_foreground_color}", textareaForegroundColor);
-
+		
 		String textareaCommentColor = convertColorToWebColorValue(Preferences.getPreferenceColor(Preferences.TEXTAREA_COMMENT_COLOR).cur);
 		template = StringTools.replace(template, "{$textarea_comment_color}", textareaCommentColor);
-
+		
 		String selectedChildColor = convertColorToWebColorValue(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur);
 		template = StringTools.replace(template, "{$selected_child_color}", selectedChildColor);
-
+		
 		String lineNumberColor = convertColorToWebColorValue(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_COLOR).cur);
 		template = StringTools.replace(template, "{$line_number_color}", lineNumberColor);
-
+		
 		String lineNumberSelectedColor = convertColorToWebColorValue(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR).cur);
 		template = StringTools.replace(template, "{$line_number_selected_color}", lineNumberSelectedColor);
-
+		
 		String lineNumberSelectedChildChildColor = convertColorToWebColorValue(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR).cur);
 		template = StringTools.replace(template, "{$line_number_selected_child_color}", lineNumberSelectedChildChildColor);
-
-				
+		
+		
 		// Outline
 		StringBuffer buf = new StringBuffer();
-
+		
 		Node node = tree.getRootNode();
 		for (int i = 0; i < node.numOfChildren(); i++) {
 			buildOutlineElement(node.getChild(i), lineEnding, buf, max_style_depth);
 		}
-
+		
 		template = StringTools.replace(template, "{$outline}", buf.toString());
-
+		
 		return template;
 	}
 	
@@ -285,10 +286,10 @@ public class HTMLExportFileFormat implements ExportFileFormat, JoeReturnCodes {
 		String blue = Integer.toHexString(c.getBlue());
 		if (blue.length() == 1) {
 			blue = "0" + blue;
-		}		
-		return "#" + red + green + blue;
+		}
+		return new StringBuffer().append("#").append(red).append(green).append(blue).toString();
 	}
-
+	
 	private static final String CSS_BRANCH = "branch";
 	private static final String CSS_LEAF = "leaf";
 	private static final String CSS_BRANCH_COMMENT = "branchcomment";
@@ -318,12 +319,12 @@ public class HTMLExportFileFormat implements ExportFileFormat, JoeReturnCodes {
 		}
 		
 		
-		buf.append("<div class=\"" + cssClass + "\">").append(escape(node.getValue())).append(lineEnding);
+		buf.append("<div class=\"").append(cssClass).append("\">").append(XMLTools.escapeHTML(node.getValue())).append(lineEnding);
 		
 		if (!node.isLeaf()) {
 			for (int i = 0; i < node.numOfChildren(); i++) {
 				buildOutlineElement(node.getChild(i), lineEnding, buf, max_style_depth);
-			}	
+			}
 		}
 		indent(node, buf);
 		buf.append("</div>").append(lineEnding);
@@ -333,54 +334,5 @@ public class HTMLExportFileFormat implements ExportFileFormat, JoeReturnCodes {
 		for (int i = 0; i < node.getDepth(); i++) {
 			buf.append("\t");
 		}
-	}
-
-	private String escape(String text) {
-		text = StringTools.replace(text, "&", "&amp;");
-		text = StringTools.replace(text, "<", "&lt;");
-		text = StringTools.replace(text, "\"", "&quot;");
-		text = StringTools.replace(text, ">", "&gt;");
-		return text;
-	}
-	
-	// File Extensions
-	private HashMap extensions = new HashMap();
-	
-	public void addExtension(String ext, boolean isDefault) {
-		extensions.put(ext, new Boolean(isDefault));
-	}
-	
-	public void removeExtension(String ext) {
-		extensions.remove(ext);
-	}
-	
-	public String getDefaultExtension() {
-		Iterator i = getExtensions();
-		while (i.hasNext()) {
-			String key = (String) i.next();
-			Boolean value = (Boolean) extensions.get(key);
-			
-			if (value.booleanValue()) {
-				return key;
-			}
-		}
-		
-		return null;
-	}
-	
-	public Iterator getExtensions() {
-		return extensions.keySet().iterator();
-	}
-	
-	public boolean extensionExists(String ext) {
-		Iterator it = getExtensions();
-		while (it.hasNext()) {
-			String key = (String) it.next();
-			if (ext.equals(key)) {
-				return true;
-			}
-		}
-		
-		return false;
 	}
 }

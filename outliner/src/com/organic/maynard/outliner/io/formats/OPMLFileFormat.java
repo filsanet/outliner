@@ -49,7 +49,7 @@ import org.xml.sax.*;
  */
 
 public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFileFormat, JoeReturnCodes {
-
+	
 	// Constants
 	public static final String ELEMENT_OPML = "opml";
 	public static final String ELEMENT_HEAD = "head";
@@ -67,33 +67,43 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	public static final String ELEMENT_BODY = "body";
 	public static final String ELEMENT_OUTLINE = "outline";
 	public static final String ELEMENT_DOCUMENT_ATTRIBUTE = "documentAttribute";
-
+	
 	public static final String ELEMENT_APPLY_FONT_STYLE_FOR_COMMENTS = "applyStyleForComments";
 	public static final String ELEMENT_APPLY_FONT_STYLE_FOR_EDITABILITY = "applyStyleForEditability";
 	public static final String ELEMENT_APPLY_FONT_STYLE_FOR_MOVEABILITY = "applyStyleForMoveability";
-
+	
 	public static final String ATTRIBUTE_TEXT = "text";
 	public static final String ATTRIBUTE_KEY = "key";
-
+	
 	public static final String ATTRIBUTE_CREATED = "created";
 	public static final String ATTRIBUTE_MODIFIED = "modified";
-
+	
 	public static final String ATTRIBUTE_IS_READ_ONLY = "readOnly"; //Another way of saying isEditable.
 	public static final String ATTRIBUTE_IS_READ_ONLY_ATTS_LIST = "readOnlyAttsList"; 
-
+	
 	public static final String ATTRIBUTE_IS_EDITABLE = "isEditable";
 	public static final String ATTRIBUTE_IS_MOVEABLE = "isMoveable";
 	public static final String ATTRIBUTE_IS_COMMENT = "isComment";
 	
 	// Open File Settings
-    private org.xml.sax.Parser parser = new com.jclark.xml.sax.Driver();
+	private org.xml.sax.Parser parser = new com.jclark.xml.sax.Driver();
 	
 	// Constructors
 	public OPMLFileFormat() {
 		parser.setDocumentHandler(this);
 		parser.setErrorHandler(this);
 	}
-
+	
+	private String name = null;
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	
 	// SaveFileFormat Interface
 	public byte[] save(JoeTree tree, DocumentInfo docInfo) {

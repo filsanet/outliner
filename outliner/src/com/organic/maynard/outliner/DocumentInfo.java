@@ -33,11 +33,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * @author  $Author$
- * @version $Revision$, $Date$
- */
-
 package com.organic.maynard.outliner;
 
 import com.organic.maynard.data.IntList;
@@ -50,6 +45,10 @@ import java.text.SimpleDateFormat;
 import java.awt.*;
 import javax.swing.*;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
 public class DocumentInfo implements Serializable, Cloneable {
 	
@@ -165,7 +164,7 @@ public class DocumentInfo implements Serializable, Cloneable {
 		setProtocolName(protocolName);
 		setHelpFile(helpFile) ;
 	}
-
+	
 	// clone ourself
 	// this is used with Save As operations
 	protected Object clone () {
@@ -200,7 +199,7 @@ public class DocumentInfo implements Serializable, Cloneable {
 	// IO Data Accessors
 	private transient byte[] bytes;
 	private transient InputStream stream = null;
-
+	
 	public byte[] getOutputBytes() {
 		return this.bytes;
 	}
@@ -216,44 +215,44 @@ public class DocumentInfo implements Serializable, Cloneable {
 	public void setInputStream(InputStream stream) {
 		this.stream = stream;
 	}
-
+	
 	// Accessors
 	public boolean isHelpFile() {return helpFile ; }
 	public void setHelpFile(boolean setting) {helpFile = setting; }
 	
 	public String getFileFormat() {return this.fileFormat;}
 	public void setFileFormat(String fileFormat) {this.fileFormat = fileFormat;}
-
+	
 	public boolean isImported() {return this.imported;}
 	public void setImported(boolean imported) {this.imported = imported;}
-
+	
 	public String getEncodingType() {return this.encodingType;}
 	public void setEncodingType(String encodingType) {this.encodingType = encodingType;}
-
+	
 	public String getLineEnding() {return this.lineEnding;}
 	public void setLineEnding(String lineEnding) {this.lineEnding = lineEnding;}
-
+	
 	public String getPadding() {return this.padding;}
 	public void setPadding(String padding) {this.padding = padding;}
-
+	
 	public String getPath() {return this.path;}
 	public void setPath(String path) {this.path = path;}
-
+	
 	public String getTitle() {return this.title;}
 	public void setTitle(String title) {this.title = title;}
-
+	
 	public String getDateCreated() {return this.dateCreated;}
 	public void setDateCreated(String dateCreated) {this.dateCreated = dateCreated;}
-
+	
 	public String getDateModified() {return this.dateModified;}
 	public void setDateModified(String dateModified) {this.dateModified = dateModified;}
-
+	
 	public String getOwnerName() {return this.ownerName;}
 	public void setOwnerName(String ownerName) {this.ownerName = ownerName;}
-
+	
 	public String getOwnerEmail() {return this.ownerEmail;}
 	public void setOwnerEmail(String ownerEmail) {this.ownerEmail = ownerEmail;}
-
+	
 	public int getVerticalScrollState() {return this.verticalScrollState;}
 	public void setVerticalScrollState(int verticalScrollState) {
 		if (verticalScrollState >= 1) {
@@ -271,7 +270,7 @@ public class DocumentInfo implements Serializable, Cloneable {
 			this.windowTop = 0;
 		}
 	}
-
+	
 	public int getWindowLeft() {return this.windowLeft;}
 	public void setWindowLeft(int windowLeft) {
 		if ((windowLeft >= 0) && (windowLeft <= 10000)) {
@@ -289,7 +288,7 @@ public class DocumentInfo implements Serializable, Cloneable {
 			this.windowBottom = windowTop + OutlinerDocument.INITIAL_HEIGHT;
 		}
 	}
-
+	
 	public int getWindowRight() {return this.windowRight;}
 	public void setWindowRight(int windowRight) {
 		if ((windowRight - windowLeft >= OutlinerDocument.MIN_WIDTH) && (windowRight <= 10000 + OutlinerDocument.INITIAL_WIDTH)) {
@@ -298,22 +297,22 @@ public class DocumentInfo implements Serializable, Cloneable {
 			this.windowRight = windowLeft + OutlinerDocument.INITIAL_WIDTH;
 		}
 	}
-
+	
 	public boolean getApplyFontStyleForComments() {return this.applyFontStyleForComments;}
 	public void setApplyFontStyleForComments(boolean applyFontStyleForComments) {this.applyFontStyleForComments = applyFontStyleForComments;}
-
+	
 	public boolean getApplyFontStyleForEditability() {return this.applyFontStyleForEditability;}
 	public void setApplyFontStyleForEditability(boolean applyFontStyleForEditability) {this.applyFontStyleForEditability = applyFontStyleForEditability;}
-
+	
 	public boolean getApplyFontStyleForMoveability() {return this.applyFontStyleForMoveability;}
 	public void setApplyFontStyleForMoveability(boolean applyFontStyleForMoveability) {this.applyFontStyleForMoveability = applyFontStyleForMoveability;}
-
+	
 	public boolean getUseCreateModDates() {return this.useCreateModDates;}
 	public void setUseCreateModDates(boolean useCreateModDates) {this.useCreateModDates = useCreateModDates;}
-
+	
 	public String getCreateModDatesFormat() {return this.createModDatesFormat;}
 	public void setCreateModDatesFormat(String createModDatesFormat) {this.createModDatesFormat = createModDatesFormat;}
-
+	
 	public String getProtocolName() {return this.protocolName;}
 	public void setProtocolName(String protocolName) { this.protocolName = protocolName;}
 	
@@ -341,12 +340,12 @@ public class DocumentInfo implements Serializable, Cloneable {
 			}
 		}
 		return buf.toString();
-	}	
+	}
 	
 	public void setExpandedNodesString(String nodeList) {
 		setExpandedNodesStringShifted(nodeList, 0);
 	}
-
+	
 	public void setExpandedNodesStringShifted(String nodeList, int shift) {
 		// Clear out the current expandedNodes Vector
 		getExpandedNodes().clear();
@@ -361,7 +360,7 @@ public class DocumentInfo implements Serializable, Cloneable {
 	public boolean addExpandedNodeNum(String nodeNum) {
 		return addExpandedNodeNumShifted(nodeNum, 0);
 	}
-
+	
 	public boolean addExpandedNodeNumShifted(String nodeNum, int shift) {
 		try {
 			return addExpandedNodeNum(Integer.parseInt(nodeNum) + shift);
@@ -381,8 +380,8 @@ public class DocumentInfo implements Serializable, Cloneable {
 		}
 		return false;
 	}
-
-
+	
+	
 	// Additional Accessors
 	public int getWidth() {
 		return getWindowRight() - getWindowLeft();
@@ -400,12 +399,12 @@ public class DocumentInfo implements Serializable, Cloneable {
 		}
 		return dateFormat.format(new Date());
 	}
-		
+	
 	public void updateDocumentInfoForDocument(OutlinerDocument document, boolean saveAs) {
 		setPath(document.getFileName());
 		
 		recordWindowPositioning(document);
-
+		
 		setEncodingType(document.settings.getSaveEncoding().cur);
 		setLineEnding(document.settings.getLineEnd().cur);
 		setFileFormat(document.settings.getSaveFormat().cur);
@@ -421,7 +420,7 @@ public class DocumentInfo implements Serializable, Cloneable {
 		
 		setDateModified(currentDateString);
 		document.settings.setDateModified(currentDateString);
-
+		
 		// Date created is a special hidden document setting that should always be up to date if we are dealing with a
 		// file that has been opened or previously saved.
 		if(saveAs) {
@@ -429,7 +428,7 @@ public class DocumentInfo implements Serializable, Cloneable {
 			document.settings.setDateCreated(currentDateString);
 		} else {
 			setDateCreated(document.settings.getDateCreated());
-		}	
+		}
 	}
 	
 	public void recordWindowPositioning(OutlinerDocument document) {
@@ -449,6 +448,6 @@ public class DocumentInfo implements Serializable, Cloneable {
 			if (node.isExpanded()) {
 				addExpandedNodeNum(i);
 			}
-		}	
+		}
 	}
 }

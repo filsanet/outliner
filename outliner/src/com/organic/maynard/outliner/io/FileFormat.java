@@ -42,7 +42,17 @@ import java.util.*;
  * @version $Revision$, $Date$
  */
 
-public interface FileFormat { 
+public interface FileFormat {
+	
+	/**
+	 * Gets the name of this format.
+	 */
+	public String getName();
+	
+	/**
+	 * Sets the name of this format.
+	 */
+	public void setName(String name);
 	
 	/**
 	 * Adds a file extension to this format.
@@ -77,7 +87,7 @@ public interface FileFormat {
 	 * @return the default extension.
 	 */
 	public String getDefaultExtension();
-
+	
 	/**
 	 * Indicates if the extension exists for this file
 	 * format.
@@ -91,16 +101,16 @@ public interface FileFormat {
 	
 	/** Indicates if this format can store comment attributes. */
 	public boolean supportsComments();
-
+	
 	/** Indicates if this format can store editability attributes. */
 	public boolean supportsEditability();
-
+	
 	/** Indicates if this format can store moveability attributes. */
 	public boolean supportsMoveability();
 	
 	/** Indicates if this format can store node attributes. */
 	public boolean supportsAttributes();
-
+	
 	/** Indicates if this format can store document attributes. */
 	public boolean supportsDocumentAttributes();
 }

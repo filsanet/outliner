@@ -50,8 +50,8 @@ import java.text.*;
  * @version $Revision$, $Date$
  */
 
-public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, JoeReturnCodes {
-
+public class JustifiedPlaintextExportFileFormat extends AbstractFileFormat implements ExportFileFormat, JoeReturnCodes {
+	
 	// Constants
 	private static int COLS = 80;
 	private static final int INDENT = 2;
@@ -60,7 +60,7 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 	
 	// Constructors
 	public JustifiedPlaintextExportFileFormat() {}
-
+	
 	
 	// ExportFileFormat Interface
 	public boolean supportsComments() {return false;}
@@ -73,7 +73,7 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 		COLS = Preferences.getPreferenceInt(Preferences.JUSTIFIED_PLAINTEXT_COL_WIDTH).cur;
 		DRAW_LINES = Preferences.getPreferenceBoolean(Preferences.JUSTIFIED_PLAINTEXT_DRAW_LINES).cur;
 		NUMBER = Preferences.getPreferenceBoolean(Preferences.JUSTIFIED_PLAINTEXT_NUMBER).cur;
-	
+		
 		StringBuffer buf = prepareFile(tree, docInfo);
 		
 		try {
@@ -83,7 +83,7 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 			return buf.toString().getBytes();
 		}
 	}
-
+	
 	private StringBuffer prepareFile(JoeTree tree, DocumentInfo docInfo) {
 		String lineEnding = PlatformCompatibility.platformToLineEnding(docInfo.getLineEnding());
 		
@@ -91,15 +91,15 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 		if (NUMBER) {
 			this.numbers = new IntList();
 		}
-
+		
 		Node node = tree.getRootNode();
 		for (int i = 0; i < node.numOfChildren(); i++) {
 			buildOutlineElement(node.getChild(i), lineEnding, buf);
 		}
-
+		
 		return buf;
 	}
-
+	
 	private void buildOutlineElement(Node node, String lineEnding, StringBuffer buf) {
 		if (NUMBER) {
 			int depth = node.getDepth();
@@ -122,7 +122,7 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 		if (!node.isLeaf()) {
 			for (int i = 0; i < node.numOfChildren(); i++) {
 				buildOutlineElement(node.getChild(i), lineEnding, buf);
-			}	
+			}
 		}
 	}
 	
@@ -165,7 +165,7 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 			}
 			buf.append((String) lines.get(i)).append(lineEnding);
 		}
-
+		
 		if (DRAW_LINES) {
 			indentHeirarchy(node, buf, AFTER_LINE);
 		} else {
@@ -195,14 +195,14 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 		
 		BreakIterator it = BreakIterator.getLineInstance();
 		it.setText(text);
-
+		
 		int prevBreak = -1;
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < text.length(); i++) {
 			if (it.isBoundary(i)) {
 				prevBreak = i;
 			}
-		
+			
 			if ((buf.length() == textCount) && (i != 0)) {
 				if (prevBreak == -1) {
 					strings.add(buf.toString());
@@ -229,7 +229,7 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 			buf.append(" ");
 		}
 	}
-
+	
 	private static final String LEAF = "+-";
 	private static final String BRANCH = "| ";
 	private static final String EMPTY = "  ";
@@ -240,7 +240,7 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 	
 	private void indentHeirarchy(Node node, StringBuffer buf, int lineType) {
 		Node parent = node.getParent();
-
+		
 		int offset = buf.length();
 		
 		if (parent != null) {
@@ -278,47 +278,5 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 			
 			parent = parent.getParent();
 		}
-	}	
-
-
-	// File Extensions
-	private HashMap extensions = new HashMap();
-	
-	public void addExtension(String ext, boolean isDefault) {
-		extensions.put(ext, new Boolean(isDefault));
-	}
-	
-	public void removeExtension(String ext) {
-		extensions.remove(ext);
-	}
-	
-	public String getDefaultExtension() {
-		Iterator i = getExtensions();
-		while (i.hasNext()) {
-			String key = (String) i.next();
-			Boolean value = (Boolean) extensions.get(key);
-			
-			if (value.booleanValue()) {
-				return key;
-			}
-		}
-		
-		return null;
-	}
-	
-	public Iterator getExtensions() {
-		return extensions.keySet().iterator();
-	}
-	
-	public boolean extensionExists(String ext) {
-		Iterator it = getExtensions();
-		while (it.hasNext()) {
-			String key = (String) it.next();
-			if (ext.equals(key)) {
-				return true;
-			}
-		}
-		
-		return false;
 	}
 }

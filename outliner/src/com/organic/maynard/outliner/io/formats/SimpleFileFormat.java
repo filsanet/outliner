@@ -44,19 +44,17 @@ import java.io.*;
 import java.util.*;
 import com.organic.maynard.util.string.Replace;
 
-public class SimpleFileFormat
-
-	implements SaveFileFormat, OpenFileFormat, JoeReturnCodes {
-
+public class SimpleFileFormat extends AbstractFileFormat implements SaveFileFormat, OpenFileFormat, JoeReturnCodes {
+	
 	// Constructors
 	public SimpleFileFormat() {}
-
-
+	
+	
 	// SaveFileFormat Interface
 	public byte[] save(JoeTree tree, DocumentInfo docInfo) {
 		StringBuffer buf = new StringBuffer();
 		tree.getRootNode().depthPaddedValue(buf, PlatformCompatibility.platformToLineEnding(docInfo.getLineEnding()));
-
+		
 		try {
 			return buf.toString().getBytes(docInfo.getEncodingType());
 		} catch (UnsupportedEncodingException e) {
@@ -64,46 +62,46 @@ public class SimpleFileFormat
 			return buf.toString().getBytes();
 		}
 	}
-
+	
 	public boolean supportsComments() {return false;}
 	public boolean supportsEditability() {return false;}
 	public boolean supportsMoveability() {return false;}
 	public boolean supportsAttributes() {return false;}
 	public boolean supportsDocumentAttributes() {return false;}
-
-
+	
+	
 	// OpenFileFormat Interface
 	public int open(JoeTree tree, DocumentInfo docInfo, InputStream stream) {
 		int success = FAILURE;
-
+		
 		String text = null;
-
+		
 		try {
 			BufferedReader buf = new BufferedReader(new InputStreamReader(stream, docInfo.getEncodingType()));
-
+			
 			StringBuffer sb = new StringBuffer();
 			String s;
 			while((s = buf.readLine()) != null) {
 				sb.append(s).append(Preferences.LINE_END_STRING);
 			}
 			buf.close();
-
+			
 			text = sb.toString();
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
-
+		
 		if (text != null) {
 			Node newNode = new NodeImpl(tree,"");
 			int padSuccess = PadSelection.pad(text, tree, 0,PlatformCompatibility.LINE_END_UNIX, newNode);
-
+			
 			switch (padSuccess) {
-
+				
 				case PadSelection.SUCCESS:
 					tree.setRootNode(newNode);
 					success = SUCCESS;
 					break;
-
+					
 				case PadSelection.SUCCESS_MODIFIED:
 					String yes = GUITreeLoader.reg.getText("yes");
 					String no = GUITreeLoader.reg.getText("no");
@@ -123,7 +121,7 @@ public class SimpleFileFormat
 						options,
 						options[0]
 					);
-
+					
 					if (result == JOptionPane.YES_OPTION) {
 						success = SUCCESS_MODIFIED;
 						tree.setRootNode(newNode);
@@ -132,7 +130,7 @@ public class SimpleFileFormat
 						success = FAILURE_USER_ABORTED;
 						break;
 					}
-
+					
 				case PadSelection.FAILURE:
 					success = FAILURE;
 					break;
@@ -140,48 +138,7 @@ public class SimpleFileFormat
 		} else {
 			success = FAILURE;
 		}
-
+		
 		return success;
-	}
-
-	// File Extensions
-	private HashMap extensions = new HashMap();
-
-	public void addExtension(String ext, boolean isDefault) {
-		extensions.put(ext, new Boolean(isDefault));
-	}
-
-	public void removeExtension(String ext) {
-		extensions.remove(ext);
-	}
-
-	public String getDefaultExtension() {
-		Iterator i = getExtensions();
-		while (i.hasNext()) {
-			String key = (String) i.next();
-			Boolean value = (Boolean) extensions.get(key);
-
-			if (value.booleanValue()) {
-				return key;
-			}
-		}
-
-		return null;
-	}
-
-	public Iterator getExtensions() {
-		return extensions.keySet().iterator();
-	}
-
-	public boolean extensionExists(String ext) {
-		Iterator it = getExtensions();
-		while (it.hasNext()) {
-			String key = (String) it.next();
-			if (ext.equals(key)) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 }

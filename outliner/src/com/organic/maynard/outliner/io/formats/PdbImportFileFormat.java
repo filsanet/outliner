@@ -93,38 +93,39 @@ package com.organic.maynard.outliner.io.formats;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.io.*;
 
-// we use these
 import java.io.*;
 import java.util.*;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
 // we're a Palm pdb file format
 // we read and write Palm pdb files 
-public class PdbImportFileFormat 
-	
-	extends Object	
-	implements 
+public class PdbImportFileFormat extends AbstractFileFormat implements 
 		PdbContentHandler,
 		PdbErrorHandler,
 		SaveFileFormat, 
 		ImportFileFormat,
 		JoeReturnCodes {
-
+	
 	// protected instance variables
 	protected PdbReaderWriter ourReaderWriter= null ;
-
+	
 	protected DocumentInfo docInfo = null;
 	protected JoeTree tree = null;
-
+	
 	protected boolean errorOccurred = false;
-
+	
 	protected Vector elementStack = new Vector();
-
+	
 	protected Node currentNode = null;
 	protected int currentLevel = -1 ;
-
+	
 	// this stores file name extension
 	protected HashMap extensions = new HashMap();
-
+	
 	protected boolean anyIsCommentInheritedAttributesFound = false; // used to provide for better interop with outliners that don't support isCommentInherited.
 	protected boolean anyIsEditableInheritedAttributesFound = false; // used to provide for better interop with outliners that don't support isEditableInherited.
 	protected boolean anyIsMoveableInheritedAttributesFound = false; // used to provide for better interop with outliners that don't support isMoveableInherited.
@@ -147,28 +148,26 @@ public class PdbImportFileFormat
 			
 			// create a reader-writer
 			createReaderWriter() ;
-
+			
 			// tell it we'll handle content and errors
 			ourReaderWriter.setContentHandler (this) ;
 			ourReaderWriter.setErrorHandler (this) ;
-				
 			
-			} // end try
-
+			
+		} // end try
+			
 		catch (JoeException someException) {
 			System.out.println("error in PdbFileFormat constructor: " + someException.getMessage()) ;
-			} // end catch
+		} // end catch
 		
 		catch (Exception someException) {
 			System.out.println ("error in PdbFileFormat constructor: " + someException.getMessage());
-			} // end catch
-			
-
-		} // end constructor PdbFileFormat 
-
-
+		} // end catch
+	} // end constructor PdbFileFormat
+	
+	
 	// ======== PDB-flavor-specific methods ========
-
+	
 	// create a reader-writer for this format
 	
 	// NOTE this is PDB-flavor-specific
@@ -177,21 +176,16 @@ public class PdbImportFileFormat
 	
 	// for this class, we provide the generic vanilla root PDB reader-writer
 	
-	protected void createReaderWriter() 
-	
-		throws JoeException {
-	
+	protected void createReaderWriter() throws JoeException {
 		// try to create an appropriate reader-writer
 		ourReaderWriter = new PdbReaderWriter() ;
 		
 		// if we fail ...
 		if (ourReaderWriter == null) {
-			
 			throw new JoeException(UNABLE_TO_CREATE_OBJECT) ;
-			
-			} // end if 
+		} // end if 
 		
-		} // end protected method PdbReaderWriter
+	} // end protected method PdbReaderWriter
 	
 	
 	// ======== OpenFileFormat interface Implementations ========
@@ -227,11 +221,10 @@ public class PdbImportFileFormat
 			// if the reader-writer had a problem ...
 			if (errorOccurred) {
 				success = FAILURE;
-				} // end if
-			else { // we succeeded
+			} else {
 				success = SUCCESS;
-				} // end else
-			} // end try
+			} // end else
+		} // end try
 		
 //		// TBD deal with pdb exceptions
 //		catch (PdbException e) {
@@ -240,20 +233,22 @@ public class PdbImportFileFormat
 //		
 		// deal with all other exceptions
 		catch (Exception e) {
-
-			success = FAILURE;
-
-			String exceptionClass = new String(e.getClass().getName()) ;
-			if (Outliner.DEBUG) { System.out.println("\tStan_Debug:\tPdbReaderWriter:read: just had a[n] " + exceptionClass + " exception"); }
 			
-			} // end catch
+			success = FAILURE;
+			
+			String exceptionClass = new String(e.getClass().getName()) ;
+			if (Outliner.DEBUG) {
+				System.out.println("\tStan_Debug:\tPdbReaderWriter:read: just had a[n] " + exceptionClass + " exception");
+			}
+			
+		} // end catch
 		
-		// if we get this far, we're okay		
+		// if we get this far, we're okay
 		return success;
 	}
 	
 	// ======== PdbContentHandler interface Implementations ========
-
+	
 	// initialize the outline data structure
 	// TBD this can be moved further up the line, it's quite vanilla
 	public void startOutline () {
@@ -268,8 +263,7 @@ public class PdbImportFileFormat
 		// set the initial level to the root node's level
 		currentLevel = -1 ;
 		
-		} // end startOutline
-
+	} // end startOutline
 	
 	// apply finishing touches to the outline data structure
 	public void finishOutline () {}
@@ -278,7 +272,6 @@ public class PdbImportFileFormat
 	// add a node of data to the outline
 	// TBD this can be moved further up the line, it's quite vanilla
 	public void addNodeToOutline (NodeImpl node, int level) {
-
 		// for appendage, we need to consider the current node's level
 		// and the node-to-be-added's level
 		int levelDelta = level - currentLevel ;
@@ -297,19 +290,16 @@ public class PdbImportFileFormat
 		
 		// if the new node's a child of the current node
 		if (levelDelta == 1) {
-			
 			currentNode.appendChild(node) ;
-			} // end if
+		} // end if
 			
 		// if the new node's a sibling of the current node
 		else if (levelDelta == 0) {
-				
 			currentNode.getParent().appendChild(node) ;
-			} // end if
-			
+		} // end if
+		
 		// if the new node's an elder of the current node
 		else if (levelDelta < 0) {
-			
 			// jump back as far as necessary
 			
 			// for each unit of delta, climb up a parent
@@ -319,92 +309,48 @@ public class PdbImportFileFormat
 					
 				tempNode = tempNode.getParent();
 				
-				} // end for
+			} // end for
 			
 			// now we're at the level we need to be
 			// add a sibling
 			tempNode.getParent().appendChild(node) ;
 			
-				
-			} // end if an elder
-
+		} // end if an elder
+		
 		// this node becomes the new current node
 		currentNode = node;
 		
 		// its level becomes the current level
 		currentLevel = level ;
-		
-		} // end addNodeToOutline
-
-
+	} // end addNodeToOutline
+	
+	
 	// ======== PdbErrorHandler Implementations ========
-
+	
 	public void error(JoeException someException) {
 		System.out.println(someException.getMessage()) ;
 		this.errorOccurred = true;
-		} // end method error
-
+	} // end method error
+	
 	public void fatalError(JoeException someException) {
 		System.out.println(someException.getMessage()) ;
 		this.errorOccurred = true;
-		} // end method fatalError
-
+	} // end method fatalError
+	
 	public void warning(JoeException someException) {
 		System.out.println(someException.getMessage()) ;
 		this.errorOccurred = true;
-		} // end method warning
-
-
+	} // end method warning
+	
+	
 	// ======== FileFormat Implementations ========
-
+	
 	// what do we support ?
 	public boolean supportsComments() {return true;}
 	public boolean supportsEditability() {return true;}
 	public boolean supportsMoveability() {return true;}	
 	public boolean supportsAttributes() {return true;}
 	public boolean supportsDocumentAttributes() {return true;}
-
-
-	// file extension stuff
-	
-	public void addExtension(String ext, boolean isDefault) {
-		extensions.put(ext, new Boolean(isDefault));
-		}
-	
-	public void removeExtension(String ext) {
-		extensions.remove(ext);
-		}
-	
-	public String getDefaultExtension() {
-		Iterator i = getExtensions();
-		while (i.hasNext()) {
-			String key = (String) i.next();
-			Boolean value = (Boolean) extensions.get(key);
-			
-			if (value.booleanValue()) {
-				return key;
-				} // end if
-			} // end while
-		
-		return null;
-		} // end method getDefaultExtension
-	
-	public Iterator getExtensions() {
-		return extensions.keySet().iterator();
-		}
-
-	public boolean extensionExists(String ext) {
-		Iterator it = getExtensions();
-		while (it.hasNext()) {
-			String key = (String) it.next();
-			if (ext.equals(key)) {
-				return true;
-				}
-			}
-		
-		return false;
-	}
-	
 	
 	// ======== SaveFileFormat Implementations ========
 	
@@ -412,12 +358,11 @@ public class PdbImportFileFormat
 	// save the outline 
 	public byte[] save(JoeTree tree, DocumentInfo docInfo) {
 		StringBuffer buf = prepareFile(tree, docInfo);
-
+		
 		
 		try {
 			return buf.toString().getBytes(docInfo.getEncodingType());
-		} 
-		catch (UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return buf.toString().getBytes();
 		}
@@ -433,7 +378,7 @@ public class PdbImportFileFormat
 		
 		// write the prelude to data
 		// TBD
-	
+		
 		// write the data
 		//Node node = tree.getRootNode();
 		//for (int i = 0; i < node.numOfChildren(); i++) {
@@ -445,7 +390,7 @@ public class PdbImportFileFormat
 		// TBD
 		
 		return buf;
-		} // end method prepareFile
+	} // end method prepareFile
 	
 	protected void buildOutlineElement(Node node, String lineEnding, StringBuffer buf) {
 //		buf.append("<").append(ELEMENT_OUTLINE).append(" ");
@@ -515,10 +460,7 @@ public class PdbImportFileFormat
 //				String key = (String) it.next();
 //				Object value = node.getAttribute(key);
 //				buf.append(" ").append(key).append("=\"").append(escapeXMLAttribute(value.toString())).append("\"");
-//				} // end while
-//			} // end if
-		} // end method buildAttributes
-
-
-
-	} // end class PdbFileFormat
+//			} // end while
+//		} // end if
+	} // end method buildAttributes
+} // end class PdbFileFormat
