@@ -56,23 +56,4 @@ public class EditMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 		super.startSetup(atts);
 		Outliner.menuBar.editMenu = this;
 	}
-	
-	
-	// Utility Methods
-	protected static void fireKeyEvent(OutlinerDocument doc, int keyMask, int keyChar) {
-		OutlinerCellRendererImpl textArea = doc.panel.layout.getUIComponent(doc.tree.getEditingNode());
-		if (textArea == null) {return;}
-		
-		try {
-			if (doc.tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), keyMask, keyChar));
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), keyMask, keyChar));
-			} else if (doc.tree.getComponentFocus() == OutlineLayoutManager.ICON) {
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), keyMask, keyChar));
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), keyMask, keyChar));
-			}
-		} catch (Exception e) {
-			System.out.println("Exception: " + e);
-		}
-	}
 }

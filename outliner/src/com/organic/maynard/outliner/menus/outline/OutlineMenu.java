@@ -51,7 +51,9 @@ import org.xml.sax.*;
 
 public class OutlineMenu extends AbstractOutlinerMenu implements DocumentRepositoryListener, GUITreeComponent {
 	
+	// Pseudo Constants
 	public static String OUTLINE_HOIST = "";
+	
 	
 	// The Constructors
 	public OutlineMenu() {
@@ -90,28 +92,5 @@ public class OutlineMenu extends AbstractOutlinerMenu implements DocumentReposit
 		OUTLINE_HOIST = hoistItem.getText();
 		
 		Outliner.documents.addDocumentRepositoryListener(this);
-	}
-	
-	
-	// Utility Methods
-	protected static void fireKeyEvent(OutlinerDocument doc, int keyMask, int keyChar, boolean pressedOnly) {
-		OutlinerCellRendererImpl textArea = doc.panel.layout.getUIComponent(doc.tree.getEditingNode());
-		if (textArea == null) {return;}
-		
-		try {
-			if (doc.tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), keyMask, keyChar));
-				if (!pressedOnly) {
-					textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), keyMask, keyChar));
-				}
-			} else if (doc.tree.getComponentFocus() == OutlineLayoutManager.ICON) {
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), keyMask, keyChar));
-				if (!pressedOnly) {	
-					textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), keyMask, keyChar));
-				}
-			}
-		} catch (Exception e) {
-			System.out.println("Exception: " + e);
-		}
 	}
 }
