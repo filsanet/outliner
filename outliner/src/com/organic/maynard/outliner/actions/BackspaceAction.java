@@ -191,6 +191,11 @@ public class BackspaceAction extends AbstractAction {
 			textArea.setText(newText);
 			textArea.setCaretPosition(newMarkPosition);
 			textArea.moveCaretPosition(newCaretPosition);
+
+			// Do the Redraw if we have wrapped or if we are currently off screen.
+			if (textArea.getPreferredSize().height != textArea.height || !currentNode.isVisible()) {
+				layout.draw(currentNode, OutlineLayoutManager.TEXT);
+			}
 		}
 	}
 
