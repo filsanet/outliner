@@ -77,8 +77,8 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 		tree.setSelectedNodesParent(parent);
 		
 		// Replace Everything
-		for (int i = 0; i < primitives.size(); i++) {
-			((PrimitiveUndoableReplace) primitives.get(i)).undo();
+		for (int i = 0, limit = primitives.size(); i < limit; i++) {
+			primitives.get(i).undo();
 		}
 
 		// Find fallback node for drawing and editing
@@ -152,7 +152,7 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 		
 		// Replace Everything
 		for (int i = primitives.size() - 1; i >= 0; i--) {
-			((PrimitiveUndoableReplace) primitives.get(i)).redo();
+			primitives.get(i).redo();
 		}
 		
 		if (tree.getSelectedNodes().size() <= 0) {

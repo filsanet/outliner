@@ -310,8 +310,8 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 
 	// ComponentListener Interface
 	public void componentResized(ComponentEvent e) {
-		panel.layout.draw();
-		panel.layout.setFocus(tree.getEditingNode(),tree.getComponentFocus());
+		panel.layout.redraw();
+		//panel.layout.setFocus(tree.getEditingNode(),tree.getComponentFocus());
 	}
 	
 	public void componentHidden(ComponentEvent e) {} 
@@ -355,8 +355,13 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	// Text Caret Positioning
 	private int preferredCaretPosition = 0;
 
-	public int getPreferredCaretPosition() {return preferredCaretPosition;}
-	public void setPreferredCaretPosition(int position) {this.preferredCaretPosition = position;}
+	public int getPreferredCaretPosition() {
+		return preferredCaretPosition;
+	}
+	
+	public void setPreferredCaretPosition(int position) {
+		this.preferredCaretPosition = position;
+	}
 	
 	public static int findNearestCaretPosition(int currentPosition, int preferredCaretPosition, Node node) {
 		int retVal = currentPosition;
@@ -368,7 +373,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		if (retVal > node.getValue().length()) {
 			int newPreferredCaretPosition = currentPosition;
 			if (preferredCaretPosition < newPreferredCaretPosition) {
-				preferredCaretPosition = newPreferredCaretPosition;
+				preferredCaretPosition = newPreferredCaretPosition; // This might be the source of a bug since this method is static and this might be intended to effect an instance variable.
 			}
 			retVal = node.getValue().length();
 		}
@@ -379,8 +384,8 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	// PropertyChangeListener Interface
 	public void propertyChange(PropertyChangeEvent evt) {
 		if (evt.getPropertyName().equals(JSplitPane.DIVIDER_LOCATION_PROPERTY)) {
-			panel.layout.draw();
-			panel.layout.setFocus(panel.doc.tree.getEditingNode(), panel.doc.tree.getComponentFocus());
+			panel.layout.redraw();
+			//panel.layout.setFocus(panel.doc.tree.getEditingNode(), panel.doc.tree.getComponentFocus());
 		}
 	}
 	// fills document title name form choices into combo box

@@ -250,10 +250,8 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		draw();
 		setFocus(nodeThatMustBeVis,focusElement);
 	}
-	
-	//public static int drawCount = 0;
-	
-	public void draw() {
+		
+	private void draw() {
 		//System.out.println("Draw Called: " + drawCount++);
 		numNodesDrawn = 0;
 		
@@ -353,12 +351,10 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 
 			// Prep the line numbers since this will improve performance. Don't need to do this for UP since the order preps itself.
 			int index = nodeIndex + CACHE_SIZE;
-			if (index >= visibleNodes.size()) {
-				Node tmpNode = visibleNodes.get(visibleNodes.size() - 1);
-				tmpNode.getLineNumber(panel.doc.tree.getLineCountKey());
+			if (index >= visibleNodesSize) {
+				visibleNodes.get(visibleNodesSize - 1).getLineNumber(panel.doc.tree.getLineCountKey());
 			} else {
-				Node tmpNode = visibleNodes.get(index);
-				tmpNode.getLineNumber(panel.doc.tree.getLineCountKey());
+				visibleNodes.get(index).getLineNumber(panel.doc.tree.getLineCountKey());
 			}
 		}
 
@@ -492,25 +488,28 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		drawingDirection = DOWN;
 		
 		// Do the extraDrawDown
-		if (numNodesDrawn < CACHE_SIZE) {
+		if (numNodesDrawn < CACHE_SIZE && ioExtraNodeToDrawFrom < visibleNodesSize) {
 			drawDownExtraNodes(ioExtraNodeToDrawFrom);
 		}
 	}
 
 	private void drawDownExtraNodes(int nodeIndex) {
-		Node node = null;
+		/*Node node = null;
 		try {
 			node = panel.doc.tree.getVisibleNodes().get(nodeIndex);
 		} catch (IndexOutOfBoundsException e) {
+			// This exception is only thrown when drawing up from the very last node in the visible node index.
 			return;
 		}
 
 		if (node == null) {
 			return;
-		}
+		}*/
 
 		JoeNodeList visibleNodes = panel.doc.tree.getVisibleNodes();
 		int visibleNodesSize = visibleNodes.size();
+		
+		Node node = visibleNodes.get(nodeIndex);
 	
 		startPoint.x = OutlinerCellRendererImpl.lineNumberOffset + OutlineLineNumber.LINE_NUMBER_WIDTH;
 		startPoint.y = textAreas[0].getLocation().y + textAreas[0].getBestHeight() + Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).cur;

@@ -136,8 +136,8 @@ public class HoistStack {
 			int ioNodeToDrawFrom = tree.getVisibleNodes().indexOf(nodeToDrawFrom);
 			layout.setNodeToDrawFrom(nodeToDrawFrom, ioNodeToDrawFrom);
 	
-			layout.draw();
-			layout.setFocus(nodeToDrawFrom, OutlineLayoutManager.ICON);
+			layout.redraw();
+			//layout.setFocus(nodeToDrawFrom, OutlineLayoutManager.ICON);
 			
 			// Fire Event
 			Outliner.documents.fireHoistDepthChangedEvent(this.doc);
@@ -184,8 +184,8 @@ public class HoistStack {
 			int ioNodeToDrawFrom = tree.getVisibleNodes().indexOf(nodeToDrawFrom);
 			layout.setNodeToDrawFrom(nodeToDrawFrom, ioNodeToDrawFrom);
 	
-			layout.draw();
-			layout.setFocus(nodeToDrawFrom, OutlineLayoutManager.ICON);
+			layout.redraw();
+			//layout.setFocus(nodeToDrawFrom, OutlineLayoutManager.ICON);
 			
 			// Fire Event
 			Outliner.documents.fireHoistDepthChangedEvent(this.doc);
@@ -235,8 +235,8 @@ public class HoistStack {
 			int ioNodeToDrawFrom = tree.getVisibleNodes().indexOf(nodeToDrawFrom);
 			layout.setNodeToDrawFrom(nodeToDrawFrom, ioNodeToDrawFrom);
 	
-			layout.draw();
-			layout.setFocus(nodeToDrawFrom, OutlineLayoutManager.ICON);
+			layout.redraw();
+			//layout.setFocus(nodeToDrawFrom, OutlineLayoutManager.ICON);
 			
 			// Fire Event
 			Outliner.documents.fireHoistDepthChangedEvent(this.doc);

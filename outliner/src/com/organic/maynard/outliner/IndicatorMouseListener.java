@@ -88,8 +88,8 @@ public class IndicatorMouseListener implements MouseListener {
 				}			
 	
 				// Redraw and set focus
-				tree.getDocument().panel.layout.draw();
-				tree.getDocument().panel.layout.setFocus(tree.getEditingNode(), tree.getComponentFocus());
+				tree.getDocument().panel.layout.redraw();
+				//tree.getDocument().panel.layout.setFocus(tree.getEditingNode(), tree.getComponentFocus());
 			}
 		} else if (c instanceof OutlineEditableIndicator) {
 			// Make sure it's in the icon, not just the JLabel.
@@ -112,8 +112,8 @@ public class IndicatorMouseListener implements MouseListener {
 				}			
 	
 				// Redraw and set focus
-				tree.getDocument().panel.layout.draw();
-				tree.getDocument().panel.layout.setFocus(tree.getEditingNode(), tree.getComponentFocus());
+				tree.getDocument().panel.layout.redraw();
+				//tree.getDocument().panel.layout.setFocus(tree.getEditingNode(), tree.getComponentFocus());
 			}
 		} else if (c instanceof OutlineMoveableIndicator) {
 			// Make sure it's in the icon, not just the JLabel.
@@ -136,8 +136,8 @@ public class IndicatorMouseListener implements MouseListener {
 				}			
 	
 				// Redraw and set focus
-				tree.getDocument().panel.layout.draw();
-				tree.getDocument().panel.layout.setFocus(tree.getEditingNode(), tree.getComponentFocus());
+				tree.getDocument().panel.layout.redraw();
+				//tree.getDocument().panel.layout.setFocus(tree.getEditingNode(), tree.getComponentFocus());
 			}
 		}
 	}

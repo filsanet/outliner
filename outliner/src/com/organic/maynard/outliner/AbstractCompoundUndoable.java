@@ -35,10 +35,11 @@
 package com.organic.maynard.outliner;
 
 import java.util.*;
+import com.organic.maynard.outliner.util.undo.UndoableList;
 
 public abstract class AbstractCompoundUndoable implements CompoundUndoable {
 
-	protected ArrayList primitives = new ArrayList(5);
+	protected UndoableList primitives = new UndoableList(5);
 	private boolean isUpdatingGui = true;
 	
 	// The Constructors
@@ -65,8 +66,8 @@ public abstract class AbstractCompoundUndoable implements CompoundUndoable {
 	
 	// Undoable Interface
 	public void destroy() {
-		for (int i = 0; i < primitives.size(); i++) {
-			((Undoable) primitives.get(i)).destroy();
+		for (int i = 0, limit = primitives.size(); i < limit; i++) {
+			primitives.get(i).destroy();
 		}
 
 		primitives = null;

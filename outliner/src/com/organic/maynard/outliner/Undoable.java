@@ -34,8 +34,9 @@
  
 package com.organic.maynard.outliner;
 
-public interface Undoable {
-	public void destroy();
+import com.organic.maynard.outliner.util.Destructible;
+
+public interface Undoable extends Destructible {
 	public void undo();
 	public void redo();
 }

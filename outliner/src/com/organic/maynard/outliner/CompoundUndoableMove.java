@@ -158,7 +158,7 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 			// Do all the Inserts
 			tree.setSelectedNodesParent(targetParent);
 			
-			for (int i = 0; i < primitives.size(); i++) {
+			for (int i = 0, limit = primitives.size(); i < limit; i++) {
 				PrimitiveUndoableMove primitive = (PrimitiveUndoableMove) primitives.get(i);
 
 				// ShortHand
@@ -199,7 +199,7 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 			
 			layout.draw(tree.getYoungestInSelection(), OutlineLayoutManager.ICON);		
 		} else {
-			for (int i = 0; i < primitives.size(); i++) {
+			for (int i = 0, limit = primitives.size(); i < limit; i++) {
 				PrimitiveUndoableMove primitive = (PrimitiveUndoableMove) primitives.get(i);
 
 				// ShortHand

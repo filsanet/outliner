@@ -49,27 +49,26 @@ public class OutlineButton extends JLabel {
 	public static int BUTTON_WIDTH = ICON_CLOSED_NODE.getIconWidth();
 	public static int BUTTON_HEIGHT = ICON_CLOSED_NODE.getIconHeight();
 	
-	public static ImageIcon ICON_OPEN_NODE = null;
-	public static ImageIcon ICON_OPEN_NODE_SELECTED = null;
-	public static ImageIcon ICON_CLOSED_NODE_SELECTED = null;
+	public static ImageIcon ICON_OPEN_NODE = new ImageIcon();
+	public static ImageIcon ICON_OPEN_NODE_SELECTED = new ImageIcon();
+	public static ImageIcon ICON_CLOSED_NODE_SELECTED = new ImageIcon();
 
-	public static ImageIcon ICON_LEAF = null;
-	public static ImageIcon ICON_LEAF_SELECTED = null;
+	public static ImageIcon ICON_LEAF = new ImageIcon();
+	public static ImageIcon ICON_LEAF_SELECTED = new ImageIcon();
 	
 	// Note: icons are initialized by the createIcons() method below. This method
 	// is called from Outliner during it's endSetup() method.
 
 	public static final ImageIcon ICON_DOWN_ARROW = new ImageIcon(Outliner.GRAPHICS_DIR + "down_arrow.gif");
 	public static final ImageIcon ICON_SE_ARROW = new ImageIcon(Outliner.GRAPHICS_DIR + "se_arrow.gif");
-	//public static final ImageIcon ICON_RIGHT_ARROW = new ImageIcon(Outliner.GRAPHICS_DIR + "right_arrow.gif");
 
 	
 	// Instance Fields
 	public OutlinerCellRendererImpl renderer = null;
 	
-	private boolean node = true;
-	private boolean open = true;
-	private boolean selected = false;
+	private boolean isNode = true;
+	private boolean isOpen = true;
+	private boolean isSelected = false;
 	
 	// The Constructor
 	public OutlineButton(OutlinerCellRendererImpl renderer) {
@@ -78,8 +77,6 @@ public class OutlineButton extends JLabel {
 		setVerticalAlignment(SwingConstants.TOP);
 		setOpaque(true);
 		setVisible(false);
-
-		updateIcon();
 	}
 	
 	public void destroy() {
@@ -96,39 +93,35 @@ public class OutlineButton extends JLabel {
 		processKeyEvent(event);
 	}
 	
-	public boolean isNode() {return node;}
-	public void setNode(boolean node) {this.node = node;}
-	
-	public boolean isOpen() {return open;}
-	public void setOpen(boolean open) {this.open = open;}
-	
-	public boolean isSelected() {return selected;}
-	public void setSelected(boolean selected) {this.selected = selected;}
+	public void setNode(boolean isNode) {this.isNode = isNode;}
+	public void setOpen(boolean isOpen) {this.isOpen = isOpen;}
+	public void setSelected(boolean isSelected) {this.isSelected = isSelected;}
 
 	public void updateIcon() {
-		if(isNode()) {
-			if(isOpen()) {
-				if(isSelected()) {
+		if(isNode) {
+			if(isOpen) {
+				if(isSelected) {
 					setIcon(ICON_OPEN_NODE_SELECTED);
 				} else {
 					setIcon(ICON_OPEN_NODE);
 				}
 			} else {
-				if(isSelected()) {
+				if(isSelected) {
 					setIcon(ICON_CLOSED_NODE_SELECTED);
 				} else {
 					setIcon(ICON_CLOSED_NODE);
 				}			
 			}	
 		} else {
-			if(isSelected()) {
+			if(isSelected) {
 				setIcon(ICON_LEAF_SELECTED);
 			} else {
 				setIcon(ICON_LEAF);
 			}
 		}
 	}
-	
+
+
 	// Static Methods
 	public static void createIcons() {
 		System.out.println("Start Creating Icons...");
@@ -148,7 +141,7 @@ public class OutlineButton extends JLabel {
 		AffineTransformOp at = new AffineTransformOp(AffineTransform.getRotateInstance((java.lang.Math.PI)/2, BUTTON_WIDTH/2, BUTTON_HEIGHT/2), AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
 		at.filter(image, openImage);
 		
-		ICON_OPEN_NODE = new ImageIcon(openImage);
+		ICON_OPEN_NODE.setImage(openImage);
 		System.out.println("  icon: openNode");
 		
 		// Lighten color to create leaf
@@ -156,7 +149,7 @@ public class OutlineButton extends JLabel {
 		FilteredImageSource leafSource = new FilteredImageSource(image.getSource(), lightenFilter);
 		Image leafImage = Outliner.outliner.createImage(leafSource);
 
-		ICON_LEAF = new ImageIcon(leafImage);
+		ICON_LEAF.setImage(leafImage);
 		System.out.println("  icon: leaf");
 
 		// Darken color for selected leaf
@@ -164,7 +157,7 @@ public class OutlineButton extends JLabel {
 		FilteredImageSource leafSelectedSource = new FilteredImageSource(leafImage.getSource(), lightenFilter2);
 		Image leafSelectedImage = Outliner.outliner.createImage(leafSelectedSource);
 
-		ICON_LEAF_SELECTED = new ImageIcon(leafSelectedImage);
+		ICON_LEAF_SELECTED.setImage(leafSelectedImage);
 		System.out.println("  icon: leafSelected");
 		
 		// Invert color for selected images
@@ -174,9 +167,9 @@ public class OutlineButton extends JLabel {
 		Image openSelectedImage = Outliner.outliner.createImage(openSource);
 		Image closedSelectedImage = Outliner.outliner.createImage(closedSource);
 		
-		ICON_OPEN_NODE_SELECTED = new ImageIcon(openSelectedImage);
+		ICON_OPEN_NODE_SELECTED.setImage(openSelectedImage);
 		System.out.println("  icon: openNodeSelected");
-		ICON_CLOSED_NODE_SELECTED = new ImageIcon(closedSelectedImage);
+		ICON_CLOSED_NODE_SELECTED.setImage(closedSelectedImage);
 		System.out.println("  icon: closedNodeSelected");
 
 		System.out.println("End Creating Icons");
@@ -185,10 +178,6 @@ public class OutlineButton extends JLabel {
 	}
 }
 
-		// Full red filter.
-		//return (
-		//	(rgb & 0xff000000) | 0x00ff0000
-		//);
 		
 class inversionFilter extends RGBImageFilter {
 	public int filterRGB(int x, int y, int rgb) {

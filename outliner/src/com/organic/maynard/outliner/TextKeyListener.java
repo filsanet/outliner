@@ -1273,13 +1273,13 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 	public static void expandAllSubheads(Node currentNode) {
 		currentNode.ExpandAllSubheads();
-		currentNode.getTree().getDocument().panel.layout.draw();
+		currentNode.getTree().getDocument().panel.layout.redraw();
 		return;
 	}
 
 	public static void expandEverything(JoeTree tree) {
 		tree.getRootNode().ExpandAllSubheads();
-		tree.getDocument().panel.layout.draw();
+		tree.getDocument().panel.layout.redraw();
 		return;
 	}
 
@@ -1314,8 +1314,9 @@ public class TextKeyListener implements KeyListener, MouseListener {
 	}
 
 	public static void collapseEverything(JoeTree tree) {
-		for (int i = 0; i < tree.getRootNode().numOfChildren(); i++) {
-			((Node) tree.getRootNode().getChild(i)).CollapseAllSubheads();
+		int limit = tree.getRootNode().numOfChildren();
+		for (int i = 0; i < limit; i++) {
+			tree.getRootNode().getChild(i).CollapseAllSubheads();
 		}
 
 		// Record the EditingNode, Mark and CursorPosition

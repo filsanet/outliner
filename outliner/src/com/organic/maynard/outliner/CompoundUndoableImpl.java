@@ -44,13 +44,13 @@ public class CompoundUndoableImpl extends AbstractCompoundUndoable {
 	// Undoable Interface
 	public void undo() {
 		for (int i = primitives.size() - 1; i >= 0; i--) {
-			((Undoable) primitives.get(i)).undo();
+			primitives.get(i).undo();
 		}
 	}
 	
 	public void redo() {
-		for (int i = 0; i < primitives.size(); i++) {
-			((Undoable) primitives.get(i)).redo();
+		for (int i = 0, limit = primitives.size(); i < limit; i++) {
+			primitives.get(i).redo();
 		}
 	}
 }

@@ -57,16 +57,15 @@ public class CompoundUndoableEdit extends AbstractCompoundUndoable {
 	
 	public void undo() {
 		for (int i = primitives.size() - 1; i >= 0; i--) {
-			((PrimitiveUndoableEdit) primitives.get(i)).undo();
+			primitives.get(i).undo();
 		}
-		tree.getDocument().panel.layout.draw();	
+		tree.getDocument().panel.layout.redraw();	
 	}
 	
 	public void redo() {
-		int size = primitives.size(); // In theory it should be faster to do this out here so we don't check the size for each loop.
-		for (int i = 0; i < size; i++) {
-			((PrimitiveUndoableEdit) primitives.get(i)).redo();
+		for (int i = 0, limit = primitives.size(); i < limit; i++) {
+			primitives.get(i).redo();
 		}
-		tree.getDocument().panel.layout.draw();	
+		tree.getDocument().panel.layout.redraw();	
 	}
 }

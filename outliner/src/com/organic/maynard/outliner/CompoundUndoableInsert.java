@@ -68,8 +68,8 @@ public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 		OutlineLayoutManager layout = tree.getDocument().panel.layout;
 		
 		// Delete Everything
-		for (int i = 0; i < primitives.size(); i++) {
-			((PrimitiveUndoableInsert) primitives.get(i)).undo();
+		for (int i = 0, limit = primitives.size(); i < limit; i++) {
+			primitives.get(i).undo();
 		}
 
 		if ((newSelectedNode == youngestNode.getParent()) && !newSelectedNode.isLeaf()) {
@@ -108,7 +108,7 @@ public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 		tree.setSelectedNodesParent(parent);
 		
 		for (int i = primitives.size() - 1; i >= 0; i--) {
-			((PrimitiveUndoableInsert) primitives.get(i)).redo();
+			primitives.get(i).redo();
 		}
 
 		// Record the EditingNode

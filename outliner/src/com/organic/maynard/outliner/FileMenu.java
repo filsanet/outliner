@@ -743,7 +743,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		tree.getVisibleNodes().clear();
 
 		// Insert nodes into the VisibleNodes Cache
-		for (int i = 0; i < tree.getRootNode().numOfChildren(); i++) {
+		for (int i = 0, limit = tree.getRootNode().numOfChildren(); i < limit; i++) {
 			tree.addNode(tree.getRootNode().getChild(i));
 		}
 
@@ -755,18 +755,18 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// case out on the form to build the title
 		switch (doc.getTitleNameForm()) {
 		
-		case FULL_PATHNAME:
-		default: 
-			title = filename ;
-			break ;
-			
-		case TRUNC_PATHNAME: 
-			title = StanStringTools.getTruncatedPathName(filename, TRUNC_STRING) ;
-			break ;
-			
-		case JUST_FILENAME: 
-			title = StanStringTools.getFileNameFromPathName(filename) ;
-			break ;
+			case FULL_PATHNAME:
+			default: 
+				title = filename ;
+				break ;
+				
+			case TRUNC_PATHNAME: 
+				title = StanStringTools.getTruncatedPathName(filename, TRUNC_STRING) ;
+				break ;
+				
+			case JUST_FILENAME: 
+				title = StanStringTools.getFileNameFromPathName(filename) ;
+				break ;
 			
 		} // end switch
 		
@@ -778,7 +778,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		
 		// Expand Nodes
 		ArrayList expandedNodes = docInfo.getExpandedNodes();
-		for (int i = 0; i < expandedNodes.size(); i++) {
+		for (int i = 0, limit = expandedNodes.size(); i < limit; i++) {
 			int nodeNum = ((Integer) expandedNodes.get(i)).intValue();
 			try {
 				Node node = doc.tree.getVisibleNodes().get(nodeNum);
@@ -810,8 +810,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// Redraw
 		OutlineLayoutManager layout = doc.panel.layout;
 		layout.setNodeToDrawFrom(firstVisibleNode,index);
-		layout.draw();
-		layout.setFocus(firstVisibleNode, OutlineLayoutManager.TEXT);
+		layout.redraw();
+		//layout.setFocus(firstVisibleNode, OutlineLayoutManager.TEXT);
 
 		// Set document as modified if something happened on open
 		if (openOrImportResult == SUCCESS_MODIFIED) {
