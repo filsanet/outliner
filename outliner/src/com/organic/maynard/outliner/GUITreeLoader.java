@@ -31,6 +31,10 @@ import org.xml.sax.helpers.*;
 
 public class GUITreeLoader extends HandlerBase implements JoeXMLConstants {
 
+	// Constants
+	private static final String TYPE_TEXT = "text";
+	
+	
 	// Class Fields
     private static Parser parser = new com.jclark.xml.sax.Driver();
 	private static boolean errorOccurred = false;
@@ -86,6 +90,9 @@ public class GUITreeLoader extends HandlerBase implements JoeXMLConstants {
 				Box box = ((AbstractPreferencesPanel) elementStack.get(elementStack.size() - 1)).box;
 				box.add(Box.createVerticalStrut(Integer.parseInt(atts.getValue(A_SIZE))));
 				return;		
+			} else if (name.equals(E_ASSET)) {
+				reg.addText(atts.getValue(A_KEY), atts.getValue(A_VALUE));
+				return;		
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -127,7 +134,7 @@ public class GUITreeLoader extends HandlerBase implements JoeXMLConstants {
 	
 	public void endElement (String name) throws SAXException {
 		// Special Handling for elements that are not GUITreeComponents
-		if (name.equals(E_SEPARATOR) || name.equals(E_VERTICAL_STRUT)) {
+		if (name.equals(E_SEPARATOR) || name.equals(E_VERTICAL_STRUT) || name.equals(E_ASSET)) {
 			return;
 		}
 		

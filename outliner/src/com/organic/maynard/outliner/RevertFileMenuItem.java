@@ -40,7 +40,7 @@ public class RevertFileMenuItem extends AbstractOutlinerMenuItem implements Acti
 	}
 
 	protected static void revertOutlinerDocument(OutlinerDocument document) {
-		int result = JOptionPane.showConfirmDialog(document, "Revert File? All Changes will be lost.","",JOptionPane.YES_NO_OPTION);
+		int result = JOptionPane.showConfirmDialog(document, GUITreeLoader.reg.getText("confirmation_revert_file"), "", JOptionPane.YES_NO_OPTION);
 		if (result == JOptionPane.YES_OPTION) {
 			FileMenu.revertFile(document.getFileName(),document);
 		} else if (result == JOptionPane.NO_OPTION) {

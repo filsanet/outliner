@@ -19,6 +19,7 @@
 package com.organic.maynard.outliner;
 
 import java.util.HashMap;
+import com.organic.maynard.util.string.Replace;
 
 /**
  * @author  $Author$
@@ -93,18 +94,38 @@ public class GUITreeComponentRegistry {
 
 	public static final String BSH_CONSOLE = "bsh_console";
 	public static final String RUN_AS_BSH_SCRIPT_MENU_ITEM = "run_as_bsh_script";
+
+	// Other Constants
+	public static final String PLACEHOLDER_1 = "{$value_1}";	
+	public static final String PLACEHOLDER_2 = "{$value_2}";	
+	public static final String PLACEHOLDER_3 = "{$value_3}";	
 	
+	// Fields
 	private HashMap reg = new HashMap();
+	private HashMap textResources = new HashMap();
 
 
 	// Constructors
 	public GUITreeComponentRegistry() {}
 	
+	
+	// Accessors
 	public void add(GUITreeComponent comp) {
 		reg.put(comp.getGUITreeComponentID(), comp);
 	}
 
 	public GUITreeComponent get(String name) {
 		return (GUITreeComponent) reg.get(name);
+	}
+
+	public void addText(String key, String value) {
+		value = Replace.replace(value,"\\n", "\n");
+		value = Replace.replace(value,"\\\\", "\\");
+		
+		reg.put(key, value);
+	}
+
+	public String getText(String key) {
+		return (String) reg.get(key);
 	}
 }

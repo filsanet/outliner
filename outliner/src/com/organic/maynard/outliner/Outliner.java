@@ -41,7 +41,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	
 	// Constants
 	// for [temporary!] conditional debugging code	[srk] 8/04/01 7:33PM
-	public static final boolean DEBUG = true ;
+	public static final boolean DEBUG = true;
 	    	
 	// Language Handling
 	public static String LANGUAGE = "";
@@ -424,8 +424,8 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		Outliner.updateSaveMenuItem();
 		Outliner.updateSaveAllMenuItem();
 
-	// Notify the Help documents manager	[srk 8/5/01 1:23PM]
-	helpDoxMgr.someDocumentJustClosed(document) ;
+		// Notify the Help documents manager	[srk 8/5/01 1:23PM]
+		helpDoxMgr.someDocumentJustClosed(document);
 	}
 	
 	public static int openDocumentCount() {

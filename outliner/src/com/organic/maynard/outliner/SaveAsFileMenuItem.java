@@ -21,6 +21,7 @@ package com.organic.maynard.outliner;
 import java.awt.event.*;
 import javax.swing.*;
 import org.xml.sax.*;
+import com.organic.maynard.util.string.Replace;
 
 public class SaveAsFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
 
@@ -52,8 +53,12 @@ public class SaveAsFileMenuItem extends AbstractOutlinerMenuItem implements Acti
 		// Handle User Input
 		if (option == JFileChooser.APPROVE_OPTION) {
 			String filename = Outliner.chooser.getSelectedFile().getPath();
+			
 			if (!Outliner.isFileNameUnique(filename) && (!filename.equals(document.getFileName()))) {
-				JOptionPane.showMessageDialog(Outliner.outliner, "Cannot save to file: " + filename + " it is currently open.");
+				String msg = GUITreeLoader.reg.getText("message_cannot_save_file_already_open");
+				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
+
+				JOptionPane.showMessageDialog(Outliner.outliner, msg);
 				// We might want to move this test into the approveSelection method of the file chooser.
 				return;
 			}

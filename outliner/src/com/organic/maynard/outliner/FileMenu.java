@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.awt.*;
 import javax.swing.*;
 import org.xml.sax.*;
+import com.organic.maynard.util.string.Replace;
 
 // WebFile
 import com.yearahead.io.*;
@@ -53,8 +54,13 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// Get the file format object
 		String fileFormatName = document.settings.saveFormat.cur;
 		SaveFileFormat saveFileFormat = Outliner.fileFormatManager.getSaveFormat(fileFormatName);
+		String msg = null;
 		if (saveFileFormat == null) {
-			JOptionPane.showMessageDialog(document, "An error occurred. Could not save file: " + Outliner.chooser.getSelectedFile().getPath() + " because I couldn't retrieve the file format: " + fileFormatName);
+			msg = GUITreeLoader.reg.getText("error_could_not_save_no_file_format");
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, Outliner.chooser.getSelectedFile().getPath());
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_2, fileFormatName);
+
+			JOptionPane.showMessageDialog(document, msg);
 			return;
 		}
 		
@@ -102,25 +108,46 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				attributesExist = true;
 			}
 		}
+
 		
-		if (commentExists && !saveFileFormat.supportsComments() && USER_ABORTED == promptUser("The file format you are saving with: " + fileFormatName + ", does not support comments.\nThe document contains commented nodes whose commented status will NOT be saved.\nDo you want to save?")) {
-			return;
+		if (commentExists && !saveFileFormat.supportsComments()) {
+			msg = GUITreeLoader.reg.getText("error_file_format_does_not_support_comments");
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, fileFormatName);
+			if (USER_ABORTED == promptUser(msg)) {
+				return;
+			}
 		}
 
-		if (editableExists && !saveFileFormat.supportsEditability() && USER_ABORTED == promptUser("The file format you are saving with: " + fileFormatName + ", does not support editability settings.\nThe document contains editable node settings that will NOT be saved.\nDo you want to save?")) {
-			return;
+		if (editableExists && !saveFileFormat.supportsEditability()) {
+			msg = GUITreeLoader.reg.getText("error_file_format_does_not_support_editability");
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, fileFormatName);
+			if (USER_ABORTED == promptUser(msg)) {
+				return;
+			}
 		}
 
-		if (moveableExists && !saveFileFormat.supportsMoveability() && USER_ABORTED == promptUser("The file format you are saving with: " + fileFormatName + ", does not support moveability settings.\nThe document contains moveable node settings that will NOT be saved.\nDo you want to save?")) {
-			return;
+		if (moveableExists && !saveFileFormat.supportsMoveability()) {
+			msg = GUITreeLoader.reg.getText("error_file_format_does_not_support_moveability");
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, fileFormatName);
+			if (USER_ABORTED == promptUser(msg)) {
+				return;
+			}
 		}
 
-		if (attributesExist && !saveFileFormat.supportsAttributes() && USER_ABORTED == promptUser("The file format you are saving with: " + fileFormatName + ", does not support attributes.\nThe document contains nodes with attribute name/value pairs that will NOT be saved.\nDo you want to save?")) {
-			return;
+		if (attributesExist && !saveFileFormat.supportsAttributes()) {
+			msg = GUITreeLoader.reg.getText("error_file_format_does_not_support_attributes");
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, fileFormatName);
+			if (USER_ABORTED == promptUser(msg)) {
+				return;
+			}
 		}
 
-		if (documentAttributesExist && !saveFileFormat.supportsDocumentAttributes() && USER_ABORTED == promptUser("The file format you are saving with: " + fileFormatName + ", does not support document attributes.\nThe document contains document attribute name/value pairs that will NOT be saved.\nDo you want to save?")) {
-			return;
+		if (documentAttributesExist && !saveFileFormat.supportsDocumentAttributes()) {
+			msg = GUITreeLoader.reg.getText("error_file_format_does_not_support_document_attributes");
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, fileFormatName);
+			if (USER_ABORTED == promptUser(msg)) {
+				return;
+			}
 		}
 
 		
@@ -145,7 +172,10 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		}
 
 		if (!success) {
-			JOptionPane.showMessageDialog(document, "An error occurred. Could not save file: " + Outliner.chooser.getSelectedFile().getPath());
+			msg = GUITreeLoader.reg.getText("error_could_not_save_file");
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, Outliner.chooser.getSelectedFile().getPath());
+
+			JOptionPane.showMessageDialog(document, msg);
 			return;
 		}
 
@@ -179,8 +209,14 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		
 		// Get the file format object
 		OpenFileFormat openFileFormat = Outliner.fileFormatManager.getOpenFormat(fileFormat);
+		
+		String msg = null;
 		if (openFileFormat == null) {
-			JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. Could not open file: " + filename + " because I couldn't retrieve the file format: " + fileFormat);
+			msg = GUITreeLoader.reg.getText("error_could_not_open_no_file_format");
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_2, fileFormat);
+
+			JOptionPane.showMessageDialog(Outliner.outliner, msg);
 			return;
 		}
 		
@@ -191,7 +227,10 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			try {
 				stream = WebFile.open(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur, filename);
 			} catch(IOException e) {
-				JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. Could not open file: " + filename);
+				msg = GUITreeLoader.reg.getText("error_could_not_open_file");
+				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
+
+				JOptionPane.showMessageDialog(Outliner.outliner, msg);
 				RecentFilesList.removeFileNameFromList(filename);
 				return;
 			}
@@ -199,11 +238,17 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			try {
 				stream = new FileInputStream(filename);
 			} catch (FileNotFoundException fnfe) {
-				JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. File not found: " + filename);
+				msg = GUITreeLoader.reg.getText("error_file_not_found");
+				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
+
+				JOptionPane.showMessageDialog(Outliner.outliner, msg);
 				RecentFilesList.removeFileNameFromList(filename);
 				return;
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. Could not open file: " + filename);
+				msg = GUITreeLoader.reg.getText("error_could_not_open_file");
+				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
+
+				JOptionPane.showMessageDialog(Outliner.outliner, msg);
 				RecentFilesList.removeFileNameFromList(filename);
 				return;
 			}
@@ -211,7 +256,10 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 		int success = openFileFormat.open(tree, docInfo, stream);
 		if (success == FAILURE) {
-			JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. Could not open file: " + filename);
+			msg = GUITreeLoader.reg.getText("error_could_not_open_file");
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
+
+			JOptionPane.showMessageDialog(Outliner.outliner, msg);
 			RecentFilesList.removeFileNameFromList(filename);
 			return;
 		} else if (success == FAILURE_USER_ABORTED) {
@@ -281,8 +329,14 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 		// Get the file format object
 		OpenFileFormat openFileFormat = Outliner.fileFormatManager.getOpenFormat(fileFormat);
+		
+		String msg = null;
 		if (openFileFormat == null) {
-			JOptionPane.showMessageDialog(document, "An error occurred. Could not revert file: " + filename + " because I couldn't retrieve the file format: " + fileFormat);
+			msg = GUITreeLoader.reg.getText("error_could_not_revert_no_file_format");
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
+			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_2, fileFormat);
+
+			JOptionPane.showMessageDialog(document, msg);
 			return;
 		}
 		
@@ -298,7 +352,10 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			try {
 				stream = WebFile.open(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur, filename);
 			} catch(IOException e) {
-				JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. Could not open file: " + filename);
+				msg = GUITreeLoader.reg.getText("error_could_not_open_file");
+				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
+
+				JOptionPane.showMessageDialog(Outliner.outliner, msg);
 				RecentFilesList.removeFileNameFromList(filename);
 				return;
 			}
@@ -306,11 +363,17 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			try {
 				stream = new FileInputStream(filename);
 			} catch (FileNotFoundException fnfe) {
-				JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. File not found: " + filename);
+				msg = GUITreeLoader.reg.getText("error_file_not_found");
+				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
+
+				JOptionPane.showMessageDialog(Outliner.outliner, msg);
 				RecentFilesList.removeFileNameFromList(filename);
 				return;
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. Could not open file: " + filename);
+				msg = GUITreeLoader.reg.getText("error_could_not_open_file");
+				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
+
+				JOptionPane.showMessageDialog(Outliner.outliner, msg);
 				RecentFilesList.removeFileNameFromList(filename);
 				return;
 			}
@@ -411,10 +474,15 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 	// Utility Methods
 	private static int promptUser(String msg) {
-		Object[] options = {"Yes","No"};
+		String yes = GUITreeLoader.reg.getText("yes");
+		String no = GUITreeLoader.reg.getText("no");
+		String confirm_save = GUITreeLoader.reg.getText("confirm_save");
+
+
+		Object[] options = {yes, no};
 		int result = JOptionPane.showOptionDialog(Outliner.outliner,
 			msg,
-			"Confirm Save",
+			confirm_save,
 			JOptionPane.YES_NO_OPTION,
 			JOptionPane.QUESTION_MESSAGE,
 			null,

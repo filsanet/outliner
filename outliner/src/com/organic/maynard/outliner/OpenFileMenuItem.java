@@ -21,6 +21,7 @@ package com.organic.maynard.outliner;
 import java.awt.event.*;
 import javax.swing.*;
 import org.xml.sax.*;
+import com.organic.maynard.util.string.Replace;
 
 public class OpenFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
 
@@ -51,7 +52,10 @@ public class OpenFileMenuItem extends AbstractOutlinerMenuItem implements Action
 		if (option == JFileChooser.APPROVE_OPTION) {
 			String filename = Outliner.chooser.getSelectedFile().getPath();
 			if (!Outliner.isFileNameUnique(filename)) {
-				JOptionPane.showMessageDialog(Outliner.outliner, "The file: " + filename + " is already open.");
+				String msg = GUITreeLoader.reg.getText("message_file_already_open");
+				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
+
+				JOptionPane.showMessageDialog(Outliner.outliner, msg);
 				
 				// Change to the open window.
 				Outliner.menuBar.windowMenu.changeToWindow(Outliner.getDocument(filename));

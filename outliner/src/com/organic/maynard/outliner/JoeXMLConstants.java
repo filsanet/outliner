@@ -26,7 +26,10 @@ package com.organic.maynard.outliner;
 public interface JoeXMLConstants {
 
 	// Attribute Names
-	public static final String A_TEXT = "text";
+	public static final String A_TYPE = "type";
+ 	public static final String A_KEY = "key";
+ 	public static final String A_VALUE = "value";
+ 	public static final String A_TEXT = "text";
    	public static final String A_TITLE = "title";
 	public static final String A_ID = "id";
 	public static final String A_CLASS = "class";
@@ -38,5 +41,6 @@ public interface JoeXMLConstants {
 	// Element Names
 	public static final String E_SEPARATOR = "separator";
 	public static final String E_VERTICAL_STRUT = "vertical_strut";
+	public static final String E_ASSET = "asset";
 
 }
