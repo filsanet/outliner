@@ -466,10 +466,10 @@
 				<menuitem id="collapse_to_parent" class="com.organic.maynard.outliner.CollapseToParentMenuItem" text="Collapse To Parent"/>
 				<menuitem id="collapse_everything" class="com.organic.maynard.outliner.CollapseEverythingMenuItem" text="Collapse Everything"/>
 				<separator/>
-				<menuitem id="move_up" class="com.organic.maynard.outliner.MoveUpMenuItem" text="Move Up" keybinding="up" keybindingmodifiers="shift"/>
-				<menuitem id="move_down" class="com.organic.maynard.outliner.MoveDownMenuItem" text="Move Down" keybinding="down" keybindingmodifiers="shift"/>
-				<menuitem id="move_left" class="com.organic.maynard.outliner.MoveLeftMenuItem" text="Move Left" keybinding="left" keybindingmodifiers="shift"/>
-				<menuitem id="move_right" class="com.organic.maynard.outliner.MoveRightMenuItem" text="Move Right" keybinding="right" keybindingmodifiers="shift"/>
+				<menuitem id="move_up" class="com.organic.maynard.outliner.MoveUpMenuItem" text="Move Up" keybinding="up" keybindingmodifiers="control"/>
+				<menuitem id="move_down" class="com.organic.maynard.outliner.MoveDownMenuItem" text="Move Down" keybinding="down" keybindingmodifiers="control"/>
+				<menuitem id="move_left" class="com.organic.maynard.outliner.MoveLeftMenuItem" text="Move Left" keybinding="left" keybindingmodifiers="control"/>
+				<menuitem id="move_right" class="com.organic.maynard.outliner.MoveRightMenuItem" text="Move Right" keybinding="right" keybindingmodifiers="control"/>
 				<separator/>
 				<menuitem id="promote" class="com.organic.maynard.outliner.PromoteMenuItem" text="Promote" keybinding="tab" keybindingmodifiers="shift"/>
 				<menuitem id="demote" class="com.organic.maynard.outliner.DemoteMenuItem" text="Demote" keybinding="tab"/>
