@@ -44,13 +44,14 @@ import org.xml.sax.*;
  */
 
 public abstract class AbstractOutlinerMenu extends JMenu implements GUITreeComponent, JoeXMLConstants {
-
+	
 	// Constants
 	public static final String A_MNEMONIC = "mnemonic";
+	
 	// Constructors
 	public AbstractOutlinerMenu() {}
-
-
+	
+	
 	// GUITreeComponent interface
 	private String id = null;
 	public String getGUITreeComponentID() {return this.id;}
@@ -59,8 +60,9 @@ public abstract class AbstractOutlinerMenu extends JMenu implements GUITreeCompo
 	public void startSetup(AttributeList atts) {
 		setText(atts.getValue(A_TEXT));
 		
-		String mnemonic = atts.getValue(A_MNEMONIC).trim().toUpperCase();
+		String mnemonic = atts.getValue(A_MNEMONIC);
 		if (mnemonic != null && mnemonic.length() > 0) {
+			mnemonic = mnemonic.trim().toUpperCase();
 			int mnemonicInt = mnemonic.charAt(0);
 			setMnemonic(mnemonicInt);
 		}
@@ -70,8 +72,8 @@ public abstract class AbstractOutlinerMenu extends JMenu implements GUITreeCompo
 	}
 	
 	public void endSetup(AttributeList atts) {}
-
-
+	
+	
 	// Fix for java bug #4309156.
 	// This bug is fixed in jdk1.4.0 since this method no longer seems to get called.
 	// Instead jdk1.4.0 calls requestFocus(boolean) to obtain temporary focus.

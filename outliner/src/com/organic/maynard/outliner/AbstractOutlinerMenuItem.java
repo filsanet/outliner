@@ -47,13 +47,13 @@ import org.xml.sax.*;
  */
 
 public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUITreeComponent, JoeXMLConstants {
-
+	
 	// Constants
 	private static final String SHIFT = "shift";
 	private static final String CTRL = "control";
 	private static final String ALT = "alt";
 	private static final String META = "meta";
-
+	
 	private static final String DELETE = "delete";
 	private static final String TAB = "tab";
 	private static final String UP = "up";
@@ -62,6 +62,7 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 	private static final String RIGHT = "right";
 	private static final String PAGE_UP = "page_up";
 	private static final String PAGE_DOWN = "page_down";
+	private static final String F1 = "f1";
 	private static final String F2 = "f2";
 	private static final String F3 = "f3";
 	private static final String F4 = "f4";
@@ -77,8 +78,8 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 	
 	// Constructors
 	public AbstractOutlinerMenuItem() {}
-
-
+	
+	
 	// GUITreeComponent interface
 	private String id = null;
 	public String getGUITreeComponentID() {return this.id;}
@@ -87,6 +88,14 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 	public void startSetup(AttributeList atts) {
 		// Set the title of the menuItem
 		setText(atts.getValue(A_TEXT));
+		
+		// Set Mnemonic
+		String mnemonic = atts.getValue(AbstractOutlinerMenu.A_MNEMONIC);
+		if (mnemonic != null && mnemonic.length() > 0) {
+			mnemonic = mnemonic.trim().toUpperCase();
+			int mnemonicInt = mnemonic.charAt(0);
+			setMnemonic(mnemonicInt);
+		}
 		
 		// Set KeyBinding
 		int mask = 0;
@@ -106,7 +115,7 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 				mask += Event.META_MASK;
 			}
 		}
-
+		
 		
 		String keyBinding = atts.getValue(A_KEY_BINDING);
 		if (keyBinding != null) {
@@ -129,14 +138,34 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, mask, false));
 				} else if (keyBinding.equals(DELETE)) {
 					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, mask, false));
+				} else if (keyBinding.equals(F1)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, mask, false));
+				} else if (keyBinding.equals(F2)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F2, mask, false));
+				} else if (keyBinding.equals(F3)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F3, mask, false));
+				} else if (keyBinding.equals(F4)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, mask, false));
+				} else if (keyBinding.equals(F5)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, mask, false));
+				} else if (keyBinding.equals(F6)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F6, mask, false));
+				} else if (keyBinding.equals(F7)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F7, mask, false));
+				} else if (keyBinding.equals(F8)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F8, mask, false));
+				} else if (keyBinding.equals(F9)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F9, mask, false));
+				} else if (keyBinding.equals(F10)) {
+					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F10, mask, false));
 				} else if (keyBinding.equals(F11)) {
 					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, mask, false));
 				} else if (keyBinding.equals(F12)) {
 					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F12, mask, false));
-				}	
+				}
 			}
 		}
-
+		
 		// Add this menuItem to the parent menu.
 		((JMenu) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 2)).add(this);
 	}
