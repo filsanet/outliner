@@ -34,6 +34,8 @@
  
 package com.organic.maynard.outliner.util.find;
 
+import com.organic.maynard.outliner.util.ProgressDialog;
+
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.util.crawler.*;
 
@@ -67,6 +69,9 @@ import java.util.*;
 		
 		crawler.setFileFilter(fileFilter);
 		crawler.setDirectoryFilter(dirFilter);
+		
+		//ProgressDialog monitor = new ProgressDialog();
+		crawler.setProgressDialog(FindReplaceFrame.monitor);
 		
 		crawler.setVerbose(false);
 		

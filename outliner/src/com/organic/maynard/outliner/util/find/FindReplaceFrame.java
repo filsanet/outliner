@@ -34,6 +34,8 @@
  
 package com.organic.maynard.outliner.util.find;
 
+import com.organic.maynard.outliner.util.ProgressDialog;
+
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.util.crawler.*;
 
@@ -884,7 +886,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		}
 	}
 	
-	private int getFindReplaceMode() {
+	private static int getFindReplaceMode() {
 		if (RADIO_CURRENT_DOCUMENT.isSelected()) {
 			return MODE_CURRENT_DOCUMENT;
 		} else if (RADIO_ALL_OPEN_DOCUMENTS.isSelected()) {
@@ -918,7 +920,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		}
 	}
 	
-	private void find(OutlinerDocument doc) {
+	private static void find(OutlinerDocument doc) {
 		int mode = getFindReplaceMode();
 		
 		switch (mode) {
@@ -955,10 +957,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		}
 	}
 
-	private void find_all(OutlinerDocument doc) {
+	private static FindReplaceResultsModel results = null;
+	protected static ProgressDialog monitor = new ProgressDialog();
+	
+	private static void find_all(OutlinerDocument doc) {
 		int mode = getFindReplaceMode();
 		
-		FindReplaceResultsModel results = new FindReplaceResultsModel();
+		results = new FindReplaceResultsModel();
 		
 		switch (mode) {
 			case MODE_CURRENT_DOCUMENT:
@@ -993,22 +998,28 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				break;
 			
 			case MODE_FILE_SYSTEM:
-				findAllFileSystem(
-					results,
-					TEXTFIELD_PATH.getText(),
-					CHECKBOX_INCLUDE_SUB_DIRECTORIES.isSelected(),
-					TEXTFIELD_FILE_FILTER_INCLUDE.getText(), 
-					CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.isSelected(), 
-					TEXTFIELD_FILE_FILTER_EXCLUDE.getText(), 
-					CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.isSelected(), 
-					TEXTFIELD_DIR_FILTER_INCLUDE.getText(), 
-					CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.isSelected(), 
-					TEXTFIELD_DIR_FILTER_EXCLUDE.getText(), 
-					CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.isSelected(), 
-					TEXTAREA_FIND.getText(), 
-					CHECKBOX_IGNORE_CASE.isSelected(), 
-					CHECKBOX_REGEXP.isSelected()
-				);
+				Thread t = new Thread(new Runnable() { 
+					public void run() { 
+						findAllFileSystem(
+							results,
+							TEXTFIELD_PATH.getText(),
+							CHECKBOX_INCLUDE_SUB_DIRECTORIES.isSelected(),
+							TEXTFIELD_FILE_FILTER_INCLUDE.getText(), 
+							CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.isSelected(), 
+							TEXTFIELD_FILE_FILTER_EXCLUDE.getText(), 
+							CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.isSelected(), 
+							TEXTFIELD_DIR_FILTER_INCLUDE.getText(), 
+							CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.isSelected(), 
+							TEXTFIELD_DIR_FILTER_EXCLUDE.getText(), 
+							CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.isSelected(), 
+							TEXTAREA_FIND.getText(), 
+							CHECKBOX_IGNORE_CASE.isSelected(), 
+							CHECKBOX_REGEXP.isSelected()
+						);
+					} 
+				});
+				t.start();
+				monitor.show(); // Modal dialog, blocks thread.
 				break;
 			
 			case MODE_UNKNOWN:
@@ -1019,13 +1030,15 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		if (results.size() == 0) {
 			// Beep to alert user no result found.
 			Outliner.outliner.getToolkit().beep();
+			results = null; // cleanup.
 			return;
 		}
 
 		Outliner.findReplaceResultsDialog.show(results);
+		results = null; // cleanup.
 	}
 	
-	private void replace(OutlinerDocument doc) {
+	private static void replace(OutlinerDocument doc) {
 		int mode = getFindReplaceMode();
 
 		switch (mode) {
@@ -1062,7 +1075,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		}
 	}
 
-	private void replace_all(OutlinerDocument doc) {
+	private static void replace_all(OutlinerDocument doc) {
 		int mode = getFindReplaceMode();
 		
 		FindReplaceResultsModel results = new FindReplaceResultsModel();
@@ -1138,7 +1151,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		
 	// This method is public and should have no direct dependancy on 
 	// find/replace GUI so that it can be called from other classes.
-	public void find(
+	public static void find(
 		OutlinerDocument doc, 
 		String sFind,
 		String sReplace,
@@ -1201,7 +1214,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	private static FileSystemFind fileSystemFind = null;
 	private static FileSystemReplace fileSystemReplace = null;
 	
-	private String[] convertListToStringArray(java.util.List list) {
+	private static String[] convertListToStringArray(java.util.List list) {
 		String[] array = new String[list.size()];
 		for (int i = 0; i < list.size(); i++) {
 			array[i] = (String) list.get(i);
@@ -1209,7 +1222,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		return array;
 	}
 	
-	public void findAllFileSystem(
+	public static void findAllFileSystem(
 		FindReplaceResultsModel model, 
 		String startingPath, 
 		boolean includeSubDirectories,
@@ -1252,7 +1265,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		fileSystemFind.find(model, fileFilter, dirFilter, startingPath, sFind, isRegexp, ignoreCase, includeSubDirectories);
 	}
 	
-	public void replaceAllFileSystem(
+	public static void replaceAllFileSystem(
 		FindReplaceResultsModel model, 
 		String startingPath, 
 		boolean includeSubDirectories,
@@ -1300,7 +1313,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 
 	// This method is public and should have no direct dependancy on 
 	// find/replace GUI so that it can be called from other classes.
-	public void findAllOpenDocuments(
+	public static void findAllOpenDocuments(
 		String sFind,
 		String sReplace,
 		boolean selectionOnly,
@@ -1400,7 +1413,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		}
 	}
 
-	public void findAllAllOpenDocuments(
+	public static void findAllAllOpenDocuments(
 		FindReplaceResultsModel results,
 		String sFind,
 		String sReplace,
@@ -1431,7 +1444,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		}
 	}
 	
-	public void findAll(
+	public static void findAll(
 		FindReplaceResultsModel results,
 		OutlinerDocument doc, 
 		String sFind,
@@ -1598,7 +1611,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				String replacementTemp = sReplace;
 				int lineNumber = location.node.getLineNumber();
 				if (isRegexp) {
-					replacementTemp = this.replacementText.substring(0, this.matchLength + this.difference);
+					replacementTemp = FindReplaceFrame.replacementText.substring(0, FindReplaceFrame.matchLength + FindReplaceFrame.difference);
 				}
 				FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, "", false);
 				results.addResult(result);
@@ -1614,7 +1627,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 
 
 
-	public void replace(
+	public static void replace(
 		OutlinerDocument doc, 
 		String sFind,
 		String sReplace,
@@ -1648,14 +1661,14 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			// Create the undoable
 			int difference = sReplace.length() - (location.endIndex - location.startIndex);
 			if (isRegexp) {
-				difference = this.difference;
+				difference = FindReplaceFrame.difference;
 			}
 
 			String oldText = location.node.getValue();
 			String newText = oldText.substring(0,location.startIndex) + sReplace + oldText.substring(location.endIndex,oldText.length());
 
 			if (isRegexp) {
-				newText = oldText.substring(0,location.startIndex) + this.replacementText;
+				newText = oldText.substring(0,location.startIndex) + FindReplaceFrame.replacementText;
 			}
 										
 			int oldPosition = location.endIndex;
@@ -1696,7 +1709,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 
 	// This method is public and should have no direct dependancy on 
 	// find/replace GUI so that it can be called from other classes.
-	public void replaceAllOpenDocuments(
+	public static void replaceAllOpenDocuments(
 		String sFind,
 		String sReplace,
 		boolean selectionOnly,
@@ -1758,14 +1771,14 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				// Create the undoable
 				int difference = sReplace.length() - (location.endIndex - location.startIndex);
 				if (isRegexp) {
-					difference = this.difference;
+					difference = FindReplaceFrame.difference;
 				}
 	
 				String oldText = location.node.getValue();
 				String newText = oldText.substring(0,location.startIndex) + sReplace + oldText.substring(location.endIndex,oldText.length());
 	
 				if (isRegexp) {
-					newText = oldText.substring(0,location.startIndex) + this.replacementText;
+					newText = oldText.substring(0,location.startIndex) + FindReplaceFrame.replacementText;
 				}
 											
 				int oldPosition = location.endIndex;
@@ -1816,7 +1829,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		}
 	}
 
-	public void replaceAllAllOpenDocuments(
+	public static void replaceAllAllOpenDocuments(
 		FindReplaceResultsModel results,
 		String sFind,
 		String sReplace,
@@ -1847,7 +1860,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		}
 	}
 	
-	public void replaceAll(
+	public static void replaceAll(
 		FindReplaceResultsModel results,
 		OutlinerDocument doc, 
 		String sFind,
@@ -1924,7 +1937,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						String oldText = location.node.getValue();
 						String newText = oldText.substring(0,location.startIndex) + sReplace + oldText.substring(location.endIndex,oldText.length()); //
 						if (isRegexp) {
-							newText = oldText.substring(0,location.startIndex) + this.replacementText;
+							newText = oldText.substring(0,location.startIndex) + FindReplaceFrame.replacementText;
 						}
 						location.node.setValue(newText);
 						
@@ -1936,7 +1949,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						String replacementTemp = sReplace;
 						int lineNumber = location.node.getLineNumber();
 						if (isRegexp) {
-							replacementTemp = this.replacementText.substring(0, this.matchLength + this.difference);
+							replacementTemp = FindReplaceFrame.replacementText.substring(0, FindReplaceFrame.matchLength + FindReplaceFrame.difference);
 						}
 						FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, replacementTemp, true);
 						results.addResult(result);
@@ -1944,7 +1957,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						// Setup for next replacement
 						int difference = sReplace.length() - (location.endIndex - location.startIndex);
 						if (isRegexp) {
-							difference = this.difference;
+							difference = FindReplaceFrame.difference;
 						}
 
 		
@@ -2002,7 +2015,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						String oldText = location.node.getValue();
 						String newText = oldText.substring(0,location.startIndex) + sReplace + oldText.substring(location.endIndex,oldText.length()); //
 						if (isRegexp) {
-							newText = oldText.substring(0,location.startIndex) + this.replacementText;
+							newText = oldText.substring(0,location.startIndex) + FindReplaceFrame.replacementText;
 						}
 						location.node.setValue(newText);
 						
@@ -2014,7 +2027,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						String replacementTemp = sReplace;
 						int lineNumber = location.node.getLineNumber();
 						if (isRegexp) {
-							replacementTemp = this.replacementText.substring(0, this.matchLength + this.difference);
+							replacementTemp = FindReplaceFrame.replacementText.substring(0, FindReplaceFrame.matchLength + FindReplaceFrame.difference);
 						}
 						FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, replacementTemp, true);
 						results.addResult(result);
@@ -2022,7 +2035,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						// Setup for next replacement
 						int difference = sReplace.length() - (location.endIndex - location.startIndex);
 						if (isRegexp) {
-							difference = this.difference;
+							difference = FindReplaceFrame.difference;
 						}
 		
 						if (nodeEnd == location.node) {
@@ -2078,7 +2091,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				String oldText = location.node.getValue();
 				String newText = oldText.substring(0,location.startIndex) + sReplace + oldText.substring(location.endIndex,oldText.length()); //
 				if (isRegexp) {
-					newText = oldText.substring(0,location.startIndex) + this.replacementText;
+					newText = oldText.substring(0,location.startIndex) + FindReplaceFrame.replacementText;
 				}
 				location.node.setValue(newText);
 				
@@ -2090,7 +2103,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				String replacementTemp = sReplace;
 				int lineNumber = location.node.getLineNumber();
 				if (isRegexp) {
-					replacementTemp = this.replacementText.substring(0, this.matchLength + this.difference);
+					replacementTemp = FindReplaceFrame.replacementText.substring(0, FindReplaceFrame.matchLength + FindReplaceFrame.difference);
 				}
 				FindReplaceResult result = new FindReplaceResult(doc, lineNumber, location.startIndex, match, replacementTemp, true);
 				results.addResult(result);
@@ -2098,7 +2111,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				// Setup for next replacement
 				int difference = sReplace.length() - (location.endIndex - location.startIndex);
 				if (isRegexp) {
-					difference = this.difference;
+					difference = FindReplaceFrame.difference;
 				}
 
 				if (nodeEnd == location.node) {
@@ -2112,7 +2125,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		}
 	}
 	
-	private NodeRangePair findLocation (
+	private static NodeRangePair findLocation (
 		OutlinerDocument doc, 
 		String textToMatch,
 		String replacement,
@@ -2186,7 +2199,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		return location;
 	}
 	
-	private NodeRangePair findText(
+	private static NodeRangePair findText(
 		Node startNode, 
 		int start, 
 		Node endNode, 
@@ -2232,7 +2245,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				matchStart += start;
 				int matchEnd = matchStart;
 				if (isRegexp) {
-					matchEnd += this.matchLength;
+					matchEnd += FindReplaceFrame.matchLength;
 				} else {
 					matchEnd += match.length();
 				}
@@ -2265,12 +2278,12 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	}
 
 
-	private int matchLength = 0;
-	private int difference = 0;
-	private String replacementText = null;
+	private static int matchLength = 0;
+	private static int difference = 0;
+	private static String replacementText = null;
 	private static char[] reservedRegexChars = {'/'};
 	
-	private String prepareRegEx(boolean isReplace, boolean ignoreCase, String match, String replacement) {
+	private static String prepareRegEx(boolean isReplace, boolean ignoreCase, String match, String replacement) {
 		StringBuffer retVal = new StringBuffer();
 		
 		// Escape '/' characters
@@ -2305,7 +2318,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		}
 	}
 	
-	private int matchText(
+	private static int matchText(
 		String text, 
 		String match, 
 		String replacement, 
@@ -2336,16 +2349,16 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 					if (util.match(regex, input)) {
 						result = util.getMatch();
 						
-						this.replacementText = util.substitute(subRegex, text);
+						FindReplaceFrame.replacementText = util.substitute(subRegex, text);
 						
-						this.matchLength = result.length(); // Store length since this method does not return it.
-						this.difference = this.replacementText.length() - text.length();
+						FindReplaceFrame.matchLength = result.length(); // Store length since this method does not return it.
+						FindReplaceFrame.difference = FindReplaceFrame.replacementText.length() - text.length();
 						
 						int matchStartIndex = result.beginOffset(0);
-						int matchEndIndex = matchStartIndex + this.matchLength;
-						int replacementEndIndex = matchEndIndex + this.difference;
+						int matchEndIndex = matchStartIndex + FindReplaceFrame.matchLength;
+						int replacementEndIndex = matchEndIndex + FindReplaceFrame.difference;
 						
-						this.replacementText = this.replacementText.substring(matchStartIndex, this.replacementText.length());
+						FindReplaceFrame.replacementText = FindReplaceFrame.replacementText.substring(matchStartIndex, FindReplaceFrame.replacementText.length());
 						return matchStartIndex;
 					}
 				} catch (MalformedCachePatternException e) {

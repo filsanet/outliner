@@ -31,6 +31,7 @@
 
 package com.organic.maynard.util.crawler;
 
+import com.organic.maynard.outliner.util.ProgressDialog;
 import java.util.*;
 import java.io.*;
 
@@ -54,11 +55,13 @@ public class DirectoryCrawler {
 	private FileFilter dirFilter = null;
 	private FileFilter fileFilter = null;
 	private Comparator directoryComparator = null;
+	
+	private ProgressDialog monitor = null;
 
 
 	// The Constructors
 	public DirectoryCrawler() {
-		this(new BasicFileHandler(), new BasicFileFilter(), new BasicFileFilter(), null, DEPTH_FIRST, true);
+		this(new BasicFileHandler(), new BasicFileFilter(), new BasicFileFilter(), null, DEPTH_FIRST, true, null);
 	}
 
 	public DirectoryCrawler(
@@ -67,18 +70,24 @@ public class DirectoryCrawler {
 			FileFilter fileFilter, 
 			Comparator directoryComparator, 
 			int crawlStyle, 
-			boolean verbose) 
-	{
+			boolean verbose,
+			ProgressDialog monitor
+	) {
 		setFileHandler(fileHandler);
 		setDirectoryFilter(dirFilter);
 		setFileFilter(fileFilter);
 		setDirectoryComparator(directoryComparator);
 		setCrawlStyle(crawlStyle);
 		setVerbose(verbose);
+		setProgressDialog(monitor);
 	}
 
 	
 	// The Accessors
+	public void setProgressDialog(ProgressDialog monitor) {
+		this.monitor = monitor;
+	}
+	
 	public boolean isVerbose() {
 		return verbose;
 	}
@@ -156,8 +165,24 @@ public class DirectoryCrawler {
 		}
 
 		// Crawl the directory structure.
-		while (fileList.size() > 0) {
+		int progressDone = 0;
+		
+		while (fileList.size() > 0) {			
 			File file = (File) fileList.get(0);
+
+			// Update Monitor
+			if (monitor != null) {
+				if (monitor.isCanceled()) {
+				    monitor.close();
+				    break;
+				}
+				
+				//System.out.println("" + progressDone + ":" + (progressDone + fileList.size()) + ":" + file.getPath());
+				//monitor.setNote(file.getPath());
+				monitor.setMaximum(progressDone + fileList.size());
+				monitor.setProgress(progressDone);
+			}
+
 			fileList.remove(0);
 			
 			if (file.isDirectory()) {
@@ -187,7 +212,14 @@ public class DirectoryCrawler {
 				if (verbose) {System.out.println("       Handle File: " + file.getPath());}
 				fileHandler.handleFile(file);
 			}
+			
+			progressDone++;
 		}
+		
+		if (monitor != null) {
+			monitor.setProgress(progressDone);
+		}
+
 		return SUCCESS;
 	}
 	
