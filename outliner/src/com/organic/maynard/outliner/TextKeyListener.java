@@ -105,6 +105,10 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		Node currentNode = textArea.node;
  		TreeContext tree = currentNode.getTree();
 
+		// Set the Mark
+		tree.setCursorMarkPosition(textArea.getCaret().getMark());
+		tree.setCursorPosition(textArea.getCaretPosition(),false);
+
 		// This is detection for Windows
 		if (e.isPopupTrigger() && (currentNode.isAncestorSelected() || (tree.getEditingNode() == currentNode))) {
 			Outliner.macroPopup.show(e.getComponent(),e.getX(), e.getY());
