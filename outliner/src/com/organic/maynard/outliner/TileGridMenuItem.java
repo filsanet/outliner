@@ -46,7 +46,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import org.xml.sax.*;
-import com.organic.maynard.util.dialog.StanDialogTools ;
 
 // our class
 public class TileGridMenuItem 
@@ -98,20 +97,25 @@ public class TileGridMenuItem
 		double availWidth = curAvailSpace.getWidth() ;
 		double availHeight = curAvailSpace.getHeight() ;
 
-		// obtain minimum tiling column height
+		// obtain minimum tiling width and height values
 		// TBD
+		int minTileRowHeight = 60 ;
 		int minTileColumnWidth = 60 ;
 		
-		// determine the maximum number of columns
+		// determine the maximum number of rows and columns
+		int maxRows = (int)availHeight/minTileRowHeight;
 		int maxColumns = (int)availWidth/minTileColumnWidth;
 		
-		// some column vars
+		// some row and column vars
+		int nominalRowHeight = 0 ;
 		int nominalColumnWidth = 0 ;
+		int finalRowHeight = 0 ;
 		int finalColumnWidth = 0 ;
+		int actualRows = 0 ;
 		int actualColumns = 0 ;
 		
 		// plenty of room ?
-		boolean plentyOfRoom = maxColumns >= openDocCount ;
+		boolean plentyOfRoom = (maxColumns * maxRows) >= openDocCount ;
 		
 		// determine actual number of columns we'll need
 		actualColumns = plentyOfRoom

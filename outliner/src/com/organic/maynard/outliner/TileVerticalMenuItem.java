@@ -46,7 +46,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import org.xml.sax.*;
-import com.organic.maynard.util.dialog.StanDialogTools ;
 
 // our class
 public class TileVerticalMenuItem 

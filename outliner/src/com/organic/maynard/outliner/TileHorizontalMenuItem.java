@@ -46,7 +46,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import org.xml.sax.*;
-import com.organic.maynard.util.dialog.StanDialogTools ;
 
 // our class
 public class TileHorizontalMenuItem 
@@ -104,10 +103,6 @@ public class TileHorizontalMenuItem
 		
 		// determine the maximum number of rows
 		int maxRows = (int)availHeight/minTileRowHeight;
-		
-		String [] debugDisplay = {"maxRows: " + maxRows,
-					"openDocCount: " + openDocCount} ;
-		StanDialogTools.modalStringDialog(debugDisplay) ;
 		
 		// some row vars
 		int nominalRowHeight = 0 ;
