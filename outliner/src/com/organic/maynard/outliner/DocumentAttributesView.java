@@ -120,5 +120,7 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 			
 			tree.setAttribute(key, value);
 		}
+		
+		tree.doc.setFileModified(true);
 	}
 }

@@ -45,12 +45,14 @@ public class OPMLFileFormat
 	public static final String ELEMENT_WINDOW_RIGHT = "windowRight";
 	public static final String ELEMENT_BODY = "body";
 	public static final String ELEMENT_OUTLINE = "outline";
+	public static final String ELEMENT_DOCUMENT_ATTRIBUTE = "documentAttribute";
 
 	public static final String ELEMENT_APPLY_FONT_STYLE_FOR_COMMENTS = "applyStyleForComments";
 	public static final String ELEMENT_APPLY_FONT_STYLE_FOR_EDITABILITY = "applyStyleForEditability";
 	public static final String ELEMENT_APPLY_FONT_STYLE_FOR_MOVEABILITY = "applyStyleForMoveability";
 
 	public static final String ATTRIBUTE_TEXT = "text";
+	public static final String ATTRIBUTE_KEY = "key";
 	
 	public static final String ATTRIBUTE_IS_EDITABLE = "isEditable";
 	//public static final String ATTRIBUTE_IS_EDITABLE_INHERITED = "isEditableInherited";
@@ -89,6 +91,7 @@ public class OPMLFileFormat
 	public boolean supportsEditability() {return true;}
 	public boolean supportsMoveability() {return true;}	
 	public boolean supportsAttributes() {return true;}
+	public boolean supportsDocumentAttributes() {return true;}
 
 	private StringBuffer prepareFile(TreeContext tree, DocumentInfo docInfo) {
 		String lineEnding = Preferences.platformToLineEnding(docInfo.getLineEnding());
@@ -116,6 +119,8 @@ public class OPMLFileFormat
 		buf.append("<").append(ELEMENT_APPLY_FONT_STYLE_FOR_EDITABILITY).append(">").append(escapeXMLText("" + docInfo.getApplyFontStyleForEditability())).append("</").append(ELEMENT_APPLY_FONT_STYLE_FOR_EDITABILITY).append(">").append(lineEnding);
 		buf.append("<").append(ELEMENT_APPLY_FONT_STYLE_FOR_MOVEABILITY).append(">").append(escapeXMLText("" + docInfo.getApplyFontStyleForMoveability())).append("</").append(ELEMENT_APPLY_FONT_STYLE_FOR_MOVEABILITY).append(">").append(lineEnding);
 
+		buildDocumentAttributes(tree, lineEnding, buf);
+		
 		buf.append("</").append(ELEMENT_HEAD).append(">").append(lineEnding);
 
 		buf.append("<").append(ELEMENT_BODY).append(">").append(lineEnding);
@@ -127,6 +132,21 @@ public class OPMLFileFormat
 		
 		buf.append("</").append(ELEMENT_OPML).append(">").append(lineEnding);
 		return buf;
+	}
+	
+	private void buildDocumentAttributes(TreeContext tree, String lineEnding, StringBuffer buf) {
+		Iterator it = tree.getAttributeKeys();
+		if (it != null) {
+			while (it.hasNext()) {
+				String key = (String) it.next();
+				Object value = tree.getAttribute(key);
+				buf.append("<").append(ELEMENT_DOCUMENT_ATTRIBUTE);
+					buf.append(" ").append(ATTRIBUTE_KEY).append("=\"").append(escapeXMLAttribute(key));
+				buf.append("\">");
+				buf.append(escapeXMLText(value.toString()));
+				buf.append("</").append(ELEMENT_DOCUMENT_ATTRIBUTE).append(">").append(lineEnding);
+			}
+		}
 	}
 	
 	private void buildOutlineElement(Node node, String lineEnding, StringBuffer buf) {
@@ -247,11 +267,13 @@ public class OPMLFileFormat
 	public void endDocument () {}
 	
 	private Vector elementStack = new Vector();
+	private Vector attributesStack = new Vector();
 	private Node currentParent = null;
 		
 	public void startElement (String name, AttributeList atts) {
 		//System.out.println("Start element: " + name);
 		elementStack.add(name);
+		attributesStack.add(atts);
 		
 		if (name.equals(ELEMENT_OUTLINE)) {
 			NodeImpl node = new NodeImpl(tree, "");
@@ -303,11 +325,13 @@ public class OPMLFileFormat
 		}
 		
 		elementStack.removeElementAt(elementStack.size() - 1);
+		attributesStack.removeElementAt(attributesStack.size() - 1);
 	}
 	
 	public void characters(char ch[], int start, int length) throws SAXException {
 		String text = new String(ch, start, length);
 		String elementName = (String) elementStack.lastElement();
+		AttributeList atts = (AttributeList) attributesStack.lastElement();
 		//System.out.println(text);
 		
 		if (elementName.equals(ELEMENT_TITLE)) {
@@ -361,6 +385,10 @@ public class OPMLFileFormat
 		
 		} else if (elementName.equals(ELEMENT_APPLY_FONT_STYLE_FOR_MOVEABILITY)) {
 			docInfo.setApplyFontStyleForMoveability(Boolean.valueOf(text).booleanValue());
+		
+		} else if (elementName.equals(ELEMENT_DOCUMENT_ATTRIBUTE)) {
+			String key = atts.getValue(ATTRIBUTE_KEY);
+			tree.setAttribute(key, text);
 		}
 	}
 	

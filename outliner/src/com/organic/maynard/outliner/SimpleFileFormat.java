@@ -47,6 +47,7 @@ public class SimpleFileFormat
 	public boolean supportsEditability() {return false;}
 	public boolean supportsMoveability() {return false;}
 	public boolean supportsAttributes() {return false;}
+	public boolean supportsDocumentAttributes() {return false;}
 	
 	
 	// OpenFileFormat Interface

@@ -339,8 +339,9 @@ class NewAttributeDialog extends JDialog implements ActionListener {
 	private static final String ATTRIBUTE = "Attribute";
 	private static final String VALUE = "Value";
 
-	private static final String ERROR_EXISTANCE = "Error: The attribute cannot be empty.";
-	private static final String ERROR_UNIQUENESS = "Error: The attribute must be unique.";
+	private static final String ERROR_EXISTANCE = "Error: key cannot be empty.";
+	private static final String ERROR_UNIQUENESS = "Error: key must be unique.";
+	private static final String ERROR_ALPHA_NUMERIC = "Error: key must be alpha-numeric.";
 
 	// GUI Elements
 	private JButton buttonOK = new JButton(OK);
@@ -438,7 +439,13 @@ class NewAttributeDialog extends JDialog implements ActionListener {
 			errorLabel.setText(ERROR_EXISTANCE);
 			return;
 		}
-		
+
+		// Validate alpha-numeric
+		if (!isValidXMLAttributeName(key)) {
+			errorLabel.setText(ERROR_ALPHA_NUMERIC);
+			return;		
+		}
+				
 		// Validate Uniqueness
 		for (int i = 0; i < model.keys.size(); i++) {
 			String existingKey = (String) model.keys.get(i);
@@ -456,5 +463,33 @@ class NewAttributeDialog extends JDialog implements ActionListener {
 
 	private void cancel() {
 		hide();
+	}
+	
+	private boolean isValidXMLAttributeName(String text) {
+		// Must match (Letter | '_' | ':') (Letter | Digit | '.' | '-' | '_' | ':')*
+		// XML allows CombiningChar | Extender but I'm gonna be more restrictive since it's easier.
+		// at some point we should improve this or find some code that already does this.
+		
+		char[] chars = text.toCharArray();
+		
+		for (int i = 0; i < chars.length; i++) {
+			char c = chars[i];
+			
+			if (i == 0) {
+				if (Character.isLetter(c) || c == '_' || c == ':') {
+					continue;
+				} else {
+					return false;
+				}
+			} else {
+				if (Character.isLetterOrDigit(c) || c == '.' || c == '-' || c == '_' || c == ':') {
+					continue;
+				} else {
+					return false;
+				}			
+			}
+		}
+		
+		return true;
 	}
 }

@@ -70,6 +70,11 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		boolean editableExists = false;
 		boolean moveableExists = false;
 		boolean attributesExist = false;
+		boolean documentAttributesExist = false;
+		
+		if (document.tree.getAttributeCount() > 0) {
+			documentAttributesExist = true;
+		}
 		
 		Node node = document.tree.getRootNode();
 		int lineCount = -1;
@@ -111,6 +116,10 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		}
 
 		if (attributesExist && !saveFileFormat.supportsAttributes() && USER_ABORTED == promptUser("The file format you are saving with: " + fileFormatName + ", does not support attributes.\nThe document contains nodes with attribute name/value pairs that will NOT be saved.\nDo you want to save?")) {
+			return;
+		}
+
+		if (documentAttributesExist && !saveFileFormat.supportsDocumentAttributes() && USER_ABORTED == promptUser("The file format you are saving with: " + fileFormatName + ", does not support document attributes.\nThe document contains document attribute name/value pairs that will NOT be saved.\nDo you want to save?")) {
 			return;
 		}
 

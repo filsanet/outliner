@@ -63,5 +63,8 @@ public interface SaveFileFormat
 	
 	// can we store node attributes in this file format ?		[srk]
 	public boolean supportsAttributes();
+
+	// can we store document attributes in this file format ?		[md]
+	public boolean supportsDocumentAttributes();
 	
 	} // end interface SaveFileFormat
