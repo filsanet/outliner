@@ -941,10 +941,10 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	) {
 		// [srk] possible bug w/ bad params
 		// check for nulls
-		if (startNode = null
-			|| endNode = null
-			|| match = null
-			|| replacement = null) { return ; }
+		if (startNode == null
+			|| endNode == null
+			|| match == null
+			|| replacement == null) { return ; }
 				
 		String text = startNode.getValue();
 		
