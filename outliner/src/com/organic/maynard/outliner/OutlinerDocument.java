@@ -101,6 +101,7 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		Outliner.menuBar.windowMenu.changeToWindow(this);
 
 		dividerPosition = getSize().height - 120;
+		splitPane.setDividerLocation(dividerPosition); // This sets the position in the event that we don't show the atts initially.
 		
 		if (Preferences.getPreferenceBoolean(Preferences.SHOW_ATTRIBUTES).cur) {
 			showAttributes(true);

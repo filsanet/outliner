@@ -52,16 +52,40 @@ public class PrimitiveUndoableAttributeChange implements Undoable, PrimitiveUndo
 		
 	// Undoable Interface
 	public void undo() {
-		node.setAttribute(oldKey, oldValue);
-		if (!oldKey.equals(newKey)) {
-			node.removeAttribute(newKey);
+		if (oldKey == null) {
+			if (newKey == null) {
+				// Do Nothing, since this should never happen.
+			} else {
+				node.removeAttribute(newKey);
+			}
+		} else {
+			if (newKey == null) {
+				node.setAttribute(oldKey, oldValue);
+			} else {
+				if (!oldKey.equals(newKey)) {
+					node.removeAttribute(newKey);
+				}
+				node.setAttribute(oldKey, oldValue);
+			}		
 		}
 	}
 	
 	public void redo() {
-		node.setAttribute(newKey, newValue);
-		if (!oldKey.equals(newKey)) {
-			node.removeAttribute(oldKey);
+		if (oldKey == null) {
+			if (newKey == null) {
+				// Do Nothing, since this should never happen.
+			} else {
+				node.setAttribute(newKey, newValue);
+			}
+		} else {
+			if (newKey == null) {
+				node.removeAttribute(oldKey);
+			} else {
+				if (!oldKey.equals(newKey)) {
+					node.removeAttribute(oldKey);
+				}
+				node.setAttribute(newKey, newValue);
+			}		
 		}
 	}
 	
