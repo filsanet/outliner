@@ -63,7 +63,7 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 	private static final int ICON_HEIGHT = 25;
 	
 	
-	private boolean isDragging = false;	
+	private boolean isDragging = false;
 	
 	//JInternalFrame State
 	private int resizeDirection = 0;
@@ -79,6 +79,7 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 	public OutlinerDesktopManager() {
 		super();
 	}
+	
 	
 	public boolean isDragging() {
 		return isDragging;
@@ -222,7 +223,7 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 	}
 	
 	public void maximizeFrame(JInternalFrame f) {
-		//System.out.println("maximizeFrame");
+		//System.out.println("maximizeFrame: " + f.getTitle());
 		setMaximized(true);
 		super.maximizeFrame(f);
 		
@@ -237,12 +238,13 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 		((OutlinerDocument) f).hideBorder();
 		
 		// Make sure JInternalFrame is sized to the viewport, not the desktop.
-		f.setSize(new Dimension(Outliner.jsp.getViewport().getWidth(), Outliner.jsp.getViewport().getHeight()));
+		Dimension d = new Dimension(Outliner.jsp.getViewport().getWidth(), Outliner.jsp.getViewport().getHeight());
+		f.setSize(d);
 		updateDesktopSize(false);
 	}
 	
 	public void minimizeFrame(JInternalFrame f) {
-		//System.out.println("minimizeFrame");
+		//System.out.println("minimizeFrame: " + f.getTitle());
 		setMaximized(false);
 		super.minimizeFrame(f);
 		
@@ -258,10 +260,10 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 	
 	public void setBoundsForFrame(JComponent f, int newX, int newY, int newWidth, int newHeight) {
 		//System.out.println("setBoundsForFrame");
- 		if (!(f instanceof JInternalFrame)) {
+		if (!(f instanceof JInternalFrame)) {
 			newWidth = ICON_WIDTH;
 			newHeight = ICON_HEIGHT;
-						
+			
 			newX = findNearest(newX,ICON_WIDTH) * ICON_WIDTH;
 			newY = findNearest(newY,ICON_HEIGHT) * ICON_HEIGHT;
 		}

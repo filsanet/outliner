@@ -45,24 +45,34 @@ import javax.swing.*;
 
 public class OutlinerDesktop extends JDesktopPane implements Scrollable {
 	
-	public OutlinerDesktopManager desktopManager = new OutlinerDesktopManager();
-	
 	// The Constructor
 	public OutlinerDesktop() {
 		super();
 		//setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
-		setDesktopManager(desktopManager);
+		setDesktopManager(new OutlinerDesktopManager());
 	}
-
+	
+	
+	// Accessors
+	public boolean isMaximized() {
+		return ((OutlinerDesktopManager) getDesktopManager()).isMaximized();
+	}
+	
+	public void setMaximized(boolean maximized) {
+		((OutlinerDesktopManager) getDesktopManager()).setMaximized(maximized);
+	}
+	
+	
+	// Overridden Methods
 	public Dimension getPreferredSize() {
-		if (desktopManager.isMaximized()) {
+		if (isMaximized()) {
 			return new Dimension(getParent().getWidth(), getParent().getHeight());
 		}
 		
 		int scrollBarWidth = Outliner.jsp.getVerticalScrollBar().getWidth();
 		int maxWidth = getParent().getWidth() - scrollBarWidth;
 		int maxHeight = getParent().getHeight() - scrollBarWidth;
-
+		
 		Component[] children = getComponents();
 		
 		for (int i = 0; i < children.length; i++) {
@@ -93,7 +103,7 @@ public class OutlinerDesktop extends JDesktopPane implements Scrollable {
 	public Dimension getPreferredScrollableViewportSize() {
 		return getPreferredSize();
 	}
-
+	
 	public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
 		//System.out.println("getScrollableUnitIncrement");
 		switch(orientation) {
@@ -121,7 +131,7 @@ public class OutlinerDesktop extends JDesktopPane implements Scrollable {
 				throw new IllegalArgumentException("Invalid orientation: " + orientation);
 		}
 	}
-
+	
 	public boolean getScrollableTracksViewportHeight() {
 		//System.out.println("getScrollableTracksViewportHeight");
 		return false;
@@ -131,7 +141,7 @@ public class OutlinerDesktop extends JDesktopPane implements Scrollable {
 		//System.out.println("getScrollableTracksViewportWidth");
 		return false;
 	}
-
+	
 	// useful for filling the available space
 	public Dimension getCurrentAvailableSpace() {
 		return new Dimension(getParent().getWidth(), getParent().getHeight());
@@ -140,13 +150,12 @@ public class OutlinerDesktop extends JDesktopPane implements Scrollable {
 	// add any visible scrollbars to available space value
 	// useful before tiling, since scrollbars melt away post-tile
 	public void addScrollbarsToAvailSpace(Dimension availSpace) {
-	
 		// if a vertical scrollbar is showing ...
 		JScrollBar scrollbar = Outliner.jsp.getVerticalScrollBar();
 		if (scrollbar.isVisible()) {
 			availSpace.width += scrollbar.getWidth();
 		}
-			
+		
 		// if a horizontal scrollbar is showing ...
 		scrollbar = Outliner.jsp.getHorizontalScrollBar();
 		if (scrollbar.isVisible()) {

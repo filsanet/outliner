@@ -63,7 +63,7 @@ public class StackMenuItem extends AbstractOutlinerMenuItem implements ActionLis
 	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		if (!Outliner.desktop.desktopManager.isMaximized()) {
+		if (!Outliner.desktop.isMaximized()) {
 			Point p = new Point(STACK_X_START,STACK_Y_START);
 			int rowCount = 1;
 			int columnCount = 1;

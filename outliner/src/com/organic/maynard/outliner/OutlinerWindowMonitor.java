@@ -38,7 +38,6 @@
  * @version $Revision$, $Date$
  */
 
-// we're a part of this
 package com.organic.maynard.outliner;
 
 import com.organic.maynard.outliner.model.DocumentInfo;

@@ -53,6 +53,7 @@ public class NewFileMenuItem extends AbstractOutlinerMenuItem implements ActionL
 	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		new OutlinerDocument("");
+		OutlinerDocument doc = new OutlinerDocument("");
+		Outliner.menuBar.windowMenu.changeToWindow(doc);
 	}
 }

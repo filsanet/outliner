@@ -422,7 +422,8 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 			} else {
 				// Create a Document. This must come after visiblity otherwise the window won't be activated.
 				if (Preferences.getPreferenceBoolean(Preferences.NEW_DOC_ON_STARTUP).cur) {
-					new OutlinerDocument("");
+					OutlinerDocument doc = new OutlinerDocument("");
+					Outliner.menuBar.windowMenu.changeToWindow(doc);
 				}
 			}
 		}

@@ -146,9 +146,6 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		// Set the icon in the frame header.
 		setFrameIcon(ICON_DOCUMENT_UNSAVED);
 		
-		// Draw and Set Focus to the First Visible Node
-		Outliner.menuBar.windowMenu.changeToWindow(this);
-		
 		dividerPosition = getSize().height - 120;
 		splitPane.setDividerLocation(dividerPosition); // This sets the position in the event that we don't show the atts initially.
 		
@@ -157,13 +154,6 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		} else {
 			showAttributes(false);
 		}
-		
-		// Need to validate and redraw one last time since everything wasn't all put together until now. And the redraw
-		// inside showAttributes wouldn't be kicked off since we're not visible yet.
-		setVisible(true);
-		
-		validate();
-		panel.layout.redraw();
 	}
 	
 	public void destroy() {

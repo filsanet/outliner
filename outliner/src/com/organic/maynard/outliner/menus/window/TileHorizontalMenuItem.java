@@ -99,9 +99,9 @@ public class TileHorizontalMenuItem
 		}
 		
 		// if we're in a maximized state ...
-		if (Outliner.desktop.desktopManager.isMaximized()) {
+		if (Outliner.desktop.isMaximized()) {
 			// leave that state
-			Outliner.desktop.desktopManager.setMaximized(false);
+			Outliner.desktop.setMaximized(false);
 			
 			// if there's a topmost window
 			doc = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();

@@ -399,11 +399,17 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 	 * @param mode indicates if the current process is an "Open" or an "Import".
 	 */
 	protected static void openFile(DocumentInfo docInfo, FileProtocol protocol, int mode) {
-		// Validate uniqueness of the filename
-		// At some point this should probably incorporate the protocol as well. More like
-		// an URL: "file:///C:/path/to/my/file.txt" for Local File System Protocol
-		//         "phpwebfile:///path/to/my/file.txt" for PHP:WebFile Protocol
-		//         "null:///Untitled 1" for unsaved documents.
+		// if mode is invalid, abort
+		if (mode != MODE_OPEN && mode != MODE_IMPORT) {
+				System.out.println("FileMenu:OpenFile: invalid mode parameter");
+				return;
+		}
+		
+		// Validate uniqueness of the filename. At some point this should probably 
+		// incorporate the protocol as well. More like an URL: 
+		//   "file:///C:/path/to/my/file.txt" for Local File System Protocol
+		//   "phpwebfile:///path/to/my/file.txt" for PHP:WebFile Protocol
+		//   "null:///Untitled 1" for unsaved documents.
 		String filename = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH);
 		if (!Outliner.documents.isFileNameUnique(filename)) {
 			String msg = GUITreeLoader.reg.getText("message_file_already_open");
@@ -412,27 +418,11 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			return;
 		}
 		
-		JoeTree tree = Outliner.newTree(null); // TBD: let's make a real factory class for trees if we even neeed one.
-		
 		// try to open the file and pour its data into the tree
+		JoeTree tree = Outliner.newTree(null); // TBD: let's make a real factory class for trees if we even neeed one.
 		int openOrImportResult = openOrImportFileAndGetTree(tree, docInfo, protocol, mode);
-		
-		// if things didn't go well, abort
 		if ((openOrImportResult != SUCCESS) && (openOrImportResult != SUCCESS_MODIFIED)) { // Might be good to have codes we can do % on.
 			return;
-		}
-		
-		// if mode is invalid, abort
-		switch (mode) {
-			case MODE_OPEN:
-			
-			case MODE_IMPORT:
-				break;
-				
-			default:
-				// we should never get here
-				System.out.println("FileMenu:OpenFile: invalid mode parameter");
-				return;
 		}
 		
 		OutlinerDocument newDoc = new OutlinerDocument(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PATH), docInfo);
@@ -441,7 +431,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		newDoc.settings.setUseDocumentSettings(true);
 		
 		// hook the outline tree to the doc, and the doc to the outline tree
-		//tree.setDocument(newDoc);
 		newDoc.setTree(tree);
 		
 		// [srk] bug:we can get to this point with no line ending set
@@ -454,23 +443,47 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		syncDocumentToDocInfo(newDoc, mode);
 		
 		// make any final modal adjustments
-		switch (mode) {
-			case MODE_IMPORT:
-				// we were imported
-				PropertyContainerUtil.setPropertyAsBoolean(docInfo, DocumentInfo.KEY_IMPORTED, true);
-				break;
-				
-			case MODE_OPEN:
-				break;
-				
-			default:
-				break;
+		if (mode == MODE_IMPORT) {
+			PropertyContainerUtil.setPropertyAsBoolean(docInfo, DocumentInfo.KEY_IMPORTED, true);
 		}
 		
 		// make sure we're in the Recent Files list
 		RecentFilesList.addFileNameToList(docInfo);
 		
 		setupAndDraw(docInfo, newDoc, openOrImportResult);
+	}
+	
+	// revert a file to it's previous state
+	// TBD get this to work with IMPORTs
+	protected static void revertFile(OutlinerDocument document) {
+		// get the document info and file protocol
+		DocumentInfo docInfo = document.getDocumentInfo();
+		FileProtocol protocol = Outliner.fileProtocolManager.getProtocol(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PROTOCOL_NAME));
+		
+		// set mode based on whether we were OPENed or IMPORTed
+		int mode = PropertyContainerUtil.getPropertyAsBoolean(docInfo, DocumentInfo.KEY_IMPORTED) ? MODE_IMPORT:MODE_OPEN;
+		
+		// try to open the file and pour its data into that tree
+		JoeTree tree = Outliner.newTree(null);
+		int openOrImportResult = openOrImportFileAndGetTree(tree, docInfo, protocol, mode);
+		if ((openOrImportResult != SUCCESS) && (openOrImportResult != SUCCESS_MODIFIED)) {
+			return;
+		} else {
+			document.setTree(tree);
+		}
+		
+		document.undoQueue.clear();
+		document.hoistStack.clear();
+		
+		// Reset the document attributes
+		Outliner.documentAttributes.configure(tree);
+		
+		// Reset the document preferences
+		document.getSettings().setUseDocumentSettings(true);
+		syncDocumentToDocInfo(document, MODE_OPEN); // MODE_OPEN works becuase we're reverting so the existing values are correct.
+		((DocumentSettingsView) GUITreeLoader.reg.get(GUITreeComponentRegistry.JDIALOG_DOCUMENT_SETTINGS_VIEW)).configure(document.getSettings());
+		
+		setupAndDraw(docInfo, document, openOrImportResult);
 	}
 	
 	private static void syncDocumentToDocInfo(OutlinerDocument doc, int mode) {
@@ -515,6 +528,14 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		doc.settings.getCreateModDatesFormat().restoreCurrentToDefault();
 		doc.settings.getCreateModDatesFormat().restoreTemporaryToDefault();
 		
+		doc.settings.getOwnerName().def = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_OWNER_NAME);
+		doc.settings.getOwnerName().restoreCurrentToDefault();
+		doc.settings.getOwnerName().restoreTemporaryToDefault();
+		
+		doc.settings.getOwnerEmail().def = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_OWNER_EMAIL);
+		doc.settings.getOwnerEmail().restoreCurrentToDefault();
+		doc.settings.getOwnerEmail().restoreTemporaryToDefault();
+		
 		doc.settings.setDateCreated(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_DATE_CREATED));
 		doc.settings.setDateModified(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_DATE_MODIFIED));
 		
@@ -525,44 +546,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		int top = PropertyContainerUtil.getPropertyAsInt(docInfo, DocumentInfo.KEY_WINDOW_TOP);
 		doc.setSize(width, height);
 		doc.setLocation(left, top);
-	}
-	
-	// revert a file to it's previous state
-	// TBD get this to work with IMPORTs
-	protected static void revertFile(OutlinerDocument document) {
-		// get the document info and file protocol
-		DocumentInfo docInfo = document.getDocumentInfo();
-		FileProtocol protocol = Outliner.fileProtocolManager.getProtocol(PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_PROTOCOL_NAME));
-		
-		// set mode based on whether we were OPENed or IMPORTed
-		int mode = PropertyContainerUtil.getPropertyAsBoolean(docInfo, DocumentInfo.KEY_IMPORTED) ? MODE_IMPORT:MODE_OPEN;
-		
-		JoeTree tree = Outliner.newTree(null);
-		
-		// try to open the file and pour its data into that tree
-		int openOrImportResult = openOrImportFileAndGetTree(tree, docInfo, protocol, mode);
-		
-		if ((openOrImportResult != SUCCESS) && (openOrImportResult != SUCCESS_MODIFIED)) {
-			return;
-		}
-		
-		// swap in the new tree
-		document.setTree(tree);
-		//tree.setDocument(document);
-		//document.tree = tree;
-		
-		document.undoQueue.clear();
-		document.hoistStack.clear();
-		
-		// Reset the document attributes
-		Outliner.documentAttributes.configure(tree);
-		
-		// Reset the document preferences
-		document.getSettings().setUseDocumentSettings(true);
-		syncDocumentToDocInfo(document, MODE_OPEN); // MODE_OPEN works becuase we're reverting so the existing values are correct.
-		((DocumentSettingsView) GUITreeLoader.reg.get(GUITreeComponentRegistry.JDIALOG_DOCUMENT_SETTINGS_VIEW)).configure(document.getSettings());
-		
-		setupAndDraw(docInfo, document, openOrImportResult);
 	}
 	
 	
@@ -690,10 +673,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			firstVisibleNode = tree.getVisibleNodes().get(0);
 		}
 		
-		// Record Document Settings
-		doc.settings.getOwnerName().cur = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_OWNER_NAME);
-		doc.settings.getOwnerEmail().cur = PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_OWNER_EMAIL);
-		
 		tree.setEditingNode(firstVisibleNode);
 		tree.setCursorPosition(0);
 		tree.setComponentFocus(OutlineLayoutManager.TEXT);
@@ -707,6 +686,12 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		if (openOrImportResult == SUCCESS_MODIFIED) {
 			doc.setModified(true);
 		}
+		
+		// Maximize document if necessary
+		//if (Outliner.desktop.isMaximized()) {
+		//	Outliner.desktop.getDesktopManager().maximizeFrame(doc);
+		//}
+		Outliner.menuBar.windowMenu.changeToWindow(doc);
 	}
 	
 	

@@ -64,7 +64,7 @@ public class MaximizeVerticalMenuItem
 	public void actionPerformed(ActionEvent e) {
 		// if we're not in a totally-maximized state 
 		// [which would make this all pointless] ...
-		if (!Outliner.desktop.desktopManager.isMaximized()) {
+		if (!Outliner.desktop.isMaximized()) {
 			
 			// grabaholda the topmost doc
 			OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();

@@ -138,35 +138,40 @@ public class WindowMenu extends AbstractOutlinerMenu implements DocumentReposito
 	
 	// Window Menu Methods
 	public static void changeToWindow(OutlinerDocument doc) {
-		if (doc == null) {
-			return;
-		}
-		
-		try {
-			// DeIconify if neccessary
-			if (doc.isIcon()) {
-				doc.setIcon(false);
-			}
-			
-			doc.moveToFront();
-			
-			if (Outliner.desktop.desktopManager.isMaximized()) {
-				// Minimize the previous document if it exists
-				OutlinerDocument prevDoc = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
-				if (prevDoc != null) {
-					OutlinerDesktopManager.activationBlock = true;
-					prevDoc.setMaximum(false);
-					prevDoc.setSelected(false);
-					OutlinerDesktopManager.activationBlock = false;
+		if (doc != null) {
+			try {
+				// DeIconify if neccessary
+				if (doc.isIcon()) {
+					doc.setIcon(false);
 				}
 				
-				// Maximize the current document.
-				doc.setMaximum(true);
+				doc.moveToFront();
+				
+				if (Outliner.desktop.isMaximized()) {
+					// Minimize the previous document if it exists
+					OutlinerDocument prevDoc = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
+					if (prevDoc != null && prevDoc != doc) {
+						OutlinerDesktopManager.activationBlock = true;
+						prevDoc.setMaximum(false);
+						prevDoc.setSelected(false);
+						OutlinerDesktopManager.activationBlock = false;
+					}
+					
+					// Maximize the current document.
+					doc.setMaximum(true);
+				}
+				
+				doc.setSelected(true);
+			} catch (java.beans.PropertyVetoException pve) {
+				pve.printStackTrace();
 			}
 			
-			doc.setSelected(true);
-		} catch (java.beans.PropertyVetoException pve) {
-			pve.printStackTrace();
+			// Document may not be visible if this is the first time we're changing to it.
+			if (!doc.isVisible()) {
+				doc.setVisible(true);
+				doc.validate();
+				doc.panel.layout.redraw();
+			}
 		}
 	}
 }
