@@ -71,5 +71,33 @@ public class XMLTools {
 	public static String getElementEnd(String elementName) {
 		return "</" + elementName + ">";
 	}
+
+	public static boolean isValidXMLAttributeName(String text) {
+		// Must match (Letter | '_' | ':') (Letter | Digit | '.' | '-' | '_' | ':')*
+		// XML allows CombiningChar | Extender but I'm gonna be more restrictive since it's easier.
+		// at some point we should improve this or find some code that already does this.
+
+		char[] chars = text.toCharArray();
+
+		for (int i = 0; i < chars.length; i++) {
+			char c = chars[i];
+
+			if (i == 0) {
+				if (Character.isLetter(c) || c == '_' || c == ':') {
+					continue;
+				} else {
+					return false;
+				}
+			} else {
+				if (Character.isLetterOrDigit(c) || c == '.' || c == '-' || c == '_' || c == ':') {
+					continue;
+				} else {
+					return false;
+				}			
+			}
+		}
+
+		return true;
+	}
 }
 
