@@ -381,12 +381,6 @@ public class OPMLFileFormat extends XMLProcessor implements SaveFileFormat, Open
 			currentParent.appendChild(node);
 			currentParent = node;
 			
-		} else if (qName.equals(ELEMENT_DOCUMENT_ATTRIBUTE)) {
-			// This is here to catch empty document attributes since they won't 
-			// trigger a characters call
-			String key = atts.getValue(ATTRIBUTE_KEY);
-			boolean isReadOnly = Boolean.valueOf(atts.getValue(ATTRIBUTE_IS_READ_ONLY)).booleanValue();
-			tree.setAttribute(key, "", isReadOnly);
 		}
 		
 		super.startElement(namespaceURI, localName, qName, atts);
@@ -454,8 +448,6 @@ public class OPMLFileFormat extends XMLProcessor implements SaveFileFormat, Open
 			PropertyContainerUtil.setPropertyAsBoolean(docInfo, DocumentInfo.KEY_APPLY_FONT_STYLE_FOR_MOVEABILITY, Boolean.valueOf(text).booleanValue());
 		
 		} else if (elementName.equals(ELEMENT_DOCUMENT_ATTRIBUTE)) {
-			// This creates document attributes that have a value since we don't know
-			// the value until we get here.
 			String key = atts.getValue(ATTRIBUTE_KEY);
 			boolean isReadOnly = tree.isReadOnly(key);
 			tree.setAttribute(key, text, isReadOnly);

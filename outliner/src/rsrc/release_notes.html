@@ -6,6 +6,15 @@
 		<h2>JOE Release Notes</h2>
 		<hr>
 		<a name="release_notes"></a>
+		<h2>1.8.10.5 - 5/18/04</h2>
+			<b>Bug Fixes:</b>
+			<ol>
+				<li>Fixed a bug in the way character data is accessed in the XMLProcessor base 
+				class which was causing document attributes to not get saved correctly in OPML and 
+				OML files when an &amp; character appeared in them. This should also fix situations
+				where multiple attributes where being created when they should not have been on opening
+				an OPML or OML file.</li>
+			</ol>
 		<h2>1.8.10.4 - 5/17/04</h2>
 			<b>Bug Fixes:</b>
 			<ol>
@@ -26,10 +35,10 @@
 				<li>Changed "Merge with Spaces" to "Merge with Delimiter" and added preferences to the "Misc" panel for setting the delimiter, enabling/disabling trimming of whitespace, and enabling/disabling the inclusion of empty nodes.</li>
 			</ol>
 			<b>Other Changes:</b>
-				<ol>
-					<li>We've got a more extensive and correct german translation file thanks to Hans-Ulrich Teufel.</li>
-					<li>We've got a more extensive and correct japanese translation file thanks to ka2hiro.</li>
-				</ol>
+			<ol>
+				<li>We've got a more extensive and correct german translation file thanks to Hans-Ulrich Teufel.</li>
+				<li>We've got a more extensive and correct japanese translation file thanks to ka2hiro.</li>
+			</ol>
 		<h2>1.8.10.3 - 02/23/04</h2>
 			<b>Bug Fixes:</b>
 			<ol>

@@ -36,7 +36,7 @@ To import a new repository:
 cvs -d:ext:loginname@cvs.yourproject.sourceforge.net:/cvsroot/yourproject import directoryname vendor start 
 
 To checkout a repository:
-cvs -z3 -d:ext:maynardd@cvs.outliner.sourceforge.net:/cvsroot/outliner co outliner 
+cvs -z3 -d:ext:maynardd@cvs.sourceforge.net:/cvsroot/outliner co outliner 
 
 SSH INSTRUCTIONS:
 ssh -l loginname yourproject.sourceforge.net 

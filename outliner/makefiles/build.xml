@@ -12,7 +12,7 @@
 			<property name="doc-api" value="${doc}/api"/>
 			<property name="path-release" value="release"/>
 			<property name="path-release-dist" value="release/outliner"/>
-			<property name="dist" value="outliner-1.8.10.4"/>
+			<property name="dist" value="outliner-1.8.10.5"/>
 			<property name="jar_libpath" value="."/>
 			<property name="jar_modulepath" value="../modules"/>
 		<target name="init">
