@@ -70,7 +70,7 @@
 		<asset type="text" key="replace" value="Replace"/>
 		<asset type="text" key="replace_all" value="Replace All"/>
 		<asset type="text" key="start_at_top" value="Start at top"/>
-		<asset type="text" key="wrap_arround" value="Wrap around"/>
+		<asset type="text" key="wrap_around" value="Wrap around"/>
 		<asset type="text" key="selection_only" value="Selection only"/>
 		<asset type="text" key="ignore_case" value="Ignore case"/>
 		<asset type="text" key="include_read_only_nodes" value="Include read-only nodes for replace"/>
