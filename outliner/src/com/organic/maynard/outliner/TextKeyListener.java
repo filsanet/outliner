@@ -417,6 +417,9 @@ public class TextKeyListener implements KeyListener, MouseListener {
 				if (startSelection != endSelection) {
 					newCaretPosition = startSelection;
 					newMarkPosition = startSelection;
+					// TBD [srk] bug here: 2nd arg to substring can be out of range
+					//	causing a StringIndexOutOfBoundsException
+					//	-- this needs to be investigated
 					newText = oldText.substring(0, startSelection) + oldText.substring(endSelection, oldText.length());				
 				} else if (startSelection == 0) {
 					newCaretPosition = 0;
