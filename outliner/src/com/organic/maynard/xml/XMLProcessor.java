@@ -74,6 +74,21 @@ public abstract class XMLProcessor extends DefaultHandler implements XMLParserCo
 	 */
 	protected Stack component_stack = null;
 	
+	/**
+	 * Maintains a stack of the current element character data as the XML is processed.
+	 */
+	protected Stack characters_stack = null;
+	
+	/**
+	 * Maintains a stack of the current element QNames as the XML is processed.
+	 */
+	protected Stack elements_stack = null;
+	
+	/**
+	 * Maintains a stack of the current element attributes as the XML is processed.
+	 */
+	protected Stack attributes_stack = null;
+	
 	
 	// Instance Fields
 	/**
@@ -124,8 +139,11 @@ public abstract class XMLProcessor extends DefaultHandler implements XMLParserCo
 	/**
 	 * Initializes the DOM implementation allowing reuse of this object.
 	 */
-	private void reset() {
+	protected void reset() {
 		component_stack = new Stack();
+		elements_stack = new Stack();
+		attributes_stack = new Stack();
+		characters_stack = new Stack();
 	}
 	
 	
@@ -243,11 +261,16 @@ public abstract class XMLProcessor extends DefaultHandler implements XMLParserCo
 	protected Object component = null;
 	
 	/**
-	 * Start of element processing.
+	 * Start of element processing. This should be called at the end of startElement
+	 * implementations by subclasses so that the component can be setup there and
+	 * stored here.
 	 */
 	public void startElement(String namespaceURI, String localName, String qName, Attributes atts) {
 		component_stack.push(component);
 		component = null;
+		elements_stack.push(qName);
+		attributes_stack.push(atts);
+		characters_stack.push(new StringBuffer());
 	}
 	
 	/**
@@ -255,13 +278,17 @@ public abstract class XMLProcessor extends DefaultHandler implements XMLParserCo
 	 */
 	public void endElement(String namespaceURI, String localName, String qName) {
 		component_stack.pop();
+		elements_stack.pop();
+		attributes_stack.pop();
+		characters_stack.pop();
 	}
 	
 	/**
 	 * Characters processing.
 	 */
 	public void characters(char ch[], int start, int length) throws SAXException {
-		// String text = new String(ch, start, length);
+		StringBuffer buf = (StringBuffer) characters_stack.peek();
+		buf.append(new String(ch, start, length));
 	}
 	
 	

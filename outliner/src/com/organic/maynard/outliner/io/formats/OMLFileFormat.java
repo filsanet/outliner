@@ -178,7 +178,7 @@ public class OMLFileFormat extends XMLProcessor implements SaveFileFormat, OpenF
 		}
 		buf.append("\t");
 		buf.append("<").append(ELEMENT_METADATA).append(" ").append(ATTRIBUTE_NAME).append("=\"").append(escapeXMLAttribute(name)).append("\">");
-		buf.append("<![CDATA[").append(escapeXMLText(value)).append("]]>");
+		XMLTools.writeCDATA(buf, value);
 		buf.append("</").append(ELEMENT_METADATA).append(">").append(line_ending);
 	}
 	
@@ -394,23 +394,12 @@ public class OMLFileFormat extends XMLProcessor implements SaveFileFormat, OpenF
 		text = StringTools.replace(text, ">", "&gt;");
 		return text;
 	}
-
-	private String escapeXMLText(String text) {
-		text = StringTools.replace(text, "&", "&amp;");
-		text = StringTools.replace(text, "<", "&lt;");
-		text = StringTools.replace(text, "]]>", "]]&gt;");
-		return text;
-	}
-	
 	
 	
 	// OpenFileFormat Interface
 	private boolean errorOccurred = false;
-	
-  private DocumentInfo docInfo = null;
-  private JoeTree tree = null;
-	private ArrayList elementStack = new ArrayList();
-	private ArrayList attributesStack = new ArrayList();
+	private DocumentInfo docInfo = null;
+	private JoeTree tree = null;
 	private Node currentParent = null;
 	
 	public int open(JoeTree tree, DocumentInfo docInfo, InputStream stream) {
@@ -443,10 +432,9 @@ public class OMLFileFormat extends XMLProcessor implements SaveFileFormat, OpenF
 		}
 		
 		// Cleanup
+		super.reset();
 		this.tree = null;
 		this.docInfo = null;
-		this.elementStack.clear();
-		this.attributesStack.clear();
 		this.currentParent = null;
 		
 		return success;
@@ -461,14 +449,10 @@ public class OMLFileFormat extends XMLProcessor implements SaveFileFormat, OpenF
 			currentParent.removeChild(currentParent.getLastChild());
 		}
 	}
-    
+	
 	public void endDocument () {}
 	
 	public void startElement(String namespaceURI, String localName, String qName, Attributes atts) {
-		//System.out.println("Start element: " + qName);
-		elementStack.add(qName);
-		attributesStack.add(atts);
-		
 		if (qName.equals(ELEMENT_OUTLINE)) {
 			NodeImpl node = new NodeImpl(tree, "");
 			
@@ -489,41 +473,39 @@ public class OMLFileFormat extends XMLProcessor implements SaveFileFormat, OpenF
 			currentParent.appendChild(node);
 			currentParent = node;
 		}
+		
+		super.startElement(namespaceURI, localName, qName, atts);
 	}
 	
 	public void endElement(String namespaceURI, String localName, String qName) {
-		//System.out.println("End element: " + qName);
+		String elementName = (String) elements_stack.peek();
+		Attributes atts = (Attributes) attributes_stack.peek();
+		String text = ((StringBuffer) characters_stack.peek()).toString();
 		
 		if (qName.equals(ELEMENT_OUTLINE)) {
 			Node parentNode = currentParent.getParent();
 			currentParent = parentNode;
-		}
-		
-		elementStack.remove(elementStack.size() - 1);
-		attributesStack.remove(attributesStack.size() - 1);
-	}
-	
-	public void characters(char ch[], int start, int length) throws SAXException {
-		String text = new String(ch, start, length);
-		String elementName = (String) elementStack.get(elementStack.size() - 1);
-		Attributes atts = (Attributes) attributesStack.get(attributesStack.size() - 1);
-		//System.out.println(text);
-		
-		if (elementName.equals(ELEMENT_METADATA)) {
+		} else if (elementName.equals(ELEMENT_METADATA)) {
 			String name = atts.getValue(ATTRIBUTE_NAME);
 			if (!handleMetaDataCharacters(name, text)) {
-				throw new SAXException("Error handling metadata element.");
+				System.out.println("Error handling metadata element.");
 			}
 		} else if (elementName.equals(ELEMENT_ITEM)) {
 			String name = atts.getValue(ATTRIBUTE_NAME);
 			if (!handleItemCharacters(name, text)) {
-				throw new SAXException("Error handling item element.");
+				System.out.println("Error handling item element.");
 			}
 		} else if (elementName.equals(ELEMENT_DATA)) {
 			if (!handleDataCharacters(text)) {
-				throw new SAXException("Error handling data element.");
+				System.out.println("Error handling data element.");
 			}
 		}
+		
+		super.endElement(namespaceURI, localName, qName);
+	}
+	
+	public void characters(char ch[], int start, int length) throws SAXException {
+		super.characters(ch, start, length);
 	}
 	
 	private boolean handleItemCharacters(String name, String text) {

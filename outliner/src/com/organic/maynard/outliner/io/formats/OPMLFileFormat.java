@@ -269,8 +269,6 @@ public class OPMLFileFormat extends XMLProcessor implements SaveFileFormat, Open
 	
 	private DocumentInfo docInfo = null;
 	private JoeTree tree = null;
-	private ArrayList elementStack = new ArrayList();
-	private ArrayList attributesStack = new ArrayList();
 	private Node currentParent = null;
 	
 	public int open(JoeTree tree, DocumentInfo docInfo, InputStream stream) {
@@ -303,10 +301,9 @@ public class OPMLFileFormat extends XMLProcessor implements SaveFileFormat, Open
 		}
 		
 		// Cleanup
+		super.reset();
 		this.tree = null;
 		this.docInfo = null;
-		this.elementStack.clear();
-		this.attributesStack.clear();
 		this.currentParent = null;
 		
 		return success;
@@ -325,10 +322,6 @@ public class OPMLFileFormat extends XMLProcessor implements SaveFileFormat, Open
 	public void endDocument () {}
 	
 	public void startElement(String namespaceURI, String localName, String qName, Attributes atts) {
-		//System.out.println("Start element: " + qName);
-		elementStack.add(qName);
-		attributesStack.add(atts);
-		
 		if (qName.equals(ELEMENT_OUTLINE)) {
 			NodeImpl node = new NodeImpl(tree, "");
 			
@@ -389,31 +382,26 @@ public class OPMLFileFormat extends XMLProcessor implements SaveFileFormat, Open
 			currentParent = node;
 			
 		} else if (qName.equals(ELEMENT_DOCUMENT_ATTRIBUTE)) {
+			// This is here to catch empty document attributes since they won't 
+			// trigger a characters call
 			String key = atts.getValue(ATTRIBUTE_KEY);
 			boolean isReadOnly = Boolean.valueOf(atts.getValue(ATTRIBUTE_IS_READ_ONLY)).booleanValue();
-			
 			tree.setAttribute(key, "", isReadOnly);
 		}
+		
+		super.startElement(namespaceURI, localName, qName, atts);
 	}
 	
 	public void endElement(String namespaceURI, String localName, String qName) {
-		//System.out.println("End element: " + qName);
+		String elementName = (String) elements_stack.peek();
+		Attributes atts = (Attributes) attributes_stack.peek();
+		String text = ((StringBuffer) characters_stack.peek()).toString();
 		
 		if (qName.equals(ELEMENT_OUTLINE)) {
 			Node parentNode = currentParent.getParent();
 			currentParent = parentNode;
-		}
-		
-		elementStack.remove(elementStack.size() - 1);
-		attributesStack.remove(attributesStack.size() - 1);
-	}
-	
-	public void characters(char ch[], int start, int length) throws SAXException {
-		String text = new String(ch, start, length);
-		String elementName = (String) elementStack.get(elementStack.size() - 1);
-		Attributes atts = (Attributes) attributesStack.get(attributesStack.size() - 1);
-		
-		if (elementName.equals(ELEMENT_TITLE)) {
+			
+		} else if (elementName.equals(ELEMENT_TITLE)) {
 			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_TITLE, text);
 		
 		} else if (elementName.equals(ELEMENT_DATE_CREATED)) {
@@ -466,10 +454,18 @@ public class OPMLFileFormat extends XMLProcessor implements SaveFileFormat, Open
 			PropertyContainerUtil.setPropertyAsBoolean(docInfo, DocumentInfo.KEY_APPLY_FONT_STYLE_FOR_MOVEABILITY, Boolean.valueOf(text).booleanValue());
 		
 		} else if (elementName.equals(ELEMENT_DOCUMENT_ATTRIBUTE)) {
+			// This creates document attributes that have a value since we don't know
+			// the value until we get here.
 			String key = atts.getValue(ATTRIBUTE_KEY);
 			boolean isReadOnly = tree.isReadOnly(key);
 			tree.setAttribute(key, text, isReadOnly);
 		}
+		
+		super.endElement(namespaceURI, localName, qName);
+	}
+	
+	public void characters(char ch[], int start, int length) throws SAXException {
+		super.characters(ch, start, length);
 	}
 	
 	

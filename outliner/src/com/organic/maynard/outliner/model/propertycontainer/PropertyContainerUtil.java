@@ -391,6 +391,8 @@ public class PropertyContainerUtil {
 			super.endElement(namespaceURI, localName, qName);
 		}
 		
-		public void characters(char ch[], int start, int length) throws SAXException {}
+		public void characters(char ch[], int start, int length) throws SAXException {
+			super.characters(ch, start, length);
+		}
 	}
 }
