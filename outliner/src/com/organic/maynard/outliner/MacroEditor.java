@@ -62,7 +62,7 @@ public class MacroEditor extends JDialog implements ActionListener {
 	
 	// The Constructor
 	public MacroEditor(MacroManagerFrame frame) {
-		super(frame,BUTTON_MODE_CREATE_TITLE,true);
+		super(Outliner.outliner, BUTTON_MODE_CREATE_TITLE, true);
 		
 		this.frame = frame;
 
@@ -165,7 +165,7 @@ public class MacroEditor extends JDialog implements ActionListener {
 	
 	private void update() {
 		Macro macro = macroConfig.getMacro();
-		String oldName = macro.getName();
+		String oldName = macro.getFileName();
 		
 		boolean success = macroConfig.update();
 		
@@ -180,7 +180,8 @@ public class MacroEditor extends JDialog implements ActionListener {
 			model.insertElementAt(macro.getName(),newIndex);
 			
 			// Save it to disk as a serialized object.
-			frame.deleteMacro(oldName);
+			File oldFile = new File(Outliner.MACROS_DIR + oldName);
+			frame.deleteMacro(oldFile);
 			frame.saveMacro(macro);
 			
 			setVisible(false);
@@ -203,7 +204,8 @@ public class MacroEditor extends JDialog implements ActionListener {
 			model.remove(index);
 			
 			// Remove it from disk
-			frame.deleteMacro(macro.getName());
+			File file = new File(Outliner.MACROS_DIR + macro.getFileName());
+			frame.deleteMacro(file);
 			
 			setVisible(false);
 		} else {

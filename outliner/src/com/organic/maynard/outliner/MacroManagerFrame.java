@@ -22,8 +22,6 @@ import java.lang.reflect.*;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.Window;
-import java.awt.datatransfer.*;
 
 import java.io.*;
 import java.util.*;
@@ -31,8 +29,9 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-public class MacroManagerFrame extends JFrame implements ActionListener {
+public class MacroManagerFrame extends JInternalFrame implements ActionListener {
 
+	// Constants
 	static final int MIN_WIDTH = 350;
 	static final int MIN_HEIGHT = 300;
 
@@ -53,17 +52,27 @@ public class MacroManagerFrame extends JFrame implements ActionListener {
 		
 	// The Constructor
 	public MacroManagerFrame() {
-		super("Macro Manager");
-		setVisible(false);
-				
+		super("Macro Manager",true,true,false,false);
+		
 		macroEditor = new MacroEditor(this);
+
+		Outliner.desktop.add(this, JLayeredPane.PALETTE_LAYER);
+
+		// Set the Component & Window Listeners
+		addInternalFrameListener(new FindReplaceFrameWindowMonitor());
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+			
+		// Create the Layout
+		restoreWindowToInitialSize();
+		setLocation(5,5);
+		setBackground(new Color(198,198,198));
 		
-		addComponentListener(new WindowSizeManager(MIN_WIDTH,MIN_HEIGHT));
-		addWindowListener(new MacroManagerFrameWindowMonitor());
 		
-		setSize(INITIAL_WIDTH,INITIAL_HEIGHT);
-		setResizable(true);
-		
+		// Try to get rid of the icon in the frame header.
+		setFrameIcon(null);
+
+		setVisible(false);
+
 		// Define New Macro Pulldown area
 		newButton.addActionListener(this);
 		
@@ -93,6 +102,10 @@ public class MacroManagerFrame extends JFrame implements ActionListener {
 		getContentPane().add(newBox, BorderLayout.NORTH);
 		getContentPane().add(jsp, BorderLayout.CENTER);
 		
+	}
+
+	public void restoreWindowToInitialSize() {
+		setSize(INITIAL_WIDTH,INITIAL_HEIGHT);
 	}
 
 	private void updateMacro(String macroName) {
@@ -175,52 +188,15 @@ public class MacroManagerFrame extends JFrame implements ActionListener {
 	}
 	
 	// Macro Saving and Loading Methods
-	public void deleteMacro(String name) {
-		String filename = Outliner.MACROS_DIR + name + ".ser";
-		File file = new File(filename);
+	public void deleteMacro(File file) {
 		file.delete();
+		LoadMacroCommand.saveConfigFile(new File(Outliner.MACROS_FILE));
 	}
 		
 	public void saveMacro(Macro macro) {
-		String filename = Outliner.MACROS_DIR + macro.getName() + ".ser";
-		
-		try {
-			ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(filename));
-			stream.writeObject(macro);
-			stream.close();
-		
-		} catch (IOException ioe) {
-			System.out.println("Exception: " + ioe);		
-		}
-	}
-	
-	public Macro loadMacro(String filename) {
-		Macro macro = null;
-		
-		try {
-			ObjectInputStream stream = new ObjectInputStream(new FileInputStream(filename));
-			macro = (Macro) stream.readObject();
-			stream.close();
-		} catch (OptionalDataException ode) {
-			System.out.println("Exception loading " + filename + ": " + ode);
-		} catch (ClassNotFoundException cnfe) {
-			System.out.println("Exception loading " + filename + ": " + cnfe);
-		} catch (FileNotFoundException fnfe) {
-			System.out.println("Exception loading " + filename + ": " + fnfe);
-		} catch (StreamCorruptedException sce) {
-			System.out.println("Exception loading " + filename + ": " + sce);		
-		} catch (IOException ioe) {
-			System.out.println("Exception loading " + filename + ": " + ioe);		
-		}
-		
-		return macro;
-	}
-}
-
-public class MacroManagerFrameWindowMonitor extends WindowAdapter {
-	public void windowClosing(WindowEvent e) {
-		MacroManagerFrame mmf = (MacroManagerFrame) e.getWindow();
-		mmf.setVisible(false);
+		File file = new File(Outliner.MACROS_DIR + macro.getFileName());
+		macro.save(file);
+		LoadMacroCommand.saveConfigFile(new File(Outliner.MACROS_FILE));
 	}
 }
 

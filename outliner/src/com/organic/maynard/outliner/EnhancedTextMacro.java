@@ -20,14 +20,30 @@ package com.organic.maynard.outliner;
 
 import javax.swing.*;
 import com.organic.maynard.util.string.*;
+import java.io.*;
+import org.xml.sax.*;
+import java.util.*;
+import com.organic.maynard.io.FileTools;
+import com.organic.maynard.xml.XMLTools;
 
-public class EnhancedTextMacro extends MacroImpl {
+public class EnhancedTextMacro extends HandlerBase implements Macro {
 
-	static final long serialVersionUID = 624838780473359965L;
-
-	public static EnhancedTextMacroConfig macroConfig = new EnhancedTextMacroConfig();
+	// Constants
+	public static final String E_PATTERN = "pattern";
+	
+	// Instance Fields
+	private String name = null;
+	private boolean undoable = true;
+	private int undoableType = Macro.COMPLEX_UNDOABLE;
 		
 	protected String replacementPattern = "";
+
+	// Class Fields
+	public static EnhancedTextMacroConfig macroConfig = new EnhancedTextMacroConfig();
+    private static Parser parser = new com.jclark.xml.sax.Driver();
+	private static boolean errorOccurred = false;
+	private static ArrayList elementStack = new ArrayList();
+
 	
 	// The Constructors
 	public EnhancedTextMacro() {
@@ -35,16 +51,31 @@ public class EnhancedTextMacro extends MacroImpl {
 	}
 
 	public EnhancedTextMacro(String name) {
-		super(name);
-		setUndoable(true);
-		setUndoableType(Macro.COMPLEX_UNDOABLE);
+		this.name = name;
+		parser.setDocumentHandler(this);
+		parser.setErrorHandler(this);	
 	}
 
-	public MacroConfig getConfigurator() {return EnhancedTextMacro.macroConfig;}
-	public void setConfigurator(MacroConfig configurator) {}
 
+	// Accessors
 	public String getReplacementPattern() {return replacementPattern;}
 	public void setReplacementPattern(String replacementPattern) {this.replacementPattern = replacementPattern;}
+
+
+	// Macro Interface	
+	public String getName() {return this.name;}
+	public void setName(String name) {this.name = name;}
+
+	public String getFileName() {return getName() + ".txt";}
+	
+	public boolean isUndoable() {return undoable;}
+	protected void setUndoable(boolean undoable) {this.undoable = undoable;}
+
+	public int getUndoableType() {return undoableType;}
+	protected void setUndoableType(int undoableType) {this.undoableType = undoableType;}
+	
+	public MacroConfig getConfigurator() {return this.macroConfig;}
+	public void setConfigurator(MacroConfig macroConfig) {}
 		
 	public NodeRangePair process(NodeRangePair nodeRangePair) {
 		Node node = nodeRangePair.node;
@@ -83,5 +114,75 @@ public class EnhancedTextMacro extends MacroImpl {
 		nodeRangePair.startIndex = -1;
 		nodeRangePair.endIndex = -1;
 		return nodeRangePair;
+	}
+	
+	public boolean init(File file) {
+		try {
+			FileInputStream fileInputStream = new FileInputStream(file);
+			parser.parse(new InputSource(fileInputStream));
+			if (errorOccurred) {
+				return false;
+			}
+			return true;
+		} catch (SAXException e) {
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}	
+	}
+	
+	public boolean save(File file) {
+		StringBuffer buf = new StringBuffer();
+		buf.append(XMLTools.getXmlDeclaration(null) + "\n");
+		buf.append(XMLTools.getElementStart(E_PATTERN) + XMLTools.escapeXMLText(getReplacementPattern()) + XMLTools.getElementEnd(E_PATTERN)+ "\n");
+		
+		FileTools.dumpStringToFile(file, buf.toString());
+		
+		return true;
+	}
+
+
+	// Sax DocumentHandler Implementation
+	public void startDocument () {}
+
+	public void endDocument () {}
+
+	public void startElement (String name, AttributeList atts) {
+		elementStack.add(name);
+	}
+	
+	public void endElement (String name) throws SAXException {
+		elementStack.remove(elementStack.size() - 1);
+	}
+	
+	public void characters(char ch[], int start, int length) throws SAXException {
+		String text = new String(ch, start, length);
+		String elementName = (String) elementStack.get(elementStack.size() - 1);
+		
+		if (elementName.equals(E_PATTERN)) {
+			setReplacementPattern(text);
+		}
+	}
+	
+	
+	// ErrorHandler Interface
+	public void error(SAXParseException e) {
+		System.out.println("SAXParserException Error: " + e);
+		this.errorOccurred = true;
+	}
+
+	public void fatalError(SAXParseException e) {
+		System.out.println("SAXParserException Fatal Error: " + e);
+		this.errorOccurred = true;
+	}
+
+	public void warning(SAXParseException e) {
+		System.out.println("SAXParserException Warning: " + e);
+		this.errorOccurred = true;
 	}
 }

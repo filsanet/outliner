@@ -20,10 +20,9 @@ package com.organic.maynard.outliner;
 
 import java.awt.*;
 import javax.swing.*;
+import java.io.*;
 
-public class MacroImpl implements Macro {
-
-	static final long serialVersionUID = -129282763101473L;
+public abstract class MacroImpl implements Macro {
 	
 	// Instance Fields		
 	private String name = null;

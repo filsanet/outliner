@@ -53,6 +53,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	// These prefs should be under the users prefs dir, or if no user prefs dir exists then
 	// they should be under the apps prefs dir.
 	public static String MACROS_DIR = USER_PREFS_DIR + "macros" + System.getProperty("file.separator");
+	public static String MACROS_FILE = USER_PREFS_DIR + "macros.txt";
 	public static String CONFIG_FILE = USER_PREFS_DIR + "config.txt";
 	public static String RECENT_FILES_FILE = USER_PREFS_DIR + "recent_files.txt";
 
@@ -90,6 +91,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	public static final String COMMAND_PARSER_SEPARATOR = "|";
 	public static final String COMMAND_SET = "set";
 	public static final String COMMAND_MACRO_CLASS = "macro_class";
+	public static final String COMMAND_MACRO = "macro";
 	public static final String COMMAND_FILE_FORMAT = "file_format";
 	public static final CommandParser PARSER = new CommandParser(COMMAND_PARSER_SEPARATOR);
 	
@@ -137,6 +139,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		// Load Preferences
 		PARSER.addCommand(new SetPrefCommand(COMMAND_SET,2));
 		PARSER.addCommand(new LoadMacroClassCommand(COMMAND_MACRO_CLASS,2));
+		PARSER.addCommand(new LoadMacroCommand(COMMAND_MACRO,2));
 		PARSER.addCommand(new LoadFileFormatClassCommand(COMMAND_FILE_FORMAT,2));
 
 		System.out.println("Loading Config...");
@@ -168,7 +171,10 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		loadPrefsFile(PARSER,MACRO_CLASSES_FILE);
 		
 		macroPopup = new MacroPopupMenu();
-		macroPopup.init();
+		//macroPopup.init();
+		System.out.println("Loading Macros...");
+		loadPrefsFile(PARSER,MACROS_FILE);
+		System.out.println("Done Loading Macros.");
 		
 		// Setup the Desktop
 		addComponentListener(new WindowSizeManager(INITIAL_WIDTH,INITIAL_HEIGHT,MIN_WIDTH,MIN_HEIGHT));

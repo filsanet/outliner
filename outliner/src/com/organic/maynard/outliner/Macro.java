@@ -29,6 +29,7 @@ public interface Macro extends Serializable {
 	
 	public String getName();
 	public void setName(String name);
+	public String getFileName();
 	
 	public boolean isUndoable();
 	public int getUndoableType();
@@ -37,4 +38,7 @@ public interface Macro extends Serializable {
 	public void setConfigurator(MacroConfig configurator);
 
 	public NodeRangePair process(NodeRangePair nodeRangePair);
+	
+	public boolean init(File file);
+	public boolean save(File file);
 }

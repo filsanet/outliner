@@ -31,7 +31,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 	public static final int UPPER_BUFFER_SIZE = 30;
 	public static final int LOWER_BUFFER_SIZE = 50;
 
-	public Vector macros = new Vector();
+	public static Vector macros = new Vector();
 	
 	// The Constructors
 	public MacroPopupMenu() {
@@ -124,8 +124,9 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		return screenSize.height - LOWER_BUFFER_SIZE;
 	}
 
-		
-	public void init() {
+	
+	// Initialization at Startup
+	/*public void init() {
 		// Code to load the menu up with macros from disk.
 		File macroDir = new File(Outliner.MACROS_DIR);
 		File[] filelist = macroDir.listFiles();
@@ -153,7 +154,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		
 		// Add it to the list in the MacroManager
 		((DefaultListModel) Outliner.macroManager.macroList.getModel()).insertElementAt(macro.getName(),i);
-	}
+	}*/
 
 	public boolean isNameUnique(String name) {
 		for (int i = 0; i < macros.size(); i++) {
