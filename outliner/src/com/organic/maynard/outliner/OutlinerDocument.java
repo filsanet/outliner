@@ -53,6 +53,9 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 
 	// Instance Variables
 	public OutlinerPanel panel = new OutlinerPanel(this);
+	
+	public DummyJScrollPane dummy = null;
+	
 	public TreeContext tree = new TreeContext(this);
 	public UndoQueue undoQueue = new UndoQueue(this);
 	public DocumentSettings settings = new DocumentSettings(this);
@@ -89,7 +92,9 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		restoreWindowToInitialSize();
 		setLocation(INITIAL_X, INITIAL_Y);
 		
-		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, panel, attJSP);
+		dummy = new DummyJScrollPane(panel);
+		
+		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, dummy, attJSP);
 		splitPane.setResizeWeight(1.0);
 		splitPane.addPropertyChangeListener(this);
 
@@ -123,8 +128,8 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 
 		if (isShowingAttributes()) {
 			// Swap the components
-			getContentPane().remove(panel);
-			splitPane.setTopComponent(panel);
+			getContentPane().remove(dummy);
+			splitPane.setTopComponent(dummy);
 			attPanel.update();
 			getContentPane().add(splitPane, BorderLayout.CENTER);
 			
@@ -136,7 +141,7 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 			
 			// Swap the components
 			getContentPane().remove(splitPane);
-			getContentPane().add(panel, BorderLayout.CENTER);
+			getContentPane().add(dummy, BorderLayout.CENTER);
 		}
 
 		validate();

@@ -22,12 +22,15 @@ import javax.swing.*;
 import java.awt.*;
 import org.xml.sax.*;
 
+// MouseWheel
+import gui.*;
+
 /**
  * @author  $Author$
  * @version $Revision$, $Date$
  */
 
-public abstract class AbstractGUITreeJDialog extends JDialog implements GUITreeComponent, JoeXMLConstants {
+public abstract class AbstractGUITreeJDialog extends JMouseWheelDialog implements GUITreeComponent, JoeXMLConstants {
 	
 	// Fields
 	private WindowSizeManager windowSizeManager = null;

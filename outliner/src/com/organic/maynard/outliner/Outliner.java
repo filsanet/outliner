@@ -29,6 +29,9 @@ import com.organic.maynard.util.*;
 import com.organic.maynard.io.FileTools;
 import com.organic.maynard.util.string.*;
 
+// MouseWheel
+import gui.*;
+
 // WebFile
 import javax.swing.filechooser.*;
 import com.yearahead.io.*;
@@ -38,7 +41,7 @@ import com.yearahead.io.*;
  * @version $Revision$, $Date$
  */
 
-public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent, JoeXMLConstants {
+public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITreeComponent, JoeXMLConstants {
 	
 	// Constants
 	// for [temporary!] conditional debugging code	[srk] 8/04/01 7:33PM
@@ -292,7 +295,11 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	public void setGUITreeComponentID(String id) {this.id = id;}
 
 	public void startSetup(AttributeList atts) {
-		outliner = this;	
+		outliner = this;
+		
+		// MouseWheel
+		setScrollSpeed(1);
+		JMouseWheelSupport.setMinScrollDistance(1);
 
 		setTitle(atts.getValue(A_TITLE));
 

@@ -60,7 +60,7 @@ public class QuitMenuItem extends AbstractOutlinerMenuItem implements ActionList
 
 		// Hide Desktop
 		Outliner.outliner.setVisible(false);
-		Outliner.outliner.dispose();
+		//Outliner.outliner.dispose();
 		
 		// Save config and quit
 		Preferences.saveConfigFile(Outliner.CONFIG_FILE);

@@ -34,7 +34,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	}
 	
 	public OutlinerPanel panel = null;
-	private JScrollBar scrollBar = new JScrollBar();
+	public JScrollBar scrollBar = new JScrollBar();
 
 	// Event Listeners
 	private TextKeyListener textListener = new TextKeyListener();
@@ -580,7 +580,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	}
 
 	public Dimension minimumLayoutSize(Container parent) {return new Dimension(0,32);}
-	public Dimension preferredLayoutSize(Container parent) {return parent.getSize();}
+	public Dimension preferredLayoutSize(Container parent) {return parent.getParent().getSize();} // Need to get parent because we've got the DummyJScrollPane between us and our parent window which has the size we want.
 	public void addLayoutComponent(String name, Component comp) {}
 	public void removeLayoutComponent(Component comp) {}
 }

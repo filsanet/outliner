@@ -50,6 +50,23 @@ public class OutlinerPanel extends JPanel {
 	}
 }
 
+class DummyJScrollPane extends JScrollPane {
+	private OutlinerPanel panel = null;
+	
+	public DummyJScrollPane(OutlinerPanel panel) {
+		super(panel, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		this.panel = panel;
+	}
+
+	public JScrollBar getVerticalScrollBar() {
+		try {
+			return panel.layout.scrollBar;
+		} catch (NullPointerException npe) {
+			return super.getVerticalScrollBar();
+		}
+	}
+}
+
 /*
 public class TestMouseMotionListener extends MouseMotionAdapter {
 
