@@ -30,6 +30,6 @@ CP=$CP:$RP/bsh.jar
 CP=$CP:$RP/jakarta-oro.jar  
 CP=$CP:$RP/jazzy-core.jar 
 
-java -cp $CP -Xincgc com.organic.maynard.outliner.Outliner en $FILENAME 
+java -cp $CP -Xincgc com.organic.maynard.outliner.Outliner $FILENAME 
 
 cd $CWD

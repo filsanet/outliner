@@ -349,14 +349,10 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		// This allows scrollbars to be resized while they are being dragged.
 		UIManager.put("ScrollBarUI", PlatformCompatibility.getScrollBarUIClassName());
 		
-		// See if we've got a preferred language to use. 
-		// lang should be a ISO 639 two letter lang code. 
-		// List at: http://www.ics.uci.edu/pub/ietf/http/related/iso639.txt
-		if (args.length > 0) {
-			String lang = args[0];
-			if (lang != null && lang.length() == 2) {
-				LANGUAGE = lang;
-			}
+		// Set the preferred language to use.
+		String ISO639LangCode = Locale.getDefault().getLanguage();
+		if (ISO639LangCode != null && !ISO639LangCode.equals("")) {
+			LANGUAGE = ISO639LangCode;
 		}
 		
 		// Load the Main GUITree
@@ -386,9 +382,9 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		ScriptsManagerModel.runStartupScripts();
 		
 		// See if the command line included a file to be opened.
-		if (args.length > 1) {      // srk - put this test in -- 2002.09.03
-			StringBuffer sb_filepath = new StringBuffer(args[1]);
-			for (int i = 2; i < args.length; i++) {
+		if (args.length > 0) {      // srk - put this test in -- 2002.09.03
+			StringBuffer sb_filepath = new StringBuffer(args[0]);
+			for (int i = 1; i < args.length; i++) {
 				sb_filepath.append(" ").append(args[i]);
 			}
 			String filepath = sb_filepath.toString();
