@@ -104,13 +104,22 @@ const char * WINDOWS_VERSION_STRINGS [] = {
 #define RECMND_MIN_SPEED 400 ;  // recommended minimum processor speed
 
 // registry
-#define SYSTEM_ENVIRONMENT_ROOT_KEY HKEY_LOCAL_MACHINE
+#define SYSTEM_ENVIRONMENT_ROOT_KEY  HKEY_LOCAL_MACHINE
 #define SYSTEM_ENVIRONMENT_KEY_PATH "System\\CurrentControlSet\\Control\\Session Manager\\Environment"  
 
 #define USER_ENVIRONMENT_ROOT_KEY HKEY_CURRENT_USER
 #define USER_ENVIRONMENT_KEY_PATH "Environment"
 
 #define MAX_REG_PATH 255
+
+#define DOC_TYPES_ROOT_KEY  HKEY_CLASSES_ROOT
+#define DOC_TYPES_OPML_PATH  ".opml"
+#define DOC_TYPES_JOE_OPML_PATH  "JOE.OPML.document"
+#define DOC_TYPES_JOE_OPML_OPEN_CMD_PATH  "\\Shell\\Open\\Command"
+
+#define DOC_TYPE_HOOKED "Hooked up "
+#define DOC_TYPE_NOT_HOOKED "Unable to hook up "
+#define DOC_TYPE_HOOKER_0 " documents to "
 
 #define SHORTCUT_ADDED  "Added "
 #define SHORTCUT_NOT_ADDED  "Unable to add "

@@ -44,6 +44,7 @@
 // include files
 #include <stdio.h>
 #include <windows.h>
+#include <shlwapi.h>
 #include "windows_setup.h"
 
 // TBD [srk] make this a very simple GUI app
@@ -194,25 +195,25 @@ int wePlugIntoSystem () {
 //			return 0 ;
 	// TBD
 	
-	// return the result of trying the following:
-	return 
-		// determine paths
-		(setAllPaths() 
-		
-		// set environment variables
-		& setAllEnvVars() 
+	// determine paths
+	result &= setAllPaths() ;
 	
-		// place shortcuts
-		& placeShortcuts()
+	// set environment variables
+	result &= setAllEnvVars() ;
 	
-		// per user choice set app to
-		// handle particular types of documents
-		& hookupDocTypes()
-		
-		// add to Add/Remove Programs listing
-		// wiring up windows_uninstall.exe
-		// TBD
-	) ;
+	// place shortcuts
+	result &= placeShortcuts() ;
+	
+	// per user choice set app to
+	// handle particular types of documents
+	result &= hookupDocTypes() ;
+	
+	// add to Add/Remove Programs listing
+	// wiring up windows_uninstall.exe
+	// TBD
+
+	// return the result of trying all the preceding steps
+	return result ;
 
 } // end wePlugIntoSystem
 
@@ -1420,12 +1421,108 @@ int shortcutToContextMenu() {
 
 //
 int hookupDocTypes() {
-	// TBD
+	// TBD generalize this
+	// for each doc type
+		// get its base dealie
+		// set that up
+		// get its app dealie
+		// set that up
+
+	// local vars
+	HKEY rootKey = DOC_TYPES_ROOT_KEY ;
+	HKEY utilKey ;
+	DWORD createKeyDisposition = 0;
+	char utilString [MAX_REG_PATH] ;
+	LONG setResult = 0;
+	LONG closeResult = 0;
+	int resultPartOne = 0 ;
+	int resultPartTwo = 0 ;
+	int result = 0 ;
+	char feedbackString [MAX_LINE] ;
 	
-	// fake for now
+	// delete any existing .opml key
+	SHDeleteKey(rootKey, DOC_TYPES_OPML_PATH) ;
+
+	// try to create a new .opml key
+	if (RegCreateKeyEx (rootKey, DOC_TYPES_OPML_PATH, 0,
+				0,REG_OPTION_NON_VOLATILE, KEY_WRITE, 0, 
+				& utilKey, & createKeyDisposition)== ERROR_SUCCESS) {
+	
+		// okay, we've got it
+		
+		// try to write our default value string
+		strcpy(utilString, DOC_TYPES_JOE_OPML_PATH) ;
+		setResult = RegSetValueEx (utilKey, 0, 0, REG_SZ,
+				(LPBYTE)utilString, strlen(utilString) + 1) ;
+		
+		// close the key
+		closeResult = RegCloseKey (utilKey) ;
+		
+		// done
+		resultPartOne = (setResult == ERROR_SUCCESS) & (closeResult == ERROR_SUCCESS) ;
+		
+	// else we couldn't create a new .opml key
+	} else {
+		// sigh
+		resultPartOne = 0 ;
+	} // end if-else
+	
+
+	// delete any existing app.type key
+	SHDeleteKey(rootKey, DOC_TYPES_JOE_OPML_PATH) ;
+
+	// build up app.type keypath string
+	strcpy(utilString, DOC_TYPES_JOE_OPML_PATH) ;
+	strcat(utilString, DOC_TYPES_JOE_OPML_OPEN_CMD_PATH) ;
+	
+	// try to create a new app.type key
+	if (RegCreateKeyEx (rootKey, utilString, 0,
+				0,REG_OPTION_NON_VOLATILE, KEY_WRITE, 0, 
+				& utilKey, & createKeyDisposition)== ERROR_SUCCESS) {
+	
+		// okay, we've got it
+
+		// build up a string
+		strcpy (utilString, g_App_Home_Path) ;
+		strcat (utilString, EXE_NAME) ;
+		strcat (utilString, " \"%1\"") ;
+		
+		// try to write that default value string
+		setResult = RegSetValueEx (utilKey, 0, 0, REG_SZ,
+				(LPBYTE)utilString, strlen(utilString) + 1) ;
+		
+		// close the key
+		closeResult = RegCloseKey (utilKey) ;
+		
+		// done
+		resultPartTwo = (setResult == ERROR_SUCCESS) & (closeResult == ERROR_SUCCESS) ;
+		
+	// else we couldn't create a new .opml key
+	} else {
+		// sigh
+		resultPartTwo = 0 ;
+	} // end if-else
+	
+	// how'd we do ?
+	result = resultPartOne & resultPartTwo ;
+	
+	// feedback
+	if (result) 
+		strcpy (feedbackString, DOC_TYPE_HOOKED) ;
+	else
+		strcpy (feedbackString, DOC_TYPE_NOT_HOOKED) ;
+	strcat(feedbackString, DOC_TYPES_OPML_PATH) ;
+	strcat(feedbackString, DOC_TYPE_HOOKER_0) ;
+	strcat(feedbackString, APP_NAME_STRING) ;
+	strcat(feedbackString, ".") ;
+	strcat(feedbackString, "\n") ;
+	printf(feedbackString) ;
+	
+	// after all doc types are done ...
+	printf ("\n") ;
 	
 	// done
-	return 1 ;
+	return result ;
 	
 } // end function hookupDocTypes
 
