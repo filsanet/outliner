@@ -485,8 +485,13 @@
 				<separator/>
 				<menuitem id="stack" class="com.organic.maynard.outliner.StackMenuItem" text="Stack"/>
 				<menuitem id="maximize_submenu" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Maximize">
-					<menuitem id="maximize_vertically" class="com.organic.maynard.outliner.MaximizeVerticallyMenuItem" text="Vertically"/>
-					<menuitem id="maximize_horizontally" class="com.organic.maynard.outliner.MaximizeHorizontallyMenuItem" text="Horizontally"/>
+					<menuitem id="maximize_horizontal" class="com.organic.maynard.outliner.MaximizeHorizontalMenuItem" text="Horizontal" keybinding="H" keybindingmodifiers="alt shift"/>
+					<menuitem id="maximize_vertical" class="com.organic.maynard.outliner.MaximizeVerticalMenuItem" text="Vertical" keybinding="V" keybindingmodifiers="alt shift"/>
+				</menuitem>
+				<menuitem id="tile_submenu" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Tile">
+					<menuitem id="tile_horizontal" class="com.organic.maynard.outliner.TileHorizontalMenuItem" text="Horizontal"/>
+					<menuitem id="tile_vertical" class="com.organic.maynard.outliner.TileVerticalMenuItem" text="Vertical"/>
+					<menuitem id="tile_gridly" class="com.organic.maynard.outliner.TileGridMenuItem" text="Grid"/>
 				</menuitem>
 				<separator/>
 				<menuitem id="next_window" class="com.organic.maynard.outliner.NextWindowMenuItem" text="Next" keybinding="S" keybindingmodifiers="control shift"/>
