@@ -34,16 +34,65 @@ package com.organic.maynard.util.math;
 import java.util.*;
 
 public class RandomNumber {
-	public static int get(int Start, int End) {
-		if (End < Start) {
-			int temp = Start;
-			Start = End;
-			End = temp;
+	// Distribution Constants
+	public static final int FLAT = 0;
+	public static final int TOP = 1;
+	public static final int BOTTOM = 2;
+	public static final int MIDDLE = 3;
+	public static final int EDGES = 4;
+	
+	// Methods
+	
+	// Note: rounding errors at the upper and lower bounds are significant for small ranges.
+	public static int get(int start, int end, int distribution, double factor) {
+		if (end < start) {
+			int temp = start;
+			start = end;
+			end = temp;
 		}
 		try {
-			return (int) Math.round((Math.random() * (End - Start))) + Start;
+			double rand = Math.random();
+			switch (distribution) {
+				case TOP:
+					// factor == 1, no skewing
+					// factor >= 2, skewed to top
+					double topSkewed = Math.pow(rand, (1/factor)); 
+					return (int) Math.floor(topSkewed * (end - start + 1)) + start;
+					
+				case BOTTOM:
+					// factor == 1, no skewing
+					// factor >= 2, skewed to bottom
+					double bottomSkewed = 1 - Math.pow(rand, (1/factor)); 
+					return (int) Math.floor(bottomSkewed * (end - start + 1)) + start;
+					
+				case MIDDLE:
+					double middleSkewed = 0;
+					if (rand < 0.5) {
+						middleSkewed = Math.pow(rand*2, (1/factor))/2;
+					} else {
+						middleSkewed = (1 - Math.pow((rand - 0.5)*2, (1/factor)))/2 + 0.5;
+					}
+					return (int) Math.floor(middleSkewed * (end - start + 1)) + start;
+
+				case EDGES:
+					double edgeSkewed = 0;
+					if (rand < 0.5) {
+						edgeSkewed = (1 - Math.pow(rand*2, (1/factor)))/2;
+					} else {
+						edgeSkewed = (Math.pow((rand - 0.5)*2, (1/factor)))/2 + 0.5;
+					}
+					return (int) Math.floor(edgeSkewed * (end - start + 1)) + start;					
+				case FLAT:
+				
+				default:
+					return (int) Math.floor(Math.random() * (end - start + 1)) + start;
+			}
 		} catch (Exception ex) {
 			return -1;
 		}
+	}
+	
+	public static int get(int start, int end) {
+		return get(start,end,FLAT,1.0);
 	}
 }
