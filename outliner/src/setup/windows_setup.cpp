@@ -566,15 +566,20 @@ int setEnvVar (char * varName, char * varValue, char * introLines, windows_versi
 		case WIN_UNKNOWN_V6:
 		case WIN_UNKNOWN_V7:
 			// win me/xp/nt4/2k/.netServer/unknownsV4andUp OSes use the registry
-			result = setRegistryEnvVar (varName, varValue, SYSTEM) ;
-			// TBD make SYSTEM/USER a choice ?
-			// pain in the butt if not just SYSTEM
 			
-			// if we succeeded, broadcast the news
-			// thus avoiding the need to reboot
-			SendMessageTimeout(HWND_BROADCAST, WM_SETTINGCHANGE, 0,
-			(LPARAM) "Environment", SMTO_ABORTIFHUNG,
-			5000, &broadcastResult);
+			// if we can't set it for all users, our first choice,
+			if (! (result = setRegistryEnvVar (varName, varValue, SYSTEM)))
+				
+				// we'll set it for just the current user
+				result = setRegistryEnvVar (varName, varValue, USER);
+			
+			// if we succeeded
+			if (result) 
+				// broadcast the news
+				// thereby ??? avoiding the need to reboot
+				SendMessageTimeout(HWND_BROADCAST, WM_SETTINGCHANGE, 0,
+				(LPARAM) "Environment", SMTO_ABORTIFHUNG,
+				5000, &broadcastResult);
 			
 			break ;
 			
