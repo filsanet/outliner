@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\About JOE.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Sun, 3 Feb 2002 07:42:23 GMT</dateModified>
+<dateModified>Sun, 3 Feb 2002 07:51:28 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>0</windowTop>
-<windowLeft>574</windowLeft>
-<windowBottom>455</windowBottom>
-<windowRight>926</windowRight>
+<windowTop>20</windowTop>
+<windowLeft>621</windowLeft>
+<windowBottom>695</windowBottom>
+<windowRight>1071</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -36,6 +36,19 @@
 			<outline text="TextKeyListener String Indices Out Of Bounds Exceptions"/>
 		</outline>
 		<outline text="New">
+			<outline text="Application Preferences Panels">
+				<outline text="There are several additions/changes to the set of Application Preferences panels ">
+					<outline text="the Look &amp; Feel panel">
+						<outline text="There's a new widget at the bottom, Document Titles, which lets you specify the form of document window titles"/>
+					</outline>
+					<outline text="the Open &amp; Save panel">
+						<outline text="There are new widgets that let you specify Default Encoding and Default Format separately for Open, Import, Save, and Export operations. "/>
+					</outline>
+					<outline text="the Open &amp; Save folder">
+						<outline text="There's a new panel, Recent Files List, that lets you specify properties of the Recent Files submenu of the File Menu."/>
+					</outline>
+				</outline>
+			</outline>
 			<outline text="Document Window Titles">
 				<outline text="You can now set outline document window titles to show a file's full pathname, a truncated version of the full pathname, or just the file name."/>
 				<outline text="Here's how:">
@@ -74,19 +87,6 @@
 				<outline text="These commands resize the topmost window so that it is made as large as fits within JOE along the specified axis. The window size does not change along the other axis.  "/>
 				<outline text="Note that the window remains in what is known as the non-Maximized, or normal, state. The user can thus move the window about and resize it by dragging its borders."/>
 				<outline text="These commands are grayed out when a window is in the Maximized state."/>
-			</outline>
-			<outline text="Application Preferences Panels">
-				<outline text="There are several additions/changes to the set of Application Preferences panels ">
-					<outline text="the Look &amp; Feel panel">
-						<outline text="There's a new widget at the bottom, Document Titles, which lets you specify the form of document window titles"/>
-					</outline>
-					<outline text="the Open &amp; Save panel">
-						<outline text="There are new widgets that let you specify Default Encoding and Default Format separately for Open, Import, Save, and Export operations. "/>
-					</outline>
-					<outline text="the Open &amp; Save folder">
-						<outline text="There's a new panel, Recent Files List, that lets you specify properties of the Recent Files submenu of the File Menu."/>
-					</outline>
-				</outline>
 			</outline>
 			<outline text="Recent Files List UI">
 				<outline text="You can now set four UI properties of the Recent Files submenu of the File menu:">
