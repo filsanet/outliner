@@ -650,6 +650,18 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		}
 	}
 
+	public Node nextSelectedSibling() {
+		// This does not test the current node.
+		Node node = nextSibling();
+		if (node == this) {
+			return null;
+		} else if (node.isAncestorSelected()) {
+			return node;
+		} else {
+			return node.nextSelectedSibling();
+		}
+	}
+
 	public Node nextNode() {
 		if (!isLeaf()) {
 			return getChild(0);
@@ -699,6 +711,17 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		}
 	}
 
+	public Node prevSelectedSibling() {
+		// This does not test the current node.
+		Node node = prevSibling();
+		if (node == this) {
+			return null;
+		} else if (node.isAncestorSelected()) {
+			return node;
+		} else {
+			return node.prevSelectedSibling();
+		}
+	}
 
 	// Data Methods
 	public void setValue(String value) {this.value = value;}

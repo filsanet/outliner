@@ -253,32 +253,56 @@ public class IconKeyListener implements KeyListener, MouseListener {
 				break;
 				
 			case KeyEvent.VK_UP:
-				if (e.isShiftDown()) {
-					moveUp(tree,layout);
+				if (e.isControlDown()) {
+					if (e.isShiftDown()) {
+						deselect(tree, layout, UP);
+					} else {
+						moveUp(tree,layout);
+					}
+				} else if (e.isShiftDown()) {
+					select(tree, layout, UP);
 				} else {
 					navigate(tree, layout, UP);
 				}
 				break;
 
 			case KeyEvent.VK_DOWN:
-				if (e.isShiftDown()) {
-					moveDown(tree,layout);
+				if (e.isControlDown()) {
+					if (e.isShiftDown()) {
+						deselect(tree, layout, DOWN);
+					} else {
+						moveDown(tree,layout);
+					}
+				} else if (e.isShiftDown()) {
+					select(tree, layout, DOWN);
 				} else {
 					navigate(tree,layout, DOWN);
 				}
 				break;
 
 			case KeyEvent.VK_LEFT:
-				if (e.isShiftDown()) {
-					moveLeft(tree,layout);
+				if (e.isControlDown()) {
+					if (e.isShiftDown()) {
+						deselect(tree, layout, LEFT);
+					} else {
+						moveLeft(tree,layout);
+					}
+				} else if (e.isShiftDown()) {
+					select(tree, layout, LEFT);
 				} else {
 					navigate(tree,layout, LEFT);
 				}
 				break;
 
 			case KeyEvent.VK_RIGHT:
-				if (e.isShiftDown()) {
-					moveRight(tree,layout);
+				if (e.isControlDown()) {
+					if (e.isShiftDown()) {
+						deselect(tree, layout, RIGHT);
+					} else {
+						moveRight(tree,layout);
+					}
+				} else if (e.isShiftDown()) {
+					select(tree, layout, RIGHT);
 				} else {
 					navigate(tree,layout, RIGHT);
 				}
@@ -1030,7 +1054,99 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	private static final int DOWN = 2;
 	private static final int LEFT = 3;
 	private static final int RIGHT = 4;
+
+	private void deselect(JoeTree tree, OutlineLayoutManager layout, int type) {
+		Node node = null;
+		Node youngestNode = null;
+		Node oldestNode = null;
+		
+		switch(type) {
+			case UP:
+				oldestNode = tree.getOldestInSelection();
+				node = oldestNode.prevSelectedSibling();
+				if ((node == null) || (node == oldestNode)) {return;}
+				tree.removeNodeFromSelection(oldestNode);
+				break;
+
+			case DOWN:
+				youngestNode = tree.getYoungestInSelection();
+				node = youngestNode.nextSelectedSibling();
+				if ((node == null) || (node == youngestNode)) {return;}
+				tree.removeNodeFromSelection(youngestNode);
+				break;
+
+			case LEFT:
+				oldestNode = tree.getOldestInSelection();
+				node = oldestNode.prevSibling();
+				if ((node == null) || (node == oldestNode)) {return;}
+				tree.removeNodeFromSelection(oldestNode);
+				tree.addNodeToSelection(node);
+				break;
+
+			case RIGHT:
+				youngestNode = tree.getYoungestInSelection();
+				node = youngestNode.nextSibling();
+				if ((node == null) || (node == youngestNode)) {return;}
+				tree.removeNodeFromSelection(youngestNode);
+				tree.addNodeToSelection(node);
+				break;
+				
+			default:
+				return;
+		}
+
+		// Record the EditingNode and CursorPosition and ComponentFocus
+		tree.setEditingNode(node);
+
+		// Redraw and Set Focus
+		layout.draw(node,OutlineLayoutManager.ICON);		
+	}
 	
+	private void select(JoeTree tree, OutlineLayoutManager layout, int type) {
+		Node node = null;
+		Node youngestNode = null;
+		Node oldestNode = null;
+		
+		switch(type) {
+			case UP:
+				youngestNode = tree.getYoungestInSelection();
+				node = youngestNode.prevSibling();
+				if (node == youngestNode) {return;}
+				break;
+
+			case DOWN:
+				oldestNode = tree.getOldestInSelection();
+				node = oldestNode.nextSibling();
+				if (node == oldestNode) {return;}
+				break;
+
+			case LEFT:
+				youngestNode = tree.getYoungestInSelection();
+				node = youngestNode.prevSibling();
+				if (node == youngestNode) {return;}
+				tree.removeNodeFromSelection(youngestNode);
+				break;
+
+			case RIGHT:
+				oldestNode = tree.getOldestInSelection();
+				node = oldestNode.nextSibling();
+				if (node == oldestNode) {return;}
+				tree.removeNodeFromSelection(oldestNode);
+				break;
+				
+			default:
+				return;
+		}
+		
+		tree.addNodeToSelection(node);
+
+		// Record the EditingNode and CursorPosition and ComponentFocus
+		tree.setEditingNode(node);
+
+		// Redraw and Set Focus
+		layout.draw(node,OutlineLayoutManager.ICON);		
+	}
+		
 	private void navigate(JoeTree tree, OutlineLayoutManager layout, int type) {
 		Node node = null;
 		Node youngestNode = null;

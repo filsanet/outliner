@@ -148,9 +148,11 @@ public interface Node extends AttributeContainer {
 	public Node prevSiblingOrParent();
 	public Node next();
 	public Node nextUnSelectedNode();
+	public Node nextSelectedSibling();
 	public Node nextNode();
 	public Node prev();
 	public Node prevUnSelectedNode();
+	public Node prevSelectedSibling();
 	
 	// Data Methods
 	public void setValue(String str);
