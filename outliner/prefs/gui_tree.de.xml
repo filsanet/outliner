@@ -39,7 +39,7 @@
 		<asset type="text" key="error_att_key_alpha" value="Fehler: Schlüssel muss alpha-numerisch sein."/>
 		<asset type="text" key="error_att_key_existance" value="Fehler: Schlüssel darf nicht leer sein."/>
 		<asset type="text" key="error_name_existance" value="Fehler: Name darf nicht leer sei.."/>
-		<asset type="text" key="error_att_key_uniqueness" value="Fehler: Schlüssel muss eindeutig sein./>
+		<asset type="text" key="error_att_key_uniqueness" value="Fehler: Schlüssel muss eindeutig sein."/>
 		<asset type="text" key="error_could_not_open_file" value="An error occurred. Could not open file: {$value_1}"/>
 		<asset type="text" key="error_could_not_open_no_file_format" value="An error occurred. Could not open file: {$value_1} because I couldn't retrieve the file format: {$value_2}"/>
 		<asset type="text" key="error_could_not_revert_no_file_format" value="An error occurred. Could not revert file: {$value_1} because I couldn't retrieve the file format: {$value_2}"/>
@@ -71,7 +71,7 @@
 		<asset type="text" key="lines" value="Zeilen:"/>
 		<asset type="text" key="mac" value="Macintosh"/>
 		<asset type="text" key="macro_name" value="Makro Name"/>
-		<asset type="text" key="macro_type" value="Makro Type"/>
+		<asset type="text" key="macro_type" value="Makro Typ"/>
 		<asset type="text" key="macros" value="Makros"/>
 		<asset type="text" key="message_an_error_occurred" value="Ein Fehler ist aufgetreten."/>
 		<asset type="text" key="message_cannot_save_file_already_open" value="Cannot save to file: {$value_1} it is currently open."/>
@@ -91,18 +91,18 @@
 		<asset type="text" key="new_macro" value="Neues Makro"/>
 		<asset type="text" key="no" value="Nein"/>
 		<asset type="text" key="ok" value="OK"/>
-		<asset type="text" key="owner_email" value="Owner Email"/>
-		<asset type="text" key="owner_name" value="Owner Name"/>
-		<asset type="text" key="pattern" value="Pattern"/>
+		<asset type="text" key="owner_email" value="Besitzer Email"/>
+		<asset type="text" key="owner_name" value="Besitzer Name"/>
+		<asset type="text" key="pattern" value="Muster"/>
 		<asset type="text" key="regexp" value="Regexp"/>
-		<asset type="text" key="rename_find_replace" value="Rename Find/Replace"/>
-		<asset type="text" key="replace" value="Replace"/>
-		<asset type="text" key="replace_all" value="Replace All"/>
-		<asset type="text" key="replacement" value="replacement"/>
-		<asset type="text" key="replacements" value="replacements"/>
-		<asset type="text" key="replacements_made" value="{$value_1} {$value_2} made."/>
-		<asset type="text" key="restore_defaults" value="Restore Defaults"/>
-		<asset type="text" key="restore_to_application_preferences" value="Restore to Application Preferences"/>
+		<asset type="text" key="rename_find_replace" value="Suchen/Ersetzen umbenennen"/>
+		<asset type="text" key="replace" value="Ersetzen"/>
+		<asset type="text" key="replace_all" value="Alles ersetzen"/>
+		<asset type="text" key="replacement" value="Ersetzung"/>
+		<asset type="text" key="replacements" value="Ersetzungen"/>
+		<asset type="text" key="replacements_made" value="{$value_1} {$value_2} durchgeführt."/>
+		<asset type="text" key="restore_defaults" value="Standard wiederherstellen"/>
+		<asset type="text" key="restore_to_application_preferences" value="Zu Programmeinstellungen zurücksetzen"/>
 		<asset type="text" key="rf_d_bottomtotop" value="Bottom to Top"/>
 		<asset type="text" key="rf_d_toptobottom" value="Top to Bottom"/>
 		<asset type="text" key="rf_nf_filename" value="Filename Only"/>
@@ -111,33 +111,33 @@
 		<asset type="text" key="rf_o_alphabetical" value="Alphabetical"/>
 		<asset type="text" key="rf_o_ascii" value="ASCII"/>
 		<asset type="text" key="rf_o_chronological" value="Chronological"/>
-		<asset type="text" key="selection_only" value="Selection only"/>
-		<asset type="text" key="sort" value="Sort"/>
-		<asset type="text" key="sort_ascending" value="Ascending"/>
-		<asset type="text" key="sort_deep" value="Deep"/>
-		<asset type="text" key="sort_descending" value="Descending"/>
-		<asset type="text" key="sort_macros" value="Sort Macros"/>
-		<asset type="text" key="sort_shallow" value="Shallow"/>
-		<asset type="text" key="start_at_top" value="Start at top"/>
+		<asset type="text" key="selection_only" value="Nur Auswahl"/>
+		<asset type="text" key="sort" value="Sortierung"/>
+		<asset type="text" key="sort_ascending" value="Aufsteigend"/>
+		<asset type="text" key="sort_deep" value="Tief"/>
+		<asset type="text" key="sort_descending" value="Absteigend"/>
+		<asset type="text" key="sort_macros" value="Makros sortieren"/>
+		<asset type="text" key="sort_shallow" value="Flach"/>
+		<asset type="text" key="start_at_top" value="Oben beginnen"/>
 		<asset type="text" key="tooltip_restore_to_global" value="Sets this document's preferences to the current application preference values."/>
-		<asset type="text" key="tooltip_toggle_comment" value="Click to Toggle Comment"/>
-		<asset type="text" key="tooltip_toggle_editability" value="Click to Toggle Read-Only Mode"/>
-		<asset type="text" key="tooltip_toggle_moveability" value="Click to Toggle Moveability Mode"/>
+		<asset type="text" key="tooltip_toggle_comment" value="Klicken um Kommentar umzuschalten"/>
+		<asset type="text" key="tooltip_toggle_editability" value="Klicken um Nur-lese-Modus umzuschalten"/>
+		<asset type="text" key="tooltip_toggle_moveability" value="Klicken um die Verschiebbarkeit umzuschalten"/>
 		<asset type="text" key="trunc_string" value=" . . . "/>
 		<asset type="text" key="unescape" value="Un-Escape"/>
 		<asset type="text" key="unix" value="Unix"/>
-		<asset type="text" key="untitled" value="Untitled"/>
-		<asset type="text" key="untitled_folder" value="untitled"/>
-		<asset type="text" key="update" value="Update"/>
-		<asset type="text" key="update_macro" value="Update Macro"/>
+		<asset type="text" key="untitled" value="Unbenannt"/>
+		<asset type="text" key="untitled_folder" value="unbenannt"/>
+		<asset type="text" key="update" value="Aktualisieren"/>
+		<asset type="text" key="update_macro" value="Makro aktualisieren"/>
 		<asset type="text" key="url" value="URL"/>
-		<asset type="text" key="value" value="Value"/>
+		<asset type="text" key="value" value="Wert"/>
 		<asset type="text" key="windows" value="Windows"/>
-		<asset type="text" key="wrap_around" value="Wrap around"/>
-		<asset type="text" key="wrap_characters" value="characters"/>
-		<asset type="text" key="wrap_words" value="words"/>
-		<asset type="text" key="xmlrpc_call" value="XML-RPC Call"/>
-		<asset type="text" key="yes" value="Yes"/>
+		<asset type="text" key="wrap_around" value="Zeilenumbruch"/>
+		<asset type="text" key="wrap_characters" value="Zeichen"/>
+		<asset type="text" key="wrap_words" value="Wörter"/>
+		<asset type="text" key="xmlrpc_call" value="XML-RPC Aufruf"/>
+		<asset type="text" key="yes" value="Ja"/>
 	<!-- PREFS PREFERENCES -->
 		<preferences id="prefs" class="com.organic.maynard.outliner.Preferences">
 			<!-- MISC HIDDEN PREFS -->
@@ -180,7 +180,7 @@
 				<preference id="tutorials_path" class="com.organic.maynard.outliner.PreferenceString" default="dox\JOE Tutorials.en.opml"/>
 				<preference id="about_path" class="com.organic.maynard.outliner.PreferenceString" default="dox\About JOE.en.opml"/>
 			<!-- USER-ADJUSTABLE PREFS -->
-				<preferencesframe id="preferences_frame" class="com.organic.maynard.outliner.PreferencesFrame" title="Application Preferences">
+				<preferencesframe id="preferences_frame" class="com.organic.maynard.outliner.PreferencesFrame" title="Programmeinstellungen">
 					<preferencepanel id="preferences_panel_editor" class="com.organic.maynard.outliner.PreferencesPanelEditor" title="Editor">
 						<preference_container id="font_preference_container" class="com.organic.maynard.outliner.PreferencesGUITreeSubContainer" style="titled" label=" Font Settings ">
 							<preference id="font_face" class="com.organic.maynard.outliner.PreferenceString" default="SansSerif">
