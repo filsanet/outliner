@@ -41,6 +41,9 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
  
  	static final int INITIAL_WIDTH = 450;
 	static final int INITIAL_HEIGHT = 450;
+
+ 	static final int INITIAL_X = 5;
+	static final int INITIAL_Y = 5;
 		
 	// Class Variables
 	static int untitledDocumentCount = 0;
@@ -79,7 +82,7 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 			
 		// Create the Layout
 		restoreWindowToInitialSize();
-		setLocation(5,5);
+		setLocation(INITIAL_X, INITIAL_Y);
 		getContentPane().add(panel, BorderLayout.CENTER);
 		
 		// Set the icon in the frame header.

@@ -56,7 +56,7 @@ public class DocumentSettings extends JDialog implements ActionListener {
 		this.doc = document;
 		
 		// Create the Layout
-		setSize(250,220);
+		setSize(250,275);
 		setResizable(false);
 		
 		// Define the Bottom Panel

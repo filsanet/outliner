@@ -19,6 +19,7 @@
 package com.organic.maynard.outliner;
 
 import java.io.*;
+import java.util.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -64,6 +65,7 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		add(FILE_OPEN_ITEM);
 
 		FILE_OPEN_RECENT_MENU = new RecentFilesList(FILE_OPEN_RECENT,Outliner.getMostRecentDocumentTouched());
+		FILE_OPEN_RECENT_MENU.setEnabled(false);
 		add(FILE_OPEN_RECENT_MENU);
 
 		insertSeparator(3);
@@ -233,7 +235,12 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 			String encoding = (String) Outliner.openEncodingComboBox.getSelectedItem();
 			String fileFormat = (String) Outliner.openFormatComboBox.getSelectedItem();
 
-			openFile(filename, encoding, fileFormat);
+			DocumentInfo docInfo = new DocumentInfo();
+			docInfo.setPath(filename);
+			docInfo.setEncodingType(encoding);
+			docInfo.setFileFormat(fileFormat);
+			
+			openFile(docInfo);
 		}
 	}
 
@@ -260,7 +267,22 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		docInfo.setPath(filename);
 		docInfo.setEncodingType(document.settings.saveEncoding.cur);
 		docInfo.setLineEnding(document.settings.lineEnd.cur);
-		
+		docInfo.setFileFormat(document.settings.saveFormat.cur);
+		Rectangle r = document.getNormalBounds();
+		docInfo.setWindowTop(r.y);
+		docInfo.setWindowLeft(r.x);
+		docInfo.setWindowBottom(r.y + r.height);
+		docInfo.setWindowRight(r.x + r.width);
+		int index = document.tree.visibleNodes.indexOf(document.panel.layout.getNodeToDrawFrom()) + 1;
+		docInfo.setVerticalScrollState(index);
+		docInfo.getExpandedNodes().clear();
+		for (int i = 0; i < document.tree.visibleNodes.size(); i++) {
+			Node node = (Node) document.tree.visibleNodes.get(i);
+			if (node.isExpanded()) {
+				docInfo.addExpandedNodeNum(i);
+			}
+		}
+					
 		boolean success = saveFileFormat.save(document.tree, docInfo);
 		if (!success) {
 			JOptionPane.showMessageDialog(document, "An error occurred. Could not save file: " + Outliner.chooser.getSelectedFile().getPath());
@@ -272,9 +294,9 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		
 		// Update the Recent File List
 		if (saveAs && !document.getFileName().equals(filename)) {
-			RecentFilesList.addFileNameToList(filename, document.settings.saveEncoding.cur, document.settings.saveFormat.cur);
+			RecentFilesList.addFileNameToList(docInfo);
 		} else {
-			RecentFilesList.updateFileNameInList(filename, filename, document.settings.saveEncoding.cur, document.settings.saveFormat.cur);
+			RecentFilesList.updateFileNameInList(filename, docInfo);
 		}
 
 		document.setFileName(filename);
@@ -285,7 +307,11 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		WindowMenu.updateWindow(document);
 	}
 		
-	protected static void openFile(String filename, String encoding, String fileFormat) {
+	protected static void openFile(DocumentInfo docInfo) {
+		String filename = docInfo.getPath();
+		String encoding = docInfo.getEncodingType();
+		String fileFormat = docInfo.getFileFormat();
+		
 		// Get the file format object
 		OpenFileFormat openFileFormat = Outliner.fileFormatManager.getOpenFormat(fileFormat);
 		if (openFileFormat == null) {
@@ -295,10 +321,6 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		
 		// Load the file
 		TreeContext tree = new TreeContext();
-		
-		DocumentInfo docInfo = new DocumentInfo();
-		docInfo.setPath(filename);
-		docInfo.setEncodingType(encoding);
 
 		boolean success = openFileFormat.open(tree, docInfo);
 		if (!success) {
@@ -310,6 +332,13 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		OutlinerDocument newDoc = new OutlinerDocument(filename);
 		tree.doc = newDoc;
 		newDoc.tree = tree;
+		
+		// Set bounds
+		if (newDoc.isMaximum()) {
+			newDoc.setNormalBounds(new Rectangle(docInfo.getWindowLeft(), docInfo.getWindowTop(), docInfo.getWidth(), docInfo.getHeight()));
+		} else {
+			newDoc.setBounds(docInfo.getWindowLeft(), docInfo.getWindowTop(), docInfo.getWidth(), docInfo.getHeight());
+		}
 		
 		newDoc.settings.syncPrefs();
 		newDoc.settings.saveEncoding.def = encoding;
@@ -337,17 +366,40 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		newDoc.setTitle(filename);
 
 		// Move it to the bottom of the recent files list
-		RecentFilesList.updateFileNameInList(filename, filename, encoding, fileFormat);
+		RecentFilesList.updateFileNameInList(filename, docInfo);
 
+		// Expand Nodes
+		Vector expandedNodes = docInfo.getExpandedNodes();
+		for (int i = 0; i < expandedNodes.size(); i++) {
+			int nodeNum = ((Integer) expandedNodes.elementAt(i)).intValue();
+			try {
+				Node node = (Node) newDoc.tree.visibleNodes.get(nodeNum);
+				node.setExpanded(true);
+			} catch (Exception e) {
+				break;
+			}
+		}
+		
 		// Record the current location
-		tree.setEditingNode((Node) tree.visibleNodes.get(0));
+		Node firstVisibleNode;
+		int index = -1;
+		try {
+			index = docInfo.getVerticalScrollState() - 1;
+			firstVisibleNode = (Node) tree.visibleNodes.get(index);
+		} catch (IndexOutOfBoundsException e) {
+			index = 0;
+			firstVisibleNode = (Node) tree.visibleNodes.get(0);
+		}
+		
+		tree.setEditingNode(firstVisibleNode);
 		tree.setCursorPosition(0);
 		tree.setComponentFocus(outlineLayoutManager.TEXT);
 		
 		// Redraw
 		outlineLayoutManager layout = newDoc.panel.layout;
-		layout.setNodeToDrawFrom((Node) tree.visibleNodes.get(0),0);
-		layout.draw((Node) tree.visibleNodes.get(0), outlineLayoutManager.TEXT);
+		layout.setNodeToDrawFrom(firstVisibleNode,index);
+		//layout.draw(firstVisibleNode, outlineLayoutManager.TEXT);
+		layout.draw();
 	}
 
 	protected static void revertFile(String filename, OutlinerDocument document) {

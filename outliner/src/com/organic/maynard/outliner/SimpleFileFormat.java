@@ -95,5 +95,4 @@ public class SimpleFileFormat implements SaveFileFormat, OpenFileFormat {
 		}
 		return text.toString();
 	}
-
 }

@@ -18,12 +18,17 @@
  
 package com.organic.maynard.outliner;
 
-//import java.awt.*;
-//import javax.swing.*;
+import com.organic.maynard.util.string.StringTools;
+import com.organic.maynard.util.string.StringSplitter;
+import java.util.*;
 
 public class DocumentInfo {
 	
+	// Constants
+	public static final String EXPANDED_NODE_SEPERATOR = ",";
+	
 	// Instance Fields		
+	private String fileFormat = null;
 	private String encodingType = null;
 	private String lineEnding = null;
 	private String padding = null;
@@ -38,13 +43,32 @@ public class DocumentInfo {
 	private int windowLeft = 0;
 	private int windowBottom = 0;
 	private int windowRight = 0;
+	private Vector expandedNodes = new Vector(); // Should only store Integers
 	
 	// The Constructors
 	public DocumentInfo() {
-		this("","","","","","","","","",1,0,0,0,0);
+		this(
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			1,
+			OutlinerDocument.INITIAL_Y,
+			OutlinerDocument.INITIAL_X,
+			OutlinerDocument.INITIAL_Y + OutlinerDocument.INITIAL_HEIGHT,
+			OutlinerDocument.INITIAL_X + OutlinerDocument.INITIAL_WIDTH,
+			""
+		);
 	}
 	
 	public DocumentInfo(
+		String fileFormat,
 		String encodingType,
 		String lineEnding,
 		String padding,
@@ -58,8 +82,10 @@ public class DocumentInfo {
 		int windowTop,
 		int windowLeft,
 		int windowBottom,
-		int windowRight) 
+		int windowRight,
+		String expandedNodesString) 
 	{
+		setFileFormat(fileFormat);
 		setEncodingType(encodingType);
 		setLineEnding(lineEnding);
 		setPadding(padding);
@@ -74,9 +100,13 @@ public class DocumentInfo {
 		setWindowLeft(windowLeft);
 		setWindowBottom(windowBottom);
 		setWindowRight(windowRight);
+		setExpandedNodesString(expandedNodesString);
 	}
 
 	// Accessors
+	public String getFileFormat() {return this.fileFormat;}
+	public void setFileFormat(String fileFormat) {this.fileFormat = fileFormat;}
+
 	public String getEncodingType() {return this.encodingType;}
 	public void setEncodingType(String encodingType) {this.encodingType = encodingType;}
 
@@ -105,18 +135,162 @@ public class DocumentInfo {
 	public void setOwnerEmail(String ownerEmail) {this.ownerEmail = ownerEmail;}
 
 	public int getVerticalScrollState() {return this.verticalScrollState;}
-	public void setVerticalScrollState(int verticalScrollState) {this.verticalScrollState = verticalScrollState;}
-
+	public void setVerticalScrollState(int verticalScrollState) {
+		if (verticalScrollState >= 1) {
+			this.verticalScrollState = verticalScrollState;
+		} else {
+			this.verticalScrollState = 1;
+		}
+	}
+	
 	public int getWindowTop() {return this.windowTop;}
-	public void setWindowTop(int windowTop) {this.windowTop = windowTop;}
+	public void setWindowTop(int windowTop) {
+		if ((windowTop >= 0) && (windowTop <= 10000)) {
+			this.windowTop = windowTop;
+		} else {
+			this.windowTop = 0;
+		}
+	}
 
 	public int getWindowLeft() {return this.windowLeft;}
-	public void setWindowLeft(int windowLeft) {this.windowLeft = windowLeft;}
-
+	public void setWindowLeft(int windowLeft) {
+		if ((windowLeft >= 0) && (windowLeft <= 10000)) {
+			this.windowLeft = windowLeft;
+		} else {
+			this.windowLeft = 0;
+		}
+	}
+	
 	public int getWindowBottom() {return this.windowBottom;}
-	public void setWindowBottom(int windowBottom) {this.windowBottom = windowBottom;}
+	public void setWindowBottom(int windowBottom) {
+		if ((windowBottom - windowTop >= OutlinerDocument.MIN_HEIGHT) && (windowBottom <= 10000 + OutlinerDocument.INITIAL_HEIGHT)) {
+			this.windowBottom = windowBottom;
+		} else {
+			this.windowBottom = windowTop + OutlinerDocument.INITIAL_HEIGHT;
+		}
+	}
 
 	public int getWindowRight() {return this.windowRight;}
-	public void setWindowRight(int windowRight) {this.windowRight = windowRight;}
+	public void setWindowRight(int windowRight) {
+		if ((windowRight - windowLeft >= OutlinerDocument.MIN_WIDTH) && (windowRight <= 10000 + OutlinerDocument.INITIAL_WIDTH)) {
+			this.windowRight = windowRight;
+		} else {
+			this.windowRight = windowLeft + OutlinerDocument.INITIAL_WIDTH;
+		}
+	}
 
+	public Vector getExpandedNodes() {return this.expandedNodes;}
+	public boolean setExpandedNodes(Vector expandedNodes) {
+		// Make sure all values are Integers
+		for (int i = 0; i < expandedNodes.size(); i++) {
+			try {
+				Integer temp = (Integer) expandedNodes.elementAt(i);
+			} catch (ClassCastException e) {
+				return false;
+			}
+		}
+		
+		this.expandedNodes = expandedNodes;
+		return true;
+	}
+	
+	public String getExpandedNodesString() {
+		StringBuffer buf = new StringBuffer();
+		for (int i = 0; i < expandedNodes.size(); i++) {
+			buf.append(((Integer) expandedNodes.elementAt(i)).toString());
+			if (i < expandedNodes.size() - 1) {
+				buf.append(EXPANDED_NODE_SEPERATOR);
+			}
+		}
+		return buf.toString();
+	}
+	
+	public void setExpandedNodesString(String nodeList) {
+		// Clear out the current expandedNodes Vector
+		getExpandedNodes().clear();
+		
+		// Load it up with Integers
+		StringSplitter splitter = new StringSplitter(nodeList,EXPANDED_NODE_SEPERATOR); 
+		while (splitter.hasMoreElements()) {
+			addExpandedNodeNum((String) splitter.nextElement());
+		}
+	}
+	
+	public boolean addExpandedNodeNum(String nodeNum) {
+		try {
+			return addExpandedNodeNum(Integer.parseInt(nodeNum));
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+	
+	public boolean addExpandedNodeNum(int nodeNum) {
+		int lastIntOnList = -1;
+		try {
+			lastIntOnList = ((Integer) expandedNodes.lastElement()).intValue();
+		} catch (NoSuchElementException e) {}
+		if (nodeNum > lastIntOnList) {
+			expandedNodes.add(new Integer(nodeNum));
+			return true;
+		}
+		return false;
+	}
+	
+	// Additional Accessors
+	public int getWidth() {return getWindowRight() - getWindowLeft();}
+	public int getHeight() {return getWindowBottom() - getWindowTop();}
+	
+	// Utility Methods
+	public String toEncodedString(String seperator, char escapeChar) {
+		StringBuffer buffer = new StringBuffer();
+		
+		buffer.append(StringTools.escape(getFileFormat(), escapeChar, null));
+		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+
+		buffer.append(StringTools.escape(getEncodingType(), escapeChar, null));
+		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+
+		buffer.append(StringTools.escape(getLineEnding(), escapeChar, null));
+		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+
+		buffer.append(StringTools.escape(getPadding(), escapeChar, null));
+		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+
+		buffer.append(StringTools.escape(getPath(), escapeChar, null));
+		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+
+		buffer.append(StringTools.escape(getTitle(), escapeChar, null));
+		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+
+		buffer.append(StringTools.escape(getDateCreated(), escapeChar, null));
+		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+
+		buffer.append(StringTools.escape(getDateModified(), escapeChar, null));
+		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+
+		buffer.append(StringTools.escape(getOwnerName(), escapeChar, null));
+		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+
+		buffer.append(StringTools.escape(getOwnerEmail(), escapeChar, null));
+		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+
+		buffer.append(StringTools.escape("" + getVerticalScrollState(), escapeChar, null));
+		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+
+		buffer.append(StringTools.escape("" + getWindowTop(), escapeChar, null));
+		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+
+		buffer.append(StringTools.escape("" + getWindowLeft(), escapeChar, null));
+		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+
+		buffer.append(StringTools.escape("" + getWindowBottom(), escapeChar, null));
+		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+
+		buffer.append(StringTools.escape("" + getWindowRight(), escapeChar, null));
+		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+
+		buffer.append(StringTools.escape("" + getExpandedNodesString(), escapeChar, null));
+		
+		return buffer.toString();
+	}
 }

@@ -26,15 +26,22 @@ import javax.swing.*;
 
 public class RecentFilesListItem extends JMenuItem {
 	
-	public String filename = "";
-	public String encoding = "";
-	public String fileFormat = "";
+	private DocumentInfo docInfo = null;
+	//public String filename = "";
+	//public String encoding = "";
+	//public String fileFormat = "";
 		
 	// The Constructors
-	public RecentFilesListItem(String text, String filename, String encoding, String fileFormat) {
+	public RecentFilesListItem(String text, DocumentInfo docInfo) {
 		super(text);
-		this.filename = filename;
-		this.encoding = encoding;
-		this.fileFormat = fileFormat;
-	}	
+		setDocumentInfo(docInfo);
+		//this.filename = filename;
+		//this.encoding = encoding;
+		//this.fileFormat = fileFormat;
+	}
+
+	// Accessors
+	public DocumentInfo getDocumentInfo() {return this.docInfo;}
+	public void setDocumentInfo(DocumentInfo docInfo) {this.docInfo = docInfo;}
+
 }

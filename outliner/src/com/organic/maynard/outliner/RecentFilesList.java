@@ -29,10 +29,9 @@ import com.organic.maynard.util.string.StringTools;
 public class RecentFilesList extends JMenu implements ActionListener {
 	
 	private OutlinerDocument doc = null;
+		
+	public static Vector docInfoList = new Vector();
 	
-	public static Vector fileList = new Vector();
-	public static Vector encodingList = new Vector(); // Stores the encoding used to save this document, so we can reopen it correctly.
-	public static Vector formatList = new Vector(); // Stores the format used to save this document, so we can reopen it correctly.
 	
 	// The Constructors
 	public RecentFilesList(String text, OutlinerDocument doc) {
@@ -40,65 +39,58 @@ public class RecentFilesList extends JMenu implements ActionListener {
 		this.doc = doc;
 		
 		// Populate the Menu with the existing filenames
-		loadMenuItemsFromLists();
-
-	}
-	
-	private void loadMenuItemsFromLists() {
-		for (int i = 0; i < fileList.size(); i++) {
-			String filename = (String) fileList.elementAt(i);
-			String encoding = (String) encodingList.elementAt(i);
-			String fileFormat = (String) formatList.elementAt(i);
-			addFileName(filename,encoding,fileFormat);
-		}	
+		for (int i = 0; i < docInfoList.size(); i++) {
+			addFileName((DocumentInfo) docInfoList.elementAt(i));
+		}
 	}
 
-	private void addFileName(String filename, String encoding, String fileFormat) {
-		RecentFilesListItem item = new RecentFilesListItem(filename,filename,encoding,fileFormat);
+	private void addFileName(DocumentInfo docInfo) {
+		RecentFilesListItem item = new RecentFilesListItem(docInfo.getPath(), docInfo);
 		item.addActionListener(this);
 		add(item);
 	}
 	
 	// Static methods
-	public static void addFileNameToList(String filename,String encoding,String fileFormat) {
+	public static void addFileNameToList(DocumentInfo docInfo) {
+		String filename = docInfo.getPath();
+		
 		// Short Circuit if undo is disabled.
 		if (Preferences.RECENT_FILES_LIST_SIZE.cur == 0) {return;}
 
 		if (isFileNameUnique(filename)) {
-			if (fileList.size() >= Preferences.RECENT_FILES_LIST_SIZE.cur) {
+			if (docInfoList.size() >= Preferences.RECENT_FILES_LIST_SIZE.cur) {
 				// Remove from the lists
-				fileList.removeElementAt(0);
-				encodingList.removeElementAt(0);
-				formatList.removeElementAt(0);
+				docInfoList.removeElementAt(0);
 				
 				// Remove from menus
 				Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.remove(0);
 			}
 			// Add to the lists
-			fileList.addElement(filename);
-			encodingList.addElement(encoding);
-			formatList.addElement(fileFormat);
+			docInfoList.addElement(docInfo);
 
 			// Add to menus
-			Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.addFileName(filename,encoding,fileFormat);
+			Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.addFileName(docInfo);
+			Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.setEnabled(true);
 		}	
 	}
 
 	public static void trim() {
-		while (fileList.size() > Preferences.RECENT_FILES_LIST_SIZE.cur) {
+		while (docInfoList.size() > Preferences.RECENT_FILES_LIST_SIZE.cur) {
 			// Trim lists
-			fileList.removeElementAt(0);
-			encodingList.removeElementAt(0);
-			formatList.removeElementAt(0);
+			docInfoList.removeElementAt(0);
 
 			// Trim menus
 			Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.remove(0);
-		}	
+		}
+		
+		if (Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.getItemCount() <= 0) {
+			Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.setEnabled(false);
+		}		
 	}
 
 	public static boolean isFileNameUnique(String filename) {
-		for (int i = 0; i < fileList.size(); i++) {
-			String text = (String) fileList.elementAt(i);
+		for (int i = 0; i < docInfoList.size(); i++) {
+			String text = ((DocumentInfo) docInfoList.elementAt(i)).getPath();
 			if (filename.equals(text)) {
 				return false;
 			}
@@ -106,16 +98,26 @@ public class RecentFilesList extends JMenu implements ActionListener {
 		return true;
 	}
 	
-	public static void updateFileNameInList(String oldFilename, String filename, String encoding, String fileFormat) {
+	public static DocumentInfo getDocumentInfo(String filename) {
+		for (int i = 0; i < docInfoList.size(); i++) {
+			DocumentInfo docInfo = (DocumentInfo) docInfoList.elementAt(i);
+			if (filename.equals(docInfo.getPath())) {
+				return docInfo;
+			}
+		}
+		return null;
+	}
+	
+	public static void updateFileNameInList(String oldFilename, DocumentInfo docInfo) {
 		removeFileNameFromList(oldFilename);
-		addFileNameToList(filename,encoding,fileFormat);		
+		addFileNameToList(docInfo);		
 	}
 
 	public static void removeFileNameFromList(String filename) {
 		int index = -1;
-		for (int i = 0; i < fileList.size(); i++) {
-			String value = (String) fileList.elementAt(i);
-			if (value.equals(filename)) {
+		for (int i = 0; i < docInfoList.size(); i++) {
+			String text = ((DocumentInfo) docInfoList.elementAt(i)).getPath();
+			if (text.equals(filename)) {
 				index = i;
 				break;
 			}
@@ -125,12 +127,13 @@ public class RecentFilesList extends JMenu implements ActionListener {
 		}
 		
 		// Remove from lists
-		fileList.removeElementAt(index);
-		encodingList.removeElementAt(index);
-		formatList.removeElementAt(index);
+		docInfoList.removeElementAt(index);
 		
 		// Remove from menus
 		Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.remove(index);
+		if (Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.getItemCount() <= 0) {
+			Outliner.menuBar.fileMenu.FILE_OPEN_RECENT_MENU.setEnabled(false);
+		}
 	}
 
 	
@@ -145,18 +148,18 @@ public class RecentFilesList extends JMenu implements ActionListener {
 		}
 	}
 	
+	// Need to fix
 	private static String prepareConfigFile() {
 		StringBuffer buffer = new StringBuffer();
-		for (int i = 0; i < fileList.size(); i++) {
+		for (int i = 0; i < docInfoList.size(); i++) {
 			buffer.append(Outliner.COMMAND_SET);
 			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
 			buffer.append("recent_file");
 			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-			buffer.append(StringTools.escape((String) fileList.elementAt(i), '\\', null));
-			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-			buffer.append(StringTools.escape((String) encodingList.elementAt(i), '\\', null));
-			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
-			buffer.append(StringTools.escape((String) formatList.elementAt(i), '\\', null));
+			
+			DocumentInfo docInfo = (DocumentInfo) docInfoList.elementAt(i);
+			buffer.append(docInfo.toEncodedString(Outliner.COMMAND_PARSER_SEPARATOR, '\\'));
+			
 			buffer.append(System.getProperty("line.separator"));
 		}
 		return buffer.toString();
@@ -164,13 +167,13 @@ public class RecentFilesList extends JMenu implements ActionListener {
 	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		String filename = ((RecentFilesListItem) e.getSource()).filename;
-		String encoding = ((RecentFilesListItem) e.getSource()).encoding;
-		String fileFormat = ((RecentFilesListItem) e.getSource()).fileFormat;
+		DocumentInfo docInfo = ((RecentFilesListItem) e.getSource()).getDocumentInfo();
+		String filename = docInfo.getPath();
 		if (!Outliner.isFileNameUnique(filename)) {
 			JOptionPane.showMessageDialog(this.doc, "The file: " + filename + " is already open.");
 			return;
 		}
-		FileMenu.openFile(filename,encoding,fileFormat);
+
+		FileMenu.openFile(docInfo);
 	}
 }

@@ -150,14 +150,31 @@ public class SetPrefCommand extends Command {
 			Preferences.SAVE_FORMAT.restoreTemporaryToCurrent();
 		
 		} else if (variableName.equals(COMMAND_RECENT_FILE)) {
-			if (RecentFilesList.fileList.size() < Preferences.RECENT_FILES_LIST_SIZE.cur) {
-				RecentFilesList.fileList.addElement((String) signature.elementAt(2));
-				RecentFilesList.encodingList.addElement((String) signature.elementAt(3));
+			if (RecentFilesList.docInfoList.size() < Preferences.RECENT_FILES_LIST_SIZE.cur) {
 				try {
-					RecentFilesList.formatList.addElement((String) signature.elementAt(4));
-				} catch (ArrayIndexOutOfBoundsException e) {
-					RecentFilesList.formatList.addElement(Preferences.OPEN_FORMAT_DEFAULT);
-				}
+					// Create a new DocumentInfo object
+					DocumentInfo docInfo = new DocumentInfo(
+						(String) signature.elementAt(2),
+						(String) signature.elementAt(3),
+						(String) signature.elementAt(4),
+						(String) signature.elementAt(5),
+						(String) signature.elementAt(6),
+						(String) signature.elementAt(7),
+						(String) signature.elementAt(8),
+						(String) signature.elementAt(9),
+						(String) signature.elementAt(10),
+						(String) signature.elementAt(11),
+						
+						Integer.parseInt((String) signature.elementAt(12)),
+						Integer.parseInt((String) signature.elementAt(13)),
+						Integer.parseInt((String) signature.elementAt(14)),
+						Integer.parseInt((String) signature.elementAt(15)),
+						Integer.parseInt((String) signature.elementAt(16)),
+						
+						(String) signature.elementAt(17)
+					);
+					RecentFilesList.docInfoList.addElement(docInfo);
+				} catch (ArrayIndexOutOfBoundsException e) {}
 			}
 		} else if (variableName.equals(COMMAND_ENCODING)) {
 			Preferences.ENCODINGS.addElement((String) signature.elementAt(2));
