@@ -32,14 +32,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
  
-package com.organic.maynard.outliner;
+package com.organic.maynard.outliner.util.undo;
 
+import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.dom.*;
 import com.organic.maynard.outliner.event.*;
 
-import com.organic.maynard.outliner.util.undo.*;
-
-import com.organic.maynard.outliner.dom.*;
 import java.util.*;
 import javax.swing.*;
 
@@ -48,24 +46,43 @@ import javax.swing.*;
  * @version $Revision$, $Date$
  */
 
-public class UndoQueue {
-	private OutlinerDocument doc = null;
-	
+public class UndoQueue implements com.organic.maynard.outliner.util.Destructible {
+
+	// Instance Fields
+	private Document doc = null;
 	private UndoableList queue = new UndoableList(Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).cur);
 	private int cursor = -1;
-	
-	// The Constructors
-	public UndoQueue(OutlinerDocument doc) {
+
+
+	/**
+	 * Creates a new <code>UndoQueue</code> for the provided <code>Document</code>.
+	 * an internal cursor is maintained that points to the current location. As
+	 * actions are undone/redone this cursor is updated.
+	 *
+	 * @param doc the document that uses this <code>UndoQueue</code>.
+	 */	
+	public UndoQueue(Document doc) {
 		this.doc = doc;
 	}
-	
+
+
+	// Destructible Interface
 	public void destroy() {
 		doc = null;
 		queue = null;
 	}
+
 	
+	/**
+	 * Adds the <code>Undoable</code> to this <code>UndoQueue</code>. The
+	 * queue is trimmed as neccessary to accomodate the new undoable. If 
+	 * successful, an <code>UndoQueueEvent</code> is fired.
+	 *
+	 * @param undoable the <code>Undoable</code> that is being added to
+	 *                 this <code>UndoQueue</code>.
+	 */	
 	public void add(Undoable undoable) {
-		doc.setFileModified(true);
+		doc.setModified(true);
 		
 		int queueSize = Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).cur;
 		
@@ -74,6 +91,7 @@ public class UndoQueue {
 			return;
 		}
 		
+		// Trim Redoables
 		trim();
 		
 		if (queue.size() < queueSize) {
@@ -87,7 +105,14 @@ public class UndoQueue {
 		// Fire Event
 		Outliner.documents.fireUndoQueueEvent(doc, UndoQueueEvent.ADD);
 	}
-	
+
+	/**
+	 * Gets the current <code>Undoable</code> pointed to by the internal
+	 * cursor.
+	 *
+	 * @return the current <code>Undoable</code> or <code>null</code> if
+	 *         the <code>UndoQueue</code> is empty.
+	 */
 	public Undoable get() {
 		try {
 			return queue.get(cursor);
@@ -96,29 +121,48 @@ public class UndoQueue {
 		}
 	}
 
+	/**
+	 * Gets the current <code>Undoable</code> pointed to by the internal
+	 * cursor if it is an <code>UndoableEdit</code> object.
+	 *
+	 * @return the current <code>Undoable</code> or <code>null</code> if
+	 *         the <code>UndoQueue</code> is empty, or the current <code>Undoable</code>
+	 *         is not an instance of <code>UndoableEdit</code>.
+	 */
 	public UndoableEdit getIfEdit() {
-		try {
-			return (UndoableEdit) get();
-		} catch (ClassCastException cce) {
+		Undoable undoable = get();
+		
+		if (undoable instanceof UndoableEdit) {
+			return (UndoableEdit) undoable;
+		} else {
 			return null;
 		}
 	}
 
+	/**
+	 * Trims the undo queue to the current size of the UNDO_QUEUE_SIZE Preference.
+	 * Starts by trimming redoables then trims undoables if neccessary. An
+	 * UndoQueueEvent is fired.
+	 */	
 	public void trim() {
 		// First trim off any redoables
 		queue.trim(cursor + 1);
 		
-		// Next, trim undoables from oldest to newest until the size matches the UNDO_QUEUE_SIZE preference.
-		// This could be optimized with System.arraycopy.
-		while (queue.size() > Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).cur) {
-			queue.remove(0);
-			cursor--;
+		// Next, trim undoables.
+		int range = queue.size() - Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).cur;
+		if (range > 0) {
+			queue.removeRange(0, range - 1);
+			cursor -= range;
 		}
 
 		// Fire Event
 		Outliner.documents.fireUndoQueueEvent(doc, UndoQueueEvent.TRIM);
 	}
 
+	/**
+	 * Clears this <code>UndoQueue</code> resetting it's size to zero. An
+	 * UndoQueueEvent is fired.
+	 */	
 	public void clear() {
 		//System.out.println("Clear");
 		cursor = -1;
@@ -127,7 +171,12 @@ public class UndoQueue {
 		// Fire Event
 		Outliner.documents.fireUndoQueueEvent(doc, UndoQueueEvent.CLEAR);
 	}
-	
+
+	/**
+	 * Indicates if this <code>UndoQueue</code> is currently empty.
+	 *
+	 * @return <code>true</code> if empty, otherwise returns <code>false</code>.
+	 */
 	public boolean isEmpty() {
 		if (queue.size() <= 0) {
 			return true;
@@ -137,32 +186,41 @@ public class UndoQueue {
 	}
 
 
-	// Undo Methods
+	/**
+	 * Calls the undo() method on the current <code>Undoable</code> if the
+	 * <code>UndoQueue</code> is currently undoable. An UndoQueueEvent is fired.
+	 */	
 	public void undo() {
 		if (isUndoable()) {
-			primitiveUndo();
-			doc.setFileModified(true);
+			queue.get(cursor).undo();
+			cursor--;
+			doc.setModified(true);
 
 			// Fire Event
 			Outliner.documents.fireUndoQueueEvent(doc, UndoQueueEvent.UNDO);
 		}
 	}
 
+	/**
+	 * Calls the undo() method on each <code>Undoable</code> in the <code>UndoQueue</code>
+	 * starting at the current <code>Undoable</code>. An UndoQueueEvent is fired.
+	 */	
 	public void undoAll() {
 		while (isUndoable()) {
-			primitiveUndo();
+			queue.get(cursor).undo();
+			cursor--;
 		}
-		doc.setFileModified(true);
+		doc.setModified(true);
 
 		// Fire Event
 		Outliner.documents.fireUndoQueueEvent(doc, UndoQueueEvent.UNDO_ALL);
 	}
 
-	private void primitiveUndo() {
-		queue.get(cursor).undo();
-		cursor--;
-	}
-	
+	/**
+	 * Indicates if this <code>UndoQueue</code> is currently undoable.
+	 *
+	 * @return <code>true</code> if undoable, otherwise returns <code>false</code>.
+	 */
 	public boolean isUndoable() {
 		if (cursor >= 0) {
 			return true;
@@ -172,32 +230,41 @@ public class UndoQueue {
 	}
 
 
-	// Redo Methods	
+	/**
+	 * Calls the redo() method on the current <code>Undoable</code> if the
+	 * <code>UndoQueue</code> is currently redoable. An UndoQueueEvent is fired.
+	 */	
 	public void redo() {
 		if (isRedoable()) {
-			primitiveRedo();
-			doc.setFileModified(true);
+			cursor++;
+			queue.get(cursor).redo();
+			doc.setModified(true);
 
 			// Fire Event
 			Outliner.documents.fireUndoQueueEvent(doc, UndoQueueEvent.REDO);
 		}	
 	}
 
+	/**
+	 * Calls the redo() method on each <code>Undoable</code> in the <code>UndoQueue</code>
+	 * starting at the current <code>Undoable</code>. An UndoQueueEvent is fired.
+	 */	
 	public void redoAll() {
 		while (isRedoable()) {
-			primitiveRedo();
+			cursor++;
+			queue.get(cursor).redo();
 		}
-		doc.setFileModified(true);
+		doc.setModified(true);
 
 		// Fire Event
 		Outliner.documents.fireUndoQueueEvent(doc, UndoQueueEvent.REDO_ALL);
 	}
-	
-	private void primitiveRedo() {
-		cursor++;
-		queue.get(cursor).redo();
-	}
 
+	/**
+	 * Indicates if this <code>UndoQueue</code> is currently redoable.
+	 *
+	 * @return <code>true</code> if redoable, otherwise returns <code>false</code>.
+	 */
 	public boolean isRedoable() {
 		if (cursor < queue.size() - 1) {
 			return true;

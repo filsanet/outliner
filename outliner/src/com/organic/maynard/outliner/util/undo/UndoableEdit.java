@@ -32,8 +32,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
  
-package com.organic.maynard.outliner;
+package com.organic.maynard.outliner.util.undo;
 
+import com.organic.maynard.outliner.*;
+
+/**
+ * An undoable that holds simple text changes. An <code>UndoableEdit</code>
+ * can be put into a frozen state where it no longer collects incremental text
+ * changes. In this case, a new non-frozen <code>UndoableEdit</code> is created
+ * to begin collecting text changes.
+ *
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
 public class UndoableEdit implements Undoable {
 
 	// Fields
@@ -103,7 +115,10 @@ public class UndoableEdit implements Undoable {
 		tree.setComponentFocus(OutlineLayoutManager.TEXT);
 		tree.setEditingNode(node);
 		tree.clearSelection();
-		tree.insertNode(node); // Used for visibility
+		
+		if (!node.isVisible()) {
+			tree.insertNode(node); // Used for visibility
+		}
 		
 		tree.getDocument().panel.layout.draw(node, OutlineLayoutManager.TEXT);
 	}
@@ -118,7 +133,10 @@ public class UndoableEdit implements Undoable {
 		tree.setComponentFocus(OutlineLayoutManager.TEXT);
 		tree.setEditingNode(node);
 		tree.clearSelection();
-		tree.insertNode(node); // Used for visibility
+
+		if (!node.isVisible()) {
+			tree.insertNode(node); // Used for visibility
+		}
 		
 		tree.getDocument().panel.layout.draw(node, OutlineLayoutManager.TEXT);
 	}
@@ -126,7 +144,7 @@ public class UndoableEdit implements Undoable {
 
 	// Static Methods
 	public static void freezeUndoEdit(Node currentNode) {
-		UndoableEdit undoable = currentNode.getTree().getDocument().undoQueue.getIfEdit();
+		UndoableEdit undoable = currentNode.getTree().getDocument().getUndoQueue().getIfEdit();
 		if ((undoable != null) && (undoable.getNode() == currentNode)) {
 			undoable.setFrozen(true);
 		}

@@ -32,47 +32,47 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
  
-package com.organic.maynard.outliner;
+package com.organic.maynard.outliner.util.undo;
+
+import com.organic.maynard.outliner.*;
 
 import java.util.*;
-import com.organic.maynard.outliner.util.undo.UndoableList;
+import java.awt.*;
 
-public abstract class AbstractCompoundUndoable implements CompoundUndoable {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
+public class PrimitiveUndoableEditableChange implements Undoable, PrimitiveUndoablePropertyChange {
 
-	protected UndoableList primitives = new UndoableList(5);
-	private boolean isUpdatingGui = true;
+	private Node node = null;
+	private int oldState = 0;
+	private int newState = 0;
+	
 	
 	// The Constructors
-	public AbstractCompoundUndoable(boolean isUpdatingGui) {
-		this.isUpdatingGui = isUpdatingGui;
+	public PrimitiveUndoableEditableChange(Node node, int oldState, int newState) {
+		this.node = node;
+		this.oldState = oldState;
+		this.newState = newState;
 	}
+
+	public void destroy() {
+		node = null;
+	}
+
+
+	// PrimitiveUndoablePropertyChangeInterface
+	public Node getNode() {return node;}
 	
-	// Accessors
-	public void addPrimitive(Undoable primitive) {
-		primitives.add(primitive);
-	}
-	
-	public boolean isUpdatingGui() {
-		return isUpdatingGui;
-	}
-	
-	public boolean isEmpty() {
-		if (primitives.size() > 0) {
-			return false;
-		} else {
-			return true;
-		}
-	}
 	
 	// Undoable Interface
-	public void destroy() {
-		for (int i = 0, limit = primitives.size(); i < limit; i++) {
-			primitives.get(i).destroy();
-		}
-
-		primitives = null;
+	public void undo() {
+		node.setEditableState(oldState);
 	}
-
-	public abstract void undo();
-	public abstract void redo();
+	
+	public void redo() {
+		node.setEditableState(newState);
+	}
 }

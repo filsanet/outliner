@@ -32,76 +32,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
  
-package com.organic.maynard.outliner;
+package com.organic.maynard.outliner.util.undo;
 
-import java.util.*;
-import java.awt.*;
+import com.organic.maynard.outliner.*;
 
-public class PrimitiveUndoableReplace implements Undoable {
-
-	private Node parent = null;
-	private Node oldNode = null;
-	private Node newNode = null;
-	
-	private int index = -1;
-	
-	// The Constructors
-	public PrimitiveUndoableReplace(Node parent, Node oldNode, Node newNode) {
-		this.parent = parent;
-		this.oldNode = oldNode;
-		this.newNode = newNode;
-		this.index = oldNode.currentIndex();
-	}
-
-	public void destroy() {
-		parent = null;
-		oldNode = null;
-		newNode = null;
-	}
-
-	// Accessors
-	public Node getOldNode() {return oldNode;}
-	public Node getNewNode() {return newNode;}
-			
-	public void undo() {
-		JoeTree tree = parent.getTree();
-		
-		if (newNode != null) {
-			// Remove node from visible nodes cache
-			tree.removeNode(newNode);
-			
-			// Swap the nodes
-			parent.removeChild(newNode,index);
-		}
-
-		// Swap the nodes
-		parent.insertChild(oldNode,index);
-		
-		// Insert the node into the visible nodes cache
-		tree.insertNode(oldNode);
-		
-		// Handle Selection
-		tree.addNodeToSelection(oldNode);	
-	}
-	
-	// Undoable Interface
-	public void redo() {
-		JoeTree tree = parent.getTree();
-
-		// Remove node from visible nodes cache
-		tree.removeNode(oldNode);
-		
-		// Swap the nodes
-		parent.removeChild(oldNode, index);	
-			
-		if (newNode != null) {
-			parent.insertChild(newNode, index);
-			
-			// Insert the node into the visible nodes cache
-			tree.insertNode(newNode);
-	
-			// Handle Selection
-			tree.addNodeToSelection(newNode);
-		}
-	}
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
+public interface PrimitiveUndoablePropertyChange {
+	public Node getNode();
 }

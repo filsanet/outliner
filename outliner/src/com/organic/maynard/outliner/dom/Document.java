@@ -36,6 +36,7 @@ package com.organic.maynard.outliner.dom;
 
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.util.Destructible;
+import com.organic.maynard.outliner.util.undo.UndoQueue;
 
 /**
  * @author  $Author$
@@ -46,6 +47,7 @@ public interface Document extends Destructible {
 	public void setFileName(String name);
 	public String getFileName();
 	
+	public void setModified(boolean modified);
 	public boolean isModified();
 
 	public void setDocumentRepository(DocumentRepository repository);
@@ -61,6 +63,6 @@ public interface Document extends Destructible {
 	public void setTree(JoeTree tree);
 	public JoeTree getTree();
 	
-	// Try to get rid of these
+	// Should get rid of these
 	public boolean isIcon();
 }

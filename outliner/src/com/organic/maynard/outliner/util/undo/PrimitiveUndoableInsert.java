@@ -32,40 +32,52 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
  
-package com.organic.maynard.outliner;
+package com.organic.maynard.outliner.util.undo;
 
-public class CompoundUndoableEdit extends AbstractCompoundUndoable {
+import com.organic.maynard.outliner.*;
 
-	private JoeTree tree = null;
+import java.util.*;
+import java.awt.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
+public class PrimitiveUndoableInsert implements Undoable {
+
+	private Node parent = null;
+	private Node node = null;
+	private int index = 0;
+	
 	
 	// The Constructors
-	public CompoundUndoableEdit(JoeTree tree) {
-		this(true, tree);
+	public PrimitiveUndoableInsert(Node parent, Node node, int index) {
+		this.parent = parent;
+		this.node = node;
+		this.index = index;
 	}
 
-	public CompoundUndoableEdit(boolean isUpdatingGui, JoeTree tree) {
-		super(isUpdatingGui);
-		this.tree = tree;
-	}
-
-
-	// Undoable Interface
 	public void destroy() {
-		super.destroy();
-		tree = null;
+		parent = null;
+		node = null;
 	}
+
+	// Accessors
+	public void setNode(Node node) {this.node = node;}
+	public Node getNode() {return this.node;}
 	
 	public void undo() {
-		for (int i = primitives.size() - 1; i >= 0; i--) {
-			primitives.get(i).undo();
-		}
-		tree.getDocument().panel.layout.redraw();	
+		// Remove the Node
+		node.getTree().removeNode(node);
+		parent.removeChild(node, index);
 	}
 	
+	// Undoable Interface
 	public void redo() {
-		for (int i = 0, limit = primitives.size(); i < limit; i++) {
-			primitives.get(i).redo();
-		}
-		tree.getDocument().panel.layout.redraw();	
+		// Insert the Node
+		parent.insertChild(node, index);
+		node.getTree().insertNode(node);
+		node.getTree().addNodeToSelection(node);
 	}
 }

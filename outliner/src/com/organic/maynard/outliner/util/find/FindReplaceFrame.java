@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner.util.find;
 
+import com.organic.maynard.outliner.util.undo.*;
 import com.organic.maynard.outliner.dom.*;
 import com.organic.maynard.outliner.event.DocumentRepositoryListener;
 import com.organic.maynard.outliner.event.DocumentRepositoryEvent;

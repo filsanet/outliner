@@ -34,6 +34,8 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.util.undo.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.Window;

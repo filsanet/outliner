@@ -35,6 +35,7 @@
 package com.organic.maynard.outliner;
 
 import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.util.undo.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -311,7 +312,6 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	// ComponentListener Interface
 	public void componentResized(ComponentEvent e) {
 		panel.layout.redraw();
-		//panel.layout.setFocus(tree.getEditingNode(),tree.getComponentFocus());
 	}
 	
 	public void componentHidden(ComponentEvent e) {} 

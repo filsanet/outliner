@@ -32,11 +32,65 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
  
-package com.organic.maynard.outliner;
+package com.organic.maynard.outliner.util.undo;
 
-import com.organic.maynard.outliner.util.Destructible;
+import com.organic.maynard.outliner.*;
 
-public interface Undoable extends Destructible {
-	public void undo();
-	public void redo();
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
+public abstract class AbstractCompoundUndoable implements CompoundUndoable {
+
+	/**
+	 * An <code>UndoableList</code> that holds the Primitives for this
+	 * <code>CompoundUndoable</code>. This field is protected to allow
+	 * subclasses direct and thus faster access to the list.
+	 */	
+	protected UndoableList primitives = new UndoableList(5);
+	
+	private boolean isUpdatingGui = true;
+
+
+	// The Constructors
+	public AbstractCompoundUndoable(boolean isUpdatingGui) {
+		this.isUpdatingGui = isUpdatingGui;
+	}
+
+
+	// CompoundUndoable Interface
+	public void addPrimitive(Undoable primitive) {
+		primitives.add(primitive);
+	}
+
+	public void setUpdatingGui(boolean isUpdatingGui) {
+		this.isUpdatingGui = isUpdatingGui;
+	}
+	
+	public boolean isUpdatingGui() {
+		return isUpdatingGui;
+	}
+	
+	public boolean isEmpty() {
+		if (primitives.size() > 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+
+	// Destructible Interface
+	public void destroy() {
+		for (int i = 0, limit = primitives.size(); i < limit; i++) {
+			primitives.get(i).destroy();
+		}
+
+		primitives = null;
+	}
+
+	// Undoable Interface
+	public abstract void undo();
+	public abstract void redo();
 }

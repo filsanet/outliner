@@ -43,11 +43,13 @@ import javax.swing.text.Caret;
 import javax.swing.plaf.*;
 import javax.swing.plaf.metal.*;
 
-// This class allows re-routing of keyEvents back to the correct OutlinerCellRendererImpl.
-// It is possible when a draw is occuring that changes the draw direction that keyEvents will
-// be sent to the old renderer before the focus manager has a chance to catch up. This class
-// intercepts any miss-targetd key events and sends them off to the correct renderer, the one
-// attached to the current editing node. 
+/**
+ * This class allows re-routing of keyEvents back to the correct OutlinerCellRendererImpl.
+ * It is possible when a draw is occuring that changes the draw direction that keyEvents will
+ * be sent to the old renderer before the focus manager has a chance to catch up. This class
+ * intercepts any miss-targetd key events and sends them off to the correct renderer, the one
+ * attached to the current editing node. 
+ */
 public class OutlinerFocusManager extends DefaultFocusManager {
 
 	public void processKeyEvent(Component c, KeyEvent e) {

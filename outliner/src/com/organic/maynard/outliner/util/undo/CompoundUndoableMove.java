@@ -32,7 +32,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
  
-package com.organic.maynard.outliner;
+package com.organic.maynard.outliner.util.undo;
+
+import com.organic.maynard.outliner.*;
 
 import java.util.*;
 

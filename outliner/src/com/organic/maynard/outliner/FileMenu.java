@@ -87,7 +87,7 @@
 // we're part of this
 package com.organic.maynard.outliner;
 
-// we use these
+import com.organic.maynard.outliner.util.undo.*;
 import java.io.*;
 import java.util.*;
 import java.text.SimpleDateFormat;

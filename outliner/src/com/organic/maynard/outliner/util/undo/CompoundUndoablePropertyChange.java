@@ -32,25 +32,68 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
  
-package com.organic.maynard.outliner;
+package com.organic.maynard.outliner.util.undo;
 
-public class CompoundUndoableImpl extends AbstractCompoundUndoable {
+import com.organic.maynard.outliner.*;
 
+import java.util.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
+public class CompoundUndoablePropertyChange extends AbstractCompoundUndoable {
+	
+	private JoeTree tree = null;
+	
 	// The Constructors
-	public CompoundUndoableImpl(boolean isUpdatingGui) {
+	public CompoundUndoablePropertyChange(JoeTree tree) {
+		this(true, tree);
+	}
+
+	public CompoundUndoablePropertyChange(boolean isUpdatingGui, JoeTree tree) {
 		super(isUpdatingGui);
+		this.tree = tree;
 	}
 	
 	// Undoable Interface
+	public void destroy() {
+		super.destroy();
+		tree = null;
+	}
+	
 	public void undo() {
 		for (int i = primitives.size() - 1; i >= 0; i--) {
 			primitives.get(i).undo();
 		}
+		
+		Node node = ((PrimitiveUndoablePropertyChange) primitives.get(0)).getNode();
+		
+		tree.setSelectedNodesParent(node.getParent());
+		tree.addNodeToSelection(node);
+		tree.setEditingNode(node);
+		tree.setComponentFocus(OutlineLayoutManager.ICON);
+
+		tree.insertNode(node);
+		tree.getDocument().panel.layout.draw(node, OutlineLayoutManager.ICON);
+		tree.getDocument().attPanel.update();
 	}
 	
 	public void redo() {
 		for (int i = 0, limit = primitives.size(); i < limit; i++) {
 			primitives.get(i).redo();
 		}
+
+		Node node = ((PrimitiveUndoablePropertyChange) primitives.get(0)).getNode();
+		
+		tree.setSelectedNodesParent(node.getParent());
+		tree.addNodeToSelection(node);
+		tree.setEditingNode(node);
+		tree.setComponentFocus(OutlineLayoutManager.ICON);
+
+		tree.insertNode(node);
+		tree.getDocument().panel.layout.draw(node, OutlineLayoutManager.ICON);
+		tree.getDocument().attPanel.update();
 	}
 }

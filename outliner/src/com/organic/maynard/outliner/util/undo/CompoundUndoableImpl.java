@@ -32,74 +32,36 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
  
-package com.organic.maynard.outliner;
+package com.organic.maynard.outliner.util.undo;
 
-import java.util.*;
-import java.awt.*;
+import com.organic.maynard.outliner.*;
 
-public class PrimitiveUndoableMove implements Undoable {
+/**
+ * A minimal implementation of CompoundUndoable. Most classes
+ * that do anything interesting will not extend this class, but will
+ * instead extend AbstractCompoundUndoable, just as this class does.
+ * 
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
+public class CompoundUndoableImpl extends AbstractCompoundUndoable {
 
-	private CompoundUndoableMove undoable = null;
-	
-	private Node node = null;
-	private int index = 0;
-	private int targetIndex = 0;
-	
-	
 	// The Constructors
-	public PrimitiveUndoableMove(CompoundUndoableMove undoable, Node node, int index, int targetIndex) {
-		this.undoable = undoable;
-		this.node = node;
-		this.index = index;
-		this.targetIndex = targetIndex;
-	}
-
-	public void destroy() {
-		undoable = null;
-		node = null;
-	}
-	
-	// Accessors
-	public void setNode(Node node) {this.node = node;}
-	public Node getNode() {return this.node;}
-
-	public int getIndex() {return this.index;}
-	public int getTargetIndex() {return this.targetIndex;}
-	
-	public void undo() {
-		// Remove the Node
-		node.getTree().removeNode(node);
-		undoable.getTargetParent().removeChild(node);
-
-		// Insert the Node
-		undoable.getParent().insertChild(node,index);
-		node.getTree().insertNode(node);
-		
-		// Set depth if neccessary.
-		if (undoable.getTargetParent().getDepth() != undoable.getParent().getDepth()) {
-			node.setDepthRecursively(undoable.getParent().getDepth() + 1);
-		}
-		
-		// Update selection
-		node.getTree().addNodeToSelection(node);
+	public CompoundUndoableImpl(boolean isUpdatingGui) {
+		super(isUpdatingGui);
 	}
 	
 	// Undoable Interface
-	public void redo() {
-		// Remove the Node
-		node.getTree().removeNode(node);
-		undoable.getParent().removeChild(node);
-
-		// Insert the Node
-		undoable.getTargetParent().insertChild(node,targetIndex);
-		node.getTree().insertNode(node);
-
-		// Set depth if neccessary.
-		if (undoable.getTargetParent().getDepth() != undoable.getParent().getDepth()) {
-			node.setDepthRecursively(undoable.getTargetParent().getDepth() + 1);
+	public void undo() {
+		for (int i = primitives.size() - 1; i >= 0; i--) {
+			primitives.get(i).undo();
 		}
-		
-		// Update selection
-		node.getTree().addNodeToSelection(node);
+	}
+	
+	public void redo() {
+		for (int i = 0, limit = primitives.size(); i < limit; i++) {
+			primitives.get(i).redo();
+		}
 	}
 }

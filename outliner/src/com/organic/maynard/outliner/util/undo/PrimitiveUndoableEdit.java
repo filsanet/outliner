@@ -32,8 +32,45 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
  
-package com.organic.maynard.outliner;
+package com.organic.maynard.outliner.util.undo;
 
-public interface PrimitiveUndoablePropertyChange {
-	public Node getNode();
+import com.organic.maynard.outliner.*;
+
+/**
+ * A primitive undoable that holds simple text changes to a node. Used
+ * by CompoundUndoableEdit.
+ *
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
+public class PrimitiveUndoableEdit implements Undoable {
+
+	private Node node = null;
+	private String oldText = null;
+	private String newText = null;
+	
+	
+	// The Constructors
+	public PrimitiveUndoableEdit(Node node, String oldText, String newText) {
+		this.node = node;
+		this.oldText = oldText;
+		this.newText = newText;
+	}
+
+	// Destructible Interface
+	public void destroy() {
+		node = null;
+		oldText = null;
+		newText = null;
+	}
+	
+	// Undoable Interface
+	public void undo() {
+		node.setValue(oldText);
+	}
+	
+	public void redo() {
+		node.setValue(newText);
+	}
 }

@@ -34,6 +34,8 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.util.undo.*;
+
 import com.organic.maynard.xml.XMLTools;
 import bsh.Interpreter;
 import bsh.NameSpace;

@@ -32,15 +32,83 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
  
-package com.organic.maynard.outliner;
+package com.organic.maynard.outliner.util.undo;
 
-public interface CompoundUndoable extends Undoable {
-	public void addPrimitive(Undoable primitive);
-	public boolean isEmpty();
+import com.organic.maynard.outliner.*;
+
+import java.util.*;
+import java.awt.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
+public class PrimitiveUndoableReplace implements Undoable {
+
+	private Node parent = null;
+	private Node oldNode = null;
+	private Node newNode = null;
 	
-	 // Indicates that this undoable may make modifications/updates to
-	 // the GUI. For performance, if you are grouping a bunch of compound
-	 // undoables into one, you probably only want 1 of them to update
-	 // the GUI.
-	public boolean isUpdatingGui();
+	private int index = -1;
+	
+	// The Constructors
+	public PrimitiveUndoableReplace(Node parent, Node oldNode, Node newNode) {
+		this.parent = parent;
+		this.oldNode = oldNode;
+		this.newNode = newNode;
+		this.index = oldNode.currentIndex();
+	}
+
+	public void destroy() {
+		parent = null;
+		oldNode = null;
+		newNode = null;
+	}
+
+	// Accessors
+	public Node getOldNode() {return oldNode;}
+	public Node getNewNode() {return newNode;}
+			
+	public void undo() {
+		JoeTree tree = parent.getTree();
+		
+		if (newNode != null) {
+			// Remove node from visible nodes cache
+			tree.removeNode(newNode);
+			
+			// Swap the nodes
+			parent.removeChild(newNode,index);
+		}
+
+		// Swap the nodes
+		parent.insertChild(oldNode,index);
+		
+		// Insert the node into the visible nodes cache
+		tree.insertNode(oldNode);
+		
+		// Handle Selection
+		tree.addNodeToSelection(oldNode);	
+	}
+	
+	// Undoable Interface
+	public void redo() {
+		JoeTree tree = parent.getTree();
+
+		// Remove node from visible nodes cache
+		tree.removeNode(oldNode);
+		
+		// Swap the nodes
+		parent.removeChild(oldNode, index);	
+			
+		if (newNode != null) {
+			parent.insertChild(newNode, index);
+			
+			// Insert the node into the visible nodes cache
+			tree.insertNode(newNode);
+	
+			// Handle Selection
+			tree.addNodeToSelection(newNode);
+		}
+	}
 }

@@ -32,8 +32,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
  
-package com.organic.maynard.outliner;
+package com.organic.maynard.outliner.util.undo;
 
+import com.organic.maynard.outliner.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
 public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 
 	private Node parent = null;
@@ -96,8 +103,12 @@ public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 		if (layout.getNodeToDrawFrom().isRoot()) {
 			layout.setNodeToDrawFrom(newSelectedNode, tree.getVisibleNodes().indexOf(newSelectedNode));
 		}
-		tree.insertNode(newSelectedNode); // Just to make it visible
-		layout.draw(newSelectedNode,OutlineLayoutManager.ICON);	
+		
+		if (!newSelectedNode.isVisible()) {
+			tree.insertNode(newSelectedNode); // Just to make it visible
+		}
+		
+		layout.draw(newSelectedNode, OutlineLayoutManager.ICON);	
 	}
 	
 	public void redo() {
@@ -116,6 +127,6 @@ public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 		tree.setComponentFocus(OutlineLayoutManager.ICON);
 		
 		// Redraw and Set Focus
-		tree.getDocument().panel.layout.draw(youngestNode,OutlineLayoutManager.ICON);		
+		tree.getDocument().panel.layout.draw(youngestNode, OutlineLayoutManager.ICON);		
 	}
 }

@@ -34,6 +34,8 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.util.undo.*;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -166,7 +168,7 @@ public class InternalDragAndDropListener implements MouseListener {
 		int targetIndexAdj = 0;
 		int currentIndexAdj = 0;
 		
-		for (int i = 0; i < tree.getSelectedNodes().size(); i++) {
+		for (int i = 0, limit = tree.getSelectedNodes().size(); i < limit; i++) {
 			// Record the Insert in the undoable
 			Node nodeToMove = tree.getSelectedNodes().get(i);
 

@@ -32,40 +32,54 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
  
-package com.organic.maynard.outliner;
+package com.organic.maynard.outliner.util.undo;
 
-import java.util.*;
-import java.awt.*;
+import com.organic.maynard.outliner.*;
 
-public class PrimitiveUndoableEditableChange implements Undoable, PrimitiveUndoablePropertyChange {
+/**
+ * Holds a series of simple text changes. Currently used by the
+ * find/replace code when doing text replacements to open documents.
+ * This undoable should only be filled with PrimitiveUndoableEdit
+ * objects.
+ *
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
+public class CompoundUndoableEdit extends AbstractCompoundUndoable {
 
-	private Node node = null;
-	private int oldState = 0;
-	private int newState = 0;
-	
+	private JoeTree tree = null;
 	
 	// The Constructors
-	public PrimitiveUndoableEditableChange(Node node, int oldState, int newState) {
-		this.node = node;
-		this.oldState = oldState;
-		this.newState = newState;
+	public CompoundUndoableEdit(JoeTree tree) {
+		this(true, tree);
 	}
 
+	public CompoundUndoableEdit(boolean isUpdatingGui, JoeTree tree) {
+		super(isUpdatingGui);
+		this.tree = tree;
+	}
+
+
+	// Destructible Interface
 	public void destroy() {
-		node = null;
+		super.destroy();
+		tree = null;
 	}
 
 
-	// PrimitiveUndoablePropertyChangeInterface
-	public Node getNode() {return node;}
-	
-	
-	// Undoable Interface
+	// Undoable Interface	
 	public void undo() {
-		node.setEditableState(oldState);
+		for (int i = primitives.size() - 1; i >= 0; i--) {
+			primitives.get(i).undo();
+		}
+		tree.getDocument().panel.layout.redraw();
 	}
 	
 	public void redo() {
-		node.setEditableState(newState);
+		for (int i = 0, limit = primitives.size(); i < limit; i++) {
+			primitives.get(i).redo();
+		}
+		tree.getDocument().panel.layout.redraw();
 	}
 }

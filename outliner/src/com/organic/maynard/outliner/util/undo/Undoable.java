@@ -32,34 +32,31 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
  
-package com.organic.maynard.outliner;
+package com.organic.maynard.outliner.util.undo;
 
-public class PrimitiveUndoableEdit implements Undoable {
+import com.organic.maynard.outliner.*;
 
-	private Node node = null;
-	private String oldText = null;
-	private String newText = null;
-	
-	
-	// The Constructors
-	public PrimitiveUndoableEdit(Node node, String oldText, String newText) {
-		this.node = node;
-		this.oldText = oldText;
-		this.newText = newText;
-	}
+import com.organic.maynard.outliner.util.Destructible;
 
-	public void destroy() {
-		node = null;
-		oldText = null;
-		newText = null;
-	}
-	
-	// Undoable Interface
-	public void undo() {
-		node.setValue(oldText);
-	}
-	
-	public void redo() {
-		node.setValue(newText);
-	}
+/**
+ * Objects implementing this interface should perform an action that
+ * can be undone and redone. Undoable objects will typically be placed
+ * on an <code>UndoQueue</code> to provide undo/redo functionality in
+ * an application.
+ * 
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
+public interface Undoable extends Destructible {
+
+	/**
+	 * Call this method to undo the action this Undoable object encapsulates.
+	 */	
+	public void undo();
+
+	/**
+	 * Call this method to redo the action this Undoable object encapsulates.
+	 */	
+	public void redo();
 }

@@ -34,6 +34,8 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.util.undo.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -207,7 +209,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 	}
 
 	public boolean isNameUnique(String name) {
-		for (int i = 0; i < macros.size(); i++) {
+		for (int i = 0, limit = macros.size(); i < limit; i++) {
 			if (name.equals(getMacro(i).getName())) {
 				return false;
 			}
@@ -218,8 +220,8 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 	public int addMacro(Macro macro) {
 		if (macro instanceof SortMacro) {
 			// Find the correct spot to add it alphabetically
-			int i;
-			for (i = 0; i < sortMacros.size(); i++) {
+			int i, limit;
+			for (i = 0, limit = sortMacros.size(); i < limit; i++) {
 				Macro macroTemp = (Macro) sortMacros.get(i);
 				if (macroTemp.getName().compareTo(macro.getName()) >= 0) {
 					break;
@@ -246,8 +248,8 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 			return i;		
 		} else {
 			// Find the correct spot to add it alphabetically
-			int i;
-			for (i = 0; i < macros.size(); i++) {
+			int i, limit;
+			for (i = 0, limit = macros.size(); i < limit; i++) {
 				Macro macroTemp = (Macro) macros.get(i);
 				if (macroTemp.getName().compareTo(macro.getName()) >= 0) {
 					break;
@@ -287,7 +289,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 	
 	public Macro getMacro(String name) {
 		// First check Macros
-		for (int i = 0; i < macros.size(); i++) {
+		for (int i = 0, limit = macros.size(); i < limit; i++) {
 			Macro macro = getMacro(i);
 			if (macro.getName().equals(name)) {
 				return macro;
@@ -295,7 +297,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		}
 		
 		// Then check SortMacros
-		for (int i = 0; i < sortMacros.size(); i++) {
+		for (int i = 0, limit = sortMacros.size(); i < limit; i++) {
 			SortMacro macro = getSortMacro(i);
 			if (macro.getName().equals(name)) {
 				return macro;
@@ -404,7 +406,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 			tree.setCursorPosition(nodeRangePair.endIndex);
 			tree.setCursorMarkPosition(nodeRangePair.startIndex);
 		} else {
-			for (int i = 0; i < tree.getSelectedNodes().size(); i++) {
+			for (int i = 0, limit = tree.getSelectedNodes().size(); i < limit; i++) {
 				Node node = tree.getSelectedNodes().get(i);
 				
 				// Abort if not editable
@@ -462,7 +464,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 				undoable.addPrimitive(new PrimitiveUndoableReplace(parent,node,nodeRangePair.node));
 			}
 		} else {
-			for (int i = 0; i < tree.getSelectedNodes().size(); i++) {
+			for (int i = 0, limit = tree.getSelectedNodes().size(); i < limit; i++) {
 				// Create a nodeRangePair
 				Node node = tree.getSelectedNodes().get(i);
 
