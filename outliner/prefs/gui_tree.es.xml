@@ -542,7 +542,7 @@
 		<scripts_manager id="macro_manager" class="com.organic.maynard.outliner.ScriptsManager" title="Scripts Manager"/>
 		<macro_editor id="macro_editor" class="com.organic.maynard.outliner.MacroEditor" title="Macro Editor"/>
 		<script_editor id="script_editor" class="com.organic.maynard.outliner.ScriptEditor" title="Script Editor"/>
-		<find_replace id="find_replace" class="com.organic.maynard.outliner.FindReplaceFrame" title="Find/Replace"/>
+		<find_replace id="find_replace" class="com.organic.maynard.outliner.util.find.FindReplaceFrame" title="Find/Replace"/>
 		<goto_dialog id="goto_dialog" class="com.organic.maynard.outliner.GoToDialog" title="Go To Line"/>
 		<bsh_console id="bsh_console" class="com.organic.maynard.outliner.BSHConsole" title="Bean Shell Console"/>
 </root>
