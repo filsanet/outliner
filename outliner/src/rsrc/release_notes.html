@@ -6,17 +6,16 @@
 		<h2>JOE Release Notes</h2>
 		<hr>
 		<a name="release_notes"></a>
-		<h2>1.8.10.3 - ???</h2>
-			TODO: 
-				update the "about JOE" html page before release.
-				update the splash screen.
+		<h2>1.8.10.3 - 02/23/04</h2>
 			<b>Bug Fixes:</b>
 			<ol>
 				<li>Fixed the line endings in run_joe.sh so that they are unix rather than windows.</li>
 				<li>Fixed a bug where the menu item used to toggle attribute display was not staying in sync with the state of the current document as a user changed from one document to another.</li>
+				<li>In the process of reworking the recent files list I believe I fixed the problems with window maximization and preservation of size and position both when opening from the recent files list and OPML.</li>
 			</ol>
 			<b>Feature Enhancements:</b>
 			<ol>
+				<li>Rewrote the interface for spell checking. Added support for adding words to the dictionary. Added a "cancel" button. Changed from a combobox to a textfield and list model for selecting replacements. Added tooltips for buttons. Fixed minor bugs as well.</li>
 				<li>Incorporated a patch provided by Axel Rauschmayer which makes the accelerator keys more platform independent, and which enables the top-level menubar in Mac OS X.</li>
 			</ol>
 			<b>Other Changes:</b>
@@ -24,6 +23,10 @@
 				<li>Updated BeanShell to version 1.3.0 from version 1.2b7.</li>
 				<li>Updated jakarta-oro (Perl regular expression support) to version 2.0.8 from version 2.0.6.</li>
 				<li>Updated Jazzy spell checker to version 0.5 from version 0.4.</li>
+				<li>Reworked parts of the package structure which were annoying me and added more extensive java docs.</li>
+				<li>Reworked the recent files list to use an XML config file rather than a serialized java file. This should be the last release that causes recent files lists to become invalid after an upgrade.</li>
+				<li>Updated the default configuration to use UTF-8 as an encoding type and turned off some of the less commonly used features. Basically I setup the default configuration to be more like the way I configure JOE myself.</li>
+				<li>Finally added a release target for ANT and some release instructions, so doing releases should be a little less time consuming.</li>
 			</ol>
 		<h2>1.8.10.2 - 10/12/03</h2>
 			It's been a while since I did a release, and I haven't really been tracking my changes. However, there really haven't been many that I can think of, so it shouldn't matter much. Anyhow, the main purpose of this release is that it should fix the delete node problem listed in the bug fixes below.<br>
@@ -39,7 +42,7 @@
 			<b>Other Changes:</b>
 			<ol>
 				<li>Added additional information about spaces not being allowed in attribute names to the error message that occurs when trying to add them.</li>
-				<li>Replaced the user and devloper guides with instructions to use the discussion forums since these guides were horribly out of date, incomplete and inacurrate.</li>
+				<li>Replaced the user and developer guides with instructions to use the discussion forums since these guides were horribly out of date, incomplete and inaccurate.</li>
 			</ol>
 		<h2>1.8.10.1 - 02/17/03</h2>
 			<b>Bug Fixes:</b>
@@ -59,12 +62,12 @@
 			<b>New Features:</b>
 				<ol>
 					<li>Added Spell Checking using Jazzy version 0.4.</li>
-					<li>Added an "Auto-Detect" file format for open and import. When selecting this format JOE will find an open or import format based on the file's extension. If no appropriate format is found then a default (as defined by file_formats.txt, not the user's prefernce) will be used.</li>
+					<li>Added an "Auto-Detect" file format for open and import. When selecting this format JOE will find an open or import format based on the file's extension. If no appropriate format is found then a default (as defined by file_formats.txt, not the user's preference) will be used.</li>
 				</ol>
 			<b>Feature Enhancements:</b>
 				<ol>
 					<li>Document Attributes Panel is now non-modal so you can leave it open and it updates as you change from document to document.</li>
-					<li>The arrow icons now use the text and forground colors rather than always using black, white.</li>
+					<li>The arrow icons now use the text and foreground colors rather than always using black, white.</li>
 					<li>Document attribute changes are now undoable.</li>
 					<li>Find/Replace results now opens files as needed when you click on a result.</li>
 				</ol>
@@ -79,7 +82,7 @@
 					<li>Fixed an issue where doing a sendto where the filename had spaces in it would fail because I wasn't appending together the args caused by the presence of the spaces.</li>
 					<li>Reverting a file now correctly reverts the document attributes.</li>
 					<li>Reverting a file now correctly reverts the document preferences.</li>
-					<li>Now showing an error dialog when the file path is invalid when doing a filesystem find/replace.</li>
+					<li>Now showing an error dialog when the file path is invalid when doing a file system find/replace.</li>
 				</ol>
 			<b>Other Changes:</b>
 				<ol>
@@ -538,7 +541,7 @@
 			<b>Enhanced Features:</b>
 				<ol>
 					<li>Line numbers are now relative to the document, not to the size of the hoist when hoisted.</li>
-					<li>The warning about the undoqueue being cleared during hoisting/dehoisting will now only show up if your undoqueue has an undoable in it.</li>
+					<li>The warning about the antique being cleared during hoisting/dehoisting will now only show up if your antique has an undoable in it.</li>
 				</ol>
 			<b>Bug Fixes:</b>
 				<ol>
@@ -661,20 +664,15 @@
 		<a name="todo"></a>
 		<h2>TODO</h2>
 			<ol>
-				<li>Fix bug with spell check where last entered word shows up in next suggestion.</li>
 				<li>Release XML Module</li>
 				<li>Look at adding toolbar, or possible just more shortcuts.</li>
 				<li>Keep current documents open. Should do lazy instantiation.</li>
 				<li>Add tabbed document switching.</li>
 				<li>Auto-scoll during drag and drop.</li>
 				<li>Make the rest of the icons, arrows use colors.</li>
-				<li>Make sure window size/position is preserved for recent files.</li>
-				<li>See if i can track down minimize/maximize bug.</li>
-				<li>Add a release target for ant.</li>
 				<li>Implement hyperlinks.</li>
 				<li>Implement markers.</li>
 				<li>Syntax highlighting.</li>
-				<li>Add an "Add Word" feature to spell checking.</li>
 				<li>Make line numbers autospace themselves</li>
 				<li>Provide an "advanced" preference to set the size of the line cache.</li>
 			</ol>
