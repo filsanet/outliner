@@ -28,51 +28,6 @@ import javax.swing.table.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 
-public abstract class AbstractAttributesPanel extends JTable {
-
-	protected TableCellRenderer removeColRenderer = new RemoveColumnRenderer(this);
-	protected TableCellEditor removeColEditor = new RemoveColumnRenderer(this);
-
-	protected RemoveColumnHeaderRenderer removeColumnHeaderRenderer = new RemoveColumnHeaderRenderer();
-	
-	// GUI Fields
-	protected AttributeTableModel model = null;
-
-	// The Constructor
-	public AbstractAttributesPanel() {
-		model = new AttributeTableModel(this);
-		setModel(model);
-		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		
-		TableColumn removeColumn = getColumnModel().getColumn(0);
-		removeColumn.setMinWidth(80);
-		removeColumn.setMaxWidth(80);
-		removeColumn.setResizable(false);
-		removeColumn.setCellRenderer(removeColRenderer);
-		removeColumn.setCellEditor(removeColEditor);
-
-		removeColumn.setHeaderRenderer(removeColumnHeaderRenderer);   
-		getTableHeader().addMouseListener(model);   
-		getTableHeader().setReorderingAllowed(false); 
-	}
-	
-	// Data Display
-	public abstract void update();
-
-	// Data Modification
-	public abstract void newAttribute(String key, Object value, AttributeTableModel model);
-	
-	// Delete Attribute
-	public abstract void deleteAttribute(int row, AttributeTableModel model);
-
-	// Set Value
-    public abstract void setValueAt(Object value, int row, AttributeTableModel model);
-		
-	// Misc
-    protected abstract boolean isCellEditable();
-}
-
-
 public class AttributesPanel extends AbstractAttributesPanel {
 
 	protected OutlinerDocument doc = null;
