@@ -331,8 +331,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				
 				// if we were imported ...
 				if (wereImported) {
-					// [srk] this sorta works, but needs improvement
-					// RecentFilesList.updateFileNameInList(filename, docInfo) ;
 					RecentFilesList.addFileNameToList(docInfo);
 					
 				// else if we're doing a Save As and the name has changed ...

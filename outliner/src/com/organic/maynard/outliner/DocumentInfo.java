@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
+ * Portions copyright (C) 2002   Stan Krute <Stan@StanKrute.com>
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or 
@@ -31,23 +32,24 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  */
- 
-package com.organic.maynard.outliner;
-
-import com.organic.maynard.util.string.StringTools;
-import com.organic.maynard.util.string.StringSplitter;
-import java.util.*;
-
-import java.io.*;
-
-import java.text.SimpleDateFormat;
-import java.awt.*;
-import javax.swing.*;
 
 /**
  * @author  $Author$
  * @version $Revision$, $Date$
  */
+
+// we're part of this
+package com.organic.maynard.outliner;
+
+// we use these 
+import com.organic.maynard.util.string.StringTools;
+import com.organic.maynard.util.string.StringSplitter;
+import java.util.*;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.awt.*;
+import javax.swing.*;
+
 
 public class DocumentInfo implements Serializable, Cloneable {
 	
@@ -153,8 +155,8 @@ public class DocumentInfo implements Serializable, Cloneable {
 	}
 
 	// clone ourself
+	// this is used with Save As operations
 	protected Object clone () {
-		
 		return new DocumentInfo(
 			new String (fileFormat),
 			imported,
@@ -177,9 +179,9 @@ public class DocumentInfo implements Serializable, Cloneable {
 			applyFontStyleForEditability,
 			applyFontStyleForMoveability,
 			new String (protocolName)) ;
-			
-		
-		} // end clone
+	} // end method clone
+	
+	
 	// IO Data Accessors
 	private transient byte[] bytes;
 	private transient InputStream stream = null;
