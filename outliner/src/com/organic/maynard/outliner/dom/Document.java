@@ -35,13 +35,14 @@
 package com.organic.maynard.outliner.dom;
 
 import com.organic.maynard.outliner.*;
+import com.organic.maynard.outliner.util.Destructible;
 
 /**
  * @author  $Author$
  * @version $Revision$, $Date$
  */
 
-public interface Document {
+public interface Document extends Destructible {
 	public void setFileName(String name);
 	public String getFileName();
 	
