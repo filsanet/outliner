@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide - English.opml</title>
 <dateCreated>Tue, 17 Jul 2001 02:49:03 GMT</dateCreated>
-<dateModified>Mon, 30 Jul 2001 09:00:15 GMT</dateModified>
+<dateModified>Mon, 30 Jul 2001 09:04:59 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
-<expansionState>1,6</expansionState>
+<expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>35</windowTop>
-<windowLeft>28</windowLeft>
-<windowBottom>484</windowBottom>
-<windowRight>567</windowRight>
+<windowTop>122</windowTop>
+<windowLeft>116</windowLeft>
+<windowBottom>385</windowBottom>
+<windowRight>577</windowRight>
 </head>
 <body>
 <outline text="Front End">
@@ -458,6 +458,14 @@
 </outline>
 <outline text="Removing a file from the project"/>
 <outline text="Removing a directory from the project"/>
+<outline text="Some Useful Batch Files">
+<outline text="cvs">
+<outline text="commitment"/>
+<outline text="updates"/>
+<outline text="merges"/>
+<outline text="reports"/>
+</outline>
+</outline>
 </outline>
 <outline text="Linux/Unix"/>
 <outline text="Macintosh"/>
