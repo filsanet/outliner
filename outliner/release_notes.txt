@@ -6,12 +6,29 @@
 		1) Support for multiple File Protocols added.
 			a) Implemented LocalFileSystemFileProtocol for opening/saving/exporting to the local filesystem.
 			b) Implemented WebFilePHPFileProtocol for opening/saving/exporting to Steven Spencer's PHP based remote file storage system. The WebFile code is now contained in it's own jar: com.yearahead.io.webfile.jar.
+		2) Added display options for document window titles
+			a) User can now set outline document window titles to show a file's full pathname, a truncated version of the full pathname, or just the file name. Setting is done via a Document Titles widget at the bottom of the Application Preferences Look & Feel panel.
+		3) Added file import functionality
+			a) Added new File menu submenu, Import. Import opens up a format that JOE can read but not write.
+			b) Added import format Brain Forest Palm pdb. Import reads node and note text, ignores other data.
+			b) Added import format  Shadow Plan Palm pdb. Import reads node and note text, ignores other data.
+			b) Added import format Thought Manager Palm pdb. Import reads node and note text, ignores other data.
+		4) Added Maximize:Horizontal/Vertical commands to Windows menu
+			a) These commands resize the topmost window so that it is made as large as fits within JOE along the specified axis. The window size does not change along the other axis.	
+		5) Added Tile Horizontal/Vertical/Grid commands to Windows menu
+			a) Each command tiles all non-iconified document windows. The axis tilings maximize the windows along the specified axis. The grid tiling seeks a balanced arrangement.	
 	Enhanced Features:
 		1) Autosave agent frequency can now be set from the misc panel.
 		2) Added a "ding" when a search/replace finds no matches.
 		3) Andreas Hochsteger (highstick) has provided a German translation of the gui_tree file so that JOE can be run with a German Text in the interface.
+		4) Enhancements to Recent Files list user interface. Users can now set four user-interface properties: list size, ordering, direction, and name form. Setting is done via a Recent Files panel within the Application Preferences Open & Save folder.
+		5) Enhancements to Application Preferences Open & Save panel. New widgets let users specify Default Encoding and Default Format separately for Open, Import, Save, and Export operations.  
 	Bug Fixes:
 		1) Fixed a bug where new documents would often have the text area hidden until the next redraw.
+		2) Fixed a bug where open Help files killed the Autosave Agent script.
+		3) Fixed a null pointer bug in the class OutlinerCellRendererImpl.
+		4) Fixed a null pointer bug in the method StringTools.replace()
+		5) Fixed several out-of-range string index bugs in the class TextKeyListener
 	Notes:
 		1) If you have a previous version of JOE on your system you will probably need to manually copy the updated autosave agent script from "<install_dir>/prefs/scripts/Autosave Agent.txt" to "<user_home>/outliner/scripts/Autosave Agent.txt". If you don't do this it just means the autosave agent won't work.
 		2) The sources for com.organic.maynard.jar have been put in CVS. Xerces.jar is required to compile com.organic.maynard.jar, but I'm leaving it out of the builds because it is very large (1.7M) and is not used by JOE. I will check in the license and a copy the copy of xerces.jar I'm currently using, so you can download it from CVS or instead get it directly from Apache: http://xml.apache.org/xerces-j/index.html. I'm currently using xerces 1.4.3, but any recent release should be fine.
