@@ -39,7 +39,7 @@ public class SaveFileMenuItem extends AbstractOutlinerMenuItem implements Action
 		saveOutlinerDocument(Outliner.getMostRecentDocumentTouched());
 	}
 
-	protected static void saveOutlinerDocument(OutlinerDocument document) {
+	public static void saveOutlinerDocument(OutlinerDocument document) {
 		FileProtocol protocol = Outliner.fileProtocolManager.getProtocol(document.getDocumentInfo().getProtocolName());
 	
 		// Get the default protocol if none was found.
