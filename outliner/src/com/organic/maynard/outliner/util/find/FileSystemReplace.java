@@ -45,46 +45,48 @@ import java.util.*;
  * @version $Revision$, $Date$
  */
 
-public class FileSystemReplace {
-
+public class FileSystemReplace implements JoeReturnCodes {
+	
 	private DirectoryCrawler crawler = null;
-
+	
 	public FileSystemReplace() {
 		crawler = new DirectoryCrawler();
 	}
-
-	public void replace(
+	
+	public int replace(
 		FindReplaceResultsModel model, 
 		FileFilter fileFilter,
 		FileFilter dirFilter,
 		String startingPath, 
 		String query,
 		String replacement,
-
+		
 		boolean isRegexp,
 		boolean ignoreCase,
 		boolean makeBackups,
 		boolean includeSubDirectories
-	) {		
+	) {
 		// Setup the Crawler
 		String lineEnd = PlatformCompatibility.platformToLineEnding(Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur);
-
+		
 		crawler.setFileHandler(new FileSystemReplaceFileContentsHandler(query, replacement, model, isRegexp, ignoreCase, makeBackups, lineEnd));
 		crawler.setFileFilter(fileFilter);
 		crawler.setDirectoryFilter(dirFilter);
 		crawler.setProgressMonitor(FindReplaceFrame.monitor);
 		crawler.setVerbose(false);
-
+		
 		// Do the Crawl
 		int status = crawler.crawl(startingPath);
-		if (status == DirectoryCrawler.SUCCESS) {
-			// TBD: handle errors
+		if (status == DirectoryCrawler.FAILURE) {
+			return FAILURE;
 		}
-
+		
 		// Cleanup so things get GC'd
 		crawler.setFileHandler(null);
 		crawler.setFileFilter(null);
 		crawler.setDirectoryFilter(null);
 		crawler.setProgressMonitor(null);
+		
+		return SUCCESS;
 	}
 }

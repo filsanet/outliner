@@ -1376,7 +1376,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		}
 		
 		// Do it
-		fileSystemReplace.replace(model, fileFilter, dirFilter, startingPath, sFind, sReplace, isRegexp, ignoreCase, makeBackups, includeSubDirectories);
+		int success = fileSystemReplace.replace(model, fileFilter, dirFilter, startingPath, sFind, sReplace, isRegexp, ignoreCase, makeBackups, includeSubDirectories);
+		
+		if (success == FAILURE) {
+			Outliner.findReplace.monitor.close();
+			JOptionPane.showMessageDialog(Outliner.outliner, "File or Directory does not exist: " + startingPath, "Error", JOptionPane.ERROR_MESSAGE);
+			
+		}
 	}
 	
 	// This method is public and should have no direct dependancy on 
