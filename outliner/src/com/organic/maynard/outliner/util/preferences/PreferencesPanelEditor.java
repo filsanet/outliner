@@ -65,6 +65,7 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		
 		PreferenceInt pUndoQueueSize = (PreferenceInt) prefs.getPreference(Preferences.UNDO_QUEUE_SIZE);
 		PreferenceBoolean pShowLineNumbers = (PreferenceBoolean) prefs.getPreference(Preferences.SHOW_LINE_NUMBERS);
+		PreferenceBoolean pSingleClickExpand = (PreferenceBoolean) prefs.getPreference(Preferences.SINGLE_CLICK_EXPAND);
 		PreferenceBoolean pShowIndicators = (PreferenceBoolean) prefs.getPreference(Preferences.SHOW_INDICATORS);
 		PreferenceString pFontFace = (PreferenceString) prefs.getPreference(Preferences.FONT_FACE);
 		PreferenceInt pFontSize = (PreferenceInt) prefs.getPreference(Preferences.FONT_SIZE);
@@ -72,6 +73,13 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		PreferenceBoolean pUseCreateModDates = (PreferenceBoolean) prefs.getPreference(Preferences.USE_CREATE_MOD_DATES);
 		PreferenceString pCreateModDatesFormat = (PreferenceString) prefs.getPreference(Preferences.CREATE_MOD_DATES_FORMAT);
 
+		// Update expand_mode in IconKeyListener
+		if (pSingleClickExpand.cur) {
+			IconKeyListener.expand_mode = IconKeyListener.MODE_EXPAND_SINGLE_CLICK;
+		} else {
+			IconKeyListener.expand_mode = IconKeyListener.MODE_EXPAND_DOUBLE_CLICK;
+		}
+		
 		// Update the line numbers
 		if (pShowLineNumbers.cur) {
 			OutlineLineNumber.LINE_NUMBER_WIDTH = OutlineLineNumber.LINE_NUMBER_WIDTH_DEFAULT;

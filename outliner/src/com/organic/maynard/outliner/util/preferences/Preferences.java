@@ -105,6 +105,7 @@ public class Preferences implements GUITreeComponent {
 		public static final String LINE_WRAP = "line_wrap";
 		public static final String UNDO_QUEUE_SIZE = "undo_queue_size";
 		public static final String SHOW_LINE_NUMBERS = "show_line_numbers";
+		public static final String SINGLE_CLICK_EXPAND = "single_click_expand";
 		public static final String SHOW_INDICATORS = "show_indicators";
 		public static final String SHOW_ATTRIBUTES = "show_attributes";
 		public static final String APPLY_FONT_STYLE_FOR_COMMENTS = "apply_font_style_for_comments";

@@ -49,6 +49,10 @@ import com.organic.maynard.util.string.*;
 
 public class IconKeyListener implements KeyListener, MouseListener {
 
+	// Expand/Collapse Mode Constants
+	public static final int MODE_EXPAND_DOUBLE_CLICK = 0;
+	public static final int MODE_EXPAND_SINGLE_CLICK = 1;
+	
 	// Constants for setting cursor position.
 	private static final int POSITION_FIRST = 0;
 	private static final int POSITION_CURRENT = 1;
@@ -57,6 +61,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 	// Instance Fields
 	private OutlinerCellRendererImpl textArea = null;
+	public static int expand_mode = MODE_EXPAND_DOUBLE_CLICK;
 
 
 	// The Constructors
@@ -105,6 +110,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		// Handle clicks. The modulo is to deal with rapid clicks that would register as a triple click or more.
 		if ((e.getClickCount() % 2) == 1) {
 			processSingleClick(e);
+			if (MODE_EXPAND_SINGLE_CLICK == expand_mode) {
+				processDoubleClick(e);
+			}
 		} else if ((e.getClickCount() % 2) == 0){
 			processDoubleClick(e);
 		}
@@ -180,22 +188,31 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	}
 	
 	protected void processDoubleClick(MouseEvent e) {
-		textArea.node.getTree().setSelectedNodesParent(textArea.node.getParent());
-		textArea.node.getTree().addNodeToSelection(textArea.node);
+		if (MODE_EXPAND_DOUBLE_CLICK == expand_mode) {
+			textArea.node.getTree().setSelectedNodesParent(textArea.node.getParent());
+			textArea.node.getTree().addNodeToSelection(textArea.node);
 
-		if (textArea.node.isExpanded()) {
-			if (e.isShiftDown()) {
-				textArea.node.setExpanded(false, false);
+			if (textArea.node.isExpanded()) {
+				if (e.isShiftDown()) {
+					textArea.node.setExpanded(false, false);
+				} else {
+					textArea.node.setExpanded(false, true);
+				}
 			} else {
-				textArea.node.setExpanded(false, true);
-			}
+				if (e.isShiftDown()) {
+					textArea.node.ExpandAllSubheads();
+				} else {
+					textArea.node.setExpanded(true, true);
+				}
+			}			
 		} else {
-			if (e.isShiftDown()) {
-				textArea.node.ExpandAllSubheads();
+			// MODE_EXPAND_SINGLE_CLICK
+			if (textArea.node.isExpanded()) {
+				textArea.node.setExpanded(false, true);
 			} else {
 				textArea.node.setExpanded(true, true);
-			}
-		}	
+			}	
+		}
 	}
 	
 	
