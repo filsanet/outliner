@@ -23,8 +23,8 @@ import java.awt.*;
 
 public class CompoundUndoableInsert implements Undoable {
 
-	private Vector primitives = new Vector();
-	public Node parent = null;
+	private Vector primitives = new Vector(1,25);
+	private Node parent = null;
 	
 	// The Constructors
 	public CompoundUndoableInsert(Node parent) {
@@ -35,6 +35,18 @@ public class CompoundUndoableInsert implements Undoable {
 	public void addPrimitive(PrimitiveUndoableInsert primitive) {
 		primitives.addElement(primitive);
 	}
+
+	public void destroy() {
+		for (int i = 0; i < primitives.size(); i++) {
+			((Undoable) primitives.get(i)).destroy();
+		}
+
+		primitives = null;
+		parent = null;
+	}
+	
+	public Node getParent() {return parent;}
+	
 	
 	// Undoable Interface
 	public void undo() {

@@ -134,7 +134,28 @@ public class DocumentSettings extends JDialog implements ActionListener {
 	
 		// Set the default button
 		getRootPane().setDefaultButton(buttonOK);
+	}
 	
+	public void destroy() {
+		doc = null;
+		lineEnd = null;
+		saveEncoding = null;
+		saveFormat = null;
+		ownerName = null;
+		ownerEmail = null;
+		dateCreated = null;
+		dateModified = null;
+		buttonOK = null;
+		buttonCancel = null;
+		buttonRestoreToGlobal = null;
+		lineEndComboBox = null;
+		saveEncodingComboBox = null;
+		saveFormatComboBox = null;
+		ownerNameField = null;
+		ownerEmailField = null;
+		
+		removeNotify();
+		removeAll();
 	}
 
 	public boolean useDocumentSettings = false;

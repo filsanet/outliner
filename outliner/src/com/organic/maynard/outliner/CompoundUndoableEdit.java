@@ -23,12 +23,21 @@ import java.awt.*;
 
 public class CompoundUndoableEdit implements Undoable {
 
-	private Vector primitives = new Vector();
+	private Vector primitives = new Vector(1,25);
 	private TreeContext tree = null;
 	
 	// The Constructors
 	public CompoundUndoableEdit(TreeContext tree) {
 		this.tree = tree;
+	}
+
+	public void destroy() {
+		for (int i = 0; i < primitives.size(); i++) {
+			((Undoable) primitives.get(i)).destroy();
+		}
+
+		primitives = null;
+		tree = null;
 	}
 	
 	// Accessors

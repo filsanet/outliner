@@ -247,7 +247,7 @@ public class FindReplaceFrame extends JInternalFrame implements ActionListener, 
 			tree.setComponentFocus(outlineLayoutManager.TEXT);
 			
 			// Update Preferred Caret Position
-			layout.panel.setPreferredCaretPosition(location.endIndex);
+			doc.setPreferredCaretPosition(location.endIndex);
 			
 			// Freeze Undo Editing
 			UndoableEdit.freezeUndoEdit(location.node);
@@ -295,7 +295,7 @@ public class FindReplaceFrame extends JInternalFrame implements ActionListener, 
 			tree.setComponentFocus(outlineLayoutManager.TEXT);
 			
 			// Update Preferred Caret Position
-			layout.panel.setPreferredCaretPosition(location.endIndex);
+			doc.setPreferredCaretPosition(location.endIndex);
 			
 			// Freeze Undo Editing
 			UndoableEdit.freezeUndoEdit(location.node);

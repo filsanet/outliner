@@ -25,18 +25,23 @@ import javax.swing.*;
 
 public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener {
 
-	public static final String OUTLINE_TOGGLE_EXPANSION = "Toggle Expansion";
-	public static final String OUTLINE_EXPAND_ALL_SUBHEADS = "Expand All Subheads";
-	public static final String OUTLINE_EXPAND_EVERYTHING = "Expand Everything";
-	public static final String OUTLINE_COLLAPSE_TO_PARENT = "Collapse To Parent";
-	public static final String OUTLINE_COLLAPSE_EVERYTHING = "Collape Everything";
-	public static final String OUTLINE_MOVE_UP = "Move Up";
-	public static final String OUTLINE_MOVE_DOWN = "Move Down";
-	public static final String OUTLINE_MOVE_RIGHT = "Move Right";
-	public static final String OUTLINE_MOVE_LEFT = "Move Left";
-	public static final String OUTLINE_PROMOTE = "Promote";
-	public static final String OUTLINE_DEMOTE = "Demote";
+	// Copy Used.
+	private static final String MENU_TITLE = "Outline";
+	
+	private static final String OUTLINE_TOGGLE_EXPANSION = "Toggle Expansion";
+	private static final String OUTLINE_EXPAND_ALL_SUBHEADS = "Expand All Subheads";
+	private static final String OUTLINE_EXPAND_EVERYTHING = "Expand Everything";
+	private static final String OUTLINE_COLLAPSE_TO_PARENT = "Collapse To Parent";
+	private static final String OUTLINE_COLLAPSE_EVERYTHING = "Collape Everything";
+	private static final String OUTLINE_MOVE_UP = "Move Up";
+	private static final String OUTLINE_MOVE_DOWN = "Move Down";
+	private static final String OUTLINE_MOVE_RIGHT = "Move Right";
+	private static final String OUTLINE_MOVE_LEFT = "Move Left";
+	private static final String OUTLINE_PROMOTE = "Promote";
+	private static final String OUTLINE_DEMOTE = "Demote";
 
+
+	// The MenuItems.
 	public JMenuItem OUTLINE_TOGGLE_EXPANSION_ITEM = new JMenuItem(OUTLINE_TOGGLE_EXPANSION);
 	// Seperator
 	public JMenuItem OUTLINE_EXPAND_ALL_SUBHEADS_ITEM = new JMenuItem(OUTLINE_EXPAND_ALL_SUBHEADS);
@@ -47,15 +52,15 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 	// Seperator	
 	public JMenuItem OUTLINE_MOVE_UP_ITEM = new JMenuItem(OUTLINE_MOVE_UP);
 	public JMenuItem OUTLINE_MOVE_DOWN_ITEM = new JMenuItem(OUTLINE_MOVE_DOWN);
-	public JMenuItem OUTLINE_MOVE_RIGHT_ITEM = new JMenuItem(OUTLINE_MOVE_RIGHT);
 	public JMenuItem OUTLINE_MOVE_LEFT_ITEM = new JMenuItem(OUTLINE_MOVE_LEFT);
+	public JMenuItem OUTLINE_MOVE_RIGHT_ITEM = new JMenuItem(OUTLINE_MOVE_RIGHT);
 	// Seperator	
 	public JMenuItem OUTLINE_PROMOTE_ITEM = new JMenuItem(OUTLINE_PROMOTE);
 	public JMenuItem OUTLINE_DEMOTE_ITEM = new JMenuItem(OUTLINE_DEMOTE);
 	
 	// The Constructors
 	public OutlineMenu() {
-		super("Outline");
+		super(MENU_TITLE);
 
 		OUTLINE_TOGGLE_EXPANSION_ITEM.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0, false));
 		OUTLINE_TOGGLE_EXPANSION_ITEM.addActionListener(this);
@@ -87,13 +92,13 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 		OUTLINE_MOVE_DOWN_ITEM.addActionListener(this);
 		add(OUTLINE_MOVE_DOWN_ITEM);
 
-		OUTLINE_MOVE_RIGHT_ITEM.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, Event.SHIFT_MASK, false));
-		OUTLINE_MOVE_RIGHT_ITEM.addActionListener(this);
-		add(OUTLINE_MOVE_RIGHT_ITEM);
-
 		OUTLINE_MOVE_LEFT_ITEM.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, Event.SHIFT_MASK, false));
 		OUTLINE_MOVE_LEFT_ITEM.addActionListener(this);
 		add(OUTLINE_MOVE_LEFT_ITEM);
+
+		OUTLINE_MOVE_RIGHT_ITEM.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, Event.SHIFT_MASK, false));
+		OUTLINE_MOVE_RIGHT_ITEM.addActionListener(this);
+		add(OUTLINE_MOVE_RIGHT_ITEM);
 
 		insertSeparator(12);
 
@@ -111,56 +116,44 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(OUTLINE_TOGGLE_EXPANSION)) {
-			toggleExpansion(Outliner.getMostRecentDocumentTouched());
+			fireKeyEvent(Outliner.getMostRecentDocumentTouched(), 0, KeyEvent.VK_PAGE_DOWN, false);
+			
 		} else if (e.getActionCommand().equals(OUTLINE_EXPAND_ALL_SUBHEADS)) {
 			expandAllSubheads(Outliner.getMostRecentDocumentTouched());
+			
 		} else if (e.getActionCommand().equals(OUTLINE_EXPAND_EVERYTHING)) {
 			expandEverything(Outliner.getMostRecentDocumentTouched());
+			
 		} else if (e.getActionCommand().equals(OUTLINE_COLLAPSE_TO_PARENT)) {
 			collapseToParent(Outliner.getMostRecentDocumentTouched());
+			
 		} else if (e.getActionCommand().equals(OUTLINE_COLLAPSE_EVERYTHING)) {
 			collapseEverything(Outliner.getMostRecentDocumentTouched());
+			
 		} else if (e.getActionCommand().equals(OUTLINE_MOVE_UP)) {
-			moveUp(Outliner.getMostRecentDocumentTouched());
+			fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.SHIFT_MASK, KeyEvent.VK_UP, true);
+			
 		} else if (e.getActionCommand().equals(OUTLINE_MOVE_DOWN)) {
-			moveDown(Outliner.getMostRecentDocumentTouched());
-		} else if (e.getActionCommand().equals(OUTLINE_MOVE_RIGHT)) {
-			moveRight(Outliner.getMostRecentDocumentTouched());
+			fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.SHIFT_MASK, KeyEvent.VK_DOWN, true);
+			
 		} else if (e.getActionCommand().equals(OUTLINE_MOVE_LEFT)) {
-			moveLeft(Outliner.getMostRecentDocumentTouched());
+			fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.SHIFT_MASK, KeyEvent.VK_LEFT, false);
+			
+		} else if (e.getActionCommand().equals(OUTLINE_MOVE_RIGHT)) {
+			fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.SHIFT_MASK, KeyEvent.VK_RIGHT, false);
+			
 		} else if (e.getActionCommand().equals(OUTLINE_PROMOTE)) {
-			promote(Outliner.getMostRecentDocumentTouched());
+			fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.SHIFT_MASK, KeyEvent.VK_TAB, false);
+			
 		} else if (e.getActionCommand().equals(OUTLINE_DEMOTE)) {
-			demote(Outliner.getMostRecentDocumentTouched());
+			fireKeyEvent(Outliner.getMostRecentDocumentTouched(), 0, KeyEvent.VK_TAB, true);
+			
 		}
 	}
 
-	public static void updateOutlineMenu(OutlinerDocument doc) {
-		if (doc == null) {
-			Outliner.menuBar.outlineMenu.setEnabled(false);
-		} else {
-			Outliner.menuBar.outlineMenu.setEnabled(true);
-		}
-	}
 	
 	// Outline Menu Methods
-	protected static void toggleExpansion(OutlinerDocument doc) {
-		OutlinerCellRendererImpl textArea = doc.panel.layout.getUIComponent(doc.tree.getEditingNode());
-		if (textArea == null) {return;}
-		try {
-			if (doc.tree.getComponentFocus() == outlineLayoutManager.TEXT) {
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , 0, KeyEvent.VK_PAGE_DOWN));
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis() , 0, KeyEvent.VK_PAGE_DOWN));
-			} else if (doc.tree.getComponentFocus() == outlineLayoutManager.ICON) {
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , 0, KeyEvent.VK_PAGE_DOWN));
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis() , 0, KeyEvent.VK_PAGE_DOWN));
-			}
-		} catch (Exception e) {
-			System.out.println("Exception: " + e);
-		}
-	}
-
-	protected static void expandAllSubheads(OutlinerDocument doc) {
+	private static void expandAllSubheads(OutlinerDocument doc) {
 		try {
 			if (doc.tree.getComponentFocus() == outlineLayoutManager.TEXT) {
 				TextKeyListener.expandAllSubheads(doc.tree.getEditingNode());
@@ -172,7 +165,7 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 		}
 	}
 
-	protected static void expandEverything(OutlinerDocument doc) {
+	private static void expandEverything(OutlinerDocument doc) {
 		OutlinerCellRendererImpl textArea = doc.panel.layout.getUIComponent(doc.tree.getEditingNode());
 		if (textArea == null) {return;}
 		try {
@@ -186,7 +179,7 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 		}
 	}
 
-	protected static void collapseToParent(OutlinerDocument doc) {
+	private static void collapseToParent(OutlinerDocument doc) {
 		try {
 			if (doc.tree.getComponentFocus() == outlineLayoutManager.TEXT) {
 				TextKeyListener.collapseToParent(doc.tree.getEditingNode());
@@ -198,7 +191,7 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 		}
 	}
 
-	protected static void collapseEverything(OutlinerDocument doc) {
+	private static void collapseEverything(OutlinerDocument doc) {
 		try {
 			if (doc.tree.getComponentFocus() == outlineLayoutManager.TEXT) {
 				TextKeyListener.collapseEverything(doc.tree);
@@ -210,93 +203,36 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 		}
 	}
 
-	protected static void moveUp(OutlinerDocument doc) {
+
+	// Utility Methods
+	private static void fireKeyEvent(OutlinerDocument doc, int keyMask, int keyChar, boolean pressedOnly) {
 		OutlinerCellRendererImpl textArea = doc.panel.layout.getUIComponent(doc.tree.getEditingNode());
 		if (textArea == null) {return;}
+		
 		try {
 			if (doc.tree.getComponentFocus() == outlineLayoutManager.TEXT) {
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , Event.SHIFT_MASK, KeyEvent.VK_UP));
+				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), keyMask, keyChar));
+				if (!pressedOnly) {
+					textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), keyMask, keyChar));
+				}
 			} else if (doc.tree.getComponentFocus() == outlineLayoutManager.ICON) {
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , Event.SHIFT_MASK, KeyEvent.VK_UP));
+				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), keyMask, keyChar));
+				if (!pressedOnly) {	
+					textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), keyMask, keyChar));
+				}
 			}
 		} catch (Exception e) {
 			System.out.println("Exception: " + e);
 		}
 	}
 
-	protected static void moveDown(OutlinerDocument doc) {
-		OutlinerCellRendererImpl textArea = doc.panel.layout.getUIComponent(doc.tree.getEditingNode());
-		if (textArea == null) {return;}
-		try {
-			if (doc.tree.getComponentFocus() == outlineLayoutManager.TEXT) {
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , Event.SHIFT_MASK, KeyEvent.VK_DOWN));
-			} else if (doc.tree.getComponentFocus() == outlineLayoutManager.ICON) {
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , Event.SHIFT_MASK, KeyEvent.VK_DOWN));
-			}
-		} catch (Exception e) {
-			System.out.println("Exception: " + e);
-		}
-	}
 
-	protected static void moveRight(OutlinerDocument doc) {
-		OutlinerCellRendererImpl textArea = doc.panel.layout.getUIComponent(doc.tree.getEditingNode());
-		if (textArea == null) {return;}
-		try {
-			if (doc.tree.getComponentFocus() == outlineLayoutManager.TEXT) {
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , Event.SHIFT_MASK, KeyEvent.VK_RIGHT));
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis() , Event.SHIFT_MASK, KeyEvent.VK_RIGHT));
-			} else if (doc.tree.getComponentFocus() == outlineLayoutManager.ICON) {
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , Event.SHIFT_MASK, KeyEvent.VK_RIGHT));
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis() , Event.SHIFT_MASK, KeyEvent.VK_RIGHT));
-			}
-		} catch (Exception e) {
-			System.out.println("Exception: " + e);
-		}
-	}
-
-	protected static void moveLeft(OutlinerDocument doc) {
-		OutlinerCellRendererImpl textArea = doc.panel.layout.getUIComponent(doc.tree.getEditingNode());
-		if (textArea == null) {return;}
-		try {
-			if (doc.tree.getComponentFocus() == outlineLayoutManager.TEXT) {
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , Event.SHIFT_MASK, KeyEvent.VK_LEFT));
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis() , Event.SHIFT_MASK, KeyEvent.VK_LEFT));
-			} else if (doc.tree.getComponentFocus() == outlineLayoutManager.ICON) {
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , Event.SHIFT_MASK, KeyEvent.VK_LEFT));
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis() , Event.SHIFT_MASK, KeyEvent.VK_LEFT));
-			}
-		} catch (Exception e) {
-			System.out.println("Exception: " + e);
-		}
-	}
-
-	protected static void promote(OutlinerDocument doc) {
-		OutlinerCellRendererImpl textArea = doc.panel.layout.getUIComponent(doc.tree.getEditingNode());
-		if (textArea == null) {return;}
-		try {
-			if (doc.tree.getComponentFocus() == outlineLayoutManager.TEXT) {
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , Event.SHIFT_MASK, KeyEvent.VK_TAB));
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis() , Event.SHIFT_MASK, KeyEvent.VK_TAB));
-			} else if (doc.tree.getComponentFocus() == outlineLayoutManager.ICON) {
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , Event.SHIFT_MASK, KeyEvent.VK_TAB));
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis() , Event.SHIFT_MASK, KeyEvent.VK_TAB));
-			}
-		} catch (Exception e) {
-			System.out.println("Exception: " + e);
-		}
-	}
-
-	protected static void demote(OutlinerDocument doc) {
-		OutlinerCellRendererImpl textArea = doc.panel.layout.getUIComponent(doc.tree.getEditingNode());
-		if (textArea == null) {return;}
-		try {
-			if (doc.tree.getComponentFocus() == outlineLayoutManager.TEXT) {
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , 0, KeyEvent.VK_TAB));
-			} else if (doc.tree.getComponentFocus() == outlineLayoutManager.ICON) {
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , 0, KeyEvent.VK_TAB));
-			}
-		} catch (Exception e) {
-			System.out.println("Exception: " + e);
+	// Misc Methods
+	public static void updateOutlineMenu(OutlinerDocument doc) {
+		if (doc == null) {
+			Outliner.menuBar.outlineMenu.setEnabled(false);
+		} else {
+			Outliner.menuBar.outlineMenu.setEnabled(true);
 		}
 	}
 }

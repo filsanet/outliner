@@ -25,18 +25,23 @@ import javax.swing.*;
 
 public class EditMenu extends AbstractOutlinerMenu implements ActionListener {
 
-	public static final String EDIT_UNDO = "Undo";
-	public static final String EDIT_REDO = "Redo";
-	public static final String EDIT_UNDO_ALL = "Undo All";
-	public static final String EDIT_REDO_ALL = "Redo All";
-	public static final String EDIT_CUT = "Cut";
-	public static final String EDIT_COPY = "Copy";
-	public static final String EDIT_PASTE = "Paste";
-	public static final String EDIT_SELECT_ALL = "Select All";
-	public static final String EDIT_DOCUMENT_SETTINGS = "Document Settings...";
-	public static final String EDIT_PREFERENCES = "Preferences...";
-	public static final String EDIT_MACROS = "Macros...";
+	// Copy Used
+	private static final String MENU_TITLE = "Edit";
+	
+	private static final String EDIT_UNDO = "Undo";
+	private static final String EDIT_REDO = "Redo";
+	private static final String EDIT_UNDO_ALL = "Undo All";
+	private static final String EDIT_REDO_ALL = "Redo All";
+	private static final String EDIT_CUT = "Cut";
+	private static final String EDIT_COPY = "Copy";
+	private static final String EDIT_PASTE = "Paste";
+	private static final String EDIT_SELECT_ALL = "Select All";
+	private static final String EDIT_DOCUMENT_SETTINGS = "Document Settings...";
+	private static final String EDIT_PREFERENCES = "Preferences...";
+	private static final String EDIT_MACROS = "Macros...";
 
+
+	// The MenuItems.
 	public JMenuItem EDIT_UNDO_ITEM = new JMenuItem(EDIT_UNDO);
 	public JMenuItem EDIT_REDO_ITEM = new JMenuItem(EDIT_REDO);
 	// Seperator	
@@ -52,10 +57,11 @@ public class EditMenu extends AbstractOutlinerMenu implements ActionListener {
 	public JMenuItem EDIT_DOCUMENT_SETTINGS_ITEM = new JMenuItem(EDIT_DOCUMENT_SETTINGS);
 	public JMenuItem EDIT_PREFERENCES_ITEM = new JMenuItem(EDIT_PREFERENCES);
 	public JMenuItem EDIT_MACROS_ITEM = new JMenuItem(EDIT_MACROS);
-	
+
+
 	// The Constructors
 	public EditMenu() {
-		super("Edit");
+		super(MENU_TITLE);
 			
 		EDIT_UNDO_ITEM.setAccelerator(KeyStroke.getKeyStroke('Z', Event.CTRL_MASK, false));
 		EDIT_UNDO_ITEM.addActionListener(this);
@@ -82,12 +88,10 @@ public class EditMenu extends AbstractOutlinerMenu implements ActionListener {
 		EDIT_CUT_ITEM.setAccelerator(KeyStroke.getKeyStroke('X', Event.CTRL_MASK, false));
 		EDIT_CUT_ITEM.addActionListener(this);
 		EDIT_CUT_ITEM.setEnabled(false);
-		EDIT_CUT_ITEM.setEnabled(false);
 		add(EDIT_CUT_ITEM);
 
 		EDIT_COPY_ITEM.setAccelerator(KeyStroke.getKeyStroke('C', Event.CTRL_MASK, false));
 		EDIT_COPY_ITEM.addActionListener(this);
-		EDIT_COPY_ITEM.setEnabled(false);
 		EDIT_COPY_ITEM.setEnabled(false);
 		add(EDIT_COPY_ITEM);
 
@@ -115,35 +119,70 @@ public class EditMenu extends AbstractOutlinerMenu implements ActionListener {
 		EDIT_MACROS_ITEM.addActionListener(this);
 		add(EDIT_MACROS_ITEM);
 	}
-	
+
+
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(EDIT_UNDO)) {
 			Outliner.getMostRecentDocumentTouched().undoQueue.undo();
+			
 		} else if (e.getActionCommand().equals(EDIT_REDO)) {
 			Outliner.getMostRecentDocumentTouched().undoQueue.redo();
+			
 		} else if (e.getActionCommand().equals(EDIT_UNDO_ALL)) {
 			Outliner.getMostRecentDocumentTouched().undoQueue.undoAll();
+			
 		} else if (e.getActionCommand().equals(EDIT_REDO_ALL)) {
 			Outliner.getMostRecentDocumentTouched().undoQueue.redoAll();
+			
 		} else if (e.getActionCommand().equals(EDIT_CUT)) {
-			cut(Outliner.getMostRecentDocumentTouched());
+			fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.CTRL_MASK, KeyEvent.VK_X);
+			
 		} else if (e.getActionCommand().equals(EDIT_COPY)) {
-			copy(Outliner.getMostRecentDocumentTouched());
+			fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.CTRL_MASK, KeyEvent.VK_C);
+			
 		} else if (e.getActionCommand().equals(EDIT_PASTE)) {
-			paste(Outliner.getMostRecentDocumentTouched());
+			fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.CTRL_MASK, KeyEvent.VK_V);
+			
 		} else if (e.getActionCommand().equals(EDIT_SELECT_ALL)) {
-			selectAll(Outliner.getMostRecentDocumentTouched());
+			fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.CTRL_MASK, KeyEvent.VK_A);
+			
 		} else if (e.getActionCommand().equals(EDIT_DOCUMENT_SETTINGS)) {
-			document_settings(Outliner.getMostRecentDocumentTouched());
+			Outliner.getMostRecentDocumentTouched().settings.show();
+			
 		} else if (e.getActionCommand().equals(EDIT_PREFERENCES)) {
-			preferences();
+			// Make the preferences window visible and switch focus to it.
+			Outliner.prefs.setVisible(true);
+			PreferencesFrame.BOTTOM_OK.requestFocus();
+			
 		} else if (e.getActionCommand().equals(EDIT_MACROS)) {
-			macros();
+			// Make the preferences window visible and switch focus to it.
+			Outliner.macroManager.setVisible(true);
+
 		}
 	}
 
 
+	// Utility Methods
+	private static void fireKeyEvent(OutlinerDocument doc, int keyMask, int keyChar) {
+		OutlinerCellRendererImpl textArea = doc.panel.layout.getUIComponent(doc.tree.getEditingNode());
+		if (textArea == null) {return;}
+		
+		try {
+			if (doc.tree.getComponentFocus() == outlineLayoutManager.TEXT) {
+				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), keyMask, keyChar));
+				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), keyMask, keyChar));
+			} else if (doc.tree.getComponentFocus() == outlineLayoutManager.ICON) {
+				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), keyMask, keyChar));
+				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), keyMask, keyChar));
+			}
+		} catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+	
+	
+	// Misc Methods
 	public static void updateEditMenu(OutlinerDocument doc) {
 		UndoQueue.updateMenuBar(doc);
 		if (doc == null) {
@@ -159,85 +198,5 @@ public class EditMenu extends AbstractOutlinerMenu implements ActionListener {
 			Outliner.menuBar.editMenu.EDIT_SELECT_ALL_ITEM.setEnabled(true);
 			Outliner.menuBar.editMenu.EDIT_DOCUMENT_SETTINGS_ITEM.setEnabled(true);
 		}
-	}
-
-	// Edit Menu Methods
-	protected static void cut(OutlinerDocument doc) {
-		OutlinerCellRendererImpl textArea = doc.panel.layout.getUIComponent(doc.tree.getEditingNode());
-		if (textArea == null) {return;}
-		try {
-			if (doc.tree.getComponentFocus() == outlineLayoutManager.TEXT) {
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , Event.CTRL_MASK, KeyEvent.VK_X));
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis() , Event.CTRL_MASK, KeyEvent.VK_X));
-			} else if (doc.tree.getComponentFocus() == outlineLayoutManager.ICON) {
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , Event.CTRL_MASK, KeyEvent.VK_X));
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis() , Event.CTRL_MASK, KeyEvent.VK_X));
-			}
-		} catch (Exception e) {
-			System.out.println("Exception: " + e);
-		}
-	}
-
-	protected static void copy(OutlinerDocument doc) {
-		OutlinerCellRendererImpl textArea = doc.panel.layout.getUIComponent(doc.tree.getEditingNode());
-		if (textArea == null) {return;}
-		try {
-			if (doc.tree.getComponentFocus() == outlineLayoutManager.TEXT) {
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , Event.CTRL_MASK, KeyEvent.VK_C));
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis() , Event.CTRL_MASK, KeyEvent.VK_C));
-			} else if (doc.tree.getComponentFocus() == outlineLayoutManager.ICON) {
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , Event.CTRL_MASK, KeyEvent.VK_C));
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis() , Event.CTRL_MASK, KeyEvent.VK_C));
-			}
-		} catch (Exception e) {
-			System.out.println("Exception: " + e);
-		}
-	}
-
-	protected static void paste(OutlinerDocument doc) {
-		OutlinerCellRendererImpl textArea = doc.panel.layout.getUIComponent(doc.tree.getEditingNode());
-		if (textArea == null) {return;}
-		try {
-			if (doc.tree.getComponentFocus() == outlineLayoutManager.TEXT) {
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , Event.CTRL_MASK, KeyEvent.VK_V));
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis() , Event.CTRL_MASK, KeyEvent.VK_V));
-			} else if (doc.tree.getComponentFocus() == outlineLayoutManager.ICON) {
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , Event.CTRL_MASK, KeyEvent.VK_V));
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis() , Event.CTRL_MASK, KeyEvent.VK_V));
-			}
-		} catch (Exception e) {
-			System.out.println("Exception: " + e);
-		}
-	}
-
-	protected static void selectAll(OutlinerDocument doc) {
-		OutlinerCellRendererImpl textArea = doc.panel.layout.getUIComponent(doc.tree.getEditingNode());
-		if (textArea == null) {return;}
-		try {
-			if (doc.tree.getComponentFocus() == outlineLayoutManager.TEXT) {
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , Event.CTRL_MASK, KeyEvent.VK_A));
-				textArea.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis() , Event.CTRL_MASK, KeyEvent.VK_A));
-			} else if (doc.tree.getComponentFocus() == outlineLayoutManager.ICON) {
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_PRESSED, System.currentTimeMillis() , Event.CTRL_MASK, KeyEvent.VK_A));
-				textArea.button.fireKeyEvent(new KeyEvent(textArea, KeyEvent.KEY_RELEASED, System.currentTimeMillis() , Event.CTRL_MASK, KeyEvent.VK_A));
-			}
-		} catch (Exception e) {
-			System.out.println("Exception: " + e);
-		}
-	}
-
-	protected static void preferences() {
-		// Make the preferences window visible and switch focus to it.
-		Outliner.prefs.setVisible(true);
-		PreferencesFrame.BOTTOM_OK.requestFocus();
-	}
-
-	protected static void macros() {
-		// Make the preferences window visible and switch focus to it.
-		Outliner.macroManager.setVisible(true);
-	}
-
-	protected static void document_settings(OutlinerDocument document) {
-		document.settings.show();
 	}
 }

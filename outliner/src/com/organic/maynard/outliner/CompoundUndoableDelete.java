@@ -23,12 +23,21 @@ import java.awt.*;
 
 public class CompoundUndoableDelete implements Undoable {
 
-	private Vector primitives = new Vector();
+	private Vector primitives = new Vector(1,25);
 	Node parent = null;
 	
 	// The Constructors
 	public CompoundUndoableDelete(Node parent) {
 		this.parent = parent;
+	}
+
+	public void destroy() {
+		for (int i = 0; i < primitives.size(); i++) {
+			((Undoable) primitives.get(i)).destroy();
+		}
+
+		primitives = null;
+		parent = null;
 	}
 	
 	// Accessors

@@ -25,11 +25,17 @@ public class WindowMenuItem extends JRadioButtonMenuItem {
 	public static ButtonGroup group = new ButtonGroup();
 		
 	public OutlinerDocument doc = null;
-		
+
+
 	// The Constructors
 	public WindowMenuItem(String text, OutlinerDocument doc) {
 		super(text);
 		this.doc = doc;
 		group.add(this);
-	}	
+	}
+	
+	public void destroy() {
+		doc = null;
+		group.remove(this);
+	}
 }

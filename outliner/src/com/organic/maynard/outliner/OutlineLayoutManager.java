@@ -72,6 +72,28 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 		panel.add(getHiddenCell());
 		panel.add(getHiddenCell().button);
 	}
+	
+	public void destroy() {
+		panel = null;
+		scrollBar.removeAdjustmentListener(this);
+		scrollBar = null;
+		for (int i = 0; i < CACHE_SIZE; i++) {
+			textAreas[i].removeMouseListener(dndListener);
+			textAreas[i].destroy();
+			outlineButtons[i].removeMouseListener(dndListener);
+			outlineButtons[i].destroy();
+		}
+		textAreas = null;
+		outlineButtons = null;
+		
+		hiddenCell.destroy();
+		hiddenCell = null;
+		
+		dndListener.destroy();
+		dndListener = null;
+		
+		nodeToDrawFrom = null;
+	}
 
 	// Node to Draw From
 	private Node nodeToDrawFrom = null;

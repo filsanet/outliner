@@ -23,20 +23,34 @@ import java.awt.*;
 
 public class CompoundUndoableMove implements Undoable {
 
-	private Vector primitives = new Vector();
-	public Node parent = null;
-	public Node targetParent = null;
+	private Vector primitives = new Vector(1,25);
+	private Node parent = null;
+	private Node targetParent = null;
 	
 	// The Constructors
 	public CompoundUndoableMove(Node parent, Node targetParent) {
 		this.parent = parent;
 		this.targetParent = targetParent;
 	}
-	
+
+	public void destroy() {
+		for (int i = 0; i < primitives.size(); i++) {
+			((Undoable) primitives.get(i)).destroy();
+		}
+		
+		primitives = null;
+		parent = null;
+		targetParent = null;
+	}
+		
 	// Accessors
 	public void addPrimitive(PrimitiveUndoableMove primitive) {
 		primitives.addElement(primitive);
 	}
+	
+	public Node getParent() {return parent;}
+	
+	public Node getTargetParent() {return targetParent;}
 	
 	// Undoable Interface
 	public void undo() {

@@ -22,7 +22,7 @@ import java.util.*;
 import java.awt.*;
 
 public class NodeImpl implements Node {
-
+	
 	// Instance Fields		
 	private TreeContext tree = null;
 	private Node parent = null;
@@ -43,6 +43,17 @@ public class NodeImpl implements Node {
 		this.value = value;
 	}
 
+	public void destroy() {
+		for (int i = 0; i < children.size(); i++) {
+			Node child = (Node) children.get(i);
+			child.destroy();
+		}
+		
+		tree = null;
+		parent = null;
+		value = null;
+		children = null;
+	}
 
 	// Explicit Cloning Method
 	public Node cloneClean() {

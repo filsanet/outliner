@@ -79,13 +79,17 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 
 		// Hide the document
 		doc.setVisible(false);
-		doc.dispose();
 
-		// Remove the document from the window menus
-		WindowMenu.removeWindow(doc);
-		
 		// Remove the document.
 		Outliner.removeDocument(doc);
+		
+		// Explicitly Destroy since Swing has problems letting go.
+		// Seems to make a difference when we also use -Xincgc.
+		doc.destroy();
+		
+		doc.dispose();
+		
+		System.gc();
 		
 		return true;
 	}

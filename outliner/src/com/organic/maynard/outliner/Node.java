@@ -22,6 +22,8 @@ import java.awt.*;
 
 public interface Node {
 
+	public void destroy();
+	
 	public Node cloneClean();
 
 	// Parent Methods

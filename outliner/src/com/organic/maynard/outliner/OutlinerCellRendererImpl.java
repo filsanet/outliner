@@ -29,7 +29,10 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	
 	public Node node = null;
 	public OutlineButton button = new OutlineButton(this);
-	public Font font = new Font(Preferences.FONT_FACE.cur,Font.PLAIN,Preferences.FONT_SIZE.cur);	
+	private static Font font = new Font(Preferences.FONT_FACE.cur,Font.PLAIN,Preferences.FONT_SIZE.cur);	
+	
+	private TextKeyListener textListener = new TextKeyListener(this);
+	private IconKeyListener iconListener = new IconKeyListener(this);
 	
 	// The Constructors
 	public OutlinerCellRendererImpl() {
@@ -51,17 +54,36 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		setSelectionColor(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
 		setSelectedTextColor(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);
 				
-		TextKeyListener textListener = new TextKeyListener(this);
+		//TextKeyListener textListener = new TextKeyListener(this);
 		addKeyListener(textListener);
 		addMouseListener(textListener);
 		
-		IconKeyListener iconListener = new IconKeyListener(this);
+		//IconKeyListener iconListener = new IconKeyListener(this);
 		button.addKeyListener(iconListener);
 		button.addMouseListener(iconListener);
 		
 		setVisible(false);
 	}
 
+	public void destroy() {
+		removeAll();
+		removeNotify();
+		
+		node = null;
+		currentTextAreaSize = null;
+		
+		removeKeyListener(textListener);
+		removeMouseListener(textListener);
+		textListener.destroy();
+		textListener = null;
+		
+		button.removeKeyListener(iconListener);
+		button.removeMouseListener(iconListener);
+		iconListener.destroy();
+		iconListener = null;
+		
+		button = null;
+	}
 		
 	public boolean isManagingFocus() {return true;}
 

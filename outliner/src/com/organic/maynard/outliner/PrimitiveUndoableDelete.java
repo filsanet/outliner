@@ -33,6 +33,11 @@ public class PrimitiveUndoableDelete implements Undoable {
 		this.node = node;
 		this.index = index;
 	}
+
+	public void destroy() {
+		parent = null;
+		node = null;
+	}
 	
 	// Accessors
 	public void setNode(Node node) {this.node = node;}

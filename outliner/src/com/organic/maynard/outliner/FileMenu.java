@@ -28,17 +28,23 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
-	public static final String FILE_NEW = "New";
-	public static final String FILE_OPEN = "Open...";
-	public static final String FILE_OPEN_RECENT = "Open Recent";
-	public static final String FILE_SAVE = "Save";
-	public static final String FILE_SAVE_ALL = "Save All";
-	public static final String FILE_SAVE_AS = "Save As...";
-	public static final String FILE_REVERT = "Revert";
-	public static final String FILE_CLOSE = "Close";
-	public static final String FILE_CLOSE_ALL = "Close All";
-	public static final String FILE_QUIT = "Quit";
 
+	// Copy Used
+	private static final String MENU_TITLE = "File";
+	
+	private static final String FILE_NEW = "New";
+	private static final String FILE_OPEN = "Open...";
+	private static final String FILE_OPEN_RECENT = "Open Recent";
+	private static final String FILE_SAVE = "Save";
+	private static final String FILE_SAVE_ALL = "Save All";
+	private static final String FILE_SAVE_AS = "Save As...";
+	private static final String FILE_REVERT = "Revert";
+	private static final String FILE_CLOSE = "Close";
+	private static final String FILE_CLOSE_ALL = "Close All";
+	private static final String FILE_QUIT = "Quit";
+
+
+	// The MenuItems.
 	public JMenuItem FILE_NEW_ITEM = new JMenuItem(FILE_NEW);
 	public JMenuItem FILE_OPEN_ITEM = new JMenuItem(FILE_OPEN);
 	public RecentFilesList FILE_OPEN_RECENT_MENU;
@@ -55,7 +61,7 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 	
 	// The Constructors
 	public FileMenu() {
-		super("File");
+		super(MENU_TITLE);
 
 		FILE_NEW_ITEM.setAccelerator(KeyStroke.getKeyStroke('N', Event.CTRL_MASK, false));
 		FILE_NEW_ITEM.addActionListener(this);
@@ -111,24 +117,33 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(FILE_NEW)) {
 			newOutlinerDocument();
+			
 		} else if (e.getActionCommand().equals(FILE_SAVE)) {
 			saveOutlinerDocument(Outliner.getMostRecentDocumentTouched());
+			
 		} else if (e.getActionCommand().equals(FILE_SAVE_ALL)) {
 			saveAllOutlinerDocuments();
+			
 		} else if (e.getActionCommand().equals(FILE_SAVE_AS)) {
 			saveAsOutlinerDocument(Outliner.getMostRecentDocumentTouched());
+			
 		} else if (e.getActionCommand().equals(FILE_REVERT)) {
 			revertOutlinerDocument(Outliner.getMostRecentDocumentTouched());
+			
 		} else if (e.getActionCommand().equals(FILE_OPEN)) {
 			openOutlinerDocument();
+			
 		} else if (e.getActionCommand().equals(FILE_CLOSE)) {
 			closeOutlinerDocument(Outliner.getMostRecentDocumentTouched());
+			
 		} else if (e.getActionCommand().equals(FILE_CLOSE_ALL)) {
 			closeAllOutlinerDocuments();
+			
 		} else if (e.getActionCommand().equals(FILE_QUIT)) {
 			quit();
 		}
 	}
+
 
 	// File Menu Methods
 	public static void quit() {
@@ -263,6 +278,8 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		}
 	}
 
+	
+	// Utility Methods
 	protected static void saveFile(String filename, OutlinerDocument document, boolean saveAs) {
 		// Get the file format object
 		String fileFormatName = document.settings.saveFormat.cur;

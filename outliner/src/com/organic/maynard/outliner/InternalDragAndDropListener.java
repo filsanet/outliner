@@ -39,6 +39,12 @@ public class InternalDragAndDropListener implements MouseListener {
 	// The Constructor
 	public InternalDragAndDropListener() {}
 	
+	public void destroy() {
+		targetNode = null;
+		currentRenderer = null;
+		prevRenderer = null;
+	}
+	
 	
 	// MouseListener Interface
 	public void mouseEntered(MouseEvent e) {

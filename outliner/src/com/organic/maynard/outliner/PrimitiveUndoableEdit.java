@@ -34,6 +34,12 @@ public class PrimitiveUndoableEdit implements Undoable {
 		this.oldText = oldText;
 		this.newText = newText;
 	}
+
+	public void destroy() {
+		node = null;
+		oldText = null;
+		newText = null;
+	}
 	
 	// Undoable Interface
 	public void undo() {

@@ -20,6 +20,7 @@ package com.organic.maynard.outliner;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.datatransfer.*;
 import java.io.*;
 import java.util.*;
 
@@ -27,7 +28,7 @@ import javax.swing.*;
 
 import com.organic.maynard.util.*;
 
-public class Outliner extends JFrame {
+public class Outliner extends JFrame implements ClipboardOwner {
 
 	public static final String PREFS_DIR = "prefs" + System.getProperty("file.separator");
 	public static final String MACROS_DIR = PREFS_DIR + "macros" + System.getProperty("file.separator");
@@ -152,6 +153,16 @@ public class Outliner extends JFrame {
 			}
 		}
 	}
+	
+	// Utility Methods
+	public static boolean isWindows() {
+		String osName = System.getProperty("os.name");
+		if (osName.toLowerCase().startsWith("win")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	
 	// Open Document Repository
@@ -186,6 +197,9 @@ public class Outliner extends JFrame {
 	public static void addDocument(OutlinerDocument document) {
 		openDocuments.addElement(document);
 
+		// Add it to the WindowMenu
+		WindowMenu.addWindow(document);
+		
 		// Update the close menu item
 		menuBar.fileMenu.FILE_CLOSE_ITEM.setEnabled(true);
 		menuBar.fileMenu.FILE_CLOSE_ALL_ITEM.setEnabled(true);
@@ -206,7 +220,11 @@ public class Outliner extends JFrame {
 	}
 	
 	public static void removeDocument(OutlinerDocument document) {
+		// Remove the document from the window menus
+		WindowMenu.removeWindow(document);
+		
 		openDocuments.removeElement(document);
+		
 		IS_CURRENT_DOCUMENT: if (mostRecentDocumentTouched == document) {
 			if (openDocumentCount() > 0) {
 				for (int i = openDocumentCount() - 1; i >= 0; i--) {
@@ -231,9 +249,18 @@ public class Outliner extends JFrame {
 	}
 	
 	public static boolean isFileNameUnique(String filename) {
-		for (int i = 0; i < openDocuments.size(); i++) {
-			if (filename.equals(getDocument(i).getFileName())) {
-				return false;
+		// For windows we need to normalize the case.
+		if (isWindows()) {
+			for (int i = 0; i < openDocuments.size(); i++) {
+				if (filename.equalsIgnoreCase(getDocument(i).getFileName())) {
+					return false;
+				}
+			}		
+		} else {
+			for (int i = 0; i < openDocuments.size(); i++) {
+				if (filename.equals(getDocument(i).getFileName())) {
+					return false;
+				}
 			}
 		}
 		return true;
@@ -281,6 +308,12 @@ public class Outliner extends JFrame {
 
 		Outliner.menuBar.fileMenu.FILE_SAVE_ALL_ITEM.setEnabled(enabledState);
 	}
+
+
+	// ClipboardOwner Interface
+	public static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+	
+	public void lostOwnership(Clipboard clipboard, Transferable contents) {}
 	
 	
 	// Misc Methods

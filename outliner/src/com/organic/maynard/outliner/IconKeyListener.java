@@ -36,6 +36,10 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	public IconKeyListener(OutlinerCellRendererImpl textArea) {
 		this.textArea = textArea;
 	}
+	
+	public void destroy() {
+		textArea = null;
+	}
 
 	// MouseListener Interface
 	public void mouseEntered(MouseEvent e) {
@@ -424,7 +428,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			
 			// Put the text onto the clipboard
 			StringSelection selection = new StringSelection(buffer.toString());
-			tree.doc.clipboard.setContents(selection,tree.doc);
+			Outliner.clipboard.setContents(selection, Outliner.outliner);
 			
 			e.consume();
 			return;
@@ -438,7 +442,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			
 			// Put the text onto the clipboard
 			StringSelection selection = new StringSelection(buffer.toString());
-			tree.doc.clipboard.setContents(selection,tree.doc);
+			Outliner.clipboard.setContents(selection, Outliner.outliner);
 			
 			delete(tree,layout);
 			
@@ -452,7 +456,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			tree.doc.undoQueue.add(undoable);
 
 			// Get the text from the clipboard and turn it into a tree
-			StringSelection selection = (StringSelection) tree.doc.clipboard.getContents(this);
+			StringSelection selection = (StringSelection) Outliner.clipboard.getContents(this);
 			String text = "";
 			try {
 				text = (String) selection.getTransferData(DataFlavor.stringFlavor);
@@ -493,7 +497,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			return;
 		}
 
-		if ((e.getKeyCode() == KeyEvent.VK_A) && e.isControlDown()) {
+		if ((e.getKeyCode() == KeyEvent.VK_A) && e.isControlDown() && !e.isShiftDown()) {
 			// select all siblings
 			Node parent = currentNode.getParent();
 			
@@ -502,7 +506,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	
 			// Redraw and Set Focus
 			layout.draw(currentNode,outlineLayoutManager.ICON);
-			
+
 			e.consume();
 			return;
 		}

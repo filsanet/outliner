@@ -37,6 +37,12 @@ public class PrimitiveUndoableReplace implements Undoable {
 		this.index = oldNode.currentIndex();
 	}
 
+	public void destroy() {
+		parent = null;
+		oldNode = null;
+		newNode = null;
+	}
+
 	// Accessors
 	public Node getOldNode() {return oldNode;}
 	public Node getNewNode() {return newNode;}

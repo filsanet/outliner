@@ -38,6 +38,9 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		this.textArea = textArea;
 	}
 
+	public void destroy() {
+		textArea = null;
+	}
 
 	// MouseListener Interface
  	public void mouseEntered(MouseEvent e) {
@@ -79,7 +82,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		}
 		
 		// Store the preferred caret position
-		tree.doc.panel.setPreferredCaretPosition(textArea.getCaretPosition());
+		tree.doc.setPreferredCaretPosition(textArea.getCaretPosition());
 		
 		// Record the EditingNode and CursorPosition and ComponentFocus
 		tree.setEditingNode(currentNode);
@@ -147,6 +150,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 			// Redraw
 			layout.draw();
+			layout.setFocus(currentNode, outlineLayoutManager.TEXT);
 
 			e.consume();
 			return;
@@ -159,7 +163,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 			// Record the EditingNode and CursorPosition
 			tree.setEditingNode(prevNode);
-			tree.setCursorPosition(layout.panel.findNearestCaretPosition(textArea.getCaretPosition(),prevNode));
+			tree.setCursorPosition(OutlinerDocument.findNearestCaretPosition(textArea.getCaretPosition(), tree.doc.getPreferredCaretPosition(), prevNode));
 				
 			// Clear Text Selection
 			textArea.setCaretPosition(0);
@@ -186,7 +190,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 			// Record the EditingNode and CursorPosition
 			tree.setEditingNode(nextNode);
-			tree.setCursorPosition(layout.panel.findNearestCaretPosition(textArea.getCaretPosition(),nextNode));
+			tree.setCursorPosition(OutlinerDocument.findNearestCaretPosition(textArea.getCaretPosition(), tree.doc.getPreferredCaretPosition(), nextNode));
 			
 			// Clear Text Selection
 			textArea.setCaretPosition(0);
@@ -217,7 +221,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 				
 				// Update Preferred Caret Position
 				int newLength = prevNode.getValue().length();
-				layout.panel.setPreferredCaretPosition(newLength);
+				tree.doc.setPreferredCaretPosition(newLength);
 
 				// Record the EditingNode and CursorPosition
 				tree.setEditingNode(prevNode);
@@ -237,7 +241,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 				e.consume();
 			} else {
 				// Update Preferred Caret Position
-				layout.panel.setPreferredCaretPosition(textArea.getCaretPosition() - 1);
+				tree.doc.setPreferredCaretPosition(textArea.getCaretPosition() - 1);
 
 				// Record the CursorPosition only since the EditingNode should not have changed
 				tree.setCursorPosition(textArea.getCaretPosition() - 1);
@@ -265,7 +269,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 			
 				// Update Preferred Caret Position
 				int newLength = nextNode.getValue().length();
-				layout.panel.setPreferredCaretPosition(newLength);
+				tree.doc.setPreferredCaretPosition(newLength);
 
 				// Record the EditingNode and CursorPosition
 				tree.setEditingNode(nextNode);
@@ -285,7 +289,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 				e.consume();
 			} else {			
 				// Update Preferred Caret Position
-				layout.panel.setPreferredCaretPosition(textArea.getCaretPosition() + 1);
+				tree.doc.setPreferredCaretPosition(textArea.getCaretPosition() + 1);
 
 				// Record the CursorPosition only since the EditingNode should not have changed
 				tree.setCursorPosition(textArea.getCaretPosition() + 1);
@@ -333,7 +337,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 				tree.setCursorPosition(0);
 
 				// Update Preferred Caret Position
-				layout.panel.setPreferredCaretPosition(0);
+				tree.doc.setPreferredCaretPosition(0);
 
 				// Put the Undoable onto the UndoQueue
 				CompoundUndoableInsert undoable = new CompoundUndoableInsert(currentNode.getParent());
@@ -397,7 +401,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 			inlinePaste = true;
 			
 			// Get the text from the clipboard and turn it into a tree
-			StringSelection selection = (StringSelection) tree.doc.clipboard.getContents(this);
+			StringSelection selection = (StringSelection) Outliner.clipboard.getContents(this);
 			String text = "";
 			try {
 				text = (String) selection.getTransferData(DataFlavor.stringFlavor);
@@ -499,7 +503,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 		// Put the Undoable onto the UndoQueue
 		UndoableEdit undoable = tree.doc.undoQueue.getIfEdit();
-		if ((undoable != null) && (undoable.getNode() == currentNode) && (undoable.frozen == false)) {
+		if ((undoable != null) && (undoable.getNode() == currentNode) && (!undoable.isFrozen())) {
 			if (e.isControlDown() && ((e.getKeyCode() == KeyEvent.VK_X) || (e.getKeyCode() == KeyEvent.VK_V))) {
 				tree.doc.undoQueue.add(new UndoableEdit(currentNode,currentNode.getValue(),textArea.getText(),tree.getCursorPosition(),textArea.getCaretPosition(),tree.getCursorMarkPosition(),textArea.getCaretPosition()));
 			} else {
@@ -527,6 +531,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 			layout.draw(currentNode,outlineLayoutManager.TEXT);
 		}
 	}
+
 	
 	// Additional Outline Methods
 	public static void expandAllSubheads(Node currentNode) {

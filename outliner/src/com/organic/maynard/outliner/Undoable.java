@@ -19,6 +19,8 @@
 package com.organic.maynard.outliner;
 
 public interface Undoable {
+	public void destroy();
+	
 	public static final int EDIT_TYPE = 0;
 
 	public static final int PRIMITIVE_DELETE_TYPE = 1;

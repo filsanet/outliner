@@ -34,10 +34,18 @@ public class UndoableEdit implements Undoable {
 	private int newMarkPosition = 0;
 	private int oldMarkPosition = 0;
 	
-	public boolean frozen = false;
+	private boolean frozen = false;
 	
 	// The Constructors
-	public UndoableEdit(Node node, String oldText, String newText, int oldPosition, int newPosition, int oldMarkPosition, int newMarkPosition) {
+	public UndoableEdit(
+		Node node, 
+		String oldText, 
+		String newText, 
+		int oldPosition, 
+		int newPosition, 
+		int oldMarkPosition, 
+		int newMarkPosition) 
+	{
 		this.node = node;
 		this.newText = newText;
 		this.oldText = oldText;
@@ -45,6 +53,12 @@ public class UndoableEdit implements Undoable {
 		this.oldPosition = oldPosition;
 		this.newMarkPosition = newMarkPosition;
 		this.oldMarkPosition = oldMarkPosition;
+	}
+	
+	public void destroy() {
+		node = null;
+		newText = null;
+		oldText = null;
 	}
 	
 	// Accessors
@@ -59,6 +73,9 @@ public class UndoableEdit implements Undoable {
 
 	public void setNewMarkPosition(int newMarkPosition) {this.newMarkPosition = newMarkPosition;}
 	public int getNewMarkPosition() {return this.newMarkPosition;}
+	
+	public void setFrozen(boolean frozen) {this.frozen = frozen;}
+	public boolean isFrozen() {return frozen;}
 	
 	// Undoable Interface
 	public void undo() {
@@ -97,7 +114,7 @@ public class UndoableEdit implements Undoable {
 	public static void freezeUndoEdit(Node currentNode) {
 		UndoableEdit undoable = currentNode.getTree().doc.undoQueue.getIfEdit();
 		if ((undoable != null) && (undoable.getNode() == currentNode)) {
-			undoable.frozen = true;
+			undoable.setFrozen(true);
 		}
 	}
 }

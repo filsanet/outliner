@@ -40,6 +40,17 @@ public class TreeContext {
 		this.doc = doc;
 		doc.panel.layout.setNodeToDrawFrom(getEditingNode(),0);
 	}
+	
+	public void destroy() {
+		visibleNodes = null;
+		selectedNodes = null;
+		rootNode.destroy();
+		rootNode = null;
+		editingNode = null;
+		mostRecentNodeTouched = null;
+		selectedNodesParent = null;
+		doc = null;
+	}
 
 	public TreeContext() {
 		// Create an empty Tree
@@ -191,10 +202,10 @@ public class TreeContext {
 	public Node getSelectedNodesParent() {return selectedNodesParent;}
 	
 	public void clearSelection() {
-		while (selectedNodes.size() > 0) {
-			((Node) selectedNodes.get(0)).setSelected(false);
-			selectedNodes.remove(0);
+		for (int i = 0; i < selectedNodes.size(); i++) {
+			((Node) selectedNodes.get(i)).setSelected(false);
 		}
+		selectedNodes.clear();
 	}
 	
 	public void addNodeToSelection(Node node) {

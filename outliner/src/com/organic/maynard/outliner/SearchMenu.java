@@ -25,16 +25,22 @@ import javax.swing.*;
 
 public class SearchMenu extends AbstractOutlinerMenu implements ActionListener {
 
-	public static final String SEARCH_GOTO_LINE = "Go to Line...";
-	public static final String SEARCH_FIND = "Find/Replace...";
+	// Copy Used
+	private static final String MENU_TITLE = "Search";
+	
+	private static final String SEARCH_GOTO_LINE = "Go to Line...";
+	private static final String SEARCH_FIND = "Find/Replace...";
 
+
+	// The MenuItems.
 	public JMenuItem SEARCH_FIND_ITEM = new JMenuItem(SEARCH_FIND);
 	// Seperator	
 	public JMenuItem SEARCH_GOTO_LINE_ITEM = new JMenuItem(SEARCH_GOTO_LINE);
-	
+
+
 	// The Constructors
 	public SearchMenu() {
-		super("Search");
+		super(MENU_TITLE);
 
 		SEARCH_FIND_ITEM.setAccelerator(KeyStroke.getKeyStroke('F', Event.CTRL_MASK, false));
 		SEARCH_FIND_ITEM.addActionListener(this);
@@ -53,28 +59,22 @@ public class SearchMenu extends AbstractOutlinerMenu implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(SEARCH_FIND)) {
 			find();
+			
 		} else if (e.getActionCommand().equals(SEARCH_GOTO_LINE)) {
 			goto_line(Outliner.getMostRecentDocumentTouched());
-		}
-	}
-
-	public static void updateSearchMenu(OutlinerDocument doc) {
-		if (doc == null) {
-			Outliner.menuBar.searchMenu.SEARCH_GOTO_LINE_ITEM.setEnabled(false);
-		} else {
-			Outliner.menuBar.searchMenu.SEARCH_GOTO_LINE_ITEM.setEnabled(true);
+			
 		}
 	}
 
 
 	// Search Menu Methods
-	protected static void find() {
+	private static void find() {
 		// Make the preferences window visible and switch focus to it.
 		Outliner.findReplace.setVisible(true);
 		FindReplaceFrame.TEXTAREA_FIND.requestFocus();
 	}
 
-	protected static void goto_line(OutlinerDocument doc) {
+	private static void goto_line(OutlinerDocument doc) {
 		// Abort if there is no open document.
 		if (Outliner.getMostRecentDocumentTouched() == null) {
 			return;
@@ -120,5 +120,15 @@ public class SearchMenu extends AbstractOutlinerMenu implements ActionListener {
 
 		// Redraw and Set Focus
 		doc.panel.layout.draw(currentNode, outlineLayoutManager.ICON);
+	}
+
+
+	// Misc Methods
+	public static void updateSearchMenu(OutlinerDocument doc) {
+		if (doc == null) {
+			Outliner.menuBar.searchMenu.SEARCH_GOTO_LINE_ITEM.setEnabled(false);
+		} else {
+			Outliner.menuBar.searchMenu.SEARCH_GOTO_LINE_ITEM.setEnabled(true);
+		}
 	}
 }

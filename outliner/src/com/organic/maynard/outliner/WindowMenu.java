@@ -25,32 +25,38 @@ import javax.swing.*;
 
 public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 
-	public static final String WINDOW_STACK = "Stack";
-	public static final String WINDOW_NEXT = "Next";
-	public static final String WINDOW_PREV = "Previous";
+	// Copy Used
+	private static final String MENU_TITLE = "Window";
 	
+	private static final String WINDOW_STACK = "Stack";
+	private static final String WINDOW_NEXT = "Next";
+	private static final String WINDOW_PREV = "Previous";
+	
+	
+	// The MenuItems
 	public JMenuItem windowStackItem = new JMenuItem(WINDOW_STACK);
 	// Seperator
 	public JMenuItem WINDOW_NEXT_ITEM = new JMenuItem(WINDOW_NEXT);
 	public JMenuItem WINDOW_PREV_ITEM = new JMenuItem(WINDOW_PREV);
 	// Seperator
 	
-	public static final int WINDOW_LIST_START = 5;
-	
+	private static final int WINDOW_LIST_START = 5;
+
+
 	// The Constructors
 	public WindowMenu() {
-		super("Window");
+		super(MENU_TITLE);
 		
 		windowStackItem.addActionListener(this);
 		add(windowStackItem);
 
 		insertSeparator(1);
 
-		WINDOW_NEXT_ITEM.setAccelerator(KeyStroke.getKeyStroke('X', Event.CTRL_MASK + Event.SHIFT_MASK, false));
+		WINDOW_NEXT_ITEM.setAccelerator(KeyStroke.getKeyStroke('S', Event.CTRL_MASK + Event.SHIFT_MASK, false));
 		WINDOW_NEXT_ITEM.addActionListener(this);
 		add(WINDOW_NEXT_ITEM);
 		
-		WINDOW_PREV_ITEM.setAccelerator(KeyStroke.getKeyStroke('Z', Event.CTRL_MASK + Event.SHIFT_MASK, false));
+		WINDOW_PREV_ITEM.setAccelerator(KeyStroke.getKeyStroke('A', Event.CTRL_MASK + Event.SHIFT_MASK, false));
 		WINDOW_PREV_ITEM.addActionListener(this);
 		add(WINDOW_PREV_ITEM);
 
@@ -59,6 +65,8 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 		setEnabled(false);
 	}	
 
+
+	// Accessors
 	public static void addWindow(OutlinerDocument doc) {
 		WindowMenuItem item = new WindowMenuItem(doc.getTitle(),doc);
 		item.addActionListener(Outliner.menuBar.windowMenu);
@@ -67,7 +75,9 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 
 	public static void removeWindow(OutlinerDocument doc) {
 		int index = getIndexOfDocument(doc);
+		WindowMenuItem item = (WindowMenuItem) Outliner.menuBar.windowMenu.getItem(index);
 		Outliner.menuBar.windowMenu.remove(index);
+		item.destroy();
 	}
 	
 	public static void updateWindow(OutlinerDocument doc) {
@@ -109,27 +119,22 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 			if (!Outliner.desktop.desktopManager.isMaximized()) {
 				stack_windows();
 			}
+			
 		} else if (e.getActionCommand().equals(WINDOW_PREV)) {
 			changeToPrevWindow();
+			
 		} else if (e.getActionCommand().equals(WINDOW_NEXT)) {
 			changeToNextWindow();
+			
 		} else {
 			changeToWindow(((WindowMenuItem) e.getSource()).doc);
-		}
-	}
-
-	public static void updateWindowMenu() {
-	
-		if (Outliner.openDocumentCount() > 0) {
-			Outliner.menuBar.windowMenu.setEnabled(true);
-		} else {
-			Outliner.menuBar.windowMenu.setEnabled(false);
+			
 		}
 	}
 
 
 	// Window Menu Methods
-	public static void changeToNextWindow() {
+	private static void changeToNextWindow() {
 		WindowMenu menu = Outliner.menuBar.windowMenu;
 	
 		if (indexOfOldSelection != -1) {
@@ -142,7 +147,7 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 		}
 	}
 
-	public static void changeToPrevWindow() {
+	private static void changeToPrevWindow() {
 		WindowMenu menu = Outliner.menuBar.windowMenu;
 	
 		if (indexOfOldSelection != -1) {
@@ -192,7 +197,7 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 
 	private static final int STACK_X_COLUMN_STEP = 45;
 	
-	protected static void stack_windows() {
+	private static void stack_windows() {
 		Point p = new Point(STACK_X_START,STACK_Y_START);
 		int rowCount = 1;
 		int columnCount = 1;
@@ -231,7 +236,18 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 		}		
 	}
 
-	protected static int getUpperScreenBoundary() {
+	private static int getUpperScreenBoundary() {
 		return Outliner.desktop.getHeight() - STACK_Y_START;
+	}
+
+
+	// Misc Methods
+	public static void updateWindowMenu() {
+	
+		if (Outliner.openDocumentCount() > 0) {
+			Outliner.menuBar.windowMenu.setEnabled(true);
+		} else {
+			Outliner.menuBar.windowMenu.setEnabled(false);
+		}
 	}
 }

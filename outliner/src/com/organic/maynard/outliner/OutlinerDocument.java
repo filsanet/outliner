@@ -21,7 +21,6 @@ package com.organic.maynard.outliner;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.Window;
-import java.awt.datatransfer.*;
 
 import java.io.*;
 import java.util.*;
@@ -30,23 +29,23 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
 
-public class OutlinerDocument extends JInternalFrame implements ComponentListener, ClipboardOwner {
+public class OutlinerDocument extends JInternalFrame implements ComponentListener {
 
 	// Constants
-	public static final ImageIcon ICON_DOCUMENT_SAVED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "document_saved.gif");
-	public static final ImageIcon ICON_DOCUMENT_UNSAVED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "document_unsaved.gif");
+	private static final ImageIcon ICON_DOCUMENT_SAVED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "document_saved.gif");
+	private static final ImageIcon ICON_DOCUMENT_UNSAVED = new ImageIcon(Outliner.GRAPHICS_DIR + System.getProperty("file.separator") + "document_unsaved.gif");
 	
 	public static final int MIN_WIDTH = 300;
 	public static final int MIN_HEIGHT = 100;
  
- 	static final int INITIAL_WIDTH = 450;
-	static final int INITIAL_HEIGHT = 450;
+ 	public static final int INITIAL_WIDTH = 450;
+	public static final int INITIAL_HEIGHT = 450;
 
- 	static final int INITIAL_X = 5;
-	static final int INITIAL_Y = 5;
+ 	public static final int INITIAL_X = 5;
+	public static final int INITIAL_Y = 5;
 		
 	// Class Variables
-	static int untitledDocumentCount = 0;
+	public static int untitledDocumentCount = 0;
 
 	// Instance Variables
 	public outlinerPanel panel = new outlinerPanel(this);
@@ -54,6 +53,7 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	public UndoQueue undoQueue = new UndoQueue(this);
 	public DocumentSettings settings = new DocumentSettings(this);
 
+	private OutlinerWindowMonitor monitor = new OutlinerWindowMonitor();
 	
 	// The Constructor
 	public OutlinerDocument(String title) {
@@ -72,12 +72,9 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		// Add it to the openDocuments list
 		Outliner.addDocument(this);
 		
-		// Add it to the window list
-		WindowMenu.addWindow(this);
-		
 		// Set the Component & Window Listeners
 		addComponentListener(this);
-		addInternalFrameListener(new OutlinerWindowMonitor());
+		addInternalFrameListener(monitor);
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 			
 		// Create the Layout
@@ -94,6 +91,32 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		panel.layout.draw((Node) tree.visibleNodes.get(0), outlineLayoutManager.TEXT);
 
 		setVisible(true);
+	}
+	
+	public void destroy() {
+		removeInternalFrameListener(monitor);
+		removeComponentListener(this);
+		getContentPane().remove(panel);
+		
+		panel.destroy();
+		panel = null;
+		
+		tree.destroy();
+		tree = null;
+		
+		undoQueue.destroy();
+		undoQueue = null;
+		
+		settings.destroy();
+		settings = null;
+		
+		monitor = null;
+		
+		border = null;
+		fileName = null;
+
+		removeNotify();
+		removeAll();
 	}
 	
 	public void restoreWindowToInitialSize() {
@@ -137,7 +160,7 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	// ComponentListener Interface
 	public void componentResized(ComponentEvent e) {
 		panel.layout.draw();
-		panel.layout.setFocus(tree.getEditingNode(),tree.getComponentFocus());
+		//panel.layout.setFocus(tree.getEditingNode(),tree.getComponentFocus());
 	}
 	
 	public void componentHidden(ComponentEvent e) {} 
@@ -145,13 +168,7 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	public void componentShown(ComponentEvent e) {}
 
 
-	// ClipboardOwner Interface
-	public Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-	
-	public void lostOwnership(Clipboard clipboard, Transferable contents) {}
-
-
-	// File Saving
+	// File Saving and Modification
 	private String fileName = "";
 	private boolean fileModified = false;
 	
@@ -176,4 +193,27 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	
 	public boolean isFileModified() {return fileModified;}
 
+
+	// Text Caret Positioning
+	private int preferredCaretPosition = 0;
+
+	public int getPreferredCaretPosition() {return preferredCaretPosition;}
+	public void setPreferredCaretPosition(int position) {this.preferredCaretPosition = position;}
+	
+	public static int findNearestCaretPosition(int currentPosition, int preferredCaretPosition, Node node) {
+		int retVal = currentPosition;
+		
+		if (preferredCaretPosition > retVal) {
+			retVal = preferredCaretPosition;
+		}
+		
+		if (retVal > node.getValue().length()) {
+			int newPreferredCaretPosition = currentPosition;
+			if (preferredCaretPosition < newPreferredCaretPosition) {
+				preferredCaretPosition = newPreferredCaretPosition;
+			}
+			retVal = node.getValue().length();
+		}
+		return retVal;
+	}
 }

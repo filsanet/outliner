@@ -22,15 +22,23 @@ import java.util.*;
 import javax.swing.*;
 
 public class UndoQueue {
-	OutlinerDocument doc = null;
+	private OutlinerDocument doc = null;
 	
-	public Vector queue = new Vector();
-	
-	public int cursor = -1;
+	private Vector queue = new Vector(Preferences.UNDO_QUEUE_SIZE.cur);
+	private int cursor = -1;
 	
 	// The Constructors
 	public UndoQueue(OutlinerDocument doc) {
 		this.doc = doc;
+	}
+	
+	public void destroy() {
+		//for (int i = 0; i < queue.size(); i++) {
+		//	((Undoable) queue.get(i)).destroy();
+		//}
+		
+		doc = null;
+		queue = null;
 	}
 	
 	public static void updateMenuBar(OutlinerDocument doc) {
@@ -41,22 +49,22 @@ public class UndoQueue {
 			Outliner.menuBar.editMenu.EDIT_REDO_ITEM.setEnabled(false);
 			Outliner.menuBar.editMenu.EDIT_REDO_ALL_ITEM.setEnabled(false);
 			return;
-		}
-		
-		if(doc.undoQueue.isUndoable()) {
-			Outliner.menuBar.editMenu.EDIT_UNDO_ITEM.setEnabled(true);
-			Outliner.menuBar.editMenu.EDIT_UNDO_ALL_ITEM.setEnabled(true);
 		} else {
-			Outliner.menuBar.editMenu.EDIT_UNDO_ITEM.setEnabled(false);
-			Outliner.menuBar.editMenu.EDIT_UNDO_ALL_ITEM.setEnabled(false);
-		}
-
-		if(doc.undoQueue.isRedoable()) {
-			Outliner.menuBar.editMenu.EDIT_REDO_ITEM.setEnabled(true);
-			Outliner.menuBar.editMenu.EDIT_REDO_ALL_ITEM.setEnabled(true);
-		} else {
-			Outliner.menuBar.editMenu.EDIT_REDO_ITEM.setEnabled(false);
-			Outliner.menuBar.editMenu.EDIT_REDO_ALL_ITEM.setEnabled(false);
+			if(doc.undoQueue.isUndoable()) {
+				Outliner.menuBar.editMenu.EDIT_UNDO_ITEM.setEnabled(true);
+				Outliner.menuBar.editMenu.EDIT_UNDO_ALL_ITEM.setEnabled(true);
+			} else {
+				Outliner.menuBar.editMenu.EDIT_UNDO_ITEM.setEnabled(false);
+				Outliner.menuBar.editMenu.EDIT_UNDO_ALL_ITEM.setEnabled(false);
+			}
+	
+			if(doc.undoQueue.isRedoable()) {
+				Outliner.menuBar.editMenu.EDIT_REDO_ITEM.setEnabled(true);
+				Outliner.menuBar.editMenu.EDIT_REDO_ALL_ITEM.setEnabled(true);
+			} else {
+				Outliner.menuBar.editMenu.EDIT_REDO_ITEM.setEnabled(false);
+				Outliner.menuBar.editMenu.EDIT_REDO_ALL_ITEM.setEnabled(false);
+			}
 		}
 	}
 	
@@ -80,27 +88,27 @@ public class UndoQueue {
 	}
 	
 	public Undoable get() {
-		Undoable undoable = null;
 		try {
-			undoable = (Undoable) queue.elementAt(cursor);
-		} catch (ArrayIndexOutOfBoundsException aiobe) {}
-		return undoable;
+			return (Undoable) queue.elementAt(cursor);
+		} catch (ArrayIndexOutOfBoundsException aiobe) {
+			return null;
+		}
 	}
 
 	public UndoableEdit getIfEdit() {
 		try {
-			UndoableEdit undoable = (UndoableEdit) get();
-			return undoable;
+			return (UndoableEdit) get();
 		} catch (ClassCastException cce) {
 			return null;
 		}
 	}
 
 	public void trim() {
-		// Trim off any redoables
+		// First trim off any redoables
 		queue.setSize(cursor + 1);
 		
-		// Trim undoables from oldest to newest until the size matches the UNDO_QUEUE_SIZE preference.
+		// Next, trim undoables from oldest to newest until the size matches the UNDO_QUEUE_SIZE preference.
+		// This could be optimized with System.arraycopy.
 		while (queue.size() > Preferences.UNDO_QUEUE_SIZE.cur) {
 			queue.removeElementAt(0);
 			cursor--;
@@ -119,8 +127,7 @@ public class UndoQueue {
 	public void undo() {
 		//System.out.println("Undo");
 		if (isUndoable()) {
-			Undoable undoable = (Undoable) queue.elementAt(cursor);
-			undoable.undo();
+			((Undoable) queue.elementAt(cursor)).undo();
 			cursor--;
 			updateMenuBar(doc);
 			doc.setFileModified(true);
@@ -137,8 +144,7 @@ public class UndoQueue {
 		//System.out.println("Redo");
 		if (isRedoable()) {
 			cursor++;
-			Undoable undoable = (Undoable) queue.elementAt(cursor);
-			undoable.redo();
+			((Undoable) queue.elementAt(cursor)).redo();
 			updateMenuBar(doc);
 			doc.setFileModified(true);
 		}	
@@ -165,5 +171,4 @@ public class UndoQueue {
 			return false;
 		}
 	}
-
 }

@@ -63,6 +63,13 @@ public class OutlineButton extends JLabel {
 		updateIcon();
 	}
 	
+	public void destroy() {
+		removeAll();
+		
+		renderer = null;
+		
+	}
+	
 	public boolean isManagingFocus() {return true;}
 
 	// Used to fire key events

@@ -18,19 +18,7 @@
  
 package com.organic.maynard.outliner;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.Window;
-import java.awt.datatransfer.*;
-
-import java.io.*;
-import java.util.*;
-
-import javax.swing.*;
-import javax.swing.tree.*;
-import javax.swing.event.*;
-
-import com.organic.maynard.util.*;
+import javax.swing.JMenuBar;
 
 public class OutlinerDesktopMenuBar extends JMenuBar {
 
@@ -40,6 +28,8 @@ public class OutlinerDesktopMenuBar extends JMenuBar {
 	public SearchMenu searchMenu = new SearchMenu();
 	public WindowMenu windowMenu = new WindowMenu();
 	
+	
+	// Constructor
 	public OutlinerDesktopMenuBar() {
 		add(fileMenu);
 		add(editMenu);

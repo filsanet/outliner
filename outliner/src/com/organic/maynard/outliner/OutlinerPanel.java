@@ -28,35 +28,27 @@ import javax.swing.event.*;
 
 public class outlinerPanel extends JPanel {
 
+
+	// GUI Fields
 	public OutlinerDocument doc = null;
 	public outlineLayoutManager layout = new outlineLayoutManager(this);
 
+
+	// The Constructor
 	public outlinerPanel(OutlinerDocument doc) {
 		this.doc = doc;
 		setBackground(Preferences.PANEL_BACKGROUND_COLOR.cur);
 		setLayout(layout);
 	}
 	
-	// Text Caret Positioning
-	private int preferredCaretPosition = 0;
-	
-	public int getPreferredCaretPosition() {return preferredCaretPosition;}
-	public void setPreferredCaretPosition(int position) {this.preferredCaretPosition = position;}
-	
-	public int findNearestCaretPosition(int currentPosition, Node node) {
-		int retVal = currentPosition;
+	public void destroy() {
+		removeNotify();
+		doc = null;
 		
-		if (preferredCaretPosition > retVal) {
-			retVal = preferredCaretPosition;
-		}
+		setLayout(null);
+		layout.destroy();
+		layout = null;
 		
-		if (retVal > node.getValue().length()) {
-			int newPreferredCaretPosition = currentPosition;
-			if (preferredCaretPosition < newPreferredCaretPosition) {
-				preferredCaretPosition = newPreferredCaretPosition;
-			}
-			retVal = node.getValue().length();
-		}
-		return retVal;
+		removeAll();
 	}
 }
