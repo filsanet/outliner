@@ -36,13 +36,18 @@ package com.organic.maynard.outliner.util.spelling;
 
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.util.preferences.*;
-
 import java.util.*;
 import java.io.*;
-
 import com.swabunga.spell.event.*;
 import com.swabunga.spell.engine.*;
 
+/**
+ * A wrapper around the Jazzy spell checker.
+ * 
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
 public class SpellingCheckerWrapper implements SpellCheckListener {
 	
 	// Preference Key Constants
@@ -53,8 +58,14 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 	private static final String IGNORESENTENCECAPITALIZATION = "ignore_sentence_cap";
 	private static final String IGNOREUPPERCASE = "ignore_upper_case";
 	
+	/** 
+	 * Controls how long we should sleep since we'll be running in our own thread. 
+	 */
+	private static final int SLEEP_THROTTLE = 25;
+	
 	// Pseudo Constants
 	public static String DICTIONARIES_DIR = new StringBuffer().append(Outliner.PREFS_DIR).append(Outliner.FILE_SEPARATOR).append("dict").append(Outliner.FILE_SEPARATOR).toString();
+	
 	
 	// Instance fields
 	private SpellingCheckerDialog dialog = null;
@@ -62,11 +73,31 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 	private SpellDictionaryHashMap dictionary = null;
 	private boolean is_initialized = false;
 	
-	// Constructor
-	public SpellingCheckerWrapper() {};
+	private int sleep_count = 0;
 	
-	// Lazy Instantiation
-	protected boolean init() {
+	private Node current_node = null;
+	private int current_offset = 0;
+	
+	private ArrayList nodes = new ArrayList();
+	private ArrayList offsets = new ArrayList();
+	private ArrayList misspelt_words = new ArrayList();
+	private boolean found_a_misspelling = false;
+	
+	
+	// Constructor
+	/**
+	 * Constructs a new SpellingCheckerWrapper.
+	 */
+	public SpellingCheckerWrapper() {
+		super();
+	};
+	
+	
+	/**
+	 * Initializes this SpellingCheckerWrapper since we're doing lazy
+	 * instantiation.
+	 */
+	private boolean init() {
 		if (!this.is_initialized) {
 			try {
 				this.dialog = new SpellingCheckerDialog(this);
@@ -81,6 +112,10 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 		return is_initialized;
 	}
 	
+	/**
+	 * Reloads the word dictionaries which the spell checker uses to determine
+	 * what is misspelled.
+	 */
 	private void reloadDictionaries() {
 		try {
 			File dictonaries_dir = new File(DICTIONARIES_DIR);
@@ -108,6 +143,9 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 	}
 	
 	// Accessors
+	/**
+	 * Gets the SpellingCheckerDialog which spawned this thread.
+	 */
 	public SpellingCheckerDialog getDialog() {
 		if (init()) {
 			return this.dialog;
@@ -117,6 +155,9 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 	}
 	
 	// Wrapper Methods
+	/**
+	 * Checks the spelling on a selection within a document.
+	 */
 	public void checkSpellingForSelection(OutlinerDocument doc) {
 		if (init()) {
 			// Configure the spellchecker
@@ -149,6 +190,9 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 		}
 	}
 	
+	/**
+	 * Checks the spelling on an entire document.
+	 */
 	public void checkSpellingForDocument(OutlinerDocument doc) {
 		if (init()) {
 			// Configure the spellchecker
@@ -166,9 +210,10 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 		}
 	}
 	
-	private int sleep_count = 0;
-	private static final int SLEEP_THROTTLE = 25;
-	
+	/**
+	 * Checks the spelling on a node. Called by each of the public spell checking
+	 * methods repeatedly as they check their respective scopes.
+	 */
 	private void checkSpelling(Node node) {
 		if (node == null) {
 			return;
@@ -195,13 +240,9 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 	
 	
 	// SpellCheckListener Interface and related methods.
-	private Node current_node = null;
-	private int current_offset = 0;
-	
-	private ArrayList nodes = new ArrayList();
-	private ArrayList offsets = new ArrayList();
-	private ArrayList misspelt_words = new ArrayList();
-	
+	/**
+	 * Gets the nth misspelled word.
+	 */
 	public SpellCheckEvent getMisspeltWord(int i) {
 		if (i < misspelt_words.size()) {
 			return (SpellCheckEvent) misspelt_words.get(i);
@@ -210,6 +251,9 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 		}
 	}
 	
+	/**
+	 * Gets the node within which the nth misspelled word was located.
+	 */
 	public Node getMisspeltWordNode(int i) {
 		if (i < misspelt_words.size()) {
 			return (Node) nodes.get(i);
@@ -218,6 +262,10 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 		}
 	}
 	
+	/**
+	 * Gets the character offset within the node which contains the nth
+	 * misspelled word.
+	 */
 	public int getMisspeltWordOffset(int i) {
 		if (i < misspelt_words.size()) {
 			return ((Integer) offsets.get(i)).intValue();
@@ -226,10 +274,16 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 		}
 	}
 	
+	/**
+	 * Gets the current number of misspelled words found.
+	 */
 	public int getCurrentWordCount() {
 		return this.misspelt_words.size();
 	}
 	
+	/**
+	 * Resets this SpellingCheckerWrapper so that it can be reused.
+	 */
 	public void reset() {
 		this.sleep_count = 0;
 		this.nodes.clear();
@@ -240,8 +294,10 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 		this.found_a_misspelling = false;
 	}
 	
-	private boolean found_a_misspelling = false;
-	
+	/**
+	 * Triggered whenever a spelling error occurs. Handles updates to the GUI and
+	 * various fields which track the progress of the spell checking session.
+	 */
 	public void spellingError(SpellCheckEvent event) {
 		if (this.dialog.shouldStop()) {
 			return;

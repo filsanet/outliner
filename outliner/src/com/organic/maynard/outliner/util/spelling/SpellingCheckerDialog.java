@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002 Maynard Demmon, maynard@organic.com
+ * Copyright (C) 2002,2004 Maynard Demmon, maynard@organic.com
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or 
@@ -47,6 +47,11 @@ import java.util.*;
 import com.swabunga.spell.event.*;
 
 /**
+ * A JDialog which enables a "spell checking session" on a document or selection
+ * within a document. The spell checking is performed by a SpellingCheckerWrapper
+ * which is spawned in a seperate Thread and which updates the GUI as misspelled
+ * words are found.
+ * 
  * @author  $Author$
  * @version $Revision$, $Date$
  */
@@ -61,8 +66,43 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 	
 	
 	// Instance Fields
-	private int word_index = 0; // The index of the current word we're checking.
+	/** The Object through which we access the spell checker. */
 	private SpellingCheckerWrapper spellChecker = null;
+	
+	/** 
+	 * A flag which indicates that the spell checking thread should stop. This is
+	 * the preferred method for terminating a Thread since it allows the Thread to
+	 * finish what it's doing.
+	 */
+	private boolean stop_thread = false;
+	
+	/** The index of the current word we're checking. */
+	private int word_index = 0;
+	
+	/** The current node being spell checked. */
+	private Node current_node = null;
+	
+	/** The character offset within the current node's text. */
+	private int current_offset_adj = 0;
+	
+	/** 
+	 * A map of misspelled words and their replacements within the context of the
+	 * current spell checking session which have had the "replace all" action
+	 * performed on them by the user.
+	 */
+	private HashMap replace_list = null;
+	
+	/** 
+	 * A map of skipped words within the context of the current spell checking 
+	 * session which have had the "skip all" action performed on them by the user.
+	 */
+	private HashMap skip_list = null;
+	
+	/** 
+	 * The undoable which captures all the text updates for the current spell
+	 * checking session.
+	 */
+	private CompoundUndoableEdit undoable = null;
 	
 	
 	// Main Component Containers
@@ -71,25 +111,29 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 	private JScrollPane JSP = null;
 	
 	// Button Text and Other Copy
-	public static String DONE = null;
-	public static String SKIP = null;
-	public static String SKIP_ALL = null;
-	public static String REPLACE = null;
-	public static String REPLACE_ALL = null;
+	private static String DONE = null;
+	private static String SKIP = null;
+	private static String SKIP_ALL = null;
+	private static String REPLACE = null;
+	private static String REPLACE_ALL = null;
 	
 	// Define Fields and Buttons
-	public JTextPane TEXT = null;
-	public JComboBox SUGGESTIONS = null;
-	public JLabel WORD = null;
-	public JLabel STATUS = null;
-	public JButton BUTTON_DONE = null;
-	public JButton BUTTON_SKIP = null;
-	public JButton BUTTON_SKIP_ALL = null;
-	public JButton BUTTON_REPLACE = null;
-	public JButton BUTTON_REPLACE_ALL = null;
+	private JTextPane TEXT = null;
+	private JComboBox SUGGESTIONS = null;
+	private JLabel WORD = null;
+	private JLabel STATUS = null;
+	private JButton BUTTON_DONE = null;
+	private JButton BUTTON_SKIP = null;
+	private JButton BUTTON_SKIP_ALL = null;
+	private JButton BUTTON_REPLACE = null;
+	private JButton BUTTON_REPLACE_ALL = null;
 	
 	
 	// The Constructor
+	/**
+	 * Constructs a new SpellingCheckerDialog and instantiates all the various GUI
+	 * components within it.
+	 */
 	public SpellingCheckerDialog(SpellingCheckerWrapper spellChecker) {
 		super(false, true, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
 		
@@ -158,17 +202,24 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 		pack();
 	}
 	
-	private boolean stop_thread = false;
+	/**
+	 * Tests if the spell checking thread has been flagged to stop.
+	 */
 	public boolean shouldStop() {
 		return this.stop_thread;
 	}
 	
+	/**
+	 * Causes the spell checking thread to terminate the next time it
+	 * checks the stop_thread flag.
+	 */
 	public void stop() {
 		this.stop_thread = true;
 	}
 	
-	private CompoundUndoableEdit undoable = null;
-	
+	/**
+	 * Resets this SpellingCheckerDialog so that it can be reused.
+	 */
 	public void reset() {
 		this.stop_thread = false;
 		this.word_index = 0;
@@ -182,6 +233,11 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 		updateGUI();
 	}
 	
+	/**
+	 * Starts spell checking the current document as indicated by the 
+	 * DocumentRepository. Spawns a spell checking thread which
+	 * updates the GUI as it finds misspelled words.
+	 */
 	public void checkSpellingForDocument() {
 		reset();
 		Thread t = new Thread(new Runnable() {
@@ -196,6 +252,11 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 		show();
 	}
 	
+	/**
+	 * Starts spell checking the current selection within the current document as 
+	 * indicated by the DocumentRepository. Spawns a spell checking thread which
+	 * updates the GUI as it finds misspelled words.
+	 */
 	public void checkSpellingForSelection() {
 		reset();
 		Thread t = new Thread(new Runnable() {
@@ -212,8 +273,10 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 	
 	
 	// ActionListener Interface
+	/**
+	 * Handles user actions on the various buttons within this Dialog.
+	 */
 	public void actionPerformed(ActionEvent e) {
-		// File Menu
 		if (e.getActionCommand().equals(DONE)) {
 			done();
 		} else if (e.getActionCommand().equals(SKIP)) {
@@ -227,6 +290,11 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 		}
 	}
 	
+	/**
+	 * Action triggered by the user clicking on the "done" button in this Dialog.
+	 * Causes the spell checking thread to stop, applys the undoable to the current
+	 * document and hides the Dialog.
+	 */
 	private void done() {
 		this.stop();
 		
@@ -238,6 +306,10 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 		hide();
 	}
 	
+	/**
+	 * Action triggered by the user clicking on the "skip" button in this Dialog.
+	 * Skips the current misspelled word.
+	 */
 	private void skip() {
 		this.word_index++;
 		
@@ -263,8 +335,11 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 		}
 	}
 	
-	private HashMap skip_list = null;
-	
+	/**
+	 * Action triggered by the user clicking on the "skip all" button in this Dialog.
+	 * Skips the current misspelled word and all other instances of it within the
+	 * current spell checking session.
+	 */
 	private void skip_all() {
 		SpellCheckEvent event = this.spellChecker.getMisspeltWord(word_index);
 		String word = event.getInvalidWord();
@@ -273,10 +348,16 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 		skip();
 	}
 	
-	public void replace() {
+	/**
+	 * Action triggered by the user clicking on the "replace" button in this Dialog.
+	 * Replaces the current misspelled word with the value selected in the 
+	 * suggestions combobox.
+	 */
+	private void replace() {
 		SpellCheckEvent event = this.spellChecker.getMisspeltWord(word_index);
 		String word = event.getInvalidWord();
 		
+		// Look for a value for "replace all"
 		String replacement = (String) replace_list.get(word);
 		if (replacement == null) {
 			replacement = SUGGESTIONS.getSelectedItem().toString();
@@ -301,8 +382,11 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 		skip();
 	}
 	
-	private Node current_node = null;
-	private int current_offset_adj = 0;
+	/**
+	 * Updates the current offset based on the difference in lengths between the
+	 * misspelled word and it's replacement. Also updates the current node if
+	 * that has changed.
+	 */
 	private void updateDifference(Node node, int difference) {
 		if (current_node == null) {
 			current_node = node;
@@ -315,9 +399,13 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 		}
 	}
 	
-	private HashMap replace_list = null;
-	
-	public void replace_all() {
+	/**
+	 * Action triggered by the user clicking on the "replace all" button in this Dialog.
+	 * Replaces the current misspelled word with the value selected in the 
+	 * suggestions combobox and all other instances of the misspelled word within
+	 * the current spell checking session.
+	 */
+	private void replace_all() {
 		SpellCheckEvent event = this.spellChecker.getMisspeltWord(word_index);
 		String word = event.getInvalidWord();
 		String replacement = SUGGESTIONS.getSelectedItem().toString();
@@ -326,6 +414,10 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 		replace();
 	}
 	
+	/**
+	 * Updates the GUI after each replacement or skip. This method is protected
+	 * because the spell checking thread needs to be able to access it.
+	 */
 	protected boolean updateGUI() {
 		SpellCheckEvent event = this.spellChecker.getMisspeltWord(word_index);
 		updateButtons();
@@ -343,7 +435,7 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 		} else {
 			// Update Word Display
 			String word = event.getInvalidWord();
-			WORD.setText("Misspelt Word: " + word);
+			WORD.setText("Misspelled Word: " + word);
 			
 			// Update Combobox
 			SUGGESTIONS.removeAllItems();
@@ -351,7 +443,7 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 			java.util.List suggestions = event.getSuggestions();
 			if (suggestions.size() > 0) {
 				for (Iterator suggestedWord = suggestions.iterator(); suggestedWord.hasNext();) {
-					SUGGESTIONS.addItem(suggestedWord.next());
+					SUGGESTIONS.addItem(suggestedWord.next().toString());
 				}
 			}
 			
@@ -370,6 +462,11 @@ public class SpellingCheckerDialog extends AbstractOutlinerJDialog implements Ac
 		}
 	}
 	
+	/**
+	 * Updates the buttons and text label based on current word count, 
+	 * thread state, etc. This method is protected
+	 * because the spell checking thread needs to be able to access it.
+	 */
 	protected void updateButtons() {
 		int current_word_count = spellChecker.getCurrentWordCount();
 		StringBuffer text = new StringBuffer();
