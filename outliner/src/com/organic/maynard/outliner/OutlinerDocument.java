@@ -20,16 +20,15 @@ package com.organic.maynard.outliner;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.Window;
-
-import java.io.*;
 import java.util.*;
-
 import javax.swing.*;
 import javax.swing.border.*;
-import javax.swing.event.*;
-
 import java.beans.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
 public class OutlinerDocument extends JInternalFrame implements ComponentListener, PropertyChangeListener {
 
@@ -58,10 +57,10 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	public UndoQueue undoQueue = new UndoQueue(this);
 	public DocumentSettings settings = new DocumentSettings(this);
 	public HoistStack hoistStack = new HoistStack(this);
-	
-	public JSplitPane splitPane = null;
 	public AttributesPanel attPanel = new AttributesPanel(this);
-	public JScrollPane attJSP = new JScrollPane(attPanel);
+	
+	private JSplitPane splitPane = null;
+	private JScrollPane attJSP = new JScrollPane(attPanel);
 
 	
 	// The Constructor
