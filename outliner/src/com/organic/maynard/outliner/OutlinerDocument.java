@@ -40,6 +40,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.beans.*;
+import gui.DummyJScrollPane;
 
 /**
  * @author  $Author$
@@ -116,7 +117,7 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		restoreWindowToInitialSize();
 		setLocation(INITIAL_X, INITIAL_Y);
 		
-		dummy = new DummyJScrollPane(panel);
+		dummy = new DummyJScrollPane(panel, panel.layout.scrollBar);
 		
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, dummy, attJSP);
 		splitPane.setResizeWeight(1.0);
