@@ -177,15 +177,17 @@ public class OutlinerFileChooser extends JFileChooser {
 	}
 
 
-	// Configure Methods
+	//----------------------------- Configure Methods -----------------------------------
 	public void configureForExport(OutlinerDocument doc, String protocolName, String currentDirectory) {
 		lazyInstantiate();
 
 		// adjust title
 		setDialogTitle("Export: " + protocolName);
 
-					 // adjust approve button
-					 setApproveButtonText ("Export") ;
+		// adjust approve button
+		setApproveButtonToolTipText ("Export file as named") ;
+		// [srk] this next doesn't work right - so we do this adjustment in the file protocol's code
+		// setApproveButtonText ("Export") ;
 
 		// Set the Accessory state
 		setAccessory(exportAccessory);
@@ -211,8 +213,10 @@ public class OutlinerFileChooser extends JFileChooser {
 		// adjust title
 		setDialogTitle("Save: " + protocolName);
 
-				// adjust approve button
-				setApproveButtonText ("Save") ;
+		// adjust approve button
+		setApproveButtonToolTipText ("Save file as named") ;
+		// [srk] this next doesn't work right - so we do this adjustment in the file protocol's code
+		// setApproveButtonText ("Save") ;
 
 		// Set the Accessory state
 		setAccessory(saveAccessory);
@@ -238,9 +242,11 @@ public class OutlinerFileChooser extends JFileChooser {
 		// adjust title
 		setDialogTitle("Open: " + protocolName);
 
-				// adjust approve button
-				setApproveButtonText ("Open") ;
-
+		// adjust approve button
+		setApproveButtonToolTipText ("Open selected file") ;
+		// [srk] this next doesn't work reliably - so we do this adjustment in the file protocol's code
+		// setApproveButtonText ("Open") ;
+		
 		// Set the Accessory state.
 		setAccessory(openAccessory);
 
@@ -261,7 +267,9 @@ public class OutlinerFileChooser extends JFileChooser {
 		setDialogTitle("Import: " + protocolName);
 		
 		// adjust approve button
-		setApproveButtonText ("Import") ;
+		setApproveButtonToolTipText ("Import selected file") ;
+		// [srk] this next doesn't work right - so we do this adjustment in the file protocol's code
+		// setApproveButtonText ("Import") ;
 
 		// Set the Accessory state.
 		setAccessory(importAccessory);

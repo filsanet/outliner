@@ -60,20 +60,30 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 	
 	// select a file to save or export
 	public boolean selectFileToSave(OutlinerDocument document, int type) {
+		// we'll customize the approve button
+		// [srk] this is done here, rather than in configureForOpen/Import, to workaround a bug
+		String approveButtonText = null ;
+
+		// make sure we're all set up
 		lazyInstantiation();
 		
 		// Setup the File Chooser to save or export
-		if (type == FileProtocol.SAVE) {
-			chooser.configureForSave(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
-		} else if (type == FileProtocol.EXPORT) {
-			chooser.configureForExport(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
-		} else {
-			System.out.println("ERROR: invalid save/export type used. (" + type +")");
-			return false;
-		}
+		switch (type) {
+			case FileProtocol.SAVE:
+				chooser.configureForSave(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
+				approveButtonText = "Save" ;
+				break ;
+			case FileProtocol.EXPORT:
+				chooser.configureForExport(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
+				approveButtonText = "Export" ;
+				break ;
+			default:
+				System.out.println("ERROR: invalid save/export type used. (" + type +")");
+				return false;
+			} // end switch
 
 		// run the File Chooser
-		int option = chooser.showSaveDialog(Outliner.outliner);
+		int option = chooser.showDialog(Outliner.outliner, approveButtonText) ;
 		
 		// Update the most recent save dir preference
 		// TBD [srk] set up a MOST_RECENT_EXPORT_DIR, then have this code act appropriately
@@ -141,15 +151,22 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 
 	// select a file to open or import
 	public boolean selectFileToOpen(DocumentInfo docInfo, int type) {
+		// we'll customize the approve button
+		// [srk] this is done here, rather than in configureForOpen/Import, to workaround a bug
+		String approveButtonText = null ;
+
+		// make sure we're all set up
 		lazyInstantiation();
 		
 		// Setup the File Chooser to open or import
 		switch (type) {
 			case FileProtocol.OPEN:
 				chooser.configureForOpen(getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
+				approveButtonText = "Open" ;
 				break ;
 			case FileProtocol.IMPORT:
 				chooser.configureForImport(getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
+				approveButtonText = "Import" ;
 				break ;
 			default:
 				System.out.println("ERROR: invalid open/import type used. (" + type +")");
@@ -157,8 +174,8 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 			} // end switch
 			
 		// run the File Chooser
-		int option = chooser.showOpenDialog(Outliner.outliner);
-
+		int option = chooser.showDialog(Outliner.outliner, approveButtonText) ;
+		
 		// Update the most recent open dir preference
 		// TBD [srk] set up a MOST_RECENT_IMPORT_DIR, then have this code act appropriately
 		Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur = chooser.getCurrentDirectory().getPath();
