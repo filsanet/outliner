@@ -441,7 +441,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 					//	-- this needs to be investigated
 					// set a bug trap
 					if (startSelection == -1) {
-						String msg = "Error at TextKeyListener:keyTyped():\n" ;
+						String msg = "Error at TextKeyListener:keyTyped:Backspace:01\n" ;
 						msg = msg + "startSelection: -1\n" ;
 						msg = msg + "oldCaretPosition: " + oldCaretPosition + "\n" ;
 						msg = msg + "oldMarkPosition: " + oldMarkPosition ;
@@ -463,7 +463,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 					//	-- this needs to be investigated
 					// set a bug trap
 					if (newCaretPosition == -1) {
-						String msg = "Error at TextKeyListener:keyTyped():\n" ;
+						String msg = "Error at TextKeyListener:keyTyped:Backspace:02\n" ;
 						msg = msg + "startSelection: 0\n" ;
 						msg = msg + "newCaretPosition: -1" ;
 						msg = msg + "oldCaretPosition: -1" + oldCaretPosition + "\n" ;
