@@ -77,7 +77,7 @@ public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 		}
 		
 		// If the newSelectedNode is null, then select the first node in the tree
-		if (newSelectedNode == null) {
+		if (newSelectedNode == null || newSelectedNode.isRoot()) {
 			tree.setSelectedNodesParent(tree.getRootNode());
 			newSelectedNode = tree.getRootNode().getFirstChild();
 			tree.addNodeToSelection(newSelectedNode);
