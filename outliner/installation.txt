@@ -1,0 +1,11 @@
+A couple notes about installation.
+
+1) You should be running Java 1.3. I think the 1.4 beta should be OK too. If
+   you've got more than one JDK installed, you may need to edit the run.bat
+   file to call the correct version of java. This would look something like:
+   c:\jdk1.3\bin\java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner
+
+2) User specific preferences are stored under your home directory. Becuase of
+   this, you should copy the macros found in prefs/macros/* to your 
+   home directory, otherwise they won't be available to you. The directory
+   YOu should copy them to is: %home%\outliner\macros\*.
