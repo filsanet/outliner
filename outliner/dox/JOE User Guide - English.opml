@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<opml version="1.0">
+<head>
+<title>E:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
+<dateCreated></dateCreated>
+<dateModified>Tue, 24 Jul 2001 07:01:29 GMT</dateModified>
+<ownerName></ownerName>
+<ownerEmail></ownerEmail>
+<expansionState></expansionState>
+<vertScrollState>1</vertScrollState>
+<windowTop>31</windowTop>
+<windowLeft>311</windowLeft>
+<windowBottom>412</windowBottom>
+<windowRight>775</windowRight>
+</head>
+<body>
+<outline text="Introduction">
+<outline text="About JOE"/>
+<outline text="People Behind JOE">
+<outline text="Maynard Demmon"/>
+<outline text="Philip Suh"/>
+<outline text="Steven Spencer"/>
+<outline text="Stan Krute"/>
+</outline>
+<outline text="Thanks To">
+<outline text="SourceForge"/>
+<outline text="Java community"/>
+</outline>
+<outline text="Use JOE">
+<outline text="Download the latest version here [link]"/>
+<outline text="Install it"/>
+</outline>
+<outline text="Develop JOE">
+<outline text="link to JOE Developer Guide.opml"/>
+</outline>
+<outline text="Feedback"/>
+</outline>
+<outline text="Installation and Setup">
+<outline text="Prepare your system"/>
+<outline text="Download the latest JOE"/>
+<outline text="Install the download"/>
+<outline text="Create some shortcuts"/>
+<outline text="Start 'im up"/>
+<outline text="Set preferences"/>
+</outline>
+<outline text="Your First Outline">
+<outline text="Some terminology"/>
+<outline text="Create a new outline"/>
+<outline text="Type in some info"/>
+<outline text="Move nodes around"/>
+<outline text="Delete nodes"/>
+<outline text="Save your outline"/>
+</outline>
+<outline text="Creating New Outlines">
+<outline text="Options"/>
+<outline text="Menu commands"/>
+<outline text="Keystroke Shortcuts"/>
+</outline>
+<outline text="Editing Outlines">
+<outline text="Expanding a Node"/>
+<outline text="Collapsing a Node"/>
+</outline>
+<outline text="Saving Outlines"/>
+<outline text="Opening Outlines"/>
+<outline text="Sharing Outlines"/>
+<outline text="Macros"/>
+<outline text="XML-RPC"/>
+<outline text="Menu Commands Reference">
+<outline text="File">
+<outline text="New">
+<outline text="keystroke shortcut: Ctrl+N"/>
+<outline text="Creates a blank new outline, and opens it up in a window for editing. The new outline has a name of the form Untitled &lt;#&gt;, where &lt;#&gt; is a number that tracks the number of new documents created during this JOE session. (Untitled 1, Untitled 2, Untitled 3, etc)"/>
+<outline text="Options">
+<outline text="none"/>
+</outline>
+</outline>
+<outline text="Open">
+<outline text="keystroke shortcut: Ctrl+O"/>
+<outline text="Opens an existing outline. The outline must be in a format that JOE can read. JOE can currently read these formats ">
+<outline text="[link to #0utlineFormats -- expand-in-place]"/>
+</outline>
+</outline>
+<outline text="Open Recent Files..."/>
+<outline text="---"/>
+<outline text="Save"/>
+<outline text="Save As..."/>
+<outline text="Save All"/>
+<outline text="Revert"/>
+<outline text="---"/>
+<outline text="Close"/>
+<outline text="Close All"/>
+<outline text="---"/>
+<outline text="Revert"/>
+</outline>
+<outline text="Edit">
+<outline text="Undo"/>
+<outline text="Redo"/>
+<outline text="---"/>
+<outline text="Undo All"/>
+<outline text="Redo All"/>
+<outline text="---"/>
+<outline text="Cut"/>
+<outline text="Copy"/>
+<outline text="Paste"/>
+<outline text="---"/>
+<outline text="Select All"/>
+<outline text="---"/>
+<outline text="Document Settings..."/>
+<outline text="---"/>
+<outline text="Preferences..."/>
+<outline text="Macros..."/>
+</outline>
+<outline text="Outline">
+<outline text="Toggle Comment"/>
+<outline text="---"/>
+<outline text="Toggle Expansion"/>
+<outline text="---"/>
+<outline text="Expand All Subheads"/>
+<outline text="Expand Everything"/>
+<outline text="---"/>
+<outline text="Collapse to Parent"/>
+<outline text="Collapse Everything"/>
+<outline text="---"/>
+<outline text="Move Up"/>
+<outline text="Move Down"/>
+<outline text="Move Left"/>
+<outline text="Move Right"/>
+<outline text="---"/>
+<outline text="Promote"/>
+<outline text="Demote"/>
+<outline text="---"/>
+<outline text="Merge"/>
+<outline text="Merge with Spaces"/>
+<outline text="--- "/>
+<outline text="Hoist"/>
+<outline text="De-Hoist"/>
+<outline text="De-Hoist All"/>
+<outline text="---"/>
+<outline text="Show Attributes"/>
+</outline>
+<outline text="Search"/>
+<outline text="Window"/>
+<outline text="Help"/>
+</outline>
+<outline text="Keystroke Shortcuts Reference"/>
+<outline text="Outline Formats">
+<outline text="tabbed text"/>
+<outline text="OPML 1.0">
+<outline text="http://opml.org/spec"/>
+</outline>
+<outline text="BrainForest .pdf"/>
+<outline text="Thought Manager .pdf"/>
+</outline>
+<outline text="Glossary">
+<outline text="A-E">
+<outline text="A"/>
+<outline text="B"/>
+<outline text="C"/>
+<outline text="D"/>
+<outline text="E"/>
+</outline>
+<outline text="F-J">
+<outline text="F"/>
+<outline text="G"/>
+<outline text="H"/>
+<outline text="I"/>
+<outline text="J"/>
+</outline>
+<outline text="K-O">
+<outline text="K"/>
+<outline text="L"/>
+<outline text="M"/>
+<outline text="N">
+<outline text="node">
+<outline text="some pithy simple clear definition"/>
+</outline>
+</outline>
+<outline text="O">
+<outline text="outline">
+<outline text="some pithy simple clear definition"/>
+</outline>
+</outline>
+</outline>
+<outline text="P-T">
+<outline text="P"/>
+<outline text="Q"/>
+<outline text="R"/>
+<outline text="S"/>
+<outline text="T"/>
+</outline>
+<outline text="U-Z">
+<outline text="U"/>
+<outline text="V"/>
+<outline text="W"/>
+<outline text="X"/>
+<outline text="Y"/>
+<outline text="Z"/>
+</outline>
+</outline>
+<outline text="Index">
+<outline text="A-E">
+<outline text="A"/>
+<outline text="B"/>
+<outline text="C"/>
+<outline text="D"/>
+<outline text="E"/>
+</outline>
+<outline text="F-J">
+<outline text="F"/>
+<outline text="G"/>
+<outline text="H"/>
+<outline text="I"/>
+<outline text="J"/>
+</outline>
+<outline text="K-O">
+<outline text="K"/>
+<outline text="L"/>
+<outline text="M"/>
+<outline text="N">
+<outline text="node">
+<outline text="a set of links to nodes within this document that mention 'node'"/>
+<outline text="for example"/>
+<outline text="#someTerminology, #moveNodesAround, #deleteNodes"/>
+</outline>
+</outline>
+<outline text="O"/>
+</outline>
+<outline text="P-T">
+<outline text="P"/>
+<outline text="Q"/>
+<outline text="R"/>
+<outline text="S"/>
+<outline text="T"/>
+</outline>
+<outline text="U-Z">
+<outline text="U"/>
+<outline text="V"/>
+<outline text="W"/>
+<outline text="X"/>
+<outline text="Y"/>
+<outline text="Z"/>
+</outline>
+</outline>
+</body>
+</opml>
