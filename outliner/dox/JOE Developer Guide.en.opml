@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide.en.opml</title>
 <dateCreated>Thu, 1 Nov 2001 12:22:52 GMT</dateCreated>
-<dateModified>Sun, 3 Feb 2002 07:48:11 GMT</dateModified>
+<dateModified>Fri, 6 Sep 2002 06:39:41 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
-<expansionState></expansionState>
-<vertScrollState>1</vertScrollState>
+<expansionState>5,6</expansionState>
+<vertScrollState>6</vertScrollState>
 <windowTop>5</windowTop>
 <windowLeft>5</windowLeft>
-<windowBottom>698</windowBottom>
-<windowRight>716</windowRight>
+<windowBottom>455</windowBottom>
+<windowRight>455</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -574,7 +574,53 @@
 			<outline isEditable="true" isMoveable="true" text="You'll see a whole bunch of files roll by"/>
 			<outline isEditable="true" isMoveable="true" text="The U stands for Updated file. Updated because it doesn't exist on your box."/>
 		</outline>
-		<outline isEditable="true" isMoveable="true" text="Build and Run the Project"/>
+		<outline text="Set Up a JOE Project in an IDE">
+			<outline text="NetBeans 3.4">
+				<outline text="Create a new project">
+					<outline text="Give the Project : Project Manager menu command"/>
+					<outline text="Project Manager appears"/>
+					<outline text="Click the New button"/>
+					<outline text="Type JOE or your own alternative as the project name"/>
+				</outline>
+				<outline text="Set up Explorer">
+					<outline text="Mount these files and directories in the Filesystems pane">
+						<outline text="{wherever}outliner\src"/>
+						<outline text="{wherever}outliner\makefiles"/>
+						<outline text="bsh.jar"/>
+						<outline text="com.organic.maynard.jar"/>
+						<outline text="com.psm.wiki.jar"/>
+						<outline text="com.yearahead.io.webfile.mar"/>
+						<outline text="jarkarta-oro.jar"/>
+						<outline text="outliner.jar"/>
+						<outline text="sax.jar"/>
+						<outline text="xmlrpc.jar"/>
+						<outline text="xp.jar"/>
+						<outline text="optional: to view Java source:">
+							<outline text="JDK 1.3.1_0x">
+								<outline text="Extract the JDK's src.jar file to a directory named src"/>
+								<outline text="Mount that directory"/>
+							</outline>
+							<outline text="JDK 1.4.0_0x">
+								<outline text="Mount the JDK's src.zip file"/>
+							</outline>
+						</outline>
+					</outline>
+					<outline text="Add these directories to the Project JOE pane">
+						<outline text="{wherever}outliner\src"/>
+						<outline text="{wherever}outliner\makefiles"/>
+					</outline>
+				</outline>
+			</outline>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="Build Your JOE Project">
+			<outline text="NetBeans 3.4">
+				<outline text="(assuming the setup documented above)"/>
+				<outline text="Go to the Project JOE pane of Explorer"/>
+				<outline text="Expand the outliner\makefiles item"/>
+				<outline text="Expand the build node"/>
+				<outline text="Right-click the jar node, then give the Execute command from the popup menu"/>
+			</outline>
+		</outline>
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="Linux/Unix [forthcoming]"/>
 	<outline isEditable="true" isMoveable="true" text="Macintosh">

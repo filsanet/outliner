@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\About JOE.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Tue, 3 Sep 2002 12:33:54 GMT</dateModified>
+<dateModified>Fri, 6 Sep 2002 06:31:08 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState>6</expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>0</windowTop>
-<windowLeft>0</windowLeft>
-<windowBottom>751</windowBottom>
-<windowRight>574</windowRight>
+<windowTop>5</windowTop>
+<windowLeft>5</windowLeft>
+<windowBottom>455</windowBottom>
+<windowRight>455</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -24,7 +24,7 @@
 </outline>
 <outline isEditable="true" isMoveable="true" text="------------" isMoveableInherited="true" isEditableInherited="true"/>
 <outline isEditable="true" isMoveable="true" text="Version" isMoveableInherited="true" isEditableInherited="true">
-	<outline text="1.8.9.2"/>
+	<outline text="1.8.9.3"/>
 </outline>
 <outline text="Release Notes ">
 	<outline text="1.8.9.2 - 09/01/02">
