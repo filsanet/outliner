@@ -79,15 +79,24 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 			System.out.println("Created User Preferences Directory: " + userPrefsFile.getPath());
 		}
 		
+		// Create macros directory it it doesn't exist, and copy over macros from installation directory.
 		File macrosFile = new File(MACROS_DIR);
 		isCreated = macrosFile.mkdirs();
 		if (isCreated) {
 			System.out.println("Created Macros Directory: " + macrosFile.getPath());
-			
-			// Copy over macros.txt and contents of macros directory.
 			try {
 				FileTools.copy(new File(PREFS_DIR + "macros"), macrosFile);
-				FileTools.copy(new File(PREFS_DIR + "macros.txt"), new File(MACROS_FILE));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// Copy over macros.txt from installation directory if it doesn't exist in the user's home directory.
+		File userMacrosFile = new File(MACROS_FILE);
+		if (!userMacrosFile.exists()) {
+			System.out.println("Copying over macros config file: " + userMacrosFile.getPath());
+			try {
+				FileTools.copy(new File(PREFS_DIR + "macros.txt"), userMacrosFile);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
