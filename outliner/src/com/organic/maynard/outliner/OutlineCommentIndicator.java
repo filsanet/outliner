@@ -43,8 +43,15 @@ import javax.swing.*;
 import java.awt.image.*;
 import java.awt.geom.*;
 
-public class OutlineCommentIndicator extends AbstractOutlineIndicator {
+import com.organic.maynard.imaging.ImageFilters;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
+public class OutlineCommentIndicator extends AbstractOutlineIndicator {
+	
 	// Class Fields
 	public static final ImageIcon ICON_IS_NOT_PROPERTY = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("graphics/is_not_commented.gif"));
 	public static ImageIcon ICON_IS_PROPERTY = null;
@@ -62,7 +69,7 @@ public class OutlineCommentIndicator extends AbstractOutlineIndicator {
 	public OutlineCommentIndicator(OutlinerCellRendererImpl renderer) {
 		super(renderer, GUITreeLoader.reg.getText("tooltip_toggle_comment"));
 	}
-
+	
 	// Misc Methods
 	public void updateIcon() {
 		if(isProperty()) {
@@ -87,30 +94,30 @@ public class OutlineCommentIndicator extends AbstractOutlineIndicator {
 		BufferedImage image = new BufferedImage(TRUE_WIDTH, BUTTON_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = image.createGraphics();
 		g.drawImage(notCommentedImage,0,0,Outliner.outliner);
-
+		
 		// Create Buffered Image for the derived images.
 		BufferedImage commentedImage = new BufferedImage(TRUE_WIDTH, BUTTON_HEIGHT, image.getType());
 		
 		// Define a transforamtion to rotate the closed image to create the open image.
 		AffineTransformOp at = new AffineTransformOp(AffineTransform.getRotateInstance((java.lang.Math.PI), TRUE_WIDTH/2, BUTTON_HEIGHT/2), AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
 		at.filter(image, commentedImage);
-
+		
 		Color c = Preferences.getPreferenceColor(Preferences.TEXTAREA_COMMENT_COLOR).cur;
 		int hexColor = ((c.getRed() << 16) | (c.getGreen() << 8) | c.getBlue());
 		
-		lightenFilter redFilter = new lightenFilter(hexColor);
+		RGBImageFilter redFilter = ImageFilters.getLightenFilter(hexColor);
 		FilteredImageSource commentedSource = new FilteredImageSource(commentedImage.getSource(), redFilter);
 		Image commentedImage2 = Outliner.outliner.createImage(commentedSource);
-
+		
 		ICON_IS_PROPERTY = new ImageIcon(commentedImage2);
 		
 		// Lighten color to inherited versions
-		lightenFilter lightenFilter = new lightenFilter(0x00cccccc);
+		RGBImageFilter lightenFilter = ImageFilters.getLightenFilter(0x00cccccc);
 		FilteredImageSource commentedInheritedSource = new FilteredImageSource(commentedImage2.getSource(), lightenFilter);
 		FilteredImageSource notCommentedInheritedSource = new FilteredImageSource(image.getSource(), lightenFilter);
 		Image commentedInheritedImage = Outliner.outliner.createImage(commentedInheritedSource);
 		Image notCommentedInheritedImage = Outliner.outliner.createImage(notCommentedInheritedSource);
-
+		
 		ICON_IS_PROPERTY_INHERITED = new ImageIcon(commentedInheritedImage);
 		ICON_IS_NOT_PROPERTY_INHERITED = new ImageIcon(notCommentedInheritedImage);
 	}

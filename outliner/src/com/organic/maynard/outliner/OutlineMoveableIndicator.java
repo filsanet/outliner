@@ -42,8 +42,15 @@ import javax.swing.*;
 import java.awt.image.*;
 import java.awt.geom.*;
 
-public class OutlineMoveableIndicator extends AbstractOutlineIndicator {
+import com.organic.maynard.imaging.ImageFilters;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
+public class OutlineMoveableIndicator extends AbstractOutlineIndicator {
+	
 	// Class Fields
 	public static final ImageIcon ICON_IS_NOT_PROPERTY = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("graphics/is_not_moveable.gif"));
 	public static final ImageIcon ICON_IS_PROPERTY = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("graphics/is_moveable.gif"));
@@ -61,7 +68,7 @@ public class OutlineMoveableIndicator extends AbstractOutlineIndicator {
 	public OutlineMoveableIndicator(OutlinerCellRendererImpl renderer) {
 		super(renderer, GUITreeLoader.reg.getText("tooltip_toggle_moveability"));
 	}
-
+	
 	// Misc Methods
 	public void updateIcon() {
 		if(isProperty()) {
@@ -86,20 +93,20 @@ public class OutlineMoveableIndicator extends AbstractOutlineIndicator {
 		BufferedImage isNotImage = new BufferedImage(TRUE_WIDTH, BUTTON_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D gIsNotImage = isNotImage.createGraphics();
 		gIsNotImage.drawImage(isNotPropertyImage,0,0,Outliner.outliner);
-
+		
 		// Create a buffered image from the is property image.
 		Image isPropertyImage = ICON_IS_PROPERTY.getImage();
 		BufferedImage isImage = new BufferedImage(TRUE_WIDTH, BUTTON_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D gIsImage = isImage.createGraphics();
 		gIsImage.drawImage(isPropertyImage,0,0,Outliner.outliner);
-
+		
 		// Lighten color to inherited versions
-		lightenFilter lightenFilter = new lightenFilter(0x00cccccc);
+		RGBImageFilter lightenFilter = ImageFilters.getLightenFilter(0x00cccccc);
 		FilteredImageSource isNotPropertyInheritedSource = new FilteredImageSource(isNotImage.getSource(), lightenFilter);
 		FilteredImageSource isPropertyInheritedSource = new FilteredImageSource(isImage.getSource(), lightenFilter);
 		Image isNotPropertyInheritedImage = Outliner.outliner.createImage(isNotPropertyInheritedSource);
 		Image isPropertyInheritedImage = Outliner.outliner.createImage(isPropertyInheritedSource);
-
+		
 		ICON_IS_NOT_PROPERTY_INHERITED = new ImageIcon(isNotPropertyInheritedImage);
 		ICON_IS_PROPERTY_INHERITED = new ImageIcon(isPropertyInheritedImage);
 	}
