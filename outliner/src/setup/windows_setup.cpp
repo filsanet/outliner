@@ -51,50 +51,400 @@
 // 	to communicate with the user as the 
 //	program goes thru main's setup steps
 
+// install the application on a Windows system
+// returns 1 if all goes well, 0 if it doesn't
 int main(int argc, char* argv[]){
-	// if any of these steps fail, we leave immediately, returning 0
-	// if we make it thru all the steps, we return 1
 	
-	// determine which version of Windows we're running under
-	// and make sure it's got a Java 2 Runtime available
-	if ( determineWindowsVersion()
+	// say hello to the people
+	welcome() ;
 	
-	// make sure we're in a suitable environment
-	// (memory, processor speed)
-	&& ensureSuitableEnvironment()
-	
-	// make sure we've got a proper Java 2 Runtime Environment
-	// && ensureJ2RE()
-	
-	// adjust run.bat if there's more than one JRE
-	// && adjustRunBat()
-	
-	// set the JOE_HOME environment var
-	&& set_JOE_HOME ()
-	
-	// per user choice, set up JOE as the handler of OPML files
-	// && setJoeAsOpmlHandler()
-	
-	// per user choice, copy JOE.pif to 0 or more of:
-	// Programs menu, Start menu top, desktop, 
-	// quickstart toolbar of taskbar, folders on desktop
-	// && copyJoePifPerUserPrefs()
+	// if this system is suitable for running the app ...
+	if ( weCanRunOnThisSystem() 
 
-	) {
-		// if we make it here, all went well
-		// give user a chance to look at results
+	// and we've got a proper Java 2 Runtime Environment
+	&& weHaveJ2RE()
+	
+	// and we're able to plug ourselves into this system
+	&& wePlugIntoSystem () ){
+		
+		// all went well, and we're installed
+		// give the user a chance to examine the results
 		// suggest a reboot for systems that need one
 		successFeedback();
 		return 1 ;
+		
 	} else {
 		// we failed
 		failureFeedback () ;
 		return 0 ;
+		
 	} // end if-else
 
-} // end main
+} // end function main
 
 
+// say hi to ever'body
+void welcome () {
+	char welcomeString [MAX_LINE] ;
+	
+	// build welcome string
+	strcpy (welcomeString, APP_VERSION_STRING) ;
+	strcat (welcomeString, " Windows Setup Program\n\n") ;
+	
+	// print welcome
+	printf (welcomeString) ;
+	
+	// done
+	return ;
+
+} // end function successFeedback
+
+
+// see if this system meets the requirements for running the app
+// returns 1 if it does, 0 if it doesn't
+int weCanRunOnThisSystem () {
+	
+	// if we can determine the version of Windows that's running ...
+	if ( (int)(g_Windows_Version = determineWindowsVersion())
+	
+	// and that there's a Java 2 Runtime available for that version ...
+	&& java2available(g_Windows_Version) 
+	
+	// and the machine has the power needed ...
+	// (memory, processor speed)
+	&& machineHasNuffOomph() ) 
+	
+		// all is cool
+		return 1 ;
+		
+	else
+		// all is not cool
+		return 0 ;
+		
+} // end function weCanRunOnThisSystem
+	
+
+// Make sure that a Java 2 Runtime Environment is properly installed on this system
+// returns 1 if it is, 0 if it isn't
+int weHaveJ2RE () {
+	
+	// TBD
+	// fake for now
+	// check registry for J2RE vars
+	// check for std location of j2re
+	// check for other env vars
+	// if not here, suggest a download
+	// run download
+	// run install
+	// do check again
+
+	return 1 ;
+	
+} // end weHaveJ2RE
+
+
+// Plug app into the system
+int wePlugIntoSystem () {
+	
+	// set up any environment variables
+	if ( set_JOE_HOME()   // TBD setAllEnvVars()
+	
+	// per user choices place icon copies
+	// TBD
+	
+	// per user choice set JOE as OPML handler 
+	// TBD
+	
+	// add to Add/Remove Programs listing
+	// wiring up windows_uninstall.exe
+	// TBD
+	
+	) 
+		return 1 ;
+	else
+		return 0 ;
+
+} // end wePlugIntoSystem
+
+
+void successFeedback () {
+	char feedbackString [MAX_LINE] ;
+	
+	// build feedback string
+	strcpy (feedbackString, "JOE installed successfully on your system.") ;
+	// add a reboot suggestion to string if warranted
+	// TBD
+	strcat (feedbackString, "\n\nPress the Enter key to finish: ") ;
+	
+	// print feedback
+	printf (feedbackString) ;
+	
+	// wait for user to press Enter key
+	getchar() ;
+	
+	// done
+	return ;
+
+} // end function successFeedback
+
+
+// provide some feedback RE installation failure
+void failureFeedback () {
+	// local vars
+	char feedbackString [MAX_LINE] ;
+
+	// build the feedback string
+	strcpy (feedbackString, "INSTALLATION FAILED.\n\nPress Enter key to finish: ") ;
+	
+	// print the feedback string
+	printf (feedbackString) ;
+	
+	// wait for Enter keypress
+	getchar() ;
+	
+	// done
+	return ;
+	
+} // end function failureFeedback 
+
+
+// figure out what version of Windows we're running
+// returns a windows_version value
+// returns 0 aka CANNOT_DETERMINE if it cannot determine the Windows version
+windows_version determineWindowsVersion () {
+	// local vars
+	OSVERSIONINFOEX osvi;
+	BOOL bOsVersionInfoEx;
+	windows_version result ;
+
+	// clear the data structure
+	ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
+	// set it up as the EX versionInfo
+	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+
+	// if calling GetVersionEx using OSVERSIONINFOEX fails ...
+	if( !(bOsVersionInfoEx = GetVersionEx ((OSVERSIONINFO *) &osvi)) ){
+		
+		// set up as the nonEX versionInfo
+		osvi.dwOSVersionInfoSize = sizeof (OSVERSIONINFO);
+	
+		// if calling GetVersionEx using OSVERSIONINFO fails ...
+		if (! GetVersionEx ( (OSVERSIONINFO *) &osvi) ) 
+			// leave failing
+			// this means we're on a pre-NT_351/95 system
+			return CANNOT_DETERMINE;
+	} // end if
+
+	// okay, we have version info in regular or EX form
+	
+	// switch out on major version #
+	switch (osvi.dwMajorVersion) {
+		
+		// NT 351
+		case 3:
+			// switch out on minor version #
+			switch (osvi.dwMinorVersion) {
+				case 51:
+					result = WIN_NT_351 ;
+					break ;
+				default:
+					result = WIN_UNKNOWN_V3 ;
+					break ;
+			} // end switch
+			break ;
+		
+		// 95, 95 OSR2, NT 4, 98, 98 SE, or ME	
+		case 4:
+			// switch out on minor version #
+			switch (osvi.dwMinorVersion) {
+				
+				// 95, 95 OSR2, or NT 4
+				case 0:
+					// if it's not NT...
+					if (osvi.dwPlatformId != VER_PLATFORM_WIN32_NT) {
+						// it's 95
+						// regular or OSR2 ?
+						// if it's a B or C
+						if ((osvi.szCSDVersion[1] == 'C')
+							|| (osvi.szCSDVersion[1] == 'B'))
+							result = WIN_95_OSR2 ;
+						else
+							result = WIN_95 ;
+					} // end if it's not NT
+					else {
+						// it's NT 4
+						result = WIN_NT_4 ;
+						
+						// let's get any service pack
+						if (osvi.szCSDVersion[0] != 0) 
+							g_NT_4_SP_Num = osvi.szCSDVersion[strlen(osvi.szCSDVersion) - 1]- '0' ;
+					} // end else it's NT 4
+					break ;
+				
+				// 98 or 98 SE
+				case 10:
+					// if it's SE
+					if (osvi.szCSDVersion[1] == 'A' )
+						result = WIN_98_SE ;
+					else
+						result = WIN_98 ;
+					break ;
+					
+				// ME
+				case 90:
+					result = WIN_ME ;
+					break ;
+					
+				// unknown
+				default:
+					result = WIN_UNKNOWN_V4 ;
+					break ;
+					
+			} // end switch on minor version #
+			break ;
+		
+		// 2000, XP, or .Net Server	
+		case 5:					
+			// switch out on minor version #
+			switch (osvi.dwMinorVersion) {
+				
+				// 2000
+				case 0:
+					result = WIN_2K ;
+					break ;
+					
+				// XP or .Net Server
+				case 1:
+					// if we have EX data (we should)
+					if (bOsVersionInfoEx) { 
+						// if we're nt workstation
+						if(osvi.wProductType == VER_NT_WORKSTATION)
+							result = WIN_XP ;
+						else
+							result = WIN_DOT_NET_SERVER ;
+					} else 
+						result = WIN_UNKNOWN_V5 ;
+					break ;
+					
+				default:
+					result = WIN_UNKNOWN_V5;
+					break ;
+			} // end switch on minor version #
+			break ;
+			
+		// future stuff
+		case 6:
+			result = WIN_UNKNOWN_V6 ;
+			break ;
+			
+		case 7:
+			result = WIN_UNKNOWN_V7 ;
+			break ;
+		
+		case 8:
+			result = WIN_UNKNOWN_V8 ;
+			break ;
+		
+		case 9:
+			result = WIN_UNKNOWN_V9 ;
+			break ;
+		
+		case 10:
+			result = WIN_UNKNOWN_V10 ;
+			break ;
+		
+		// very unknown
+		// majorVersion < 3 or > 10
+		default:
+			result = WIN_VERY_UNKNOWN ;
+			break ;
+			
+	} // end switch on major version #
+
+	// done with determination
+	
+	// provide some feedback RE the Windows version
+	osFeedback (result);
+	
+	// done
+	return result ;
+	
+} // end function determineWindowsVersion
+
+
+// determine whether there's a Java 2 Runtime Environment for this OS
+// returns 1 if OS is suitable, 0 if it's unsuitable
+int java2available (windows_version windowsVersion) {
+	// local vars
+	int result = 0 ;
+	char feedbackString [MAX_LINE] ;
+	
+	// switch out on windows version
+	switch (windowsVersion) {
+		case WIN_95:
+		case WIN_95_OSR2:
+		case WIN_98:
+		case WIN_98_SE:
+		case WIN_ME:
+		case WIN_XP:
+		case WIN_NT_4:
+		case WIN_2K:
+		case WIN_DOT_NET_SERVER:
+		case WIN_UNKNOWN_V4:
+		case WIN_UNKNOWN_V5:
+		case WIN_UNKNOWN_V6:
+		case WIN_UNKNOWN_V7:
+			
+			// all these are cool
+			result = 1 ;
+			break ;
+			
+		case WIN_NT_351:
+		case WIN_UNKNOWN_V3:
+		case WIN_VERY_UNKNOWN:
+		default:
+			// problems
+			result = 0 ;
+			
+			// build up a feedback string
+			strcpy (feedbackString, "There's no Java 2 Runtime Environment") ;
+			strcat (feedbackString, "\nfor this OS. JOE cannot run on this system.\n\n") ;
+
+			// print the feedback string
+			printf (feedbackString) ;
+						
+			break ;
+			
+		} // end switch out on Windows version
+	
+	// done
+	return result;
+	
+} // end function java2available 
+
+
+int machineHasNuffOomph () {
+	
+	// if we have enough memory
+	// TBD
+	
+	// and a fast enuf processsor
+	// TBD
+	
+		// we cool
+		return 1 ;
+		
+	// else
+		// we ain't
+		// return 0 ;
+		
+	// end if-else
+	
+} // end function machineHasNuffOomph
+
+
+// set up the JOE_HOME environment variable
+// returns 1 if it succeeds, 0 if it fails
 int set_JOE_HOME () {
 	// local vars
 	char shortPathBuffer[MAX_PATH] ;
@@ -110,7 +460,7 @@ int set_JOE_HOME () {
 	
 	// return result of trying to set 
 	// environment var JOE_HOME to that value
-	return setEnvVar(JOE_HOME, shortPathBuffer, introLines);
+	return setEnvVar(JOE_HOME, shortPathBuffer, introLines, g_Windows_Version);
 	
 } // end set_JOE_HOME
 
@@ -136,12 +486,12 @@ int getShortPathCurDir (char * shortPathBuffer) {
 
 
 // set an environment variable
-int setEnvVar (char * varName, char * varValue, char * introLines) {
+int setEnvVar (char * varName, char * varValue, char * introLines, windows_version windowsVersion) {
 	// local vars
 	int result ;
 	
 	// switch out on windows version
-	switch (gWindowsVersion) {
+	switch (windowsVersion) {
 		case WIN_95:
 		case WIN_95_OSR2:
 		case WIN_98:
@@ -595,202 +945,19 @@ int trimFileOffPath (char * path) {
 } // end trimFileOffPath
 
 
-// figure out what version of Windows we're running
-// returns 0 if it can't determine anything, 1 otherwise
-// sets the global var gWindowsVersion
-int determineWindowsVersion () {
-	// local vars
-	OSVERSIONINFOEX osvi;
-	BOOL bOsVersionInfoEx;
-
-	// clear the data structure
-	ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
-	// set it up as the EX versionInfo
-	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-
-	// if calling GetVersionEx using OSVERSIONINFOEX fails ...
-	if( !(bOsVersionInfoEx = GetVersionEx ((OSVERSIONINFO *) &osvi)) ){
-		
-		// set up as the nonEX versionInfo
-		osvi.dwOSVersionInfoSize = sizeof (OSVERSIONINFO);
-	
-		// if calling GetVersionEx using OSVERSIONINFO fails ...
-		if (! GetVersionEx ( (OSVERSIONINFO *) &osvi) ) 
-			// leave failing
-			// this means we're on a pre-NT_351/95 system
-			return 0;
-	} // end if
-
-	// okay, we have version info in regular or EX form
-	
-	// switch out on major version #
-	switch (osvi.dwMajorVersion) {
-		
-		// NT 351
-		case 3:
-			// switch out on minor version #
-			switch (osvi.dwMinorVersion) {
-				case 51:
-					gWindowsVersion = WIN_NT_351 ;
-					break ;
-				default:
-					gWindowsVersion = WIN_UNKNOWN_V3 ;
-					break ;
-			} // end switch
-			break ;
-		
-		// 95, 95 OSR2, NT 4, 98, 98 SE, or ME	
-		case 4:
-			// switch out on minor version #
-			switch (osvi.dwMinorVersion) {
-				
-				// 95, 95 OSR2, or NT 4
-				case 0:
-					// if it's not NT...
-					if (osvi.dwPlatformId != VER_PLATFORM_WIN32_NT) {
-						// it's 95
-						// regular or OSR2 ?
-						// if it's a B or C
-						if ((osvi.szCSDVersion[1] == 'C')
-							|| (osvi.szCSDVersion[1] == 'B'))
-							gWindowsVersion = WIN_95_OSR2 ;
-						else
-							gWindowsVersion = WIN_95 ;
-					} // end if it's not NT
-					else {
-						// it's NT 4
-						gWindowsVersion = WIN_NT_4 ;
-						
-						// let's get any service pack
-						if (osvi.szCSDVersion[0] != 0) 
-							g_NT_4_SP_Num = osvi.szCSDVersion[strlen(osvi.szCSDVersion) - 1]- '0' ;
-					} // end else it's NT 4
-					break ;
-				
-				// 98 or 98 SE
-				case 10:
-					// if it's SE
-					if (osvi.szCSDVersion[1] == 'A' )
-						gWindowsVersion = WIN_98_SE ;
-					else
-						gWindowsVersion = WIN_98 ;
-					break ;
-					
-				// ME
-				case 90:
-					gWindowsVersion = WIN_ME ;
-					break ;
-					
-				// unknown
-				default:
-					gWindowsVersion = WIN_UNKNOWN_V4 ;
-					break ;
-					
-			} // end switch on minor version #
-			break ;
-		
-		// 2000, XP, or .Net Server	
-		case 5:					
-			// switch out on minor version #
-			switch (osvi.dwMinorVersion) {
-				
-				// 2000
-				case 0:
-					gWindowsVersion = WIN_2K ;
-					break ;
-					
-				// XP or .Net Server
-				case 1:
-					// if we have EX data (we should)
-					if (bOsVersionInfoEx) { 
-						// if we're nt workstation
-						if(osvi.wProductType == VER_NT_WORKSTATION)
-							gWindowsVersion = WIN_XP ;
-						else
-							gWindowsVersion = WIN_DOT_NET_SERVER ;
-					} else 
-						gWindowsVersion = WIN_UNKNOWN_V5 ;
-					break ;
-					
-				default:
-					gWindowsVersion = WIN_UNKNOWN_V5;
-					break ;
-			} // end switch on minor version #
-			break ;
-			
-		// future stuff
-		case 6:
-			gWindowsVersion = WIN_UNKNOWN_V6 ;
-			break ;
-			
-		case 7:
-			gWindowsVersion = WIN_UNKNOWN_V7 ;
-			break ;
-		
-		// very unknown
-		// majorVersion < 3 or > 7
-		default:
-			gWindowsVersion = WIN_VERY_UNKNOWN ;
-			break ;
-			
-	} // end switch on major version #
-
-	// done with determination
-	
-	// provide some feedback RE the Windows version
-	// TBD returns 0 if the OS is unsuitable for JOE
-	return osFeedback ();
-	
-} // end function determineWindowsVersion
-
 
 // provide some feedback RE the OS we're attempting to install under
 // returns 1 if OS is suitable, 0 if it's unsuitable
-int osFeedback () {
+int osFeedback (windows_version windowsVersion) {
 	// local vars
 	char feedbackString [MAX_LINE] ;
 	int result = 1 ;
 	
-	// start building the feedback string
+	// build the feedback string
 	strcpy (feedbackString, "Your computer is running the ") ;
-	strcat (feedbackString, windows_version_strings[gWindowsVersion]) ;
+	strcat (feedbackString, g_Windows_Version_Strings[windowsVersion]) ;
 	strcat (feedbackString, " operating system.\n\n") ;
 
-	// make sure the OS supports Java 2
-	// switch out on windows version
-	switch (gWindowsVersion) {
-		case WIN_95:
-		case WIN_95_OSR2:
-		case WIN_98:
-		case WIN_98_SE:
-		case WIN_ME:
-		case WIN_XP:
-		case WIN_NT_4:
-		case WIN_2K:
-		case WIN_DOT_NET_SERVER:
-		case WIN_UNKNOWN_V4:
-		case WIN_UNKNOWN_V5:
-		case WIN_UNKNOWN_V6:
-		case WIN_UNKNOWN_V7:
-			
-			// all these are cool
-			break ;
-			
-		case WIN_NT_351:
-		case WIN_UNKNOWN_V3:
-		case WIN_VERY_UNKNOWN:
-		default:
-			// problems
-			result = 0 ;
-			
-			// build up a feedback string
-			strcat (feedbackString, "Since there's no Java 2 Runtime Environment") ;
-			strcat (feedbackString, "\nfor that OS, JOE cannot run on this system.\n\n") ;
-						
-			break ;
-			
-		} // end switch out on Windows version
-	
 	// print the feedback string
 	printf (feedbackString) ;
 	
@@ -806,12 +973,12 @@ int sevFeedback (int result, char * varName, char * varValue) {
 	char feedbackString [MAX_LINE] ;
 	
 	if (result) 
-		strcpy (feedbackString, "Successfully ensured ") ;
+		strcpy (feedbackString, "Successfully ") ;
 	else 
-		strcpy (feedbackString, "Unable to ensure ") ;
-	strcat (feedbackString, "that the environment variable ") ;
+		strcpy (feedbackString, "Failed to ") ;
+	strcat (feedbackString, "set the environment variable ") ;
 	strcat (feedbackString, varName) ;
-	strcat (feedbackString, "\nhas the value ") ;
+	strcat (feedbackString, "\nto the value ") ;
 	strcat (feedbackString, varValue) ;
 	strcat (feedbackString, "\n\n") ;
 	printf (feedbackString) ;
@@ -819,26 +986,6 @@ int sevFeedback (int result, char * varName, char * varValue) {
 	return 1 ;
 
 } // end sevFeedback
-
-
-void successFeedback () {
-	char feedbackString [MAX_LINE] ;
-	
-	strcpy (feedbackString, "All went well.") ;
-	// TBD
-	// add a reboot suggestion to string if warranted
-	strcat (feedbackString, "\n\nPress the Enter key to finish: ") ;
-	
-	// print that feedback
-	printf (feedbackString) ;
-	
-	// wait for Enter keypress
-	getchar() ;
-	
-	// done
-	return ;
-
-} // end function successFeedback
 
 
 int ensureSuitableEnvironment () {
@@ -850,25 +997,43 @@ int ensureSuitableEnvironment () {
 } // end function ensureSuitableEnvironment
 
 
-// provide some feedback RE installation failure
-void failureFeedback () {
-	// local vars
-	char feedbackString [MAX_LINE] ;
-
-	// build the feedback string
-	strcpy (feedbackString, "INSTALLATION FAILED.\n\nPress Enter key to finish: ") ;
-	
-	// print the feedback string
-	printf (feedbackString) ;
-	
-	// wait for Enter keypress
-	getchar() ;
-	
-	// done
-	return ;
-	
-} // end function failureFeedback 
-
-
-
-	
+//
+//	
+//
+//
+//
+//	// make sure the OS supports Java 2
+//	// switch out on windows version
+//	switch (windowsVersion) {
+//		case WIN_95:
+//		case WIN_95_OSR2:
+//		case WIN_98:
+//		case WIN_98_SE:
+//		case WIN_ME:
+//		case WIN_XP:
+//		case WIN_NT_4:
+//		case WIN_2K:
+//		case WIN_DOT_NET_SERVER:
+//		case WIN_UNKNOWN_V4:
+//		case WIN_UNKNOWN_V5:
+//		case WIN_UNKNOWN_V6:
+//		case WIN_UNKNOWN_V7:
+//			
+//			// all these are cool
+//			result = 1 ;
+//			break ;
+//			
+//		case WIN_NT_351:
+//		case WIN_UNKNOWN_V3:
+//		case WIN_VERY_UNKNOWN:
+//		default:
+//			// problems
+//			result = 0 ;
+//			
+//			// build up a feedback string
+//			strcat (feedbackString, "Since there's no Java 2 Runtime Environment") ;
+//			strcat (feedbackString, "\nfor that OS, JOE cannot run on this system.\n\n") ;
+//						
+//			break ;
+//			
+//		} // end switch out on Windows version

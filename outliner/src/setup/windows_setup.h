@@ -38,29 +38,17 @@
  * @version $Revision$, $Date$
  */
 
-// function decls
-int determineWindowsVersion () ;
-int ensureSuitableEnvironment () ;
-int getAutoExecPath(char *);
-int getShortPathCurDir (char *) ;
-int getWord (int, char *, char *) ;
-int osFeedback () ;
-int setAutoExecEnvVar (char *, char *, char *);
-int setEnvVar (char *, char *, char *);
-int setRegistryEnvVar (char *, char *);
-int set_JOE_HOME () ;
-int sevFeedback (int, char *, char *) ;
-int strToUpper (char *) ;
-int trimFileOffPath (char *) ;
-void failureFeedback () ;
-void successFeedback () ;
-
 // constants
 #define MAX_LINE 1024
 #define JOE_HOME "JOE_HOME"
+#define APP_VERSION_STRING "JOE 1.8.8"
+
+
+// ---------- datatypes
 
 // windows version info
 enum windows_version {	// these are the major functionally-different versions
+	CANNOT_DETERMINE = 0,
 	WIN_95,
 	WIN_95_OSR2,
 	WIN_98,
@@ -76,11 +64,20 @@ enum windows_version {	// these are the major functionally-different versions
 	WIN_UNKNOWN_V5,
 	WIN_UNKNOWN_V6,
 	WIN_UNKNOWN_V7,
-	WIN_VERY_UNKNOWN } gWindowsVersion = WIN_VERY_UNKNOWN;
+	WIN_UNKNOWN_V8,
+	WIN_UNKNOWN_V9,
+	WIN_UNKNOWN_V10,
+	WIN_VERY_UNKNOWN } ;
+
+
+// ---------- global variables
+
+windows_version g_Windows_Version = CANNOT_DETERMINE;
 
 int g_NT_4_SP_Num = 0 ;	// NT 4 Service Pack #
 
-char * windows_version_strings [] = {
+char * g_Windows_Version_Strings [] = {
+	"<cannot determine Windows version>",
 	"Windows 95",
 	"Windows 95 OSR2",
 	"Windows 98",
@@ -98,4 +95,29 @@ char * windows_version_strings [] = {
 	"Unknown V7 Windows",
 	"Very Unknown Windows" }; 
 		
+
+// ---------- functions
+
+int ensureSuitableEnvironment() ;
+int getAutoExecPath(char *);
+int getShortPathCurDir(char *) ;
+int getWord(int, char *, char *) ;
+int java2available(windows_version) ;
+int machineHasNuffOomph() ;
+int osFeedback(windows_version) ;
+int setAutoExecEnvVar(char *, char *, char *);
+int setEnvVar(char *, char *, char *, windows_version);
+int setRegistryEnvVar(char *, char *);
+int set_JOE_HOME() ;
+int sevFeedback(int, char *, char *) ;
+int strToUpper(char *) ;
+int trimFileOffPath(char *) ;
+int weCanRunOnThisSystem() ;
+int weHaveJ2RE() ;
+int wePlugIntoSystem() ;
+void failureFeedback() ;
+void successFeedback() ;
+void welcome() ;
+windows_version determineWindowsVersion() ;
+
 
