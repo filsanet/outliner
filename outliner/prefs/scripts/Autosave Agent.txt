@@ -1,17 +1,15 @@
 <?xml version="1.0"?>
-<script>while (true) {
+<script>import com.organic.maynard.outliner.util.preferences.Preferences;
+
+while (true) {
 	int freq = Preferences.getPreferenceInt("autosave_frequency").cur * 1000;
 	Thread.sleep(freq);
 
-	for (int i = 0; i &lt; Outliner.openDocumentCount(); i++) {
-		OutlinerDocument doc = Outliner.getDocument(i);
-		if (!doc.getDocumentInfo().isImported()) {
-			if (!doc.getDocumentInfo().isHelpFile()) {
-				if (!doc.getFileName().equals("") &amp;&amp; doc.isFileModified()) {
-					System.out.println("Auto-Saving: " + doc.getFileName());
-					SaveFileMenuItem.saveOutlinerDocument(doc);
-				}
-			}
+	for (int i = 0; i &lt; Outliner.documents.openDocumentCount(); i++) {
+		OutlinerDocument doc = Outliner.documents.getDocument(i);
+		if (!doc.getFileName().equals("") &amp;&amp; doc.isFileModified()) {
+			System.out.println("Auto-Saving: " + doc.getFileName());
+			SaveFileMenuItem.saveOutlinerDocument(doc);
 		}
 	}
 }</script>
