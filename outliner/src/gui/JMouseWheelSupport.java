@@ -1,6 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // JMouseWheel: Mouse wheel support for Java applications on Win32 platforms
 // Copyright (C) 2001 Davanum Srinivas (dims@geocities.com)
+// Portions Copyright (C) 2001 Maynard Demmon, maynard@organic.com
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -25,21 +26,43 @@ import com.organic.maynard.outliner.DummyJScrollPane;
 /**
  * Helper class to the JMouseWheelDialog and JMouseWheelFrame.  Encapsulates the
  * scrolling code into one object shared by both types of Window ancestors.
+ *
+ * Changes by Maynard Demmon on 11/12/01:
+ *
+ * 1) Made JMouseWheelSupport class public so that the Accessor methods can be 
+ *    accessed by classes in other packages.
+ *
+ * 2) Added setMinScrollDistance and getMinScrollDistance methods and an associated
+ *    minScrollDistance field.
+ *
+ * 3) Modified the setting of nIncrement to use the minScrollDistance field.
+ *
+ * 4) Added a switch for how the JScrollBar object is obtained so that DummyJScrollPane's
+ *    are treated differently.
  */
 public abstract class JMouseWheelSupport {
 
 	private static int minScrollDistance = 15;
 	
+	/**
+	 * Sets the minimum scroll distance.
+	 * 
+	 * @param i the minimum scroll distance. Should be greater than or equal to 1.
+	 */
 	public static void setMinScrollDistance(int i) {
 		minScrollDistance = i;
 	}
-
+	
+	/**
+	 * Gets the minimum scroll distance.
+	 * 
+	 * @return the minimum scroll distance.
+	 */
 	public static int getMinScrollDistance() {
 		return minScrollDistance;
 	}
-	
-	static void notifyMouseWheel(Component owner, int scrollSpeed, short fwKeys,short zDelta,long xPos, long yPos)
-	{
+
+	static void notifyMouseWheel(Component owner, int scrollSpeed, short fwKeys,short zDelta,long xPos, long yPos) {
 		// Convert screen coordinates to component specific offsets.
 		Point p = new Point((int)xPos,(int)yPos);
 		SwingUtilities.convertPointFromScreen(p, owner);
@@ -53,9 +76,9 @@ public abstract class JMouseWheelSupport {
 				// Get the vertical scrollbar for the scroll pane.
 				JScrollBar scrollBar = null;
 				if (c instanceof DummyJScrollPane) {
-					scrollBar = ((DummyJScrollPane) c).getVerticalScrollBarProxy(); // MD: Modifed to use a different method name so that other processes don't get access to the scrollbar by when they shouldn't.
+					scrollBar = ((DummyJScrollPane) c).getVerticalScrollBarProxy(); // MD: Modifed to use a different method name so that other processes don't get access to the scrollbar when they shouldn't.
 				} else {
-					scrollBar = ((JScrollPane) c).getVerticalScrollBar(); // MD: Modifed to use a different method name so that other processes don't get access to the scrollbar by when they shouldn't.
+					scrollBar = ((JScrollPane) c).getVerticalScrollBar(); // MD: Modifed to use a different method name so that other processes don't get access to the scrollbar when they shouldn't.
 				}
 				BoundedRangeModel model = scrollBar.getModel();
 
@@ -65,28 +88,46 @@ public abstract class JMouseWheelSupport {
 					// the direction of the mouse wheel.
 					int nValue = scrollBar.getValue();
 					int nIncrement = scrollBar.getUnitIncrement((zDelta > 0) ? -1 : 1);
-					nIncrement = Math.max( nIncrement, minScrollDistance ) * scrollSpeed; 	// (15 is not too annoying yet still less than table row increment)
+					nIncrement = Math.max( nIncrement, minScrollDistance ) * scrollSpeed; // MD: Modified to use configurable minScrollDistance.
 					nValue = nValue + ((zDelta > 0) ? -nIncrement : nIncrement);
-					SwingUtilities.invokeLater(new ScrollBarAdjuster(scrollBar, nValue));
+
+					// MS Internet Explorer does not like invokeLater for this
+					// => Throws SecurityExceptionEx's
+					// It works for other things... ?? Marc Hoeschele 17.08.01
+					if (System.getProperty("java.vendor", "").indexOf("Microsoft") == -1) {
+						SwingUtilities.invokeLater(new ScrollBarAdjuster(scrollBar, nValue));
+					} else {
+						// Not synchronized for IE!
+						new ScrollBarAdjuster(scrollBar, nValue).run();
+					}
 					return;
-                }
-            } else if ( c instanceof JComboBox ) {
+				}
+			} else if ( c instanceof JComboBox ) {
 				JComboBox cb = (JComboBox) c;
-				
+
 				// if the mouse is over a combo box, we
 				// should change it's scroll value too...
-				
+
 				// (only adjust if it's enabled...)
-				if (!cb.isEnabled())
+				if (!cb.isEnabled()) {
 					return;
-				
-				SwingUtilities.invokeLater(new ComboBoxAdjuster(cb, zDelta));
+				}
+
+				// MS Internet Explorer does not like invokeLater for this
+				// => Throws SecurityExceptionEx's
+				// (But it works for other things...) ?? Marc Hoeschele 17.08.01
+				if (System.getProperty("java.vendor", "").indexOf("Microsoft") == -1) {
+					SwingUtilities.invokeLater(new ComboBoxAdjuster(cb, zDelta));
+				} else {
+					// Not synchronized for IE!
+					new ComboBoxAdjuster(cb, zDelta).run();
+				}
 				return;
 			}
-			
+
 			// See if parent is a scroll pane that can scroll
 			c = c.getParent();
-        }
+		}
 
 	}
 
@@ -94,29 +135,28 @@ public abstract class JMouseWheelSupport {
 	private static class ScrollBarAdjuster implements Runnable {
 		private JScrollBar scrollBar;
 		private int value;
+		
 		public ScrollBarAdjuster(JScrollBar scrollBar, int value) {
 			this.scrollBar=scrollBar;
 			this.value=value;
 		}
+		
 		public void run() {
 			scrollBar.setValue(value);
 		}
 	}
 
 	// utility class to change the combo box selection, from the event thread
-	private static class ComboBoxAdjuster implements Runnable
-	{
+	private static class ComboBoxAdjuster implements Runnable {
 		private JComboBox comboBox;
 		private int zDelta;
 
-		public ComboBoxAdjuster(JComboBox aComboBox, int aDelta)
-		{
+		public ComboBoxAdjuster(JComboBox aComboBox, int aDelta) {
 			comboBox = aComboBox;
 			zDelta   = aDelta;
 		}
 
-		public void run()
-		{
+		public void run() {
 			int oldIdx = comboBox.getSelectedIndex();
 			if (oldIdx < 0)
 				oldIdx = 0;
@@ -144,14 +184,12 @@ public abstract class JMouseWheelSupport {
 
 /*
  * $Log$
- * Revision 1.3  2001/10/06 08:27:01  maynardd
- * fixed a class cast problem with JScrollPane
- *
- * Revision 1.2  2001/09/28 07:50:22  maynardd
- * Had to make this explicitly use DummyJScrollPane to fix the jump scrolling bug.
- *
- * Revision 1.1  2001/09/21 07:37:13  maynardd
- * modified to let us get at scroll speed.
+ * Revision 1.2  2001/10/12 21:44:30  mhoesch
+ * Added support for MS Java (also for Internet Explorer, if Applets are signed!!!
+ * Code for loading DLL to client is missing.., but if copied into WIN System
+ * classpath works fine.
+ * It also works if DLL is copied at runtime, before the loadLibrary() method is
+ * called. Maybe someone else will provide the necessary code.
  *
  * Revision 1.1  2001/08/13 02:15:51  davidconnard
  * Added support for JComboBoxes.  Moved shared scrolling code into
@@ -159,4 +197,3 @@ public abstract class JMouseWheelSupport {
  * to be duplicated between the Frame and Dialog flavours.
  *
  */
-
