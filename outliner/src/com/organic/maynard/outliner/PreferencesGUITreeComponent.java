@@ -176,10 +176,20 @@ class PreferencesGUITreeColorButtonComponent extends AbstractPreferencesGUITreeC
 		PreferencesFrame pf = (PreferencesFrame) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_FRAME);
 		PreferenceColor pref = (PreferenceColor) getPreference();
 		
-		Color newColor = JColorChooser.showDialog(pf, getLabelText(), pref.tmp);
-		if (newColor != null) {
-			pref.tmp = newColor;
-			getComponent().setBackground(pref.tmp);
+		if (!clickBlocker) {
+			clickBlocker = true;
+			Color newColor = JColorChooser.showDialog(pf, getLabelText(), pref.tmp);
+			if (newColor != null) {
+				pref.tmp = newColor;
+				getComponent().setBackground(pref.tmp);
+			}
+			clickBlocker = false;
 		}
 	}
+	
+	// This prevents double clicks from launching the color chooser twice. This seems like a bug since
+	// you would expect only one action event to be created when the user double-clicks on a button,
+	// but apparently 2 are created. Until the "bug" is really figured out this hack will make things a 
+	// little better.
+	private boolean clickBlocker = false; 
 }
