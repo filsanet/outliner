@@ -23,6 +23,8 @@
 			<antcall target="jar-webfilephp"/>
 		</target>
 		<target name="javadoc" depends="init" description="Generates Documentation.">
+			<delete dir="dox/api"/>
+			<mkdir  dir="dox/api"/>
 			<javadoc packagenames="com.*, gui.*"
 				sourcepath="src"
 				destdir="dox/api"
