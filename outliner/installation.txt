@@ -1,92 +1,57 @@
----------------------------------
+Installation for JOE 1.8.10.1
 
-JOE 1.8.8
-Installation
+If you have any trouble getting JOE running please post
+your questions to the JOE help forums:
+  http://sourceforge.net/forum/forum.php?forum_id=45897
 
----------------------------------
+Windows:
 
-Contents
+1) Make sure you've got a Java Runtime Environment. You should be 
+   running version 1.4.0 or later. JOE version 1.8.9.2 was the last
+   version that runs under 1.2.2, 1.3.0 or 1.3.1 with varying degrees
+   of compatibility.
 
-I. On All Platforms
-II. Windows
-III. Unix/Linux/Solaris
-IV. <forthcoming> Macintosh OS X
+2) (optional) If you haven't already, download and decompress JOE. You 
+   can obtain JOE from http://outliner.sourceforge.net/
 
----------------------------------
+3) (optional) If you've got more than one JRE installed you may need to
+   explicitly set the path to java.exe/javaw.exe in JOE's run.bat file.
+   To do this, edit the line that looks like this:
+     java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner "%1"
+   and change it to something like:
+     c:\jdk1.4.1_01\bin\java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner "%1"
 
-I. On All Platforms
+4) (optional) If you want to run JOE using a language other than english
+   you will need to uncomment one of the java lines with a language
+   specified, and comment out the java line with no language. For example,
+   to run with Japanese it would look something like this:
+     java -cp %CP% -Duser.language=ja -Duser.region=JP -Xincgc com.organic.maynard.outliner.Outliner
+     :: java -cp %CP% -Duser.language=de -Duser.region=DE -Xincgc com.organic.maynard.outliner.Outliner
+     :: java -cp %CP% -Duser.language=es -Duser.region=ES -Xincgc com.organic.maynard.outliner.Outliner
+     :: java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner "%1"
 
-1) When you first run JOE you should examine, and customize as desired, JOE's application preferences.
-	Give the Edit:Application Preferences menu command. 
-	The Application Preferences dialog appears. 
-	Go through the preference panels, and set the items as desired.
+5) Run JOE by double-clicking on the run.bat file or executing it from
+   a command prompt. The first time you run JOE several files will
+   be copied to your user directory into a subdirectory named "outliner".
+   
+   Note: If you are upgrading from a previous version of JOE you may need to 
+   delete the "outliner" directory in your user directory if you experience problems.
+   I recommend making a backup of this directory first since your custom preference
+   settings, scripts, macros and find/replace patterns are stored here.
 
----------------------------------
 
-II. Windows 
+UNIX/Linux/Solaris:
 
-0) Operating System Requirements
-	Windows 95 or later
-	Windows NT 4 or later
+1) Follow steps 1 and 2 from the windows instructions above.
 
-1) Ensure that your system has an appropriate Java 2 Runtime Environment (JRE) installed. 
-	That means at least version 1.3. The latest 1.4 beta should also work, although we have not tested it.
-	To determine what JRE, if any, is installed on your system:
-		Give the Start:Settings:Control Panel menu command. 
-		Run the Add/Remove Programs applet. 
-		Look for entries in the list of installed software with Java in their names, such as Java 2 Runtime or Java 2 SDK.
-	You can download JREs and Java 2 SDKs (which include JREs)as follows: 
-		JRE 1.3.1_02:
-			http://java.sun.com/j2se/1.3/jre/download-windows.html
-		Java 2 SDK 1.3.1_02:
-			http://java.sun.com/j2se/1.3/download-windows.html
-
-2) If you discover in step 1) that your system has more than one JRE, edit the Outliner directory's run.bat file so that it invokes the particular java.exe runtime you want JOE to run under.
-	Determine the pathname for the java runtime .exe file you want to run.
-		One way to do this: give the following command from the root directory of the drive you are examining in an MS-DOS command line window:
-			dir java.exe /s
-	There's a line near the end of run.bat that invokes the Java runtime. It looks like this:
-		java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner en
-	Edit that line so that it uses the pathname determined above.
-		Example:
-			C:\Program Files\JavaSoft\JRE\1.3.1_02\bin\java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner en
-
-3) If you haven't already, download and decompress JOE
-	You can obtain the download here:
-		http://JavaOutlineEditor.org/downloads/
-	The decompressed package lives in a directory named Outliner
-
-4) Run the program windows_setup.exe, located in JOE's Outliner directory. 
-
-5) Reboot your system.
-
-6) Run JOE.
-	There's a JOE shortcut file in the Outliner directory. It's the file with the black/purple/yellow/white JOE icon. Double-click it to run JOE. 
-		Actually, its complete name is JOE.pif, but most Windows systems will show just the JOE part of its name.
-	You can copy and paste the JOE file that's in the Outliner Directory to the Windows desktop, the Program menu, the top of the Start menu, andor the Taskbar's QuickLaunch toolbar. It will work from any of those locations, and from any location on any of your drives.
-	
-
-7) Option: Use the sendto.bat file to set up Windows "sendto".
-	In sendto.bat, change the path for cd to the directory you installed JOE into.
-
-8) Note: If you move, rename, or copy the Outliner directory containing JOE, just re-run steps 4) and 5) to get JOE working correctly from the new/renamed location.
-
----------------------------------
-
-III. UNIX/Linux/Solaris:
-
-1) Edit run_joe.sh so that INSTALL_DIR points to the directory you installed JOE into.
-	Make sure to make it executable and put it somewhere in your PATH. 
-	
-	Note: something like this
-	
-	   run_joe ../../file.opml 
-	
-	won't work. Because it needs to change in to the JOE directory to run it, the script 
-	cuts off any path info, and then adds on the current directory, so it always passes $CWD/filename.opml to JOE. 
-
----------------------------------
-
-IV. <forthcoming> Macintosh OS X
-
----------------------------------
+2) Edit run_joe.sh so that INSTALL_DIR points to the directory you installed JOE into.
+   Make sure to make it executable and put it somewhere in your PATH. 
+   
+   Note: something like this:
+     run_joe ../../file.opml 
+   won't work. Because it needs to change in to the JOE directory to run it, the script 
+   cuts off any path info, and then adds on the current directory, so it always 
+   passes $CWD/filename.opml to JOE.
+   
+3) Steps 3,4 and 5 from the windows instructions above also apply but with edits 
+   appropriate to the shell you're using.
