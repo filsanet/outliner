@@ -199,7 +199,7 @@
 			<copy file="sendto.bat" tofile="${path-release-dist}/sendto.bat"/>
 		</target>
 		<target name="release-compress" depends="init" description="Tar and Gzips the release.">
-			<tar tarfile="${path-release}/${dist}.tar" basedir="${path-release-dist}"/>
+			<tar tarfile="${path-release}/${dist}.tar" basedir="${path-release}"/>
 			<gzip zipfile="${path-release}/${dist}.tar.gz" src="${path-release}/${dist}.tar"/>
 			<delete file="${path-release}/${dist}.tar"/>
 		</target>
