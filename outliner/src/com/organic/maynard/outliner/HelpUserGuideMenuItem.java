@@ -65,6 +65,7 @@ public class HelpUserGuideMenuItem
 		setEnabled(true);
 		} // end startSetup
 
+
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		// if the Help UserGuide document is open ...
@@ -77,7 +78,7 @@ public class HelpUserGuideMenuItem
 			
 			} // end if
 		else {
-			// Help's not open; try to open it
+			// it's not open; try to open it
 			int result = openHelpUserGuideDocument() ;
 			
 			} // end else
