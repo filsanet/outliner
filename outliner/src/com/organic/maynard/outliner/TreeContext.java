@@ -142,7 +142,12 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 
 	// Statistics
 	public int getLineCount() {
-		return rootNode.getDecendantCount();
+		int total = 0;
+		for (int i = 0, limit = rootNode.numOfChildren(); i < limit; i++) {
+			total++;
+			total += rootNode.getChild(i).getDecendantCount();
+		}
+		return total;
 	}
 	
 	public int getCharCount() {

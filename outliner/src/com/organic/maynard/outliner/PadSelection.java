@@ -82,7 +82,9 @@ public class PadSelection implements JoeReturnCodes {
 			line = Replace.replace(line, Preferences.DEPTH_PAD_STRING, "");
 			
 			// Record Shallowest
-			if ((depth < shallowest) || (shallowest == -1)) {shallowest = depth;}
+			if ((depth < shallowest) || (shallowest == -1)) {
+				shallowest = depth;
+			}
 			
 			Node node = new NodeImpl(tree,line);
 			node.setDepth(depth);
@@ -94,31 +96,30 @@ public class PadSelection implements JoeReturnCodes {
 			return padRetVal;
 		}
 		
-		// Normalize depths to the target depth based on shallowest
+		// Loop over node list and pad as necessary.
+		Node previousNode = null;
+		int previousDepth = -1;
+		
 		for (int i = 0, limit = nodes.size(); i < limit; i++) {
 			Node node = nodes.get(i);
-			node.setDepth((node.getDepth() - shallowest) + targetDepth);
-		}
-		
-		// Pad based on targetDepth and the preceeding line
-		// and build the tree as we go.
-		int previousDepth = targetDepth;
-		Node previousNode = nodes.get(0);
-		
-		//tempRoot.appendChild(previousNode);
-		appendChildPaddedForDepth(tempRoot, previousNode, tree, tempRoot);
-		
-		for (int i = 1, limit = nodes.size(); i < limit; i++) {
-			Node node = nodes.get(i);
-			if (node.getDepth() == previousDepth) {
+			
+			int currentDepth = node.getDepth() - shallowest + targetDepth;
+			node.setDepth(currentDepth);
+			
+			if (previousNode == null) {
+				// Kickoff, should only happen for first node in list.
+				appendChildPaddedForDepth(tempRoot,node,tree,tempRoot);
+			} else if (currentDepth == previousDepth) {
 				previousNode.getParent().appendChild(node);
-			} else if (node.getDepth() < previousDepth) {
-				Node parent = getParentNodeOfDepth(previousNode,node.getDepth()).getParent();
+			} else if (currentDepth < previousDepth) {
+				Node parent = getParentNodeOfDepth(previousNode, currentDepth).getParent();
 				parent.appendChild(node);			
-			} else { // node.getDepth() > previousDepth
+			} else {
+				// Only happens when currentDepth > previousDepth
 				appendChildPaddedForDepth(previousNode,node,tree,tempRoot);				
 			}
-			previousDepth = node.getDepth();
+			
+			previousDepth = currentDepth;
 			previousNode = node;				
 		}
 
@@ -134,23 +135,24 @@ public class PadSelection implements JoeReturnCodes {
 		}
 	}
 	
+	// Inserts empty nodes as needed to maintainthe depth of the childNode.
 	private static void appendChildPaddedForDepth(Node parentNode, Node childNode, JoeTree tree, Node tempRoot) {
-		if (parentNode == null) { //This should only happen when we are at the top of the tree.
-			Node newNode = new NodeImpl(tree,"");
-			newNode.setDepth(0);
-			tempRoot.appendChild(newNode);
-			appendChildPaddedForDepth(newNode, childNode, tree, tempRoot);
-			return;
-		} else if ((parentNode.getDepth() + 1) == childNode.getDepth()) {
-			parentNode.appendChild(childNode);
-			return;
-		} else {
-			Node newNode = new NodeImpl(tree,"");
-			newNode.setDepth(parentNode.getDepth() + 1);
-			parentNode.appendChild(newNode);
-			appendChildPaddedForDepth(newNode, childNode, tree, tempRoot);
-			padRetVal = SUCCESS_MODIFIED;
-			return;
+	
+		//This should only happen when we are at the top of the tree.
+		if (parentNode == null) {
+			parentNode = new NodeImpl(tree,"");
+			tempRoot.appendChild(parentNode);
 		}
+		
+		int childDepth = childNode.getDepth();
+		while ((parentNode.getDepth() + 1) < childDepth) {
+			Node newNode = new NodeImpl(tree,"");
+			parentNode.appendChild(newNode);
+			parentNode = newNode;
+			padRetVal = SUCCESS_MODIFIED;
+		}
+		
+		parentNode.appendChild(childNode);
+		return;
 	}	
 }

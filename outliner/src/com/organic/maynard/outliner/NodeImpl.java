@@ -175,9 +175,10 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	}
 	
 	public void adjustDecendantCount(int amount) {
-		decendantCount += amount;
-		if (!isRoot()) {
-			getParent().adjustDecendantCount(amount);
+		NodeImpl node = this;
+		while(!node.isRoot()) {
+			node.decendantCount += amount;
+			node = (NodeImpl) node.getParent();
 		}
 	}
 	
