@@ -1,3 +1,17 @@
+1.8.9.1 - 08/24/02
+	New Features:
+		1) Added a splash screen that displays at startup, giving a user a bit more feedback that something is happening while they wait for the GUI to set itself up.
+	Feature Enhancements:
+		1) Added a node number preference to the JustifiedPlainText format. This will number nodes like 1, 1.1, 1.2, 2, 2.1, 2.2, 2.2.1, etc.
+	Bug Fixes:
+		1) Fixed bug where doing an export could cause saving to stop working because the default file format would get set incorrectly.
+		2) Fixed bugs where many of the menu items under "edit" and "outline" would not work and throw a StackOverflow error.
+		3) Fixed a bug where if you typed really fast and did carriage returns at the same time, characters would appear but then get cleared. This fix was part of the conversion to Actions mentioned below.
+		4) Fixed a bug where Java Version numbers that contained _ characters would throw an exception.
+		5) Fixed a bug where doing a merge on a selection that contains a mix of editable and read-only nodes could cause the read-only nodes to wink out of existance.
+	Other Changes:
+		1) Image resources are now stored in com.organic.maynard.jar.
+		2) Moved much of the KeyListener code to Action code. This should make things work a little better under JDK 1.4.
 1.8.9 - 08/12/02
 	New Features:
 		1) Feature Request #548169. Added the following two editing actions:
