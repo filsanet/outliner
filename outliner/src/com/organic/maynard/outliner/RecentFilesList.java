@@ -161,10 +161,17 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		// we need to make sure we have a Vector
 		// because we used to use an ArrayList
 		if (obj != null) {
+			// to help see what we've got
 			Vector testVector = new Vector() ;
 			
-			// if we're pointin' to a vector, we're cool
+			// if we've got a Vector ...
 			if (testVector.getClass().isInstance(obj)) {
+				
+				// remove any duplicate entries
+				// saves youngest, removes oldest
+				StanVectorTools.removeDupesHeadside((Vector)obj) ;
+				
+				// set the var
 				frameInfoList = (Vector)obj ;
 			} else {
 				frameInfoList = null ;
