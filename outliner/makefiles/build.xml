@@ -55,7 +55,7 @@
 		</target>
 	<!-- webfilephp TARGETS -->
 		<target name="compile-webfilephp" depends="init, clean-webfilephp" description="Compiles all class files for the webfilephp src tree.">
-			<javac debug="false" optimize="true" deprecation="false" srcdir="${src-webfilephp}">
+			<javac debug="false" optimize="true" deprecation="true" srcdir="${src-webfilephp}">
 				<classpath>
 					<pathelement path="${lib}/com.organic.maynard.jar"/>
 					<pathelement path="${lib}/outliner.jar"/>
@@ -77,7 +77,7 @@
 		</target>
 	<!-- wikiff TARGETS -->
 		<target name="compile-wikiff" depends="init, clean-wikiff" description="Compiles all class files for the wikiff src tree.">
-			<javac debug="false" optimize="true" deprecation="false" srcdir="${src-wikiff}">
+			<javac debug="false" optimize="true" deprecation="true" srcdir="${src-wikiff}">
 				<classpath>
 					<pathelement path="${lib}/com.organic.maynard.jar"/>
 					<pathelement path="${lib}/outliner.jar"/>
@@ -99,7 +99,7 @@
 		</target>
 	<!-- maynard TARGETS -->
 		<target name="compile-maynard" depends="init, clean-maynard" description="Compiles all class files for the maynard src tree.">
-			<javac debug="false" optimize="true" deprecation="false" srcdir="${src-maynard}">
+			<javac debug="false" optimize="true" deprecation="true" srcdir="${src-maynard}">
 				<classpath>
 					<pathelement path="${lib}/jakarta-oro.jar"/>
 				</classpath>
@@ -128,7 +128,7 @@
 		</target>
 	<!-- outliner TARGETS -->
 		<target name="compile-outliner" depends="init, clean-outliner" description="Compiles all class files for the outliner src tree.">
-			<javac debug="true" optimize="true" deprecation="false" srcdir="${src-outliner}">
+			<javac debug="true" optimize="true" deprecation="true" srcdir="${src-outliner}">
 				<classpath>
 					<pathelement path="${lib}/bsh.jar"/>
 					<pathelement path="${lib}/com.organic.maynard.jar"/>

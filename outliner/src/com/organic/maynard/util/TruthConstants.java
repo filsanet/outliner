@@ -32,49 +32,41 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.organic.maynard.xml;
-
-import java.util.*;
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
+package com.organic.maynard.util;
 
 /**
- * A bare bones implementation of a SAX error handler.
+ * Collects constants for indicating true and false via String representations.
+ * Evaluation of these constants is handled in the TruthTest class.
  */
-public class SimpleSAXErrorHandler extends DefaultHandler {
+public interface TruthConstants {
 	
-	// Constants
-	private static final String PADDING_DEFAULT = "";
+	/** The cannonical representation of truth within an XML/HTML document. */
+	public static final String VALUE_TRUE_CANNONICAL = "true";
 	
+	/** The cannonical representation of false within an XML/HTML document. */
+	public static final String VALUE_FALSE_CANNONICAL = "false";
 	
-	// InstanceFields
-	private String padding = "";
+	/** The short text based representation of truth within an XML/HTML document. */
+	public static final String VALUE_TRUE_SHORT = "t";
 	
+	/** The short text based representation of false within an XML/HTML document. */
+	public static final String VALUE_FALSE_SHORT = "f";
 	
-	// The Constructors
-	public SimpleSAXErrorHandler() {
-		this(PADDING_DEFAULT);
-	}
+	/** The numerical representation of truth within an XML/HTML document. */
+	public static final String VALUE_TRUE_NUMERICAL = "1";
 	
-	public SimpleSAXErrorHandler(String padding) {
-		super();
-		this.padding = padding;
-	}
+	/** The numerical representation of false within an XML/HTML document. */
+	public static final String VALUE_FALSE_NUMERICAL = "0";
 	
+	/** The yes/no representation of truth within an XML/HTML document. */
+	public static final String VALUE_YES = "yes";
 	
-	// DefaultHandler Overridden Methods
-	public void error(SAXParseException e) {
-		System.out.println(padding + "XML PARSER ERROR: Line: " + e.getLineNumber() + " Column: " + e.getColumnNumber());
-		System.out.println(padding + e.getMessage());
-	}
+	/** The yes/no representation of false within an XML/HTML document. */
+	public static final String VALUE_NO = "no";
 	
-	public void fatalError(SAXParseException e) {
-		System.out.println(padding + "XML PARSER FATAL ERROR: Line: " + e.getLineNumber() + " Column: " + e.getColumnNumber());
-		System.out.println(padding + e.getMessage());
-	}
+	/** The short yes/no representation of truth within an XML/HTML document. */
+	public static final String VALUE_YES_SHORT = "y";
 	
-	public void warning(SAXParseException e) {
-		System.out.println(padding + "XML PARSER WARNING: Line: " + e.getLineNumber() + " Column: " + e.getColumnNumber());
-		System.out.println(padding + e.getMessage());
-	}
+	/** The shortyes/no representation of false within an XML/HTML document. */
+	public static final String VALUE_NO_SHORT = "n";
 }

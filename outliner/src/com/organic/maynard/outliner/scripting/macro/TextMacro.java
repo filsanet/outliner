@@ -31,7 +31,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package com.organic.maynard.outliner.scripting.macro;
 
 import com.organic.maynard.outliner.*;
@@ -44,36 +44,36 @@ import com.organic.maynard.xml.XMLTools;
  */
 
 public class TextMacro extends MacroImpl {
-
+	
 	// Constants
 	private static final String E_PATTERN = "pattern";
 	
-	// Instance Fields		
+	// Instance Fields
 	private String replacementPattern = "";
-
+	
 	// Class Fields
 	private static TextMacroConfig macroConfig = new TextMacroConfig();
 	
-
+	
 	// The Constructors
 	public TextMacro() {
 		this("");
 	}
-
+	
 	public TextMacro(String name) {
 		super(name, true, Macro.SIMPLE_UNDOABLE);
 	}
-
-
+	
+	
 	// Accessors
 	public String getReplacementPattern() {return replacementPattern;}
 	public void setReplacementPattern(String replacementPattern) {this.replacementPattern = replacementPattern;}
-
-
-	// Macro Interface			
+	
+	
+	// Macro Interface
 	public MacroConfig getConfigurator() {return this.macroConfig;}
 	public void setConfigurator(MacroConfig macroConfig) {}
-		
+	
 	public NodeRangePair process(NodeRangePair nodeRangePair) {
 		Node node = nodeRangePair.node;
 		
@@ -96,7 +96,7 @@ public class TextMacro extends MacroImpl {
 		int lengthAfter = text.length();
 		
 		int difference = lengthAfter - lengthBefore;
-
+		
 		if (textSelection) {
 			nodeRangePair.endIndex += difference;
 			nodeRangePair.startIndex = nodeRangePair.endIndex;
@@ -109,15 +109,17 @@ public class TextMacro extends MacroImpl {
 	private String munge(String text) {
 		return Replace.replace(replacementPattern, "{$value}", text);
 	}
-
+	
 	
 	// Saving the Macro
 	protected void prepareFile (StringBuffer buf) {
 		buf.append(XMLTools.getXmlDeclaration(null) + "\n");
-		buf.append(XMLTools.getElementStart(E_PATTERN) + XMLTools.escapeXMLText(getReplacementPattern()) + XMLTools.getElementEnd(E_PATTERN)+ "\n");
+		XMLTools.writeElementStart(buf, 0, false, null, E_PATTERN, null);
+			XMLTools.writePCData(buf, getReplacementPattern());
+		XMLTools.writeElementEnd(buf, 0, "\n", E_PATTERN);
 	}
-
-
+	
+	
 	// Sax DocumentHandler Implementation
 	protected void handleCharacters(String elementName, String text) {
 		if (elementName.equals(E_PATTERN)) {

@@ -36,7 +36,6 @@ package com.organic.maynard.outliner.util.find;
 
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.*;
-
 import java.util.*;
 import java.io.*;
 import org.xml.sax.*;
@@ -55,26 +54,26 @@ public class FindReplaceModel extends HandlerBase {
 	public static final int MODE_ALL_OPEN_DOCUMENTS = 2;
 	public static final int MODE_FILE_SYSTEM = 3;
 	public static final int MODE_UNKNOWN = -1;
-
+	
 	// Constants
 	protected static final String DEFAULT_NAME = "Default";
-
+	
 	private static final String E_ROOT = "root";
 	private static final String E_ITEM = "item";
-
+	
 	private static final String A_NAME = "name";
 	private static final String A_FIND = "find";
 	private static final String A_REPLACE = "replace";
 	private static final String A_REGEXP = "regexp";
 	private static final String A_IGNORE_CASE = "ignore_case";
-
+	
 	private static final String A_SELECTION_MODE = "selection_mode";
-
+	
 	private static final String A_START_AT_TOP = "start_at_top";
 	private static final String A_WRAP_AROUND = "wrap_around";
 	private static final String A_SELECTION_ONLY = "selection_only";
 	private static final String A_INCLUDE_READ_ONLY = "include_read_only";
-
+	
 	private static final String A_PATH = "path";
 	private static final String A_INCLUDE_SUB_DIRS = "include_sub_dirs";
 	private static final String A_MAKE_BACKUPS = "make_backups";
@@ -86,15 +85,15 @@ public class FindReplaceModel extends HandlerBase {
 	private static final String A_DIR_FILTER_INCLUDE_IGNORE_CASE = "dir_filter_include_ignore_case";
 	private static final String A_DIR_FILTER_EXCLUDE = "dir_filter_exclude";
 	private static final String A_DIR_FILTER_EXCLUDE_IGNORE_CASE = "dir_filter_exclude_ignore_case";
-
+	
 	// Fields
 	private ArrayList names = new ArrayList(); // Strings
-
+	
 	private ArrayList finds = new ArrayList(); // Strings
 	private ArrayList replaces = new ArrayList(); // Strings
 	private ArrayList ignoreCases = new ArrayList(); // Booleans
 	private ArrayList regExps = new ArrayList(); // Booleans
-
+	
 	// Global Settings
 	private int selectionMode = 0;
 	
@@ -102,7 +101,7 @@ public class FindReplaceModel extends HandlerBase {
 	private boolean wrapAround = false;
 	private boolean selectionOnly = false;
 	private boolean includeReadOnly = false;
-
+	
 	private String path = "";
 	private boolean includeSubDirs = false;
 	private boolean makeBackups = false;
@@ -114,12 +113,12 @@ public class FindReplaceModel extends HandlerBase {
 	private boolean dirFilterIncludeIgnoreCase = false;
 	private String dirFilterExclude = "";
 	private boolean dirFilterExcludeIgnoreCase = false;
-
-
+	
+	
 	// Constructors
 	public FindReplaceModel() {
 		Outliner.XML_PARSER.setDocumentHandler(this);
-
+		
 		try {
 			FileInputStream fileInputStream = new FileInputStream(Outliner.FIND_REPLACE_FILE);
 			Outliner.XML_PARSER.parse(new InputSource(fileInputStream));
@@ -130,17 +129,17 @@ public class FindReplaceModel extends HandlerBase {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
 		// Make sure size is at least 1.
 		if (getSize() <= 0) {
 			add(0,DEFAULT_NAME,"","",false,false);
 		}
 	}
-
-
+	
+	
 	// Accessors
 	public int getSize() {return names.size();}
-
+	
 	public void add(
 		int i,
 		String name,
@@ -155,7 +154,7 @@ public class FindReplaceModel extends HandlerBase {
 		addIgnoreCase(i,ignoreCase);
 		addRegExp(i,regExp);
 	}
-
+	
 	public void remove(int i) {
 		// Remove from model
 		names.remove(i);
@@ -163,43 +162,43 @@ public class FindReplaceModel extends HandlerBase {
 		replaces.remove(i);
 		ignoreCases.remove(i);
 		regExps.remove(i);
-
+		
 		// Remove from JList
 		((DefaultListModel) Outliner.findReplace.LIST.getModel()).removeElementAt(i);
 	}
-
+	
 	public String getName(int i) {return (String) this.names.get(i);}
-
+	
 	public void setName(int i, String s) {
 		this.names.set(i, s);
 		((DefaultListModel) Outliner.findReplace.LIST.getModel()).setElementAt(s,i);
 	}
-
+	
 	public void addName(int i, String s) {
 		this.names.add(i, s);
 		((DefaultListModel) Outliner.findReplace.LIST.getModel()).insertElementAt(s,i);
 	}
-
+	
 	public String getFind(int i) {return (String) this.finds.get(i);}
 	public void setFind(int i, String s) {this.finds.set(i, s);}
 	public void addFind(int i, String s) {this.finds.add(i, s);}
-
+	
 	public String getReplace(int i) {return (String) this.replaces.get(i);}
 	public void setReplace(int i, String s) {this.replaces.set(i, s);}
 	public void addReplace(int i, String s) {this.replaces.add(i, s);}
-
+	
 	public boolean getRegExp(int i) {return ((Boolean) this.regExps.get(i)).booleanValue();}
 	public void setRegExp(int i, boolean b) {this.regExps.set(i, new Boolean(b));}
 	public void setRegExp(int i, String b) {this.regExps.set(i, new Boolean(b));}
 	public void addRegExp(int i, boolean b) {this.regExps.add(i, new Boolean(b));}
 	public void addRegExp(int i, String b) {this.regExps.add(i, new Boolean(b));}
-
+	
 	public boolean getIgnoreCase(int i) {return ((Boolean) this.ignoreCases.get(i)).booleanValue();}
 	public void setIgnoreCase(int i, boolean b) {this.ignoreCases.set(i, new Boolean(b));}
 	public void setIgnoreCase(int i, String b) {this.ignoreCases.set(i, new Boolean(b));}
 	public void addIgnoreCase(int i, boolean b) {this.ignoreCases.add(i, new Boolean(b));}
 	public void addIgnoreCase(int i, String b) {this.ignoreCases.add(i, new Boolean(b));}
-
+	
 	// Scope Settings
 	public int getSelectionMode() {return this.selectionMode;}
 	public void setSelectionMode(int selectionMode) {this.selectionMode = selectionMode;}
@@ -210,63 +209,63 @@ public class FindReplaceModel extends HandlerBase {
 			this.selectionMode = MODE_UNKNOWN;
 		}
 	}
-
+	
 	public boolean getStartAtTop() {return this.startAtTop;}
 	public void setStartAtTop(boolean startAtTop) {this.startAtTop = startAtTop;}
 	public void setStartAtTop(String startAtTop) {this.startAtTop = Boolean.valueOf(startAtTop).booleanValue();}
-
+	
 	public boolean getWrapAround() {return this.wrapAround;}
 	public void setWrapAround(boolean wrapAround) {this.wrapAround = wrapAround;}
 	public void setWrapAround(String wrapAround) {this.wrapAround = Boolean.valueOf(wrapAround).booleanValue();}
-
+	
 	public boolean getSelectionOnly() {return this.selectionOnly;}
 	public void setSelectionOnly(boolean selectionOnly) {this.selectionOnly = selectionOnly;}
 	public void setSelectionOnly(String selectionOnly) {this.selectionOnly = Boolean.valueOf(selectionOnly).booleanValue();}
-
+	
 	public boolean getIncludeReadOnly() {return this.includeReadOnly;}
 	public void setIncludeReadOnly(boolean includeReadOnly) {this.includeReadOnly = includeReadOnly;}
 	public void setIncludeReadOnly(String includeReadOnly) {this.includeReadOnly = Boolean.valueOf(includeReadOnly).booleanValue();}
-
+	
 	public String getPath() {return this.path;}
 	public void setPath(String path) {this.path = path;}
-
+	
 	public boolean getIncludeSubDirs() {return this.includeSubDirs;}
 	public void setIncludeSubDirs(boolean includeSubDirs) {this.includeSubDirs = includeSubDirs;}
 	public void setIncludeSubDirs(String includeSubDirs) {this.includeSubDirs = Boolean.valueOf(includeSubDirs).booleanValue();}
-
+	
 	public boolean getMakeBackups() {return this.makeBackups;}
 	public void setMakeBackups(boolean makeBackups) {this.makeBackups = makeBackups;}
 	public void setMakeBackups(String makeBackups) {this.makeBackups = Boolean.valueOf(makeBackups).booleanValue();}
-
+	
 	public String getFileFilterInclude() {return this.fileFilterInclude;}
 	public void setFileFilterInclude(String fileFilterInclude) {this.fileFilterInclude = fileFilterInclude;}
-
+	
 	public boolean getFileFilterIncludeIgnoreCase() {return this.fileFilterIncludeIgnoreCase;}
 	public void setFileFilterIncludeIgnoreCase(boolean fileFilterIncludeIgnoreCase) {this.fileFilterIncludeIgnoreCase = fileFilterIncludeIgnoreCase;}
 	public void setFileFilterIncludeIgnoreCase(String fileFilterIncludeIgnoreCase) {this.fileFilterIncludeIgnoreCase = Boolean.valueOf(fileFilterIncludeIgnoreCase).booleanValue();}
-
+	
 	public String getFileFilterExclude() {return this.fileFilterExclude;}
 	public void setFileFilterExclude(String fileFilterExclude) {this.fileFilterExclude = fileFilterExclude;}
-
+	
 	public boolean getFileFilterExcludeIgnoreCase() {return this.fileFilterExcludeIgnoreCase;}
 	public void setFileFilterExcludeIgnoreCase(boolean fileFilterExcludeIgnoreCase) {this.fileFilterExcludeIgnoreCase = fileFilterExcludeIgnoreCase;}
 	public void setFileFilterExcludeIgnoreCase(String fileFilterExcludeIgnoreCase) {this.fileFilterExcludeIgnoreCase = Boolean.valueOf(fileFilterExcludeIgnoreCase).booleanValue();}
-
+	
 	public String getDirFilterInclude() {return this.dirFilterInclude;}
 	public void setDirFilterInclude(String dirFilterInclude) {this.dirFilterInclude = dirFilterInclude;}
-
+	
 	public boolean getDirFilterIncludeIgnoreCase() {return this.dirFilterIncludeIgnoreCase;}
 	public void setDirFilterIncludeIgnoreCase(boolean dirFilterIncludeIgnoreCase) {this.dirFilterIncludeIgnoreCase = dirFilterIncludeIgnoreCase;}
 	public void setDirFilterIncludeIgnoreCase(String dirFilterIncludeIgnoreCase) {this.dirFilterIncludeIgnoreCase = Boolean.valueOf(dirFilterIncludeIgnoreCase).booleanValue();}
-
+	
 	public String getDirFilterExclude() {return this.dirFilterExclude;}
 	public void setDirFilterExclude(String dirFilterExclude) {this.dirFilterExclude = dirFilterExclude;}
-
+	
 	public boolean getDirFilterExcludeIgnoreCase() {return this.dirFilterExcludeIgnoreCase;}
 	public void setDirFilterExcludeIgnoreCase(boolean dirFilterExcludeIgnoreCase) {this.dirFilterExcludeIgnoreCase = dirFilterExcludeIgnoreCase;}
 	public void setDirFilterExcludeIgnoreCase(String dirFilterExcludeIgnoreCase) {this.dirFilterExcludeIgnoreCase = Boolean.valueOf(dirFilterExcludeIgnoreCase).booleanValue();}
-
-	// Saving the Config File	
+	
+	// Saving the Config File
 	public void saveConfigFile() {
 		try {
 			FileWriter fw = new FileWriter(Outliner.FIND_REPLACE_FILE);
@@ -276,10 +275,10 @@ public class FindReplaceModel extends HandlerBase {
 			JOptionPane.showMessageDialog(null, GUITreeLoader.reg.getText("message_could_not_save_find_replace_config") + ": " + e);
 		}
 	}
-
+	
 	private String prepareConfigFile() {
 		StringBuffer buf = new StringBuffer();
-
+		
 		buf.append(XMLTools.getXmlDeclaration(null)).append(PlatformCompatibility.LINE_END_DEFAULT);
 		buf.append("<").append(E_ROOT);
 			buf.append(" ").append(A_SELECTION_MODE).append("=\"").append(XMLTools.escapeXMLAttribute("" + getSelectionMode())).append("\"");
@@ -299,32 +298,31 @@ public class FindReplaceModel extends HandlerBase {
 			buf.append(" ").append(A_DIR_FILTER_EXCLUDE).append("=\"").append(XMLTools.escapeXMLAttribute("" + getDirFilterExclude())).append("\"");
 			buf.append(" ").append(A_DIR_FILTER_EXCLUDE_IGNORE_CASE).append("=\"").append(XMLTools.escapeXMLAttribute("" + getDirFilterExcludeIgnoreCase())).append("\"");
 		buf.append(">").append(PlatformCompatibility.LINE_END_DEFAULT);
-
+		
 		for (int i = 0; i < getSize(); i++) {
 			buf.append("<").append(E_ITEM);
-
+			
 			buf.append(" ").append(A_NAME).append("=\"").append(XMLTools.escapeXMLAttribute(getName(i))).append("\"");
 			buf.append(" ").append(A_FIND).append("=\"").append(XMLTools.escapeXMLAttribute(getFind(i))).append("\"");
 			buf.append(" ").append(A_REPLACE).append("=\"").append(XMLTools.escapeXMLAttribute(getReplace(i))).append("\"");
 			buf.append(" ").append(A_IGNORE_CASE).append("=\"").append(XMLTools.escapeXMLAttribute("" + getIgnoreCase(i))).append("\"");
 			buf.append(" ").append(A_REGEXP).append("=\"").append(XMLTools.escapeXMLAttribute("" + getRegExp(i))).append("\"");
-
+			
 			buf.append("/>").append(PlatformCompatibility.LINE_END_DEFAULT);
 		}
-
-		buf.append(XMLTools.getElementEnd(E_ROOT)).append(PlatformCompatibility.LINE_END_DEFAULT);
-
+		
+		XMLTools.writeElementEnd(buf, 0, PlatformCompatibility.LINE_END_DEFAULT, E_ROOT);
 		return buf.toString();
 	}
-
+	
 	// Sax DocumentHandler Implementation
 	public void startDocument () {}
 	public void endDocument () {}
-
+	
 	public void startElement (String elementName, AttributeList atts) {
 		if (elementName.equals(E_ITEM)) {
 			int size = getSize();
-
+			
 			addName(size, atts.getValue(A_NAME));
 			addFind(size, atts.getValue(A_FIND));
 			addReplace(size, atts.getValue(A_REPLACE));
@@ -336,7 +334,7 @@ public class FindReplaceModel extends HandlerBase {
 			setWrapAround(atts.getValue(A_WRAP_AROUND));
 			setSelectionOnly(atts.getValue(A_SELECTION_ONLY));
 			setIncludeReadOnly(atts.getValue(A_INCLUDE_READ_ONLY));
-
+			
 			setPath(atts.getValue(A_PATH));
 			setIncludeSubDirs(atts.getValue(A_INCLUDE_SUB_DIRS));
 			setMakeBackups(atts.getValue(A_MAKE_BACKUPS));
@@ -350,8 +348,7 @@ public class FindReplaceModel extends HandlerBase {
 			setDirFilterExcludeIgnoreCase(atts.getValue(A_DIR_FILTER_EXCLUDE_IGNORE_CASE));
 		}
 	}
-
+	
 	public void endElement (String name) throws SAXException {}
 	public void characters(char ch[], int start, int length) throws SAXException {}
 }
-

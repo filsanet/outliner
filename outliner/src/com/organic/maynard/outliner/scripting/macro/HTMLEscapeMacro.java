@@ -31,7 +31,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package com.organic.maynard.outliner.scripting.macro;
 
 import com.organic.maynard.outliner.*;
@@ -122,7 +122,9 @@ public class HTMLEscapeMacro extends MacroImpl {
 	// Saving the Macro
 	protected void prepareFile (StringBuffer buf) {
 		buf.append(XMLTools.getXmlDeclaration(null) + "\n");
-		buf.append(XMLTools.getElementStart(E_ESCAPE) + isEscaping() + XMLTools.getElementEnd(E_ESCAPE)+ "\n");
+		XMLTools.writeElementStart(buf, 0, false, null, E_ESCAPE, null);
+			XMLTools.writePCData(buf, "" + isEscaping());
+		XMLTools.writeElementEnd(buf, 0, "\n", E_ESCAPE);
 	}
 	
 	

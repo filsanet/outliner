@@ -44,13 +44,13 @@ import com.organic.maynard.xml.XMLTools;
  */
 
 public class URLEncodeMacro extends MacroImpl {
-
+	
 	// Constants
 	private static final String E_ENCODE = "encode";
 	
 	// Instance Fields
 	private boolean encode = true;
-
+	
 	// Class Fields
 	private static URLEncodeMacroConfig macroConfig = new URLEncodeMacroConfig();
 	
@@ -59,21 +59,21 @@ public class URLEncodeMacro extends MacroImpl {
 	public URLEncodeMacro() {
 		this("");
 	}
-
+	
 	public URLEncodeMacro(String name) {
 		super(name, true, Macro.SIMPLE_UNDOABLE);
 	}
-
-
+	
+	
 	// Accessors
 	public boolean isEncoding() {return this.encode;}
 	public void setEncoding(boolean encode) {this.encode = encode;}
-
-
-	// Macro Interface	
+	
+	
+	// Macro Interface
 	public MacroConfig getConfigurator() {return this.macroConfig;}
 	public void setConfigurator(MacroConfig macroConfig) {}
-		
+	
 	public NodeRangePair process(NodeRangePair nodeRangePair) {
 		Node node = nodeRangePair.node;
 		
@@ -96,7 +96,7 @@ public class URLEncodeMacro extends MacroImpl {
 		int lengthAfter = text.length();
 		
 		int difference = lengthAfter - lengthBefore;
-
+		
 		if (textSelection) {
 			nodeRangePair.endIndex += difference;
 			nodeRangePair.startIndex = nodeRangePair.endIndex;
@@ -117,15 +117,17 @@ public class URLEncodeMacro extends MacroImpl {
 			}
 		}
 	}
-
+	
 	
 	// Saving the Macro
 	protected void prepareFile (StringBuffer buf) {
 		buf.append(XMLTools.getXmlDeclaration(null) + "\n");
-		buf.append(XMLTools.getElementStart(E_ENCODE) + isEncoding() + XMLTools.getElementEnd(E_ENCODE)+ "\n");
+		XMLTools.writeElementStart(buf, 0, false, null, E_ENCODE, null);
+			XMLTools.writePCData(buf, "" + isEncoding());
+		XMLTools.writeElementEnd(buf, 0, "\n", E_ENCODE);
 	}
-
-
+	
+	
 	// Sax DocumentHandler Implementation
 	protected void handleCharacters(String elementName, String text) {
 		if (elementName.equals(E_ENCODE)) {

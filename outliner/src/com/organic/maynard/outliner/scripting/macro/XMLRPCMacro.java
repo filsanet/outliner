@@ -47,9 +47,9 @@ import com.organic.maynard.xml.XMLTools;
  */
 
 public class XMLRPCMacro extends MacroImpl {
-
+	
 	// Constants
-	private static final String E_XMLRPC = "xmlrpc";	
+	private static final String E_XMLRPC = "xmlrpc";
 	private static final String E_URL = "url";
 	private static final String E_CALL = "xmlrpc_call";
 	private static final String E_REPLACE = "replace";
@@ -58,36 +58,36 @@ public class XMLRPCMacro extends MacroImpl {
 	private boolean replace = false;
 	private String url = "http://127.0.0.1/RPC2";
 	private String xmlrpcCall = "";
-
+	
 	// Class Fields
 	private static XMLRPCMacroConfig macroConfig = new XMLRPCMacroConfig();
-
+	
 	
 	// The Constructors
 	public XMLRPCMacro() {
 		this("");
 	}
-
+	
 	public XMLRPCMacro(String name) {
 		super(name, true, Macro.COMPLEX_UNDOABLE);
 	}
-
-
+	
+	
 	// Accessors
 	public String getURL() {return url;}
 	public void setURL(String url) {this.url = url;}
-
+	
 	public boolean isReplacing() {return this.replace;}
 	public void setReplacing(boolean replace) {this.replace = replace;}
-
+	
 	public String getCall() {return xmlrpcCall;}
 	public void setCall(String xmlrpcCall) {this.xmlrpcCall = xmlrpcCall;}
-
-
-	// Macro Interface	
+	
+	
+	// Macro Interface
 	public MacroConfig getConfigurator() {return this.macroConfig;}
 	public void setConfigurator(MacroConfig macroConfig) {}
-		
+	
 	public NodeRangePair process(NodeRangePair nodeRangePair) {
 		// Get the selected text
 		String requestXmlString = null;
@@ -109,7 +109,7 @@ public class XMLRPCMacro extends MacroImpl {
 			buf.delete(buf.length() - Preferences.LINE_END_STRING.length(), buf.length());
 			requestXmlString = buf.toString();		
 		}
-
+		
 		if (!xmlrpcCall.equals("")) {
 			// If xmlrpcCall is not empty then munge it
 			requestXmlString = munge(requestXmlString);
@@ -120,7 +120,7 @@ public class XMLRPCMacro extends MacroImpl {
 				requestXmlString = requestXmlString.substring(startIndex, requestXmlString.length());
 			}
 		}
-
+		
 		// Instantiate a Client and make the request
 		try {
 			XmlRpcClient client = new XmlRpcClient(url);
@@ -128,7 +128,7 @@ public class XMLRPCMacro extends MacroImpl {
 			StringBuffer buf = new StringBuffer();
 			convertObjectToString(obj, buf, 0);
 			String text = buf.toString();
-					
+			
 			Node replacementNode = null;
 			
 			// Do the right replacement for the selection type.
@@ -145,7 +145,7 @@ public class XMLRPCMacro extends MacroImpl {
 				nodeRangePair.startIndex = -1;
 				nodeRangePair.endIndex = -1;
 			}
-		
+			
 			// Display the result
 			if (isReplacing()) {
 				return nodeRangePair;
@@ -153,13 +153,13 @@ public class XMLRPCMacro extends MacroImpl {
 				System.out.println(obj.toString());
 				return null;
 			}
-
+			
 		} catch (Exception e) {
 			System.out.println("Exception: " + e);
 			return null;
 		}
 	}
-
+	
 	private String munge(String text) {
 		return Replace.replace(xmlrpcCall, "{$value}", text);
 	}
@@ -195,18 +195,29 @@ public class XMLRPCMacro extends MacroImpl {
 		}
 	}
 	
-
+	
 	// Saving the Macro
 	protected void prepareFile (StringBuffer buf) {
 		buf.append(XMLTools.getXmlDeclaration(null)).append("\n");
-		buf.append(XMLTools.getElementStart(E_XMLRPC)).append("\n");
-		buf.append(XMLTools.getElementStart(E_URL)).append(XMLTools.escapeXMLText(getURL())).append(XMLTools.getElementEnd(E_URL)).append("\n");
-		buf.append(XMLTools.getElementStart(E_CALL)).append(XMLTools.escapeXMLText(getCall())).append(XMLTools.getElementEnd(E_CALL)).append("\n");
-		buf.append(XMLTools.getElementStart(E_REPLACE)).append(isReplacing() + XMLTools.getElementEnd(E_REPLACE)).append("\n");
-		buf.append(XMLTools.getElementEnd(E_XMLRPC)).append("\n");
+		
+		XMLTools.writeElementStart(buf, 0, false, "\n", E_XMLRPC, null);
+			
+			XMLTools.writeElementStart(buf, 0, false, null, E_URL, null);
+				XMLTools.writePCData(buf, getURL());
+			XMLTools.writeElementEnd(buf, 0, "\n", E_URL);
+			
+			XMLTools.writeElementStart(buf, 0, false, null, E_CALL, null);
+				XMLTools.writePCData(buf, getCall());
+			XMLTools.writeElementEnd(buf, 0, "\n", E_CALL);
+			
+			XMLTools.writeElementStart(buf, 0, false, null, E_REPLACE, null);
+				XMLTools.writePCData(buf, "" + isReplacing());
+			XMLTools.writeElementEnd(buf, 0, "\n", E_REPLACE);
+			
+		XMLTools.writeElementEnd(buf, 0, "\n", E_XMLRPC);
 	}
-
-
+	
+	
 	// Sax DocumentHandler Implementation
 	protected void handleCharacters(String elementName, String text) {
 		if (elementName.equals(E_URL)) {

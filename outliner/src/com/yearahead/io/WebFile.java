@@ -40,16 +40,14 @@ public class WebFile extends File
 	/**
 	 * Create a new named web file.
 	 */
-	public WebFile(String name)
-	{
+	public WebFile(String name) {
 		super(name);
 	}
 	
 	/**
 	 * Create a child file - parent is a directory.
 	 */
-	public WebFile(WebFile f, String name)
-	{
+	public WebFile(WebFile f, String name) {
 		super(f, name);
 		
 		url = f.url;
@@ -60,8 +58,7 @@ public class WebFile extends File
 	 * Called just once, from WebFileSystem.  This creates the parent
 	 * WebFile from which all others are based.
 	 */
-	public WebFile(String name, URL url)
-	{
+	public WebFile(String name, URL url) {
 		super(name);
 		
 		this.url = url;
@@ -71,20 +68,17 @@ public class WebFile extends File
 	/**
 	 * Returns true if file is a directory.
 	 */
-	public boolean isDirectory()
-	{
+	public boolean isDirectory() {
 		return isDir;
 	}
 	
 	/**
 	 * Returns true if file exists on web server.
 	 */
-	public boolean exists()
-	{
+	public boolean exists() {
 		dbg("exists: " + getPath());
-
-		try
-		{
+		
+		try {
 			BufferedReader r = new BufferedReader(new InputStreamReader(httpPost(url, getPath(), "exists", "1")));
 			String result = br2string(r);
 			if ("1".equals(result)) {
@@ -93,25 +87,20 @@ public class WebFile extends File
 				dbg("exists Failed(" + result.length() + "): '" +result + "'");
 				return false;
 			}
-		}
-		catch(IOException x)
-		{
+		} catch(IOException x) {
 			x.printStackTrace();
 			return false;
 		}
-
 	}
-
+	
 	/**
 	 * Renames the file denoted by this abstract pathname on the
 	 * remote web server.
 	 */
-	public boolean renameTo(File dest)
-	{
+	public boolean renameTo(File dest) {
 		dbg("renameTo url=" + url + " destname=" + dest + " destpath=" +
 			dest.getPath());
-		try
-		{
+		try {
 			BufferedReader r = new BufferedReader(new InputStreamReader(httpPost(url,  getPath(), "rename", dest.getName())));
 			String result = br2string(r);
 			if ("1".equals(result)) {
@@ -121,23 +110,19 @@ public class WebFile extends File
 				dbg("renameTo Failed: " + result);
 				return false;
 			}
-		}
-		catch(IOException x)
-		{
+		} catch(IOException x) {
 			x.printStackTrace();
 			return false;
 		}
 	}
-
+	
 	/**
 	 * Creates a new directory on the remote web server.
 	 */
-	public boolean mkdir()
-	{
+	public boolean mkdir() {
 		dbg("mkdir: " + getPath());
-
-		try
-		{
+		
+		try {
 			BufferedReader r = new BufferedReader(new InputStreamReader(httpPost(url, getPath(), "mkdir", "1")));
 			String result = br2string(r);
 			if ("1".equals(result)) {
@@ -146,66 +131,58 @@ public class WebFile extends File
 				dbg("mkdir Failed: " + result);
 				return false;
 			}
-		}
-		catch(IOException x)
-		{
+		} catch(IOException x) {
 			x.printStackTrace();
 			return false;
 		}
 	}
-
+	
 	/**
 	 * List all the files in this directory.
 	 */
-    public File[] listFiles()
-	{
+    public File[] listFiles() {
 		dbg("listFiles: " + getPath());
-
+		
 		ArrayList list = new ArrayList();
-
-		try
-		{
+		
+		try {
 			BufferedReader r = new BufferedReader(new InputStreamReader(httpPost(url, getPath(), null, null)));
 			
 			String s;
-
-			while((s = r.readLine()) != null)
-			{
+			
+			while((s = r.readLine()) != null) {
 				list.add(new WebFile(this, s));
 			}
-
-		}
-		catch(IOException x)
-		{
+			
+		} catch(IOException x) {
 			x.printStackTrace();
 		}
-
+		
 		return (File[])list.toArray(FileArrayType);
 	}
-
-
+	
+	
 	/**
 	 * Opens the given file.  These were made static since Outliner
 	 * wants to pass strings rather than a file.
 	 */
-	public static InputStream open(String host, String path)
-		throws IOException
-	{
+	public static InputStream open(String host, String path) throws IOException {
 		dbg("open: " + path);
 		return httpPost(host, path, "open", "1");
 	}
-
+	
 	/**
 	 * Saves a file to the web server.  These were made static since
 	 * Outliner wants to pass strings rather than a file.
 	 */
-	public static boolean save(String url, String path, byte[] bytes)
-		throws IOException
-	{
+	public static boolean save(
+		String url, 
+		String path, 
+		byte[] bytes
+	) throws IOException {
 		dbg("save, url=" + url + " path=" + path);
-
-		try
-		{
+		
+		try {
 			BufferedReader r = new BufferedReader(new InputStreamReader(httpPost(url, path, "save", new String(bytes))));
 			String result = br2string(r);
 			if ("1".equals(result)) {
@@ -214,74 +191,61 @@ public class WebFile extends File
 				dbg("save Failed: " + result);
 				return false;
 			}
-		}
-		catch(IOException x)
-		{
+		} catch(IOException x) {
 			x.printStackTrace();
 			return false;
 		}
 	}
-
+	
 	/**
 	 * Util method return buffered reader into string.
 	 */
-	public static String br2string(BufferedReader r)
-	{
-		try
-		{
+	public static String br2string(BufferedReader r) {
+		try {
 			StringBuffer sb = new StringBuffer();
 			String s;
-			while((s = r.readLine()) != null)
-			{
+			while((s = r.readLine()) != null) {
 				sb.append(s);
 				sb.append("\n");
 			}
-
+			
 			return sb.substring(0, sb.length()-1);
-		}
-		catch(IOException x)
-		{
+		} catch(IOException x) {
 			x.printStackTrace();
 			return null;
 		}
 	}
-
+	
 	/**
 	 * Returns the canonical form of this abstract pathname.
 	 */
-	public File getCanonicalFile()
-		throws IOException
-	{
+	public File getCanonicalFile() throws IOException {
 		return this;
 	}
-
+	
 	/**
 	 * Returns the canonical pathname string of this abstract pathname.
 	 */
-	public String getCanonicalPath()
-		throws IOException
-	{
+	public String getCanonicalPath() throws IOException {
 		return getPath();
 	}
-
-
+	
+	
 	/**
 	 * Converts this abstract pathname into a pathname string.
 	 */
-	public String getPath()
-	{
+	public String getPath() {
 		File f = this;
 		String s = super.getName();
-
-		while ((f = f.getParentFile()) != null)
-		{
+		
+		while ((f = f.getParentFile()) != null) {
 			s = f.getName() + "/" + s;
 		}
-
+		
 		return s;
 	}
-
-
+	
+	
 	/**
 	 * All communication between the webserver and outliner takes
 	 * place here.  Performs a HTTP POST to the web server, returning
@@ -320,7 +284,7 @@ public class WebFile extends File
 	 * @return the data returned from the web server, could either
 	 * be a boolean type result, like "1" or "0", or the actual data.
 	 */
-	 public static InputStream httpPost(
+	 public static InputStream httpPost (
 	 	URL url, 
 		String path,
 		String name, 
@@ -340,10 +304,10 @@ public class WebFile extends File
 			path = "/.";
 		}
 		dbg("  path: " + path);
-		out.print("path=" + URLEncoder.encode(path));
+		out.print("path=" + URLEncoder.encode(path, "UTF-8"));
 		
 		if (name != null) {
-			out.print("&" + name + "=" + URLEncoder.encode(value));
+			out.print("&" + name + "=" + URLEncoder.encode(value, "UTF-8"));
 		}
 		out.close();
 		
@@ -356,9 +320,9 @@ public class WebFile extends File
 	 *
 	 * @param s the debug output
 	 */
-	private static void dbg(String s)
-	{
-		if (DEBUG)
+	private static void dbg(String s) {
+		if (DEBUG) {
 			System.out.println("[WebFile] " + s);
+		}
 	}
 }

@@ -305,7 +305,10 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 		buf.append("</").append(ELEMENT_OUTLINE).append(">").append(line_ending);
 	}
 	
-	private void indent(Node node, StringBuffer buf) {
+	/**
+	 * Writes a tab based indent to the StringBuffer.
+	 */
+	public static void indent(Node node, StringBuffer buf) {
 		for (int i = 0, limit = node.getDepth(); i < limit; i++) {
 			buf.append("\t");
 		}

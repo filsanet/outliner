@@ -34,47 +34,58 @@
 
 package com.organic.maynard.xml;
 
-import java.util.*;
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
-
 /**
- * A bare bones implementation of a SAX error handler.
+ * Collects constants used by many of the SAX2 parsers we will implement.
  */
-public class SimpleSAXErrorHandler extends DefaultHandler {
+public interface XMLParserConstants {
 	
-	// Constants
-	private static final String PADDING_DEFAULT = "";
+	// Verbosity
+	/**
+	 * A valid verbosity setting as used by the "verbose" processing 
+	 * instruction.
+	 */
+	public static final int VERBOSITY_NONE = 0;
+	
+	/**
+	 * A valid verbosity setting as used by the "verbose" processing 
+	 * instruction.
+	 */
+	public static final int VERBOSITY_MINIMAL = 1;
+	
+	/**
+	 * A valid verbosity setting as used by the "verbose" processing 
+	 * instruction.
+	 */
+	public static final int VERBOSITY_NORMAL = 2;
+	
+	/**
+	 * A valid verbosity setting as used by the "verbose" processing 
+	 * instruction.
+	 */
+	public static final int VERBOSITY_MAXIMAL = 3;
+	
+	/**
+	 * A valid verbosity setting as used by the "verbose" processing 
+	 * instruction.
+	 */
+	public static final int VERBOSITY_DEBUG = 4;
 	
 	
-	// InstanceFields
-	private String padding = "";
+	// XML Processing Instructions
+	/**
+	 * A processing instruction tag name used for setting the verbosity during 
+	 * processing.
+	 */
+	public static final String PI_VERBOSE = "verbose";
 	
+	/**
+	 * A processing instruction attribute used for turning verbosity on and off.
+	 */
+	public static final String PI_NAME_ENABLED = "enabled";
 	
-	// The Constructors
-	public SimpleSAXErrorHandler() {
-		this(PADDING_DEFAULT);
-	}
-	
-	public SimpleSAXErrorHandler(String padding) {
-		super();
-		this.padding = padding;
-	}
-	
-	
-	// DefaultHandler Overridden Methods
-	public void error(SAXParseException e) {
-		System.out.println(padding + "XML PARSER ERROR: Line: " + e.getLineNumber() + " Column: " + e.getColumnNumber());
-		System.out.println(padding + e.getMessage());
-	}
-	
-	public void fatalError(SAXParseException e) {
-		System.out.println(padding + "XML PARSER FATAL ERROR: Line: " + e.getLineNumber() + " Column: " + e.getColumnNumber());
-		System.out.println(padding + e.getMessage());
-	}
-	
-	public void warning(SAXParseException e) {
-		System.out.println(padding + "XML PARSER WARNING: Line: " + e.getLineNumber() + " Column: " + e.getColumnNumber());
-		System.out.println(padding + e.getMessage());
-	}
+	/**
+	 * A processing instruction attribute that sets how verbose to be. Valid 
+	 * values are provided by the VERBOSITY_XX connstants defined above.
+	 */
+	public static final String PI_NAME_LEVEL = "level";
 }

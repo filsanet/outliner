@@ -31,7 +31,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package com.organic.maynard.outliner.scripting.macro;
 
 import com.organic.maynard.outliner.scripting.script.*;
@@ -119,7 +119,9 @@ public class BSHMacro extends MacroImpl implements Script {
 	// Saving the Macro
 	protected void prepareFile (StringBuffer buf) {
 		buf.append(XMLTools.getXmlDeclaration(null) + "\n");
-		buf.append(XMLTools.getElementStart(E_SCRIPT) + XMLTools.escapeXMLText(getScript()) + XMLTools.getElementEnd(E_SCRIPT)+ "\n");
+		XMLTools.writeElementStart(buf, 0, false, null, E_SCRIPT, null);
+			XMLTools.writePCData(buf, getScript());
+		XMLTools.writeElementEnd(buf, 0, "\n", E_SCRIPT);
 	}
 	
 	

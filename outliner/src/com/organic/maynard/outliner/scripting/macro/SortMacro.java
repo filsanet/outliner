@@ -31,12 +31,11 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package com.organic.maynard.outliner.scripting.macro;
 
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.util.undo.*;
-
 import com.organic.maynard.xml.XMLTools;
 import bsh.Interpreter;
 import bsh.NameSpace;
@@ -110,7 +109,7 @@ public class SortMacro extends MacroImpl implements RawMacro {
 		CompoundUndoableImpl undoable = new CompoundUndoableImpl(true);
 		
 		// Create the Comparator using BSH
-		Comparator comparator = null; 
+		Comparator comparator = null;
 		
 		try {
 			Interpreter bsh = new Interpreter();
@@ -219,7 +218,9 @@ public class SortMacro extends MacroImpl implements RawMacro {
 	// Saving the Macro
 	protected void prepareFile (StringBuffer buf) {
 		buf.append(XMLTools.getXmlDeclaration(null)).append("\n");
-		buf.append(XMLTools.getElementStart(E_COMPARATOR)).append(XMLTools.escapeXMLText(getComparator())).append(XMLTools.getElementEnd(E_COMPARATOR)).append("\n");
+		XMLTools.writeElementStart(buf, 0, false, null, E_COMPARATOR, null);
+			XMLTools.writePCData(buf, getComparator());
+		XMLTools.writeElementEnd(buf, 0, "\n", E_COMPARATOR);
 	}
 	
 	
