@@ -91,6 +91,21 @@ const char * WINDOWS_VERSION_STRINGS [] = {
 	"Unknown V7 Windows",
 	"Very Unknown Windows" }; 
 
+// machine requirements
+#define BARE_MIN_MEMORY  32 ;  // barest minimum RAM required to run app
+#define RECMND_MIN_MEMORY  64 ;  // recommended minimum RAM required to run app
+
+#define RECMND_MIN_SPEED 400 ;  // recommended minimum processor speed
+
+// registry
+#define SYSTEM_ENVIRONMENT_ROOT_KEY HKEY_LOCAL_MACHINE
+#define SYSTEM_ENVIRONMENT_KEY_PATH "System\\CurrentControlSet\\Control\\Session Manager\\Environment"  
+
+#define USER_ENVIRONMENT_ROOT_KEY HKEY_CURRENT_USER
+#define USER_ENVIRONMENT_KEY_PATH "Environment"
+
+#define MAX_REG_PATH 255
+
 
 // ---------- datatypes
 
@@ -115,8 +130,13 @@ enum windows_version {	// these are the major functionally-different versions
 	WIN_UNKNOWN_V8,
 	WIN_UNKNOWN_V9,
 	WIN_UNKNOWN_V10,
-	WIN_VERY_UNKNOWN } ;
+	WIN_VERY_UNKNOWN 
+	} ; // end enum
 
+enum environment_target {
+	USER,
+	SYSTEM
+	} ; // end enum
 
 // ---------- global variables
 
@@ -138,7 +158,7 @@ int rebootRequired(windows_version) ;
 int setAutoExecEnvVar(char *, char *, char *);
 int setAllEnvVars() ;
 int setEnvVar(char *, char *, char *, windows_version);
-int setRegistryEnvVar(char *, char *);
+int setRegistryEnvVar(char *, char *, environment_target);
 int set_APP_HOME() ;
 int sevFeedback(int, char *, char *) ;
 int strToUpper(char *) ;

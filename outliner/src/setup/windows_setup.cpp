@@ -543,6 +543,7 @@ int getShortPathCurDir (char * shortPathBuffer) {
 int setEnvVar (char * varName, char * varValue, char * introLines, windows_version windowsVersion) {
 	// local vars
 	int result ;
+	DWORD broadcastResult ;
 	
 	// switch out on windows version
 	switch (windowsVersion) {
@@ -550,8 +551,12 @@ int setEnvVar (char * varName, char * varValue, char * introLines, windows_versi
 		case WIN_95_OSR2:
 		case WIN_98:
 		case WIN_98_SE:
-			// win 9x use autoexec.bat and a reboot
+			// win 9x OSes use autoexec.bat and a reboot
 			result = setAutoExecEnvVar (varName, varValue, introLines) ;
+			
+			// just for fun, let's try to set the registry var anyhow
+			setRegistryEnvVar (varName, varValue, SYSTEM) ;
+			
 			break ;
 			
 		case WIN_ME:
@@ -563,12 +568,17 @@ int setEnvVar (char * varName, char * varValue, char * introLines, windows_versi
 		case WIN_UNKNOWN_V5:
 		case WIN_UNKNOWN_V6:
 		case WIN_UNKNOWN_V7:
-			// win me/xp/nt4/2k/.netServer/unknownsV4andUp use the registry
-			result = setRegistryEnvVar (varName, varValue) ;
+			// win me/xp/nt4/2k/.netServer/unknownsV4andUp OSes use the registry
+			result = setRegistryEnvVar (varName, varValue, SYSTEM) ;
+			// TBD make SYSTEM/USER a choice ?
+			// pain in the butt if not just SYSTEM
 			
-			// if we succeeded, broadcast the news,
-			// 	so as to avoid need to reboot
-			// if (result) result = broadcast the news
+			// if we succeeded, broadcast the news
+			// thus avoiding the need to reboot
+			SendMessageTimeout(HWND_BROADCAST, WM_SETTINGCHANGE, 0,
+			(LPARAM) "Environment", SMTO_ABORTIFHUNG,
+			5000, &broadcastResult);
+			
 			break ;
 			
 		case WIN_NT_351:
@@ -590,31 +600,58 @@ int setEnvVar (char * varName, char * varValue, char * introLines, windows_versi
 
 
 // set an environment variable via the registry
-// used for Windows NT, 2K, ME, and XP
-int setRegistryEnvVar (char * varName, char * varValue) {
+// used for Windows NT, 2K, ME, XP, and beyond
+int setRegistryEnvVar (char * envVarName, char * envVarValue, environment_target envTarget) {
+
+	// local vars
+	HKEY rootKey = NULL ;
+	char keyPath [MAX_REG_PATH] ;
 	
-/* The key key
+	HKEY enviroKey = NULL;
+	DWORD createKeyDisposition = 0;
 
-	makes system changes (vs user changes)
-	user must be logged on as an administrator
-	if user's not logged on as an admin, could offer to install as user,
-	rather than as system, or suggest reboot
-
-	HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SessionManager\Environment
-
-	get the elements in the key
-	search for a varName element
-	if found, check its value
-	if value's cool, cool
-	if value needs changing, do so
-	if not found, add name/value
+	LONG setResult = 0;
+	LONG closeResult = 0;
 	
-	if everything was not perfect (we had to change or add)
-		broadcast the new setting to see if we can avoid the need to reboot
-*/
-	return 1 ;
-
+	// are we setting this for all users, or just the current user ?
+	switch (envTarget) {
+		case USER:
+			rootKey = USER_ENVIRONMENT_ROOT_KEY ;
+			strcpy (keyPath, USER_ENVIRONMENT_KEY_PATH) ;
+			break ;
+			
+		case SYSTEM:
+		default:
+			rootKey = SYSTEM_ENVIRONMENT_ROOT_KEY ;
+			strcpy (keyPath, SYSTEM_ENVIRONMENT_KEY_PATH) ;
+			break ;
+	} // end switch target
+		
+	// try to open up the environment key
+	// if it doesn't exist, will try to create it
+	if (RegCreateKeyEx (rootKey, keyPath, 0,
+				0,REG_OPTION_NON_VOLATILE, KEY_WRITE, 0, 
+				& enviroKey, & createKeyDisposition)== ERROR_SUCCESS) {
 	
+		// okay, we've got the environment key
+		
+		// try to write the name/value pair to it
+		// will create n/v pair if it doesn't already exist
+		setResult = RegSetValueEx (enviroKey, envVarName, 0, REG_SZ,
+				(LPBYTE)envVarValue, strlen(envVarValue) + 1) ;
+		
+		// close the environment key
+		closeResult = RegCloseKey (enviroKey) ;
+		
+		// done
+		return ((setResult == ERROR_SUCCESS) & (closeResult == ERROR_SUCCESS)) ;
+		
+	// else we couldn't get at the environment key
+	} else {
+		// sigh
+		return 0 ;
+	} // end if-else
+
 } // end function setRegistryEnvVar
 
 
