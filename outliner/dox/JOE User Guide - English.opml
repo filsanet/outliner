@@ -3,7 +3,7 @@
 <head>
 <title>e:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Mon, 30 Jul 2001 11:22:13 GMT</dateModified>
+<dateModified>Tue, 31 Jul 2001 09:25:31 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState>17</expansionState>
@@ -167,6 +167,9 @@
 <outline text="Playing with Outlines">
 <outline text="Creating Nodes"/>
 <outline text="Destroying Nodes"/>
+<outline text="Read-Only Nodes"/>
+<outline text="Hidden Nodes"/>
+<outline text="Immoveable Nodes"/>
 <outline text="Copying Nodes"/>
 <outline text="Pasting Nodes"/>
 <outline text="Alphabetizing Nodes"/>
@@ -176,6 +179,7 @@
 <outline text="Collapsing Nodes"/>
 <outline text="Moving Nodes"/>
 <outline text="Merging Nodes"/>
+<outline text="Playing with Node Attributes"/>
 <outline text="Merging Outlines"/>
 <outline text="Hoisting Nodes"/>
 <outline text="Undoing Node Play"/>
