@@ -65,15 +65,15 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 		for (int i = 0; i < CACHE_SIZE; i++) {
 			OutlinerCellRendererImpl renderer = new OutlinerCellRendererImpl();
 			panel.add(renderer);
-			renderer.addMouseListener(dndListener);
 			renderer.addKeyListener(textListener);
 			renderer.addMouseListener(textListener);
+			renderer.addMouseListener(dndListener);
 			textAreas[i] = renderer;
 			
 			panel.add(renderer.button);
-			renderer.button.addMouseListener(dndListener);
 			renderer.button.addKeyListener(iconListener);
 			renderer.button.addMouseListener(iconListener);
+			renderer.button.addMouseListener(dndListener);
 		}
 		
 		// Initialized the hidden components

@@ -18,21 +18,16 @@
  
 package com.organic.maynard.outliner;
 
-import java.awt.*;
 import java.awt.event.*;
-import java.awt.Window;
 import java.awt.datatransfer.*;
-
-import javax.swing.*;
-import javax.swing.table.*;
-import javax.swing.event.*;
-
-import com.organic.maynard.util.string.*;
 
 public class TextKeyListener implements KeyListener, MouseListener {
 	
 	private OutlinerCellRendererImpl textArea = null;
-		
+	
+	private boolean inlinePaste = true;
+
+
 	// The Constructors
 	public TextKeyListener() {}
 
@@ -40,20 +35,13 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		textArea = null;
 	}
 
+
 	// MouseListener Interface
- 	public void mouseEntered(MouseEvent e) {
-		//System.out.println("TEXT Mouse Entered: " + e.paramString()); 	
- 	}
- 	
- 	public void mouseExited(MouseEvent e) {
-		//System.out.println("TEXT Mouse Exited: " + e.paramString()); 	
- 	
- 	}
+ 	public void mouseEntered(MouseEvent e) {}
+ 	public void mouseExited(MouseEvent e) {}
  	
  	public void mousePressed(MouseEvent e) {
  		textArea = (OutlinerCellRendererImpl) e.getComponent();
-		//System.out.println("TEXT Mouse Pressed: " + e.paramString()); 	
- 		//System.out.println("Pressed: " + textArea.node.getValue() + " " + e.paramString());
  		
  		// Shorthand
  		Node currentNode = textArea.node;
@@ -100,9 +88,6 @@ public class TextKeyListener implements KeyListener, MouseListener {
  	public void mouseReleased(MouseEvent e) {
  		textArea = (OutlinerCellRendererImpl) e.getComponent();
  		
-		//System.out.println("TEXT Mouse Released: " + e.paramString()); 	
- 		//System.out.println("Released: " + textArea.node.getValue() + " " + e.paramString());
-		
 		// Shorthand
 		Node currentNode = textArea.node;
  		TreeContext tree = currentNode.getTree();
@@ -128,341 +113,88 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		}
 	}
 
- 	public void mouseClicked(MouseEvent e) {
- 		//System.out.println("Clicked: " + textArea.node.getValue() + " " + e.paramString());
- 	}
+ 	public void mouseClicked(MouseEvent e) {}
 	
 	
 	// KeyListener Interface
 	public void keyPressed(KeyEvent e) {
 		textArea = (OutlinerCellRendererImpl) e.getComponent();
 		
-		//System.out.println("TEXTAREA KEY PRESSED: " + e.paramString());
-		
 		// Shorthand
 		Node currentNode = textArea.node;
 		TreeContext tree = currentNode.getTree();
 		outlineLayoutManager layout = tree.doc.panel.layout;
-
-		if (e.getKeyCode() == KeyEvent.VK_PAGE_DOWN) {
-			if (currentNode.isExpanded()) {
-				currentNode.setExpanded(false);
-			} else {
-				currentNode.setExpanded(true);
-			}
-
-			// Redraw
-			layout.draw(currentNode, outlineLayoutManager.TEXT);
-
-			e.consume();
-			return;
-		}
 		
-		if (e.getKeyCode() == KeyEvent.VK_UP) {
-			// Get Prev Node
-			Node prevNode = tree.getPrevNode(currentNode);
-			if (prevNode == null) {return;}
+		switch(e.getKeyCode()) {
+			case KeyEvent.VK_PAGE_DOWN:
+				toggleExpansion(tree, layout);
+				break;
 
-			// Record the EditingNode and CursorPosition
-			tree.setEditingNode(prevNode);
-			tree.setCursorPosition(OutlinerDocument.findNearestCaretPosition(textArea.getCaretPosition(), tree.doc.getPreferredCaretPosition(), prevNode));
-				
-			// Clear Text Selection
-			textArea.setCaretPosition(0);
-			textArea.moveCaretPosition(0);
+			case KeyEvent.VK_UP:
+				moveUp(tree, layout);
+				break;
 
-			// Freeze Undo Editing
-			UndoableEdit.freezeUndoEdit(currentNode);
+			case KeyEvent.VK_DOWN:
+				moveDown(tree, layout);
+				break;
 
-			// Redraw and Set Focus
-			if (prevNode.isVisible()) {
-				layout.setFocus(prevNode,outlineLayoutManager.TEXT);
-			} else {
-				layout.draw(prevNode,outlineLayoutManager.TEXT);
-			}
-			
-			e.consume();
-			return;			
-		}
-
-		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			// Get Prev Node
-			Node nextNode = tree.getNextNode(currentNode);
-			if (nextNode == null) {return;}
-
-			// Record the EditingNode and CursorPosition
-			tree.setEditingNode(nextNode);
-			tree.setCursorPosition(OutlinerDocument.findNearestCaretPosition(textArea.getCaretPosition(), tree.doc.getPreferredCaretPosition(), nextNode));
-			
-			// Clear Text Selection
-			textArea.setCaretPosition(0);
-			textArea.moveCaretPosition(0);
-
-			// Freeze Undo Editing
-			UndoableEdit.freezeUndoEdit(currentNode);
-
-			// Redraw and Set Focus
-			if (nextNode.isVisible()) {
-				layout.setFocus(nextNode,outlineLayoutManager.TEXT);
-			} else {
-				layout.draw(nextNode,outlineLayoutManager.TEXT);
-			}
-
-			e.consume();
-			return;			
-		}
-		
-		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			if (textArea.getCaretPosition() == 0) {
-				// Get Prev Node
-				Node prevNode = tree.getPrevNode(currentNode);
-				if (prevNode == null) {
-					tree.setCursorPosition(tree.getCursorPosition()); // Makes sure we reset the mark
-					return;
-				}
-				
-				// Update Preferred Caret Position
-				int newLength = prevNode.getValue().length();
-				tree.doc.setPreferredCaretPosition(newLength);
-
-				// Record the EditingNode and CursorPosition
-				tree.setEditingNode(prevNode);
-				tree.setCursorPosition(newLength);
-
-				// Clear Text Selection
-				textArea.setCaretPosition(0);
-				textArea.moveCaretPosition(0);
-
-				// Redraw and Set Focus
-				if (prevNode.isVisible()) {
-					layout.setFocus(prevNode,outlineLayoutManager.TEXT);
-				} else {
-					layout.draw(prevNode,outlineLayoutManager.TEXT);
-				}
-				
-				e.consume();
-			} else {
-				// Update Preferred Caret Position
-				tree.doc.setPreferredCaretPosition(textArea.getCaretPosition() - 1);
-
-				// Record the CursorPosition only since the EditingNode should not have changed
-				tree.setCursorPosition(textArea.getCaretPosition() - 1);
-
-				// Redraw and Set Focus if this node is currently offscreen
-				if (!currentNode.isVisible()) {
-					layout.draw(currentNode,outlineLayoutManager.TEXT);
-				}		
-			}
-
-			// Freeze Undo Editing
-			UndoableEdit.freezeUndoEdit(currentNode);
-			
-			return;			
-		}
-
-		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			if (textArea.getCaretPosition() == textArea.getText().length()) {
-				// Get Prev Node
-				Node nextNode = tree.getNextNode(currentNode);
-				if (nextNode == null) {
-					tree.setCursorPosition(tree.getCursorPosition()); // Makes sure we reset the mark
-					return;
-				}
-			
-				// Update Preferred Caret Position
-				int newLength = nextNode.getValue().length();
-				tree.doc.setPreferredCaretPosition(newLength);
-
-				// Record the EditingNode and CursorPosition
-				tree.setEditingNode(nextNode);
-				tree.setCursorPosition(0);
-
-				// Clear Text Selection
-				textArea.setCaretPosition(0);
-				textArea.moveCaretPosition(0);
-
-				// Redraw and Set Focus
-				if (nextNode.isVisible()) {
-					layout.setFocus(nextNode,outlineLayoutManager.TEXT);
-				} else {
-					layout.draw(nextNode,outlineLayoutManager.TEXT);
-				}
-
-				e.consume();
-			} else {			
-				// Update Preferred Caret Position
-				tree.doc.setPreferredCaretPosition(textArea.getCaretPosition() + 1);
-
-				// Record the CursorPosition only since the EditingNode should not have changed
-				tree.setCursorPosition(textArea.getCaretPosition() + 1);
-
-				// Redraw and Set Focus if this node is currently offscreen
-				if (!currentNode.isVisible()) {
-					layout.draw(currentNode,outlineLayoutManager.TEXT);
-				}
-			}
-
-			// Freeze Undo Editing
-			UndoableEdit.freezeUndoEdit(currentNode);
-
-			return;			
-		}
-
-		if (e.getKeyChar() == KeyEvent.VK_ENTER) {			
-			if (e.isShiftDown()) {
-				tree.setSelectedNodesParent(currentNode.getParent());
-				tree.addNodeToSelection(currentNode);
-
-				// Record the EditingNode and CursorPosition
-				tree.setComponentFocus(outlineLayoutManager.ICON);
-
-				// Redraw and Set Focus
-				layout.draw(currentNode,outlineLayoutManager.ICON);
-			} else {
-				// Create a new node and insert it as a sibling immediatly after this node, unless
-				// the current node is expanded and has children. Then, we should insert it as the first child of the
-				// current node.
-				Node newNode = new NodeImpl(currentNode.getTree(),"");
-				
-				if ((!currentNode.isLeaf()) && (currentNode.isExpanded())) {
-					newNode.setDepth(currentNode.getDepth() + 1);
-					currentNode.insertChild(newNode,0);				
-				} else {
-					newNode.setDepth(currentNode.getDepth());
-					currentNode.getParent().insertChild(newNode,currentNode.currentIndex() + 1);
-				}
-				
-				tree.insertNode(newNode);
-
-				// Record the EditingNode and CursorPosition
-				tree.setEditingNode(newNode);
-				tree.setCursorPosition(0);
-
-				// Update Preferred Caret Position
-				tree.doc.setPreferredCaretPosition(0);
-
-				// Put the Undoable onto the UndoQueue
-				CompoundUndoableInsert undoable = new CompoundUndoableInsert(newNode.getParent());
-				undoable.addPrimitive(new PrimitiveUndoableInsert(newNode.getParent(),newNode,newNode.currentIndex()));
-				tree.doc.undoQueue.add(undoable);
-
-				// Redraw and Set Focus
-				layout.draw(newNode,outlineLayoutManager.TEXT);
-			}
-			
-			e.consume();
-			return;
-		}
-
-		if (e.getKeyChar() == KeyEvent.VK_TAB) {
-			if (e.isShiftDown()) {
-				// Put the Undoable onto the UndoQueue
-				Node targetNode = currentNode.getParent().getParent();
-				int targetIndex = currentNode.getParent().currentIndex() + 1;
-				if (currentNode.getParent().isRoot()) {
-					// Our parent is root. Since we can't be promoted to root level, Abort.
+			case KeyEvent.VK_LEFT:
+				if (textArea.getCaretPosition() == 0) {
+					moveLeftToPrevNode(tree, layout);
 					e.consume();
-					return;
+				} else {
+					moveLeft(tree, layout);
 				}
-				
-				CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(),targetNode);
-				tree.doc.undoQueue.add(undoable);
 
-				// Record the Insert in the undoable
-				int index = currentNode.currentIndex();
-				undoable.addPrimitive(new PrimitiveUndoableMove(undoable,currentNode,index,targetIndex));
+				// Freeze Undo Editing
+				UndoableEdit.freezeUndoEdit(currentNode);
 
-				tree.promoteNode(currentNode);
-			} else {		
-				if (currentNode.isFirstChild()) {
-					e.consume();
-					return;
-				}
-				// Put the Undoable onto the UndoQueue
-				Node targetNode = currentNode.prevSibling();
-
-				CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(),targetNode);
-				tree.doc.undoQueue.add(undoable);
-				
-				// Record the Insert in the undoable
-				int index = currentNode.currentIndex();
-				int targetIndex = targetNode.numOfChildren();
-				undoable.addPrimitive(new PrimitiveUndoableMove(undoable,currentNode,index,targetIndex));
-
-				tree.demoteNode(currentNode,targetNode);
-			}
-
-			// Redraw and Set Focus
-			layout.draw(currentNode,outlineLayoutManager.TEXT);
-			
-			e.consume();
-			return;
-		}
-
-		if ((e.getKeyCode() == KeyEvent.VK_V) && e.isControlDown()) {
-			inlinePaste = true;
-			
-			// Get the text from the clipboard and turn it into a tree
-			StringSelection selection = (StringSelection) Outliner.clipboard.getContents(this);
-			String text = "";
-			try {
-				text = (String) selection.getTransferData(DataFlavor.stringFlavor);
-			} catch (Exception ex) {
-			
-			}
-			
-			// Need to make a check for inline pastes
-			if ((text.indexOf(Preferences.LINE_END_STRING) == -1) && (text.indexOf(Preferences.DEPTH_PAD_STRING) == -1)) {
 				return;
-			} else {
-				inlinePaste = false;
-			}
 
-			// Put the Undoable onto the UndoQueue
-			CompoundUndoableInsert undoable = new CompoundUndoableInsert(currentNode.getParent());
-			tree.doc.undoQueue.add(undoable);
-			
-			Node tempRoot = PadSelection.pad(text, tree, currentNode.getDepth(),Preferences.LINE_END_UNIX);
-			
-			Node parentForNewNode = currentNode.getParent();
-			int indexForNewNode = parentForNewNode.getChildIndex(currentNode);
-			for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
-				Node node = tempRoot.getChild(i);
-				parentForNewNode.insertChild(node, indexForNewNode + 1);
-				tree.insertNode(node);
+			case KeyEvent.VK_RIGHT:
+				if (textArea.getCaretPosition() == textArea.getText().length()) {
+					moveRightToNextNode(tree, layout);
+					e.consume();
+				} else {
+					moveRight(tree, layout);
+				}
+				
+				// Freeze Undo Editing
+				UndoableEdit.freezeUndoEdit(currentNode);
 
-				// Record the Insert in the undoable
-				int index = node.currentIndex() + i;
-				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode,node,index));
-			}
-			
-			tree.setSelectedNodesParent(parentForNewNode);
+				return;
 
-			for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
-				Node node = tempRoot.getChild(i);
-				tree.addNodeToSelection(node);
-			}
-			
-			Node nodeThatMustBeVisible = tree.getYoungestInSelection();
+			case KeyEvent.VK_ENTER:
+				if (e.isShiftDown()) {
+					changeFocusToIcon(tree,layout);
+				} else {
+					insert(tree,layout);
+				}
+				break;
 
-			// Record the EditingNode and CursorPosition and ComponentFocus
-			tree.setEditingNode(nodeThatMustBeVisible);
-			tree.setCursorPosition(0);
-			tree.setComponentFocus(outlineLayoutManager.ICON);
+			case KeyEvent.VK_TAB:
+				if (e.isShiftDown()) {
+					promote(tree,layout);
+				} else {
+					demote(tree,layout);
+				}
+				break;
 
-			// Redraw and Set Focus
-			layout.draw(nodeThatMustBeVisible,outlineLayoutManager.ICON);
-			
-			e.consume();
-			return;
+			case KeyEvent.VK_V:
+				if (e.isControlDown()) {
+					paste(tree,layout);
+				}
+				return;
+				
+			default:
+				return;
 		}
+		
+		e.consume();
+		return;
 	}
 	
-	public void keyTyped(KeyEvent e) { 
-		//System.out.println("KeyTyped: " + e.paramString());
-	}
-	
-	private boolean inlinePaste = true;
+	public void keyTyped(KeyEvent e) {}
 	
 	public void keyReleased(KeyEvent e) {
 		textArea = (OutlinerCellRendererImpl) e.getComponent();
@@ -502,46 +234,358 @@ public class TextKeyListener implements KeyListener, MouseListener {
 				return;
 		}
 
-		// All other keys
-		//System.out.println("KeyReleased: " + e.paramString());
-
 		// Create some short names for convienence
 		Node currentNode = textArea.node;
 		TreeContext tree = currentNode.getTree();
 		outlineLayoutManager layout = tree.doc.panel.layout;
 
+		// Update the value in the node and get some values
+		int caretPosition = textArea.getCaretPosition();
+		String oldText = currentNode.getValue();
+		String newText = textArea.getText();
+		currentNode.setValue(newText);
+
 		// Put the Undoable onto the UndoQueue
 		UndoableEdit undoable = tree.doc.undoQueue.getIfEdit();
 		if ((undoable != null) && (undoable.getNode() == currentNode) && (!undoable.isFrozen())) {
 			if (e.isControlDown() && ((e.getKeyCode() == KeyEvent.VK_X) || (e.getKeyCode() == KeyEvent.VK_V))) {
-				tree.doc.undoQueue.add(new UndoableEdit(currentNode,currentNode.getValue(),textArea.getText(),tree.getCursorPosition(),textArea.getCaretPosition(),tree.getCursorMarkPosition(),textArea.getCaretPosition()));
+				tree.doc.undoQueue.add(new UndoableEdit(currentNode, oldText, newText, tree.getCursorPosition(), caretPosition, tree.getCursorMarkPosition(), caretPosition));
 			} else {
-				undoable.setNewText(textArea.getText());
-				undoable.setNewPosition(textArea.getCaretPosition());
-				undoable.setNewMarkPosition(textArea.getCaretPosition());
+				undoable.setNewText(newText);
+				undoable.setNewPosition(caretPosition);
+				undoable.setNewMarkPosition(caretPosition);
 			}
 		} else {
-			tree.doc.undoQueue.add(new UndoableEdit(currentNode,currentNode.getValue(),textArea.getText(),tree.getCursorPosition(),textArea.getCaretPosition(),tree.getCursorMarkPosition(),textArea.getCaretPosition()));
+			tree.doc.undoQueue.add(new UndoableEdit(currentNode, oldText, newText, tree.getCursorPosition(), caretPosition, tree.getCursorMarkPosition(), caretPosition));
 		}
-			
-		// Update the value in the node
-		currentNode.setValue(textArea.getText());
 
 		// Record the EditingNode, Mark and CursorPosition
 		tree.setEditingNode(currentNode);
 		tree.setCursorMarkPosition(textArea.getCaret().getMark());
-		tree.setCursorPosition(textArea.getCaretPosition(),false);
+		tree.setCursorPosition(caretPosition, false);
 
 		// Do the Redraw if we have wrapped or if we are currently off screen.
 		if (!textArea.getPreferredSize().equals(textArea.getCurrentTextAreaSize())) {
 			textArea.setCurrentTextAreaSize(textArea.getPreferredSize());
-			layout.draw(currentNode,outlineLayoutManager.TEXT);
+			layout.draw(currentNode, outlineLayoutManager.TEXT);
 		} else if (!currentNode.isVisible()) {
+			layout.draw(currentNode, outlineLayoutManager.TEXT);
+		}
+	}
+
+
+	// Key Handlers
+	private void toggleExpansion(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		
+		if (currentNode.isExpanded()) {
+			currentNode.setExpanded(false);
+		} else {
+			currentNode.setExpanded(true);
+		}
+
+		// Redraw
+		layout.draw(currentNode, outlineLayoutManager.TEXT);
+	}
+
+	private void moveUp(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+
+		// Get Prev Node
+		Node prevNode = tree.getPrevNode(currentNode);
+		if (prevNode == null) {
+			return;
+		}
+
+		// Record the EditingNode and CursorPosition
+		tree.setEditingNode(prevNode);
+		tree.setCursorPosition(OutlinerDocument.findNearestCaretPosition(textArea.getCaretPosition(), tree.doc.getPreferredCaretPosition(), prevNode));
+			
+		// Clear Text Selection
+		textArea.setCaretPosition(0);
+		textArea.moveCaretPosition(0);
+
+		// Freeze Undo Editing
+		UndoableEdit.freezeUndoEdit(currentNode);
+
+		// Redraw and Set Focus
+		if (prevNode.isVisible()) {
+			layout.setFocus(prevNode,outlineLayoutManager.TEXT);
+		} else {
+			layout.draw(prevNode,outlineLayoutManager.TEXT);
+		}
+	}
+
+	private void moveDown(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+
+		// Get Prev Node
+		Node nextNode = tree.getNextNode(currentNode);
+		if (nextNode == null) {
+			return;
+		}
+
+		// Record the EditingNode and CursorPosition
+		tree.setEditingNode(nextNode);
+		tree.setCursorPosition(OutlinerDocument.findNearestCaretPosition(textArea.getCaretPosition(), tree.doc.getPreferredCaretPosition(), nextNode));
+		
+		// Clear Text Selection
+		textArea.setCaretPosition(0);
+		textArea.moveCaretPosition(0);
+
+		// Freeze Undo Editing
+		UndoableEdit.freezeUndoEdit(currentNode);
+
+		// Redraw and Set Focus
+		if (nextNode.isVisible()) {
+			layout.setFocus(nextNode,outlineLayoutManager.TEXT);
+		} else {
+			layout.draw(nextNode,outlineLayoutManager.TEXT);
+		}
+	}
+
+	private void moveLeft(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+
+		// Update Preferred Caret Position
+		tree.doc.setPreferredCaretPosition(textArea.getCaretPosition() - 1);
+
+		// Record the CursorPosition only since the EditingNode should not have changed
+		tree.setCursorPosition(textArea.getCaretPosition() - 1);
+
+		// Redraw and Set Focus if this node is currently offscreen
+		if (!currentNode.isVisible()) {
 			layout.draw(currentNode,outlineLayoutManager.TEXT);
 		}
 	}
 
+	private void moveLeftToPrevNode(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+
+		// Get Prev Node
+		Node prevNode = tree.getPrevNode(currentNode);
+		if (prevNode == null) {
+			tree.setCursorPosition(tree.getCursorPosition()); // Makes sure we reset the mark
+			return;
+		}
+		
+		// Update Preferred Caret Position
+		int newLength = prevNode.getValue().length();
+		tree.doc.setPreferredCaretPosition(newLength);
+
+		// Record the EditingNode and CursorPosition
+		tree.setEditingNode(prevNode);
+		tree.setCursorPosition(newLength);
+
+		// Clear Text Selection
+		textArea.setCaretPosition(0);
+		textArea.moveCaretPosition(0);
+
+		// Redraw and Set Focus
+		if (prevNode.isVisible()) {
+			layout.setFocus(prevNode,outlineLayoutManager.TEXT);
+		} else {
+			layout.draw(prevNode,outlineLayoutManager.TEXT);
+		}
+	}
+
+	private void moveRight(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+
+		// Update Preferred Caret Position
+		tree.doc.setPreferredCaretPosition(textArea.getCaretPosition() + 1);
+
+		// Record the CursorPosition only since the EditingNode should not have changed
+		tree.setCursorPosition(textArea.getCaretPosition() + 1);
+
+		// Redraw and Set Focus if this node is currently offscreen
+		if (!currentNode.isVisible()) {
+			layout.draw(currentNode,outlineLayoutManager.TEXT);
+		}
+	}
+
+	private void moveRightToNextNode(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+
+		// Get Prev Node
+		Node nextNode = tree.getNextNode(currentNode);
+		if (nextNode == null) {
+			tree.setCursorPosition(tree.getCursorPosition()); // Makes sure we reset the mark
+			return;
+		}
 	
+		// Update Preferred Caret Position
+		int newLength = nextNode.getValue().length();
+		tree.doc.setPreferredCaretPosition(newLength);
+
+		// Record the EditingNode and CursorPosition
+		tree.setEditingNode(nextNode);
+		tree.setCursorPosition(0);
+
+		// Clear Text Selection
+		textArea.setCaretPosition(0);
+		textArea.moveCaretPosition(0);
+
+		// Redraw and Set Focus
+		if (nextNode.isVisible()) {
+			layout.setFocus(nextNode,outlineLayoutManager.TEXT);
+		} else {
+			layout.draw(nextNode,outlineLayoutManager.TEXT);
+		}
+	}
+
+	private void changeFocusToIcon(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+
+		tree.setSelectedNodesParent(currentNode.getParent());
+		tree.addNodeToSelection(currentNode);
+
+		// Record the EditingNode and CursorPosition
+		tree.setComponentFocus(outlineLayoutManager.ICON);
+
+		// Redraw and Set Focus
+		layout.draw(currentNode,outlineLayoutManager.ICON);
+	}
+
+	private void insert(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+
+		// Create a new node and insert it as a sibling immediatly after this node, unless
+		// the current node is expanded and has children. Then, we should insert it as the first child of the
+		// current node.
+		Node newNode = new NodeImpl(currentNode.getTree(),"");
+		
+		if ((!currentNode.isLeaf()) && (currentNode.isExpanded())) {
+			newNode.setDepth(currentNode.getDepth() + 1);
+			currentNode.insertChild(newNode,0);				
+		} else {
+			newNode.setDepth(currentNode.getDepth());
+			currentNode.getParent().insertChild(newNode,currentNode.currentIndex() + 1);
+		}
+		
+		tree.insertNode(newNode);
+
+		// Record the EditingNode and CursorPosition
+		tree.setEditingNode(newNode);
+		tree.setCursorPosition(0);
+
+		// Update Preferred Caret Position
+		tree.doc.setPreferredCaretPosition(0);
+
+		// Put the Undoable onto the UndoQueue
+		CompoundUndoableInsert undoable = new CompoundUndoableInsert(newNode.getParent());
+		undoable.addPrimitive(new PrimitiveUndoableInsert(newNode.getParent(),newNode,newNode.currentIndex()));
+		tree.doc.undoQueue.add(undoable);
+
+		// Redraw and Set Focus
+		layout.draw(newNode,outlineLayoutManager.TEXT);
+	}
+
+	private void promote(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+
+		// Put the Undoable onto the UndoQueue
+		Node targetNode = currentNode.getParent().getParent();
+		int targetIndex = currentNode.getParent().currentIndex() + 1;
+		if (currentNode.getParent().isRoot()) {
+			// Our parent is root. Since we can't be promoted to root level, Abort.
+			return;
+		}
+		
+		CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(),targetNode);
+		tree.doc.undoQueue.add(undoable);
+
+		// Record the Insert in the undoable
+		int index = currentNode.currentIndex();
+		undoable.addPrimitive(new PrimitiveUndoableMove(undoable,currentNode,index,targetIndex));
+
+		tree.promoteNode(currentNode);
+
+		// Redraw and Set Focus
+		layout.draw(currentNode,outlineLayoutManager.TEXT);
+	}
+
+	private void demote(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+
+		if (currentNode.isFirstChild()) {
+			return;
+		}
+		// Put the Undoable onto the UndoQueue
+		Node targetNode = currentNode.prevSibling();
+
+		CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(),targetNode);
+		tree.doc.undoQueue.add(undoable);
+		
+		// Record the Insert in the undoable
+		int index = currentNode.currentIndex();
+		int targetIndex = targetNode.numOfChildren();
+		undoable.addPrimitive(new PrimitiveUndoableMove(undoable,currentNode,index,targetIndex));
+
+		tree.demoteNode(currentNode,targetNode);
+
+		// Redraw and Set Focus
+		layout.draw(currentNode,outlineLayoutManager.TEXT);
+	}
+
+	private void paste(TreeContext tree, outlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+
+		inlinePaste = true;
+		
+		// Get the text from the clipboard and turn it into a tree
+		StringSelection selection = (StringSelection) Outliner.clipboard.getContents(this);
+		String text = "";
+		try {
+			text = (String) selection.getTransferData(DataFlavor.stringFlavor);
+		} catch (Exception ex) {
+		
+		}
+		
+		// Need to make a check for inline pastes
+		if ((text.indexOf(Preferences.LINE_END_STRING) == -1) && (text.indexOf(Preferences.DEPTH_PAD_STRING) == -1)) {
+			return;
+		} else {
+			inlinePaste = false;
+		}
+
+		// Put the Undoable onto the UndoQueue
+		CompoundUndoableInsert undoable = new CompoundUndoableInsert(currentNode.getParent());
+		tree.doc.undoQueue.add(undoable);
+		
+		Node tempRoot = PadSelection.pad(text, tree, currentNode.getDepth(),Preferences.LINE_END_UNIX);
+		
+		Node parentForNewNode = currentNode.getParent();
+		int indexForNewNode = parentForNewNode.getChildIndex(currentNode);
+		for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
+			Node node = tempRoot.getChild(i);
+			parentForNewNode.insertChild(node, indexForNewNode + 1);
+			tree.insertNode(node);
+
+			// Record the Insert in the undoable
+			int index = node.currentIndex() + i;
+			undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode,node,index));
+		}
+		
+		tree.setSelectedNodesParent(parentForNewNode);
+
+		for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
+			Node node = tempRoot.getChild(i);
+			tree.addNodeToSelection(node);
+		}
+		
+		Node nodeThatMustBeVisible = tree.getYoungestInSelection();
+
+		// Record the EditingNode and CursorPosition and ComponentFocus
+		tree.setEditingNode(nodeThatMustBeVisible);
+		tree.setCursorPosition(0);
+		tree.setComponentFocus(outlineLayoutManager.ICON);
+
+		// Redraw and Set Focus
+		layout.draw(nodeThatMustBeVisible,outlineLayoutManager.ICON);
+	}
+
+
 	// Additional Outline Methods
 	public static void expandAllSubheads(Node currentNode) {
 		currentNode.ExpandAllSubheads();
@@ -604,5 +648,4 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		
 		return;
 	}
-
 }

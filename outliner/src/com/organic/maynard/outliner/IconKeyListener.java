@@ -257,8 +257,6 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		Node currentNode = textArea.node;
 		TreeContext tree = currentNode.getTree();
 		outlineLayoutManager layout = tree.doc.panel.layout;
-
-
 		Node youngestNode = tree.getYoungestInSelection();
 
 		// Clear the selection since focus will change to the textarea.
