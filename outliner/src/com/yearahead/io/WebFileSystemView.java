@@ -22,7 +22,7 @@ import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.net.Authenticator;
 import java.util.HashMap;
-import com.organic.maynard.outliner.GUITreeLoader;
+import com.organic.maynard.outliner.guitree.GUITreeLoader;
 
 /**
  * A plugin to a JFileChooser so that a directory on a web server will

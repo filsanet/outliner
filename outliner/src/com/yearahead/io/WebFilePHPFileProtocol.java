@@ -33,6 +33,7 @@
  */
 package com.yearahead.io;
 
+import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.util.preferences.*;
 import com.organic.maynard.outliner.*;
 import javax.swing.*;
