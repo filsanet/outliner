@@ -83,20 +83,28 @@ public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements
 		setVisible(false);
 	}
 	
-	public FindReplaceResultModel getModel() {return this.model;}
+	public FindReplaceResultsModel getModel() {return this.model;}
 	
 	public void show(FindReplaceResultsModel model) {
 		this.model = model;
+		model.setView(this);
 		
 		// Setup the JTable
 		table.setModel(model);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		totalMatches.setText(TOTAL_MATCHES + model.size());
+		updateTotalMatches();
 		
-		setVisible(true);
-		//super.show();
+		show();
+		
+		SwingUtilities.invokeLater(new Runnable(){public void run(){Outliner.outliner.requestFocus();}});
 	}
+	
+	public void updateTotalMatches() {
+		totalMatches.setText(TOTAL_MATCHES + model.size());
+	}
+	
+	public void requestFocus() {}
 
 	// MouseListener Interface
 	public void mouseClicked(MouseEvent e) {}
@@ -127,7 +135,6 @@ public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements
 		Outliner.outliner.requestFocus();
 		GoToDialog.goToLineAndColumn(doc, line, start, false, true);
 		WindowMenu.changeToWindow(doc);
-		
 	}
 	
 	private void handleFileClick(FindReplaceResult result) {

@@ -52,11 +52,15 @@ public class FindReplaceResultsModel extends AbstractTableModel {
 
 	// Fields
 	private ArrayList results = new ArrayList();
+	
+	private FindReplaceResultsDialog view = null;
 
 
 	// Constructors
-	public FindReplaceResultsModel() {
-
+	public FindReplaceResultsModel() {}
+	
+	public void setView(FindReplaceResultsDialog view) {
+		this.view = view;
 	}
 
 
@@ -75,6 +79,18 @@ public class FindReplaceResultsModel extends AbstractTableModel {
 		results.remove(index);
 	}
 	
+	public void removeAllResultsForDocument(OutlinerDocument doc) {
+		for (int i = results.size() - 1; i >= 0; i--) {
+			FindReplaceResult result = getResult(i);
+			OutlinerDocument resultDoc = result.getDocument();
+			if (doc == resultDoc) {
+				removeResult(i);
+			}
+		}
+		
+		fireTableDataChanged();
+	}
+	
 	public FindReplaceResult getResult(int index) {
 		return (FindReplaceResult) results.get(index);
 	}
@@ -85,6 +101,11 @@ public class FindReplaceResultsModel extends AbstractTableModel {
 	
 	
 	// TableModel Interface
+	public void fireTableDataChanged() {
+		super.fireTableDataChanged();
+		view.updateTotalMatches();
+	}
+	
 	public int getRowCount() {
 		return size();
 	}

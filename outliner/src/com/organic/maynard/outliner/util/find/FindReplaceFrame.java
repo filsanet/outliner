@@ -638,6 +638,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 					CHECKBOX_WRAP_AROUND.isSelected(),
 					CHECKBOX_REGEXP.isSelected()
 				);
+				
+				doc.panel.layout.redraw();
 				break;
 			
 			case MODE_ALL_OPEN_DOCUMENTS:
@@ -652,6 +654,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 					CHECKBOX_WRAP_AROUND.isSelected(),
 					CHECKBOX_REGEXP.isSelected()
 				);
+				
+				Outliner.redrawAllOpenDocuments();
 				break;
 			
 			case MODE_FILE_SYSTEM:
@@ -669,12 +673,6 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		}
 
 		Outliner.findReplaceResultsDialog.show(results);
-
-		// Bring the window to the front
-		Outliner.outliner.requestFocus();
-		WindowMenu.changeToWindow(doc);
-		
-		//popCountDialog(results.size());
 	}
 		
 	// This method is public and should have no direct dependancy on 
@@ -1339,23 +1337,6 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			}
 		}
 	}
-	
-	private void popCountDialog(int count) {
-		if (count == 0) {
-			return; // No dialog if we made no changes.
-		}
-		
-		String replacementText = GUITreeLoader.reg.getText("replacements");
-		if (count == 1) {
-			replacementText = GUITreeLoader.reg.getText("replacement");
-		}
-		String msg = GUITreeLoader.reg.getText("replacements_made");
-		msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, "" + count);
-		msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_2, replacementText);
-
-		JOptionPane.showMessageDialog(Outliner.getMostRecentDocumentTouched(), msg);	
-	}
-	
 	
 	private NodeRangePair findLocation (
 		OutlinerDocument doc, 

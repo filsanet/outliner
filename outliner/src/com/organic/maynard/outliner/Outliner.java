@@ -658,6 +658,12 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 
 		// Notify the Help documents manager	[srk 8/5/01 1:23PM]
 		helpDoxMgr.someDocumentJustClosed(document);
+		
+		// If the FindReplaceResultsDialog is visible, remove any references to this document
+		if (findReplaceResultsDialog.isVisible()) {
+			FindReplaceResultsModel model = findReplaceResultsDialog.getModel();
+			model.removeAllResultsForDocument(document);
+		}
 	}
 	
 	public static int openDocumentCount() {
