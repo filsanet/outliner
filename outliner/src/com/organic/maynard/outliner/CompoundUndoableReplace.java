@@ -82,22 +82,7 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 			}
 		}
 		
-		// Record the EditingNode
-		Node firstNewSelectedNode = tree.getYoungestInSelection();
-		int ioFirstNewSelectedNode = tree.visibleNodes.indexOf(firstNewSelectedNode);
-		Node lastNewSelectedNode = tree.getOldestInSelection();
-		int ioLastNewSelectedNode = tree.visibleNodes.indexOf(lastNewSelectedNode);
-
-		Node newSelectedNode = null;
-		if (ioFirstNewSelectedNode == 0) {
-			layout.setNodeToDrawFrom(firstNewSelectedNode, ioFirstNewSelectedNode);
-			newSelectedNode = firstNewSelectedNode;
-		} else if (ioLastNewSelectedNode == (tree.visibleNodes.size() - 1)) {
-			layout.setNodeToDrawFrom(lastNewSelectedNode, ioLastNewSelectedNode);
-			newSelectedNode = lastNewSelectedNode;
-		} else {
-			newSelectedNode = firstNewSelectedNode;
-		}
+		Node newSelectedNode = determineNewSelectedNode(tree);
 		
 		tree.setEditingNode(newSelectedNode);
 		tree.setCursorPosition(0);
@@ -116,40 +101,27 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 		boolean allWillBeDeleted = false;
 		Node fallbackNode = null;
 		if (deleteMode) {
-			fallbackNode = ((PrimitiveUndoableReplace) primitives.lastElement()).getOldNode().nextUnSelectedNode();
-
-			if (fallbackNode == parent.nextSibling()) {
-				fallbackNode = ((PrimitiveUndoableReplace) primitives.lastElement()).getOldNode().prevUnSelectedNode();
-				if (fallbackNode == parent) {
-					fallbackNode = parent.nextSibling();
-				}
-			}
+			Node oldNode = ((PrimitiveUndoableReplace) primitives.lastElement()).getOldNode();
+			fallbackNode = oldNode.nextUnSelectedNode();
 			
 			if (fallbackNode.isRoot()) {
-				fallbackNode = ((PrimitiveUndoableReplace) primitives.lastElement()).getOldNode().prevUnSelectedNode();
+				fallbackNode = oldNode.prevUnSelectedNode();
 				if (fallbackNode.isRoot()) {
 					allWillBeDeleted = true;
 				}
 			}
 		} else {
-			fallbackNode = ((PrimitiveUndoableReplace) primitives.firstElement()).getOldNode().prev();
-
-			if (fallbackNode == parent) {
-				fallbackNode = ((PrimitiveUndoableReplace) primitives.firstElement()).getOldNode().nextUnSelectedNode();
-				if ((fallbackNode == parent.nextSibling()) || fallbackNode.isRoot()) {
-					fallbackNode = parent;
-				}
-			}
+			Node oldNode = ((PrimitiveUndoableReplace) primitives.firstElement()).getOldNode();
+			fallbackNode = oldNode.prev();
 			
 			if (fallbackNode.isRoot()) {
-				fallbackNode = ((PrimitiveUndoableReplace) primitives.firstElement()).getOldNode().nextUnSelectedNode();
+				fallbackNode = oldNode.nextUnSelectedNode();
 				if (fallbackNode.isRoot()) {
 					allWillBeDeleted = true;
 				}
 			}
 		}
-		
-		
+
 		tree.setSelectedNodesParent(parent);
 		
 		// Replace Everything
@@ -158,7 +130,6 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 		}
 		
 		if (tree.selectedNodes.size() <= 0) {
-			// Find fallback node for drawing and editing
 			if (fallbackNode.isRoot()) {
 				if (allWillBeDeleted) {
 					tree.setSelectedNodesParent(tree.getRootNode());
@@ -173,20 +144,7 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 			}
 		}
 
-		Node firstNewSelectedNode = tree.getYoungestInSelection();
-		int ioFirstNewSelectedNode = tree.visibleNodes.indexOf(firstNewSelectedNode);
-		Node lastNewSelectedNode = tree.getOldestInSelection();
-		int ioLastNewSelectedNode = tree.visibleNodes.indexOf(lastNewSelectedNode);
-
-		Node newSelectedNode = null;
-		if (ioFirstNewSelectedNode == 0) {
-			layout.setNodeToDrawFrom(firstNewSelectedNode, ioFirstNewSelectedNode);
-			newSelectedNode = firstNewSelectedNode;
-		} else if (ioLastNewSelectedNode == (tree.visibleNodes.size() - 1)) {
-			newSelectedNode = lastNewSelectedNode;
-		} else {
-			newSelectedNode = firstNewSelectedNode;
-		}
+		Node newSelectedNode = determineNewSelectedNode(tree);
 
 		//System.out.println("node: " + newSelectedNode.getValue());
 		tree.setEditingNode(newSelectedNode);
@@ -195,6 +153,28 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 		tree.setComponentFocus(OutlineLayoutManager.ICON);
 
 		layout.draw(newSelectedNode, OutlineLayoutManager.ICON);
+	}
+	
+	private Node determineNewSelectedNode(TreeContext tree) {
+		Node newSelectedNode = null;
+
+		// Find the range
+		Node firstNewSelectedNode = tree.getYoungestInSelection();
+		int ioFirstNewSelectedNode = tree.visibleNodes.indexOf(firstNewSelectedNode);
+		Node lastNewSelectedNode = tree.getOldestInSelection();
+		int ioLastNewSelectedNode = tree.visibleNodes.indexOf(lastNewSelectedNode);
+
+		// Handle Boundary conditions for the selection.
+		if (ioFirstNewSelectedNode == 0) {
+			tree.doc.panel.layout.setNodeToDrawFrom(firstNewSelectedNode, ioFirstNewSelectedNode);
+			newSelectedNode = firstNewSelectedNode;
+		} else if (ioLastNewSelectedNode == (tree.visibleNodes.size() - 1)) {
+			newSelectedNode = lastNewSelectedNode;
+		} else {
+			newSelectedNode = firstNewSelectedNode;
+		}
+		
+		return newSelectedNode;
 	}
 	
 	public int getType() {return Undoable.COMPOUND_REPLACE_TYPE;}

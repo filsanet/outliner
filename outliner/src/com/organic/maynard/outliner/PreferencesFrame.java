@@ -35,10 +35,10 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 
 	// Constants
 	static final int MIN_WIDTH = 450;
-	static final int MIN_HEIGHT = 425;
+	static final int MIN_HEIGHT = 430;
  
  	static final int INITIAL_WIDTH = 450;
-	static final int INITIAL_HEIGHT = 425;
+	static final int INITIAL_HEIGHT = 430;
 
 	public static final String A_TITLE = "title";
 
@@ -107,9 +107,12 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 
 		// Put it all together
 		JScrollPane jsp = new JScrollPane(tree);
+		jsp.setMinimumSize(new Dimension(100,0));
 		JScrollPane jsp2 = new JScrollPane(RIGHT_PANEL);
 
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,true,jsp,jsp2);
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, jsp, jsp2);
+		splitPane.setResizeWeight(0.0);
+		
 		getContentPane().add(BOTTOM_PANEL, BorderLayout.SOUTH);
 		getContentPane().add(splitPane, BorderLayout.CENTER);		
 	}

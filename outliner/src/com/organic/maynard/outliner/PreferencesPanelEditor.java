@@ -116,6 +116,7 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 
 				SHOW_ATTRIBUTES_CHECKBOX.setSelected(Preferences.getPreferenceBoolean(Preferences.SHOW_ATTRIBUTES).def);
 				Preferences.getPreferenceBoolean(Preferences.SHOW_ATTRIBUTES).restoreTemporaryToDefault();
+
 			} catch (Exception ex) {
 				System.out.println("Exception: " + ex);
 			}

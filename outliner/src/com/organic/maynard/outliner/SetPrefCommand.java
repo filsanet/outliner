@@ -82,7 +82,9 @@ public class SetPrefCommand extends Command {
 				pref.setCur((String) signature.elementAt(2));
 				pref.restoreTemporaryToCurrent();
 			} catch (ArrayIndexOutOfBoundsException e) {
-				System.out.println("Error Setting int Preference, ArrayIndexOutOfBoundsException: " + e.getMessage());
+				System.out.println("Error Setting Preference, ArrayIndexOutOfBoundsException: " + e.getMessage());
+			} catch (NullPointerException e) {
+				System.out.println("Error Setting Preference, NullPointerException: " + e.getMessage());
 			}
 		}
 	}
