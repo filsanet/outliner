@@ -19,28 +19,25 @@
 package com.organic.maynard.outliner;
 
 import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
 
-public class URLEncodeMacroConfig extends JPanel implements MacroConfig {
-	
-	public static final String NAME = "Macro Name";
-	
-	protected JLabel nameLabel = new JLabel(NAME);
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
-	protected JTextField nameField = new JTextField();
+public class URLEncodeMacroConfig extends MacroConfigImpl {
+		
+	private JLabel nameLabel = new JLabel(NAME);
+	private JTextField nameField = new JTextField();
+	private ButtonGroup buttonGroup = new ButtonGroup();
+	private JRadioButton encodeRadio = new JRadioButton("Encode");
+	private JRadioButton decodeRadio = new JRadioButton("Decode");
 	
-	protected ButtonGroup buttonGroup = new ButtonGroup();
-	protected JRadioButton encodeRadio = new JRadioButton("Encode");
-	protected JRadioButton decodeRadio = new JRadioButton("Decode");
 
 	// The Constructor
 	public URLEncodeMacroConfig() {
+		super();
 		
 		// Create the layout
 		this.setLayout(new BorderLayout());
@@ -66,21 +63,22 @@ public class URLEncodeMacroConfig extends JPanel implements MacroConfig {
 
 	
 	// MacroConfig Interface
-	protected URLEncodeMacro macro = null;
-	
-	public void init(Macro macro) {
-		this.macro = (URLEncodeMacro) macro;
-		if (this.macro.isEncoding()) {
+	public void init(Macro urlEncodeMacro) {
+		super.init(urlEncodeMacro);
+		
+		URLEncodeMacro macro = (URLEncodeMacro) getMacro();
+
+		if (macro.isEncoding()) {
 			encodeRadio.setSelected(true);
 		} else {
 			decodeRadio.setSelected(true);
 		}
 		nameField.setText(macro.getName());
 	}
-
-	public Macro getMacro() {return this.macro;}
 	
 	public boolean create() {
+		URLEncodeMacro macro = (URLEncodeMacro) getMacro();
+
 		String name = nameField.getText();
 
 		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name)) {
@@ -98,6 +96,8 @@ public class URLEncodeMacroConfig extends JPanel implements MacroConfig {
 	}
 	
 	public boolean update() {
+		URLEncodeMacro macro = (URLEncodeMacro) getMacro();
+
 		String name = nameField.getText();
 
 		if (MacroPopupMenu.validateExistence(name)) {
@@ -121,15 +121,5 @@ public class URLEncodeMacroConfig extends JPanel implements MacroConfig {
 			}
 		}
 		return false;
-	}
-	
-	public boolean cancel() {
-		// Should Always return true.
-		return true;
-	}
-	
-	public boolean delete() {
-		// Should Always return true.
-		return true;
 	}
 }

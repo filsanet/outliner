@@ -37,7 +37,7 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 	private static final int INITIAL_WIDTH = 350;
 	private static final int INITIAL_HEIGHT = 300;
  	private static final int MINIMUM_WIDTH = 350;
-	private static final int MINIMUM_HEIGHT = 200;
+	private static final int MINIMUM_HEIGHT = 300;
 	
 	private static final String CREATE = "Create";
 	private static final String UPDATE = "Update";
@@ -48,8 +48,6 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 	private Box updateButtonBox = Box.createHorizontalBox();
 
 	private JLabel macroTypeName = new JLabel();
-	
-	private JScrollPane scrollPane = new JScrollPane();
 	
 	private JButton createButton = new JButton(CREATE);
 	private JButton updateButton = new JButton(UPDATE);
@@ -111,11 +109,16 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 
 		// Put it all together
 		this.getContentPane().add(macroTypeName,BorderLayout.NORTH);
-		this.getContentPane().add(scrollPane,BorderLayout.CENTER);
 	}
 
 
 	public void setMacroConfigAndShow(MacroConfig macroConfig, int buttonMode) {
+		// Swap in the new MacroConfig Panel
+		if (this.macroConfig != null) {
+			this.remove((Component) this.macroConfig);
+		}
+		this.getContentPane().add((Component) macroConfig,BorderLayout.CENTER);
+
 		this.macroConfig = macroConfig;
 
 		if (buttonMode == BUTTON_MODE_CREATE) {
@@ -127,9 +130,6 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 			this.getContentPane().add(updateButtonBox,BorderLayout.SOUTH);
 			setTitle(BUTTON_MODE_UPDATE_TITLE);
 		}
-						
-		// Swap in the new MacroConfig Panel
-		scrollPane.setViewportView((JComponent) macroConfig);
 		
 		// Update the macroTypeName text with the name of the class of the macroConfig.
 		this.macroTypeName.setText("Macro Type: " + Outliner.macroManager.getMacroTypeNameFromClassName(macroConfig.getMacro().getClass().getName()));

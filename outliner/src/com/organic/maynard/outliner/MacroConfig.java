@@ -18,10 +18,13 @@
  
 package com.organic.maynard.outliner;
 
-import javax.swing.*;
-import java.io.*;
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
-public interface MacroConfig extends Serializable {
+public interface MacroConfig extends java.io.Serializable {
+
 	public boolean create();
 	public boolean update();
 	public boolean cancel();

@@ -19,27 +19,27 @@
 package com.organic.maynard.outliner;
 
 import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
 
-public class EnhancedTextMacroConfig extends JPanel implements MacroConfig {
-	
-	public static final String NAME = "Macro Name";
-	public static final String PATTERN = "Pattern";
-	
-	protected JLabel nameLabel = new JLabel(NAME);
-	protected JLabel patternLabel = new JLabel(PATTERN);
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
-	protected JTextField nameField = new JTextField();
-	protected JTextArea patternTextArea = new JTextArea();
+public class EnhancedTextMacroConfig extends MacroConfigImpl {
+	
+	private static final String PATTERN = "Pattern";
+	
+	private JLabel nameLabel = new JLabel(NAME);
+	private JLabel patternLabel = new JLabel(PATTERN);
+
+	private JTextField nameField = new JTextField();
+	private JTextArea patternTextArea = new JTextArea();
+
 
 	// The Constructor
 	public EnhancedTextMacroConfig() {
+		super();
 		
 		// Create the layout
 		this.setLayout(new BorderLayout());
@@ -65,17 +65,18 @@ public class EnhancedTextMacroConfig extends JPanel implements MacroConfig {
 
 	
 	// MacroConfig Interface
-	protected EnhancedTextMacro textMacro = null;
-	
 	public void init(Macro macro) {
-		this.textMacro = (EnhancedTextMacro) macro;
+		super.init(macro);
+		
+		EnhancedTextMacro textMacro = (EnhancedTextMacro) getMacro();
+
 		patternTextArea.setText(textMacro.getReplacementPattern());
 		nameField.setText(textMacro.getName());
 	}
-
-	public Macro getMacro() {return this.textMacro;}
 	
 	public boolean create() {
+		EnhancedTextMacro textMacro = (EnhancedTextMacro) getMacro();
+
 		String name = nameField.getText();
 
 		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name)) {
@@ -88,6 +89,8 @@ public class EnhancedTextMacroConfig extends JPanel implements MacroConfig {
 	}
 	
 	public boolean update() {
+		EnhancedTextMacro textMacro = (EnhancedTextMacro) getMacro();
+
 		String name = nameField.getText();
 
 		if (MacroPopupMenu.validateExistence(name)) {
@@ -101,15 +104,5 @@ public class EnhancedTextMacroConfig extends JPanel implements MacroConfig {
 			}
 		}
 		return false;
-	}
-	
-	public boolean cancel() {
-		// Should Always return true.
-		return true;
-	}
-	
-	public boolean delete() {
-		// Should Always return true.
-		return true;
 	}
 }

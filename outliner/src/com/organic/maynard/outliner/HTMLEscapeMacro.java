@@ -18,33 +18,25 @@
  
 package com.organic.maynard.outliner;
 
-import javax.swing.*;
 import com.organic.maynard.util.string.*;
-import java.io.*;
-import java.net.*;
-import org.xml.sax.*;
-import java.util.*;
-import com.organic.maynard.io.FileTools;
 import com.organic.maynard.xml.XMLTools;
 
-public class HTMLEscapeMacro extends HandlerBase implements Macro {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public class HTMLEscapeMacro extends MacroImpl {
 
 	// Constants
-	public static final String E_ESCAPE = "escape";
+	private static final String E_ESCAPE = "escape";
 	
 	// Instance Fields
-	private String name = null;
-	private boolean undoable = true;
-	private int undoableType = Macro.SIMPLE_UNDOABLE;
-		
-	protected boolean escape = true;
+	private boolean escape = true;
 
 	// Class Fields
-	public static HTMLEscapeMacroConfig macroConfig = new HTMLEscapeMacroConfig();
-	private static Parser parser = new com.jclark.xml.sax.Driver();
-	private static boolean errorOccurred = false;
-	private static ArrayList elementStack = new ArrayList();
-
+	private static HTMLEscapeMacroConfig macroConfig = new HTMLEscapeMacroConfig();
+	
 	
 	// The Constructors
 	public HTMLEscapeMacro() {
@@ -52,9 +44,7 @@ public class HTMLEscapeMacro extends HandlerBase implements Macro {
 	}
 
 	public HTMLEscapeMacro(String name) {
-		this.name = name;
-		parser.setDocumentHandler(this);
-		parser.setErrorHandler(this);	
+		super(name, true, Macro.SIMPLE_UNDOABLE);
 	}
 
 
@@ -64,17 +54,6 @@ public class HTMLEscapeMacro extends HandlerBase implements Macro {
 
 
 	// Macro Interface	
-	public String getName() {return this.name;}
-	public void setName(String name) {this.name = name;}
-
-	public String getFileName() {return getName() + ".txt";}
-	
-	public boolean isUndoable() {return undoable;}
-	protected void setUndoable(boolean undoable) {this.undoable = undoable;}
-
-	public int getUndoableType() {return undoableType;}
-	protected void setUndoableType(int undoableType) {this.undoableType = undoableType;}
-	
 	public MacroConfig getConfigurator() {return this.macroConfig;}
 	public void setConfigurator(MacroConfig macroConfig) {}
 		
@@ -110,7 +89,7 @@ public class HTMLEscapeMacro extends HandlerBase implements Macro {
 		return nodeRangePair;
 	}
 	
-	protected String transform(String text) {
+	private String transform(String text) {
 		if (isEscaping()) {
 			return escape(text);
 		} else {
@@ -122,7 +101,7 @@ public class HTMLEscapeMacro extends HandlerBase implements Macro {
 		}
 	}
 	
-	protected String escape(String text) {
+	private String escape(String text) {
 		text = Replace.replace(text,"&","&amp;");
 		text = Replace.replace(text,"<","&lt;");
 		text = Replace.replace(text,">","&gt;");
@@ -130,81 +109,26 @@ public class HTMLEscapeMacro extends HandlerBase implements Macro {
 		return text;
 	}
 
-	protected String unescape(String text) {
+	private String unescape(String text) {
 		text = Replace.replace(text,"&amp;","&");
 		text = Replace.replace(text,"&lt;","<");
 		text = Replace.replace(text,"&gt;",">");
 		text = Replace.replace(text,"&quot;","\"");
 		return text;
 	}
+
 	
-	public boolean init(File file) {
-		try {
-			FileInputStream fileInputStream = new FileInputStream(file);
-			parser.parse(new InputSource(fileInputStream));
-			if (errorOccurred) {
-				return false;
-			}
-			return true;
-		} catch (SAXException e) {
-			e.printStackTrace();
-			return false;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}	
-	}
-	
-	public boolean save(File file) {
-		StringBuffer buf = new StringBuffer();
+	// Saving the Macro
+	protected void prepareFile (StringBuffer buf) {
 		buf.append(XMLTools.getXmlDeclaration(null) + "\n");
 		buf.append(XMLTools.getElementStart(E_ESCAPE) + isEscaping() + XMLTools.getElementEnd(E_ESCAPE)+ "\n");
-		
-		FileTools.dumpStringToFile(file, buf.toString());
-		
-		return true;
 	}
 
 
 	// Sax DocumentHandler Implementation
-	public void startDocument () {}
-
-	public void endDocument () {}
-
-	public void startElement (String name, AttributeList atts) {
-		elementStack.add(name);
-	}
-	
-	public void endElement (String name) throws SAXException {
-		elementStack.remove(elementStack.size() - 1);
-	}
-	
-	public void characters(char ch[], int start, int length) throws SAXException {
-		String text = new String(ch, start, length);
-		String elementName = (String) elementStack.get(elementStack.size() - 1);
-		
+	protected void handleCharacters(String elementName, String text) {
 		if (elementName.equals(E_ESCAPE)) {
 			setEscaping(Boolean.valueOf(text).booleanValue());
 		}
-	}
-	
-	
-	// ErrorHandler Interface
-	public void error(SAXParseException e) {
-		System.out.println("SAXParserException Error: " + e);
-		this.errorOccurred = true;
-	}
-
-	public void fatalError(SAXParseException e) {
-		System.out.println("SAXParserException Fatal Error: " + e);
-		this.errorOccurred = true;
-	}
-
-	public void warning(SAXParseException e) {
-		System.out.println("SAXParserException Warning: " + e);
-		this.errorOccurred = true;
 	}
 }

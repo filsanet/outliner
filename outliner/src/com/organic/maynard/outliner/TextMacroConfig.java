@@ -20,28 +20,28 @@ package com.organic.maynard.outliner;
 
 import java.awt.*;
 import java.awt.event.*;
-
-import java.io.*;
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
-
 import com.organic.maynard.util.string.*;
 
-public class TextMacroConfig extends JPanel implements MacroConfig, KeyListener {
-	
-	public static final String NAME = "Macro Name";
-	public static final String PATTERN = "Pattern";
-	
-	protected JLabel nameLabel = new JLabel(NAME);
-	protected JLabel patternLabel = new JLabel(PATTERN);
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
-	protected JTextField nameField = new JTextField();
-	protected JTextArea patternTextArea = new JTextArea();
+public class TextMacroConfig extends MacroConfigImpl implements KeyListener {
+	
+	private static final String PATTERN = "Pattern";
+	
+	private JLabel nameLabel = new JLabel(NAME);
+	private JLabel patternLabel = new JLabel(PATTERN);
+
+	private JTextField nameField = new JTextField();
+	private JTextArea patternTextArea = new JTextArea();
+
 
 	// The Constructor
 	public TextMacroConfig() {
+		super();
 		
 		// Create the layout
 		this.setLayout(new BorderLayout());
@@ -68,17 +68,18 @@ public class TextMacroConfig extends JPanel implements MacroConfig, KeyListener 
 
 	
 	// MacroConfig Interface
-	protected TextMacro textMacro = null;
-	
 	public void init(Macro macro) {
-		this.textMacro = (TextMacro) macro;
+		super.init(macro);
+		
+		TextMacro textMacro = (TextMacro) getMacro();
+		
 		patternTextArea.setText(textMacro.getReplacementPattern());
 		nameField.setText(textMacro.getName());
 	}
-
-	public Macro getMacro() {return this.textMacro;}
 	
 	public boolean create() {
+		TextMacro textMacro = (TextMacro) getMacro();
+		
 		String name = nameField.getText();
 
 		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name)) {
@@ -91,6 +92,8 @@ public class TextMacroConfig extends JPanel implements MacroConfig, KeyListener 
 	}
 	
 	public boolean update() {
+		TextMacro textMacro = (TextMacro) getMacro();
+		
 		String name = nameField.getText();
 
 		if (MacroPopupMenu.validateExistence(name)) {
@@ -105,16 +108,7 @@ public class TextMacroConfig extends JPanel implements MacroConfig, KeyListener 
 		}
 		return false;
 	}
-	
-	public boolean cancel() {
-		// Should Always return true.
-		return true;
-	}
-	
-	public boolean delete() {
-		// Should Always return true.
-		return true;
-	}
+
 	
 	// KeyListener Interface
 	public void keyPressed(KeyEvent e) {

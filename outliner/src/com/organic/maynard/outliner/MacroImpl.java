@@ -18,36 +18,128 @@
  
 package com.organic.maynard.outliner;
 
-import java.awt.*;
 import javax.swing.*;
+import com.organic.maynard.util.string.*;
 import java.io.*;
+import org.xml.sax.*;
+import java.util.*;
+import com.organic.maynard.io.FileTools;
+import com.organic.maynard.xml.XMLTools;
 
-public abstract class MacroImpl implements Macro {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public abstract class MacroImpl extends HandlerBase implements Macro {
+
+    private static Parser parser = new com.jclark.xml.sax.Driver();
+	protected static ArrayList elementStack = new ArrayList();
 	
 	// Instance Fields		
 	private String name = null;
 	private boolean undoable = true;
 	private int undoableType = Macro.NOT_UNDOABLE;
-	private MacroConfig configurator = null;
-	
+
+
 	// The Constructors	
-	public MacroImpl(String name) {
+	public MacroImpl(String name, boolean undoable, int undoableType) {
 		this.name = name;
+		this.undoable = undoable;
+		this.undoableType = undoableType;
+
+		parser.setDocumentHandler(this);
+		parser.setErrorHandler(this);	
 	}
 
+
+	// Macro Interface
 	public String getName() {return this.name;}
 	public void setName(String name) {this.name = name;}
+	
+	public String getFileName() {return getName() + ".txt";}
 	
 	public boolean isUndoable() {return undoable;}
 	protected void setUndoable(boolean undoable) {this.undoable = undoable;}
 
 	public int getUndoableType() {return undoableType;}
 	protected void setUndoableType(int undoableType) {this.undoableType = undoableType;}
-	
-	public MacroConfig getConfigurator() {return this.configurator;}
-	public void setConfigurator(MacroConfig configurator) {this.configurator = configurator;}
 
 	public NodeRangePair process(NodeRangePair nodeRangePair) {
 		return nodeRangePair;
+	}
+
+	public boolean init(File file) {
+		try {
+			errorOccurred = false;
+			FileInputStream fileInputStream = new FileInputStream(file);
+			parser.parse(new InputSource(fileInputStream));
+			if (errorOccurred) {
+				return false;
+			}
+			return true;
+		} catch (SAXException e) {
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}	
+	}
+
+	public boolean save(File file) {
+		StringBuffer buf = new StringBuffer();
+		
+		prepareFile(buf);
+		
+		FileTools.dumpStringToFile(file, buf.toString());
+		
+		return true;
+	}
+	
+	protected abstract void prepareFile(StringBuffer buf);
+
+	// Sax DocumentHandler Implementation
+	public void startDocument () {}
+
+	public void endDocument () {}
+
+	public void startElement (String name, AttributeList atts) {
+		elementStack.add(name);
+	}
+	
+	public void endElement (String name) throws SAXException {
+		elementStack.remove(elementStack.size() - 1);
+	}
+	
+	public void characters(char ch[], int start, int length) throws SAXException {
+		String text = new String(ch, start, length);
+		String elementName = (String) elementStack.get(elementStack.size() - 1);
+		
+		handleCharacters(elementName, text);
+	}
+	
+	protected abstract void handleCharacters(String elementName, String text);
+
+
+	// ErrorHandler Interface
+	protected static boolean errorOccurred = false;
+
+	public void error(SAXParseException e) {
+		System.out.println("SAXParserException Error: " + e);
+		this.errorOccurred = true;
+	}
+
+	public void fatalError(SAXParseException e) {
+		System.out.println("SAXParserException Fatal Error: " + e);
+		this.errorOccurred = true;
+	}
+
+	public void warning(SAXParseException e) {
+		System.out.println("SAXParserException Warning: " + e);
+		this.errorOccurred = true;
 	}
 }

@@ -18,8 +18,12 @@
  
 package com.organic.maynard.outliner;
 
-import javax.swing.*;
 import java.io.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
 public interface Macro extends Serializable {
 	// Undoable Types

@@ -19,28 +19,25 @@
 package com.organic.maynard.outliner;
 
 import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
 
-public class HTMLEscapeMacroConfig extends JPanel implements MacroConfig {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
+public class HTMLEscapeMacroConfig extends MacroConfigImpl {
 	
-	public static final String NAME = "Macro Name";
-	
-	protected JLabel nameLabel = new JLabel(NAME);
+	private JLabel nameLabel = new JLabel(NAME);
+	private JTextField nameField = new JTextField();
+	private ButtonGroup buttonGroup = new ButtonGroup();
+	private JRadioButton escapeRadio = new JRadioButton("Escape");
+	private JRadioButton unescapeRadio = new JRadioButton("Un-Escape");
 
-	protected JTextField nameField = new JTextField();
-	
-	protected ButtonGroup buttonGroup = new ButtonGroup();
-	protected JRadioButton escapeRadio = new JRadioButton("Escape");
-	protected JRadioButton unescapeRadio = new JRadioButton("Un-Escape");
 
 	// The Constructor
 	public HTMLEscapeMacroConfig() {
+		super();
 		
 		// Create the layout
 		this.setLayout(new BorderLayout());
@@ -66,21 +63,22 @@ public class HTMLEscapeMacroConfig extends JPanel implements MacroConfig {
 
 	
 	// MacroConfig Interface
-	protected HTMLEscapeMacro macro = null;
-	
-	public void init(Macro macro) {
-		this.macro = (HTMLEscapeMacro) macro;
-		if (this.macro.isEscaping()) {
+	public void init(Macro htmlEscapeMacro) {
+		super.init(htmlEscapeMacro);
+		
+		HTMLEscapeMacro macro = (HTMLEscapeMacro) getMacro();
+
+		if (macro.isEscaping()) {
 			escapeRadio.setSelected(true);
 		} else {
 			unescapeRadio.setSelected(true);
 		}
 		nameField.setText(macro.getName());
 	}
-
-	public Macro getMacro() {return this.macro;}
 	
 	public boolean create() {
+		HTMLEscapeMacro macro = (HTMLEscapeMacro) getMacro();
+
 		String name = nameField.getText();
 
 		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name)) {
@@ -98,6 +96,8 @@ public class HTMLEscapeMacroConfig extends JPanel implements MacroConfig {
 	}
 	
 	public boolean update() {
+		HTMLEscapeMacro macro = (HTMLEscapeMacro) getMacro();
+
 		String name = nameField.getText();
 
 		if (MacroPopupMenu.validateExistence(name)) {
@@ -121,15 +121,5 @@ public class HTMLEscapeMacroConfig extends JPanel implements MacroConfig {
 			}
 		}
 		return false;
-	}
-	
-	public boolean cancel() {
-		// Should Always return true.
-		return true;
-	}
-	
-	public boolean delete() {
-		// Should Always return true.
-		return true;
 	}
 }

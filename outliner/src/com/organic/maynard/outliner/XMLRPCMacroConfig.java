@@ -19,17 +19,15 @@
 package com.organic.maynard.outliner;
 
 import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
 
-public class XMLRPCMacroConfig extends JPanel implements MacroConfig {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public class XMLRPCMacroConfig extends MacroConfigImpl {
 	
-	private static final String NAME = "Macro Name";
 	private static final String URL = "URL";
 	private static final String DO_REPLACEMENT = "Do Replacement";
 	private static final String CALL = "XML-RPC Call";
@@ -47,8 +45,10 @@ public class XMLRPCMacroConfig extends JPanel implements MacroConfig {
 	private JRadioButton yesRadio = new JRadioButton("Yes");
 	private JRadioButton noRadio = new JRadioButton("No");
 
+
 	// The Constructor
 	public XMLRPCMacroConfig() {
+		super();
 		
 		// Create the layout
 		this.setLayout(new BorderLayout());
@@ -99,23 +99,24 @@ public class XMLRPCMacroConfig extends JPanel implements MacroConfig {
 
 	
 	// MacroConfig Interface
-	private XMLRPCMacro macro = null;
-	
 	public void init(Macro xmlrpcMacro) {
-		this.macro = (XMLRPCMacro) xmlrpcMacro;
+		super.init(xmlrpcMacro);
+		
+		XMLRPCMacro macro = (XMLRPCMacro) getMacro();
+
 		nameField.setText(macro.getName());
 		urlField.setText(macro.getURL());
 		callTextArea.setText(macro.getCall());
-		if (this.macro.isReplacing()) {
+		if (macro.isReplacing()) {
 			yesRadio.setSelected(true);
 		} else {
 			noRadio.setSelected(true);
 		}
 	}
-
-	public Macro getMacro() {return this.macro;}
 	
 	public boolean create() {
+		XMLRPCMacro macro = (XMLRPCMacro) getMacro();
+
 		String name = nameField.getText();
 		String url = urlField.getText();
 		
@@ -141,6 +142,8 @@ public class XMLRPCMacroConfig extends JPanel implements MacroConfig {
 	}
 	
 	public boolean update() {
+		XMLRPCMacro macro = (XMLRPCMacro) getMacro();
+
 		String name = nameField.getText();
 		String url = urlField.getText();
 		
@@ -173,15 +176,5 @@ public class XMLRPCMacroConfig extends JPanel implements MacroConfig {
 			}
 		}
 		return false;
-	}
-	
-	public boolean cancel() {
-		// Should Always return true.
-		return true;
-	}
-	
-	public boolean delete() {
-		// Should Always return true.
-		return true;
 	}
 }

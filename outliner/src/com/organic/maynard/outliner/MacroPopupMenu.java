@@ -136,8 +136,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 
 	public boolean isNameUnique(String name) {
 		for (int i = 0; i < macros.size(); i++) {
-			Macro macro = getMacro(i);
-			if (name.equals(macro.getName())) {
+			if (name.equals(getMacro(i).getName())) {
 				return false;
 			}
 		}
@@ -174,7 +173,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 	
 	public Macro getMacro(String name) {
 		for (int i = 0; i < macros.size(); i++) {
-			Macro macro = (Macro) macros.get(i);
+			Macro macro = getMacro(i);
 			if (macro.getName().equals(name)) {
 				return macro;
 			}
@@ -188,8 +187,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		startWaitCursor();
 
 		// Get the Macro
-		String macroKey = e.getActionCommand();
-		Macro macro = getMacro(macroKey);
+		Macro macro = getMacro(e.getActionCommand());
 
 		// Shorthand
 		OutlinerDocument document = Outliner.getMostRecentDocumentTouched();
@@ -206,17 +204,17 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		}
 		
 		if (macro.getUndoableType() == Macro.SIMPLE_UNDOABLE) {
-			doSimpleUndoableMacro(document,tree,macro);
+			doSimpleUndoableMacro(document, tree, macro);
 		} else if (macro.getUndoableType() == Macro.COMPLEX_UNDOABLE) {
-			doComplexUndoableMacro(document,tree,macro);
+			doComplexUndoableMacro(document, tree, macro);
 		} else {
 			// Need code for when it is not undoable.
 		}
 		
-		endWaitCursor();
-		
 		// Redraw
-		tree.doc.panel.layout.redraw();		
+		tree.doc.panel.layout.redraw();
+		
+		endWaitCursor();
 	}
 	
 	private void doSimpleUndoableMacro(OutlinerDocument document, TreeContext tree, Macro macro) {
@@ -236,7 +234,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 			int startIndex = Math.min(cursor,mark);
 			int endIndex = Math.max(cursor,mark);
 			
-			NodeRangePair nodeRangePair = new NodeRangePair(node,startIndex,endIndex);
+			NodeRangePair nodeRangePair = new NodeRangePair(node, startIndex, endIndex);
 			
 			// Process the macro and create undoable
 			String oldText = nodeRangePair.node.getValue();
@@ -244,7 +242,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 			String newText = nodeRangePair.node.getValue();
 			
 			if (macro.isUndoable()) {
-				undoable.addPrimitive(new PrimitiveUndoableEdit(nodeRangePair.node,oldText,newText));
+				undoable.addPrimitive(new PrimitiveUndoableEdit(nodeRangePair.node,oldText, newText));
 			}
 			
 			tree.setCursorPosition(nodeRangePair.endIndex);
@@ -267,7 +265,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 				String newText = nodeRangePair.node.getValue();
 				
 				if (macro.isUndoable()) {
-					undoable.addPrimitive(new PrimitiveUndoableEdit(nodeRangePair.node,oldText,newText));
+					undoable.addPrimitive(new PrimitiveUndoableEdit(nodeRangePair.node, oldText, newText));
 				}				
 			}
 		}

@@ -19,27 +19,27 @@
 package com.organic.maynard.outliner;
 
 import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
 
-public class BSHMacroConfig extends JPanel implements MacroConfig {
-	
-	public static final String NAME = "Macro Name";
-	public static final String PATTERN = "BeanShell Code";
-	
-	protected JLabel nameLabel = new JLabel(NAME);
-	protected JLabel patternLabel = new JLabel(PATTERN);
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
-	protected JTextField nameField = new JTextField();
-	protected JTextArea patternTextArea = new JTextArea();
+public class BSHMacroConfig extends MacroConfigImpl {
+	
+	private static final String PATTERN = "BeanShell Code";
+	
+	private JLabel nameLabel = new JLabel(NAME);
+	private JLabel patternLabel = new JLabel(PATTERN);
+
+	private JTextField nameField = new JTextField();
+	private JTextArea patternTextArea = new JTextArea();
+
 
 	// The Constructor
 	public BSHMacroConfig() {
+		super();
 		
 		// Create the layout
 		this.setLayout(new BorderLayout());
@@ -65,17 +65,18 @@ public class BSHMacroConfig extends JPanel implements MacroConfig {
 
 	
 	// MacroConfig Interface
-	protected BSHMacro bshmacro = null;
-	
 	public void init(Macro macro) {
-		this.bshmacro = (BSHMacro) macro;
+		super.init(macro);
+		
+		BSHMacro bshmacro = (BSHMacro) getMacro();
+
 		patternTextArea.setText(bshmacro.getScript());
 		nameField.setText(bshmacro.getName());
 	}
-
-	public Macro getMacro() {return this.bshmacro;}
 	
 	public boolean create() {
+		BSHMacro bshmacro = (BSHMacro) getMacro();
+
 		String name = nameField.getText();
 
 		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name)) {
@@ -88,6 +89,8 @@ public class BSHMacroConfig extends JPanel implements MacroConfig {
 	}
 	
 	public boolean update() {
+		BSHMacro bshmacro = (BSHMacro) getMacro();
+
 		String name = nameField.getText();
 
 		if (MacroPopupMenu.validateExistence(name)) {
@@ -101,15 +104,5 @@ public class BSHMacroConfig extends JPanel implements MacroConfig {
 			}
 		}
 		return false;
-	}
-	
-	public boolean cancel() {
-		// Should Always return true.
-		return true;
-	}
-	
-	public boolean delete() {
-		// Should Always return true.
-		return true;
 	}
 }

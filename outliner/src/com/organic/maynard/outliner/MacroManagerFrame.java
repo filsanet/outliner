@@ -104,6 +104,7 @@ public class MacroManagerFrame extends AbstractGUITreeJDialog implements ActionL
 		}
 	}
 
+
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		// File Menu

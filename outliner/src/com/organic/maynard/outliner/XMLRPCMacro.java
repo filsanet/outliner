@@ -18,17 +18,17 @@
  
 package com.organic.maynard.outliner;
 
-import javax.swing.*;
 import com.organic.maynard.util.string.*;
-import java.io.*;
-import java.net.*;
-import org.xml.sax.*;
 import java.util.*;
 import helma.xmlrpc.*;
-import com.organic.maynard.io.FileTools;
 import com.organic.maynard.xml.XMLTools;
 
-public class XMLRPCMacro extends HandlerBase implements Macro {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public class XMLRPCMacro extends MacroImpl {
 
 	// Constants
 	private static final String E_XMLRPC = "xmlrpc";	
@@ -37,19 +37,12 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 	private static final String E_REPLACE = "replace";
 	
 	// Instance Fields
-	private String name = null;
-	private boolean undoable = true;
-	private int undoableType = Macro.COMPLEX_UNDOABLE;
-		
 	private boolean replace = false;
 	private String url = "http://127.0.0.1/RPC2";
 	private String xmlrpcCall = "";
 
 	// Class Fields
-	public static XMLRPCMacroConfig macroConfig = new XMLRPCMacroConfig();
-	private static Parser parser = new com.jclark.xml.sax.Driver();
-	private static boolean errorOccurred = false;
-	private static ArrayList elementStack = new ArrayList();
+	private static XMLRPCMacroConfig macroConfig = new XMLRPCMacroConfig();
 
 	
 	// The Constructors
@@ -58,9 +51,7 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 	}
 
 	public XMLRPCMacro(String name) {
-		this.name = name;
-		parser.setDocumentHandler(this);
-		parser.setErrorHandler(this);	
+		super(name, true, Macro.COMPLEX_UNDOABLE);
 	}
 
 
@@ -76,17 +67,6 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 
 
 	// Macro Interface	
-	public String getName() {return this.name;}
-	public void setName(String name) {this.name = name;}
-
-	public String getFileName() {return getName() + ".txt";}
-	
-	public boolean isUndoable() {return undoable;}
-	protected void setUndoable(boolean undoable) {this.undoable = undoable;}
-
-	public int getUndoableType() {return undoableType;}
-	protected void setUndoableType(int undoableType) {this.undoableType = undoableType;}
-	
 	public MacroConfig getConfigurator() {return this.macroConfig;}
 	public void setConfigurator(MacroConfig macroConfig) {}
 		
@@ -159,43 +139,6 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 			return null;
 		}
 	}
-	
-	public boolean init(File file) {
-		try {
-			FileInputStream fileInputStream = new FileInputStream(file);
-			parser.parse(new InputSource(fileInputStream));
-			if (errorOccurred) {
-				return false;
-			}
-			return true;
-		} catch (SAXException e) {
-			e.printStackTrace();
-			return false;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}	
-	}
-	
-	public boolean save(File file) {
-		StringBuffer buf = new StringBuffer();
-		buf.append(XMLTools.getXmlDeclaration(null) + "\n");
-		
-		buf.append(XMLTools.getElementStart(E_XMLRPC) + "\n");
-		
-		buf.append(XMLTools.getElementStart(E_URL) + XMLTools.escapeXMLText(getURL()) + XMLTools.getElementEnd(E_URL)+ "\n");
-		buf.append(XMLTools.getElementStart(E_CALL) + XMLTools.escapeXMLText(getCall()) + XMLTools.getElementEnd(E_CALL)+ "\n");
-		buf.append(XMLTools.getElementStart(E_REPLACE) + isReplacing() + XMLTools.getElementEnd(E_REPLACE)+ "\n");
-
-		buf.append(XMLTools.getElementEnd(E_XMLRPC) + "\n");
-		
-		FileTools.dumpStringToFile(file, buf.toString());
-		
-		return true;
-	}
 
 	private String munge(String text) {
 		return Replace.replace(xmlrpcCall, "{$value}", text);
@@ -231,24 +174,21 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 			buf.append(obj.toString()).append("\n");
 		}
 	}
+	
+
+	// Saving the Macro
+	protected void prepareFile (StringBuffer buf) {
+		buf.append(XMLTools.getXmlDeclaration(null) + "\n");
+		buf.append(XMLTools.getElementStart(E_XMLRPC) + "\n");
+		buf.append(XMLTools.getElementStart(E_URL) + XMLTools.escapeXMLText(getURL()) + XMLTools.getElementEnd(E_URL)+ "\n");
+		buf.append(XMLTools.getElementStart(E_CALL) + XMLTools.escapeXMLText(getCall()) + XMLTools.getElementEnd(E_CALL)+ "\n");
+		buf.append(XMLTools.getElementStart(E_REPLACE) + isReplacing() + XMLTools.getElementEnd(E_REPLACE)+ "\n");
+		buf.append(XMLTools.getElementEnd(E_XMLRPC) + "\n");
+	}
+
 
 	// Sax DocumentHandler Implementation
-	public void startDocument () {}
-
-	public void endDocument () {}
-
-	public void startElement (String name, AttributeList atts) {
-		elementStack.add(name);
-	}
-	
-	public void endElement (String name) throws SAXException {
-		elementStack.remove(elementStack.size() - 1);
-	}
-	
-	public void characters(char ch[], int start, int length) throws SAXException {
-		String text = new String(ch, start, length);
-		String elementName = (String) elementStack.get(elementStack.size() - 1);
-		
+	protected void handleCharacters(String elementName, String text) {
 		if (elementName.equals(E_URL)) {
 			setURL(text);
 		} else if (elementName.equals(E_CALL)) {
@@ -256,22 +196,5 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 		} else if (elementName.equals(E_REPLACE)) {
 			setReplacing(Boolean.valueOf(text).booleanValue());
 		}
-	}
-	
-	
-	// ErrorHandler Interface
-	public void error(SAXParseException e) {
-		System.out.println("SAXParserException Error: " + e);
-		this.errorOccurred = true;
-	}
-
-	public void fatalError(SAXParseException e) {
-		System.out.println("SAXParserException Fatal Error: " + e);
-		this.errorOccurred = true;
-	}
-
-	public void warning(SAXParseException e) {
-		System.out.println("SAXParserException Warning: " + e);
-		this.errorOccurred = true;
 	}
 }
