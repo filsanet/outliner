@@ -27,6 +27,7 @@ import javax.swing.*;
 import org.xml.sax.*;
 import com.organic.maynard.util.*;
 import com.organic.maynard.io.FileTools;
+import com.organic.maynard.util.string.*;
 
 // WebFile
 import javax.swing.filechooser.*;
@@ -87,28 +88,70 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 			System.out.println("Created User Preferences Directory: " + userPrefsFile.getPath());
 		}
 		
-		// Create macros directory it it doesn't exist, and copy over macros from installation directory.
+		// Create macros directory it it doesn't exist.
 		File macrosFile = new File(MACROS_DIR);
 		isCreated = macrosFile.mkdirs();
 		if (isCreated) {
 			System.out.println("Created Macros Directory: " + macrosFile.getPath());
-			try {
-				FileTools.copy(new File(PREFS_DIR + "macros"), macrosFile);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 		
-		// Copy over macros.txt from installation directory if it doesn't exist in the user's home directory.
-		File userMacrosFile = new File(MACROS_FILE);
-		if (!userMacrosFile.exists()) {
-			System.out.println("Copying over macros config file: " + userMacrosFile.getPath());
-			try {
-				FileTools.copy(new File(PREFS_DIR + "macros.txt"), userMacrosFile);
-			} catch (Exception e) {
-				e.printStackTrace();
+		// Copy over any macros files that don't exist
+			// First, turn the macros.txt file into a hashtable of lines keyed by the macro name.
+			char[] delimiters = {'\n','\r'};
+			Vector lines = StringTools.split(FileTools.readFileToString(new File(PREFS_DIR + "macros.txt")),'\\', delimiters);
+			Hashtable indexedLines = new Hashtable();
+			for (int i = 0; i < lines.size(); i++) {
+				String line = (String) lines.elementAt(i);
+				if (line.indexOf("|") != -1) {
+					int start = line.indexOf("|");
+					int end = line.indexOf("|", start + 1);
+					String key = line.substring(start + 1, end);
+					indexedLines.put(key, line);
+				}
 			}
-		}
+			
+			// Second, copy macros that don't exist.
+			StringBuffer appendBuffer = new StringBuffer();
+
+			File fromMacrosFile = new File(PREFS_DIR + "macros");
+			File[] macrosFiles = fromMacrosFile.listFiles();
+			
+			for (int i = 0; i < macrosFiles.length; i++) {
+				File fromFile = macrosFiles[i];
+				File toFile = new File(MACROS_DIR + fromFile.getName());
+				
+				if (!toFile.exists()) {
+					try {
+						FileTools.copy(fromFile, toFile);
+						appendBuffer.append("\n").append(indexedLines.get(fromFile.getName()));
+						System.out.println("\tCopying macro: " + fromFile.getName());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else {
+					macrosFiles[i] = null; // Set to null, so later we know what got copied.
+				}
+			}
+		
+			// Third, either copy over entire macros.txt file if it doesn't exist, or append new lines to existing macros.txt file.
+			File userMacrosFile = new File(MACROS_FILE);
+			if (!userMacrosFile.exists()) {
+				System.out.println("Copying over macros config file: " + userMacrosFile.getPath());
+				try {
+					FileTools.copy(new File(PREFS_DIR + "macros.txt"), userMacrosFile);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				try {
+					FileWriter fw = new FileWriter(userMacrosFile.getPath(), true);
+					fw.write(appendBuffer.toString());
+					fw.flush();
+					fw.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 
 		// Copy over find_replace.xml from installation directory if it doesn't exist in the user's home directory.
 		File userFindReplaceFile = new File(FIND_REPLACE_FILE);
