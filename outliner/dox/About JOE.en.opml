@@ -3,43 +3,46 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\About JOE.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Tue, 21 Aug 2001 08:05:49 GMT</dateModified>
+<dateModified>Sat, 25 Aug 2001 06:41:02 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>18</windowTop>
-<windowLeft>99</windowLeft>
-<windowBottom>597</windowBottom>
-<windowRight>713</windowRight>
+<windowTop>86</windowTop>
+<windowLeft>96</windowLeft>
+<windowBottom>313</windowBottom>
+<windowRight>396</windowRight>
+<applyStyleForComments>false</applyStyleForComments>
+<applyStyleForEditability>false</applyStyleForEditability>
+<applyStyleForMoveability>false</applyStyleForMoveability>
 </head>
 <body>
-<outline isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="About JOE"/>
-<outline isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="------------"/>
-<outline isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Version">
-<outline isEditable="true" isMoveable="true" text="1.8.3"/>
+<outline isEditable="true" isMoveable="true" text="About JOE" isMoveableInherited="true" isEditableInherited="true"/>
+<outline isEditable="true" isMoveable="true" text="------------" isMoveableInherited="true" isEditableInherited="true"/>
+<outline isEditable="true" isMoveable="true" text="Version" isMoveableInherited="true" isEditableInherited="true">
+	<outline isEditable="true" isMoveable="true" text="1.8.4"/>
 </outline>
-<outline isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Credits">
-<outline isEditable="true" isMoveable="true" text="Maynard Demmon">
-<outline isEditable="true" isMoveable="true" text="mailto:maynard@organic.com"/>
+<outline isEditable="true" isMoveable="true" text="Credits" isMoveableInherited="true" isEditableInherited="true">
+	<outline isEditable="true" isMoveable="true" text="Maynard Demmon">
+		<outline isEditable="true" isMoveable="true" text="mailto:maynard@organic.com"/>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="Philip Suh"/>
+	<outline isEditable="true" isMoveable="true" text="Steven Spencer"/>
+	<outline isEditable="true" isMoveable="true" text="Stanley Krute">
+		<outline isEditable="true" isMoveable="true" text="mailto:Stan@JavaOutlineEditor.org"/>
+	</outline>
 </outline>
-<outline isEditable="true" isMoveable="true" text="Philip Suh"/>
-<outline isEditable="true" isMoveable="true" text="Steven Spencer"/>
-<outline isEditable="true" isMoveable="true" text="Stanley Krute">
-<outline isEditable="true" isMoveable="true" text="mailto:Stan@JavaOutlineEditor.org"/>
+<outline isEditable="true" isMoveable="true" text="Copyright" isMoveableInherited="true" isEditableInherited="true">
+	<outline isEditable="true" isMoveable="true" text="[note: copyright holders are listed in chronological order by date of first contribution to the code base]"/>
+	<outline isEditable="true" isMoveable="true" text="Portions Copyright 2000-2001 by Maynard Demmon. All rights reserved."/>
+	<outline isEditable="true" isMoveable="true" text="Portions Copyright 2001 by Steven Spencer. All rights reserved."/>
+	<outline isEditable="true" isMoveable="true" text="Portions Copyright 2001 by Stanley Krute. All rights reserved."/>
 </outline>
+<outline isEditable="true" isMoveable="true" text="Feedback" isMoveableInherited="true" isEditableInherited="true">
+	<outline isEditable="true" isMoveable="true" text="http://JavaOutlineEditor.org/feedback"/>
 </outline>
-<outline isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Copyright">
-<outline isEditable="true" isMoveable="true" text="[note: copyright holders are listed in chronological order by date of first contribution to the code base]"/>
-<outline isEditable="true" isMoveable="true" text="Portions Copyright 2000-2001 by Maynard Demmon. All rights reserved."/>
-<outline isEditable="true" isMoveable="true" text="Portions Copyright 2001 by Steven Spencer. All rights reserved."/>
-<outline isEditable="true" isMoveable="true" text="Portions Copyright 2001 by Stanley Krute. All rights reserved."/>
-</outline>
-<outline isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Feedback">
-<outline isEditable="true" isMoveable="true" text="http://JavaOutlineEditor.org/feedback"/>
-</outline>
-<outline isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Website">
-<outline isEditable="true" isMoveable="true" text="http://JavaOutlineEditor.org"/>
+<outline isEditable="true" isMoveable="true" text="Website" isMoveableInherited="true" isEditableInherited="true">
+	<outline isEditable="true" isMoveable="true" text="http://JavaOutlineEditor.org"/>
 </outline>
 </body>
 </opml>
