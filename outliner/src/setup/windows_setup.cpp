@@ -151,6 +151,23 @@ int weHaveJ2RE () {
 			// suggest install once downloaded
 
 		// do check again
+		
+		
+		
+	// 
+//	for each possible location
+//		see if we have a java home that's in standard spot
+//		if (RegOpenKeyEx (hKey,lpSubKey, ulOptions, samDesired, phkResult) {
+//			
+//			
+//		} // end if
+//    // handle to open key
+//
+//		if we do, and it's new enuf version, that's cool
+//		if we do, but it's an old version, install new version
+//		if we don't, install new version
+//		if install went okay, return 1
+//		if install went bad, return 0
 	return 1 ;
 	
 } // end weHaveJ2RE
@@ -158,41 +175,41 @@ int weHaveJ2RE () {
 
 // Plug app into the system
 int wePlugIntoSystem () {
+	// local vars
+	int result = 1 ;
 	
 	// if we're running from a CD,
-	// copy folder to hard drive
+	
+//	if (runningFromCD()) 
+//		// copy folder to hard drive
+//		if (! copyAppFoldersToLocalDrive())
+//			return 0 ;
 	// TBD
 	
 	// if we're running on another machine
-	// copy folder to local hard drive
+	// if (runningFromOtherMachine())
+//	if (runningFromOtherMachine())
+		// copy folder to local hard drive
+//		if (! copyAppFoldersToLocalDrive())
+//			return 0 ;
 	// TBD
 	
-	// set up any environment variables
-	if ( setAllEnvVars() 
+	// return the result of trying the following:
+	return 
+		// set environment variables
+		(setAllEnvVars() 
 	
-	// per user choices place icon copies
-	// TBD
-		// Programs menu
-		// upper half of Start menu
-		// desktop
-		// desktop folder
-		// Taskbar's Quick Launch Toolbar
-		// user browse/type choice[s]
+		// place shortcuts
+		& placeShortcuts()
 	
-	// per user choice set JOE as OPML handler 
-	// TBD
-		// anyone currently handling ?
-		// if so, check with user RE switch
-		// set to JOE
-	
-	// add to Add/Remove Programs listing
-	// wiring up windows_uninstall.exe
-	// TBD
-	
-	) 
-		return 1 ;
-	else
-		return 0 ;
+		// per user choice set app to
+		// handle particular types of documents
+		& hookupDocTypes()
+		
+		// add to Add/Remove Programs listing
+		// wiring up windows_uninstall.exe
+		// TBD
+	) ;
 
 } // end wePlugIntoSystem
 
@@ -495,6 +512,37 @@ int setAllEnvVars () {
 		) ;
 	
 } // end function setAllEnvVars
+
+
+// place app shortcuts
+// this is based on user choices
+int placeShortcuts(){
+	// local vars
+	shortcut_placement shortcutPlacement ;
+	int result = 1 ;
+	
+	// if we can't get user choices, leave
+	if (! getUserChoicesReShortcutPlacement(& shortcutPlacement)) return 0 ; 
+	
+	// if user chose to put shortcut in program menu
+	if (shortcutPlacement.programMenu) result &= shortcutToProgramMenu() ;
+	
+	// if user chose to put shortcut in upper part of start menu
+	if (shortcutPlacement.startMenu) result &= shortcutToStartMenu() ;
+	
+	// if user chose to put shortcut to desktop
+	if (shortcutPlacement.desktop) result &= shortcutToDesktop() ;
+	
+	// if user chose to put shortcut in the Quick Launch toolbar of the Taskbar
+	if (shortcutPlacement.quickLaunch) result &= shortcutToQuickLaunch() ;
+	
+	// if user chose to put shortcut in popup context menu
+	if (shortcutPlacement.contextMenu) result &= shortcutToContextMenu() ;
+	
+	// done
+	return result ;
+	
+} // end function placeShortcuts
 
 
 // set up the APP_HOME environment variable
@@ -1129,3 +1177,101 @@ int rebootRequired (windows_version windowsVersion) {
 	return result ;
 	
 } // end function rebootRequired
+
+
+// see if the user wants to place program shortcuts in
+// any of the standard locations
+// returns 1 if there are no problems, 0 if there are
+// user prefs placed into a shortcut_placement data structure
+int getUserChoicesReShortcutPlacement (shortcut_placement * ptrShortcutPlacment) {
+	// TBD
+	
+	// fake for now
+	ptrShortcutPlacment->programMenu = 1 ;
+	ptrShortcutPlacment->startMenu = 0 ;
+	ptrShortcutPlacment->desktop = 0 ;
+	ptrShortcutPlacment->quickLaunch = 0 ;
+	ptrShortcutPlacment->contextMenu = 0 ;
+	
+	// done
+	return 1 ;
+	
+} // end function getUserChoicesReShortcutPlacement
+
+
+// add a shortcut to the app to the Program menu
+// returns 1 if successful, 0 if not
+int shortcutToProgramMenu() {
+	// TBD
+	
+	// fake for now
+	
+	// done 
+	return 1 ;
+	
+} // end function shortCutToProgramMenu
+
+
+// add a shortcut to the app to the upper half of the Start menu
+// returns 1 if successful, 0 if not
+int shortcutToStartMenu() {
+	// TBD
+	
+	// fake for now
+	
+	// done 
+	return 1 ;
+	
+} // end function shortcutToStartMenu
+
+
+// add a shortcut to the app to the desktop
+// returns 1 if successful, 0 if not
+int shortcutToDesktop() {
+	// TBD
+	
+	// fake for now
+	
+	// done 
+	return 1 ;
+	
+} // end function shortcutToDesktop
+
+
+// add a shortcut to the app to the Quick Launch toolbar of the Taskbar
+// returns 1 if successful, 0 if not
+int shortcutToQuickLaunch() {
+	// TBD
+	
+	// fake for now
+	
+	// done 
+	return 1 ;
+	
+} // end function shortcutToQuickLaunch
+
+
+// add a shortcut to the app to the Context menu
+// returns 1 if successful, 0 if not
+int shortcutToContextMenu() {
+	// TBD
+	
+	// fake for now
+	
+	// done 
+	return 1 ;
+	
+} // end function shortcutToContextMenu
+
+
+//
+int hookupDocTypes() {
+	// TBD
+	
+	// fake for now
+	
+	// done
+	return 1 ;
+	
+} // end function hookupDocTypes
+

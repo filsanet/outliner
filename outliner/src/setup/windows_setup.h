@@ -138,6 +138,14 @@ enum environment_target {
 	SYSTEM
 	} ; // end enum
 
+typedef struct _shortcut_placement {
+	int programMenu;
+	int startMenu;
+	int desktop;
+	int quickLaunch;
+	int contextMenu;
+	} shortcut_placement ; // end struct
+
 // ---------- global variables
 
 windows_version g_Windows_Version = CANNOT_DETERMINE;
@@ -170,5 +178,11 @@ void failureFeedback() ;
 void successFeedback() ;
 void welcome() ;
 windows_version determineWindowsVersion() ;
-
-
+int placeShortcuts() ;
+int getUserChoicesReShortcutPlacement (shortcut_placement *) ;
+int shortcutToProgramMenu() ;
+int shortcutToStartMenu() ;
+int shortcutToDesktop() ;
+int shortcutToQuickLaunch() ;
+int shortcutToContextMenu() ;
+int hookupDocTypes() ;
