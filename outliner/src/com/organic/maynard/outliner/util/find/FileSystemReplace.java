@@ -54,7 +54,8 @@ import java.util.*;
 	
 	public void replace(
 		FindReplaceResultsModel model, 
-		String[] fileExtensions, 
+		FileFilter fileFilter,
+		FileFilter dirFilter,
 		String startingPath, 
 		String query,
 		String replacement,
@@ -67,16 +68,10 @@ import java.util.*;
 		String lineEnd = PlatformCompatibility.platformToLineEnding(Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur);
 		
 		crawler.setFileHandler(new FileSystemReplaceFileContentsHandler(query, replacement, model, isRegexp, ignoreCase, makeBackups, lineEnd));
-		if (fileExtensions.length > 0) {
-			crawler.setFileFilter(new FileExtensionFilter(fileExtensions));
-		} else {
-			crawler.setFileFilter(new BasicFileFilter());		
-		}
-		if (!includeSubDirectories) {
-			crawler.setDirectoryFilter(new NoSubDirectoryFilter());
-		} else {
-			crawler.setDirectoryFilter(new BasicFileFilter());
-		}
+		
+		crawler.setFileFilter(fileFilter);
+		crawler.setDirectoryFilter(dirFilter);
+
 		crawler.setVerbose(false);
 		
 		// Do the Crawl

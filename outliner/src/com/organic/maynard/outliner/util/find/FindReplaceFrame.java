@@ -1102,21 +1102,18 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				break;
 			
 			case MODE_FILE_SYSTEM:
-				Object path = TEXTFIELD_PATH.getText();
-				if (path == null) {
-					path = new String("");
-				}
-
-				Object extensions = TEXTFIELD_FILE_FILTER_INCLUDE.getText();
-				if (extensions == null) {
-					extensions = new String("");
-				}
-				
 				replaceAllFileSystem(
 					results,
-					path.toString(),
+					TEXTFIELD_PATH.getText(),
 					CHECKBOX_INCLUDE_SUB_DIRECTORIES.isSelected(),
-					extensions.toString(), 
+					TEXTFIELD_FILE_FILTER_INCLUDE.getText(), 
+					CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.isSelected(), 
+					TEXTFIELD_FILE_FILTER_EXCLUDE.getText(), 
+					CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.isSelected(), 
+					TEXTFIELD_DIR_FILTER_INCLUDE.getText(), 
+					CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.isSelected(), 
+					TEXTFIELD_DIR_FILTER_EXCLUDE.getText(), 
+					CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.isSelected(), 
 					TEXTAREA_FIND.getText(), 
 					TEXTAREA_REPLACE.getText(), 
 					CHECKBOX_IGNORE_CASE.isSelected(), 
@@ -1259,7 +1256,14 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		FindReplaceResultsModel model, 
 		String startingPath, 
 		boolean includeSubDirectories,
-		String fileExtensions, 
+		String fileFilterInclude, 
+		boolean fileFilterIncludeIgnoreCase,
+		String fileFilterExclude, 
+		boolean fileFilterExcludeIgnoreCase,
+		String dirFilterInclude, 
+		boolean dirFilterIncludeIgnoreCase,
+		String dirFilterExclude, 
+		boolean dirFilterExcludeIgnoreCase,
 		String sFind, 
 		String sReplace, 
 		boolean ignoreCase, 
@@ -1280,17 +1284,18 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				return;
 			}
 		}
-		
-		// Prep Extensions List
-		ArrayList extensions = new ArrayList();
-		StringTokenizer tok = new StringTokenizer(fileExtensions);
-		while (tok.hasMoreTokens()) {
-			String extension = tok.nextToken();
-			extensions.add(extension);
+
+		// Prepare Filters
+		com.organic.maynard.util.crawler.FileFilter fileFilter = new TypeGlobFileFilter(fileFilterInclude, fileFilterIncludeIgnoreCase, fileFilterExclude, fileFilterExcludeIgnoreCase);
+		com.organic.maynard.util.crawler.FileFilter dirFilter = null;
+		if (includeSubDirectories) {
+			dirFilter = new TypeGlobFileFilter(dirFilterInclude, dirFilterIncludeIgnoreCase, dirFilterExclude, dirFilterExcludeIgnoreCase);
+		} else {
+			dirFilter = new NoSubDirectoryFilter();
 		}
 
 		// Do it
-		fileSystemReplace.replace(model, convertListToStringArray(extensions), startingPath, sFind, sReplace, isRegexp, ignoreCase, makeBackups, includeSubDirectories);
+		fileSystemReplace.replace(model, fileFilter, dirFilter, startingPath, sFind, sReplace, isRegexp, ignoreCase, makeBackups, includeSubDirectories);
 	}
 
 	// This method is public and should have no direct dependancy on 
