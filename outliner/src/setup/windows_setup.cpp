@@ -48,17 +48,27 @@
 #include "windows_setup.h"
 
 // TBD [srk] make this a very simple GUI app
-// 	that uses a series of simple dialogs to communicate with the user
+// 	that uses a series of simple dialogs 
+// 	to communicate with the user as the 
+//	program goes thru main's setup steps
 
 int main(int argc, char* argv[]){
 	
-	// if any of these steps fail, return 0
-	// if all goes well, return 1
+	// if any of these steps fail, we leave immediately, returning 0
+	// if we make it thru all the steps, we return 1
+	
+	// try to determine which version of Windows we're running under
+	// if (! determineWindowsVersion()) return 0 ;
+	
+	// on some systems, user must be logged on as an adminstrator to
+	// set environment variables -- check for that, and prompt as
+	// necessary
+	// if (! dealWithAdministratorCrap()) return 0 ;
 	
 	// try to make sure we've got a proper Java 2 Runtime Environment
 	// if (! ensureJ2RE()) return 0 ;
 	
-	// adjust run.bat if there's more than one JRE
+	// try to adjust run.bat if there's more than one JRE
 	// if (! adjustRunBat()) return 0 ;
 	
 	// set the JOE_HOME environment var
@@ -68,11 +78,12 @@ int main(int argc, char* argv[]){
 	// if (! setJoeAsOpmlHandler()) return 0 ;
 	
 	// per user choice, copy JOE.pif to
-	// Programs menu, desktop, quickstart toolbar of taskbar
-	// copyJoePifPerUserPrefs() ;
+	// Programs menu, Start menu top, desktop, 
+	// quickstart toolbar of taskbar, folders on desktop
+	// if (! copyJoePifPerUserPrefs()) return 0 ;
 	
-	// suggest a Windows reboot
-	// suggestWindowsReboot() ;
+	// suggest a reboot for Windows 9x systems
+	// if (! suggestWindowsReboot()) return 0 ;
 	
 	return 1 ;
 
@@ -99,6 +110,7 @@ int set_JOE_HOME () {
 } // end set_JOE_HOME
 
 
+// get a shortpath version of the current directory
 int getShortPathCurDir (char * shortPathBuffer) {
 	// local vars
 	char longPathBuffer[MAX_PATH]; 
@@ -120,33 +132,63 @@ int getShortPathCurDir (char * shortPathBuffer) {
 
 // set an environment variable
 int setEnvVar (char * varName, char * varValue, char * introLines) {
-	
-	// obtain info RE Windows version
+	// local vars
+	int result = 0 ;
 	// switch out on windows version
-		// for win 9x, use autoexec.bat
-		return setEnvVarWin9x (varName, varValue, introLines) ;
-		// for win nt, ???
-//		return setEnvVarWinNT (varName, varValue) ;
-//		// for win 2k, ???
-//		return setEnvVarWin2k(varName, varValue) ;
-//		// for win me, ???
-//		return setEnvVarWinME (varName, varValue) ;
-//		// for win xp, ???
-//		return setEnvVarWinXP (varName, varValue) ;
+	// switch (gWindowsVersion) {
+		// case WINDOWS_9X:
+		// default:
+			// win 9x uses autoexec.bat and a reboot
+			return setAutoExecEnvVar (varName, varValue, introLines) ;
+			// break ;
+		// case WINDOWS_NT:
+		// case WINDOWS_2K:
+		// case WINDOWS_ME:
+		// case WINDOWS_XP:
+			// win nt/2k/me/xp use the registry for env vars
+			// result = setRegistryEnvVar (varName, varValue) ;
+			// if (result) result = broadcast the news
+			// return result 
+			// break ;
+		// } // end switch
+		
+		// for win nt, 2k, me, xp, use registry
+//		
 	
 } // end setEnvVar
 
 
-// set an environment variable on Windows 95, 98, 98 SE
-int setEnvVarWin9x (char * varName, char * varValue, char* introLines) {
+// set an environment variable via the registry
+// used for Windows NT, 2K, ME, and XP
+int setRegistryEnvVar (char * varName, char * varValue) {
 	
-	// set up the name/value in autoexec.bat
-	return setAutoExecEnvVar (varName, varValue, introLines) ;
+/* The key key
+
+	makes system changes (vs user changes)
+	user must be logged on as an administrator
+	if user's not logged on as an admin, could offer to install as user,
+	rather than as system, or suggest reboot
+
+	HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SessionManager\Environment
+
+	get the elements in the key
+	search for a varName element
+	if found, check its value
+	if value's cool, cool
+	if value needs changing, do so
+	if not found, add name/value
 	
-} // end function setEnvVarWin9x
+	if everything was not perfect (we had to change or add)
+		broadcast the new setting to see if we can avoid the need to reboot
+*/
+	return 1 ;
+
+	
+} // end function setRegistryEnvVar
 
 
-// set an autoexec.bat environment variable
+// set an environment variable via autoexec.bat
+// used for Windows 95, 98, 98 SE
 int setAutoExecEnvVar (char * varName, char * varValue, char * introLines) {
 	
 	// local vars
