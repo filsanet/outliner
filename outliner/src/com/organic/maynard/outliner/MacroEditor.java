@@ -157,9 +157,13 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 			
 			// Add it to the Popup Menu
 			int i = Outliner.macroPopup.addMacro(macro);
-			
+
 			// Add it to the list in the MacroManager
-			((DefaultListModel) frame.macroList.getModel()).insertElementAt(macro.getName(),i);
+			if (macro instanceof SortMacro) {
+				((DefaultListModel) frame.sortMacroList.getModel()).insertElementAt(macro.getName(),i);
+			} else {
+				((DefaultListModel) frame.macroList.getModel()).insertElementAt(macro.getName(),i);
+			}
 			
 			// Save it to disk as a serialized object.
 			saveMacro(macro);
@@ -179,9 +183,15 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 			// Update the popup menu.
 			int oldIndex = Outliner.macroPopup.removeMacro(macro);
 			int newIndex = Outliner.macroPopup.addMacro(macro);
-			
+
 			// Update the list
-			DefaultListModel model = (DefaultListModel) frame.macroList.getModel();
+			DefaultListModel model = null;
+			if (macro instanceof SortMacro) {
+				model = (DefaultListModel) frame.sortMacroList.getModel();
+			} else {
+				model = (DefaultListModel) frame.macroList.getModel();
+			}
+						
 			model.remove(oldIndex);
 			model.insertElementAt(macro.getName(), newIndex);
 			
@@ -208,7 +218,11 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 			int index = Outliner.macroPopup.removeMacro(macro);
 			
 			// Remove it from the list in the MacroManager
-			((DefaultListModel) frame.macroList.getModel()).remove(index);
+			if (macro instanceof SortMacro) {
+				((DefaultListModel) frame.sortMacroList.getModel()).remove(index);
+			} else {
+				((DefaultListModel) frame.macroList.getModel()).remove(index);
+			}
 			
 			// Remove it from disk
 			deleteMacro(new File(Outliner.MACROS_DIR + macro.getFileName()));

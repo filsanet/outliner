@@ -24,6 +24,7 @@ import java.awt.*;
 public class PrimitiveUndoableMove implements Undoable {
 
 	private CompoundUndoableMove undoable = null;
+	
 	private Node node = null;
 	private int index = 0;
 	private int targetIndex = 0;
@@ -35,8 +36,6 @@ public class PrimitiveUndoableMove implements Undoable {
 		this.node = node;
 		this.index = index;
 		this.targetIndex = targetIndex;
-		
-		//System.out.println(((String) undoable.parent.getValue()) + ((String) undoable.targetParent.getValue()) + ((String) node.getValue()) + " : " + index + " : " + targetIndex);
 	}
 
 	public void destroy() {
@@ -47,6 +46,9 @@ public class PrimitiveUndoableMove implements Undoable {
 	// Accessors
 	public void setNode(Node node) {this.node = node;}
 	public Node getNode() {return this.node;}
+
+	public int getIndex() {return this.index;}
+	public int getTargetIndex() {return this.targetIndex;}
 	
 	public void undo() {
 		// Remove the Node
@@ -56,7 +58,13 @@ public class PrimitiveUndoableMove implements Undoable {
 		// Insert the Node
 		undoable.getParent().insertChild(node,index);
 		node.getTree().insertNode(node);
-		node.setDepthRecursively(undoable.getParent().getDepth() + 1);
+		
+		// Set depth if neccessary.
+		if (undoable.getTargetParent().getDepth() != undoable.getParent().getDepth()) {
+			node.setDepthRecursively(undoable.getParent().getDepth() + 1);
+		}
+		
+		// Update selection
 		node.getTree().addNodeToSelection(node);
 	}
 	
@@ -69,7 +77,13 @@ public class PrimitiveUndoableMove implements Undoable {
 		// Insert the Node
 		undoable.getTargetParent().insertChild(node,targetIndex);
 		node.getTree().insertNode(node);
-		node.setDepthRecursively(undoable.getTargetParent().getDepth() + 1);
+
+		// Set depth if neccessary.
+		if (undoable.getTargetParent().getDepth() != undoable.getParent().getDepth()) {
+			node.setDepthRecursively(undoable.getTargetParent().getDepth() + 1);
+		}
+		
+		// Update selection
 		node.getTree().addNodeToSelection(node);
 	}
 }

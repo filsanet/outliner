@@ -946,7 +946,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		int index = currentNode.currentIndex();
 		undoable.addPrimitive(new PrimitiveUndoableMove(undoable,currentNode,index,targetIndex));
 
-		tree.promoteNode(currentNode);
+		tree.promoteNode(currentNode, index);
 
 		// Redraw and Set Focus
 		layout.draw(currentNode,OutlineLayoutManager.TEXT);
@@ -967,7 +967,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		// Put the Undoable onto the UndoQueue
 		Node targetNode = currentNode.prevSibling();
 
-		CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(),targetNode);
+		CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(), targetNode);
 		tree.doc.undoQueue.add(undoable);
 		
 		// Record the Insert in the undoable
@@ -975,7 +975,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		int targetIndex = targetNode.numOfChildren();
 		undoable.addPrimitive(new PrimitiveUndoableMove(undoable,currentNode,index,targetIndex));
 
-		tree.demoteNode(currentNode,targetNode);
+		tree.demoteNode(currentNode,targetNode, index);
 
 		// Redraw and Set Focus
 		layout.draw(currentNode,OutlineLayoutManager.TEXT);

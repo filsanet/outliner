@@ -383,6 +383,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		youngestNode.setValue(newText);
 
 		// Record the EditingNode and CursorPosition and ComponentFocus
+		tree.setEditingNode(youngestNode);
 		tree.setCursorPosition(1);
 		tree.setComponentFocus(OutlineLayoutManager.TEXT);
 

@@ -34,6 +34,9 @@ public class SortMacro extends MacroImpl implements RawMacro {
 	// Constants
 	private static final String E_COMPARATOR = "comparator";
 	
+	private static final int MODE_SHALLOW = 1;
+	private static final int MODE_DEEP = 2;
+	
 	// Instance Fields
 	private String comparator = ""; // BSH will turn this into a Comparator
 
@@ -66,6 +69,18 @@ public class SortMacro extends MacroImpl implements RawMacro {
 	}
 	
 	public void process() {
+		// not supported
+	}
+	
+	public void processShallow() {
+		process(MODE_SHALLOW);
+	}
+	
+	public void processDeep() {
+		process(MODE_DEEP);
+	}
+	
+	private void process(int mode) {
 		// Shorthand
 		OutlinerDocument document = Outliner.getMostRecentDocumentTouched();
 		TreeContext tree = document.tree;
@@ -76,53 +91,63 @@ public class SortMacro extends MacroImpl implements RawMacro {
 		}
 
 		// Instantiate the Undoable
-		Node parent = tree.getEditingNode().getParent();
-		CompoundUndoableMove undoable = new CompoundUndoableMove(parent, parent);
-		
+		CompoundUndoableImpl undoable = new CompoundUndoableImpl();
+
 		// Create the Comparator using BSH
 		BSHComparator comparator = new BSHComparator(this);
 
-		/*Comparator comparator = null;
+		ArrayList parentNodes = new ArrayList();
+		parentNodes.add(tree.getEditingNode().getParent());
+		
+		for (int i = 0; i < parentNodes.size(); i++) {
+			// Instantiate the Undoable
+			Node parent = (Node) parentNodes.get(i);
+			CompoundUndoableMove undoableMove = new CompoundUndoableMove(parent, parent);
 
-		try {
-			Interpreter bsh = new Interpreter();
-			NameSpace nameSpace = new NameSpace("outliner");
-			nameSpace.importPackage("com.organic.maynard.outliner");
-			
-			bsh.setNameSpace(nameSpace);
-			//bsh.set("comparator", comparator);
-			comparator = (Comparator) bsh.eval(getComparator());
-		} catch (Exception e) {
-			System.out.println("BSH Exception: " + e.getMessage());
-			JOptionPane.showMessageDialog(document, "BSH Exception: " + e.getMessage());
-			return;
-		}*/
-		
-		// Store the Before State
-		//Object[] nodes = tree.selectedNodes.toArray();
-		Object[] sortedNodes = tree.selectedNodes.toArray();
-		int[] indeces = new int[tree.selectedNodes.size()];
+			// Store the Before State
+			Object[] sortedNodes;
+			int[] indeces;
 
-		for (int i = 0; i < sortedNodes.length; i++) {
-			Node node = (Node) sortedNodes[i];
-			indeces[i] = node.currentIndex();
-		}
-		
-		// Sort them
-		Arrays.sort(sortedNodes, comparator);
-		
-		tree.clearSelection();
-		
-		// Add the primitives to the undoable
-		for (int i = sortedNodes.length - 1; i >= 0; i--) {
-			Node sortedNode = (Node) sortedNodes[i];
-			int oldIndex = sortedNode.currentIndex();
-			int newIndex = indeces[i];
-			PrimitiveUndoableMove primitive = new PrimitiveUndoableMove(undoable, sortedNode, oldIndex, newIndex);
+			if (i == 0) {
+				sortedNodes = tree.selectedNodes.toArray();
+				indeces = new int[tree.selectedNodes.size()];
+			} else {
+				sortedNodes = ((NodeImpl) parent).children.toArray();
+				indeces = new int[parent.numOfChildren()];
+			}
+	
+			for (int j = 0; j < sortedNodes.length; j++) {
+				Node node = (Node) sortedNodes[j];
+				indeces[j] = node.currentIndex();
+				
+				// If the node has children then throw it on the list of things to sort
+				if (!node.isLeaf() && mode == MODE_DEEP) {
+					parentNodes.add(node);
+				}
+			}
 			
-			undoable.addPrimitive(primitive);
+			// Sort them
+			Arrays.sort(sortedNodes, comparator);
 			
-			tree.addNodeToSelection(sortedNode);
+			if (i == 0) { // Only do this for the top level nodeset
+				tree.clearSelection();
+			}
+			
+			// Add the primitives to the undoable
+			for (int j = sortedNodes.length - 1; j >= 0; j--) {
+				Node sortedNode = (Node) sortedNodes[j];
+				int oldIndex = sortedNode.currentIndex();
+				int newIndex = indeces[j];
+				PrimitiveUndoableMove primitive = new PrimitiveUndoableMove(undoableMove, sortedNode, oldIndex, newIndex);
+				
+				undoableMove.addPrimitive(primitive);
+
+				if (i == 0) { // Only do this for the top level nodeset
+					tree.addNodeToSelection(sortedNode);
+				}
+			}
+			
+			undoable.addPrimitive(undoableMove);
 		}
 		
 		// Put the undoable onto the queue

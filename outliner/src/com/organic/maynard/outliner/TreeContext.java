@@ -270,11 +270,11 @@ public class TreeContext {
 	public Node getSelectedNodesParent() {return selectedNodesParent;}
 	
 	public void clearSelection() {
-		// Walking it backwards should give better performance.
-		while (selectedNodes.size() > 0) {
-			((Node) selectedNodes.get(selectedNodes.size() - 1)).setSelected(false);
-			selectedNodes.remove(selectedNodes.size() - 1);
+		for (int i = selectedNodes.size() - 1; i >= 0; i--) {
+			((Node) selectedNodes.get(i)).setSelected(false);
 		}
+		
+		selectedNodes.clear();
 	}
 	
 	public void addNodeToSelection(Node node) {
@@ -285,8 +285,9 @@ public class TreeContext {
 			mostRecentNodeTouched = node;
 			
 			// Maintain the selected nodes in order from youngest to oldest
+			int nodeIndex = node.currentIndex();
 			for (int i = 0; i < selectedNodes.size(); i++) {
-				if (((Node) selectedNodes.get(i)).currentIndex() > node.currentIndex()) {
+				if (((Node) selectedNodes.get(i)).currentIndex() > nodeIndex) {
 					selectedNodes.add(i, node);
 					return;
 				}
@@ -342,7 +343,7 @@ public class TreeContext {
 
 
 	// Tree Manipulation
-	public void promoteNode(Node currentNode) {
+	public void promoteNode(Node currentNode, int currentNodeIndex) {
 		Node targetNode = currentNode.getParent().getParent();
 		int insertIndex = currentNode.getParent().currentIndex() + 1;
 		if (currentNode.getParent().isRoot()) {
@@ -351,7 +352,7 @@ public class TreeContext {
 		}
 		
 		// Remove the selected node from the current parent node.
-		currentNode.getParent().removeChild(currentNode);
+		currentNode.getParent().removeChild(currentNode, currentNodeIndex);
 			
 		// Append the selected node to the target node.
 		targetNode.insertChild(currentNode,insertIndex);
@@ -362,14 +363,14 @@ public class TreeContext {
 		insertNode(currentNode);
 	}
 	
-	public void demoteNode(Node currentNode, Node targetNode) {
+	public void demoteNode(Node currentNode, Node targetNode, int currentNodeIndex) {
 		if (targetNode == currentNode) {
 			// We have no previous sibling, so Abort.
 			return;
 		}
 
 		// Remove the selected node from the current parent node.
-		currentNode.getParent().removeChild(currentNode);
+		currentNode.getParent().removeChild(currentNode, currentNodeIndex);
 			
 		// Append the selected node to the target node.
 		targetNode.insertChild(currentNode,targetNode.numOfChildren());

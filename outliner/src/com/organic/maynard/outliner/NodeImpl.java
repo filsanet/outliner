@@ -28,7 +28,7 @@ public class NodeImpl implements Node {
 	private Node parent = null;
 	private String value = null;
 	private HashMap attributes = null;
-	private ArrayList children = null;
+	protected ArrayList children = null;
 	private static final int INITIAL_ARRAY_LIST_SIZE = 10;
 
 	private int depth = -1; // -1 so that children of root will be depth 0.
@@ -200,7 +200,19 @@ public class NodeImpl implements Node {
 		// Adjust Counts
 		adjustDecendantCount(-(node.getDecendantCount() + 1));
 	}
-	
+
+	public void removeChild(Node node, int index) {
+		if (children == null) {
+			return;
+		}
+		
+		node.setParent(null);
+		children.remove(index);
+
+		// Adjust Counts
+		adjustDecendantCount(-(node.getDecendantCount() + 1));
+	}
+		
 	public Node getChild(int i) {
 		if (children == null) {
 			return null;

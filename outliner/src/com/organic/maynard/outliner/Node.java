@@ -45,6 +45,8 @@ public interface Node {
 	public int numOfChildren();
 	public void appendChild(Node node);
 	public void removeChild(Node node);
+	public void removeChild(Node node, int index);
+	
 	public Node getChild(int i);
 	public Node getFirstChild();
 	public Node getLastChild();

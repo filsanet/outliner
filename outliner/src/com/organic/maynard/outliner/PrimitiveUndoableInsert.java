@@ -47,7 +47,7 @@ public class PrimitiveUndoableInsert implements Undoable {
 	public void undo() {
 		// Remove the Node
 		node.getTree().removeNode(node);
-		parent.removeChild(node);
+		parent.removeChild(node,index);
 	}
 	
 	// Undoable Interface

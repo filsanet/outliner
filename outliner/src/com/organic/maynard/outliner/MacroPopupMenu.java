@@ -34,15 +34,34 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 	// Constants
 	private static final int UPPER_BUFFER_SIZE = 30;
 	private static final int LOWER_BUFFER_SIZE = 50;
+	
+	// Sort Menu
+	private static final String SORT = "Sort";
+	private static final String SORT_SHALLOW = "Shallow";
+	private static final String SORT_DEEP = "Deep";
+	
+	private static final JMenu SORT_MENU = new JMenu(SORT);
+	private static final JMenu SORT_SHALLOW_MENU = new JMenu(SORT_SHALLOW);
+	private static final JMenu SORT_DEEP_MENU = new JMenu(SORT_DEEP);
+	
+	static {
+		SORT_MENU.insert(SORT_SHALLOW_MENU, 0);
+		SORT_MENU.insert(SORT_DEEP_MENU, 1);
+	}
 
 
 	// Class Fields
 	public static ArrayList macros = new ArrayList();
 
+	public static ArrayList sortMacros = new ArrayList();
+
 
 	// The Constructors
 	public MacroPopupMenu() {
 		super();
+		
+		this.insert(SORT_MENU, 0);
+		this.insert(new JPopupMenu.Separator(), 1);
 	}
 
 
@@ -90,7 +109,8 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 
 	// MouseListener Interface
 	public void mouseEntered(MouseEvent e) {
-		JMenuItem item = (JMenuItem) e.getSource();
+		JComponent item = (JComponent) e.getSource();
+		//JMenuItem item = (JMenuItem) e.getSource();
 		int itemHeight = item.getHeight();
 		Point p = new Point(0,itemHeight/2);
 		
@@ -144,27 +164,55 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 	}
 	
 	public int addMacro(Macro macro) {
-		// Find the correct spot to add it alphabetically
-		int i;
-		for (i = 0; i < macros.size(); i++) {
-			Macro macroTemp = (Macro) macros.get(i);
-			if (macroTemp.getName().compareTo(macro.getName()) >= 0) {
-				break;
+		if (macro instanceof SortMacro) {
+			// Find the correct spot to add it alphabetically
+			int i;
+			for (i = 0; i < sortMacros.size(); i++) {
+				Macro macroTemp = (Macro) sortMacros.get(i);
+				if (macroTemp.getName().compareTo(macro.getName()) >= 0) {
+					break;
+				}
 			}
+			
+			sortMacros.add(i, macro);
+			JMenuItem shallowItem = new JMenuItem(macro.getName());
+			JMenuItem deepItem = new JMenuItem(macro.getName());
+			shallowItem.addActionListener(this);
+			deepItem.addActionListener(this);
+			SORT_SHALLOW_MENU.insert(shallowItem,i);
+			SORT_DEEP_MENU.insert(deepItem,i);
+			return i;		
+		} else {
+			// Find the correct spot to add it alphabetically
+			int i;
+			for (i = 0; i < macros.size(); i++) {
+				Macro macroTemp = (Macro) macros.get(i);
+				if (macroTemp.getName().compareTo(macro.getName()) >= 0) {
+					break;
+				}
+			}
+			
+			macros.add(i, macro);
+			JMenuItem item = new JMenuItem(macro.getName());
+			item.addActionListener(this);
+			this.insert(item,i + 2);
+			return i;
 		}
-		
-		macros.add(i, macro);
-		JMenuItem item = new JMenuItem(macro.getName());
-		item.addActionListener(this);
-		this.insert(item,i);
-		return i;
 	}
-	
+		
 	public int removeMacro(Macro macro) {
-		int index = macros.indexOf(macro);
-		macros.remove(index);
-		this.remove(index);
-		return index;
+		if (macro instanceof SortMacro) {
+			int index = sortMacros.indexOf(macro);
+			sortMacros.remove(index);
+			SORT_SHALLOW_MENU.remove(index);
+			SORT_DEEP_MENU.remove(index);
+			return index;
+		} else {
+			int index = macros.indexOf(macro);
+			macros.remove(index);
+			this.remove(index + 2);
+			return index;
+		}
 	}
 	
 	public Macro getMacro(int i) {
@@ -172,15 +220,28 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 	}
 	
 	public Macro getMacro(String name) {
+		// First check Macros
 		for (int i = 0; i < macros.size(); i++) {
 			Macro macro = getMacro(i);
 			if (macro.getName().equals(name)) {
 				return macro;
 			}
 		}
+		
+		// Then check SortMacros
+		for (int i = 0; i < sortMacros.size(); i++) {
+			SortMacro macro = getSortMacro(i);
+			if (macro.getName().equals(name)) {
+				return macro;
+			}
+		}
+
 		return null;
 	}
 
+	public SortMacro getSortMacro(int i) {
+		return (SortMacro) sortMacros.get(i);	
+	}
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
@@ -210,7 +271,18 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 			doComplexUndoableMacro(document, tree, macro);
 			
 		} else if (macro.getUndoableType() == Macro.RAW_MACRO_UNDOABLE) {
-			((RawMacro) macro).process();
+			if (macro instanceof SortMacro) {
+				String parentMenuText = ((JMenu) ((JPopupMenu) ((JComponent) e.getSource()).getParent()).getInvoker()).getText();
+				if (SORT_SHALLOW.equals(parentMenuText)) {
+					((SortMacro) macro).processShallow();
+				} else if (SORT_DEEP.equals(parentMenuText)) {
+					((SortMacro) macro).processDeep();
+				} else {
+					((SortMacro) macro).process();
+				}
+			} else {
+				((RawMacro) macro).process();
+			}
 			
 		} else {
 			// TODO: Need code for when it is not undoable.

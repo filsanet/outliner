@@ -76,7 +76,7 @@ public class EnhancedTextMacro extends MacroImpl {
 				
 				int index = walkNode.currentIndex();
 				Node parent = walkNode.getParent();
-				parent.removeChild(walkNode);
+				parent.removeChild(walkNode,index);
 				parent.insertChild(clonedNode,index);
 				
 				walkNode = clonedNode;

@@ -55,7 +55,7 @@ public class PrimitiveUndoableReplace implements Undoable {
 			tree.removeNode(newNode);
 			
 			// Swap the nodes
-			parent.removeChild(newNode);
+			parent.removeChild(newNode,index);
 			parent.insertChild(oldNode,index);
 			
 			// Insert the node into the visible nodes cache
@@ -85,7 +85,7 @@ public class PrimitiveUndoableReplace implements Undoable {
 			tree.removeNode(oldNode);
 			
 			// Swap the nodes
-			parent.removeChild(oldNode);
+			parent.removeChild(oldNode, index);
 			parent.insertChild(newNode, index);
 			
 			// Insert the node into the visible nodes cache
@@ -99,7 +99,7 @@ public class PrimitiveUndoableReplace implements Undoable {
 			tree.removeNode(oldNode);
 			
 			// Swap the nodes
-			parent.removeChild(oldNode);	
+			parent.removeChild(oldNode, index);	
 		}
 	}
 }

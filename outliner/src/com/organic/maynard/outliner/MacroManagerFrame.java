@@ -45,11 +45,18 @@ public class MacroManagerFrame extends AbstractGUITreeJDialog implements ActionL
 	protected MacroEditor macroEditor = null;
 
 	protected ArrayList macroNames = new ArrayList();
+	//protected ArrayList sortMacroNames = new ArrayList();
+	
 	protected ArrayList macroClassNames = new ArrayList();
 
 	private JButton newButton = new JButton(NEW);
 	protected JComboBox macroType = new JComboBox();	
+
+	private JLabel macroLabel = new JLabel("Macros");
 	protected JList macroList = new JList();
+
+	private JLabel sortMacroLabel = new JLabel("Sort Macros");
+	protected JList sortMacroList = new JList();
 
 
 	// The Constructor
@@ -71,8 +78,12 @@ public class MacroManagerFrame extends AbstractGUITreeJDialog implements ActionL
 		newBox.add(macroType);
 		newBox.add(Box.createHorizontalStrut(5));
 		newBox.add(newButton);
+
+		// Define Macro Lists		
+		Box macroBox = Box.createVerticalBox();
 		
 		// Define Macro List
+		macroBox.add(macroLabel);
 		macroList.setModel(new DefaultListModel());
 		macroList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -89,10 +100,33 @@ public class MacroManagerFrame extends AbstractGUITreeJDialog implements ActionL
 		);
 		
 		JScrollPane jsp = new JScrollPane(macroList);
+
+		macroBox.add(jsp);
+
+		// Define SortMacro List
+		macroBox.add(sortMacroLabel);
+		sortMacroList.setModel(new DefaultListModel());
+		sortMacroList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		sortMacroList.addMouseListener(
+			new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					if (e.getClickCount() == 2) {
+						int index = sortMacroList.locationToIndex(e.getPoint());
+						DefaultListModel model = (DefaultListModel) sortMacroList.getModel();
+						updateMacro((String) model.get(index));
+					}
+				}
+			}
+		);
+		
+		JScrollPane jspSort = new JScrollPane(sortMacroList);
+		
+		macroBox.add(jspSort);
 		
 		// Put it all together
 		getContentPane().add(newBox, BorderLayout.NORTH);
-		getContentPane().add(jsp, BorderLayout.CENTER);		
+		getContentPane().add(macroBox, BorderLayout.CENTER);		
 	}
 
 

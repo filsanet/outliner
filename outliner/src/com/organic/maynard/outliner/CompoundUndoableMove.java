@@ -20,6 +20,11 @@ package com.organic.maynard.outliner;
 
 import java.util.*;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
 public class CompoundUndoableMove extends AbstractCompoundUndoable {
 
 	private Node parent = null;
@@ -57,7 +62,7 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 		tree.setSelectedNodesParent(parent);
 
 		for (int i = primitives.size() - 1; i >= 0; i--) {
-			((PrimitiveUndoableMove) primitives.get(i)).undo();
+			primitiveUndo((PrimitiveUndoableMove) primitives.get(i));
 		}
 
 		// Record the EditingNode
@@ -79,6 +84,28 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 		layout.draw(tree.getYoungestInSelection(), OutlineLayoutManager.ICON);
 	}
 	
+	private void primitiveUndo(PrimitiveUndoableMove primitive) {
+		// ShortHand
+		Node node = primitive.getNode();
+		TreeContext tree = node.getTree();
+		
+		// Remove the Node
+		tree.removeNode(node);
+		targetParent.removeChild(node);
+
+		// Insert the Node
+		parent.insertChild(node, primitive.getIndex());
+		tree.insertNode(node);
+		
+		// Set depth if neccessary.
+		if (targetParent.getDepth() != parent.getDepth()) {
+			node.setDepthRecursively(parent.getDepth() + 1);
+		}
+
+		// Update selection
+		tree.addNodeToSelection(node);
+	}
+	
 	public void redo() {
 		Node youngestNode = ((PrimitiveUndoableMove) primitives.get(0)).getNode();
 		TreeContext tree = youngestNode.getTree();
@@ -91,7 +118,7 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 		tree.setSelectedNodesParent(targetParent);
 		
 		for (int i = 0; i < primitives.size(); i++) {
-			((PrimitiveUndoableMove) primitives.get(i)).redo();
+			primitiveRedo((PrimitiveUndoableMove) primitives.get(i));
 		}
 
 		// Record the EditingNode
@@ -111,5 +138,27 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 		}
 		
 		layout.draw(tree.getYoungestInSelection(), OutlineLayoutManager.ICON);
+	}
+	
+	private void primitiveRedo(PrimitiveUndoableMove primitive) {
+		// ShortHand
+		Node node = primitive.getNode();
+		TreeContext tree = node.getTree();
+
+		// Remove the Node
+		tree.removeNode(node);
+		parent.removeChild(node);
+
+		// Insert the Node
+		targetParent.insertChild(node, primitive.getTargetIndex());
+		tree.insertNode(node);
+
+		// Set depth if neccessary.
+		if (targetParent.getDepth() != parent.getDepth()) {
+			node.setDepthRecursively(targetParent.getDepth() + 1);
+		}
+		
+		// Update selection
+		tree.addNodeToSelection(node);
 	}
 }

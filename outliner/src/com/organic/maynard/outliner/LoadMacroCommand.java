@@ -61,13 +61,16 @@ public class LoadMacroCommand extends Command {
 			if (!success) {
 				return;
 			}
-			
+
 			// Add it to the MacroPopupMenu
 			int i = Outliner.macroPopup.addMacro(obj);
 			
 			// Add it to the list in the MacroManager
-			((DefaultListModel) Outliner.macroManager.macroList.getModel()).insertElementAt(obj.getName(),i);
-			
+			if (obj instanceof SortMacro) {
+				((DefaultListModel) Outliner.macroManager.sortMacroList.getModel()).insertElementAt(obj.getName(),i);
+			} else {
+				((DefaultListModel) Outliner.macroManager.macroList.getModel()).insertElementAt(obj.getName(),i);
+			}
 		} catch (ClassNotFoundException cnfe) {
 			System.out.println("Exception: " + className + " " + cnfe);
 		} catch (Exception e) {
@@ -91,6 +94,17 @@ public class LoadMacroCommand extends Command {
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < MacroPopupMenu.macros.size(); i++) {
 			Macro macro = (Macro) MacroPopupMenu.macros.get(i);
+			
+			buffer.append(Outliner.COMMAND_MACRO);
+			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+			buffer.append(macro.getFileName());
+			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+			buffer.append(macro.getClass().getName());
+			buffer.append(System.getProperty("line.separator"));
+		}
+
+		for (int i = 0; i < MacroPopupMenu.sortMacros.size(); i++) {
+			Macro macro = (Macro) MacroPopupMenu.sortMacros.get(i);
 			
 			buffer.append(Outliner.COMMAND_MACRO);
 			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
