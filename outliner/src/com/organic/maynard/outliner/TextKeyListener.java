@@ -616,14 +616,16 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		inlinePaste = true;
 		
 		// Get the text from the clipboard and turn it into a tree
-		StringSelection selection = (StringSelection) Outliner.clipboard.getContents(this);
 		String text = "";
 		try {
-			text = (String) selection.getTransferData(DataFlavor.stringFlavor);
+			Transferable selection = (Transferable) Outliner.clipboard.getContents(this);
+			if (selection != null) {
+				text = (String) selection.getTransferData(DataFlavor.stringFlavor);
+			}
 		} catch (Exception ex) {
-		
+			ex.printStackTrace();
 		}
-		
+				
 		// Need to make a check for inline pastes
 		if ((text.indexOf(Preferences.LINE_END_STRING) == -1) && (text.indexOf(Preferences.DEPTH_PAD_STRING) == -1)) {
 			return;
@@ -634,7 +636,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		// Put the Undoable onto the UndoQueue
 		CompoundUndoableInsert undoable = new CompoundUndoableInsert(currentNode.getParent());
 		tree.doc.undoQueue.add(undoable);
-		
+			
 		Node tempRoot = PadSelection.pad(text, tree, currentNode.getDepth(),Preferences.LINE_END_UNIX);
 		
 		Node parentForNewNode = currentNode.getParent();
@@ -655,7 +657,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 			Node node = tempRoot.getChild(i);
 			tree.addNodeToSelection(node);
 		}
-		
+			
 		Node nodeThatMustBeVisible = tree.getYoungestInSelection();
 
 		// Record the EditingNode and CursorPosition and ComponentFocus

@@ -134,8 +134,6 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	public void keyPressed(KeyEvent e) {
 		recordRenderer(e.getComponent());
 	
-		//System.out.println("ICON Pressed: " + e.paramString());
-
 		// Create some short names for convienence
 		TreeContext tree = textArea.node.getTree();
 		outlineLayoutManager layout = tree.doc.panel.layout;
@@ -659,10 +657,12 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		tree.doc.undoQueue.add(undoable);
 
 		// Get the text from the clipboard and turn it into a tree
-		StringSelection selection = (StringSelection) Outliner.clipboard.getContents(this);
 		String text = "";
 		try {
-			text = (String) selection.getTransferData(DataFlavor.stringFlavor);
+			Transferable selection = (Transferable) Outliner.clipboard.getContents(this);
+			if (selection != null) {
+				text = (String) selection.getTransferData(DataFlavor.stringFlavor);
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -682,13 +682,12 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			int index = node.currentIndex() + i;
 			undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode,node,index));
 		}
-		
+				
 		tree.clearSelection();
 
 		for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
 			tree.addNodeToSelection(tempRoot.getChild(i));
 		}
-
 
 		// Record the EditingNode and CursorPosition and ComponentFocus
 		tree.setEditingNode(tree.getYoungestInSelection());

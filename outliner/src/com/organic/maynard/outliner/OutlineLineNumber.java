@@ -43,8 +43,10 @@ public class OutlineLineNumber extends JLabel {
 		setVerticalAlignment(SwingConstants.TOP);
 		if (Preferences.SHOW_LINE_NUMBERS.cur) {
 			setOpaque(true);
+			LINE_NUMBER_WIDTH = LINE_NUMBER_WIDTH_DEFAULT;
 		} else {
 			setOpaque(false);
+			LINE_NUMBER_WIDTH = LINE_NUMBER_WIDTH_MIN;
 		}
 		setVisible(false);
 	}
