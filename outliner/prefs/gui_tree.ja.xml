@@ -56,7 +56,7 @@
 		<asset type="text" key="script" value="Script"/>
 		<asset type="text" key="thread" value="Thread"/>
 		<asset type="text" key="script_name" value="Script Name"/>
-		<asset type="text" key="apply" value="適用しなさい"/>
+		<asset type="text" key="apply" value="適用"/>
 		<asset type="text" key="apply_font_style_for_comments" value="Apply Font Style for Comments"/>
 		<asset type="text" key="apply_font_style_for_editability" value="Apply Font Style for Editability"/>
 		<asset type="text" key="apply_font_style_for_moveability" value="Apply Font Style for Moveability"/>
@@ -106,7 +106,7 @@
 		<asset type="text" key="escape" value="Escape"/>
 		<asset type="text" key="file_encoding" value="File Encoding"/>
 		<asset type="text" key="file_format" value="File Format"/>
-		<asset type="text" key="find" value="発見"/>
+		<asset type="text" key="find" value="検索"/>
 		<asset type="text" key="format_when_saving" value="Format when saving."/>
 		<asset type="text" key="goto_dialog_count_indents" value="Count indents for column number."/>
 		<asset type="text" key="goto_dialog_enter_column" value="Enter a column number."/>
@@ -135,7 +135,7 @@
 		<asset type="text" key="message_uh_oh" value="Uh Oh, something has gone wrong."/>
 		<asset type="text" key="modification_date" value="Modification Date:"/>
 		<asset type="text" key="name" value="名前"/>
-		<asset type="text" key="new" value="新しい"/>
+		<asset type="text" key="new" value="新規"/>
 		<asset type="text" key="new_attribute" value="New Attribute"/>
 		<asset type="text" key="new_find_replace" value="New Find/Replace"/>
 		<asset type="text" key="new_macro" value="New Macro"/>
@@ -185,7 +185,7 @@
 		<asset type="text" key="update" value="Update"/>
 		<asset type="text" key="update_macro" value="Update Macro"/>
 		<asset type="text" key="url" value="URL"/>
-		<asset type="text" key="value" value="価値"/>
+		<asset type="text" key="value" value="値"/>
 		<asset type="text" key="windows" value="Windows"/>
 		<asset type="text" key="wrap_around" value="Wrap around"/>
 		<asset type="text" key="wrap_characters" value="characters"/>
@@ -234,8 +234,8 @@
 				<preference id="tutorials_path" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="dox/JOE Tutorials.en.opml"/>
 				<preference id="about_path" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="dox/About JOE.en.opml"/>
 			<!-- USER-ADJUSTABLE PREFS -->
-				<preferencesframe id="preferences_frame" class="com.organic.maynard.outliner.util.preferences.PreferencesFrame" title="適用好み">
-					<preferencepanel id="preferences_panel_editor" class="com.organic.maynard.outliner.util.preferences.PreferencesPanelEditor" title="編集者">
+				<preferencesframe id="preferences_frame" class="com.organic.maynard.outliner.util.preferences.PreferencesFrame" title="環境設定">
+					<preferencepanel id="preferences_panel_editor" class="com.organic.maynard.outliner.util.preferences.PreferencesPanelEditor" title="編集">
 						<preference_container id="font_preference_container" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeSubContainer" style="titled" label=" Font Settings ">
 							<preference id="font_face" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="SansSerif">
 								<preference_component id="font_face_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Font Face" list="font_family_names"/>
@@ -290,7 +290,7 @@
 							</preference>
 						</preference_container>
 					</preferencepanel>
-					<preferencepanel id="preferences_panel_look_and_feel" class="com.organic.maynard.outliner.util.preferences.PreferencesPanelLookAndFeel" title="一見と感じ">
+					<preferencepanel id="preferences_panel_look_and_feel" class="com.organic.maynard.outliner.util.preferences.PreferencesPanelLookAndFeel" title="ルック＆フィール">
 						<preference id="desktop_background_color" class="com.organic.maynard.outliner.util.preferences.PreferenceColor" default="-16777216">
 							<preference_component id="desktop_background_color_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeColorButtonComponent" label="Desktop Color"/>
 						</preference>
@@ -348,7 +348,7 @@
 							<preference_component id="document_titles_name_form_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="Document Titles" list="recent_files_name_forms"/>
 						</preference>
 					</preferencepanel>
-					<preferencepanel id="preferences_panel_open_and_save" class="com.organic.maynard.outliner.util.preferences.PreferencesPanelOpenAndSave" title="開け, 救いなさい">
+					<preferencepanel id="preferences_panel_open_and_save" class="com.organic.maynard.outliner.util.preferences.PreferencesPanelOpenAndSave" title="開く /保存">
 						<preference_container id="open_and_save_general_preference_container" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeSubContainer" style="titled" label=" General ">
 							<preference id="file_protocol" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="Local File System">
 								<preference_component id="file_protocol_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeComboBoxComponent" label="File Protocol" style="single_centered" list="file_protocols"/>
@@ -456,7 +456,7 @@
 							<preference_component id="ignore_sentence_cap_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeCheckBoxComponent" label="Ignore sentence capitalization"/>
 						</preference>
 					</preferencepanel>
-					<preferencepanel id="preferences_panel_misc" class="com.organic.maynard.outliner.util.preferences.PreferencesPanelMisc" title="雑多">
+					<preferencepanel id="preferences_panel_misc" class="com.organic.maynard.outliner.util.preferences.PreferencesPanelMisc" title="その他">
 						<preference id="print_environment" class="com.organic.maynard.outliner.util.preferences.PreferenceBoolean" default="false">
 							<validator id="print_environment_validator" class="com.organic.maynard.outliner.util.preferences.BooleanValidator"/>
 							<preference_component id="print_environment_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeCheckBoxComponent" label="Print environment to console on startup"/>
@@ -485,50 +485,50 @@
 	<!-- MENUBARS -->
 		<menubar id="menubar" class="com.organic.maynard.outliner.menus.OutlinerDesktopMenuBar">
 			<menu id="file" class="com.organic.maynard.outliner.menus.file.FileMenu" text="ファイル" mnemonic="f">
-				<menuitem id="new_file" class="com.organic.maynard.outliner.menus.file.NewFileMenuItem" text="新しい" keybinding="N" keybindingmodifiers="shortcut"/>
-				<menuitem id="open" class="com.organic.maynard.outliner.menus.OutlinerSubMenuItem" text="開いた"/>
-				<menu id="recent_file_list" class="com.organic.maynard.outliner.menus.file.RecentFilesList" text="最近のファイル">
+				<menuitem id="new_file" class="com.organic.maynard.outliner.menus.file.NewFileMenuItem" text="新規" keybinding="N" keybindingmodifiers="shortcut"/>
+				<menuitem id="open" class="com.organic.maynard.outliner.menus.OutlinerSubMenuItem" text="開く"/>
+				<menu id="recent_file_list" class="com.organic.maynard.outliner.menus.file.RecentFilesList" text="最近使ったファイル">
 				</menu>
 				<separator/>
-				<menuitem id="import" class="com.organic.maynard.outliner.menus.OutlinerSubMenuItem" text="輸入"/>
+				<menuitem id="import" class="com.organic.maynard.outliner.menus.OutlinerSubMenuItem" text="読み込み"/>
 				<separator/>
-				<menuitem id="save" class="com.organic.maynard.outliner.menus.file.SaveFileMenuItem" text="を除けば" keybinding="S" keybindingmodifiers="shortcut"/>
-				<menuitem id="save_all" class="com.organic.maynard.outliner.menus.file.SaveAllFileMenuItem" text="すべてを除けば"/>
-				<menuitem id="save_as" class="com.organic.maynard.outliner.menus.file.SaveAsSubMenuItem" text="新しい名前とを除けば"/>
-				<menuitem id="revert" class="com.organic.maynard.outliner.menus.file.RevertFileMenuItem" text="戻しなさい"/>
+				<menuitem id="save" class="com.organic.maynard.outliner.menus.file.SaveFileMenuItem" text="保存" keybinding="S" keybindingmodifiers="shortcut"/>
+				<menuitem id="save_all" class="com.organic.maynard.outliner.menus.file.SaveAllFileMenuItem" text="すべてを保存"/>
+				<menuitem id="save_as" class="com.organic.maynard.outliner.menus.file.SaveAsSubMenuItem" text="別名で保存"/>
+				<menuitem id="revert" class="com.organic.maynard.outliner.menus.file.RevertFileMenuItem" text="戻す"/>
 				<separator/>
-				<menuitem id="export" class="com.organic.maynard.outliner.menus.file.ExportSubMenuItem" text="輸出"/>
-				<menuitem id="export_selection" class="com.organic.maynard.outliner.menus.file.ExportSelectionSubMenuItem" text="輸出選択"/>
+				<menuitem id="export" class="com.organic.maynard.outliner.menus.file.ExportSubMenuItem" text="書き出し"/>
+				<menuitem id="export_selection" class="com.organic.maynard.outliner.menus.file.ExportSelectionSubMenuItem" text="書き出し選択"/>
 				<separator/>
-				<menuitem id="close" class="com.organic.maynard.outliner.menus.file.CloseFileMenuItem" text="終わり" keybinding="W" keybindingmodifiers="shortcut"/>
-				<menuitem id="close_all" class="com.organic.maynard.outliner.menus.file.CloseAllFileMenuItem" text="すべてを閉めなさい"/>
+				<menuitem id="close" class="com.organic.maynard.outliner.menus.file.CloseFileMenuItem" text="閉じる" keybinding="W" keybindingmodifiers="shortcut"/>
+				<menuitem id="close_all" class="com.organic.maynard.outliner.menus.file.CloseAllFileMenuItem" text="すべてを閉じる"/>
 				<separator/>
-				<menuitem id="quit" class="com.organic.maynard.outliner.menus.file.QuitMenuItem" text="やめられる" keybinding="Q" keybindingmodifiers="shortcut"/>
+				<menuitem id="quit" class="com.organic.maynard.outliner.menus.file.QuitMenuItem" text="終了" keybinding="Q" keybindingmodifiers="shortcut"/>
 			</menu>
-			<menu id="edit" class="com.organic.maynard.outliner.menus.edit.EditMenu" text="編集しなさい" mnemonic="e">
-				<menuitem id="undo" class="com.organic.maynard.outliner.menus.edit.UndoMenuItem" text="取消しなさい" keybinding="Z" keybindingmodifiers="shortcut"/>
-				<menuitem id="redo" class="com.organic.maynard.outliner.menus.edit.RedoMenuItem" text="やり直しなさい" keybinding="Z" keybindingmodifiers="shortcut shift"/>
+			<menu id="edit" class="com.organic.maynard.outliner.menus.edit.EditMenu" text="編集" mnemonic="e">
+				<menuitem id="undo" class="com.organic.maynard.outliner.menus.edit.UndoMenuItem" text="取り消し" keybinding="Z" keybindingmodifiers="shortcut"/>
+				<menuitem id="redo" class="com.organic.maynard.outliner.menus.edit.RedoMenuItem" text="やり直し" keybinding="Z" keybindingmodifiers="shortcut shift"/>
 				<separator/>
-				<menuitem id="undo_all" class="com.organic.maynard.outliner.menus.edit.UndoAllMenuItem" text="すべてを取消しなさい"/>
-				<menuitem id="redo_all" class="com.organic.maynard.outliner.menus.edit.RedoAllMenuItem" text="すべてをやり直しなさい"/>
+				<menuitem id="undo_all" class="com.organic.maynard.outliner.menus.edit.UndoAllMenuItem" text="すべてを取り消し"/>
+				<menuitem id="redo_all" class="com.organic.maynard.outliner.menus.edit.RedoAllMenuItem" text="すべてをやり直し"/>
 				<separator/>
-				<menuitem id="cut" class="com.organic.maynard.outliner.menus.edit.CutMenuItem" text="切口" keybinding="X" keybindingmodifiers="shortcut"/>
-				<menuitem id="copy" class="com.organic.maynard.outliner.menus.edit.CopyMenuItem" text="複写" keybinding="C" keybindingmodifiers="shortcut"/>
-				<menuitem id="paste" class="com.organic.maynard.outliner.menus.edit.PasteMenuItem" text="のり" keybinding="V" keybindingmodifiers="shortcut"/>
+				<menuitem id="cut" class="com.organic.maynard.outliner.menus.edit.CutMenuItem" text="カット" keybinding="X" keybindingmodifiers="shortcut"/>
+				<menuitem id="copy" class="com.organic.maynard.outliner.menus.edit.CopyMenuItem" text="コピー" keybinding="C" keybindingmodifiers="shortcut"/>
+				<menuitem id="paste" class="com.organic.maynard.outliner.menus.edit.PasteMenuItem" text="ペースト" keybinding="V" keybindingmodifiers="shortcut"/>
 				<menuitem id="delete" class="com.organic.maynard.outliner.menus.edit.DeleteMenuItem" text="削除" keybinding="delete"/>
 				<separator/>
-				<menuitem id="select_all" class="com.organic.maynard.outliner.menus.edit.SelectAllMenuItem" text="すべてを選びなさい" keybinding="A" keybindingmodifiers="shortcut"/>
-				<menuitem id="select_none" class="com.organic.maynard.outliner.menus.edit.SelectNoneMenuItem" text="どれも選んではいけない" keybinding="D" keybindingmodifiers="shortcut"/>
-				<menuitem id="select_inverse" class="com.organic.maynard.outliner.menus.edit.SelectInverseMenuItem" text="の反対に選びなさい" keybinding="I" keybindingmodifiers="shortcut"/>
+				<menuitem id="select_all" class="com.organic.maynard.outliner.menus.edit.SelectAllMenuItem" text="すべてを選択" keybinding="A" keybindingmodifiers="shortcut"/>
+				<menuitem id="select_none" class="com.organic.maynard.outliner.menus.edit.SelectNoneMenuItem" text="すべてを選択解除" keybinding="D" keybindingmodifiers="shortcut"/>
+				<menuitem id="select_inverse" class="com.organic.maynard.outliner.menus.edit.SelectInverseMenuItem" text="選択反転" keybinding="I" keybindingmodifiers="shortcut"/>
 				<separator/>
-				<menuitem id="preferences" class="com.organic.maynard.outliner.menus.edit.PreferencesMenuItem" text="適用好み..."/>
-				<menuitem id="edit_document_settings" class="com.organic.maynard.outliner.menus.edit.EditDocumentSettingsMenuItem" text="文書の好み..."/>
-				<menuitem id="edit_document_attributes" class="com.organic.maynard.outliner.menus.edit.EditDocumentAttributesMenuItem" text="文書の属性..."/>
+				<menuitem id="preferences" class="com.organic.maynard.outliner.menus.edit.PreferencesMenuItem" text="環境設定..."/>
+				<menuitem id="edit_document_settings" class="com.organic.maynard.outliner.menus.edit.EditDocumentSettingsMenuItem" text="書類設定..."/>
+				<menuitem id="edit_document_attributes" class="com.organic.maynard.outliner.menus.edit.EditDocumentAttributesMenuItem" text="書類属性..."/>
 				<separator/>
 				<menuitem id="check_spelling" class="com.organic.maynard.outliner.menus.edit.CheckSpellingMenuItem" text="Check Spelling" keybinding="K" keybindingmodifiers="shortcut"/>
 				<menuitem id="check_spelling_for_selection" class="com.organic.maynard.outliner.menus.edit.CheckSpellingForSelectionMenuItem" text="Check Spelling for Selection" keybinding="K" keybindingmodifiers="shortcut shift"/>
 			</menu>
-			<menu id="outline" class="com.organic.maynard.outliner.menus.outline.OutlineMenu" text="輪郭" mnemonic="o">
+			<menu id="outline" class="com.organic.maynard.outliner.menus.outline.OutlineMenu" text="アウトライン" mnemonic="o">
 				<menuitem id="comment_submenu" class="com.organic.maynard.outliner.menus.OutlinerSubMenuItem" text="Comments">
 					<menuitem id="toggle_comment_and_clear" class="com.organic.maynard.outliner.menus.outline.ToggleCommentAndClearMenuItem" text="Toggle Comment and Clear Subnodes" keybinding="page_up"/>
 					<menuitem id="clear_comments" class="com.organic.maynard.outliner.menus.outline.ClearCommentsMenuItem" text="Clear Comments in selected nodes" keybinding="page_up" keybindingmodifiers="shortcut shift"/>
@@ -576,20 +576,20 @@
 				<separator/>
 				<menuitem id="toggle_attributes" class="com.organic.maynard.outliner.menus.outline.ToggleAttributesMenuItem" text="X" show="Show Attributes" hide="Hide Attributes" keybinding="T" keybindingmodifiers="shortcut"/>
 			</menu>
-			<menu id="search" class="com.organic.maynard.outliner.menus.search.SearchMenu" text="調査" mnemonic="s">
-				<menuitem id="goto" class="com.organic.maynard.outliner.menus.search.GoToMenuItem" text="並ぶことを行きなさい..." keybinding="G" keybindingmodifiers="shortcut"/>
+			<menu id="search" class="com.organic.maynard.outliner.menus.search.SearchMenu" text="検索" mnemonic="s">
+				<menuitem id="goto" class="com.organic.maynard.outliner.menus.search.GoToMenuItem" text="移動..." keybinding="G" keybindingmodifiers="shortcut"/>
 				<separator/>
-				<menuitem id="find" class="com.organic.maynard.outliner.menus.search.FindMenuItem" text="見つけるか/または取り替えなさい..." keybinding="F" keybindingmodifiers="shortcut"/>
+				<menuitem id="find" class="com.organic.maynard.outliner.menus.search.FindMenuItem" text="検索/置換..." keybinding="F" keybindingmodifiers="shortcut"/>
 			</menu>
-			<menu id="script" class="com.organic.maynard.outliner.menus.script.ScriptMenu" text="原稿" mnemonic="c">
+			<menu id="script" class="com.organic.maynard.outliner.menus.script.ScriptMenu" text="スクリプト" mnemonic="c">
 				<menuitem id="macros" class="com.organic.maynard.outliner.menus.script.MacrosMenuItem" text="マクロマネージャー..."/>
 				<separator/>
 				<run_as_bsh_script id="run_as_bsh_script" class="com.organic.maynard.outliner.menus.script.RunAsBSHScriptMenuItem" text="Run as Bean Shell Script"/>
 				<menuitem id="bsh_console" class="com.organic.maynard.outliner.menus.script.BSHConsoleMenuItem" text="Bean Shell Console"/>
-				<menuitem id="scripts_manager" class="com.organic.maynard.outliner.menus.script.ScriptsManagerMenuItem" text="原稿のマネージャー..."/>
+				<menuitem id="scripts_manager" class="com.organic.maynard.outliner.menus.script.ScriptsManagerMenuItem" text="スクリプトマネージャー..."/>
 			</menu>
-			<menu id="window" class="com.organic.maynard.outliner.menus.window.WindowMenu" text="窓" mnemonic="w">
-				<menuitem id="statistics" class="com.organic.maynard.outliner.menus.window.StatisticsMenuItem" text="文書の統計量..."/>
+			<menu id="window" class="com.organic.maynard.outliner.menus.window.WindowMenu" text="ウインドウ" mnemonic="w">
+				<menuitem id="statistics" class="com.organic.maynard.outliner.menus.window.StatisticsMenuItem" text="書類の統計..."/>
 				<separator/>
 				<menuitem id="stack" class="com.organic.maynard.outliner.menus.window.StackMenuItem" text="Stack"/>
 				<menuitem id="maximize_submenu" class="com.organic.maynard.outliner.menus.OutlinerSubMenuItem" text="Maximize">
@@ -602,18 +602,18 @@
 					<menuitem id="tile_gridly" class="com.organic.maynard.outliner.menus.window.TileGridMenuItem" text="Grid"/>
 				</menuitem>
 				<separator/>
-				<menuitem id="next_window" class="com.organic.maynard.outliner.menus.window.NextWindowMenuItem" text="Next" keybinding="S" keybindingmodifiers="shortcut shift"/>
-				<menuitem id="prev_window" class="com.organic.maynard.outliner.menus.window.PrevWindowMenuItem" text="Previous" keybinding="A" keybindingmodifiers="shortcut shift"/>
+				<menuitem id="next_window" class="com.organic.maynard.outliner.menus.window.NextWindowMenuItem" text="次へ" keybinding="S" keybindingmodifiers="shortcut shift"/>
+				<menuitem id="prev_window" class="com.organic.maynard.outliner.menus.window.PrevWindowMenuItem" text="前へ" keybinding="A" keybindingmodifiers="shortcut shift"/>
 				<separator/>
 			</menu>
-			<menu id="help" class="com.organic.maynard.outliner.menus.help.HelpMenu" text="助け" mnemonic="h">
-				<menuitem id="about" class="com.organic.maynard.outliner.menus.help.HTMLViewerMenuItem" text="About JOE" path="rsrc/about.html"/>
-				<menuitem id="third_party" class="com.organic.maynard.outliner.menus.help.HTMLViewerMenuItem" text="About 3rd Party Libraries" path="rsrc/versions.html"/>
+			<menu id="help" class="com.organic.maynard.outliner.menus.help.HelpMenu" text="ヘルプ" mnemonic="h">
+				<menuitem id="about" class="com.organic.maynard.outliner.menus.help.HTMLViewerMenuItem" text="JOEについて" path="rsrc/about.html"/>
+				<menuitem id="third_party" class="com.organic.maynard.outliner.menus.help.HTMLViewerMenuItem" text="3rd Partyライブラリについて" path="rsrc/versions.html"/>
 				<separator/>
-				<menuitem id="release_notes" class="com.organic.maynard.outliner.menus.help.HTMLViewerMenuItem" text="Release Notes" path="rsrc/release_notes.html"/>
+				<menuitem id="release_notes" class="com.organic.maynard.outliner.menus.help.HTMLViewerMenuItem" text="リリースノート" path="rsrc/release_notes.html"/>
 				<separator/>
-				<menuitem id="userGuide" class="com.organic.maynard.outliner.menus.help.HTMLViewerMenuItem" text="User Guide" path="rsrc/user_guide.html"/>
-				<menuitem id="developerGuide" class="com.organic.maynard.outliner.menus.help.HTMLViewerMenuItem" text="Developer Guide" path="rsrc/developer_guide.html"/>
+				<menuitem id="userGuide" class="com.organic.maynard.outliner.menus.help.HTMLViewerMenuItem" text="ユーザガイド" path="rsrc/user_guide.html"/>
+				<menuitem id="developerGuide" class="com.organic.maynard.outliner.menus.help.HTMLViewerMenuItem" text="デベロッパガイド" path="rsrc/developer_guide.html"/>
 			</menu>
 		</menubar>
 	<!-- MISC COMPONENTS -->
