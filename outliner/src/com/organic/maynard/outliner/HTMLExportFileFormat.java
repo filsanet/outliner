@@ -107,7 +107,10 @@ class SelectHTMLExportStyleDialog extends AbstractOutlinerJDialog implements Act
 		File[] fileNames = CSS_DIR.listFiles();
 		
 		for (int i = 0; i < fileNames.length; i++) {
-			styles.addItem(fileNames[i]);
+			File file = fileNames[i];
+			if (file.isFile()) {
+				styles.addItem(file);
+			}
 		}
 		
 		super.show();		
@@ -151,7 +154,7 @@ public class HTMLExportFileFormat implements ExportFileFormat, JoeReturnCodes {
 
 	
 	// ExportFileFormat Interface
-	public boolean supportsComments() {return false;}
+	public boolean supportsComments() {return true;}
 	public boolean supportsEditability() {return false;}
 	public boolean supportsMoveability() {return false;}
 	public boolean supportsAttributes() {return false;}
@@ -279,6 +282,8 @@ public class HTMLExportFileFormat implements ExportFileFormat, JoeReturnCodes {
 
 	private static final String CSS_BRANCH = "branch";
 	private static final String CSS_LEAF = "leaf";
+	private static final String CSS_BRANCH_COMMENT = "branchcomment";
+	private static final String CSS_LEAF_COMMENT = "leafcomment";
 	
 	private void buildOutlineElement(Node node, String lineEnding, StringBuffer buf, int max_style_depth) {
 		indent(node, buf);
@@ -286,9 +291,17 @@ public class HTMLExportFileFormat implements ExportFileFormat, JoeReturnCodes {
 		// Calculate CSS Class
 		String cssClass = "";
 		if (node.isLeaf()) {
-			cssClass = CSS_LEAF;
+			if (node.isComment()) {
+				cssClass = CSS_LEAF_COMMENT;
+			} else {
+				cssClass = CSS_LEAF;
+			}
 		} else {
-			cssClass = CSS_BRANCH;
+			if (node.isComment()) {
+				cssClass = CSS_BRANCH_COMMENT;
+			} else {
+				cssClass = CSS_BRANCH;
+			}
 		}
 		
 		if (node.getDepth() <= max_style_depth) {
