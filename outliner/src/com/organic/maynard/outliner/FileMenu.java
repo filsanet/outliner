@@ -123,7 +123,9 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 
 	// File Menu Methods
 	public static void quit() {
-		closeAllOutlinerDocuments();
+		if (!closeAllOutlinerDocuments()) {
+			return;
+		}
 
 		// Hide Desktop
 		Outliner.outliner.setVisible(false);
@@ -140,10 +142,13 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		OutlinerWindowMonitor.closeInternalFrame(document);
 	}
 
-	protected static void closeAllOutlinerDocuments() {
+	protected static boolean closeAllOutlinerDocuments() {
 		for (int i = Outliner.openDocumentCount() - 1; i >= 0; i--) {
-			OutlinerWindowMonitor.closeInternalFrame(Outliner.getDocument(i));
+			if (!OutlinerWindowMonitor.closeInternalFrame(Outliner.getDocument(i))) {
+				return false;
+			}
 		}
+		return true;
 	}
 
 	protected static void newOutlinerDocument() {

@@ -28,7 +28,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 		closeInternalFrame(e.getInternalFrame());
 	}
 	
-	public static void closeInternalFrame(JInternalFrame w) {
+	public static boolean closeInternalFrame(JInternalFrame w) {
 		// Confirm Close when the document is not saved.
 		OutlinerDocument doc = (OutlinerDocument) w;
 		
@@ -39,7 +39,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 			} else if (result == JOptionPane.NO_OPTION) {
 				// Do Nothing
 			} else if (result == JOptionPane.CANCEL_OPTION) {
-				return;
+				return false;
 			}
 		} else if (doc.isFileModified()) {
 			int result = JOptionPane.showConfirmDialog(doc, "The text in the " + doc.getFileName() + " file has changed.\nDo you want to save the changes?");
@@ -48,7 +48,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 			} else if (result == JOptionPane.NO_OPTION) {
 				// Do Nothing
 			} else if (result == JOptionPane.CANCEL_OPTION) {
-				return;
+				return false;
 			}
 		}
 
@@ -63,6 +63,8 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 		Outliner.removeDocument(doc);
 
 		// Update the Save All Menu Item
-		Outliner.updateSaveAllMenuItem();	
+		Outliner.updateSaveAllMenuItem();
+		
+		return true;
 	}
 }
