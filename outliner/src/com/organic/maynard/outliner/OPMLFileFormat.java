@@ -116,20 +116,17 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	
 	private String escapeXMLAttribute(String text) {
 		text = StringTools.replace(text, "&", "&amp;");
-		text = StringTools.replace(text, "\"", "&quot;");
 		text = StringTools.replace(text, "<", "&lt;");
-		text = StringTools.replace(text, ">", "&gt;");
+		text = StringTools.replace(text, "\"", "&quot;");
 		return text;
 	}
 
 	private String escapeXMLText(String text) {
 		text = StringTools.replace(text, "&", "&amp;");
-		text = StringTools.replace(text, "\"", "&quot;");
 		text = StringTools.replace(text, "<", "&lt;");
-		text = StringTools.replace(text, ">", "&gt;");
+		text = StringTools.replace(text, "]]>", "]]&gt;");
 		return text;
 	}
-
 
 	
 	// OpenFileFormat Interface
