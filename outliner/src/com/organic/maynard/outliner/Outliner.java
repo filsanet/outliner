@@ -294,6 +294,39 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 				e.printStackTrace();
 			}
 		}
+		
+		// Copy over config.txt from installation directory if it doesn't exist in the user's home directory.
+		File userConfigFile = new File(CONFIG_FILE);
+		if (!userConfigFile.exists()) {
+			System.out.println("Copying over config.txt file: " + userConfigFile.getPath());
+			try {
+				FileTools.copy(new File(PREFS_DIR + "config.txt"), userConfigFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// Copy over recent_files.xml from installation directory if it doesn't exist in the user's home directory.
+		File userRecentFilesFile = new File(RECENT_FILES_FILE);
+		if (!userRecentFilesFile.exists()) {
+			System.out.println("Copying over recent_files.xml file: " + userRecentFilesFile.getPath());
+			try {
+				FileTools.copy(new File(PREFS_DIR + "recent_files.xml"), userRecentFilesFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// Copy over open_files.xml from installation directory if it doesn't exist in the user's home directory.
+		File userOpemFilesFile = new File(OPEN_FILES_FILE);
+		if (!userOpemFilesFile.exists()) {
+			System.out.println("Copying over open_files.xml file: " + userOpemFilesFile.getPath());
+			try {
+				FileTools.copy(new File(PREFS_DIR + "open_files.xml"), userOpemFilesFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	// XML Parser
