@@ -118,6 +118,7 @@ public interface Node {
 	
 	public void setAttribute(String key, Object value);
 	public Object getAttribute(String key);
+	public int getAttributeCount();
 	public Iterator getAttributeKeys();
 
 	// String Representation Methods

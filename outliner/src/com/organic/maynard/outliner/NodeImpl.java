@@ -569,6 +569,13 @@ public class NodeImpl implements Node {
 		return null;
 	}
 	
+	public int getAttributeCount() {
+		if (attributes != null) {
+			return attributes.size();
+		}
+		return 0;
+	}
+	
 	public Iterator getAttributeKeys() {
 		if (attributes != null) {
 			return attributes.keySet().iterator();

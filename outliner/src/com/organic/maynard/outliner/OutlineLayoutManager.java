@@ -222,6 +222,8 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		startPoint.y = Preferences.getPreferenceInt(Preferences.TOP_MARGIN).cur;
 		
 		Node node = getNodeToDrawFrom();
+		if (node == null) {return;}
+		
 		int nodeIndex = ioNodeToDrawFrom;
 		
 		// Pre-compute some values
@@ -288,6 +290,8 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		startPoint.y = this.bottom - Preferences.getPreferenceInt(Preferences.BOTTOM_MARGIN).cur;
 
 		Node node = getNodeToDrawFrom();
+		if (node == null) {return;}
+
 		int nodeIndex = ioNodeToDrawFrom;
 
 		// Pre-compute some values
@@ -459,6 +463,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		switch (type) {
 			case TEXT:
 				renderer.requestFocus();
+				renderer.getCaret().setVisible(true); // This fixes a problem where the caret becomes invisible when it shouldn't be.
 				
 				// Restore the Caret Position and text selection.
 				try {
@@ -507,11 +512,15 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		// Update the scrollbar size
 		Dimension d = scrollBar.getPreferredSize();
 		scrollBar.setBounds(right - d.width, top, d.width, bottom - top);
+		
+		// Redraw. This is here to support the split pane, it may have introduced a redundant draw. I'll have to check on that later.
+		//draw();
+		//setFocus(panel.doc.tree.getEditingNode(), panel.doc.tree.getComponentFocus());
 
 	}
 
-	public Dimension minimumLayoutSize(Container parent) {return new Dimension(0,0);}
-	public Dimension preferredLayoutSize(Container parent) {return parent.getPreferredSize();}
+	public Dimension minimumLayoutSize(Container parent) {return new Dimension(0,32);}
+	public Dimension preferredLayoutSize(Container parent) {return parent.getSize();}
 	public void addLayoutComponent(String name, Component comp) {}
 	public void removeLayoutComponent(Component comp) {}
 }

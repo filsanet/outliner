@@ -52,7 +52,7 @@ public class TreeContext {
 		insertNode(child);
 		
 		// Record the current location
-		setEditingNode(child);	
+		setEditingNode(child, false);	
 	}
 	
 	public void destroy() {
@@ -112,7 +112,18 @@ public class TreeContext {
 	private int cursorMarkPosition = 0;
 	private int componentFocus = OutlineLayoutManager.TEXT;
 
-	public void setEditingNode(Node editingNode) {this.editingNode = editingNode;}
+	public void setEditingNode(Node editingNode) {
+		setEditingNode(editingNode, true);
+	}
+
+	public void setEditingNode(Node editingNode, boolean updateAttPanel) {
+		this.editingNode = editingNode;
+		
+		if (updateAttPanel) {
+			doc.attPanel.update();
+		}
+	}
+	
 	public Node getEditingNode() {return editingNode;}
 
 	public void setCursorMarkPosition(int cursorMarkPosition) {this.cursorMarkPosition = cursorMarkPosition;}

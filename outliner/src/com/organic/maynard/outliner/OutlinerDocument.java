@@ -29,7 +29,9 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
 
-public class OutlinerDocument extends JInternalFrame implements ComponentListener {
+import java.beans.*;
+
+public class OutlinerDocument extends JInternalFrame implements ComponentListener, PropertyChangeListener {
 
 	// Constants
 	public static final String UNTITLED_DOCUMENT_NAME = "Untitled";
@@ -56,6 +58,10 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	public UndoQueue undoQueue = new UndoQueue(this);
 	public DocumentSettings settings = new DocumentSettings(this);
 	public HoistStack hoistStack = new HoistStack(this);
+	
+	public JSplitPane splitPane = null;
+	public AttributesPanel attPanel = new AttributesPanel(this);
+	public JScrollPane attJSP = new JScrollPane(attPanel);
 
 	
 	// The Constructor
@@ -83,17 +89,50 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		// Create the Layout
 		restoreWindowToInitialSize();
 		setLocation(INITIAL_X, INITIAL_Y);
-		getContentPane().add(panel, BorderLayout.CENTER);
 		
+		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, panel, attJSP);
+		splitPane.setResizeWeight(1.0);
+		splitPane.addPropertyChangeListener(this);
+
 		// Set the icon in the frame header.
 		setFrameIcon(ICON_DOCUMENT_UNSAVED);
 		
 		// Draw and Set Focus to the First Visible Node
 		Outliner.menuBar.windowMenu.changeToWindow(this);
 
+		dividerPosition = getSize().height - 100;
+		showAttributes(true);
+
 		setVisible(true);
+	}
+	
+	
+	// Attributes Panel
+	private boolean isShowingAttributes = false;
+	private int dividerPosition = 0;
+	
+	public boolean isShowingAttributes() {return this.isShowingAttributes;}
+	
+	public void showAttributes(boolean b) {
+		if (b) {
+			getContentPane().remove(panel);
+			splitPane.setTopComponent(panel);
+			attPanel.update();
+			getContentPane().add(splitPane, BorderLayout.CENTER);
+			System.out.println("position: " + dividerPosition);
+			splitPane.setDividerLocation(dividerPosition);
+		} else {
+			dividerPosition = splitPane.getDividerLocation();
+			getContentPane().remove(splitPane);
+			getContentPane().add(panel, BorderLayout.CENTER);
+		}
+
+		validate();
 				
-		panel.layout.draw((Node) tree.visibleNodes.get(0), OutlineLayoutManager.TEXT);
+		panel.layout.draw();
+		panel.layout.setFocus(tree.getEditingNode(),tree.getComponentFocus());
+
+		isShowingAttributes = b;
 	}
 	
 	public void destroy() {
@@ -220,5 +259,14 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 			retVal = node.getValue().length();
 		}
 		return retVal;
+	}
+	
+	
+	// PropertyChangeListener Interface
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getPropertyName().equals(JSplitPane.DIVIDER_LOCATION_PROPERTY)) {
+			panel.layout.draw();
+			panel.layout.setFocus(panel.doc.tree.getEditingNode(), panel.doc.tree.getComponentFocus());
+		}
 	}
 }

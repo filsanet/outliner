@@ -54,6 +54,7 @@ public class GUITreeComponentRegistry {
 	public static final String SELECT_ALL_MENU_ITEM = "select_all";
 	public static final String EDIT_DOCUMENT_SETTINGS_MENU_ITEM = "edit_document_settings";
 
+	public static final String OUTLINE_TOGGLE_ATTRIBUTES_MENU_ITEM = "toggle_attributes";
 	public static final String OUTLINE_TOGGLE_COMMENT_MENU_ITEM = "toggle_comment";
 	public static final String OUTLINE_TOGGLE_EXPANSION_MENU_ITEM = "toggle_expansion";
 	public static final String OUTLINE_EXPAND_ALL_SUBHEADS_MENU_ITEM = "expand_all_subheads";

@@ -78,6 +78,12 @@ public class OutlineMenu extends AbstractOutlinerMenu implements GUITreeComponen
 			Outliner.menuBar.outlineMenu.setEnabled(false);
 		} else {
 			Outliner.menuBar.outlineMenu.setEnabled(true);
+			ToggleAttributesMenuItem toggleAttributesItem = (ToggleAttributesMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.OUTLINE_TOGGLE_ATTRIBUTES_MENU_ITEM);
+			if (doc.isShowingAttributes()) {
+				toggleAttributesItem.setShowMode(false);
+			} else {
+				toggleAttributesItem.setShowMode(true);
+			}
 		}
 	}
 }
