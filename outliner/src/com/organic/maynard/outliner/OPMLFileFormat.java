@@ -337,8 +337,8 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 					}
 				}
 			} else {
-				if (isEditable) {
-					node.setEditableState(Node.EDITABLE_TRUE);
+				if (!isEditable) {
+					node.setEditableState(Node.EDITABLE_FALSE);
 				}
 			}
 
@@ -351,8 +351,8 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 					}
 				}
 			} else {
-				if (isMoveable) {
-					node.setMoveableState(Node.MOVEABLE_TRUE);
+				if (!isMoveable) {
+					node.setMoveableState(Node.MOVEABLE_FALSE);
 				}
 			}
 						
