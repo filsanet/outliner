@@ -274,6 +274,12 @@ public class TextKeyListener implements KeyListener, MouseListener {
 					break;
 				}
 				return;
+
+			case KeyEvent.VK_D:
+				if (e.isControlDown()) {
+					selectNone(tree,layout);
+				}
+				break;
 				
 			default:
 				return;
@@ -801,7 +807,24 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		// Redraw and Set Focus
 		layout.draw(newNode,OutlineLayoutManager.TEXT);
 	}
-	
+
+	private void selectNone(TreeContext tree, OutlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+
+		// Clear Text Selection
+		int caretPosition = textArea.getCaretPosition();
+		tree.setCursorPosition(caretPosition);
+		textArea.setCaretPosition(caretPosition);
+		textArea.moveCaretPosition(caretPosition);
+		
+		// Update the undoable if neccessary
+		UndoableEdit undoable = tree.doc.undoQueue.getIfEdit();
+		if ((undoable != null) && (undoable.getNode() == currentNode) && (!undoable.isFrozen())) {
+			undoable.setNewPosition(caretPosition);
+			undoable.setNewMarkPosition(caretPosition);
+		}
+	}
+		
 	private void promote(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 

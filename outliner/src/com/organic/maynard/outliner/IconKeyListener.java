@@ -276,6 +276,14 @@ public class IconKeyListener implements KeyListener, MouseListener {
 					return;
 				}
 
+			case KeyEvent.VK_D:
+				if (e.isControlDown() && !e.isShiftDown()) {
+					selectNone(tree,layout);
+					break;
+				} else {
+					return;
+				}
+
 			case KeyEvent.VK_M:
 				if (e.isControlDown()) {
 					if (e.isShiftDown()) {
@@ -721,6 +729,10 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 		// Redraw and Set Focus
 		layout.draw(currentNode,OutlineLayoutManager.ICON);
+	}
+
+	private void selectNone(TreeContext tree, OutlineLayoutManager layout) {
+		changeFocusToTextArea(tree, layout, POSITION_FIRST);
 	}
 
 	private void changeToParent(TreeContext tree, OutlineLayoutManager layout) {

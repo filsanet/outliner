@@ -52,6 +52,7 @@ public class GUITreeComponentRegistry {
 	public static final String COPY_MENU_ITEM = "copy";
 	public static final String PASTE_MENU_ITEM = "paste";
 	public static final String SELECT_ALL_MENU_ITEM = "select_all";
+	public static final String SELECT_NONE_MENU_ITEM = "select_none";
 	public static final String EDIT_DOCUMENT_SETTINGS_MENU_ITEM = "edit_document_settings";
 
 	public static final String OUTLINE_TOGGLE_ATTRIBUTES_MENU_ITEM = "toggle_attributes";

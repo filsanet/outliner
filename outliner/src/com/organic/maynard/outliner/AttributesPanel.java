@@ -34,7 +34,7 @@ public class AttributesPanel extends JTable {
 	private TableCellRenderer removeColRenderer = new RemoveColumnRenderer(this);
 	private TableCellEditor removeColEditor = new RemoveColumnRenderer(this);
 
-	private RemoveColumnHeaderRenderer removeColumnHeaderRenderer = new RemoveColumnHeaderRenderer(this);
+	private RemoveColumnHeaderRenderer removeColumnHeaderRenderer = new RemoveColumnHeaderRenderer();
 	
 	// GUI Fields
 	private AttributeTableModel model = null;
@@ -53,10 +53,6 @@ public class AttributesPanel extends JTable {
 		removeColumn.setResizable(false);
 		removeColumn.setCellRenderer(removeColRenderer);
 		removeColumn.setCellEditor(removeColEditor);
-		
-		removeColumn.setHeaderRenderer(removeColumnHeaderRenderer);
-		getTableHeader().addMouseListener(removeColumnHeaderRenderer);
-		getTableHeader().setReorderingAllowed(false); 
 	}
 	
 	// Data Display
@@ -86,7 +82,10 @@ public class AttributesPanel extends JTable {
 }
 
 
-class AttributeTableModel extends AbstractTableModel {
+
+class AttributeTableModel extends AbstractTableModel implements MouseListener {
+
+	private static NewAttributeDialog dialog = new NewAttributeDialog();
 	
 	public AttributesPanel panel = null;
 	
@@ -156,7 +155,25 @@ class AttributeTableModel extends AbstractTableModel {
 			fireTableCellUpdated(row, col);
 		}
 	}
+
+	
+	// MouseListener Interface
+	public void mouseClicked(MouseEvent e) {
+		int col = panel.getTableHeader().columnAtPoint(e.getPoint());
+		if (col == 0) {
+			dialog.show(panel);
+		} else if (col == 1) {
+			System.out.println("sort");
+		}
+	}
+	
+	public void mouseEntered(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {}
+	public void mousePressed(MouseEvent e) {}
+	public void mouseReleased(MouseEvent e) {}
 }
+
+
 
 class RemoveColumnRenderer extends AbstractCellEditor implements ActionListener, TableCellRenderer, TableCellEditor {
 	private JButton button = new JButton("Delete");
@@ -221,13 +238,11 @@ class RemoveColumnRenderer extends AbstractCellEditor implements ActionListener,
 	}
 }
 
-class RemoveColumnHeaderRenderer extends JButton implements MouseListener, TableCellRenderer {
-	private AttributesPanel panel = null;
-	private static NewAttributeDialog dialog = new NewAttributeDialog();
-	
-	public RemoveColumnHeaderRenderer(AttributesPanel panel) {
+
+
+class RemoveColumnHeaderRenderer extends JButton implements TableCellRenderer {
+	public RemoveColumnHeaderRenderer() {
 		super("New...");
-		this.panel = panel;
 	}
 	
 	public Component getTableCellRendererComponent(
@@ -240,20 +255,9 @@ class RemoveColumnHeaderRenderer extends JButton implements MouseListener, Table
 	) {
 		return this;
 	}
-	
-	// MouseListener Interface
-	public void mouseClicked(MouseEvent e) {
-		int col = panel.getTableHeader().columnAtPoint(e.getPoint());
-		if (col == 0) {
-			dialog.show(panel);
-		}
-	}
-	
-	public void mouseEntered(MouseEvent e) {}
-	public void mouseExited(MouseEvent e) {}
-	public void mousePressed(MouseEvent e) {}
-	public void mouseReleased(MouseEvent e) {}
 }
+
+
 
 class NewAttributeDialog extends JDialog implements ActionListener {
 
