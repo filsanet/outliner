@@ -45,15 +45,15 @@ import java.util.*;
  * @version $Revision$, $Date$
  */
  
-public class FileSystemFind {
-
+public class FileSystemFind implements JoeReturnCodes {
+	
 	private DirectoryCrawler crawler = null;
-
+	
 	public FileSystemFind() {
 		crawler = new DirectoryCrawler();
 	}
-
-	public void find(
+	
+	public int find(
 		FindReplaceResultsModel model, 
 		FileFilter fileFilter,
 		FileFilter dirFilter,
@@ -62,25 +62,26 @@ public class FileSystemFind {
 		boolean isRegexp,
 		boolean ignoreCase,
 		boolean includeSubDirectories
-	) {		
-
+	) {
 		// Setup the Crawler
 		crawler.setFileHandler(new FileSystemFindFileContentsHandler(query, model, isRegexp, ignoreCase, PlatformCompatibility.LINE_END_UNIX));
 		crawler.setFileFilter(fileFilter);
 		crawler.setDirectoryFilter(dirFilter);
 		crawler.setProgressMonitor(FindReplaceFrame.monitor);
 		crawler.setVerbose(false);
-
+		
 		// Do the Crawl
 		int status = crawler.crawl(startingPath);
-		if (status == DirectoryCrawler.SUCCESS) {
-			// TBD: handle errors
+		if (status == DirectoryCrawler.FAILURE) {
+			return FAILURE;
 		}
-
+		
 		// Cleanup so things get GC'd
 		crawler.setFileHandler(null);
 		crawler.setFileFilter(null);
 		crawler.setDirectoryFilter(null);
 		crawler.setProgressMonitor(null);
+		
+		return SUCCESS;
 	}
 }

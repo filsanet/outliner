@@ -72,7 +72,7 @@ import org.apache.oro.text.regex.MatchResult;
  * @version $Revision$, $Date$
  */
 
-public class FindReplaceFrame extends AbstractGUITreeJDialog implements DocumentRepositoryListener, ActionListener, KeyListener, ListSelectionListener {
+public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeReturnCodes, DocumentRepositoryListener, ActionListener, KeyListener, ListSelectionListener {
 	
 	// Constants
 	private static final int MINIMUM_WIDTH = 550;
@@ -1324,7 +1324,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements Document
 		}
 		
 		// Do it
-		fileSystemFind.find(model, fileFilter, dirFilter, startingPath, sFind, isRegexp, ignoreCase, includeSubDirectories);
+		int success = fileSystemFind.find(model, fileFilter, dirFilter, startingPath, sFind, isRegexp, ignoreCase, includeSubDirectories);
+		
+		if (success == FAILURE) {
+			Outliner.findReplace.monitor.close();
+			JOptionPane.showMessageDialog(Outliner.outliner, "File or Directory does not exist: " + startingPath, "Error", JOptionPane.ERROR_MESSAGE);
+			
+		}
 	}
 	
 	public static void replaceAllFileSystem(
