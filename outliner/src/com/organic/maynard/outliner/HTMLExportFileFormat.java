@@ -63,8 +63,9 @@ public class HTMLExportFileFormat
 
 		buf.append("<style type=\"text/css\">").append(lineEnding);
 		buf.append("	.indented {").append(lineEnding);
-		buf.append("		margin-left: 20pt;").append(lineEnding);
-		buf.append("		margin-bottom: 10pt;").append(lineEnding);
+		buf.append("		margin-left: 15pt;").append(lineEnding);
+		buf.append("		margin-top: 3pt;").append(lineEnding);
+		buf.append("		margin-bottom: 3pt;").append(lineEnding);
 		buf.append("	}").append(lineEnding);
 		buf.append("</style>").append(lineEnding);
 
