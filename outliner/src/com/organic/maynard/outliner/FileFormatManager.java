@@ -50,7 +50,7 @@
  * Portions copyright (C) 2001 Maynard Demmon <maynard@organic.com>
  * Portions copyright (C) 2001 Stan Krute <Stan@StanKrute.com>
  *
- * Most recent changes: 8/15/01 10:20PM
+ * Most recent changes: 8/27/01 9:15AM
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -104,8 +104,6 @@ public class FileFormatManager {
 			// obtain the class object for className		[srk]
 			Class theClass = Class.forName(className);
 			
-			// TBD add a bit of cleanth and use a switch statement here  [srk]
-		
 			// if this is an Open format spec .... 	[srk]
 			if (formatType.equals(FORMAT_TYPE_OPEN)) {
 				
