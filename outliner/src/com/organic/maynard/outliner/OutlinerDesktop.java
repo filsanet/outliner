@@ -147,4 +147,25 @@ public class OutlinerDesktop extends JDesktopPane implements Scrollable {
 		
 	} // end method getCurrentAvailableSpace
 	
+	// add any visible scrollbars to available space value
+	// useful before tiling, since scrollbars melt away post-tile
+	void addScrollbarsToAvailSpace (Dimension availSpace) {
+	
+		// if a vertical scrollbar is showing ...
+		JScrollBar scrollbar = Outliner.jsp.getVerticalScrollBar();
+		if (scrollbar.isVisible()){
+			availSpace.setSize((int)availSpace.getWidth() + scrollbar.getWidth(),
+				(int) availSpace.getHeight()) ;
+		}  // end if
+			
+		// if a horizontal scrollbar is showing ...
+		scrollbar = Outliner.jsp.getHorizontalScrollBar();
+		if (scrollbar.isVisible()){
+			availSpace.setSize((int)availSpace.getWidth(),
+				(int)availSpace.getHeight() + scrollbar.getHeight()) ;
+		} // end if
+	
+	} // end method adjustForScrollbar	
+
+	
 } // end class OutlinerDesktop.java
