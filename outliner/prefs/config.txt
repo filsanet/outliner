@@ -15,10 +15,15 @@ set|selected_child_color|255,255,153
 set|font_size|13
 set|font_face|Courier New
 set|line_end|Windows
-set|open_encoding|ISO-8859-2
-set|save_encoding|ISO-8859-3
+set|open_encoding|ISO-8859-1
+set|save_encoding|ISO-8859-1
 set|line_wrap|words
 set|new_doc_on_startup|false
 set|is_maximized|true
-set|open_format|Alternate Open
-set|save_format|Alternate Save
+set|open_format|Plaintext
+set|save_format|Plaintext
+set|most_recent_open_dir|.
+set|most_recent_save_dir|.
+set|owner_name|
+set|owner_email|
+set|time_zone_for_saving_dates|GMT
