@@ -44,7 +44,7 @@ import java.awt.geom.*;
 public class OutlineButton extends JLabel {
 
 	// Class Fields
-	public static final ImageIcon ICON_CLOSED_NODE = new ImageIcon(Outliner.GRAPHICS_DIR + "closed_node.gif");
+	public static final ImageIcon ICON_CLOSED_NODE = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("graphics/closed_node.gif"));
 	
 	public static int BUTTON_WIDTH = ICON_CLOSED_NODE.getIconWidth();
 	public static int BUTTON_HEIGHT = ICON_CLOSED_NODE.getIconHeight();
@@ -59,10 +59,10 @@ public class OutlineButton extends JLabel {
 	// Note: icons are initialized by the createIcons() method below. This method
 	// is called from Outliner during it's endSetup() method.
 
-	public static final ImageIcon ICON_DOWN_ARROW = new ImageIcon(Outliner.GRAPHICS_DIR + "down_arrow.gif");
-	public static final ImageIcon ICON_SE_ARROW = new ImageIcon(Outliner.GRAPHICS_DIR + "se_arrow.gif");
+	public static final ImageIcon ICON_DOWN_ARROW = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("graphics/down_arrow.gif"));
+	public static final ImageIcon ICON_SE_ARROW = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("graphics/se_arrow.gif"));
 
-	
+
 	// Instance Fields
 	public OutlinerCellRendererImpl renderer = null;
 	

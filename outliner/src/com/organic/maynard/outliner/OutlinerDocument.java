@@ -57,8 +57,9 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 
 	// Constants
 	private static final String UNTITLED_DOCUMENT_NAME = GUITreeLoader.reg.getText("untitled");
-	private static final ImageIcon ICON_DOCUMENT_SAVED =   new ImageIcon(new StringBuffer().append(Outliner.GRAPHICS_DIR).append("document_saved.gif").toString());
-	private static final ImageIcon ICON_DOCUMENT_UNSAVED = new ImageIcon(new StringBuffer().append(Outliner.GRAPHICS_DIR).append("document_unsaved.gif").toString());
+
+	public static final ImageIcon ICON_DOCUMENT_SAVED = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("graphics/document_saved.gif"));
+	public static final ImageIcon ICON_DOCUMENT_UNSAVED = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("graphics/document_unsaved.gif"));
 
 	public static final int MIN_WIDTH = 300;
 	public static final int MIN_HEIGHT = 100;

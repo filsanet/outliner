@@ -75,7 +75,6 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	public static final String USER_OUTLINER_DIR = "outliner";
 	
 	// [deric] 31sep2001, We want to be able to specify the graphics dir via a Property in the packaging for MacOS X. If it isn't defined it defaults to the usual "graphics". 
-	public static String GRAPHICS_DIR =       new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.graphicsdir", "graphics")).append(FILE_SEPARATOR).toString();
 	public static String PREFS_DIR =          new StringBuffer().append(System.getProperty("com.organic.maynard.outliner.Outliner.prefsdir", "prefs")).append(FILE_SEPARATOR).toString();
 	public static String USER_PREFS_DIR =     PREFS_DIR;
 	public static final String APP_DIR_PATH = new StringBuffer().append(System.getProperty("user.dir")).append(FILE_SEPARATOR).toString();
@@ -507,7 +506,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		setContentPane(jsp);
 
 		// Set Frame Icon
-		ImageIcon icon = new ImageIcon(GRAPHICS_DIR + "frame_icon.gif");
+		ImageIcon icon = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("graphics/frame_icon.gif"));
 		setIconImage(icon.getImage());
 
 		// Initialize open/save_as/export/export_selection menus.

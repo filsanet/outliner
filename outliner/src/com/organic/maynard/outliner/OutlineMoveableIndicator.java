@@ -45,8 +45,8 @@ import java.awt.geom.*;
 public class OutlineMoveableIndicator extends AbstractOutlineIndicator {
 
 	// Class Fields
-	public static final ImageIcon ICON_IS_NOT_PROPERTY = new ImageIcon(Outliner.GRAPHICS_DIR + "is_not_moveable.gif");
-	public static ImageIcon ICON_IS_PROPERTY = new ImageIcon(Outliner.GRAPHICS_DIR + "is_moveable.gif");
+	public static final ImageIcon ICON_IS_NOT_PROPERTY = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("graphics/is_not_moveable.gif"));
+	public static final ImageIcon ICON_IS_PROPERTY = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("graphics/is_moveable.gif"));
 	public static ImageIcon ICON_IS_PROPERTY_INHERITED = null;
 	public static ImageIcon ICON_IS_NOT_PROPERTY_INHERITED = null;
 	
