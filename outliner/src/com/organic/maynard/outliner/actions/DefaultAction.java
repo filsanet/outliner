@@ -62,6 +62,7 @@ public class DefaultAction extends AbstractAction {
 		OutlinerCellRendererImpl textArea  = null;
 		boolean isIconFocused = true;
 		Component c = (Component) e.getSource();
+		
 		if (c instanceof OutlineButton) {
 			textArea = ((OutlineButton) c).renderer;
 		} else if (c instanceof OutlineLineNumber) {
@@ -71,6 +72,14 @@ public class DefaultAction extends AbstractAction {
 		} else if (c instanceof OutlinerCellRendererImpl) {
 			textArea = (OutlinerCellRendererImpl) c;
 			isIconFocused = false;
+		} else if (c instanceof JTextArea) {
+			// Should only happen for standard JTextArea components not used in an outliner doc.
+			originalDefaultAction(e, (JTextArea) c);
+			return;
+		}
+		
+		if (textArea == null) {
+			return;
 		}
 		
 		// Shorthand
@@ -85,6 +94,27 @@ public class DefaultAction extends AbstractAction {
 			defaultActionText(e, textArea, tree, layout);
 		}
 	}
+	
+	private static void originalDefaultAction(ActionEvent e, JTextArea textArea) {
+		// Insert char into textArea (Code taken from javax.swing.text.DefaultEditorKit.DefaultKeyTypedAction class)
+		String content = e.getActionCommand();
+		int mod = e.getModifiers();
+		if ((content != null) && (content.length() > 0) && ((mod & ActionEvent.ALT_MASK) == (mod & ActionEvent.CTRL_MASK))) {
+			char ch = content.charAt(0);
+
+			switch(ch) {
+				case KeyEvent.VK_ENTER:
+				case KeyEvent.VK_TAB:
+				case KeyEvent.VK_ESCAPE:
+					return;
+			}
+		
+			if ((ch >= 0x20) && (ch != 0x7F)) {
+				textArea.replaceSelection(content);
+			}
+		}
+	}
+
 
 
 	// KeyFocusedMethods

@@ -38,6 +38,11 @@ import com.organic.maynard.outliner.util.preferences.*;
 import java.util.*;
 import java.awt.*;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
 public class NodeImpl extends AttributeContainerImpl implements Node {
 
 	// Constants
@@ -207,8 +212,13 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	}
 	
 	// Parent Methods
-	public void setParent(Node node) {this.parent = node;}
-	public Node getParent() {return parent;}
+	public void setParent(Node node) {
+		this.parent = node;
+	}
+	
+	public Node getParent() {
+		return parent;
+	}
 	
 	// Child Methods
 	public int numOfChildren() {
@@ -295,25 +305,32 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	}
 	
 	public Node getLastDecendent() {
-		Node node = getLastChild();
-		if (node == null) {
-			return this;
-		} else {
-			return node.getLastDecendent();
+		Node node = this;
+		Node child = getLastChild();
+				
+		while (child != null) {
+			node = child;
+			child = node.getLastChild();
 		}
+		
+		return node;
 	}
 
 	public Node getLastViewableDecendent() {
-		if (isExpanded()) {
-			Node node = getLastChild();
-			if (node == null) {
-				return this;
-			} else {
-				return node.getLastViewableDecendent();
-			}
-		} else {
+		// Shortcut since most calls should exit here.
+		if (!isExpanded()) {
 			return this;
 		}
+		
+		Node node = this;
+		Node child = node.getLastChild();
+		
+		while (node.isExpanded() && child != null) {
+			node = child;
+			child = node.getLastChild();		
+		}
+		
+		return node;
 	}
 	
 	public void insertChild(Node node, int i) {
@@ -357,10 +374,13 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	}
 
 	// Tree Accessor Methods
-	public JoeTree getTree() {return tree;}
+	public JoeTree getTree() {
+		return tree;
+	}
 	
 	public void setTree(JoeTree tree, boolean recursive) {
 		this.tree = tree;
+		
 		if (recursive) {
 			for (int i = 0; i < numOfChildren(); i++) {
 				getChild(i).setTree(tree, true);
@@ -370,66 +390,94 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	
 	
 	// Visibility Methods	
-	public void setVisible(boolean visible) {this.visible = visible;}
-	public boolean isVisible() {return visible;}
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+	
+	public boolean isVisible() {
+		return visible;
+	}
 
 	// Comment Methods	
-	public void setCommentState(int commentState) {this.commentState = commentState;}
-	public int getCommentState() {return commentState;}
+	public void setCommentState(int commentState) {
+		this.commentState = commentState;
+	}
+	
+	public int getCommentState() {
+		return commentState;
+	}
 	
 	public boolean isComment() {
-		if (getCommentState() == Node.COMMENT_TRUE) {
-			return true;
-		} else if (getCommentState() == Node.COMMENT_FALSE) {
-			return false;
-		} else {
-			if (isRoot()) {
-				return getTree().getRootNodeCommentState();
-			} else {
-				return getParent().isComment();
-			}
+		Node node = this;
+		
+		while (!node.isRoot()) {
+			if (node.getCommentState() == Node.COMMENT_TRUE) {
+				return true;
+			} else if (node.getCommentState() == Node.COMMENT_FALSE) {
+				return false;
+			}		
+			node = node.getParent();
 		}
+		
+		return getTree().getRootNodeCommentState();
 	}
 
 	// Editability Methods
-	public void setEditableState(int editableState) {this.editableState = editableState;}
-	public int getEditableState() {return editableState;}
+	public void setEditableState(int editableState) {
+		this.editableState = editableState;
+	}
+	
+	public int getEditableState() {
+		return editableState;
+	}
 
 	public boolean isEditable() {
-		if (getEditableState() == Node.EDITABLE_TRUE) {
-			return true;
-		} else if (getEditableState() == Node.EDITABLE_FALSE) {
-			return false;
-		} else {
-			if (isRoot()) {
-				return getTree().getRootNodeEditableState();
-			} else {
-				return getParent().isEditable();
-			}
+		Node node = this;
+		
+		while (!node.isRoot()) {
+			if (node.getEditableState() == Node.EDITABLE_TRUE) {
+				return true;
+			} else if (node.getEditableState() == Node.EDITABLE_FALSE) {
+				return false;
+			}		
+			node = node.getParent();
 		}
+		
+		return getTree().getRootNodeEditableState();
 	}
 	
 	// Moveability Methods
-	public void setMoveableState(int moveableState) {this.moveableState = moveableState;}
-	public int getMoveableState() {return moveableState;}
+	public void setMoveableState(int moveableState) {
+		this.moveableState = moveableState;
+	}
+	
+	public int getMoveableState() {
+		return moveableState;
+	}
 
 	public boolean isMoveable() {
-		if (getMoveableState() == Node.MOVEABLE_TRUE) {
-			return true;
-		} else if (getMoveableState() == Node.MOVEABLE_FALSE) {
-			return false;
-		} else {
-			if (isRoot()) {
-				return getTree().getRootNodeMoveableState();
-			} else {
-				return getParent().isMoveable();
-			}
+		Node node = this;
+		
+		while (!node.isRoot()) {
+			if (node.getMoveableState() == Node.MOVEABLE_TRUE) {
+				return true;
+			} else if (node.getMoveableState() == Node.MOVEABLE_FALSE) {
+				return false;
+			}		
+			node = node.getParent();
 		}
+		
+		return getTree().getRootNodeMoveableState();
 	}
 	
 	// Hoisting Methods
-	public void setHoisted(boolean hoisted) {this.hoisted = hoisted;}
-	public boolean isHoisted() {return hoisted;}
+	public void setHoisted(boolean hoisted) {
+		this.hoisted = hoisted;
+	}
+	
+	public boolean isHoisted() {
+		return hoisted;
+	}
 	
 	public Node getHoistedAncestorOrSelf() {
 		if (isRoot()) {
@@ -442,52 +490,49 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	}
 
 	// Selection Methods	
-	public void setSelected(boolean selected) {this.selected = selected;}
-	public boolean isSelected() {return selected;}
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+	
+	public boolean isSelected() {
+		return selected;
+	}
 
 	public boolean isAncestorSelected() {
-		if (isSelected()) {
-			return true;
-		} else if (isRoot()) {
-			return false;
-		} else {
-			return getParent().isAncestorSelected();
+		Node node = this;
+		
+		while (!node.isRoot()) {
+			if (node.isSelected()) {
+				return true;
+			}
+			node = node.getParent();
 		}
 		
-		
-		
-		/*
-		// Is this a faster way to do things since it won't use as many stack calls since the method
-		// calls aren't recursive.
-		if (isSelected()) {
-			return true;
-		} else {
-			Node node = getParent();
-			while (!node.isRoot()) {
-				if (node.isSelected()) {
-					return true;
-				} else {
-					node = node.getParent();
-				}
-			}
-			return false;
-		}*/
+		return false;
 	}
 	
 	// Is this a decendant of node?
-	public boolean isDecendantOf(Node node) {
-		if (this == node) {
-			return true;
-		} else if (isRoot()) {
-			return false;
-		} else {
-			return getParent().isDecendantOf(node);
+	public boolean isDecendantOf(Node decendant) {
+		Node node = this;
+		
+		while (!node.isRoot()) {
+			if (node == decendant) {
+				return true;
+			}
+			node = node.getParent();
 		}
+		
+		return false;
 	}
 
 	// Depth Methods
-	public void setDepth(int depth) {this.depth = depth;}
-	public int getDepth() {return depth;}
+	public void setDepth(int depth) {
+		this.depth = depth;
+	}
+	
+	public int getDepth() {
+		return depth;
+	}
 	
 	public void setDepthRecursively(int depth) {
 		setDepth(depth);
@@ -537,7 +582,9 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		}
 	}
 	
-	public boolean isExpanded() {return this.expanded;}
+	public boolean isExpanded() {
+		return this.expanded;
+	}
 
 	public void ExpandAllSubheads() {
 		setExpanded(true);
@@ -555,11 +602,11 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 
 	public void expandAllAncestors() {
 		Node parent = getParent();
-		if (parent.isRoot()) {
-			return;
+		
+		while (!parent.isRoot()) {
+			parent.setExpandedClean(true);
+			parent = parent.getParent();		
 		}
-		parent.setExpandedClean(true);
-		parent.expandAllAncestors();
 	}
 
 	public int currentIndex() {
@@ -631,34 +678,11 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 			return getChild(0);
 		} else {
 			Node node = nextSibling();
-			
 			if (node == this) {
 				return nextSiblingOfAnyParent(node);
 			} else {
 				return node;
 			}
-		}
-	}
-
-	public Node nextUnSelectedNode() {
-		// This does not test the current node.
-		Node node = next();
-		if (node.isAncestorSelected()) {
-			return node.nextUnSelectedNode();
-		} else {
-			return node;
-		}
-	}
-
-	public Node nextSelectedSibling() {
-		// This does not test the current node.
-		Node node = nextSibling();
-		if (node == this) {
-			return null;
-		} else if (node.isAncestorSelected()) {
-			return node;
-		} else {
-			return node.nextSelectedSibling();
 		}
 	}
 
@@ -675,17 +699,52 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		}
 	}
 	
-	private static Node nextSiblingOfAnyParent(Node node) {
-		if (node.getParent() == null) {
-			return node;
-		} else {
-			Node nextSiblingOfParent = node.getParent().nextSibling();
-			if (node.getParent() == nextSiblingOfParent) {
-				return nextSiblingOfAnyParent(node.getParent());
-			} else {
-				return nextSiblingOfParent;
+	public Node nextUnSelectedNode() {
+		// This does not test the current node.
+		Node node = next();
+		
+		while (node.isAncestorSelected()) {
+			node = node.next();
+		}
+		
+		return node;
+	}
+
+	public Node nextSelectedSibling() {
+		// This does not test the current node.
+		Node node = nextSibling();
+
+		if (node == this) {
+			return null;
+		}
+				
+		while (!node.isAncestorSelected()) {
+			node = node.nextSibling();
+
+			if (node == this) {
+				return null;
 			}
 		}
+		
+		return node;
+	}
+	
+	private static Node nextSiblingOfAnyParent(Node node) {
+		Node parent = node.getParent();
+		if (parent == null) {
+			return node;
+		}	
+		Node nextSiblingOfParent = parent.nextSibling();
+		
+		while (parent == nextSiblingOfParent) {
+			parent = nextSiblingOfParent.getParent();
+			if (parent == null) {
+				return nextSiblingOfParent;
+			}
+			nextSiblingOfParent = parent.nextSibling();
+		}
+		
+		return nextSiblingOfParent;
 	}
 	
 	public Node prev() {
@@ -704,23 +763,31 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	public Node prevUnSelectedNode() {
 		// This does not test the current node.
 		Node node = prev();
-		if (node.isAncestorSelected()) {
-			return node.prevUnSelectedNode();
-		} else {
-			return node;
+		
+		while(node.isAncestorSelected()) {
+			node = node.prev();
 		}
+		
+		return node;
 	}
 
 	public Node prevSelectedSibling() {
 		// This does not test the current node.
 		Node node = prevSibling();
+
 		if (node == this) {
 			return null;
-		} else if (node.isAncestorSelected()) {
-			return node;
-		} else {
-			return node.prevSelectedSibling();
 		}
+				
+		while (!node.isAncestorSelected()) {
+			node = node.prevSibling();
+
+			if (node == this) {
+				return null;
+			}
+		}
+		
+		return node;
 	}
 
 	// Data Methods

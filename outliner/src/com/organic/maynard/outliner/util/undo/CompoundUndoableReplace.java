@@ -124,6 +124,14 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 		JoeTree tree = parent.getTree();
 		OutlineLayoutManager layout = tree.getDocument().panel.layout;
 
+		// We must ensure that the nodes we will be deleting/replacing are currently selected.
+		tree.setSelectedNodesParent(parent);
+
+		for (int i = primitives.size() - 1; i >= 0; i--) {
+			tree.addNodeToSelection(((PrimitiveUndoableReplace) primitives.get(i)).getOldNode());
+		}		
+
+
 		// Let's be aware if we are deleting the nodeToDrawFrom.
 		boolean nodeToDrawFromDeleted = false;
 		if (tree.getDocument().panel.layout.getNodeToDrawFrom().isAncestorSelected()) {
@@ -154,7 +162,7 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 				}
 			}
 		}
-
+		
 		tree.setSelectedNodesParent(parent);
 		
 		// Replace Everything

@@ -59,24 +59,25 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	
 	// Pre-computed values
 	protected static int textAreaWidth = 0;
-	protected static int moveableOffset = 0;
-	protected static int editableOffset = 0;
-	protected static int commentOffset = 0;
-	protected static int lineNumberOffset = 0;
-	protected static int bestHeightComparison = 0;
+	public static int moveableOffset = 0;
+	public static int editableOffset = 0;
+	public static int commentOffset = 0;
+	public static int lineNumberOffset = 0;
+	public static int bestHeightComparison = 0;
 	
 	// Pre-stored preference settings
-	protected static int pIndent = 0;
-	protected static int pVerticalSpacing = 0;
-	protected static boolean pShowLineNumbers = true;
-	protected static boolean pShowIndicators = true;
-	protected static Color pCommentColor = null;
-	protected static Color pForegroundColor = null;
-	protected static Color pBackgroundColor = null;
-	protected static Color pSelectedChildColor = null;
-	protected static Color pLineNumberColor = null;
-	protected static Color pLineNumberSelectedColor = null;
-	protected static Color pLineNumberSelectedChildColor = null;
+	public static int pIndent = 0;
+	public static int pVerticalSpacing = 0;
+	public static boolean pShowLineNumbers = true;
+	public static boolean pShowIndicators = true;
+	public static Color pCommentColor = null;
+	public static Color pForegroundColor = null;
+	public static Color pBackgroundColor = null;
+	public static Color pSelectedChildColor = null;
+	public static Color pLineNumberColor = null;
+	public static Color pLineNumberSelectedColor = null;
+	public static Color pLineNumberSelectedChildColor = null;
+	
 	protected static boolean pApplyFontStyleForComments = true;
 	protected static boolean pApplyFontStyleForEditability = true;
 	protected static boolean pApplyFontStyleForMoveability = true;
@@ -84,20 +85,8 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	static {
 		updateFonts();
 	}
-	
-	// Instance Fields
-	public Node node = null;
-	public OutlineButton button = new OutlineButton(this);
-	public OutlineCommentIndicator iComment = new OutlineCommentIndicator(this);
-	public OutlineEditableIndicator iEditable = new OutlineEditableIndicator(this);
-	public OutlineMoveableIndicator iMoveable = new OutlineMoveableIndicator(this);
-	public OutlineLineNumber lineNumber = new OutlineLineNumber(this);
-	
-	public int height = 0;
 
-	public boolean hasFocus = false;
-
-
+	// Actions
 	private static final ToggleCommentAction toggleCommentAction = new ToggleCommentAction();
 	private static final ToggleEditableAction toggleEditableAction = new ToggleEditableAction();
 	private static final ToggleMoveableAction toggleMoveableAction = new ToggleMoveableAction();
@@ -122,6 +111,20 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	private static final RightAction rightAction = new RightAction();
 
 	private static final DefaultAction defaultAction = new DefaultAction();
+
+
+	// Instance Fields
+	public Node node = null;
+	public OutlineButton button = new OutlineButton(this);
+	public OutlineCommentIndicator iComment = new OutlineCommentIndicator(this);
+	public OutlineEditableIndicator iEditable = new OutlineEditableIndicator(this);
+	public OutlineMoveableIndicator iMoveable = new OutlineMoveableIndicator(this);
+	public OutlineLineNumber lineNumber = new OutlineLineNumber(this);
+	
+	public int height = 0;
+
+	public boolean hasFocus = false;
+
 	
 	// The Constructors
 	public OutlinerCellRendererImpl() {
@@ -342,7 +345,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		if (pShowLineNumbers) {
 			if (node.getTree().getDocument().hoistStack.isHoisted()) {
 				// TODO: This value should be pre-calculated.
-				int offset = node.getTree().getDocument().hoistStack.getLineCountOffset()  + node.getLineNumber(node.getTree().getLineCountKey());
+				int offset = node.getTree().getDocument().hoistStack.getLineCountOffset() + node.getLineNumber(node.getTree().getLineCountKey());
 				lineNumber.setText("" + offset);
 			} else {
 				lineNumber.setText("" + node.getLineNumber(node.getTree().getLineCountKey()));

@@ -45,17 +45,30 @@ import javax.swing.event.*;
 import com.organic.maynard.util.string.StanStringTools ;
 import org.xml.sax.*;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
 public class PreferencesPanelLookAndFeel extends AbstractPreferencesPanel implements PreferencesPanel, GUITreeComponent {
 
 	// PreferencePanel Interface
 	public void applyCurrentToApplication() {
-		Preferences prefs = Outliner.prefs;
+		//Preferences prefs = Outliner.prefs;
 
-		PreferenceColor pDesktopBackgroundColor = (PreferenceColor) prefs.getPreference(Preferences.DESKTOP_BACKGROUND_COLOR);
-		PreferenceColor pPanelBackgroundColor = (PreferenceColor) prefs.getPreference(Preferences.PANEL_BACKGROUND_COLOR);
-		PreferenceColor pTextareaForegroundColor = (PreferenceColor) prefs.getPreference(Preferences.TEXTAREA_FOREGROUND_COLOR);
-		PreferenceColor pTextareaBackgroundColor = (PreferenceColor) prefs.getPreference(Preferences.TEXTAREA_BACKGROUND_COLOR);
-		PreferenceColor pSelectedChildColor = (PreferenceColor) prefs.getPreference(Preferences.SELECTED_CHILD_COLOR);
+		PreferenceColor pDesktopBackgroundColor =       Preferences.getPreferenceColor(Preferences.DESKTOP_BACKGROUND_COLOR);
+		PreferenceColor pPanelBackgroundColor =         Preferences.getPreferenceColor(Preferences.PANEL_BACKGROUND_COLOR);
+		PreferenceColor pTextareaForegroundColor =      Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR);
+		PreferenceColor pTextareaBackgroundColor =      Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR);
+		PreferenceColor pTextareaCommentColor =         Preferences.getPreferenceColor(Preferences.TEXTAREA_COMMENT_COLOR);				
+		PreferenceColor pSelectedChildColor =           Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR);
+		PreferenceColor pLineNumberColor =              Preferences.getPreferenceColor(Preferences.LINE_NUMBER_COLOR);
+		PreferenceColor pLineNumberSelectedColor =      Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR);
+		PreferenceColor pLineNumberSelectedChildColor = Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR);
+
+		PreferenceInt pIndent =                         Preferences.getPreferenceInt(Preferences.INDENT);
+		PreferenceInt pVerticalSpacing =                Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING);
+		PreferenceInt pLeftMargin =                     Preferences.getPreferenceInt(Preferences.LEFT_MARGIN);
 
 		// Set the Desktop Background color
 		Outliner.jsp.getViewport().setBackground(pDesktopBackgroundColor.cur);
@@ -77,6 +90,35 @@ public class PreferencesPanelLookAndFeel extends AbstractPreferencesPanel implem
 				renderer.setCaretColor(pSelectedChildColor.cur);
 			}
 		}
+
+		// Push values into the renderer for faster access.
+		OutlinerCellRendererImpl.pCommentColor =                 pTextareaCommentColor.cur;				
+		OutlinerCellRendererImpl.pForegroundColor =              pTextareaForegroundColor.cur;
+		OutlinerCellRendererImpl.pBackgroundColor =              pTextareaBackgroundColor.cur;
+		OutlinerCellRendererImpl.pSelectedChildColor =           pSelectedChildColor.cur;
+		OutlinerCellRendererImpl.pLineNumberColor =              pLineNumberColor.cur;
+		OutlinerCellRendererImpl.pLineNumberSelectedColor =      pLineNumberSelectedColor.cur;
+		OutlinerCellRendererImpl.pLineNumberSelectedChildColor = pLineNumberSelectedChildColor.cur;
+
+		OutlinerCellRendererImpl.pIndent =          pIndent.cur;
+		OutlinerCellRendererImpl.pVerticalSpacing = pVerticalSpacing.cur;
+
+		OutlinerCellRendererImpl.moveableOffset =   pLeftMargin.cur;
+		OutlinerCellRendererImpl.editableOffset =   OutlinerCellRendererImpl.moveableOffset + OutlineMoveableIndicator.BUTTON_WIDTH;
+		OutlinerCellRendererImpl.commentOffset =    OutlinerCellRendererImpl.editableOffset + OutlineEditableIndicator.BUTTON_WIDTH;
+		OutlinerCellRendererImpl.lineNumberOffset = OutlinerCellRendererImpl.commentOffset + OutlineCommentIndicator.BUTTON_WIDTH;
+
+		OutlinerCellRendererImpl.bestHeightComparison = 
+		Math.max(
+			Math.max(
+				Math.max(
+					Math.max(
+						OutlineMoveableIndicator.BUTTON_HEIGHT, 
+					OutlineLineNumber.LINE_NUMBER_HEIGHT), 
+				OutlineCommentIndicator.BUTTON_HEIGHT), 
+			OutlineEditableIndicator.BUTTON_HEIGHT), 
+		OutlineMoveableIndicator.BUTTON_HEIGHT);
+			 		
 		
 		// Update the Comment Icons
 		OutlineCommentIndicator.createIcons();

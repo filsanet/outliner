@@ -44,19 +44,54 @@ import javax.swing.text.Caret;
 import javax.swing.plaf.*;
 import javax.swing.plaf.metal.*;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
 public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
-	
-	// Constants
-	private static final int UP = 1;
-	private static final int DOWN = 2;
-	public static final int TEXT = 0;
-	public static final int ICON = 1;
-
 
 	static {
 		javax.swing.FocusManager.setCurrentManager(new OutlinerFocusManager());
 	}
+		
+	// Constants
+	private static final int UP = 1;
+	private static final int DOWN = 2;
 	
+	public static final int TEXT = 0;
+	public static final int ICON = 1;
+
+	public static final int CACHE_SIZE = Preferences.getPreferenceInt(Preferences.RENDERER_WIDGIT_CACHE_SIZE).cur;
+
+	private static final Dimension MINIMUM_DIMENSION = new Dimension(0,32);
+
+
+	// Class Fields
+	private static Point startPoint = new Point(0,0);
+
+
+	// Instance Fields
+	private int drawingDirection = DOWN;
+
+	private int numNodesDrawn = 1;
+	private int ioFirstVisNode = 0;
+	private int ioLastVisNode = 0;
+	
+	private boolean partialCellDrawn = false;
+
+	private Node nodeToDrawFrom = null;
+	private int ioNodeToDrawFrom = 0;
+
+
+	private boolean drawBlock = false; // Used to prevent drawing from happening when we update the scrollbar's value.
+
+	private int top = 0;
+	private int bottom = 0;
+	private int left = 0;
+	private int right = 0;
+
+	// GUI Components'
 	public OutlinerPanel panel = null;
 	public JScrollBar scrollBar = new JScrollBar();
 
@@ -67,19 +102,8 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	protected InternalDragAndDropListener dndListener = new InternalDragAndDropListener();
 		
 	// Widgit Cache
-	public static final int CACHE_SIZE = Preferences.getPreferenceInt(Preferences.RENDERER_WIDGIT_CACHE_SIZE).cur;
 	public OutlinerCellRendererImpl[] textAreas = new OutlinerCellRendererImpl[CACHE_SIZE];
-	
-	// GUI Components for handling offscreen focus events.
 	private OutlinerCellRendererImpl hiddenCell = new OutlinerCellRendererImpl();
-	
-	public OutlinerCellRendererImpl getHiddenCell() {
-		return hiddenCell;
-	}
-	
-	public void setHiddenCell(OutlinerCellRendererImpl hiddenCell) {
-		this.hiddenCell = hiddenCell;
-	}
 	
 
 	// The Constructors
@@ -221,39 +245,34 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		nodeToDrawFrom = null;
 	}
 
-	// Node to Draw From
-	private Node nodeToDrawFrom = null;
-	private int ioNodeToDrawFrom = 0;
+	// Accessors
+	public OutlinerCellRendererImpl getHiddenCell() {
+		return hiddenCell;
+	}
+	
+	public void setHiddenCell(OutlinerCellRendererImpl hiddenCell) {
+		this.hiddenCell = hiddenCell;
+	}
 	
 	public void setNodeToDrawFrom(Node nodeToDrawFrom, int ioNodeToDrawFrom) {
-		//System.out.println("Node to Draw From: " + nodeToDrawFrom.getValue() + ":" + ioNodeToDrawFrom);
 		this.nodeToDrawFrom = nodeToDrawFrom;
 		this.ioNodeToDrawFrom = ioNodeToDrawFrom;
 	}
+
+	public Node getNodeToDrawFrom() {
+		return this.nodeToDrawFrom;
+	}
+		
+	public int getIndexOfNodeToDrawFrom() {
+		return ioNodeToDrawFrom;
+	}	
 	
 	public void updateNodeToDrawFrom() {
 		ioNodeToDrawFrom = panel.doc.tree.getVisibleNodes().indexOf(nodeToDrawFrom);
 	}
-	
-	public Node getNodeToDrawFrom() {
-		return this.nodeToDrawFrom;
-	}
-	
-	public int getIndexOfNodeToDrawFrom() {
-		return ioNodeToDrawFrom;
-	}	
 
 
-	// Main Drawing Methods
-	private int drawingDirection = DOWN;
-
-	private int numNodesDrawn = 1;
-	private int ioFirstVisNode = 0;
-	private int ioLastVisNode = 0;
-	
-	private boolean partialCellDrawn = false;
-	private static Point startPoint = new Point(0,0);
-	
+	// Main Drawing Methods	
 	public void redraw() {
 		draw();
 		setFocus(panel.doc.tree.getEditingNode(), panel.doc.tree.getComponentFocus());
@@ -279,41 +298,11 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	public void draw() {
 		//System.out.println("Draw Called: " + drawCount++);
 		numNodesDrawn = 0;
-		
-		// Pre-store some values from the preferences so we don't have to get them once for every renderer.
-		OutlinerCellRendererImpl.pIndent = Preferences.getPreferenceInt(Preferences.INDENT).cur;
-		OutlinerCellRendererImpl.pVerticalSpacing = Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).cur;
-		OutlinerCellRendererImpl.pShowLineNumbers = Preferences.getPreferenceBoolean(Preferences.SHOW_LINE_NUMBERS).cur;
-		OutlinerCellRendererImpl.pShowIndicators = Preferences.getPreferenceBoolean(Preferences.SHOW_INDICATORS).cur;
-		
+
+		// Precompute some values
 		OutlinerCellRendererImpl.pApplyFontStyleForComments = panel.doc.settings.getApplyFontStyleForComments().cur;
 		OutlinerCellRendererImpl.pApplyFontStyleForEditability = panel.doc.settings.getApplyFontStyleForEditability().cur;
 		OutlinerCellRendererImpl.pApplyFontStyleForMoveability = panel.doc.settings.getApplyFontStyleForMoveability().cur;
-		
-		OutlinerCellRendererImpl.pCommentColor = Preferences.getPreferenceColor(Preferences.TEXTAREA_COMMENT_COLOR).cur;				
-		OutlinerCellRendererImpl.pForegroundColor = Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur;
-		OutlinerCellRendererImpl.pBackgroundColor = Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).cur;
-		OutlinerCellRendererImpl.pSelectedChildColor = Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur;
-		OutlinerCellRendererImpl.pLineNumberColor = Preferences.getPreferenceColor(Preferences.LINE_NUMBER_COLOR).cur;
-		OutlinerCellRendererImpl.pLineNumberSelectedColor = Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR).cur;
-		OutlinerCellRendererImpl.pLineNumberSelectedChildColor = Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR).cur;
-					
-		// Pre-compute some values so we don't have to do them once for every renderer.
-		OutlinerCellRendererImpl.moveableOffset = Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur; // equiv to left margin
-		OutlinerCellRendererImpl.editableOffset = OutlinerCellRendererImpl.moveableOffset + OutlineMoveableIndicator.BUTTON_WIDTH;
-		OutlinerCellRendererImpl.commentOffset = OutlinerCellRendererImpl.editableOffset + OutlineEditableIndicator.BUTTON_WIDTH;
-		OutlinerCellRendererImpl.lineNumberOffset = OutlinerCellRendererImpl.commentOffset + OutlineCommentIndicator.BUTTON_WIDTH;
-		
-		OutlinerCellRendererImpl.bestHeightComparison = 
-		Math.max(
-			Math.max(
-				Math.max(
-					Math.max(
-						OutlineMoveableIndicator.BUTTON_HEIGHT, 
-					OutlineLineNumber.LINE_NUMBER_HEIGHT), 
-				OutlineCommentIndicator.BUTTON_HEIGHT), 
-			OutlineEditableIndicator.BUTTON_HEIGHT), 
-		OutlineMoveableIndicator.BUTTON_HEIGHT);
 
 		OutlinerCellRendererImpl.textAreaWidth = 
 			panel.getParent().getWidth()
@@ -321,26 +310,25 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			 - OutlineLineNumber.LINE_NUMBER_WIDTH 
 			 - OutlineButton.BUTTON_WIDTH
 			 - Preferences.getPreferenceInt(Preferences.RIGHT_MARGIN).cur 
-			 - scrollBar.getWidth();			 
+			 - scrollBar.getWidth();
 		
-		// Draw the visible components
 
-			// Hide all the nodes from the previous draw
-			for (int i = 0; i < CACHE_SIZE; i++) {
-				if (textAreas[i].node != null) {
-					textAreas[i].node.setVisible(false);
-				}
+		// Hide all the nodes from the previous draw
+		for (int i = 0; i < CACHE_SIZE; i++) {
+			if (textAreas[i].node != null) {
+				textAreas[i].node.setVisible(false);
 			}
+		}
 
-			startPoint.x = OutlinerCellRendererImpl.lineNumberOffset + OutlineLineNumber.LINE_NUMBER_WIDTH;
-			
-			switch (drawingDirection) {
-				case DOWN:
-					drawDown();
-					break;
-				default:
-					drawUp();
-			}
+		startPoint.x = OutlinerCellRendererImpl.lineNumberOffset + OutlineLineNumber.LINE_NUMBER_WIDTH;
+		
+		switch (drawingDirection) {
+			case DOWN:
+				drawDown();
+				break;
+			default:
+				drawUp();
+		}
 		
 		// Draw the hidden component so that things work when we scroll away from the editing node.
 		startPoint.x = this.left;
@@ -623,8 +611,6 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 
 
 	// AdjustmentListener Interface
-	private boolean drawBlock = false;
-	
 	public void adjustmentValueChanged(AdjustmentEvent e) {
 		if (drawBlock) {
 			return;
@@ -642,12 +628,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	}
 	
 	
-	// LayoutManager Interface
-	private int top = 0;
-	private int bottom = 0;
-	private int left = 0;
-	private int right = 0;
-	
+	// LayoutManager Interface	
 	public void layoutContainer(Container container) {
 		Insets insets = panel.getInsets();
 		this.top = insets.top;
@@ -660,8 +641,17 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		scrollBar.setBounds(right - d.width, top, d.width, bottom - top);
 	}
 
-	public Dimension minimumLayoutSize(Container parent) {return new Dimension(0,32);}
-	public Dimension preferredLayoutSize(Container parent) {return parent.getParent().getSize();} // Need to get parent because we've got the DummyJScrollPane between us and our parent window which has the size we want.
+	public Dimension minimumLayoutSize(Container parent) {
+		return MINIMUM_DIMENSION;
+	}
+	
+	public Dimension preferredLayoutSize(Container parent) {
+		// Need to get parent because we've got the DummyJScrollPane 
+		// between us and our parent window which has the size we want.
+		return parent.getParent().getSize();
+	}
+	
 	public void addLayoutComponent(String name, Component comp) {}
+	
 	public void removeLayoutComponent(Component comp) {}
 }

@@ -43,6 +43,11 @@ import javax.swing.event.*;
 
 import org.xml.sax.*;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
 public class PreferencesPanelEditor extends AbstractPreferencesPanel implements PreferencesPanel, GUITreeComponent {
 	
 	// PreferencePanel Interface
@@ -89,6 +94,9 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		if (pLineWrap.cur.equals(Preferences.TXT_CHARACTERS)) {
 			line_wrap = false;
 		}
+
+		OutlinerCellRendererImpl.pShowLineNumbers = pShowLineNumbers.cur;
+		OutlinerCellRendererImpl.pShowIndicators = pShowIndicators.cur;
 
 		// Update fonts
 		OutlinerCellRendererImpl.updateFonts();
