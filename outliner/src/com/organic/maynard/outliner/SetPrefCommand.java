@@ -27,6 +27,7 @@ public class SetPrefCommand extends Command {
 	public static final String COMMAND_ENCODING = "encoding";
 
 	// Setup Validators
+	protected static final IntRangeValidator RENDERER_WIDGIT_CACHE_SIZE_VALIDATOR = new IntRangeValidator(4, 256, Preferences.RENDERER_WIDGIT_CACHE_SIZE_DEFAULT);	
 	protected static final IntRangeValidator INDENT_VALIDATOR = new IntRangeValidator(1, 99, Preferences.INDENT_DEFAULT);	
 	protected static final IntRangeValidator VERTICAL_SPACING_VALIDATOR = new IntRangeValidator(0, 99, Preferences.VERTICAL_SPACING_DEFAULT);	
 	protected static final IntRangeValidator LEFT_MARGIN_VALIDATOR = new IntRangeValidator(0, 99, Preferences.LEFT_MARGIN_DEFAULT);	
@@ -80,6 +81,9 @@ public class SetPrefCommand extends Command {
 
 		} else if (variableName.equals(Preferences.IS_MAXIMIZED.getCommand())) {
 			setBooleanPref(signature, Preferences.IS_MAXIMIZED, BOOLEAN_VALIDATOR);
+
+		} else if (variableName.equals(Preferences.RENDERER_WIDGIT_CACHE_SIZE.getCommand())) {
+			setIntPref(signature, Preferences.RENDERER_WIDGIT_CACHE_SIZE, RENDERER_WIDGIT_CACHE_SIZE_VALIDATOR);
 
 		} else if (variableName.equals(Preferences.NEW_DOC_ON_STARTUP.getCommand())) {
 			setBooleanPref(signature, Preferences.NEW_DOC_ON_STARTUP, BOOLEAN_VALIDATOR);

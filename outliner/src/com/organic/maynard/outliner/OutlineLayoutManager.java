@@ -42,7 +42,7 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 	protected InternalDragAndDropListener dndListener = new InternalDragAndDropListener();
 		
 	// Widgit Cache
-	public static final int CACHE_SIZE = 40;
+	public static final int CACHE_SIZE = Preferences.RENDERER_WIDGIT_CACHE_SIZE.cur;
 	public OutlinerCellRendererImpl[] textAreas = new OutlinerCellRendererImpl[CACHE_SIZE];
 	
 	// GUI Components for handling offscreen focus events.

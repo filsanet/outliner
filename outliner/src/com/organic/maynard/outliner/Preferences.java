@@ -50,13 +50,15 @@ public class Preferences {
 
 
 	// Static Fields (Global Preferences) These are saved.
-	public static final Preference[] pref_list = new Preference[33];
+	public static final Preference[] pref_list = new Preference[34];
 
 	public static final Vector ENCODINGS = new Vector();
 	public static final Vector FILE_FORMATS_OPEN = new Vector();
 	public static final Vector FILE_FORMATS_SAVE = new Vector();
 	
 	// Default Values
+	public static final int RENDERER_WIDGIT_CACHE_SIZE_DEFAULT = 40;
+
 	public static final String TIME_ZONE_FOR_SAVING_DATES_DEFAULT = "GMT";
 	public static final String MOST_RECENT_SAVE_DIR_DEFAULT = ".";
 	public static final String MOST_RECENT_OPEN_DIR_DEFAULT = ".";
@@ -143,6 +145,8 @@ public class Preferences {
 	public static final PreferenceString MOST_RECENT_SAVE_DIR = new PreferenceString(MOST_RECENT_SAVE_DIR_DEFAULT,MOST_RECENT_SAVE_DIR_DEFAULT,"most_recent_save_dir");
 	public static final PreferenceBoolean IS_MAXIMIZED = new PreferenceBoolean(IS_MAXIMIZED_DEFAULT,false,"is_maximized");
 	public static final PreferenceString TIME_ZONE_FOR_SAVING_DATES = new PreferenceString(TIME_ZONE_FOR_SAVING_DATES_DEFAULT,TIME_ZONE_FOR_SAVING_DATES_DEFAULT,"time_zone_for_saving_dates");
+	public static final PreferenceInt RENDERER_WIDGIT_CACHE_SIZE = new PreferenceInt(RENDERER_WIDGIT_CACHE_SIZE_DEFAULT,RENDERER_WIDGIT_CACHE_SIZE_DEFAULT,"renderer_widgit_cache_size",SetPrefCommand.RENDERER_WIDGIT_CACHE_SIZE_VALIDATOR);
+
 
 	static {
 		pref_list[0] = PRINT_ENVIRONMENT;
@@ -178,6 +182,7 @@ public class Preferences {
 		pref_list[30] = LINE_NUMBER_SELECTED_COLOR;	
 		pref_list[31] = LINE_NUMBER_SELECTED_CHILD_COLOR;	
 		pref_list[32] = SHOW_LINE_NUMBERS;	
+		pref_list[33] = RENDERER_WIDGIT_CACHE_SIZE;
 	}
 		
 	// Static Methods	
