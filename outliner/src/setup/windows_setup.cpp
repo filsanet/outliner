@@ -773,7 +773,7 @@ int setAutoExecEnvVar (char * varName, char * varValue, char * introLines) {
 	char newSettingBuffer [MAX_LINE] ;
 	char oldAutoExecNewNameBuffer [MAX_LINE] ;
 	
-	// if we can't get autoexec.bat's path, leave in failure
+	// if we can't get msdos.sys's path, leave in failure
 	if (getAutoExecPath(autoExecPathBuffer) == 0) return result ;
 	
 	// try to open autoexec.bat for reading
@@ -964,14 +964,21 @@ int setAutoExecEnvVar (char * varName, char * varValue, char * introLines) {
 
 } // end function setEnvVarWin9x
 
-// determine the path to the system's boot drive's autoexec.bat file
+// determine the path to a 9x system's boot drive's autoexec.bat file
 // if one doesn't exist, try to create one
 // if all goes well, returns 1
 // if not, returns 0	
 int getAutoExecPath(char * pathBuffer) {
 	
 	// local vars
-	int result ;
+	FILE * newFile ;
+	
+	// TBD fix this
+	// msDosSys is on 95/98/ME systems
+	// autoexec.bat is used by install on 95/98/ME systems
+	// TBD [srk] check this with compressed boot volumes
+	// although those are rare these days
+	// this may not work correctly on them
 	
 	// if there's an msdos.sys file boot drive indicator
 	if (msDosSysExtract(PATHS, HOST_WIN_BOOT_DRV, pathBuffer)) {
@@ -988,42 +995,56 @@ int getAutoExecPath(char * pathBuffer) {
 	// if the pathed file exists ...
 	if (fileExists(pathBuffer))
 		return 1 ;
+		
 	else {
 		// try to create the file
+		newFile = fopen(pathBuffer, "a+") ; 
 		
-		// return result of new existence test
-		return fileExists(pathBuffer) ;
+		// if we failed ...
+		if (newFile == NULL)
+			return 0 ;
+			
+		// else we succeeded
+		else {
+			// close the file
+			fclose(newFile) ;
+			
+			return 1 ;
+		} // end else we succeeded
+
 	} // end else
 	
-	
-		
-//	#define HOST_WIN_BOOT_DRV  "HostWinBootDrv"
-//	#define UNINSTALL_DIR  "UninstallDir"
-//	#define WIN_DIR  "WinDir"
-//	#define WIN_BOOT_DIR  "WinBootDir"
-//	
-//	WinDir=C:\WINDOWS
-//	WinBootDir=C:\WINDOWS
-//	HostWinBootDrv=C
-//	UninstallDir=C:\
-//
-	// examine msdos.sys
-	// look for HostWinBootDrv
-	// look for UninstallDir
-	// compressed volumes: hmmm ??
-	// does it have an autoexec.bat ??
-	// if it does, cool
-	// if it doesn't, create one
-	
-	return 1 ;
-
 } // end function getAutoExecPath
 
 
-// extract a value from an msdos.sys file
-int msDosSysExtract(ms_dos_sys_section section, char * name, char * valueBuffer) {
+// try to determine the path to a 9x system's msdos.sys file
+// if all goes well, returns 1
+// if not, returns 0	
+int getMsDosSysPath(char * pathBuffer) {
 	
-	// extract a value from the msdos.sys file
+	// TBD make this real
+	// msdos.sys is in root folder
+
+	// use the standard path, good for most systems
+	strcpy(pathBuffer, STD_MS_DOS_SYS_PATH) ;
+
+	// if the pathed file exists ...
+	if (fileExists(pathBuffer))
+		return 1 ;
+		
+	else 
+		return 0 ;
+	
+} // end function getMsDosSysPath
+
+// extract a value from an msdos.sys file on a 9x system
+int msDosSysExtract(ms_dos_sys_section section, char * name, char * valueBuffer) {
+
+	// local vars
+	char msDosSysPathBuffer [MAX_PATH] ;
+	
+	// if we can't get msdos.sys's path, leave in failure
+	if (getMsDosSysPath(msDosSysPathBuffer) == 0) return 0 ;
 	
 	// if the file exists
 		// if it contains ascii data
@@ -1059,7 +1080,8 @@ int strToUpper (char * someString) {
 } // end function  strToUpper
 
 
-// get a word from an autoexec.bat file line
+// get a word from an text file line
+// used here on msdos.sys and autoexec.bat files
 // within a line, words are separated by spaces, tabs, or equal signs
 // equal signs are considered words
 int getWord (int whichWord, char * sourceString, char * wordBuffer) {

@@ -114,6 +114,7 @@ const char * WINDOWS_VERSION_STRINGS [] = {
 #define CONFIG_SYS  "config.sys"
 #define MS_DOS_SYS  "msdos.sys"
 #define STD_AUTOEXEC_PATH  "c:\\autoexec.bat"
+#define STD_MS_DOS_SYS_PATH  "c:\\msdos.sys"
 
 // msdos.sys
 #define HOST_WIN_BOOT_DRV  "HostWinBootDrv"
