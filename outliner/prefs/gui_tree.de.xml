@@ -111,6 +111,8 @@
 		<asset type="text" key="rf_o_alphabetical" value="Alphabetical"/>
 		<asset type="text" key="rf_o_ascii" value="ASCII"/>
 		<asset type="text" key="rf_o_chronological" value="Chronological"/>
+		<asset type="text" key="save" value="Save"/>
+		<asset type="text" key="save_and_close" value="Save and Close"/>
 		<asset type="text" key="selection_only" value="Nur Auswahl"/>
 		<asset type="text" key="sort" value="Sortierung"/>
 		<asset type="text" key="sort_ascending" value="Aufsteigend"/>
