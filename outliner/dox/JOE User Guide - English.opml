@@ -3,11 +3,11 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Wed, 25 Jul 2001 03:23:12 GMT</dateModified>
+<dateModified>Wed, 25 Jul 2001 03:46:09 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
-<vertScrollState>1</vertScrollState>
+<vertScrollState>5</vertScrollState>
 <windowTop>60</windowTop>
 <windowLeft>35</windowLeft>
 <windowBottom>532</windowBottom>
@@ -43,7 +43,7 @@
 <outline text="If you're running JOE by invoking run.bat, you need to ensure that there is enough environment space">
 <outline text="Add a line like this to the file c:\config.sys">
 <outline text="shell=c:\windows\command.com /e2048 /p"/>
-<outline text="In this example, the environment is set to 2048 bytes"/>
+<outline text="This example sets the environment to 2048 bytes"/>
 </outline>
 </outline>
 </outline>
@@ -195,7 +195,7 @@
 <outline text="O">
 <outline text="OPML"/>
 <outline text="outline">
-<outline text=""/>
+<outline text="An outline is a collection of nodes that are organized in two dimensions: serial and hierarchic. The topmost level of an outline's hierarchic organization is called level 0. Nodes that are hierarchically subjunctive to a given node are called subnodes , or descendants, of that node. Subnodes one level down from a given node are called child nodes, and the given node is their parent. Nodes that share a parent node are called sibling nodes. The topmost set of sibling nodes is said to be at level 0 of the outline. Nodes contain arbitrary sorts of information, some of which is commonly displayed to the user. "/>
 </outline>
 </outline>
 </outline>
