@@ -55,7 +55,7 @@ import com.organic.maynard.util.string.*;
  */
  
 public class DeleteAction extends AbstractAction {
-
+	
 	public void actionPerformed(ActionEvent e) {
 		//System.out.println("DeleteAction");
 		
@@ -77,7 +77,7 @@ public class DeleteAction extends AbstractAction {
 		Node node = textArea.node;
 		JoeTree tree = node.getTree();
 		OutlineLayoutManager layout = tree.getDocument().panel.layout;
-
+		
 		//System.out.println(e.getModifiers());
 		switch (e.getModifiers()) {
 			case 0:
@@ -89,8 +89,8 @@ public class DeleteAction extends AbstractAction {
 				break;
 		}
 	}
-
-
+	
+	
 	// KeyFocusedMethods
 	public static void deleteText(OutlinerCellRendererImpl textArea, JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
@@ -99,10 +99,10 @@ public class DeleteAction extends AbstractAction {
 		if (!currentNode.isEditable()) {
 			return;
 		}
-
+		
 		int caretPosition = textArea.getCaretPosition();
 		int markPosition = textArea.getCaret().getMark();
-
+		
 		if ((caretPosition == textArea.getText().length()) && (caretPosition == markPosition) && textArea.node.isLeaf()) {
 			mergeWithNextVisibleNode(textArea, tree, layout);
 		} else {
@@ -132,21 +132,21 @@ public class DeleteAction extends AbstractAction {
 				System.out.println("Stan_Debug:\t" + msg); 
 				return ;
 			} // end bug trap
-
+			
 			if (startSelection != endSelection) {
 				newCaretPosition = startSelection;
 				newMarkPosition = startSelection;
-				newText = oldText.substring(0, startSelection) + oldText.substring(endSelection, oldText.length());				
+				newText = oldText.substring(0, startSelection) + oldText.substring(endSelection, oldText.length());
 			} else if (startSelection == oldText.length()) {
 				newCaretPosition = oldText.length();
 				newMarkPosition = oldText.length();
-				newText = oldText;				
+				newText = oldText;
 			} else {
 				newCaretPosition = startSelection;
 				newMarkPosition = startSelection;
-				newText = oldText.substring(0, newCaretPosition) + oldText.substring(newCaretPosition + 1, oldText.length());				
+				newText = oldText.substring(0, newCaretPosition) + oldText.substring(newCaretPosition + 1, oldText.length());
 			}
-
+			
 			UndoableEdit undoable = tree.getDocument().getUndoQueue().getIfEdit();
 			if ((undoable != null) && (undoable.getNode() == currentNode) && (!undoable.isFrozen())) {
 				undoable.setNewText(newText);
@@ -165,44 +165,45 @@ public class DeleteAction extends AbstractAction {
 				newUndoable.setName("Delete Text");
 				tree.getDocument().getUndoQueue().add(newUndoable);
 			}
-
+			
+			currentNode.setValue(newText);
+			
 			// Record the EditingNode, Mark and CursorPosition
+			tree.setEditingNode(currentNode);
 			tree.setCursorMarkPosition(newMarkPosition);
 			tree.setCursorPosition(newCaretPosition, false);
 			tree.getDocument().setPreferredCaretPosition(newCaretPosition);
-
-			currentNode.setValue(newText);
 			
 			textArea.setText(newText);
 			textArea.setCaretPosition(newMarkPosition);
 			textArea.moveCaretPosition(newCaretPosition);
-
+			
 			// Do the Redraw if we have wrapped or if we are currently off screen.
 			if (textArea.getPreferredSize().height != textArea.height || !currentNode.isVisible()) {
 				layout.draw(currentNode, OutlineLayoutManager.TEXT);
 			}
 		}
 	}
-
+	
 	private static void mergeWithNextVisibleNode(OutlinerCellRendererImpl textArea, JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		Node nextNode = tree.getNextNode(currentNode);
 		if (nextNode == null) {
 			return;
 		}
-
+		
 		// Abort if nextNode is not editable
 		if (!nextNode.isEditable()) {
 			return;
 		}
-				
+		
 		Node parent = currentNode.getParent();
-
+		
 		// Get Text for nodes.
 		String nextNodeText = nextNode.getValue();
 		String currentNodeText = currentNode.getValue();
 		String newNextNodeText = currentNodeText + nextNodeText;
-
+		
 		// Put the Undoable onto the UndoQueue
 		UndoableEdit undoableEdit = new UndoableEdit(
 			nextNode, 
@@ -223,10 +224,10 @@ public class DeleteAction extends AbstractAction {
 		undoable.setName("Merge with Next Node");
 		
 		tree.getDocument().getUndoQueue().add(undoable);
-				
+		
 		undoable.redo();
 	}
-
+	
 	// IconFocusedMethods
 	public static void delete(JoeTree tree, OutlineLayoutManager layout, boolean deleteMode) {
 		Node youngestNode = tree.getYoungestInSelection();
@@ -237,7 +238,7 @@ public class DeleteAction extends AbstractAction {
 		
 		Node parent = youngestNode.getParent();
 		CompoundUndoableReplace undoable = new CompoundUndoableReplace(parent, deleteMode);
-
+		
 		int startDeleting = 0;
 		if (tree.isWholeDocumentSelected()) {
 			// Abort if the doc is empty.
@@ -252,13 +253,13 @@ public class DeleteAction extends AbstractAction {
 			
 			startDeleting++;
 		}
-
+		
 		// Iterate over the remaining selected nodes deleting each one
 		JoeNodeList nodeList = tree.getSelectedNodes();
 		int deleteCount = 0;
 		for (int i = startDeleting, limit = nodeList.size(); i < limit; i++) {
 			Node node = nodeList.get(i);
-
+			
 			// Abort if node is not editable
 			if (!node.isEditable()) {
 				continue;
@@ -267,7 +268,7 @@ public class DeleteAction extends AbstractAction {
 			undoable.addPrimitive(new PrimitiveUndoableReplace(parent, node, null));
 			deleteCount++;
 		}
-
+		
 		if (!undoable.isEmpty()) {
 			if (deleteCount == 1) {
 				undoable.setName("Delete Node");

@@ -55,7 +55,7 @@ import com.organic.maynard.util.string.*;
  */
  
 public class BackspaceAction extends AbstractAction {
-
+	
 	public void actionPerformed(ActionEvent e) {
 		//System.out.println("BackspaceAction");
 		
@@ -80,7 +80,7 @@ public class BackspaceAction extends AbstractAction {
 		Node node = textArea.node;
 		JoeTree tree = node.getTree();
 		OutlineLayoutManager layout = tree.getDocument().panel.layout;
-
+		
 		//System.out.println(e.getModifiers());
 		switch (e.getModifiers()) {
 			case 0:
@@ -92,20 +92,20 @@ public class BackspaceAction extends AbstractAction {
 				break;
 		}
 	}
-
-
+	
+	
 	// KeyFocusedMethods
 	public static void deleteText(OutlinerCellRendererImpl textArea, JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
-
+		
 		// Abort if node is not editable
 		if (!currentNode.isEditable()) {
 			return;
 		}
-
+		
 		int caretPosition = textArea.getCaretPosition();
 		int markPosition = textArea.getCaret().getMark();
-
+		
 		if ((caretPosition == 0) && (caretPosition == markPosition) && textArea.node.isLeaf()) {
 			mergeWithPrevVisibleNode(textArea, tree, layout);
 		} else {
@@ -162,7 +162,7 @@ public class BackspaceAction extends AbstractAction {
 				} // end bug trap
 				newText = oldText.substring(0, newCaretPosition) + oldText.substring(newCaretPosition + 1, oldText.length());				
 			} // end else
-
+			
 			UndoableEdit undoable = tree.getDocument().getUndoQueue().getIfEdit();
 			if ((undoable != null) && (undoable.getNode() == currentNode) && (!undoable.isFrozen())) {
 				undoable.setNewText(newText);
@@ -181,25 +181,26 @@ public class BackspaceAction extends AbstractAction {
 				newUndoable.setName("Delete Text");
 				tree.getDocument().getUndoQueue().add(newUndoable);
 			}
-
+			
+			currentNode.setValue(newText);
+			
 			// Record the EditingNode, Mark and CursorPosition
+			tree.setEditingNode(currentNode);
 			tree.setCursorMarkPosition(newMarkPosition);
 			tree.setCursorPosition(newCaretPosition, false);
 			tree.getDocument().setPreferredCaretPosition(newCaretPosition);
-
-			currentNode.setValue(newText);
 			
 			textArea.setText(newText);
 			textArea.setCaretPosition(newMarkPosition);
 			textArea.moveCaretPosition(newCaretPosition);
-
+			
 			// Do the Redraw if we have wrapped or if we are currently off screen.
 			if (textArea.getPreferredSize().height != textArea.height || !currentNode.isVisible()) {
 				layout.draw(currentNode, OutlineLayoutManager.TEXT);
 			}
 		}
 	}
-
+	
 	private static void mergeWithPrevVisibleNode(OutlinerCellRendererImpl textArea, JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		
@@ -207,19 +208,19 @@ public class BackspaceAction extends AbstractAction {
 		if (prevNode == null) {
 			return;
 		}
-
+		
 		// Abort if prevNode is not editable
 		if (!prevNode.isEditable()) {
 			return;
 		}
-				
+		
 		Node parent = currentNode.getParent();
-
+		
 		// Get Text for nodes.
 		String prevNodeText = prevNode.getValue();
 		String currentNodeText = currentNode.getValue();
 		String newPrevNodeText = prevNodeText + currentNodeText;
-
+		
 		// Put the Undoable onto the UndoQueue
 		UndoableEdit undoableEdit = new UndoableEdit(
 			prevNode, 
@@ -240,10 +241,10 @@ public class BackspaceAction extends AbstractAction {
 		undoable.setName("Merge with Previous Node");
 		
 		tree.getDocument().getUndoQueue().add(undoable);
-				
+		
 		undoable.redo();
 	}
-
+	
 	
 	// IconFocusedMethods
 	public static void delete(JoeTree tree, OutlineLayoutManager layout, boolean deleteMode) {
@@ -255,7 +256,7 @@ public class BackspaceAction extends AbstractAction {
 		
 		Node parent = youngestNode.getParent();
 		CompoundUndoableReplace undoable = new CompoundUndoableReplace(parent, deleteMode);
-
+		
 		int startDeleting = 0;
 		if (tree.isWholeDocumentSelected()) {
 			// Abort if the doc is empty.
@@ -270,13 +271,13 @@ public class BackspaceAction extends AbstractAction {
 			
 			startDeleting++;
 		}
-
+		
 		// Iterate over the remaining selected nodes deleting each one
 		JoeNodeList nodeList = tree.getSelectedNodes();
 		int deleteCount = 0;
 		for (int i = startDeleting, limit = nodeList.size(); i < limit; i++) {
 			Node node = nodeList.get(i);
-
+			
 			// Abort if node is not editable
 			if (!node.isEditable()) {
 				continue;
@@ -285,7 +286,7 @@ public class BackspaceAction extends AbstractAction {
 			undoable.addPrimitive(new PrimitiveUndoableReplace(parent, node, null));
 			deleteCount++;
 		}
-
+		
 		if (!undoable.isEmpty()) {
 			if (deleteCount == 1) {
 				undoable.setName("Delete Node");
