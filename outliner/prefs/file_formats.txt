@@ -1,0 +1,5 @@
+file_format|save|com.organic.maynard.outliner.SimpleFileFormat|Plaintext
+file_format|open|com.organic.maynard.outliner.SimpleFileFormat|Plaintext
+# Just for testing
+file_format|save|com.organic.maynard.outliner.SimpleFileFormat|Alternate
+file_format|open|com.organic.maynard.outliner.SimpleFileFormat|Alternate
