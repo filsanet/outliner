@@ -22,6 +22,7 @@ RP=lib
 CP=$RP/com.organic.maynard.jar 
 CP=$CP:$RP/outliner.jar 
 CP=$CP:$RP/com.yearahead.io.webfile.jar 
+CP=$CP:$RP/com.psm.wiki.jar 
 CP=$CP:$RP/sax.jar 
 CP=$CP:$RP/xp.jar 
 CP=$CP:$RP/helma.xmlrpc.jar 
