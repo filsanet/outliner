@@ -20,6 +20,7 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
+import com.organic.maynard.outliner.DummyJScrollPane;
 
 /**
  * Helper class to the JMouseWheelDialog and JMouseWheelFrame.  Encapsulates the
@@ -52,7 +53,7 @@ public abstract class JMouseWheelSupport {
             if ( c instanceof JScrollPane )
             {
                 // Get the vertical scrollbar for the scroll pane.
-                JScrollBar scrollBar = ((JScrollPane)c).getVerticalScrollBar();
+                JScrollBar scrollBar = ((DummyJScrollPane)c).getVerticalScrollBarProxy(); // MD: Modifed to use a different method name so that other processes don't get access to the scrollbar by when they shouldn't.
                 BoundedRangeModel model = scrollBar.getModel();
 
                 // If there's room to scroll, update this scrollbar and return.
@@ -143,6 +144,9 @@ public abstract class JMouseWheelSupport {
 
 /*
  * $Log$
+ * Revision 1.1  2001/09/21 07:37:13  maynardd
+ * modified to let us get at scroll speed.
+ *
  * Revision 1.1  2001/08/13 02:15:51  davidconnard
  * Added support for JComboBoxes.  Moved shared scrolling code into
  * a helper class - JMouseWheelSupport so that it does not have
