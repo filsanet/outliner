@@ -1,6 +1,12 @@
 <?xml version="1.0"?>
 <root id="outliner" class="com.organic.maynard.outliner.Outliner" title="JOE">
 	<!-- TEXT REPOSITORY -->
+		<asset type="text" key="new_script" value="New Script"/>
+		<asset type="text" key="update_script" value="Update Script"/>
+		<asset type="text" key="script_type" value="Script Type"/>
+		<asset type="text" key="script" value="Script"/>
+		<asset type="text" key="thread" value="Thread"/>
+		<asset type="text" key="script_name" value="Script Name"/>
 		<asset type="text" key="apply" value="Apply"/>
 		<asset type="text" key="apply_font_style_for_comments" value="Apply Font Style for Comments"/>
 		<asset type="text" key="apply_font_style_for_editability" value="Apply Font Style for Editability"/>
@@ -73,6 +79,7 @@
 		<asset type="text" key="message_could_not_save_preferences" value="Could not save preferences because of"/>
 		<asset type="text" key="message_could_not_save_recent_files_config" value="Could not save recent files config file because of"/>
 		<asset type="text" key="message_do_you_really_want_to_delete_this_macro" value="Do you really want to delete this macro?"/>
+		<asset type="text" key="message_do_you_really_want_to_delete_this_script" value="Do you really want to delete this script?"/>
 		<asset type="text" key="message_file_already_open" value="The file: {$value_1} is already open."/>
 		<asset type="text" key="message_uh_oh" value="Uh Oh, something has gone wrong."/>
 		<asset type="text" key="modification_date" value="Modification Date:"/>
@@ -402,6 +409,7 @@
 			<separator/>
 			<run_as_bsh_script id="run_as_bsh_script" class="com.organic.maynard.outliner.RunAsBSHScriptMenuItem" text="Run as Bean Shell Script"/>
 			<menuitem id="bsh_console" class="com.organic.maynard.outliner.BSHConsoleMenuItem" text="Bean Shell Console"/>
+			<menuitem id="scripts_manager" class="com.organic.maynard.outliner.ScriptsManagerMenuItem" text="Scripts Manager..."/>
 		</menu>
 		<menu id="window" class="com.organic.maynard.outliner.WindowMenu" text="Window">
 			<menuitem id="statistics" class="com.organic.maynard.outliner.StatisticsMenuItem" text="Document Statistics..."/>
@@ -427,7 +435,9 @@
 		<document_attributes_view id="document_attributes_view" class="com.organic.maynard.outliner.DocumentAttributesView" title="Document Attributes"/>
 		<document_statistics id="document_statistics" class="com.organic.maynard.outliner.DocumentStatistics" title="Document Statistics"/>
 		<macro_manager id="macro_manager" class="com.organic.maynard.outliner.MacroManagerFrame" title="Macro Manager"/>
+		<scripts_manager id="macro_manager" class="com.organic.maynard.outliner.ScriptsManager" title="Scripts Manager"/>
 		<macro_editor id="macro_editor" class="com.organic.maynard.outliner.MacroEditor" title="Macro Editor"/>
+		<script_editor id="script_editor" class="com.organic.maynard.outliner.ScriptEditor" title="Script Editor"/>
 		<find_replace id="find_replace" class="com.organic.maynard.outliner.FindReplaceFrame" title="Find/Replace"/>
 		<goto_dialog id="goto_dialog" class="com.organic.maynard.outliner.GoToDialog" title="Go To Line"/>
 		<bsh_console id="bsh_console" class="com.organic.maynard.outliner.BSHConsole" title="Bean Shell Console"/>
