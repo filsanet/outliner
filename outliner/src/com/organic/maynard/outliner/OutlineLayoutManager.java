@@ -46,6 +46,13 @@ import javax.swing.plaf.metal.*;
 
 public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	
+	// Constants
+	private static final int UP = 1;
+	private static final int DOWN = 2;
+	public static final int TEXT = 0;
+	public static final int ICON = 1;
+
+
 	static {
 		javax.swing.FocusManager.setCurrentManager(new OutlinerFocusManager());
 	}
@@ -66,8 +73,13 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	// GUI Components for handling offscreen focus events.
 	private OutlinerCellRendererImpl hiddenCell = new OutlinerCellRendererImpl();
 	
-	public OutlinerCellRendererImpl getHiddenCell() {return hiddenCell;}
-	public void setHiddenCell(OutlinerCellRendererImpl hiddenCell) {this.hiddenCell = hiddenCell;}
+	public OutlinerCellRendererImpl getHiddenCell() {
+		return hiddenCell;
+	}
+	
+	public void setHiddenCell(OutlinerCellRendererImpl hiddenCell) {
+		this.hiddenCell = hiddenCell;
+	}
 	
 
 	// The Constructors
@@ -120,6 +132,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		hiddenCell.button.addKeyListener(iconListener);
 		hiddenCell.button.addMouseListener(iconListener);
 		panel.add(hiddenCell.button);
+		hiddenCell.setVisible(true); // JDK 1.4 needs components to be visible for requestFocus() to work.
 	}
 	
 	public void destroy() {
@@ -222,17 +235,18 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		ioNodeToDrawFrom = panel.doc.tree.getVisibleNodes().indexOf(nodeToDrawFrom);
 	}
 	
-	public Node getNodeToDrawFrom() {return this.nodeToDrawFrom;}
-	public int getIndexOfNodeToDrawFrom() {return ioNodeToDrawFrom;}
+	public Node getNodeToDrawFrom() {
+		return this.nodeToDrawFrom;
+	}
+	
+	public int getIndexOfNodeToDrawFrom() {
+		return ioNodeToDrawFrom;
+	}	
 
 
-	// Drawing Direction
-	private static final int UP = 1;
-	private static final int DOWN = 2;
+	// Main Drawing Methods
 	private int drawingDirection = DOWN;
 
-	
-	// Main Drawing Methods
 	private int numNodesDrawn = 1;
 	private int ioFirstVisNode = 0;
 	private int ioLastVisNode = 0;
@@ -270,6 +284,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		OutlinerCellRendererImpl.pIndent = Preferences.getPreferenceInt(Preferences.INDENT).cur;
 		OutlinerCellRendererImpl.pVerticalSpacing = Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).cur;
 		OutlinerCellRendererImpl.pShowLineNumbers = Preferences.getPreferenceBoolean(Preferences.SHOW_LINE_NUMBERS).cur;
+		OutlinerCellRendererImpl.pShowIndicators = Preferences.getPreferenceBoolean(Preferences.SHOW_INDICATORS).cur;
 		
 		OutlinerCellRendererImpl.pApplyFontStyleForComments = panel.doc.settings.getApplyFontStyleForComments().cur;
 		OutlinerCellRendererImpl.pApplyFontStyleForEditability = panel.doc.settings.getApplyFontStyleForEditability().cur;
@@ -345,7 +360,9 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		startPoint.y = Preferences.getPreferenceInt(Preferences.TOP_MARGIN).cur;
 		
 		Node node = getNodeToDrawFrom();
-		if (node == null) {return;}
+		if (node == null) {
+			return;
+		}
 		
 		JoeNodeList visibleNodes = panel.doc.tree.getVisibleNodes();
 		int visibleNodesSize = visibleNodes.size();
@@ -505,18 +522,6 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	}
 
 	private void drawDownExtraNodes(int nodeIndex) {
-		/*Node node = null;
-		try {
-			node = panel.doc.tree.getVisibleNodes().get(nodeIndex);
-		} catch (IndexOutOfBoundsException e) {
-			// This exception is only thrown when drawing up from the very last node in the visible node index.
-			return;
-		}
-
-		if (node == null) {
-			return;
-		}*/
-
 		JoeNodeList visibleNodes = panel.doc.tree.getVisibleNodes();
 		int visibleNodesSize = visibleNodes.size();
 		
@@ -556,12 +561,6 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			node = visibleNodes.get(nodeIndex);
 		}
 
-		// Hide any drawing elements that were not used.
-		// If we start using this method anywhere but from drawDown then we may want this code back in.
-		//for (int i = numNodesDrawn; i < CACHE_SIZE; i++) {
-		//	textAreas[i].setVisible(false);
-		//}
-
 		// Record Indexes and get things ready for the scrollbar
 		if (partialCellDrawn) {
 			numNodesDrawn--;
@@ -593,9 +592,6 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	}
 	
 	// Focus Methods
-	public static final int TEXT = 0;
-	public static final int ICON = 1;
-
 	public void setFocus(Node node, int type) {
 		OutlinerCellRendererImpl renderer = getUIComponent(node);
 		
@@ -630,7 +626,9 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	private boolean drawBlock = false;
 	
 	public void adjustmentValueChanged(AdjustmentEvent e) {
-		if (drawBlock) {return;}
+		if (drawBlock) {
+			return;
+		}
 		
 		// Explicit call to draw and focus, so that we can scroll away from our current component focus.
 		int value = e.getValue();

@@ -150,7 +150,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 			setWrapStyleWord(true);
 		}
 		
-		setVisible(false);
+		//setVisible(false);
 	}
 	
 	private void setupMaps(InputMap input_map, ActionMap action_map) {

@@ -48,7 +48,11 @@ import javax.swing.plaf.metal.*;
  * It is possible when a draw is occuring that changes the draw direction that keyEvents will
  * be sent to the old renderer before the focus manager has a chance to catch up. This class
  * intercepts any miss-targetd key events and sends them off to the correct renderer, the one
- * attached to the current editing node. 
+ * attached to the current editing node.
+ *
+ * To see the problem this fixes, comment out this code and drag the scrollbar up and down quickly 
+ * as you type. This keeps all the characters going to the current node, without it characters get 
+ * inserted into different nodes.
  */
 public class OutlinerFocusManager extends DefaultFocusManager {
 
