@@ -125,7 +125,9 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 		try {
 			XmlRpcClient client = new XmlRpcClient(url);
 			Object obj = client.execute(requestXmlString);
-			String text = obj.toString();
+			StringBuffer buf = new StringBuffer();
+			convertObjectToString(obj, buf, 0);
+			String text = buf.toString();
 					
 			Node replacementNode = null;
 			
@@ -197,6 +199,37 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 
 	private String munge(String text) {
 		return Replace.replace(xmlrpcCall, "{$value}", text);
+	}
+	
+	private void convertObjectToString(Object obj, StringBuffer buf, int depth) {
+		for (int i = 0; i < depth; i++) {
+			buf.append("\t");
+		}
+		
+		if (obj instanceof Vector) {
+			Vector v = (Vector) obj;
+			
+			buf.append("vector:\n");
+			for (int i = 0; i < v.size(); i++) {
+				convertObjectToString(v.elementAt(i), buf, depth + 1);
+			}
+			
+		} else if (obj instanceof Hashtable) {
+			Hashtable h = (Hashtable) obj;
+			
+			buf.append("hashtable:\n");
+			
+			Enumeration enum = h.keys();
+			while (enum.hasMoreElements()) {
+				Object key = enum.nextElement();
+				Object value = h.get(key);
+				convertObjectToString(key, buf, depth + 1);
+				convertObjectToString(value, buf, depth + 2);
+			}
+			
+		} else {
+			buf.append(obj.toString()).append("\n");
+		}
 	}
 
 	// Sax DocumentHandler Implementation
