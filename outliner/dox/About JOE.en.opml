@@ -3,10 +3,10 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\About JOE.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Thu, 17 Jan 2002 08:06:01 GMT</dateModified>
+<dateModified>Sat, 19 Jan 2002 12:30:15 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
-<expansionState>8,10</expansionState>
+<expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
 <windowTop>5</windowTop>
 <windowLeft>5</windowLeft>
@@ -19,8 +19,11 @@
 <body>
 <outline isEditable="true" isMoveable="true" text="About JOE" isMoveableInherited="true" isEditableInherited="true"/>
 <outline isEditable="true" isMoveable="true" text="------------" isMoveableInherited="true" isEditableInherited="true"/>
-<outline isEditable="true" isMoveable="true" text="Version " isMoveableInherited="true" isEditableInherited="true">
+<outline isEditable="true" isMoveable="true" text="Version" isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="1.8.7"/>
+	<outline text="Version ReadMe File">
+		<outline text="&lt;forthcoming/&gt;"/>
+	</outline>
 </outline>
 <outline isEditable="true" isMoveable="true" text="Credits" isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="Maynard Demmon">
@@ -33,7 +36,7 @@
 	</outline>
 	<outline text="Daniel Ericsson"/>
 </outline>
-<outline isEditable="true" isMoveable="true" text="Copyright" isMoveableInherited="true" isEditableInherited="true">
+<outline isEditable="true" isMoveable="true" text="Copyright Notices" isMoveableInherited="true" isEditableInherited="true">
 	<outline text="by JOE developers">
 		<outline isEditable="true" isMoveable="true" text="[copyright holders are listed in chronological order by date of first contribution to the code base]"/>
 		<outline isEditable="true" isMoveable="true" text="Portions Copyright 2000-2002 by Maynard Demmon. All rights reserved."/>
@@ -54,6 +57,9 @@
 		<outline text="license">
 			<outline text="Helma XML-RPC License "/>
 		</outline>
+		<outline text="what it does for JOE">
+			<outline text="&lt;forthcoming/&gt;"/>
+		</outline>
 	</outline>
 	<outline text="Jakarta ORO">
 		<outline text="website">
@@ -61,6 +67,9 @@
 		</outline>
 		<outline text="license">
 			<outline text="Apache Software License"/>
+		</outline>
+		<outline text="what it does for JOE">
+			<outline text="&lt;forthcoming/&gt;"/>
 		</outline>
 	</outline>
 	<outline text="XP - an XML Parser in Java">
@@ -70,52 +79,16 @@
 		<outline text="license">
 			<outline text="XP - an XML Parser in Java License "/>
 		</outline>
+		<outline text="what it does for JOE">
+			<outline text="&lt;forthcoming/&gt;"/>
+		</outline>
 	</outline>
 </outline>
 <outline text="Licensing">
-	<outline text="Portions of JOE are distributed subject to the following Open Source software licenses.">
+	<outline text="Portions of JOE are distributed subject to the following Open Source software licenses">
 		<outline text="Each source code file contains licensing information that applies to that file's code."/>
 		<outline text="Further info on Open Source licenses">
 			<outline text="http://www.opensource.org/licenses/"/>
-		</outline>
-	</outline>
-	<outline text="JOE License">
-		<outline text="http://JavaOutlineEditor.org/license.txt"/>
-		<outline text="license text">
-			<outline text=" * Redistribution and use in source and binary forms, with or "/>
-			<outline text=" * without modification, are permitted provided that the "/>
-			<outline text=" * following conditions are met:"/>
-			<outline text=" * "/>
-			<outline text=" *  - Redistributions of source code must retain the above copyright "/>
-			<outline text=" *    notice, this list of conditions and the following disclaimer. "/>
-			<outline text=" * "/>
-			<outline text=" *  - Redistributions in binary form must reproduce the above "/>
-			<outline text=" *    copyright notice, this list of conditions and the following "/>
-			<outline text=" *    disclaimer in the documentation and/or other materials provided "/>
-			<outline text=" *    with the distribution. "/>
-			<outline text=" * "/>
-			<outline text=" *  - Neither the names &quot;Java Outline Editor&quot;, &quot;JOE&quot; nor the names of its "/>
-			<outline text=" *    contributors may be used to endorse or promote products derived "/>
-			<outline text=" *    from this software without specific prior written permission. "/>
-			<outline text=" * "/>
-			<outline text=" * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "/>
-			<outline text=" * &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT "/>
-			<outline text=" * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS "/>
-			<outline text=" * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE "/>
-			<outline text=" * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, "/>
-			<outline text=" * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, "/>
-			<outline text=" * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; "/>
-			<outline text=" * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER "/>
-			<outline text=" * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT "/>
-			<outline text=" * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN "/>
-			<outline text=" * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE "/>
-			<outline text=" * POSSIBILITY OF SUCH DAMAGE."/>
-		</outline>
-		<outline text="plain-English summary">
-			<outline text="legal disclaimer">
-				<outline text="This plain-English summary means nothing legally. It is provided solely as an aid to understanding. The license itself is the legally-binding entity. "/>
-			</outline>
-			<outline text="&lt;forthcoming&gt;"/>
 		</outline>
 	</outline>
 	<outline text="Apache Software License">
@@ -187,6 +160,10 @@
 			</outline>
 			<outline text="&lt;forthcoming&gt;"/>
 		</outline>
+		<outline text="covered jars and files">
+			<outline text="jars"/>
+			<outline text="files"/>
+		</outline>
 	</outline>
 	<outline text="Helma XML-RPC License ">
 		<outline text="http://xmlrpc.helma.org/download/license"/>
@@ -213,6 +190,53 @@
 				<outline text="This plain-English summary means nothing legally. It is provided solely as an aid to understanding. The license itself is the legally-binding entity. "/>
 			</outline>
 			<outline text="&lt;forthcoming&gt;"/>
+		</outline>
+		<outline text="covered jars and files">
+			<outline text="jars"/>
+			<outline text="files"/>
+		</outline>
+	</outline>
+	<outline text="JOE License">
+		<outline text="http://JavaOutlineEditor.org/license.txt"/>
+		<outline text="license text">
+			<outline text=" * Redistribution and use in source and binary forms, with or "/>
+			<outline text=" * without modification, are permitted provided that the "/>
+			<outline text=" * following conditions are met:"/>
+			<outline text=" * "/>
+			<outline text=" *  - Redistributions of source code must retain the above copyright "/>
+			<outline text=" *    notice, this list of conditions and the following disclaimer. "/>
+			<outline text=" * "/>
+			<outline text=" *  - Redistributions in binary form must reproduce the above "/>
+			<outline text=" *    copyright notice, this list of conditions and the following "/>
+			<outline text=" *    disclaimer in the documentation and/or other materials provided "/>
+			<outline text=" *    with the distribution. "/>
+			<outline text=" * "/>
+			<outline text=" *  - Neither the names &quot;Java Outline Editor&quot;, &quot;JOE&quot; nor the names of its "/>
+			<outline text=" *    contributors may be used to endorse or promote products derived "/>
+			<outline text=" *    from this software without specific prior written permission. "/>
+			<outline text=" * "/>
+			<outline text=" * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "/>
+			<outline text=" * &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT "/>
+			<outline text=" * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS "/>
+			<outline text=" * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE "/>
+			<outline text=" * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, "/>
+			<outline text=" * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, "/>
+			<outline text=" * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; "/>
+			<outline text=" * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER "/>
+			<outline text=" * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT "/>
+			<outline text=" * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN "/>
+			<outline text=" * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE "/>
+			<outline text=" * POSSIBILITY OF SUCH DAMAGE."/>
+		</outline>
+		<outline text="plain-English summary">
+			<outline text="legal disclaimer">
+				<outline text="This plain-English summary means nothing legally. It is provided solely as an aid to understanding. The license itself is the legally-binding entity. "/>
+			</outline>
+			<outline text="&lt;forthcoming&gt;"/>
+		</outline>
+		<outline text="covered jars and files">
+			<outline text="jars"/>
+			<outline text="files"/>
 		</outline>
 	</outline>
 	<outline text="XP - an XML Parser in Java License ">
@@ -250,6 +274,10 @@
 				<outline text="This plain-English summary means nothing legally. It is provided solely as an aid to understanding. The license itself is the legally-binding entity. "/>
 			</outline>
 			<outline text="&lt;forthcoming&gt;"/>
+		</outline>
+		<outline text="covered jars and files">
+			<outline text="jars"/>
+			<outline text="files"/>
 		</outline>
 	</outline>
 </outline>
