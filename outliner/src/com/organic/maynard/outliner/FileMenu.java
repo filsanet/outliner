@@ -80,6 +80,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 		
 		docInfo.getCommentedNodes().clear();
 		boolean commentExists = false;
+		boolean attributesExist = false;
 		
 		Node node = document.tree.getRootNode();
 		int lineCount = -1;
@@ -95,12 +96,16 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 				docInfo.addCommentedNodeNum(lineCount);
 				commentExists = true;
 			}
+			
+			if (!attributesExist && node.getAttributeCount() > 0) {
+				attributesExist = true;
+			}
 		}
 		
 		if (commentExists && !saveFileFormat.supportsComments()) {
 			Object[] options = {"Yes","No"};
 			int result = JOptionPane.showOptionDialog(Outliner.outliner,
-				"The file format you are saving with: " + fileFormatName + " does not support comments.\nThe document contains commented nodes whose commented status will be lost.\nDo you want to save it anyway?",
+				"The file format you are saving with: " + fileFormatName + ", does not support comments.\nThe document contains commented nodes whose commented status will NOT be saved.\nDo you want to save?",
 				"Confirm Open",
 				JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE,
@@ -115,7 +120,25 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 				return;
 			}
 		}
-		
+
+		if (attributesExist && !saveFileFormat.supportsAttributes()) {
+			Object[] options = {"Yes","No"};
+			int result = JOptionPane.showOptionDialog(Outliner.outliner,
+				"The file format you are saving with: " + fileFormatName + ", does not support attributes.\nThe document contains nodes with attribute name/value pairs that will NOT be saved.\nDo you want to save?",
+				"Confirm Open",
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				options,
+				options[0]
+			);
+			
+			if (result == JOptionPane.YES_OPTION) {
+				// Do Nothing
+			} else if (result == JOptionPane.NO_OPTION) {
+				return;
+			}
+		}		
 		docInfo.setOwnerName(document.settings.ownerName.cur);
 		docInfo.setOwnerEmail(document.settings.ownerEmail.cur);
 		

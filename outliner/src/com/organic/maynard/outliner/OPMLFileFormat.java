@@ -71,6 +71,8 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	}
 	
 	public boolean supportsComments() {return true;}
+	
+	public boolean supportsAttributes() {return true;}
 
 	private StringBuffer prepareFile(TreeContext tree, DocumentInfo docInfo) {
 		String lineEnding = Preferences.platformToLineEnding(docInfo.getLineEnding());

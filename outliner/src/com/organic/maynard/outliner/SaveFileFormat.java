@@ -28,4 +28,6 @@ public interface SaveFileFormat {
 	);
 	
 	public boolean supportsComments();
+	
+	public boolean supportsAttributes();
 }

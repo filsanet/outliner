@@ -231,6 +231,7 @@ public class FileFormatManager {
 	public static String loadFile(String filename, String encoding) {
 		// This could be optimized to return a string array or List/Vector instead.
 		StringBuffer text = new StringBuffer("");
+		
 		try {
 			FileInputStream fileInputStream = new FileInputStream(filename);
 			InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream,encoding);
@@ -245,23 +246,25 @@ public class FileFormatManager {
 					text.append(theLine + Preferences.LINE_END_UNIX);
 				}
 			}
-			
+
 			fileInputStream.close();
+			
 		} catch (FileNotFoundException fnfe) {
 			System.out.println("File not found.");
 			return null;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
+			
 		}
+		
 		return text.toString();
 	}
 	
 	public static boolean writeFile(String filename, byte[] bytes) {
 		try {
-			FileOutputStream fileOutputStream = new FileOutputStream(filename);
-			//OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, encoding);
-			
+			FileOutputStream fileOutputStream = new FileOutputStream(filename);			
 			fileOutputStream.write(bytes);
 			fileOutputStream.flush();
 			fileOutputStream.close();
