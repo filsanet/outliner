@@ -1,3 +1,9 @@
+1.8.8 - ???
+	Feature Enhancements:
+		1) New Selection key commands.
+		2) Script and Macro editor now have save commands.
+	Bug Fixes:
+		1) Fixed a bug where cancelling an "Export" would cause the next save to fail. Same bug also fixed in "Export Selection" where cancelling would also cause you to lose the document tree except for what was selected.
 1.8.7 - 2/04/02
 	License Change:
 		1) Switched to a BSD license.
