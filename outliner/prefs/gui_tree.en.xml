@@ -152,6 +152,10 @@
 					<validator id="renderer_widgit_cache_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="4" max="256" default="40">
 					</validator>
 				</preference>
+				<preference id="frames_info_list_size" class="com.organic.maynard.outliner.PreferenceInt" default="200">
+					<validator id="frames_info_list_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="100" max="1000" default="200">
+					</validator>
+				</preference>
 			<!-- MAIN WINDOW PREFS -->
 				<preference id="main_window_width" class="com.organic.maynard.outliner.PreferenceInt" default="600">
 					<validator id="main_window_width_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="450" max="2048" default="600">
