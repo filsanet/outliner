@@ -154,7 +154,7 @@ public class StanStringTools {
 		} // end for
 		
 		// if we have 2 or fewer separators, just return the pathname
-		if (lastSeparator < secondSeparator) {
+		if ( (secondSeparator == -1) ||  (lastSeparator < secondSeparator) ) {
 			return pathNameString ;
 		} // end if
 		

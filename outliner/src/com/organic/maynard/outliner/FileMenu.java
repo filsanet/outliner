@@ -95,6 +95,7 @@ import java.awt.*;
 import javax.swing.*;
 import org.xml.sax.*;
 import com.organic.maynard.util.string.Replace;
+import com.organic.maynard.util.string.StanStringTools ;
 
 // this class implements the meat of several File Menu commands: New, Open, Import, Save, Revert, Close
 public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, JoeReturnCodes {
@@ -105,6 +106,14 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 	private static final int MODE_OPEN = 0;
 	private static final int MODE_IMPORT = 1;
 
+	private static final String TRUNC_STRING = GUITreeLoader.reg.getText("trunc_string");
+
+	// document title name forms
+	private static final int FULL_PATHNAME = 0 ;
+	private static final int TRUNC_PATHNAME = 1 ;
+	private static final int JUST_FILENAME = 2 ;
+
+	
 	// The Constructors
 	public FileMenu() {
 		super();
@@ -163,6 +172,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		boolean documentAttributesExist = false;
 		boolean wereImported = false ;
 		String savedDocsPrevName = null ;
+		String title ;
 		
 		// set up the protocol
 		docInfo.setProtocolName(protocol.getName()) ;
@@ -345,8 +355,29 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				} // end else
 
 				//document.setFileName(filename);
-				document.setTitle(filename);
 				document.setFileModified(false);
+				// document.setTitle(StanStringTools.getTruncatedPathName(filename, TRUNC_STRING)) ;
+				
+				// case out on the form to build the title
+				switch (document.getTitleNameForm()) {
+				
+				case FULL_PATHNAME:
+				default: 
+					title = filename ;
+					break ;
+					
+				case TRUNC_PATHNAME: 
+					title = StanStringTools.getTruncatedPathName(filename, TRUNC_STRING) ;
+					break ;
+					
+				case JUST_FILENAME: 
+					title = StanStringTools.getFileNameFromPathName(filename) ;
+					break ;
+					
+				} // end switch
+				
+				// set the title
+				document.setTitle(title) ;
 
 				// Update the Window Menu
 				WindowMenu.updateWindow(document);
@@ -639,6 +670,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 
 	private static void setupAndDraw(DocumentInfo docInfo, OutlinerDocument doc, int openOrImportResult) {
+		String title ;
+		
 		// grab a ref to the tree
 		TreeContext tree = doc.tree;
 		// grab the path
@@ -658,7 +691,28 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// Update the menuBar
 		doc.setFileName(filename);
 		doc.setFileModified(false);
-		doc.setTitle(filename);
+		// doc.setTitle(filename) ;
+		
+		// case out on the form to build the title
+		switch (doc.getTitleNameForm()) {
+		
+		case FULL_PATHNAME:
+		default: 
+			title = filename ;
+			break ;
+			
+		case TRUNC_PATHNAME: 
+			title = StanStringTools.getTruncatedPathName(filename, TRUNC_STRING) ;
+			break ;
+			
+		case JUST_FILENAME: 
+			title = StanStringTools.getFileNameFromPathName(filename) ;
+			break ;
+			
+		} // end switch
+		
+		// set the title
+		doc.setTitle(title) ;
 
 		// Expand Nodes
 		ArrayList expandedNodes = docInfo.getExpandedNodes();

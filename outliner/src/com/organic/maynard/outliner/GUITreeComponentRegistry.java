@@ -119,6 +119,8 @@ public class GUITreeComponentRegistry {
 	public static final String COMPONENT_FORMAT_WHEN_SAVING = "save_format_component";
 	public static final String COMPONENT_FORMAT_WHEN_EXPORTING = "export_format_component";
 
+	public static final String COMPONENT_DOCUMENT_TITLES_NAME_FORM = "document_titles_name_form_component";
+
 	public static final String COMPONENT_RECENT_FILES_ORDERING = "recent_files_ordering_component";
 	public static final String COMPONENT_RECENT_FILES_DIRECTION = "recent_files_direction_component";
 	public static final String COMPONENT_RECENT_FILES_NAME_FORM = "recent_files_name_form_component";

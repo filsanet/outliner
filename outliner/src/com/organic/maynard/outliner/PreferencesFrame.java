@@ -50,9 +50,9 @@ import java.util.*;
 public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSelectionListener, ActionListener, JoeXMLConstants {
 
 	// Constants
-	private static final int MINIMUM_WIDTH = 525;
+	private static final int MINIMUM_WIDTH = 575;
 	private static final int MINIMUM_HEIGHT = 430;
- 	private static final int INITIAL_WIDTH = 525;
+ 	private static final int INITIAL_WIDTH = 575;
 	private static final int INITIAL_HEIGHT = 430;
 
 

@@ -53,7 +53,7 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	//public static final String UNTITLED_DOCUMENT_NAME = "Untitled";
 	private static final ImageIcon ICON_DOCUMENT_SAVED = new ImageIcon(Outliner.GRAPHICS_DIR + "document_saved.gif");
 	private static final ImageIcon ICON_DOCUMENT_UNSAVED = new ImageIcon(Outliner.GRAPHICS_DIR + "document_unsaved.gif");
-	
+
 	public static final int MIN_WIDTH = 300;
 	public static final int MIN_HEIGHT = 100;
  
@@ -67,7 +67,39 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	private static int untitledDocumentCount = 0;
 	private static OutlinerWindowMonitor monitor = new OutlinerWindowMonitor();
 
+	private static int titleNameForm = 0 ;
 
+	// sets of choice strings for combo boxes
+	private static final String [] DOCUMENT_TITLES_NAME_FORMS = {
+		GUITreeLoader.reg.getText(Preferences.RF_NF_FULL_PATHNAME), 
+		GUITreeLoader.reg.getText(Preferences.RF_NF_TRUNC_PATHNAME), 
+		GUITreeLoader.reg.getText(Preferences.RF_NF_FILENAME) 
+		} ;
+
+	// some static initializer code
+	static {
+		int nameForm ;
+		int limit ;
+		String currentSetting ;
+		
+		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
+		// get a ref to it
+		PreferenceString pDT_Name_Form = (PreferenceString) prefs.getPreference(
+			Preferences.DOCUMENT_TITLES_NAME_FORM);
+			
+		// try to convert it to an int value
+		for (nameForm = 0, limit = DOCUMENT_TITLES_NAME_FORMS.length, currentSetting = pDT_Name_Form.getCur();
+			nameForm < limit ; nameForm++ ) {
+				if (currentSetting.equals(DOCUMENT_TITLES_NAME_FORMS[nameForm])) {
+					break ;
+				} // end if
+			} // end for
+			
+		if (nameForm < limit) {
+			titleNameForm = nameForm ;
+		}
+	} // end static initializer code
+		
 	// Instance Variables
 	public OutlinerPanel panel = new OutlinerPanel(this);
 	
@@ -273,6 +305,22 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	}
 	
 	public String getFileName() {return fileName;}
+
+
+
+
+
+	public static int getTitleNameForm() {
+		return titleNameForm ;
+	}
+
+	public static void setTitleNameForm(int nameForm) {
+		titleNameForm = nameForm ;
+	}
+
+
+
+
 
 	public void setFileModified(boolean fileModified) {
 		// Abort if we're not changing state.

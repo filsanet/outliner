@@ -271,6 +271,9 @@
 							<validator id="bottom_margin_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="5"/>
 							<preference_component id="bottom_margin_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Bottom Margin" size="4"/>
 						</preference>
+						<preference id="document_titles_name_form" class="com.organic.maynard.outliner.PreferenceString" default="Full Pathname">
+							<preference_component id="document_titles_name_form_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Document Titles" />
+						</preference>
 					</preferencepanel>
 					<preferencepanel id="preferences_panel_open_and_save" class="com.organic.maynard.outliner.PreferencesPanelOpenAndSave" title="Open &amp; Save">
 						<preference id="file_protocol" class="com.organic.maynard.outliner.PreferenceString" default="Local File System">

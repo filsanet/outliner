@@ -117,6 +117,7 @@ public class Preferences implements GUITreeComponent {
 		public static final String TOP_MARGIN = "top_margin";
 		public static final String RIGHT_MARGIN = "right_margin";
 		public static final String BOTTOM_MARGIN = "bottom_margin";
+		public static final String DOCUMENT_TITLES_NAME_FORM = "document_titles_name_form";
 		
 		// Open & Save Panel
 		public static final String FILE_PROTOCOL = "file_protocol";
