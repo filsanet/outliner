@@ -469,7 +469,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 					// which means that startSelection has the value 0
 					//	-- this needs to be investigated
 					// set a bug trap
-					if (newCaretPosition < 0) {
+					if ((newCaretPosition < 0) || (oldText.length < 0)) {
 						String msg = "Error at TextKeyListener:keyTyped:Backspace:02\n" ;
 						msg = msg + "startSelection: 0\n" ;
 						msg = msg + "newCaretPosition: -1" ;
