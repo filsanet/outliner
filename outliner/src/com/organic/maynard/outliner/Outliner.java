@@ -298,7 +298,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		outliner = this;
 		
 		// MouseWheel
-		setScrollSpeed(1);
+		//setScrollSpeed(1);
 		JMouseWheelSupport.setMinScrollDistance(1);
 
 		setTitle(atts.getValue(A_TITLE));

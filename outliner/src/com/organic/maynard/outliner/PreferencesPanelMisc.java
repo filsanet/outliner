@@ -21,6 +21,14 @@ package com.organic.maynard.outliner;
 public class PreferencesPanelMisc extends AbstractPreferencesPanel implements PreferencesPanel, GUITreeComponent {
 	
 	public void applyCurrentToApplication() {		
-		RecentFilesList.trim();	
+		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
+
+		PreferenceInt pScrollSpeed = (PreferenceInt) prefs.getPreference(Preferences.MOUSE_WHEEL_SCROLL_SPEED);
+
+		// Trim the recent file menu since we may have a new size.
+		RecentFilesList.trim();
+
+		// Set the scroll speed on outliner. This will be inherited by all GUI elements contained within.
+		Outliner.outliner.setScrollSpeed(pScrollSpeed.cur); 
 	}
 }

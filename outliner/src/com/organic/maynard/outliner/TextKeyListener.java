@@ -84,6 +84,8 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		
 		// Redraw only if there is a current selection
 		if (selectionSize > 0) {
+			 // This doesn't use redraw() becuase it's important to do a full draw if the node 
+			 // is partially visible.
 			tree.doc.panel.layout.draw(currentNode,OutlineLayoutManager.TEXT);
 		}
 		

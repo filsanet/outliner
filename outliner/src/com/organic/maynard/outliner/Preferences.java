@@ -121,6 +121,7 @@ public class Preferences implements GUITreeComponent {
 		public static final String PRINT_ENVIRONMENT = "print_environment";
 		public static final String NEW_DOC_ON_STARTUP = "new_doc_on_startup";
 		public static final String RECENT_FILES_LIST_SIZE = "recent_files_list_size";
+		public static final String MOUSE_WHEEL_SCROLL_SPEED = "mouse_wheel_scroll_speed";
 		public static final String OWNER_NAME = "owner_name";
 		public static final String OWNER_EMAIL = "owner_email";
 
