@@ -527,9 +527,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 
 	public static void redrawAllOpenDocuments() {
 		for (int i = 0; i < openDocuments.size(); i++) {
-			OutlinerDocument doc = getDocument(i);
-			doc.panel.layout.draw();
-			doc.panel.layout.setFocus(doc.tree.getEditingNode(),doc.tree.getComponentFocus());
+			getDocument(i).panel.layout.redraw();
 		}		
 	}
 }

@@ -57,6 +57,8 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	protected static Color pLineNumberSelectedColor = null;
 	protected static Color pLineNumberSelectedChildColor = null;
 	protected static boolean pApplyFontStyleForComments = true;
+	protected static boolean pApplyFontStyleForEditability = true;
+	protected static boolean pApplyFontStyleForMoveability = true;
 	
 	
 	public Node node = null;
@@ -110,7 +112,11 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 
 	public static void updateFonts() {
 		font = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.PLAIN, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
-		
+
+		readOnlyFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.ITALIC, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
+		immoveableFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.BOLD, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
+		immoveableReadOnlyFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.BOLD + Font.ITALIC, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
+		/*
 		if (Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur) {
 			readOnlyFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.ITALIC, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
 			if (Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur) {
@@ -129,7 +135,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 				immoveableFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.PLAIN, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
 				immoveableReadOnlyFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.PLAIN, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
 			}
-		}
+		}*/
 	}
 
 	// Used to fire key events
@@ -326,18 +332,26 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		if (node.isEditable()) {
 			setEditable(true);
 		
-			if (node.isMoveable()) {
-				setFont(font);
-			} else {
+			if (!node.isMoveable() && pApplyFontStyleForMoveability) {
 				setFont(immoveableFont);
+			} else {
+				setFont(font);
 			}
 		} else {
 			setEditable(false);
 			
-			if (node.isMoveable()) {
-				setFont(readOnlyFont);
+			if (!node.isMoveable() && pApplyFontStyleForMoveability) {
+				if (pApplyFontStyleForEditability) {
+					setFont(immoveableReadOnlyFont);
+				} else {
+					setFont(immoveableFont);
+				}
 			} else {
-				setFont(immoveableReadOnlyFont);
+				if (pApplyFontStyleForEditability) {
+					setFont(readOnlyFont);
+				} else {
+					setFont(font);
+				}
 			}
 		}	
 	}

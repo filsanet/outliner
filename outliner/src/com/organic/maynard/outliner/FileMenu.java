@@ -58,27 +58,14 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			return;
 		}
 		
-		// Save the file
+		// Initialize DocumentInfo with current document state, prefs and document settings.
+		document.setFileName(filename);
 		DocumentInfo docInfo = new DocumentInfo();
-		docInfo.setPath(filename);
-		docInfo.setEncodingType(document.settings.saveEncoding.cur);
-		docInfo.setLineEnding(document.settings.lineEnd.cur);
-		docInfo.setFileFormat(document.settings.saveFormat.cur);
-		Rectangle r = document.getNormalBounds();
-		docInfo.setWindowTop(r.y);
-		docInfo.setWindowLeft(r.x);
-		docInfo.setWindowBottom(r.y + r.height);
-		docInfo.setWindowRight(r.x + r.width);
-		int index = document.tree.visibleNodes.indexOf(document.panel.layout.getNodeToDrawFrom()) + 1;
-		docInfo.setVerticalScrollState(index);
-		docInfo.getExpandedNodes().clear();
-		for (int i = 0; i < document.tree.visibleNodes.size(); i++) {
-			Node node = (Node) document.tree.visibleNodes.get(i);
-			if (node.isExpanded()) {
-				docInfo.addExpandedNodeNum(i);
-			}
-		}
+		docInfo.updateDocumentInfoForDocument(document, saveAs);
 		
+		document.settings.useDocumentSettings = true;
+		
+		// Check File Format Support
 		boolean commentExists = false;
 		boolean editableExists = false;
 		boolean moveableExists = false;
@@ -111,7 +98,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			}
 		}
 		
-		// Check File Format Support
 		if (commentExists && !saveFileFormat.supportsComments() && USER_ABORTED == promptUser("The file format you are saving with: " + fileFormatName + ", does not support comments.\nThe document contains commented nodes whose commented status will NOT be saved.\nDo you want to save?")) {
 			return;
 		}
@@ -128,22 +114,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			return;
 		}
 
-	
-		docInfo.setOwnerName(document.settings.ownerName.cur);
-		docInfo.setOwnerEmail(document.settings.ownerEmail.cur);
-		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z");
-		if (!Preferences.getPreferenceString(Preferences.TIME_ZONE_FOR_SAVING_DATES).cur.equals("")) {
-			dateFormat.setTimeZone(TimeZone.getTimeZone(Preferences.getPreferenceString(Preferences.TIME_ZONE_FOR_SAVING_DATES).cur));
-		}
-		String currentDateString = dateFormat.format(new Date());
-		if(saveAs) {
-			docInfo.setDateCreated(currentDateString);
-			docInfo.setDateModified(currentDateString);
-		} else {
-			docInfo.setDateCreated(document.settings.dateCreated);
-			docInfo.setDateModified(currentDateString);
-		}
 		
 		// Save the File
 		if (document.hoistStack.isHoisted()) {
@@ -151,8 +121,9 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		}
 		
 		// WebFile
-		boolean success = false;
 		byte[] bytes = saveFileFormat.save(document.tree, docInfo);
+
+		boolean success = false;
 		if (Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
 			try {
 				success = WebFile.save(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur, docInfo.getPath(), bytes);
@@ -164,7 +135,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			success = FileFormatManager.writeFile(docInfo.getPath(), bytes);
 		}
 
-		//boolean success = saveFileFormat.save(document.tree, docInfo);
 		if (!success) {
 			JOptionPane.showMessageDialog(document, "An error occurred. Could not save file: " + Outliner.chooser.getSelectedFile().getPath());
 			return;
@@ -185,7 +155,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			RecentFilesList.updateFileNameInList(filename, docInfo);
 		}
 
-		document.setFileName(filename);
+		//document.setFileName(filename);
 		document.setTitle(filename);
 		document.setFileModified(false);
 
@@ -262,15 +232,29 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// Update DocumentSettings
 		//newDoc.settings.syncPrefs();
 		newDoc.settings.saveEncoding.def = encoding;
-		newDoc.settings.saveEncoding.cur = encoding;
-		newDoc.settings.saveEncoding.tmp = encoding;
+		newDoc.settings.saveEncoding.restoreCurrentToDefault();
+		newDoc.settings.saveEncoding.restoreTemporaryToDefault();
+		
 		newDoc.settings.saveFormat.def = fileFormat;
-		newDoc.settings.saveFormat.cur = fileFormat;
-		newDoc.settings.saveFormat.tmp = fileFormat;
-		newDoc.settings.useDocumentSettings = true;
+		newDoc.settings.saveFormat.restoreCurrentToDefault();
+		newDoc.settings.saveFormat.restoreTemporaryToDefault();
+		
+		newDoc.settings.applyFontStyleForComments.def = docInfo.getApplyFontStyleForComments();
+		newDoc.settings.applyFontStyleForComments.restoreCurrentToDefault();
+		newDoc.settings.applyFontStyleForComments.restoreTemporaryToDefault();
+
+		newDoc.settings.applyFontStyleForEditability.def = docInfo.getApplyFontStyleForEditability();		
+		newDoc.settings.applyFontStyleForEditability.restoreCurrentToDefault();
+		newDoc.settings.applyFontStyleForEditability.restoreTemporaryToDefault();
+
+		newDoc.settings.applyFontStyleForMoveability.def = docInfo.getApplyFontStyleForMoveability();
+		newDoc.settings.applyFontStyleForMoveability.restoreCurrentToDefault();
+		newDoc.settings.applyFontStyleForMoveability.restoreTemporaryToDefault();
 		
 		newDoc.settings.dateCreated = docInfo.getDateCreated();
 		newDoc.settings.dateModified = docInfo.getDateModified();
+
+		newDoc.settings.useDocumentSettings = true;
 
 		// Move it to the bottom of the recent files list
 		RecentFilesList.updateFileNameInList(filename, docInfo);
@@ -378,9 +362,9 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		doc.setTitle(filename);
 
 		// Expand Nodes
-		Vector expandedNodes = docInfo.getExpandedNodes();
+		ArrayList expandedNodes = docInfo.getExpandedNodes();
 		for (int i = 0; i < expandedNodes.size(); i++) {
-			int nodeNum = ((Integer) expandedNodes.elementAt(i)).intValue();
+			int nodeNum = ((Integer) expandedNodes.get(i)).intValue();
 			try {
 				Node node = (Node) doc.tree.visibleNodes.get(nodeNum);
 				node.setExpanded(true);

@@ -180,6 +180,11 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	private boolean partialCellDrawn = false;
 	private static Point startPoint = new Point(0,0);
 	
+	public void redraw() {
+		draw();
+		setFocus(panel.doc.tree.getEditingNode(), panel.doc.tree.getComponentFocus());
+	}
+	
 	public void draw(Node nodeThatMustBeVis, int focusElement) {
 		draw(nodeThatMustBeVis, panel.doc.tree.visibleNodes.indexOf(nodeThatMustBeVis), focusElement);
 	}
@@ -207,7 +212,16 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		OutlinerCellRendererImpl.pIndent = Preferences.getPreferenceInt(Preferences.INDENT).cur;
 		OutlinerCellRendererImpl.pVerticalSpacing = Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).cur;
 		OutlinerCellRendererImpl.pShowLineNumbers = Preferences.getPreferenceBoolean(Preferences.SHOW_LINE_NUMBERS).cur;
-		OutlinerCellRendererImpl.pApplyFontStyleForComments = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur;
+		
+		if (panel.doc.settings.useDocumentSettings) {
+			OutlinerCellRendererImpl.pApplyFontStyleForComments = panel.doc.settings.applyFontStyleForComments.cur;
+			OutlinerCellRendererImpl.pApplyFontStyleForEditability = panel.doc.settings.applyFontStyleForEditability.cur;
+			OutlinerCellRendererImpl.pApplyFontStyleForMoveability = panel.doc.settings.applyFontStyleForMoveability.cur;
+		} else {
+			OutlinerCellRendererImpl.pApplyFontStyleForComments = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur;
+			OutlinerCellRendererImpl.pApplyFontStyleForEditability = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur;
+			OutlinerCellRendererImpl.pApplyFontStyleForMoveability = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur;
+		}
 		
 		OutlinerCellRendererImpl.pCommentColor = Preferences.getPreferenceColor(Preferences.TEXTAREA_COMMENT_COLOR).cur;				
 		OutlinerCellRendererImpl.pForegroundColor = Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur;

@@ -46,6 +46,10 @@ public class OPMLFileFormat
 	public static final String ELEMENT_BODY = "body";
 	public static final String ELEMENT_OUTLINE = "outline";
 
+	public static final String ELEMENT_APPLY_FONT_STYLE_FOR_COMMENTS = "applyStyleForComments";
+	public static final String ELEMENT_APPLY_FONT_STYLE_FOR_EDITABILITY = "applyStyleForEditability";
+	public static final String ELEMENT_APPLY_FONT_STYLE_FOR_MOVEABILITY = "applyStyleForMoveability";
+
 	public static final String ATTRIBUTE_TEXT = "text";
 	
 	public static final String ATTRIBUTE_IS_EDITABLE = "isEditable";
@@ -107,6 +111,10 @@ public class OPMLFileFormat
 		buf.append("<").append(ELEMENT_WINDOW_LEFT).append(">").append(escapeXMLText("" + docInfo.getWindowLeft())).append("</").append(ELEMENT_WINDOW_LEFT).append(">").append(lineEnding);
 		buf.append("<").append(ELEMENT_WINDOW_BOTTOM).append(">").append(escapeXMLText("" + docInfo.getWindowBottom())).append("</").append(ELEMENT_WINDOW_BOTTOM).append(">").append(lineEnding);
 		buf.append("<").append(ELEMENT_WINDOW_RIGHT).append(">").append(escapeXMLText("" + docInfo.getWindowRight())).append("</").append(ELEMENT_WINDOW_RIGHT).append(">").append(lineEnding);
+
+		buf.append("<").append(ELEMENT_APPLY_FONT_STYLE_FOR_COMMENTS).append(">").append(escapeXMLText("" + docInfo.getApplyFontStyleForComments())).append("</").append(ELEMENT_APPLY_FONT_STYLE_FOR_COMMENTS).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_APPLY_FONT_STYLE_FOR_EDITABILITY).append(">").append(escapeXMLText("" + docInfo.getApplyFontStyleForEditability())).append("</").append(ELEMENT_APPLY_FONT_STYLE_FOR_EDITABILITY).append(">").append(lineEnding);
+		buf.append("<").append(ELEMENT_APPLY_FONT_STYLE_FOR_MOVEABILITY).append(">").append(escapeXMLText("" + docInfo.getApplyFontStyleForMoveability())).append("</").append(ELEMENT_APPLY_FONT_STYLE_FOR_MOVEABILITY).append(">").append(lineEnding);
 
 		buf.append("</").append(ELEMENT_HEAD).append(">").append(lineEnding);
 
@@ -382,36 +390,55 @@ public class OPMLFileFormat
 		
 		if (elementName.equals(ELEMENT_TITLE)) {
 			docInfo.setTitle(text);
+		
 		} else if (elementName.equals(ELEMENT_DATE_CREATED)) {
 			docInfo.setDateCreated(text);
+		
 		} else if (elementName.equals(ELEMENT_DATE_MODIFIED)) {
 			docInfo.setDateModified(text);
+		
 		} else if (elementName.equals(ELEMENT_OWNER_NAME)) {
 			docInfo.setOwnerName(text);
+		
 		} else if (elementName.equals(ELEMENT_OWNER_EMAIL)) {
 			docInfo.setOwnerEmail(text);
+		
 		} else if (elementName.equals(ELEMENT_EXPANSION_STATE)) {
 			docInfo.setExpandedNodesStringShifted(text, -1);
+		
 		} else if (elementName.equals(ELEMENT_VERTICAL_SCROLL_STATE)) {
 			try {
 				docInfo.setVerticalScrollState(Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
+		
 		} else if (elementName.equals(ELEMENT_WINDOW_TOP)) {
 			try {
 				docInfo.setWindowTop(Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
+		
 		} else if (elementName.equals(ELEMENT_WINDOW_LEFT)) {
 			try {
 				docInfo.setWindowLeft(Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
+		
 		} else if (elementName.equals(ELEMENT_WINDOW_BOTTOM)) {
 			try {
 				docInfo.setWindowBottom(Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
+		
 		} else if (elementName.equals(ELEMENT_WINDOW_RIGHT)) {
 			try {
 				docInfo.setWindowRight(Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
+		
+		} else if (elementName.equals(ELEMENT_APPLY_FONT_STYLE_FOR_COMMENTS)) {
+			docInfo.setApplyFontStyleForComments(Boolean.valueOf(text).booleanValue());
+		
+		} else if (elementName.equals(ELEMENT_APPLY_FONT_STYLE_FOR_EDITABILITY)) {
+			docInfo.setApplyFontStyleForEditability(Boolean.valueOf(text).booleanValue());
+		
+		} else if (elementName.equals(ELEMENT_APPLY_FONT_STYLE_FOR_MOVEABILITY)) {
+			docInfo.setApplyFontStyleForMoveability(Boolean.valueOf(text).booleanValue());
 		}
 	}
 	

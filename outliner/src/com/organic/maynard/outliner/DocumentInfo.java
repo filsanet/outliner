@@ -22,11 +22,20 @@ import com.organic.maynard.util.string.StringTools;
 import com.organic.maynard.util.string.StringSplitter;
 import java.util.*;
 
+import java.text.SimpleDateFormat;
+import java.awt.*;
+import javax.swing.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
 public class DocumentInfo {
 	
 	// Constants
-	public static final String EXPANDED_NODE_SEPERATOR = ",";
-	public static final String COMMENTED_NODE_SEPERATOR = ",";
+	private static final String EXPANDED_NODE_SEPERATOR = ",";
+	private static final String COMMENTED_NODE_SEPERATOR = ",";
 	
 	// Instance Fields		
 	private String fileFormat = null;
@@ -44,7 +53,10 @@ public class DocumentInfo {
 	private int windowLeft = 0;
 	private int windowBottom = 0;
 	private int windowRight = 0;
-	private Vector expandedNodes = new Vector(); // Should only store Integers
+	private ArrayList expandedNodes = new ArrayList(); // Should only store Integers
+	private boolean applyFontStyleForComments = true;
+	private boolean applyFontStyleForEditability = true;
+	private boolean applyFontStyleForMoveability = true;
 	
 	// The Constructors
 	public DocumentInfo() {
@@ -64,7 +76,10 @@ public class DocumentInfo {
 			OutlinerDocument.INITIAL_X,
 			OutlinerDocument.INITIAL_Y + OutlinerDocument.INITIAL_HEIGHT,
 			OutlinerDocument.INITIAL_X + OutlinerDocument.INITIAL_WIDTH,
-			""
+			"",
+			Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur,
+			Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur,
+			Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur
 		);
 	}
 	
@@ -84,7 +99,11 @@ public class DocumentInfo {
 		int windowLeft,
 		int windowBottom,
 		int windowRight,
-		String expandedNodesString) 
+		String expandedNodesString,
+		boolean applyFontStyleForComments,
+		boolean applyFontStyleForEditability,
+		boolean applyFontStyleForMoveability
+		) 
 	{
 		setFileFormat(fileFormat);
 		setEncodingType(encodingType);
@@ -102,6 +121,9 @@ public class DocumentInfo {
 		setWindowBottom(windowBottom);
 		setWindowRight(windowRight);
 		setExpandedNodesString(expandedNodesString);
+		setApplyFontStyleForComments(applyFontStyleForComments);
+		setApplyFontStyleForEditability(applyFontStyleForEditability);
+		setApplyFontStyleForMoveability(applyFontStyleForMoveability);
 	}
 
 	// Accessors
@@ -180,13 +202,22 @@ public class DocumentInfo {
 		}
 	}
 
+	public boolean getApplyFontStyleForComments() {return this.applyFontStyleForComments;}
+	public void setApplyFontStyleForComments(boolean applyFontStyleForComments) {this.applyFontStyleForComments = applyFontStyleForComments;}
+
+	public boolean getApplyFontStyleForEditability() {return this.applyFontStyleForEditability;}
+	public void setApplyFontStyleForEditability(boolean applyFontStyleForEditability) {this.applyFontStyleForEditability = applyFontStyleForEditability;}
+
+	public boolean getApplyFontStyleForMoveability() {return this.applyFontStyleForMoveability;}
+	public void setApplyFontStyleForMoveability(boolean applyFontStyleForMoveability) {this.applyFontStyleForMoveability = applyFontStyleForMoveability;}
+
 	// Expanded Nodes
-	public Vector getExpandedNodes() {return this.expandedNodes;}
-	public boolean setExpandedNodes(Vector expandedNodes) {
+	public ArrayList getExpandedNodes() {return this.expandedNodes;}
+	public boolean setExpandedNodes(ArrayList expandedNodes) {
 		// Make sure all values are Integers
 		for (int i = 0; i < expandedNodes.size(); i++) {
 			try {
-				Integer temp = (Integer) expandedNodes.elementAt(i);
+				Integer temp = (Integer) expandedNodes.get(i);
 			} catch (ClassCastException e) {
 				return false;
 			}
@@ -203,7 +234,7 @@ public class DocumentInfo {
 	public String getExpandedNodesStringShifted(int shift) {
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < expandedNodes.size(); i++) {
-			buf.append("" + (((Integer) expandedNodes.elementAt(i)).intValue() + shift));
+			buf.append("" + (((Integer) expandedNodes.get(i)).intValue() + shift));
 			if (i < expandedNodes.size() - 1) {
 				buf.append(EXPANDED_NODE_SEPERATOR);
 			}
@@ -241,8 +272,8 @@ public class DocumentInfo {
 	public boolean addExpandedNodeNum(int nodeNum) {
 		int lastIntOnList = -1;
 		try {
-			lastIntOnList = ((Integer) expandedNodes.lastElement()).intValue();
-		} catch (NoSuchElementException e) {}
+			lastIntOnList = ((Integer) expandedNodes.get(expandedNodes.size() - 1)).intValue();
+		} catch (IndexOutOfBoundsException e) {}
 		if (nodeNum > lastIntOnList) {
 			expandedNodes.add(new Integer(nodeNum));
 			return true;
@@ -305,7 +336,79 @@ public class DocumentInfo {
 		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
 
 		buffer.append(StringTools.escape("" + getExpandedNodesString(), escapeChar, null));
+		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+
+		buffer.append(StringTools.escape("" + getApplyFontStyleForComments(), escapeChar, null));
+		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+
+		buffer.append(StringTools.escape("" + getApplyFontStyleForEditability(), escapeChar, null));
+		buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+
+		buffer.append(StringTools.escape("" + getApplyFontStyleForMoveability(), escapeChar, null));
 		
 		return buffer.toString();
+	}
+	
+	public void updateDocumentInfoForDocument(OutlinerDocument document, boolean saveAs) {
+		setPath(document.getFileName());
+		
+		recordWindowPositioning(document);
+
+		// These three settings are set by SavAsMenuItem so we can allways be sure they exist in DocumentSettings
+		setEncodingType(document.settings.saveEncoding.cur);
+		setLineEnding(document.settings.lineEnd.cur);
+		setFileFormat(document.settings.saveFormat.cur);
+
+		// These five settings are NOT set by SavAsMenuItem so we have to check if DocumentSettings are being used
+		if (document.settings.useDocumentSettings) {
+			setOwnerName(document.settings.ownerName.cur);
+			setOwnerEmail(document.settings.ownerEmail.cur);
+			setApplyFontStyleForComments(document.settings.applyFontStyleForComments.cur);
+			setApplyFontStyleForEditability(document.settings.applyFontStyleForEditability.cur);
+			setApplyFontStyleForMoveability(document.settings.applyFontStyleForMoveability.cur);
+		} else {
+			setOwnerName(Preferences.getPreferenceString(Preferences.OWNER_NAME).cur);
+			setOwnerEmail(Preferences.getPreferenceString(Preferences.OWNER_EMAIL).cur);
+			setApplyFontStyleForComments(Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur);
+			setApplyFontStyleForEditability(Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur);
+			setApplyFontStyleForMoveability(Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur);
+		}
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z");
+		if (!Preferences.getPreferenceString(Preferences.TIME_ZONE_FOR_SAVING_DATES).cur.equals("")) {
+			dateFormat.setTimeZone(TimeZone.getTimeZone(Preferences.getPreferenceString(Preferences.TIME_ZONE_FOR_SAVING_DATES).cur));
+		}
+		String currentDateString = dateFormat.format(new Date());
+		
+		setDateModified(currentDateString);
+		document.settings.dateModified = currentDateString;
+
+		// Date created is a special hidden document setting that should always be up to date if we are dealing with a
+		// file that has been opened or previously saved.
+		if(saveAs) {
+			setDateCreated(currentDateString);
+			document.settings.dateCreated = currentDateString;
+		} else {
+			setDateCreated(document.settings.dateCreated);
+		}	
+	}
+	
+	public void recordWindowPositioning(OutlinerDocument document) {
+		Rectangle r = document.getNormalBounds();
+		setWindowTop(r.y);
+		setWindowLeft(r.x);
+		setWindowBottom(r.y + r.height);
+		setWindowRight(r.x + r.width);
+		
+		int index = document.tree.visibleNodes.indexOf(document.panel.layout.getNodeToDrawFrom()) + 1;
+		setVerticalScrollState(index);
+		
+		getExpandedNodes().clear();
+		for (int i = 0; i < document.tree.visibleNodes.size(); i++) {
+			Node node = (Node) document.tree.visibleNodes.get(i);
+			if (node.isExpanded()) {
+				addExpandedNodeNum(i);
+			}
+		}	
 	}
 }

@@ -58,25 +58,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 		// Record current state into DocumentInfo in the RecentFileList if we can
 		DocumentInfo docInfo = RecentFilesList.getDocumentInfo(doc.getFileName());
 		if (docInfo != null) {
-			// Window Position
-			Rectangle r = doc.getNormalBounds();
-			docInfo.setWindowTop(r.y);
-			docInfo.setWindowLeft(r.x);
-			docInfo.setWindowBottom(r.y + r.height);
-			docInfo.setWindowRight(r.x + r.width);
-			
-			// VerticalScrollState
-			int index = doc.tree.visibleNodes.indexOf(doc.panel.layout.getNodeToDrawFrom()) + 1;
-			docInfo.setVerticalScrollState(index);
-			
-			// ExpandedNodes
-			docInfo.getExpandedNodes().clear();
-			for (int i = 0; i < doc.tree.visibleNodes.size(); i++) {
-				Node node = (Node) doc.tree.visibleNodes.get(i);
-				if (node.isExpanded()) {
-					docInfo.addExpandedNodeNum(i);
-				}
-			}
+			docInfo.recordWindowPositioning(doc);
 		}
 
 		// Hide the document

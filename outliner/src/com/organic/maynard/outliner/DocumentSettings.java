@@ -29,12 +29,18 @@ public class DocumentSettings {
 	private String sSaveFormat = Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur;
 	private String sOwnerName = Preferences.getPreferenceString(Preferences.OWNER_NAME).cur;
 	private String sOwnerEmail = Preferences.getPreferenceString(Preferences.OWNER_EMAIL).cur;
+	private boolean sApplyFontStyleForComments = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur;
+	private boolean sApplyFontStyleForEditability = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur;
+	private boolean sApplyFontStyleForMoveability = Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur;
 	
 	public PreferenceLineEnding lineEnd = new PreferenceLineEnding(sLineEnd, sLineEnd, "");
 	public PreferenceString saveEncoding = new PreferenceString(sSaveEncoding, sSaveEncoding, "");
 	public PreferenceString saveFormat = new PreferenceString(sSaveFormat, sSaveFormat, "");
 	public PreferenceString ownerName = new PreferenceString(sOwnerName, sOwnerName, "");
 	public PreferenceString ownerEmail = new PreferenceString(sOwnerEmail, sOwnerEmail, "");
+	public PreferenceBoolean applyFontStyleForComments = new PreferenceBoolean(sApplyFontStyleForComments, sApplyFontStyleForComments, "");
+	public PreferenceBoolean applyFontStyleForEditability = new PreferenceBoolean(sApplyFontStyleForEditability, sApplyFontStyleForEditability, "");
+	public PreferenceBoolean applyFontStyleForMoveability = new PreferenceBoolean(sApplyFontStyleForMoveability, sApplyFontStyleForMoveability, "");
 
 	// Hidden Settings
 	public String dateCreated = new String("");
@@ -55,6 +61,9 @@ public class DocumentSettings {
 		ownerEmail = null;
 		dateCreated = null;
 		dateModified = null;
+		applyFontStyleForComments = null;
+		applyFontStyleForEditability = null;
+		applyFontStyleForMoveability = null;
 	}
 
 	public void show() {
