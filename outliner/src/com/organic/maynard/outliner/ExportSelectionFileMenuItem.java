@@ -117,6 +117,7 @@ public class ExportSelectionFileMenuItem extends AbstractOutlinerMenuItem implem
 			
 			for (int i = 0; i < document.tree.getSelectedNodes().size(); i++) {
 				Node node = document.tree.getSelectedNodes().get(i).cloneClean();
+				node.setDepthRecursively(0);
 				newTree.getRootNode().appendChild(node);				
 			}
 		}

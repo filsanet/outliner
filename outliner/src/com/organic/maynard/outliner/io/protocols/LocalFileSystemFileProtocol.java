@@ -143,15 +143,17 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 
 
 			// Update the document settings
-			document.settings.getLineEnd().def = lineEnd;
-			document.settings.getLineEnd().cur = lineEnd;
-			document.settings.getLineEnd().tmp = lineEnd;
-			document.settings.getSaveEncoding().def = encoding;
-			document.settings.getSaveEncoding().cur = encoding;
-			document.settings.getSaveEncoding().tmp = encoding;
-			document.settings.getSaveFormat().def = fileFormat;
-			document.settings.getSaveFormat().cur = fileFormat;
-			document.settings.getSaveFormat().tmp = fileFormat;
+			if (document.settings.useDocumentSettings()) {
+				document.settings.getLineEnd().def = lineEnd;
+				document.settings.getLineEnd().cur = lineEnd;
+				document.settings.getLineEnd().tmp = lineEnd;
+				document.settings.getSaveEncoding().def = encoding;
+				document.settings.getSaveEncoding().cur = encoding;
+				document.settings.getSaveEncoding().tmp = encoding;
+				document.settings.getSaveFormat().def = fileFormat;
+				document.settings.getSaveFormat().cur = fileFormat;
+				document.settings.getSaveFormat().tmp = fileFormat;
+			}
 
 			// Update Document Info
 			DocumentInfo docInfo = document.getDocumentInfo();

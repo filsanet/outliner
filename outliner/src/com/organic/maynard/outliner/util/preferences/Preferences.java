@@ -158,6 +158,7 @@ public class Preferences implements GUITreeComponent {
 		// File Format: Justified Plaintext
 		public static final String JUSTIFIED_PLAINTEXT_COL_WIDTH = "justified_plaintext_col_width";
 		public static final String JUSTIFIED_PLAINTEXT_DRAW_LINES = "justified_plaintext_draw_lines";
+		public static final String JUSTIFIED_PLAINTEXT_NUMBER = "justified_plaintext_number";
 		
 		// Recent Files List Options
 		public static final String RECENT_FILES_LIST_SIZE = "recent_files_list_size";

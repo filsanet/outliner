@@ -36,6 +36,7 @@ package com.organic.maynard.outliner.io.formats;
 
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.io.*;
+import com.organic.maynard.data.IntList;
 
 import com.organic.maynard.outliner.util.preferences.*;
 import javax.swing.*;
@@ -55,6 +56,7 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 	private static int COLS = 80;
 	private static final int INDENT = 2;
 	private static boolean DRAW_LINES = true;
+	private static boolean NUMBER = false;
 	
 	// Constructors
 	public JustifiedPlaintextExportFileFormat() {}
@@ -70,6 +72,7 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 	public byte[] save(JoeTree tree, DocumentInfo docInfo) {
 		COLS = Preferences.getPreferenceInt(Preferences.JUSTIFIED_PLAINTEXT_COL_WIDTH).cur;
 		DRAW_LINES = Preferences.getPreferenceBoolean(Preferences.JUSTIFIED_PLAINTEXT_DRAW_LINES).cur;
+		NUMBER = Preferences.getPreferenceBoolean(Preferences.JUSTIFIED_PLAINTEXT_NUMBER).cur;
 	
 		StringBuffer buf = prepareFile(tree, docInfo);
 		
@@ -85,6 +88,9 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 		String lineEnding = PlatformCompatibility.platformToLineEnding(docInfo.getLineEnding());
 		
 		StringBuffer buf = new StringBuffer();
+		if (NUMBER) {
+			this.numbers = new IntList();
+		}
 
 		Node node = tree.getRootNode();
 		for (int i = 0; i < node.numOfChildren(); i++) {
@@ -95,6 +101,22 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 	}
 
 	private void buildOutlineElement(Node node, String lineEnding, StringBuffer buf) {
+		if (NUMBER) {
+			int depth = node.getDepth();
+			if (depth == numbers.size()) {
+				numbers.add(1);
+			} else if (depth == numbers.size() - 1) {
+				int num = numbers.get(depth);
+				numbers.set(depth, num + 1);
+			} else if (depth < numbers.size() - 1) {
+				for (int i = numbers.size() - 1; i > depth; i--) {
+					numbers.remove(i);
+				}
+				int num = numbers.get(depth);
+				numbers.set(depth, num + 1);
+			}
+		}
+		
 		splitNode(node, lineEnding, buf);
 		
 		if (!node.isLeaf()) {
@@ -120,10 +142,14 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 			return;
 		}
 		
-		ArrayList lines = split(textCount, node.getValue());
+		ArrayList lines = null;
+		if (NUMBER) {
+			lines = split(textCount, getNumber() + node.getValue());
+		} else {
+			lines = split(textCount, node.getValue());
+		}
 		
 		for (int i = 0; i < lines.size(); i++) {
-			//indent(spaceCount, buf);
 			if (i == 0) {
 				if (DRAW_LINES) {
 					indentHeirarchy(node, buf, FIRST_LINE);
@@ -146,6 +172,22 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 			indent(spaceCount, buf);
 		}
 		buf.append(lineEnding);
+	}
+	
+	private IntList numbers = null;
+	
+	private String getNumber() {
+		StringBuffer buf = new StringBuffer();
+		
+		for (int i = 0; i < numbers.size(); i++) {
+			if (i > 0) {
+				buf.append(".");
+			}
+			buf.append(numbers.get(i));
+		}
+		buf.append(") ");
+		
+		return buf.toString();
 	}
 	
 	private ArrayList split(int textCount, String text) {
@@ -225,8 +267,6 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 					buf.append(BRANCH);
 				}			
 			}
-			
-			//parent = parent.getParent();
 		}
 				
 		while (!parent.isRoot()) {
@@ -239,7 +279,8 @@ public class JustifiedPlaintextExportFileFormat implements ExportFileFormat, Joe
 			parent = parent.getParent();
 		}
 	}	
-	
+
+
 	// File Extensions
 	private HashMap extensions = new HashMap();
 	
