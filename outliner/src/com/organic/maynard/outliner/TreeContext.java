@@ -199,11 +199,12 @@ public class TreeContext {
 		ancestor.insertChildrenIntoVisibleNodesCache(this,visibleNodes.indexOf(ancestor));
 	}
 
-	public void insertNodeAfter(Node existingNode, Node newNode) {
+	public int insertNodeAfter(Node existingNode, Node newNode) {
 		int nodeIndex = visibleNodes.indexOf(existingNode) + 1;
 		if (nodeIndex >= 0) {
 			visibleNodes.add(nodeIndex, newNode);
 		}
+		return nodeIndex;
 	}
 
 	

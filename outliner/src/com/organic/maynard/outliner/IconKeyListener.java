@@ -571,7 +571,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			newNodeParent.insertChild(newNode, newNodeIndex);
 		}
 		
-		tree.insertNodeAfter(node, newNode);
+		int visibleIndex = tree.insertNodeAfter(node, newNode);
 
 		// Record the EditingNode and CursorPosition and ComponentFocus
 		tree.setEditingNode(newNode);
@@ -586,7 +586,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 		// Redraw and Set Focus
 		tree.clearSelection();
-		layout.draw(newNode, outlineLayoutManager.TEXT);
+		layout.draw(newNode, visibleIndex, outlineLayoutManager.TEXT);
 	}
 
 	private void promote(TreeContext tree, outlineLayoutManager layout) {

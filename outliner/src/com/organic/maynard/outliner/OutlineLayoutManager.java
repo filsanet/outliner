@@ -160,10 +160,12 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 	
 	private boolean partialCellDrawn = false;
 	private static Point startPoint = new Point(0,0);
-		
+	
 	public void draw(Node nodeThatMustBeVis, int focusElement) {
-		int ioNodeThatMustBeVis = panel.doc.tree.visibleNodes.indexOf(nodeThatMustBeVis);
-
+		draw(nodeThatMustBeVis, panel.doc.tree.visibleNodes.indexOf(nodeThatMustBeVis), focusElement);
+	}
+		
+	public void draw(Node nodeThatMustBeVis, int ioNodeThatMustBeVis, int focusElement) {
 		if (ioNodeThatMustBeVis <= ioFirstVisNode) {
 			drawingDirection = DOWN;
 			setNodeToDrawFrom(nodeThatMustBeVis, ioNodeThatMustBeVis);

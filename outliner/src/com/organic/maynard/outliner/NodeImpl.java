@@ -455,6 +455,7 @@ public class NodeImpl implements Node {
 		}
 
 		Node node = getParent().getChild(currentIndex() - 1);
+		
 		if (node == null) {
 			return this;
 		} else {

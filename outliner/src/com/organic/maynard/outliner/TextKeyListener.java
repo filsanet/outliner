@@ -661,7 +661,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 			newNodeParent.insertChild(newNode, newNodeIndex);
 		}
 		
-		tree.insertNodeAfter(node, newNode);
+		int visibleIndex = tree.insertNodeAfter(node, newNode);
 
 		// Record the EditingNode and CursorPosition and ComponentFocus
 		tree.setEditingNode(newNode);
@@ -675,7 +675,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		tree.doc.undoQueue.add(undoable);
 		
 		// Redraw and Set Focus
-		layout.draw(newNode, outlineLayoutManager.TEXT);
+		layout.draw(newNode, visibleIndex, outlineLayoutManager.TEXT);
 	}
 
 	private void mergeWithPrevVisibleNode(TreeContext tree, outlineLayoutManager layout) {
