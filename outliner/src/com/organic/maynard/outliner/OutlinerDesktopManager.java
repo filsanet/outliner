@@ -108,6 +108,16 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 			}
 		}
 		
+		// Prevent resizing of the frame above or to the left.
+		if (newY < 0) {
+			newHeight += newY;
+			newY = 0;
+		}
+		if (newX < 0) {
+			newWidth += newX;
+			newX = 0;
+		}
+
 		super.resizeFrame(f,newX,newY,newWidth,newHeight);
 		updateDesktopSize(false);
 	}
@@ -127,6 +137,10 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 	
 	public void dragFrame(JComponent f, int newX, int newY) {
 		//System.out.println("dragFrame");
+		
+		// Prevent dragging of the frame above the visible area. To the left is ok though.
+		if (newY < 0) {newY = 0;}
+
 		super.dragFrame(f,newX,newY);
 		updateDesktopSize(false);
 	}
