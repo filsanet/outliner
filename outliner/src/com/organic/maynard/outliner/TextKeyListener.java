@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
+ * Portions copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
+ * Portions copyright (C) 2002 Stan Krute <Stan@StanKrute.com>
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or 
@@ -32,8 +33,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
  
+// we're part of this
 package com.organic.maynard.outliner;
 
+// we use these
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.datatransfer.*;
@@ -86,9 +89,13 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		// Clear any text selection in the node that was being edited
 		if ((selectionSize == 0) && (currentNode != tree.getEditingNode())) {
 			OutlinerCellRendererImpl renderer = layout.getUIComponent(tree.getEditingNode());
-			renderer.setCaretPosition(0);
-			renderer.moveCaretPosition(0);
-		}
+			// [srk] bug trap
+			// renderer being null has caused a crash here
+			if (renderer != null) {
+				renderer.setCaretPosition(0);
+				renderer.moveCaretPosition(0);
+			} // end if
+		} // end if
 		
 		// Store the preferred caret position
 		tree.doc.setPreferredCaretPosition(textArea.getCaretPosition());
