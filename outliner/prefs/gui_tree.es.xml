@@ -206,6 +206,10 @@
 							<validator id="show_line_numbers_validator" class="com.organic.maynard.outliner.util.preferences.BooleanValidator"/>
 							<preference_component id="show_line_numbers_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeCheckBoxComponent" label="Muestre Los Números De la Línea"/>
 						</preference>
+						<preference id="single_click_expand" class="com.organic.maynard.outliner.util.preferences.PreferenceBoolean" default="false">
+							<validator id="single_click_expand_validator" class="com.organic.maynard.outliner.util.preferences.BooleanValidator"/>
+							<preference_component id="single_click_expand_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeCheckBoxComponent" label="Single click to expand/collapse nodes"/>
+						</preference>
 						<preference id="show_attributes" class="com.organic.maynard.outliner.util.preferences.PreferenceBoolean" default="false">
 							<validator id="show_attributes_validator" class="com.organic.maynard.outliner.util.preferences.BooleanValidator"/>
 							<preference_component id="show_attributes_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeCheckBoxComponent" label="Muestre los atributos para los nuevos documentos"/>
