@@ -561,13 +561,13 @@
 				<separator/>
 			</menu>
 			<menu id="help" class="com.organic.maynard.outliner.HelpMenu" text="Help" mnemonic="h">
-				<menuitem id="userGuide" class="com.organic.maynard.outliner.HelpUserGuideMenuItem" text="User Guide"/>
-				<menuitem id="developerGuide" class="com.organic.maynard.outliner.HelpDeveloperGuideMenuItem" text="Developer Guide"/>
+				<menuitem id="about" class="com.organic.maynard.outliner.HTMLViewerMenuItem" text="About JOE" path="rsrc/about.html"/>
+				<menuitem id="third_party" class="com.organic.maynard.outliner.HTMLViewerMenuItem" text="About 3rd Party Libraries" path="rsrc/versions.html"/>
 				<separator/>
-				<menuitem id="tutorials" class="com.organic.maynard.outliner.HelpTutorialsMenuItem" text="Tutorials"/>
-				<menuitem id="bookmarks" class="com.organic.maynard.outliner.HelpBookmarksMenuItem" text="Bookmarks"/>
+				<menuitem id="release_notes" class="com.organic.maynard.outliner.HTMLViewerMenuItem" text="Release Notes" path="rsrc/release_notes.html"/>
 				<separator/>
-				<menuitem id="about" class="com.organic.maynard.outliner.HelpAboutMenuItem" text="About JOE"/>
+				<menuitem id="userGuide" class="com.organic.maynard.outliner.HTMLViewerMenuItem" text="User Guide" path="rsrc/user_guide.html"/>
+				<menuitem id="developerGuide" class="com.organic.maynard.outliner.HTMLViewerMenuItem" text="Developer Guide" path="rsrc/developer_guide.html"/>
 			</menu>
 		</menubar>
 	<!-- MISC COMPONENTS -->
