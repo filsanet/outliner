@@ -185,8 +185,13 @@ public class TileGridMenuItem
 			} // end if
 		} // end if we're in a maximized state
 		
-		// determine how much room we have to play with
+		// get the raw available space
 		Dimension curAvailSpace = Outliner.desktop.getCurrentAvailableSpace() ; 
+		
+		// since we're tiling, any scrollbars will melt away
+		Outliner.desktop.addScrollbarsToAvailSpace (curAvailSpace) ;
+		
+		// determine how much room we have to play with
 		double availWidth = curAvailSpace.getWidth() ;
 		double availHeight = curAvailSpace.getHeight() ;
 
@@ -235,31 +240,10 @@ public class TileGridMenuItem
 		boolean plentyOfColumnRoom = patternFatRowColumnCount <= maxColumns ;
 		boolean plentyOfRoom = plentyOfRowRoom && plentyOfColumnRoom ;
 
-// don't need these, cuz we fork below
-// nuke 'em once everything's workin'
-//		
-//		// determine actual max number of columns we'll need
-//		actualMaxColumns = plentyOfColumnRoom
-//			? patternFatRowColumnCount 
-//			: maxColumns ;
-//		
-//		// determine actual number of rows we'll need
-//		actualRows = plentyOfRowRoom
-//			? patternRowCount 
-//			: maxRows ;
-			
-		// some row and column arrays
-		// [srk] may not need these - check once all's working
-		int [] columnWidths = null;
-		int [] columnPositions = null;
-		int [] rowHeights = null;
-		int [] rowPositions = null;
-
 		// some vars for window size and location info
 		Point ptLocation = new Point();
 		Dimension dimSize = new Dimension();
 		
-
 		// if we have plenty of room
 		if (plentyOfRoom) {
 			// block local vars
@@ -336,7 +320,7 @@ public class TileGridMenuItem
 				for (int column = 0; column < rowsColumnCount; column ++) {
 					
 					// grab the next document
-					doc = Outliner.getDocument(docCounter++) ;
+					doc = (OutlinerDocument)notIconified.get(docCounter++) ;
 					
 					// set up location
 					ptLocation.setLocation(column * widthStd,rowY) ;

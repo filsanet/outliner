@@ -117,8 +117,13 @@ public class TileHorizontalMenuItem
 			} // end if
 		} // end if we're in a maximized state
 		
-		// determine how much room we have to play with
+		// get the raw available space
 		Dimension curAvailSpace = Outliner.desktop.getCurrentAvailableSpace() ; 
+		
+		// since we're tiling, any scrollbars will melt away
+		Outliner.desktop.addScrollbarsToAvailSpace (curAvailSpace) ;
+		
+		// determine how much room we have to play with
 		double availWidth = curAvailSpace.getWidth() ;
 		double availHeight = curAvailSpace.getHeight() ;
 
