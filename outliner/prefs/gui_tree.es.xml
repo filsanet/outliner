@@ -176,11 +176,11 @@
 					</validator>
 				</preference>
 			<!-- HELP SYSTEM PREFS -->
-				<preference id="user_guide_path" class="com.organic.maynard.outliner.PreferenceString" default="dox\JOE User Guide.en.opml"/>
-				<preference id="developer_guide_path" class="com.organic.maynard.outliner.PreferenceString" default="dox\JOE Developer Guide.en.opml"/>
+				<preference id="user_guide_path" class="com.organic.maynard.outliner.PreferenceString" default="dox/JOE User Guide.en.opml"/>
+				<preference id="developer_guide_path" class="com.organic.maynard.outliner.PreferenceString" default="dox/JOE Developer Guide.en.opml"/>
 				<preference id="bookmarks_path" class="com.organic.maynard.outliner.PreferenceString" default="usr\Default User\My JOE Bookmarks.opml"/>
-				<preference id="tutorials_path" class="com.organic.maynard.outliner.PreferenceString" default="dox\JOE Tutorials.en.opml"/>
-				<preference id="about_path" class="com.organic.maynard.outliner.PreferenceString" default="dox\About JOE.en.opml"/>
+				<preference id="tutorials_path" class="com.organic.maynard.outliner.PreferenceString" default="dox/JOE Tutorials.en.opml"/>
+				<preference id="about_path" class="com.organic.maynard.outliner.PreferenceString" default="dox/About JOE.en.opml"/>
 			<!-- USER-ADJUSTABLE PREFS -->
 				<preferencesframe id="preferences_frame" class="com.organic.maynard.outliner.PreferencesFrame" title="Preferencias De la Aplicación">
 					<preferencepanel id="preferences_panel_editor" class="com.organic.maynard.outliner.PreferencesPanelEditor" title="Editor">
