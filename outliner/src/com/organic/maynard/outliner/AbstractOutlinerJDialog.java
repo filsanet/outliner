@@ -38,15 +38,12 @@ import javax.swing.*;
 import java.awt.*;
 import org.xml.sax.*;
 
-// MouseWheel
-import gui.*;
-
 /**
  * @author  $Author$
  * @version $Revision$, $Date$
  */
 
-public abstract class AbstractOutlinerJDialog extends JMouseWheelDialog {
+public abstract class AbstractOutlinerJDialog extends JDialog {
 	
 	// Fields
 	private WindowSizeManager windowSizeManager = null;

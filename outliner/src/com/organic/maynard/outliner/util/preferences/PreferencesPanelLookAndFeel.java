@@ -130,6 +130,7 @@ public class PreferencesPanelLookAndFeel extends AbstractPreferencesPanel implem
 		OutlineCommentIndicator.createIcons();
 		OutlineEditableIndicator.createIcons();
 		OutlineMoveableIndicator.createIcons();
+		OutlineButton.createIcons();
 		
 		// sync up with any title name form changes
 		OutlinerDocument.syncTitleNameForms();

@@ -55,15 +55,12 @@ import com.organic.maynard.util.string.*;
 
 import com.organic.maynard.swing.SplashScreen;
 
-// MouseWheel
-import gui.*;
-
 /**
  * @author  $Author$
  * @version $Revision$, $Date$
  */
 
-public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITreeComponent, JoeXMLConstants {
+public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent, JoeXMLConstants {
 	
 	// Constants
 	public static final boolean DEBUG = false;
@@ -444,11 +441,6 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	
 	public void startSetup(AttributeList atts) {
 		outliner = this;
-		
-		// MouseWheel
-		if (PlatformCompatibility.isWindows()) {
-			JMouseWheelSupport.setMinScrollDistance(1);
-		}
 		
 		setTitle(atts.getValue(A_TITLE));
 		
