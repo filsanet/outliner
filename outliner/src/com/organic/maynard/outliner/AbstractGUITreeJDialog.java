@@ -57,7 +57,6 @@ public abstract class AbstractGUITreeJDialog extends AbstractOutlinerJDialog imp
 
 	public void startSetup(AttributeList atts) {
 		setTitle(atts.getValue(A_TITLE));
-		setVisible(false);
 	}
 	
 	public void endSetup(AttributeList atts) {}

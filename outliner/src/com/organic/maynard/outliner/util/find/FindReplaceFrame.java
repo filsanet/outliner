@@ -36,6 +36,10 @@ package com.organic.maynard.outliner.util.find;
 
 import com.organic.maynard.outliner.*;
 
+import javax.swing.plaf.*;
+import javax.swing.plaf.basic.*;
+
+import java.io.*;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -108,8 +112,24 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	private static String FILE_SYSTEM = "File System";
 	
 	private static String PATH = "Path";
+	private static String SELECT = "Select";
+	private static String SELECT_DOTS = SELECT + "...";
 	private static String INCLUDE_SUB_DIRECTORIES = "Include Sub Directories";
+	private static String MAKE_BACKUPS = "Make Backups";
 	private static String FILE_FILTER = "File Filter";
+	private static String DIR_FILTER = "Directory Filter";
+	private static String INCLUDE = "Include";
+	private static String EXCLUDE = "Exclude";
+	
+	private static String FILE_FILTER_INCLUDE = "file_filter_include";
+	private static String FILE_FILTER_INCLUDE_IGNORE_CASE = "file_filter_include_ignore_case";
+	private static String FILE_FILTER_EXCLUDE = "file_filter_exclude";
+	private static String FILE_FILTER_EXCLUDE_IGNORE_CASE = "file_filter_exclude_ignore_case";
+	private static String DIR_FILTER_INCLUDE = "dir_filter_include";
+	private static String DIR_FILTER_INCLUDE_IGNORE_CASE ="dir_filter_include_ignore_case";
+	private static String DIR_FILTER_EXCLUDE = "dir_filter_exclude";
+	private static String DIR_FILTER_EXCLUDE_IGNORE_CASE = "dir_filter_exclude_ignore_case";
+
 
 	// Define Fields and Buttons
 	private static JCheckBox CHECKBOX_START_AT_TOP = null;
@@ -134,9 +154,27 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	private static JLabel LABEL_REPLACE = null;
 	private static JTextArea TEXTAREA_REPLACE = null;
 
+	private static JLabel LABEL_PATH = null;
+	private static JTextField TEXTFIELD_PATH = null;
+	private static JButton BUTTON_SELECT = null;
 	private static JCheckBox CHECKBOX_INCLUDE_SUB_DIRECTORIES = null;
-	private static JComboBox COMBOBOX_PATH = null;
-	private static JComboBox COMBOBOX_FILE_FILTER = null;
+	private static JCheckBox CHECKBOX_MAKE_BACKUPS = null;
+	
+	private static JLabel LABEL_FILE_FILTER = null;
+	private static JLabel LABEL_FILE_FILTER_INCLUDE = null;
+	private static JLabel LABEL_FILE_FILTER_EXCLUDE = null;
+	private static JTextField TEXTFIELD_FILE_FILTER_INCLUDE = null;
+	private static JTextField TEXTFIELD_FILE_FILTER_EXCLUDE = null;
+	private static JCheckBox CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE = null;
+	private static JCheckBox CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE = null;
+
+	private static JLabel LABEL_DIR_FILTER = null;
+	private static JLabel LABEL_DIR_FILTER_INCLUDE = null;
+	private static JLabel LABEL_DIR_FILTER_EXCLUDE = null;
+	private static JTextField TEXTFIELD_DIR_FILTER_INCLUDE = null;
+	private static JTextField TEXTFIELD_DIR_FILTER_EXCLUDE = null;
+	private static JCheckBox CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE = null;
+	private static JCheckBox CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE = null;
 
 	// Define the left panel
 	protected static JList LIST = new JList();
@@ -150,6 +188,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	public static FindReplaceModel model = null;
 	
 	private static FindReplaceDialog findReplaceDialog = null;
+	
+	// File Chooser
+	private static final JFileChooser fileChooser = new JFileChooser();
 	
 	// Static Methods
 	private static boolean documentRadiosEnabled = true;
@@ -167,9 +208,25 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			CHECKBOX_WRAP_AROUND.setEnabled(true);
 			CHECKBOX_SELECTION_ONLY.setEnabled(true);
 			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
+			TEXTFIELD_PATH.setEnabled(false);
+			BUTTON_SELECT.setEnabled(false);
 			CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(false);
-			COMBOBOX_PATH.setEnabled(false);
-			COMBOBOX_FILE_FILTER.setEnabled(false);
+			CHECKBOX_MAKE_BACKUPS.setEnabled(false);
+			TEXTFIELD_FILE_FILTER_INCLUDE.setEnabled(false);
+			TEXTFIELD_FILE_FILTER_EXCLUDE.setEnabled(false);
+			CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
+			CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
+			TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(false);
+			TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(false);
+			CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
+			CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
+			LABEL_PATH.setEnabled(false);
+			LABEL_FILE_FILTER.setEnabled(false);
+			LABEL_FILE_FILTER_INCLUDE.setEnabled(false);
+			LABEL_FILE_FILTER_EXCLUDE.setEnabled(false);
+			LABEL_DIR_FILTER.setEnabled(false);
+			LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
+			LABEL_DIR_FILTER_EXCLUDE.setEnabled(false);
 			
 		} else if (RADIO_ALL_OPEN_DOCUMENTS.isSelected()) {
 			BUTTON_FIND.setEnabled(true);
@@ -180,10 +237,25 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			CHECKBOX_WRAP_AROUND.setEnabled(false);
 			CHECKBOX_SELECTION_ONLY.setEnabled(false);
 			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
+			TEXTFIELD_PATH.setEnabled(false);
+			BUTTON_SELECT.setEnabled(false);
 			CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(false);
-			COMBOBOX_PATH.setEnabled(false);
-			COMBOBOX_FILE_FILTER.setEnabled(false);
-			
+			CHECKBOX_MAKE_BACKUPS.setEnabled(false);
+			TEXTFIELD_FILE_FILTER_INCLUDE.setEnabled(false);
+			TEXTFIELD_FILE_FILTER_EXCLUDE.setEnabled(false);
+			CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
+			CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
+			TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(false);
+			TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(false);
+			CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
+			CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
+			LABEL_PATH.setEnabled(false);
+			LABEL_FILE_FILTER.setEnabled(false);
+			LABEL_FILE_FILTER_INCLUDE.setEnabled(false);
+			LABEL_FILE_FILTER_EXCLUDE.setEnabled(false);
+			LABEL_DIR_FILTER.setEnabled(false);
+			LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
+			LABEL_DIR_FILTER_EXCLUDE.setEnabled(false);
 		}
 
 		documentRadiosEnabled = true;
@@ -202,9 +274,25 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			CHECKBOX_WRAP_AROUND.setEnabled(false);
 			CHECKBOX_SELECTION_ONLY.setEnabled(false);
 			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(false);
+			TEXTFIELD_PATH.setEnabled(false);
+			BUTTON_SELECT.setEnabled(false);
 			CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(false);
-			COMBOBOX_PATH.setEnabled(false);
-			COMBOBOX_FILE_FILTER.setEnabled(false);
+			CHECKBOX_MAKE_BACKUPS.setEnabled(false);
+			TEXTFIELD_FILE_FILTER_INCLUDE.setEnabled(false);
+			TEXTFIELD_FILE_FILTER_EXCLUDE.setEnabled(false);
+			CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
+			CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
+			TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(false);
+			TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(false);
+			CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
+			CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
+			LABEL_PATH.setEnabled(false);
+			LABEL_FILE_FILTER.setEnabled(false);
+			LABEL_FILE_FILTER_INCLUDE.setEnabled(false);
+			LABEL_FILE_FILTER_EXCLUDE.setEnabled(false);
+			LABEL_DIR_FILTER.setEnabled(false);
+			LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
+			LABEL_DIR_FILTER_EXCLUDE.setEnabled(false);
 		}
 				
 		documentRadiosEnabled = false;
@@ -219,6 +307,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		FIND_ALL = "Find All"; //TBD: update gui tree and use: GUITreeLoader.reg.getText("find_all");
 		REPLACE = GUITreeLoader.reg.getText("replace");
 		REPLACE_ALL = GUITreeLoader.reg.getText("replace_all");
+		
+		RADIO_CURRENT_DOCUMENT = new JRadioButton(CURRENT_DOCUMENT);
+		RADIO_CURRENT_DOCUMENT.addActionListener(this);
+		RADIO_ALL_OPEN_DOCUMENTS = new JRadioButton(ALL_OPEN_DOCUMENTS);
+		RADIO_ALL_OPEN_DOCUMENTS.addActionListener(this);
+		RADIO_FILE_SYSTEM = new JRadioButton(FILE_SYSTEM);
+		RADIO_FILE_SYSTEM.addActionListener(this);
 
 		START_AT_TOP = GUITreeLoader.reg.getText("start_at_top");
 		WRAP_ARROUND = GUITreeLoader.reg.getText("wrap_around");
@@ -239,22 +334,40 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		CHECKBOX_IGNORE_CASE.addActionListener(this);
 		CHECKBOX_INCLUDE_READ_ONLY_NODES = new JCheckBox(INCLUDE_READ_ONLY_NODES);
 		CHECKBOX_INCLUDE_READ_ONLY_NODES.addActionListener(this);
+		
 
+		LABEL_PATH = new JLabel(PATH);
+		TEXTFIELD_PATH = new JTextField();
+		BUTTON_SELECT = new JButton(SELECT_DOTS);
+		BUTTON_SELECT.addActionListener(this);
 		CHECKBOX_INCLUDE_SUB_DIRECTORIES = new JCheckBox(INCLUDE_SUB_DIRECTORIES);
 		CHECKBOX_INCLUDE_SUB_DIRECTORIES.addActionListener(this);
-		COMBOBOX_PATH = new JComboBox();
-		COMBOBOX_PATH.setEditable(true);
-		COMBOBOX_PATH.addActionListener(this);
-		COMBOBOX_FILE_FILTER = new JComboBox();
-		COMBOBOX_FILE_FILTER.setEditable(true);
-		COMBOBOX_FILE_FILTER.addActionListener(this);
+		CHECKBOX_MAKE_BACKUPS = new JCheckBox(MAKE_BACKUPS);
+		CHECKBOX_MAKE_BACKUPS.addActionListener(this);
 		
-		RADIO_CURRENT_DOCUMENT = new JRadioButton(CURRENT_DOCUMENT);
-		RADIO_CURRENT_DOCUMENT.addActionListener(this);
-		RADIO_ALL_OPEN_DOCUMENTS = new JRadioButton(ALL_OPEN_DOCUMENTS);
-		RADIO_ALL_OPEN_DOCUMENTS.addActionListener(this);
-		RADIO_FILE_SYSTEM = new JRadioButton(FILE_SYSTEM);
-		RADIO_FILE_SYSTEM.addActionListener(this);
+		LABEL_FILE_FILTER = new JLabel(FILE_FILTER);
+		LABEL_FILE_FILTER_INCLUDE = new JLabel(INCLUDE);
+		TEXTFIELD_FILE_FILTER_INCLUDE = new JTextField();
+		CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE = new JCheckBox(IGNORE_CASE);
+		CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.addActionListener(this);
+		CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.setActionCommand(FILE_FILTER_INCLUDE_IGNORE_CASE);
+		LABEL_FILE_FILTER_EXCLUDE = new JLabel(EXCLUDE);
+		TEXTFIELD_FILE_FILTER_EXCLUDE = new JTextField();
+		CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE = new JCheckBox(IGNORE_CASE);
+		CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.addActionListener(this);
+		CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.setActionCommand(FILE_FILTER_EXCLUDE_IGNORE_CASE);
+		
+		LABEL_DIR_FILTER = new JLabel(DIR_FILTER);
+		LABEL_DIR_FILTER_INCLUDE = new JLabel(INCLUDE);
+		TEXTFIELD_DIR_FILTER_INCLUDE = new JTextField();
+		CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE = new JCheckBox(IGNORE_CASE);
+		CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.addActionListener(this);
+		CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setActionCommand(DIR_FILTER_INCLUDE_IGNORE_CASE);
+		LABEL_DIR_FILTER_EXCLUDE = new JLabel(EXCLUDE);
+		TEXTFIELD_DIR_FILTER_EXCLUDE = new JTextField();
+		CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE = new JCheckBox(IGNORE_CASE);
+		CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.addActionListener(this);
+		CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setActionCommand(DIR_FILTER_EXCLUDE_IGNORE_CASE);	
 		
 		// Add the radio buttons to a group.
 		ButtonGroup radioButtonGroup = new ButtonGroup();
@@ -317,6 +430,12 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		jsp = new JScrollPane(LIST);
 	
 		disableButtons();
+		
+		// Setup JFileChooser
+		fileChooser.setFileHidingEnabled(false);
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		fileChooser.setApproveButtonText(SELECT);
+
 	}
 	
 	public void show() {
@@ -370,10 +489,45 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		Box documentScopeBox2 = Box.createHorizontalBox();
 		documentScopeBox2.add(RADIO_FILE_SYSTEM);
 		scopeOptionsBox.add(documentScopeBox2);
-		
-		scopeOptionsBox.add(COMBOBOX_PATH);
-		scopeOptionsBox.add(CHECKBOX_INCLUDE_SUB_DIRECTORIES);
-		scopeOptionsBox.add(COMBOBOX_FILE_FILTER);
+
+		// Define Box for File System Search
+		Box fileSystemSearch = Box.createVerticalBox();
+			Box fileSystemPathBox = Box.createHorizontalBox();
+				fileSystemPathBox.add(LABEL_PATH);
+				fileSystemPathBox.add(Box.createHorizontalStrut(5));
+				fileSystemPathBox.add(TEXTFIELD_PATH);
+				fileSystemPathBox.add(Box.createHorizontalStrut(5));
+				fileSystemPathBox.add(BUTTON_SELECT);
+			fileSystemSearch.add(fileSystemPathBox);
+			Box fileSystemPathCheckBoxBox = Box.createHorizontalBox();
+				fileSystemPathCheckBoxBox.add(CHECKBOX_INCLUDE_SUB_DIRECTORIES);
+				fileSystemPathCheckBoxBox.add(Box.createHorizontalStrut(5));
+				fileSystemPathCheckBoxBox.add(CHECKBOX_MAKE_BACKUPS);
+			fileSystemSearch.add(fileSystemPathCheckBoxBox);
+			JPanel filterPanel = new JPanel();
+				filterPanel.setLayout(new GridLayout(4,4));
+				
+				filterPanel.add(LABEL_FILE_FILTER);
+				filterPanel.add(LABEL_FILE_FILTER_INCLUDE);
+				filterPanel.add(TEXTFIELD_FILE_FILTER_INCLUDE);
+				filterPanel.add(CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE);
+
+				filterPanel.add(new JLabel(""));
+				filterPanel.add(LABEL_FILE_FILTER_EXCLUDE);
+				filterPanel.add(TEXTFIELD_FILE_FILTER_EXCLUDE);
+				filterPanel.add(CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE);
+
+				filterPanel.add(LABEL_DIR_FILTER);
+				filterPanel.add(LABEL_DIR_FILTER_INCLUDE);
+				filterPanel.add(TEXTFIELD_DIR_FILTER_INCLUDE);
+				filterPanel.add(CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE);
+
+				filterPanel.add(new JLabel(""));
+				filterPanel.add(LABEL_DIR_FILTER_EXCLUDE);
+				filterPanel.add(TEXTFIELD_DIR_FILTER_EXCLUDE);
+				filterPanel.add(CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE);
+			fileSystemSearch.add(filterPanel);
+		scopeOptionsBox.add(fileSystemSearch);
 		
 		scopeOptionsPanel.add(scopeOptionsBox, BorderLayout.CENTER);
 		
@@ -441,6 +595,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		
 		LIST.setSelectedIndex(0);
 		
+		syncToModel();
+		
 		pack();
 	}
 
@@ -453,11 +609,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		
 		// Sync View to Model for new index
 		if ((currentIndex >= 0) && (currentIndex < model.getSize())) {
-			CHECKBOX_START_AT_TOP.setSelected(model.getStartAtTop(currentIndex));
-			CHECKBOX_WRAP_AROUND.setSelected(model.getWrapAround(currentIndex));
-			CHECKBOX_SELECTION_ONLY.setSelected(model.getSelectionOnly(currentIndex));
 			CHECKBOX_IGNORE_CASE.setSelected(model.getIgnoreCase(currentIndex));
-			CHECKBOX_INCLUDE_READ_ONLY_NODES.setSelected(model.getIncludeReadOnly(currentIndex));
 			CHECKBOX_REGEXP.setSelected(model.getRegExp(currentIndex));
 			TEXTAREA_FIND.setText(model.getFind(currentIndex));
 			TEXTAREA_REPLACE.setText(model.getReplace(currentIndex));
@@ -493,6 +645,51 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	public void keyReleased(KeyEvent e) {}
 
 
+	private void syncToModel() {
+		CHECKBOX_START_AT_TOP.setSelected(model.getStartAtTop());
+		CHECKBOX_WRAP_AROUND.setSelected(model.getWrapAround());
+		CHECKBOX_SELECTION_ONLY.setSelected(model.getSelectionOnly());
+		CHECKBOX_INCLUDE_READ_ONLY_NODES.setSelected(model.getIncludeReadOnly());
+		TEXTFIELD_PATH.setText(model.getPath());
+		CHECKBOX_INCLUDE_SUB_DIRECTORIES.setSelected(model.getIncludeSubDirs());
+		CHECKBOX_MAKE_BACKUPS.setSelected(model.getMakeBackups());
+		TEXTFIELD_FILE_FILTER_INCLUDE.setText(model.getFileFilterInclude());
+		TEXTFIELD_FILE_FILTER_EXCLUDE.setText(model.getFileFilterExclude());
+		CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.setSelected(model.getFileFilterIncludeIgnoreCase());
+		CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.setSelected(model.getFileFilterExcludeIgnoreCase());
+		TEXTFIELD_DIR_FILTER_INCLUDE.setText(model.getDirFilterInclude());
+		TEXTFIELD_DIR_FILTER_EXCLUDE.setText(model.getDirFilterExclude());
+		CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setSelected(model.getDirFilterIncludeIgnoreCase());
+		CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setSelected(model.getDirFilterExcludeIgnoreCase());
+
+		int mode = model.getSelectionMode();
+		if (mode == MODE_CURRENT_DOCUMENT) {
+			RADIO_CURRENT_DOCUMENT.setSelected(true);
+			if (Outliner.openDocumentCount() > 0) {
+				updateForCurrentDocumentRadio();
+			}
+		} else if (mode == MODE_ALL_OPEN_DOCUMENTS) {
+			RADIO_ALL_OPEN_DOCUMENTS.setSelected(true);
+			if (Outliner.openDocumentCount() > 0) {
+				updateForAllOpenDocumentsRadio();
+			}
+		} else if (mode == MODE_FILE_SYSTEM) {
+			RADIO_FILE_SYSTEM.setSelected(true);
+			updateForSelectFileSystemRadio();
+		} else {
+			System.out.println("Unknown File Selection Mode: " + mode);
+		}
+	}
+
+	public void hide() {
+		model.setPath(TEXTFIELD_PATH.getText());
+		model.setFileFilterInclude(TEXTFIELD_FILE_FILTER_INCLUDE.getText());
+		model.setFileFilterExclude(TEXTFIELD_FILE_FILTER_EXCLUDE.getText());
+		model.setDirFilterInclude(TEXTFIELD_DIR_FILTER_INCLUDE.getText());
+		model.setDirFilterExclude(TEXTFIELD_DIR_FILTER_EXCLUDE.getText());
+		super.hide();
+	}
+	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		// File Menu
@@ -508,60 +705,174 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			newFindReplace();
 		} else if (e.getActionCommand().equals(DELETE)) {
 			deleteFindReplace();
+
+		} else if (e.getActionCommand().equals(SELECT_DOTS)) {
+			int returnVal = fileChooser.showOpenDialog(this);
+			if(returnVal == JFileChooser.APPROVE_OPTION) {
+				TEXTFIELD_PATH.setText(fileChooser.getSelectedFile().getPath());
+			}
 		
 		// CheckBoxes
-		} else if (e.getActionCommand().equals(START_AT_TOP)) {
-			model.setStartAtTop(currentIndex, CHECKBOX_START_AT_TOP.isSelected());
-		} else if (e.getActionCommand().equals(WRAP_ARROUND)) {
-			model.setWrapAround(currentIndex, CHECKBOX_WRAP_AROUND.isSelected());
-		} else if (e.getActionCommand().equals(SELECTION_ONLY)) {
-			model.setSelectionOnly(currentIndex, CHECKBOX_SELECTION_ONLY.isSelected());
 		} else if (e.getActionCommand().equals(IGNORE_CASE)) {
 			model.setIgnoreCase(currentIndex, CHECKBOX_IGNORE_CASE.isSelected());
-		} else if (e.getActionCommand().equals(INCLUDE_READ_ONLY_NODES)) {
-			model.setIncludeReadOnly(currentIndex, CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected());
 		} else if (e.getActionCommand().equals(REGEXP)) {
 			model.setRegExp(currentIndex, CHECKBOX_REGEXP.isSelected());
+			
+		} else if (e.getActionCommand().equals(START_AT_TOP)) {
+			model.setStartAtTop(CHECKBOX_START_AT_TOP.isSelected());
+		} else if (e.getActionCommand().equals(WRAP_ARROUND)) {
+			model.setWrapAround(CHECKBOX_WRAP_AROUND.isSelected());
+		} else if (e.getActionCommand().equals(SELECTION_ONLY)) {
+			model.setSelectionOnly(CHECKBOX_SELECTION_ONLY.isSelected());
+		} else if (e.getActionCommand().equals(INCLUDE_READ_ONLY_NODES)) {
+			model.setIncludeReadOnly(CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected());
+
+		} else if (e.getActionCommand().equals(MAKE_BACKUPS)) {
+			model.setMakeBackups(CHECKBOX_MAKE_BACKUPS.isSelected());
+
+		} else if (e.getActionCommand().equals(FILE_FILTER_INCLUDE_IGNORE_CASE)) {
+			model.setFileFilterIncludeIgnoreCase(CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.isSelected());
+		} else if (e.getActionCommand().equals(FILE_FILTER_EXCLUDE_IGNORE_CASE)) {
+			model.setFileFilterExcludeIgnoreCase(CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.isSelected());
+
+		} else if (e.getActionCommand().equals(DIR_FILTER_INCLUDE_IGNORE_CASE)) {
+			model.setDirFilterIncludeIgnoreCase(CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.isSelected());
+		} else if (e.getActionCommand().equals(DIR_FILTER_EXCLUDE_IGNORE_CASE)) {
+			model.setDirFilterExcludeIgnoreCase(CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.isSelected());
+
+		} else if (e.getActionCommand().equals(INCLUDE_SUB_DIRECTORIES)) {
+			model.setIncludeSubDirs(CHECKBOX_INCLUDE_SUB_DIRECTORIES.isSelected());
+			
+			if (CHECKBOX_INCLUDE_SUB_DIRECTORIES.isSelected()) {
+				LABEL_DIR_FILTER.setEnabled(true);
+				LABEL_DIR_FILTER_INCLUDE.setEnabled(true);
+				LABEL_DIR_FILTER_EXCLUDE.setEnabled(true);
+				TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(true);
+				TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(true);
+				CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(true);
+				CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(true);				
+			} else {
+				LABEL_DIR_FILTER.setEnabled(false);
+				LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
+				LABEL_DIR_FILTER_EXCLUDE.setEnabled(false);
+				TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(false);
+				TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(false);
+				CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
+				CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);			
+			}
 		
 		// RadioButtons
 		} else if (e.getActionCommand().equals(CURRENT_DOCUMENT)) {
-			BUTTON_FIND.setEnabled(true);
-			BUTTON_FIND_ALL.setEnabled(true);
-			BUTTON_REPLACE.setEnabled(true);
-			BUTTON_REPLACE_ALL.setEnabled(true);
-			CHECKBOX_START_AT_TOP.setEnabled(true);
-			CHECKBOX_WRAP_AROUND.setEnabled(true);
-			CHECKBOX_SELECTION_ONLY.setEnabled(true);
-			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
-			CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(false);
-			COMBOBOX_PATH.setEnabled(false);
-			COMBOBOX_FILE_FILTER.setEnabled(false);
+			model.setSelectionMode(MODE_CURRENT_DOCUMENT);
+			updateForCurrentDocumentRadio();
 
 		} else if (e.getActionCommand().equals(ALL_OPEN_DOCUMENTS)) {
-			BUTTON_FIND.setEnabled(true);
-			BUTTON_FIND_ALL.setEnabled(true);
-			BUTTON_REPLACE.setEnabled(true);
-			BUTTON_REPLACE_ALL.setEnabled(true);
-			CHECKBOX_START_AT_TOP.setEnabled(false);
-			CHECKBOX_WRAP_AROUND.setEnabled(false);
-			CHECKBOX_SELECTION_ONLY.setEnabled(false);
-			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
-			CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(false);
-			COMBOBOX_PATH.setEnabled(false);
-			COMBOBOX_FILE_FILTER.setEnabled(false);
+			model.setSelectionMode(MODE_ALL_OPEN_DOCUMENTS);
+			updateForAllOpenDocumentsRadio();
 			
 		} else if (e.getActionCommand().equals(FILE_SYSTEM)) {
-			BUTTON_FIND.setEnabled(false);
-			BUTTON_FIND_ALL.setEnabled(true);
-			BUTTON_REPLACE.setEnabled(false);
-			BUTTON_REPLACE_ALL.setEnabled(true);
-			CHECKBOX_START_AT_TOP.setEnabled(false);
-			CHECKBOX_WRAP_AROUND.setEnabled(false);
-			CHECKBOX_SELECTION_ONLY.setEnabled(false);
-			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(false);
-			CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(true);
-			COMBOBOX_PATH.setEnabled(true);
-			COMBOBOX_FILE_FILTER.setEnabled(true);
+			model.setSelectionMode(MODE_FILE_SYSTEM);
+			updateForSelectFileSystemRadio();
+		}
+	}
+
+	private void updateForCurrentDocumentRadio() {
+		BUTTON_FIND.setEnabled(true);
+		BUTTON_FIND_ALL.setEnabled(true);
+		BUTTON_REPLACE.setEnabled(true);
+		BUTTON_REPLACE_ALL.setEnabled(true);
+		CHECKBOX_START_AT_TOP.setEnabled(true);
+		CHECKBOX_WRAP_AROUND.setEnabled(true);
+		CHECKBOX_SELECTION_ONLY.setEnabled(true);
+		CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
+		TEXTFIELD_PATH.setEnabled(false);
+		BUTTON_SELECT.setEnabled(false);
+		CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(false);
+		CHECKBOX_MAKE_BACKUPS.setEnabled(false);
+		TEXTFIELD_FILE_FILTER_INCLUDE.setEnabled(false);
+		TEXTFIELD_FILE_FILTER_EXCLUDE.setEnabled(false);
+		CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
+		CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
+		TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(false);
+		TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(false);
+		CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
+		CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
+		LABEL_PATH.setEnabled(false);
+		LABEL_FILE_FILTER.setEnabled(false);
+		LABEL_FILE_FILTER_INCLUDE.setEnabled(false);
+		LABEL_FILE_FILTER_EXCLUDE.setEnabled(false);
+		LABEL_DIR_FILTER.setEnabled(false);
+		LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
+		LABEL_DIR_FILTER_EXCLUDE.setEnabled(false);
+	}
+	
+	private void updateForAllOpenDocumentsRadio() {
+		BUTTON_FIND.setEnabled(true);
+		BUTTON_FIND_ALL.setEnabled(true);
+		BUTTON_REPLACE.setEnabled(true);
+		BUTTON_REPLACE_ALL.setEnabled(true);
+		CHECKBOX_START_AT_TOP.setEnabled(false);
+		CHECKBOX_WRAP_AROUND.setEnabled(false);
+		CHECKBOX_SELECTION_ONLY.setEnabled(false);
+		CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
+		TEXTFIELD_PATH.setEnabled(false);
+		BUTTON_SELECT.setEnabled(false);
+		CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(false);
+		CHECKBOX_MAKE_BACKUPS.setEnabled(false);
+		TEXTFIELD_FILE_FILTER_INCLUDE.setEnabled(false);
+		TEXTFIELD_FILE_FILTER_EXCLUDE.setEnabled(false);
+		CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
+		CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
+		TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(false);
+		TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(false);
+		CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
+		CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
+		LABEL_PATH.setEnabled(false);
+		LABEL_FILE_FILTER.setEnabled(false);
+		LABEL_FILE_FILTER_INCLUDE.setEnabled(false);
+		LABEL_FILE_FILTER_EXCLUDE.setEnabled(false);
+		LABEL_DIR_FILTER.setEnabled(false);
+		LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
+		LABEL_DIR_FILTER_EXCLUDE.setEnabled(false);
+	}
+	
+	private void updateForSelectFileSystemRadio() {
+		BUTTON_FIND.setEnabled(false);
+		BUTTON_FIND_ALL.setEnabled(true);
+		BUTTON_REPLACE.setEnabled(false);
+		BUTTON_REPLACE_ALL.setEnabled(true);
+		CHECKBOX_START_AT_TOP.setEnabled(false);
+		CHECKBOX_WRAP_AROUND.setEnabled(false);
+		CHECKBOX_SELECTION_ONLY.setEnabled(false);
+		CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(false);
+		TEXTFIELD_PATH.setEnabled(true);
+		BUTTON_SELECT.setEnabled(true);
+		CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(true);
+		CHECKBOX_MAKE_BACKUPS.setEnabled(true);
+		TEXTFIELD_FILE_FILTER_INCLUDE.setEnabled(true);
+		TEXTFIELD_FILE_FILTER_EXCLUDE.setEnabled(true);
+		CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.setEnabled(true);
+		CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(true);
+		LABEL_PATH.setEnabled(true);
+		LABEL_FILE_FILTER.setEnabled(true);
+		LABEL_FILE_FILTER_INCLUDE.setEnabled(true);
+		LABEL_FILE_FILTER_EXCLUDE.setEnabled(true);
+		if (CHECKBOX_INCLUDE_SUB_DIRECTORIES.isSelected()) {
+			LABEL_DIR_FILTER.setEnabled(true);
+			LABEL_DIR_FILTER_INCLUDE.setEnabled(true);
+			LABEL_DIR_FILTER_EXCLUDE.setEnabled(true);
+			TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(true);
+			TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(true);
+			CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(true);
+			CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(true);				
+		} else {
+			LABEL_DIR_FILTER.setEnabled(false);
+			LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
+			LABEL_DIR_FILTER_EXCLUDE.setEnabled(false);
+			TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(false);
+			TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(false);
+			CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
+			CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);			
 		}
 	}
 	
@@ -674,12 +985,12 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				break;
 			
 			case MODE_FILE_SYSTEM:
-				Object path = COMBOBOX_PATH.getSelectedItem();
+				Object path = TEXTFIELD_PATH.getText();
 				if (path == null) {
 					path = new String("");
 				}
 
-				Object extensions = COMBOBOX_FILE_FILTER.getSelectedItem();
+				Object extensions = TEXTFIELD_FILE_FILTER_INCLUDE.getText();
 				if (extensions == null) {
 					extensions = new String("");
 				}
@@ -786,12 +1097,12 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				break;
 			
 			case MODE_FILE_SYSTEM:
-				Object path = COMBOBOX_PATH.getSelectedItem();
+				Object path = TEXTFIELD_PATH.getText();
 				if (path == null) {
 					path = new String("");
 				}
 
-				Object extensions = COMBOBOX_FILE_FILTER.getSelectedItem();
+				Object extensions = TEXTFIELD_FILE_FILTER_INCLUDE.getText();
 				if (extensions == null) {
 					extensions = new String("");
 				}
@@ -804,6 +1115,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 					TEXTAREA_FIND.getText(), 
 					TEXTAREA_REPLACE.getText(), 
 					CHECKBOX_IGNORE_CASE.isSelected(), 
+					CHECKBOX_MAKE_BACKUPS.isSelected(), 
 					CHECKBOX_REGEXP.isSelected()
 				);
 				break;
@@ -938,6 +1250,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		String sFind, 
 		String sReplace, 
 		boolean ignoreCase, 
+		boolean makeBackups, 
 		boolean isRegexp
 	) {
 		// Lazy Instantiation
@@ -964,7 +1277,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		}
 
 		// Do it
-		fileSystemReplace.replace(model, convertListToStringArray(extensions), startingPath, sFind, sReplace, isRegexp, ignoreCase, includeSubDirectories);
+		fileSystemReplace.replace(model, convertListToStringArray(extensions), startingPath, sFind, sReplace, isRegexp, ignoreCase, makeBackups, includeSubDirectories);
 	}
 
 	// This method is public and should have no direct dependancy on 
@@ -2177,7 +2490,7 @@ class FindReplaceDialog extends JDialog implements ActionListener {
 		JList list = Outliner.findReplace.LIST;
 		
 		if (currentMode == MODE_NEW) {
-			model.add(model.getSize(), name, "", "", false, false, false, false, false, false);
+			model.add(model.getSize(), name, "", "", false, false);
 			list.setSelectedIndex(model.getSize() - 1);
 		} else if (currentMode == MODE_RENAME) {
 			model.setName(Outliner.findReplace.LIST.getSelectedIndex(), name);
@@ -2192,7 +2505,6 @@ class FindReplaceDialog extends JDialog implements ActionListener {
 		hide();
 	}
 }
-
 
 class FindReplaceJTextAreaDocumentListener implements DocumentListener {
 	public static final int TYPE_FIND = 0;
@@ -2225,3 +2537,15 @@ class FindReplaceJTextAreaDocumentListener implements DocumentListener {
 		}
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+

@@ -60,12 +60,13 @@ import java.util.*;
 		String replacement,
 		boolean isRegexp,
 		boolean ignoreCase,
+		boolean makeBackups,
 		boolean includeSubDirectories
 	) {		
 		// Setup the Crawler
 		String lineEnd = PlatformCompatibility.platformToLineEnding(Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur);
 		
-		crawler.setFileHandler(new FileSystemReplaceFileContentsHandler(query, replacement, model, isRegexp, ignoreCase, lineEnd));
+		crawler.setFileHandler(new FileSystemReplaceFileContentsHandler(query, replacement, model, isRegexp, ignoreCase, makeBackups, lineEnd));
 		if (fileExtensions.length > 0) {
 			crawler.setFileFilter(new FileExtensionFilter(fileExtensions));
 		} else {

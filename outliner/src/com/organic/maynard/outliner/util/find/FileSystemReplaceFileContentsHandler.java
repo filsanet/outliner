@@ -56,6 +56,8 @@ import org.apache.oro.text.regex.MatchResult;
  
 public class FileSystemReplaceFileContentsHandler extends FileContentsHandler {
 
+	private static final String EXT_BAK = "bak";
+	
 	private String query = null;
 	private String replacement = null;
 	private Perl5Util util = new Perl5Util();
@@ -65,6 +67,7 @@ public class FileSystemReplaceFileContentsHandler extends FileContentsHandler {
 	private FindReplaceResultsModel results = null;
 	private boolean isRegexp;
 	private boolean ignoreCase;
+	private boolean makeBackups;
 	
 	
 	// Constructors
@@ -74,6 +77,7 @@ public class FileSystemReplaceFileContentsHandler extends FileContentsHandler {
 		FindReplaceResultsModel results, 
 		boolean isRegexp, 
 		boolean ignoreCase, 
+		boolean makeBackups,
 		String lineEnding
 	) {
 		super(lineEnding, false, FileContentsHandler.MODE_ARRAYS, Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur, Preferences.getPreferenceString(Preferences.SAVE_ENCODING).cur);
@@ -81,6 +85,7 @@ public class FileSystemReplaceFileContentsHandler extends FileContentsHandler {
 		this.results = results;
 		this.isRegexp = isRegexp;
 		this.ignoreCase = ignoreCase;
+		this.makeBackups = makeBackups;
 		
 		if (!isRegexp && ignoreCase) {
 			this.query = query.toLowerCase();
@@ -93,6 +98,19 @@ public class FileSystemReplaceFileContentsHandler extends FileContentsHandler {
 	
 	// Overridden Methods
 	protected boolean processContents(File file, ArrayList lines, ArrayList lineEndings) {
+		ArrayList backupLines = null;
+		ArrayList backupLineEndings = null;
+		if (makeBackups) {
+			backupLines = new ArrayList();
+			backupLineEndings = new ArrayList();
+			
+			// Make copies of lines and lineEndings
+			for (int i = 0; i < lines.size(); i++) {
+				backupLines.add((String) lines.get(i));
+				backupLineEndings.add((String) lineEndings.get(i));
+			}
+		}
+		
 		for (int lineCount = 1; lineCount <= lines.size(); lineCount++) {
 			String line = (String) lines.get(lineCount - 1);
 			
@@ -179,9 +197,13 @@ public class FileSystemReplaceFileContentsHandler extends FileContentsHandler {
 		}
 		
 		if (results.size() == 0) {
-			// If we made no changes then don't write a re-write the file.
+			// If we made no changes then don't re-write the file.
 			return false;
 		} else {
+			if (makeBackups) {
+				File backup = new File(file.getPath() + "." + EXT_BAK);
+				FileTools.dumpArrayOfLinesToFile(backup, getSaveEncoding(), backupLines, backupLineEndings);
+			}
 			return true;
 		}
 	}	
