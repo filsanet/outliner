@@ -257,13 +257,23 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			 
 
 		// Draw the visible components
-		switch (drawingDirection) {
-			case DOWN:
-				drawDown();
-				break;
-			default:
-				drawUp();
-		}
+
+			// Hide all the nodes from the previous draw
+			for (int i = 0; i < CACHE_SIZE; i++) {
+				if (textAreas[i].node != null) {
+					textAreas[i].node.setVisible(false);
+				}
+			}
+
+			startPoint.x = OutlinerCellRendererImpl.lineNumberOffset + OutlineLineNumber.LINE_NUMBER_WIDTH;
+			
+			switch (drawingDirection) {
+				case DOWN:
+					drawDown();
+					break;
+				default:
+					drawUp();
+			}
 		
 		// Draw the hidden component so that things work when we scroll away from the editing node.
 		startPoint.x = this.left;
@@ -279,21 +289,14 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	}
 
 	private void drawDown() {
-		// Hide all the nodes from the previous draw
-		for (int i = 0; i < CACHE_SIZE; i++) {
-			if (textAreas[i].node != null) {
-				textAreas[i].node.setVisible(false);
-			}
-		}
-
 		// Now Draw as many nodes as neccessary.
-		startPoint.x = OutlinerCellRendererImpl.lineNumberOffset + OutlineLineNumber.LINE_NUMBER_WIDTH;
 		startPoint.y = Preferences.getPreferenceInt(Preferences.TOP_MARGIN).cur;
 		
 		Node node = getNodeToDrawFrom();
 		if (node == null) {return;}
 		
 		int nodeIndex = ioNodeToDrawFrom;
+		ioFirstVisNode = ioNodeToDrawFrom;
 		
 		// Pre-compute some values
 		int effectiveBottom = bottom - Preferences.getPreferenceInt(Preferences.BOTTOM_MARGIN).cur;
@@ -339,24 +342,15 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			numNodesDrawn--;
 			partialCellDrawn = false;
 		}
-		
-		ioFirstVisNode = panel.doc.tree.visibleNodes.indexOf(textAreas[0].node);
-		ioLastVisNode = ioFirstVisNode + (numNodesDrawn - 1);		
+
+		ioLastVisNode = ioFirstVisNode + (numNodesDrawn - 1);
 		if (ioLastVisNode >= panel.doc.tree.visibleNodes.size()) {
 			ioLastVisNode = panel.doc.tree.visibleNodes.size() - 1;
 		}
 	}
 	
 	private void drawUp() {
-		// Hide all the nodes from the previous draw
-		for (int i = 0; i < CACHE_SIZE; i++) {
-			if (textAreas[i].node != null) {
-				textAreas[i].node.setVisible(false);
-			}
-		}
-
 		// Now Draw as many nodes as neccessary.
-		startPoint.x = OutlinerCellRendererImpl.lineNumberOffset + OutlineLineNumber.LINE_NUMBER_WIDTH;
 		startPoint.y = this.bottom - Preferences.getPreferenceInt(Preferences.BOTTOM_MARGIN).cur;
 
 		Node node = getNodeToDrawFrom();

@@ -34,7 +34,9 @@ public interface Node extends AttributeContainer {
 	public void adjustDecendantCharCount(int amount);
 	
 	public int getLineNumber();
+	public void setLineNumber(int lineNumber); // I wish this could be protected.
 	public int getLineNumber(int key);
+	public void setLineNumberKey(int lineNumberKey); // I wish this could be protected.
 	
 	// Parent Methods
 	public void setParent(Node node);

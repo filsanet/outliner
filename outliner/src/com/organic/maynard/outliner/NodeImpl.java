@@ -94,8 +94,16 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	
 
 	// Statistics Methods
-	protected int lineNumber = -1;
-	protected int lineNumberUpdateKey = -1;
+	private int lineNumber = -1;
+	private int lineNumberUpdateKey = -1;
+	
+	public void setLineNumber(int lineNumber) {
+		this.lineNumber = lineNumber;
+	}
+
+	public void setLineNumberKey(int lineNumberUpdateKey) {
+		this.lineNumberUpdateKey = lineNumberUpdateKey;
+	}
 	
 	public int getLineNumber() {
 		// This for when we need to get a line number but we don't want the
@@ -108,7 +116,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 			return lineNumber;
 		}
 		
-		NodeImpl next = (NodeImpl) tree.visibleNodes.get(0);
+		Node next = tree.visibleNodes.get(0);
 		int runningTotal = 0;
 		
 		int siblingCount = 0;
@@ -116,20 +124,20 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		while (true) {
 			runningTotal++;
 
-			next.lineNumber = runningTotal;
-			next.lineNumberUpdateKey = key;
+			next.setLineNumber(runningTotal);
+			next.setLineNumberKey(key);
 				
 			if (this.isDecendantOf(next)) {
 				if (next == this) {
 					break;
 				} else {
 					siblingCount = 0;
-					next = (NodeImpl) next.getChild(siblingCount);
+					next = next.getChild(siblingCount);
 				}
 			} else {
 				runningTotal += next.getDecendantCount();
 				siblingCount++;
-				next = (NodeImpl) next.getParent().getChild(siblingCount);
+				next = next.getParent().getChild(siblingCount);
 			}
 		}
 		
