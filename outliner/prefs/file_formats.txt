@@ -2,3 +2,4 @@ file_format|save_default|com.organic.maynard.outliner.SimpleFileFormat|Plaintext
 file_format|open_default|com.organic.maynard.outliner.SimpleFileFormat|Plaintext|txt htm html xml xsl
 file_format|save|com.organic.maynard.outliner.OPMLFileFormat|OPML
 file_format|open|com.organic.maynard.outliner.OPMLFileFormat|OPML|opm opml
+file_format|export|com.organic.maynard.outliner.HTMLExportFileFormat|HTML

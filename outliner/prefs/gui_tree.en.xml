@@ -330,6 +330,8 @@
 			<menuitem id="save_as" class="com.organic.maynard.outliner.SaveAsFileMenuItem" text="Save As..."/>
 			<menuitem id="revert" class="com.organic.maynard.outliner.RevertFileMenuItem" text="Revert"/>
 			<separator/>
+			<menuitem id="export" class="com.organic.maynard.outliner.ExportFileMenuItem" text="Export..."/>
+			<separator/>
 			<menuitem id="close" class="com.organic.maynard.outliner.CloseFileMenuItem" text="Close" keybinding="W" keybindingmodifiers="control"/>
 			<menuitem id="close_all" class="com.organic.maynard.outliner.CloseAllFileMenuItem" text="Close All"/>
 			<separator/>
