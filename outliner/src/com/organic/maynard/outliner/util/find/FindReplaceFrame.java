@@ -103,6 +103,10 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	private static String CURRENT_DOCUMENT = "Current Document";
 	private static String ALL_OPEN_DOCUMENTS = "All Open Documents";
 	private static String FILE_SYSTEM = "File System";
+	
+	private static String PATH = "Path";
+	private static String INCLUDE_SUB_DIRECTORIES = "Include Sub Directories";
+	private static String FILE_FILTER = "File Filter";
 
 	// Define Fields and Buttons
 	private static JCheckBox CHECKBOX_START_AT_TOP = null;
@@ -126,7 +130,11 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 
 	private static JLabel LABEL_REPLACE = null;
 	private static JTextArea TEXTAREA_REPLACE = null;
-	
+
+	private static JCheckBox CHECKBOX_INCLUDE_SUB_DIRECTORIES = null;
+	private static JComboBox COMBOBOX_PATH = null;
+	private static JComboBox COMBOBOX_FILE_FILTER = null;
+
 	// Define the left panel
 	protected static JList LIST = new JList();
 	private static JScrollPane jsp = null;
@@ -156,6 +164,10 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			CHECKBOX_WRAP_AROUND.setEnabled(true);
 			CHECKBOX_SELECTION_ONLY.setEnabled(true);
 			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
+			CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(false);
+			COMBOBOX_PATH.setEnabled(false);
+			COMBOBOX_FILE_FILTER.setEnabled(false);
+			
 		} else if (RADIO_ALL_OPEN_DOCUMENTS.isSelected()) {
 			BUTTON_FIND.setEnabled(true);
 			BUTTON_FIND_ALL.setEnabled(true);
@@ -165,6 +177,10 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			CHECKBOX_WRAP_AROUND.setEnabled(false);
 			CHECKBOX_SELECTION_ONLY.setEnabled(false);
 			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
+			CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(false);
+			COMBOBOX_PATH.setEnabled(false);
+			COMBOBOX_FILE_FILTER.setEnabled(false);
+			
 		}
 
 		documentRadiosEnabled = true;
@@ -183,6 +199,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			CHECKBOX_WRAP_AROUND.setEnabled(false);
 			CHECKBOX_SELECTION_ONLY.setEnabled(false);
 			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(false);
+			CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(false);
+			COMBOBOX_PATH.setEnabled(false);
+			COMBOBOX_FILE_FILTER.setEnabled(false);
 		}
 				
 		documentRadiosEnabled = false;
@@ -218,6 +237,15 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		CHECKBOX_INCLUDE_READ_ONLY_NODES = new JCheckBox(INCLUDE_READ_ONLY_NODES);
 		CHECKBOX_INCLUDE_READ_ONLY_NODES.addActionListener(this);
 
+		CHECKBOX_INCLUDE_SUB_DIRECTORIES = new JCheckBox(INCLUDE_SUB_DIRECTORIES);
+		CHECKBOX_INCLUDE_SUB_DIRECTORIES.addActionListener(this);
+		COMBOBOX_PATH = new JComboBox();
+		COMBOBOX_PATH.setEditable(true);
+		COMBOBOX_PATH.addActionListener(this);
+		COMBOBOX_FILE_FILTER = new JComboBox();
+		COMBOBOX_FILE_FILTER.setEditable(true);
+		COMBOBOX_FILE_FILTER.addActionListener(this);
+		
 		RADIO_CURRENT_DOCUMENT = new JRadioButton(CURRENT_DOCUMENT);
 		RADIO_CURRENT_DOCUMENT.addActionListener(this);
 		RADIO_ALL_OPEN_DOCUMENTS = new JRadioButton(ALL_OPEN_DOCUMENTS);
@@ -320,14 +348,15 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		JPanel scopeOptionsPanel = new JPanel();
 		scopeOptionsPanel.setLayout(new BorderLayout());
 		scopeOptionsPanel.setBorder(new TitledBorder(" Scope "));
+		
 		Box scopeOptionsBox = Box.createVerticalBox();
 		
 		Box documentScopeBox1 = Box.createHorizontalBox();
 		documentScopeBox1.add(RADIO_CURRENT_DOCUMENT);
 		documentScopeBox1.add(Box.createHorizontalStrut(15));
 		documentScopeBox1.add(RADIO_ALL_OPEN_DOCUMENTS);
-		
 		scopeOptionsBox.add(documentScopeBox1);
+		
 		scopeOptionsBox.add(CHECKBOX_START_AT_TOP);
 		scopeOptionsBox.add(CHECKBOX_WRAP_AROUND);
 		scopeOptionsBox.add(CHECKBOX_SELECTION_ONLY);
@@ -337,9 +366,12 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 
 		Box documentScopeBox2 = Box.createHorizontalBox();
 		documentScopeBox2.add(RADIO_FILE_SYSTEM);
-
 		scopeOptionsBox.add(documentScopeBox2);
-
+		
+		scopeOptionsBox.add(COMBOBOX_PATH);
+		scopeOptionsBox.add(CHECKBOX_INCLUDE_SUB_DIRECTORIES);
+		scopeOptionsBox.add(COMBOBOX_FILE_FILTER);
+		
 		scopeOptionsPanel.add(scopeOptionsBox, BorderLayout.CENTER);
 		
 		// Define Button Box
@@ -498,6 +530,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			CHECKBOX_WRAP_AROUND.setEnabled(true);
 			CHECKBOX_SELECTION_ONLY.setEnabled(true);
 			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
+			CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(false);
+			COMBOBOX_PATH.setEnabled(false);
+			COMBOBOX_FILE_FILTER.setEnabled(false);
 
 		} else if (e.getActionCommand().equals(ALL_OPEN_DOCUMENTS)) {
 			BUTTON_FIND.setEnabled(true);
@@ -508,6 +543,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			CHECKBOX_WRAP_AROUND.setEnabled(false);
 			CHECKBOX_SELECTION_ONLY.setEnabled(false);
 			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
+			CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(false);
+			COMBOBOX_PATH.setEnabled(false);
+			COMBOBOX_FILE_FILTER.setEnabled(false);
 			
 		} else if (e.getActionCommand().equals(FILE_SYSTEM)) {
 			BUTTON_FIND.setEnabled(false);
@@ -518,6 +556,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			CHECKBOX_WRAP_AROUND.setEnabled(false);
 			CHECKBOX_SELECTION_ONLY.setEnabled(false);
 			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(false);
+			CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(true);
+			COMBOBOX_PATH.setEnabled(true);
+			COMBOBOX_FILE_FILTER.setEnabled(true);
 		}
 	}
 	
@@ -586,9 +627,6 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				);
 				break;
 			
-			case MODE_FILE_SYSTEM:
-				break;
-			
 			case MODE_UNKNOWN:
 				System.out.println("ERROR: Unknown Find/Replace mode.");
 				break;
@@ -633,6 +671,25 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				break;
 			
 			case MODE_FILE_SYSTEM:
+				Object path = COMBOBOX_PATH.getSelectedItem();
+				if (path == null) {
+					path = new String("");
+				}
+
+				Object extensions = COMBOBOX_FILE_FILTER.getSelectedItem();
+				if (extensions == null) {
+					extensions = new String("");
+				}
+				
+				findAllFileSystem(
+					results,
+					path.toString(),
+					CHECKBOX_INCLUDE_SUB_DIRECTORIES.isSelected(),
+					extensions.toString(), 
+					TEXTAREA_FIND.getText(), 
+					CHECKBOX_IGNORE_CASE.isSelected(), 
+					CHECKBOX_REGEXP.isSelected()
+				);
 				break;
 			
 			case MODE_UNKNOWN:
@@ -678,9 +735,6 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 					CHECKBOX_WRAP_AROUND.isSelected(),
 					CHECKBOX_REGEXP.isSelected()
 				);
-				break;
-			
-			case MODE_FILE_SYSTEM:
 				break;
 			
 			case MODE_UNKNOWN:
@@ -729,6 +783,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				break;
 			
 			case MODE_FILE_SYSTEM:
+				replaceAllFileSystem(results);
 				break;
 			
 			case MODE_UNKNOWN:
@@ -807,6 +862,50 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		}
 	}
 
+	private static FileSystemFind fileSystemFind = null;
+	
+	private String[] convertListToStringArray(java.util.List list) {
+		String[] array = new String[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			array[i] = (String) list.get(i);
+		}
+		return array;
+	}
+	
+	public void findAllFileSystem(
+		FindReplaceResultsModel model, 
+		String startingPath, 
+		boolean includeSubDirectories,
+		String fileExtensions, 
+		String sFind, 
+		boolean ignoreCase, 
+		boolean isRegexp
+	) {
+		// Lazy Instantiation
+		if (fileSystemFind == null) {
+			fileSystemFind = new FileSystemFind();
+		}
+		
+		// Prep Query
+		if (isRegexp) {
+			sFind = prepareRegEx(false, ignoreCase, sFind, "");
+		}
+		
+		// Prep Extensions List
+		ArrayList extensions = new ArrayList();
+		StringTokenizer tok = new StringTokenizer(fileExtensions);
+		while (tok.hasMoreTokens()) {
+			String extension = tok.nextToken();
+			extensions.add(extension);
+		}
+
+		// Do it
+		fileSystemFind.find(model, convertListToStringArray(extensions), startingPath, sFind, isRegexp, includeSubDirectories);
+	}
+	
+	public void replaceAllFileSystem(FindReplaceResultsModel model) {
+	
+	}
 
 	// This method is public and should have no direct dependancy on 
 	// find/replace GUI so that it can be called from other classes.
@@ -1779,6 +1878,28 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	private int difference = 0;
 	private String replacementText = null;
 	
+	private String prepareRegEx(boolean isReplace, boolean ignoreCase, String match, String replacement) {
+		StringBuffer retVal = new StringBuffer();
+		
+		if (isReplace) {
+			retVal.append(REGEX_REPLACE_START).append(match).append(REGEX_REPLACE_MIDDLE).append(replacement);
+			if (ignoreCase) {
+				retVal.append(REGEX_REPLACE_END_IGNORE_CASE);
+			} else {
+				retVal.append(REGEX_REPLACE_END);
+			}
+		
+		} else {
+			retVal.append(REGEX_MATCH_START).append(match);
+			if (ignoreCase) {
+				retVal.append(REGEX_MATCH_END_IGNORE_CASE);
+			} else {
+				retVal.append(REGEX_MATCH_END);
+			}		
+		}
+		
+		return retVal.toString();
+	}
 	
 	private int matchText(
 		String text, 
@@ -1793,21 +1914,11 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			input = new PatternMatcherInput(text);
 
 			// Prepare the regex
-			String regex = null;
-			if (ignoreCase) {
-				regex = REGEX_MATCH_START + match + REGEX_MATCH_END_IGNORE_CASE;
-			} else {
-				regex = REGEX_MATCH_START + match + REGEX_MATCH_END;
-			}
+			String regex = prepareRegEx(isReplace, ignoreCase, match, replacement);
 							
 			if (isReplace) {
 				// Prepare the replacement regex
-				String subRegex = null;
-				if (ignoreCase) {
-					subRegex = REGEX_REPLACE_START + match + REGEX_REPLACE_MIDDLE + replacement + REGEX_REPLACE_END_IGNORE_CASE;
-				} else {
-					subRegex = REGEX_REPLACE_START + match + REGEX_REPLACE_MIDDLE + replacement + REGEX_REPLACE_END;
-				}
+				String subRegex = prepareRegEx(isReplace, ignoreCase, match, replacement);
 								
 				// Do the regex find and return result
 				try {
