@@ -1,11 +1,11 @@
 /**
- * JOEReturnCodes interface
+ * JoeReturnCodes interface
  * 
  * Provides a set of return code constants for JOE methods
  * 
  *		
  * Copyright (C) 2001 Stan Krute <Stan@StanKrute.com>
- * Last Touched: 8/5/01 3:15PM
+ * Last Touched: 8/12/01 8:15PM
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,7 +26,7 @@
 package com.organic.maynard.outliner;
 
 // Provide a set of return code constants for JOE programming
-public interface JOEReturnCodes {
+public interface JoeReturnCodes {
 	
 	// standard classics
 	public static final int SUCCESS = 1 ;
@@ -62,4 +62,4 @@ public interface JOEReturnCodes {
 	// -7xx internet errors
 	public static final int URL_NOT_FOUND = -700 ;
 	
-	} // end interface jrc
+	} // end interface JoeReturnCodes
