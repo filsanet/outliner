@@ -82,6 +82,12 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 		if (option == JFileChooser.APPROVE_OPTION) {
 			String filename = chooser.getSelectedFile().getPath();
 			
+			// part of proposed bug # 495512 fix    SRK    12/25/01 2:41PM
+			String lineEnd ;
+			String encoding ;
+			String fileFormat ;
+			// end of part of proposed bug # 495512 fix
+			
 			if (!Outliner.isFileNameUnique(filename) && (!filename.equals(document.getFileName()))) {
 				String msg = GUITreeLoader.reg.getText("message_cannot_save_file_already_open");
 				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
@@ -92,9 +98,31 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 			}
 			
 			// Pull Preference Values from the file chooser
+			
+			/* bug # 495512  - the following code always assumes export    SRK   12/25/01 2:43PM
 			String lineEnd = chooser.getExportLineEnding();
 			String encoding = chooser.getExportEncoding();
 			String fileFormat = chooser.getExportFileFormat();
+			end bug # 495512 */
+			
+			// part of proposed bug # 495512 fix    switch on type   SRK   12/25/01 2:43PM
+			switch (type) {
+				case FileProtocol.SAVE:
+					lineEnd = chooser.getLineEnding();
+					encoding = chooser.getSaveEncoding();
+					fileFormat = chooser.getSaveFileFormat();
+					break ;
+				case FileProtocol.EXPORT:
+					lineEnd = chooser.getExportLineEnding();
+					encoding = chooser.getExportEncoding();
+					fileFormat = chooser.getExportFileFormat();
+					break ;
+				default:
+					System.out.println("ERROR: invalid save type used. (" + type +")");
+					return false;
+				} // end switch
+				
+			// end of part of proposed bug # 495512 fix
 
 			// Update the document settings
 			document.settings.lineEnd.def = lineEnd;
