@@ -1340,6 +1340,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		}
 
 		// Redraw
+		tree.getDocument().attPanel.update();
 		layout.draw(currentNode, OutlineLayoutManager.TEXT);
 	}
 
@@ -1353,6 +1354,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		}
 
 		// Redraw
+		tree.getDocument().attPanel.update();
 		layout.draw(currentNode, OutlineLayoutManager.TEXT);
 	}
 
@@ -1366,6 +1368,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		}
 
 		// Redraw
+		tree.getDocument().attPanel.update();
 		layout.draw(currentNode, OutlineLayoutManager.TEXT);
 	}
 
@@ -1379,6 +1382,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		}
 
 		// Redraw
+		tree.getDocument().attPanel.update();
 		layout.draw(currentNode, OutlineLayoutManager.TEXT);
 	}
 

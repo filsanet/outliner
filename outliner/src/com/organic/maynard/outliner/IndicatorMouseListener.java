@@ -192,6 +192,8 @@ public class IndicatorMouseListener implements MouseListener {
 		if (!undoable.isEmpty()) {
 			tree.getDocument().undoQueue.add(undoable);
 		}
+		
+		tree.getDocument().attPanel.update();
 	}
 
 	private void toggleEditableAndClear(JoeTree tree) {
@@ -202,6 +204,8 @@ public class IndicatorMouseListener implements MouseListener {
 		if (!undoable.isEmpty()) {
 			tree.getDocument().undoQueue.add(undoable);
 		}
+		
+		tree.getDocument().attPanel.update();
 	}
 
 	private void toggleEditable(JoeTree tree) {
@@ -212,6 +216,8 @@ public class IndicatorMouseListener implements MouseListener {
 		if (!undoable.isEmpty()) {
 			tree.getDocument().undoQueue.add(undoable);
 		}
+		
+		tree.getDocument().attPanel.update();
 	}
 
 	private void toggleEditableInheritance(JoeTree tree) {
@@ -222,6 +228,8 @@ public class IndicatorMouseListener implements MouseListener {
 		if (!undoable.isEmpty()) {
 			tree.getDocument().undoQueue.add(undoable);
 		}
+		
+		tree.getDocument().attPanel.update();
 	}
 
 	// Moveable

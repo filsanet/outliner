@@ -1400,6 +1400,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			tree.getDocument().undoQueue.add(undoable);
 		}
 
+		tree.getDocument().attPanel.update();
 		layout.draw(currentNode, OutlineLayoutManager.ICON);
 	}
 
@@ -1430,6 +1431,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			tree.getDocument().undoQueue.add(undoable);
 		}
 
+		tree.getDocument().attPanel.update();
 		layout.draw(currentNode, OutlineLayoutManager.ICON);
 	}
 
@@ -1454,6 +1456,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			tree.getDocument().undoQueue.add(undoable);
 		}
 
+		tree.getDocument().attPanel.update();
 		layout.draw(currentNode, OutlineLayoutManager.ICON);
 	}
 
@@ -1496,6 +1499,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			tree.getDocument().undoQueue.add(undoable);
 		}
 
+		tree.getDocument().attPanel.update();
 		layout.draw(currentNode, OutlineLayoutManager.ICON);
 	}
 	

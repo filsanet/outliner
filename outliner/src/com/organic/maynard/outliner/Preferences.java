@@ -103,6 +103,8 @@ public class Preferences implements GUITreeComponent {
 		public static final String APPLY_FONT_STYLE_FOR_COMMENTS = "apply_font_style_for_comments";
 		public static final String APPLY_FONT_STYLE_FOR_EDITABILITY = "apply_font_style_for_editability";
 		public static final String APPLY_FONT_STYLE_FOR_MOVEABILITY = "apply_font_style_for_moveability";
+		public static final String USE_CREATE_MOD_DATES = "use_create_mod_dates";
+		public static final String CREATE_MOD_DATES_FORMAT = "create_mod_dates_format";
 	
 		// Look & Feel Panel
 		public static final String DESKTOP_BACKGROUND_COLOR = "desktop_background_color";

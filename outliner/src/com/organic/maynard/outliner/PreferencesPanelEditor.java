@@ -66,7 +66,13 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		PreferenceString pFontFace = (PreferenceString) prefs.getPreference(Preferences.FONT_FACE);
 		PreferenceInt pFontSize = (PreferenceInt) prefs.getPreference(Preferences.FONT_SIZE);
 		PreferenceString pLineWrap = (PreferenceString) prefs.getPreference(Preferences.LINE_WRAP);
-	
+		PreferenceBoolean pUseCreateModDates = (PreferenceBoolean) prefs.getPreference(Preferences.USE_CREATE_MOD_DATES);
+		PreferenceString pCreateModDatesFormat = (PreferenceString) prefs.getPreference(Preferences.CREATE_MOD_DATES_FORMAT);
+
+		// Update Dates For Node Atts
+		NodeImpl.isSettingCreateModDates = pUseCreateModDates.cur;
+		NodeImpl.updateSimpleDateFormat(pCreateModDatesFormat.cur);
+		
 		// Update the undo queue for all the documents immediatly if it is being downsized.
 		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
 			Outliner.getDocument(i).undoQueue.trim();

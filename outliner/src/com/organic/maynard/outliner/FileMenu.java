@@ -430,7 +430,10 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 	// open/import a file and store its outline into a tree
 	private static int openOrImportFileAndGetTree(JoeTree tree, DocumentInfo docInfo, FileProtocol protocol, int mode) {
-
+		// Stop updating mod/create dates
+		boolean tempIsSettingCreateModDates = NodeImpl.isSettingCreateModDates;
+		NodeImpl.isSettingCreateModDates = false;
+		
 		// local vars
 		String msg = null;
 		int openOrImportResult = FAILURE;
@@ -438,6 +441,9 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 		// try to open the file
 		if (!protocol.openFile(docInfo)) {
+			// Restore
+			NodeImpl.isSettingCreateModDates = tempIsSettingCreateModDates;
+
 			return FAILURE;
 		} // end if
 
@@ -456,6 +462,10 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				// Ack, this shouldn't happen.
 				// illegal/unknown mode specification
 				System.out.println("FileMenu:OpenFile: bad mode parameter");
+
+				// Restore
+				NodeImpl.isSettingCreateModDates = tempIsSettingCreateModDates;
+
 				return FAILURE;
 			} // end switch
 
@@ -488,6 +498,9 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// no matter what happened,
 		// reset the input stream in the docInfo
 		docInfo.setInputStream(null);
+		
+		// Restore
+		NodeImpl.isSettingCreateModDates = tempIsSettingCreateModDates;
 
 		// return the results of our efforts
 		return openOrImportResult;

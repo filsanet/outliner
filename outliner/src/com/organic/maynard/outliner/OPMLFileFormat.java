@@ -69,7 +69,10 @@ public class OPMLFileFormat
 
 	public static final String ATTRIBUTE_TEXT = "text";
 	public static final String ATTRIBUTE_KEY = "key";
-	
+
+	public static final String ATTRIBUTE_CREATED = "created";
+	public static final String ATTRIBUTE_MODIFIED = "modified";
+
 	public static final String ATTRIBUTE_IS_EDITABLE = "isEditable";
 	//public static final String ATTRIBUTE_IS_EDITABLE_INHERITED = "isEditableInherited";
 
@@ -321,6 +324,12 @@ public class OPMLFileFormat
 					} else if (attValue != null && attValue.equals("true")) {
 						node.setCommentState(Node.COMMENT_TRUE);
 					}
+
+				} else if (attName.equals(ATTRIBUTE_CREATED)) {
+					node.setAttribute(attName, attValue, true);
+
+				} else if (attName.equals(ATTRIBUTE_MODIFIED)) {
+					node.setAttribute(attName, attValue, true);
 					
 				} else {
 					node.setAttribute(attName, attValue);

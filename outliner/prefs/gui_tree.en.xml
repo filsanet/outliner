@@ -224,6 +224,15 @@
 							<validator id="apply_font_style_for_moveability_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
 							<preference_component id="apply_font_style_for_moveability_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Apply Font Style for Moveability."/>
 						</preference>
+						<preference_container id="attr_date_preference_container" class="com.organic.maynard.outliner.PreferencesGUITreeSubContainer" style="titled" label=" Attribute Creation/Modification Dates ">
+							<preference id="use_create_mod_dates" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
+								<validator id="use_create_mod_dates_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
+								<preference_component id="use_create_mod_dates_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Automatically Generate Node Attributes"/>
+							</preference>
+							<preference id="create_mod_dates_format" class="com.organic.maynard.outliner.PreferenceString" default="EEE, d MMM yyyy hh:mm:ss z">
+								<preference_component id="create_mod_dates_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Date Format" size="10"/>
+							</preference>
+						</preference_container>
 					</preferencepanel>
 					<preferencepanel id="preferences_panel_look_and_feel" class="com.organic.maynard.outliner.PreferencesPanelLookAndFeel" title="Look &amp; Feel">
 						<preference id="desktop_background_color" class="com.organic.maynard.outliner.PreferenceColor" default="-16777216">
