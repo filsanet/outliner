@@ -1,4 +1,8 @@
 1.8.9.2 - ???
+	New Features:
+		1) Added text actions for moving the current selection. Ctrl-Right Arrow will move the current selection to the right one character, or down to the next line if the selection is at the end of the current text area. Left Arrow works similarly.
+		2) Added text actions for expanding a selection within a text area with the keyboard. Shift-Up Arrow Selects to the start of the text area. Shift-Down Arrow selects to the end of the text area.
+		3) Added text actions for expanding a selection within a text area with the keyboard. Right Arrow expands one character to the right. Ctrl-Shift-Right Arrow expands to the next work boundary. Left Arrow works similarly. This functionality existed prior to the addition of the Action code so this is sort of a bug fix as well.
 	Feature Enhancements:
 		1) Undo/Redo now displays informative text in the MenuItems about what you are undoing and redoing.
 		2) Undo All/Redo All now displays your current location within the undo queue, as well as the maximum size of the undo queue.
