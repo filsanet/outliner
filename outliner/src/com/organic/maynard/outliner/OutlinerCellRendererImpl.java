@@ -34,6 +34,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	public OutlineButton button = new OutlineButton(this);
 	public OutlineLineNumber lineNumber = new OutlineLineNumber(this);
 	
+	public int height = 0;
 	
 	// The Constructors
 	public OutlinerCellRendererImpl() {
@@ -61,7 +62,6 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		removeNotify();
 		
 		node = null;
-		currentTextAreaSize = null;
 		
 		button = null;
 		lineNumber = null;
@@ -69,18 +69,6 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		
 	public boolean isManagingFocus() {
 		return true;
-	}
-
-
-	// Dimension Methods
-	private Dimension currentTextAreaSize = new Dimension(1,1); // Random unlikely value so it isn't null.
-
-	public void setCurrentTextAreaSize(Dimension d) {
-		this.currentTextAreaSize = d;
-	}
-	
-	public Dimension getCurrentTextAreaSize() {
-		return currentTextAreaSize;
 	}
 
 
@@ -128,7 +116,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		
 		// Size needs to be set twice. The first time forces the lines to flow. The second then sets the correct height.
 		setSize(width,32);
-		int height = getBestHeight();
+		height = getBestHeight();
 		p.y -= (height + Preferences.VERTICAL_SPACING.cur);
 		setBounds(p.x + indent + OutlineButton.BUTTON_WIDTH, p.y, width, height);
 		
@@ -158,7 +146,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		
 		// Size needs to be set twice. The first time forces the lines to flow. The second then sets the correct height.
 		setSize(width,32);
-		int height = getBestHeight();
+		height = getBestHeight();
 		setBounds(p.x + indent + OutlineButton.BUTTON_WIDTH, p.y, width, height);
 		
 		// Draw the Button

@@ -255,7 +255,6 @@ public class Preferences {
 			Outliner.getDocument(i).panel.setBackground(Preferences.PANEL_BACKGROUND_COLOR.cur);
 		}
 
-		// This is probably not the best way to set the font now that it is static.
 		Font font = new Font(Preferences.FONT_FACE.cur,Font.PLAIN,Preferences.FONT_SIZE.cur);
 
 		boolean line_wrap = true;

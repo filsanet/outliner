@@ -101,6 +101,11 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 			textAreas[i].button.removeMouseListener(iconListener);
 			textAreas[i].button.destroy();
 
+			textAreas[i].lineNumber.removeMouseListener(dndListener);
+			textAreas[i].lineNumber.removeKeyListener(iconListener);
+			textAreas[i].lineNumber.removeMouseListener(iconListener);
+			textAreas[i].lineNumber.destroy();
+
 			textAreas[i].removeMouseListener(dndListener);
 			textAreas[i].removeKeyListener(textListener);
 			textAreas[i].removeMouseListener(textListener);
@@ -202,6 +207,69 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 		return;
 	}
 
+	private void drawDown() {
+		// Hide all the nodes from the previous draw
+		for (int i = 0; i < CACHE_SIZE; i++) {
+			if (textAreas[i].node != null) {
+				textAreas[i].node.setVisible(false);
+			}
+		}
+
+		// Now Draw as many nodes as neccessary.
+		startPoint.x = Preferences.LEFT_MARGIN.cur + OutlineLineNumber.LINE_NUMBER_WIDTH;
+		startPoint.y = Preferences.TOP_MARGIN.cur;
+		
+		Node node = getNodeToDrawFrom();
+		int nodeIndex = ioNodeToDrawFrom;
+		
+		// Pre-compute some values
+		int effectiveBottom = bottom - Preferences.BOTTOM_MARGIN.cur;
+		
+		while (true) {
+			OutlinerCellRendererImpl renderer = textAreas[numNodesDrawn];
+			renderer.drawDown(startPoint, node);
+			renderer.setVisible(true);
+			renderer.node.setVisible(true);
+			numNodesDrawn++;
+			
+			// Make sure we don't draw past the bottom. And don't count nodes that are partially drawn.
+			if (startPoint.y > effectiveBottom) {
+				renderer.node.setVisible(false);
+				partialCellDrawn = true;
+				break;
+			}
+
+			// Make sure we dont' try to draw more nodes than the cache size
+			if (numNodesDrawn == CACHE_SIZE) {
+				break;
+			}
+			
+			// Get the Next Node to Draw
+			nodeIndex++;
+			if (nodeIndex == panel.doc.tree.visibleNodes.size()) {
+				break;
+			}
+			node = (Node) panel.doc.tree.visibleNodes.get(nodeIndex);
+		}
+
+		// Hide any drawing elements that were not used.
+		for (int i = numNodesDrawn; i < CACHE_SIZE; i++) {
+			textAreas[i].setVisible(false);
+		}
+
+		// Record Indexes and get things ready for the scrollbar
+		if (partialCellDrawn) {
+			numNodesDrawn--;
+			partialCellDrawn = false;
+		}
+		
+		ioFirstVisNode = panel.doc.tree.visibleNodes.indexOf(textAreas[0].node);
+		ioLastVisNode = ioFirstVisNode + (numNodesDrawn - 1);		
+		if (ioLastVisNode >= panel.doc.tree.visibleNodes.size()) {
+			ioLastVisNode = panel.doc.tree.visibleNodes.size() - 1;
+		}
+	}
+	
 	private void drawUp() {
 		// Hide all the nodes from the previous draw
 		for (int i = 0; i < CACHE_SIZE; i++) {
@@ -287,69 +355,6 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 		
 		// Do the extraDrawDown
 		drawDownExtraNodes(ioExtraNodeToDrawFrom);
-	}
-	
-	private void drawDown() {
-		// Hide all the nodes from the previous draw
-		for (int i = 0; i < CACHE_SIZE; i++) {
-			if (textAreas[i].node != null) {
-				textAreas[i].node.setVisible(false);
-			}
-		}
-
-		// Now Draw as many nodes as neccessary.
-		startPoint.x = Preferences.LEFT_MARGIN.cur + OutlineLineNumber.LINE_NUMBER_WIDTH;
-		startPoint.y = Preferences.TOP_MARGIN.cur;
-		
-		Node node = getNodeToDrawFrom();
-		int nodeIndex = ioNodeToDrawFrom;
-		
-		// Pre-compute some values
-		int effectiveBottom = bottom - Preferences.BOTTOM_MARGIN.cur;
-		
-		while (true) {
-			OutlinerCellRendererImpl renderer = textAreas[numNodesDrawn];
-			renderer.drawDown(startPoint, node);
-			renderer.setVisible(true);
-			renderer.node.setVisible(true);
-			numNodesDrawn++;
-			
-			// Make sure we don't draw past the bottom. And don't count nodes that are partially drawn.
-			if (startPoint.y > effectiveBottom) {
-				renderer.node.setVisible(false);
-				partialCellDrawn = true;
-				break;
-			}
-
-			// Make sure we dont' try to draw more nodes than the cache size
-			if (numNodesDrawn == CACHE_SIZE) {
-				break;
-			}
-			
-			// Get the Next Node to Draw
-			nodeIndex++;
-			if (nodeIndex == panel.doc.tree.visibleNodes.size()) {
-				break;
-			}
-			node = (Node) panel.doc.tree.visibleNodes.get(nodeIndex);
-		}
-
-		// Hide any drawing elements that were not used.
-		for (int i = numNodesDrawn; i < CACHE_SIZE; i++) {
-			textAreas[i].setVisible(false);
-		}
-
-		// Record Indexes and get things ready for the scrollbar
-		if (partialCellDrawn) {
-			numNodesDrawn--;
-			partialCellDrawn = false;
-		}
-		
-		ioFirstVisNode = panel.doc.tree.visibleNodes.indexOf(textAreas[0].node);
-		ioLastVisNode = ioFirstVisNode + (numNodesDrawn - 1);		
-		if (ioLastVisNode >= panel.doc.tree.visibleNodes.size()) {
-			ioLastVisNode = panel.doc.tree.visibleNodes.size() - 1;
-		}
 	}
 
 	private void drawDownExtraNodes(int nodeIndex) {

@@ -85,12 +85,6 @@ public class UndoableEdit implements Undoable {
 		node.getTree().clearSelection();
 		node.getTree().insertNode(node); // Used for visibility
 		node.getTree().doc.panel.layout.draw(node,outlineLayoutManager.TEXT);
-		
-		// fix the stored textarea size since it will have changed if the number of lines changed.
-		OutlinerCellRendererImpl textArea = node.getTree().doc.panel.layout.getUIComponent(node);
-		if (textArea != null) {
-			textArea.setCurrentTextAreaSize(textArea.getPreferredSize());
-		}
 	}
 	
 	public void redo() {
@@ -100,12 +94,6 @@ public class UndoableEdit implements Undoable {
 		node.getTree().clearSelection();
 		node.getTree().insertNode(node); // Used for visibility
 		node.getTree().doc.panel.layout.draw(node,outlineLayoutManager.TEXT);
-
-		// fix the stored textarea size since it will have changed if the number of lines changed.
-		OutlinerCellRendererImpl textArea = node.getTree().doc.panel.layout.getUIComponent(node);
-		if (textArea != null) {
-			textArea.setCurrentTextAreaSize(textArea.getPreferredSize());
-		}
 	}
 	
 	public int getType() {return Undoable.EDIT_TYPE;}

@@ -268,10 +268,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		tree.setCursorPosition(caretPosition, false);
 
 		// Do the Redraw if we have wrapped or if we are currently off screen.
-		if (!textArea.getPreferredSize().equals(textArea.getCurrentTextAreaSize())) {
-			textArea.setCurrentTextAreaSize(textArea.getPreferredSize());
-			layout.draw(currentNode, outlineLayoutManager.TEXT);
-		} else if (!currentNode.isVisible()) {
+		if (textArea.getPreferredSize().height != textArea.height || !currentNode.isVisible()) {
 			layout.draw(currentNode, outlineLayoutManager.TEXT);
 		}
 	}
