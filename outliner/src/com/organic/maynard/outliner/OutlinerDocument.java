@@ -212,6 +212,11 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	
 	
 	// Accessors
+	
+	public DocumentSettings getSettings() {
+		return this.settings ;
+	}
+	
 	public void setDocumentRepository(DocumentRepository repository) {
 		this.repository = repository;
 	}
