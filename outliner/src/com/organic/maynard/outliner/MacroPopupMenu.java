@@ -36,7 +36,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 	private static final int LOWER_BUFFER_SIZE = 50;
 
 
-	// Fields
+	// Class Fields
 	public static ArrayList macros = new ArrayList();
 
 
@@ -205,10 +205,15 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		
 		if (macro.getUndoableType() == Macro.SIMPLE_UNDOABLE) {
 			doSimpleUndoableMacro(document, tree, macro);
+			
 		} else if (macro.getUndoableType() == Macro.COMPLEX_UNDOABLE) {
 			doComplexUndoableMacro(document, tree, macro);
+			
+		} else if (macro.getUndoableType() == Macro.RAW_MACRO_UNDOABLE) {
+			((RawMacro) macro).process();
+			
 		} else {
-			// Need code for when it is not undoable.
+			// TODO: Need code for when it is not undoable.
 		}
 		
 		// Redraw
@@ -336,6 +341,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		}
 	}
 
+	
 	// Class Methods
 	private static Cursor normalCursor = null;
 	private static Cursor waitCursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);

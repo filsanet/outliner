@@ -24,14 +24,22 @@ import java.io.*;
 import java.lang.reflect.*;
 import javax.swing.*;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
 public class LoadMacroCommand extends Command {
+	
 	// Constants
 	private static final String EXTENSION_SEPARATOR = ".";
+	
 	
 	// The Constructors
 	public LoadMacroCommand(String name, int numOfArgs) {
 		super(name,numOfArgs);
 	}
+
 
 	public synchronized void execute(Vector signature) {
 		String path = (String) signature.elementAt(1);
@@ -78,7 +86,7 @@ public class LoadMacroCommand extends Command {
 		}
 	}
 	
-	// Need to fix
+	// Need to fix. [md] I don't see what's wrong anymore?
 	private static String prepareConfigFile() {
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < MacroPopupMenu.macros.size(); i++) {

@@ -171,9 +171,10 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 	}
 	
 	private void update() {
+		Macro macro = macroConfig.getMacro();
+		String oldName = macro.getFileName();
+
 		if (macroConfig.update()) {
-			Macro macro = macroConfig.getMacro();
-			String oldName = macro.getFileName();
 
 			// Update the popup menu.
 			int oldIndex = Outliner.macroPopup.removeMacro(macro);

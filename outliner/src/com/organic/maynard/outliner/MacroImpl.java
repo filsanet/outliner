@@ -33,8 +33,14 @@ import com.organic.maynard.xml.XMLTools;
 
 public abstract class MacroImpl extends HandlerBase implements Macro {
 
+	// Constants
+	private static final String SAVE_EXT = ".txt";
+	
+	
+	// Class Fields
     private static Parser parser = new com.jclark.xml.sax.Driver();
-	protected static ArrayList elementStack = new ArrayList();
+	private static ArrayList elementStack = new ArrayList();
+	
 	
 	// Instance Fields		
 	private String name = null;
@@ -56,18 +62,12 @@ public abstract class MacroImpl extends HandlerBase implements Macro {
 	// Macro Interface
 	public String getName() {return this.name;}
 	public void setName(String name) {this.name = name;}
-	
-	public String getFileName() {return getName() + ".txt";}
+	public String getFileName() {return getName() + SAVE_EXT;}
 	
 	public boolean isUndoable() {return undoable;}
-	protected void setUndoable(boolean undoable) {this.undoable = undoable;}
-
 	public int getUndoableType() {return undoableType;}
-	protected void setUndoableType(int undoableType) {this.undoableType = undoableType;}
 
-	public NodeRangePair process(NodeRangePair nodeRangePair) {
-		return nodeRangePair;
-	}
+	abstract public NodeRangePair process(NodeRangePair nodeRangePair);
 
 	public boolean init(File file) {
 		try {

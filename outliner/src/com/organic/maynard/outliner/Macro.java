@@ -26,10 +26,13 @@ import java.io.*;
  */
 
 public interface Macro extends Serializable {
+	
 	// Undoable Types
 	public static final int NOT_UNDOABLE = -1;
 	public static final int SIMPLE_UNDOABLE = 0;
 	public static final int COMPLEX_UNDOABLE = 1;
+	
+	public static final int RAW_MACRO_UNDOABLE = 2;
 	
 	public String getName();
 	public void setName(String name);
@@ -45,4 +48,8 @@ public interface Macro extends Serializable {
 	
 	public boolean init(File file);
 	public boolean save(File file);
+}
+
+public interface RawMacro extends Macro {
+	public void process();
 }
