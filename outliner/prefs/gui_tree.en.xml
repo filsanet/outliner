@@ -132,6 +132,7 @@
 		<!-- MISC HIDDEN PREFS -->
 			<preference id="most_recent_open_dir" class="com.organic.maynard.outliner.PreferenceString" default="."/>
 			<preference id="most_recent_save_dir" class="com.organic.maynard.outliner.PreferenceString" default="."/>
+
 			<preference id="is_maximized" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
 				<validator id="is_maximized_validator" class="com.organic.maynard.outliner.BooleanValidator">
 				</validator>
@@ -261,6 +262,10 @@
 				</preference>
 			</preferencepanel>
 			<preferencepanel id="preferences_panel_open_and_save" class="com.organic.maynard.outliner.PreferencesPanelOpenAndSave" title="Open &amp; Save">
+				<preference id="file_protocol" class="com.organic.maynard.outliner.PreferenceString" default="Local File System">
+					<preference_component id="file_protocol_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="File Protocol" style="single_centered"/>
+				</preference>
+				<vertical_strut size="5"/>
 				<preference id="line_end" class="com.organic.maynard.outliner.PreferenceLineEnding">
 					<preference_component id="line_end_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Line Terminator" style="single_centered"/>
 				</preference>
@@ -288,6 +293,17 @@
 						<preference_component id="justified_plaintext_draw_lines_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Draw Heirarchy Lines"/>
 					</preference>
 				</preferencepanel>
+				<preferencepanel id="preferences_panel_web_file" class="com.organic.maynard.outliner.PreferencesPanelImpl" title="File Protocol: WebFile">
+					<preference id="web_file_url" class="com.organic.maynard.outliner.PreferenceString" default="http://localhost/outliner.php">
+						<preference_component id="web_file_url_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Remote URL" size="10"/>
+					</preference>
+					<preference id="web_file_user" class="com.organic.maynard.outliner.PreferenceString" default="">
+						<preference_component id="web_file_user_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Remote username" size="10"/>
+					</preference>
+					<preference id="web_file_password" class="com.organic.maynard.outliner.PreferenceString" default="">
+						<preference_component id="web_file_password_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Remote password" size="10"/>
+					</preference>
+				</preferencepanel>
 			</preferencepanel>
 			<preferencepanel id="preferences_panel_misc" class="com.organic.maynard.outliner.PreferencesPanelMisc" title="Misc.">
 				<preference id="print_environment" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
@@ -312,36 +328,23 @@
 					<validator id="mouse_wheel_scroll_speed_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="1" max="1000" default="1"/>
 					<preference_component id="mouse_wheel_scroll_speed_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Mouse Wheel Scroll Speed" size="2"/>
 				</preference>
-				<preference id="web_file_system" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
-					<validator id="web_file_system_validator" class="com.organic.maynard.outliner.BooleanValidator"/>
-					<preference_component id="web_file_system_component" class="com.organic.maynard.outliner.PreferencesGUITreeCheckBoxComponent" label="Open/Save Remotely"/>
-				</preference>
-				<preference id="web_file_url" class="com.organic.maynard.outliner.PreferenceString" default="http://localhost/outliner.php">
-					<preference_component id="web_file_url_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Remote URL" size="10"/>
-				</preference>
-				<preference id="web_file_user" class="com.organic.maynard.outliner.PreferenceString" default="">
-					<preference_component id="web_file_user_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Remote username" size="10"/>
-				</preference>
-				<preference id="web_file_password" class="com.organic.maynard.outliner.PreferenceString" default="">
-					<preference_component id="web_file_password_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Remote password" size="10"/>
-				</preference>
 			</preferencepanel>
 		</preferencesframe>
 	</preferences>
 	<menubar id="menubar" class="com.organic.maynard.outliner.OutlinerDesktopMenuBar">
 		<menu id="file" class="com.organic.maynard.outliner.FileMenu" text="File">
 			<menuitem id="new_file" class="com.organic.maynard.outliner.NewFileMenuItem" text="New" keybinding="N" keybindingmodifiers="control"/>
-			<menuitem id="open_file" class="com.organic.maynard.outliner.OpenFileMenuItem" text="Open..." keybinding="O" keybindingmodifiers="control"/>
+			<menuitem id="open" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Open"/>
 			<menu id="recent_file_list" class="com.organic.maynard.outliner.RecentFilesList" text="Open Recent Files">
 			</menu>
 			<separator/>
 			<menuitem id="save" class="com.organic.maynard.outliner.SaveFileMenuItem" text="Save" keybinding="S" keybindingmodifiers="control"/>
 			<menuitem id="save_all" class="com.organic.maynard.outliner.SaveAllFileMenuItem" text="Save All"/>
-			<menuitem id="save_as" class="com.organic.maynard.outliner.SaveAsFileMenuItem" text="Save As..."/>
+			<menuitem id="save_as" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Save As"/>
 			<menuitem id="revert" class="com.organic.maynard.outliner.RevertFileMenuItem" text="Revert"/>
 			<separator/>
-			<menuitem id="export" class="com.organic.maynard.outliner.ExportFileMenuItem" text="Export..."/>
-			<menuitem id="export_selection" class="com.organic.maynard.outliner.ExportSelectionFileMenuItem" text="Export Selection..."/>
+			<menuitem id="export" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Export"/>
+			<menuitem id="export_selection" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Export Selection"/>
 			<separator/>
 			<menuitem id="close" class="com.organic.maynard.outliner.CloseFileMenuItem" text="Close" keybinding="W" keybindingmodifiers="control"/>
 			<menuitem id="close_all" class="com.organic.maynard.outliner.CloseAllFileMenuItem" text="Close All"/>
