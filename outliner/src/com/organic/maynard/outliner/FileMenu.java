@@ -834,7 +834,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			saveAsItem.setEnabled(true);
 			revertItem.setEnabled(false);
 			exportItem.setEnabled(true);
-			exportSelectionItem.setEnabled(true);
 			closeItem.setEnabled(true);
 			closeAllItem.setEnabled(true);
 		// else if it has a name, thus it's not a new doc, and it's been modified
@@ -843,7 +842,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			saveAsItem.setEnabled(true);
 			revertItem.setEnabled(true);
 			exportItem.setEnabled(true);
-			exportSelectionItem.setEnabled(true);
 			closeItem.setEnabled(true);
 			closeAllItem.setEnabled(true);
 		// else it has a name, but has not been modified
@@ -852,7 +850,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			saveAsItem.setEnabled(true);
 			revertItem.setEnabled(false);
 			exportItem.setEnabled(true);
-			exportSelectionItem.setEnabled(true);
 			closeItem.setEnabled(true);
 			closeAllItem.setEnabled(true);
 		}
