@@ -10,11 +10,6 @@
  * 		instance
  * 			public
  * 				byte[] save(TreeContext, DocumentInfo docInfo)
- * 				boolean supportsComments();
- * 				boolean supportsEditability();
- * 				boolean supportsMoveability();
- * 				boolean supportsAttributes();
- * 				boolean supportsDocumentAttributes();
  * 	
  * 	
  * Portions copyright (C) 2001 Maynard Demmon <maynard@organic.com>

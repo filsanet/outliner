@@ -13,6 +13,12 @@
  * 				Iterator getExtensions();
  * 				boolean extensionExists(String);
  * 
+  * 				boolean supportsComments();
+ * 				boolean supportsEditability();
+ * 				boolean supportsMoveability();
+ * 				boolean supportsAttributes();
+ * 				boolean supportsDocumentAttributes();
+ * 
  * Portions copyright (C) 2001 Maynard Demmon <maynard@organic.com>
  * Portions copyright (C) 2001 Stan Krute <Stan@StanKrute.com>
   * 
@@ -55,19 +61,19 @@ public interface FileFormat {
 	
 	// supportsXxxxx methods
 	
-	// can we store comment attributes in this file format ?	[srk]
+	// can we store comment attributes in this file format ?
 	public boolean supportsComments();
 
-	// can we store editability attributes in this file format ?	[srk]
+	// can we store editability attributes in this file format ?
 	public boolean supportsEditability();
 
-	// can we store moveability attributes in this file format ?	[srk]
+	// can we store moveability attributes in this file format ?
 	public boolean supportsMoveability();
 	
-	// can we store node attributes in this file format ?		[srk]
+	// can we store node attributes in this file format ?
 	public boolean supportsAttributes();
 
-	// can we store document attributes in this file format ?		[md]
+	// can we store document attributes in this file format ?
 	public boolean supportsDocumentAttributes();
 	
 
