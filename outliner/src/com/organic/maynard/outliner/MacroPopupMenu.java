@@ -44,6 +44,14 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 	private static JMenu SORT_SHALLOW_MENU = null;
 	private static JMenu SORT_DEEP_MENU = null;
 
+	private static String SORT_ASCENDING = null;
+	private static String SORT_DECENDING = null;
+
+	private static JMenu SORT_SHALLOW_ASCENDING_MENU = null;
+	private static JMenu SORT_SHALLOW_DECENDING_MENU = null;
+	private static JMenu SORT_DEEP_ASCENDING_MENU = null;
+	private static JMenu SORT_DEEP_DECENDING_MENU = null;
+
 
 	// Class Fields
 	public static ArrayList macros = new ArrayList();
@@ -58,6 +66,9 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		SORT = GUITreeLoader.reg.getText("sort");
 		SORT_SHALLOW = GUITreeLoader.reg.getText("sort_shallow");
 		SORT_DEEP = GUITreeLoader.reg.getText("sort_deep");
+		SORT_ASCENDING = GUITreeLoader.reg.getText("sort_ascending");
+		SORT_DECENDING = GUITreeLoader.reg.getText("sort_descending");
+
 
 		SORT_MENU = new OutlinerSubMenuItem();
 		SORT_MENU.setText(SORT);
@@ -65,6 +76,22 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		SORT_SHALLOW_MENU.setText(SORT_SHALLOW);
 		SORT_DEEP_MENU = new OutlinerSubMenuItem();
 		SORT_DEEP_MENU.setText(SORT_DEEP);
+
+		SORT_SHALLOW_ASCENDING_MENU = new OutlinerSubMenuItem();
+		SORT_SHALLOW_ASCENDING_MENU.setText(SORT_ASCENDING);
+		SORT_SHALLOW_DECENDING_MENU = new OutlinerSubMenuItem();
+		SORT_SHALLOW_DECENDING_MENU.setText(SORT_DECENDING);
+		SORT_DEEP_ASCENDING_MENU = new OutlinerSubMenuItem();
+		SORT_DEEP_ASCENDING_MENU.setText(SORT_ASCENDING);
+		SORT_DEEP_DECENDING_MENU = new OutlinerSubMenuItem();
+		SORT_DEEP_DECENDING_MENU.setText(SORT_DECENDING);
+
+
+		SORT_SHALLOW_MENU.insert(SORT_SHALLOW_ASCENDING_MENU, 0);
+		SORT_SHALLOW_MENU.insert(SORT_SHALLOW_DECENDING_MENU, 1);
+
+		SORT_DEEP_MENU.insert(SORT_DEEP_ASCENDING_MENU, 0);
+		SORT_DEEP_MENU.insert(SORT_DEEP_DECENDING_MENU, 1);
 		
 		SORT_MENU.insert(SORT_SHALLOW_MENU, 0);
 		SORT_MENU.insert(SORT_DEEP_MENU, 1);
@@ -184,12 +211,22 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 			}
 			
 			sortMacros.add(i, macro);
-			JMenuItem shallowItem = new JMenuItem(macro.getName());
-			JMenuItem deepItem = new JMenuItem(macro.getName());
-			shallowItem.addActionListener(this);
-			deepItem.addActionListener(this);
-			SORT_SHALLOW_MENU.insert(shallowItem,i);
-			SORT_DEEP_MENU.insert(deepItem,i);
+			
+			JMenuItem shallowAscendingItem = new JMenuItem(macro.getName());
+			JMenuItem shallowDecendingItem = new JMenuItem(macro.getName());
+			JMenuItem deepAscendingItem = new JMenuItem(macro.getName());
+			JMenuItem deepDecendingItem = new JMenuItem(macro.getName());
+			
+			shallowAscendingItem.addActionListener(this);
+			shallowDecendingItem.addActionListener(this);
+			deepAscendingItem.addActionListener(this);
+			deepDecendingItem.addActionListener(this);
+			
+			SORT_SHALLOW_ASCENDING_MENU.insert(shallowAscendingItem,i);
+			SORT_SHALLOW_DECENDING_MENU.insert(shallowDecendingItem,i);
+			SORT_DEEP_ASCENDING_MENU.insert(deepAscendingItem,i);
+			SORT_DEEP_DECENDING_MENU.insert(deepDecendingItem,i);
+			
 			return i;		
 		} else {
 			// Find the correct spot to add it alphabetically
@@ -213,8 +250,12 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		if (macro instanceof SortMacro) {
 			int index = sortMacros.indexOf(macro);
 			sortMacros.remove(index);
-			SORT_SHALLOW_MENU.remove(index);
-			SORT_DEEP_MENU.remove(index);
+			
+			SORT_SHALLOW_ASCENDING_MENU.remove(index);
+			SORT_SHALLOW_DECENDING_MENU.remove(index);
+			SORT_DEEP_ASCENDING_MENU.remove(index);
+			SORT_DEEP_DECENDING_MENU.remove(index);
+			
 			return index;
 		} else {
 			int index = macros.indexOf(macro);
@@ -283,11 +324,22 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 			
 		} else if (macro.getUndoableType() == Macro.RAW_MACRO_UNDOABLE) {
 			if (macro instanceof SortMacro) {
-				String parentMenuText = ((JMenu) ((JPopupMenu) ((JComponent) e.getSource()).getParent()).getInvoker()).getText();
-				if (SORT_SHALLOW.equals(parentMenuText)) {
-					((SortMacro) macro).processShallow();
-				} else if (SORT_DEEP.equals(parentMenuText)) {
-					((SortMacro) macro).processDeep();
+				JMenu parentMenu = (JMenu) ((JPopupMenu) ((JComponent) e.getSource()).getParent()).getInvoker();
+				String parentMenuText = parentMenu.getText();
+				String parentParentMenuText = ((JMenu) ((JPopupMenu) (parentMenu).getParent()).getInvoker()).getText();
+				
+				if (SORT_SHALLOW.equals(parentParentMenuText)) {
+					if (SORT_ASCENDING.equals(parentMenuText)) {
+						((SortMacro) macro).process(SortMacro.MODE_SHALLOW + SortMacro.MODE_ASCENDING);
+					} else if (SORT_DECENDING.equals(parentMenuText)) {
+						((SortMacro) macro).process(SortMacro.MODE_SHALLOW + SortMacro.MODE_DECENDING);
+					}
+				} else if (SORT_DEEP.equals(parentParentMenuText)) {
+					if (SORT_ASCENDING.equals(parentMenuText)) {
+						((SortMacro) macro).process(SortMacro.MODE_DEEP + SortMacro.MODE_ASCENDING);
+					} else if (SORT_DECENDING.equals(parentMenuText)) {
+						((SortMacro) macro).process(SortMacro.MODE_DEEP + SortMacro.MODE_DECENDING);
+					}
 				} else {
 					((SortMacro) macro).process();
 				}

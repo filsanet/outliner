@@ -34,8 +34,13 @@ public class SortMacro extends MacroImpl implements RawMacro {
 	// Constants
 	private static final String E_COMPARATOR = "comparator";
 	
-	private static final int MODE_SHALLOW = 1;
-	private static final int MODE_DEEP = 2;
+	// These modes are intended to be added together so should go 1,2,4,8,...
+	// Don't forget that 0 is basically the default for each independant property.
+	public static final int MODE_SHALLOW = 0;
+	public static final int MODE_DEEP = 1;
+
+	public static final int MODE_ASCENDING = 0;
+	public static final int MODE_DECENDING = 2;
 	
 	// Instance Fields
 	private String comparator = ""; // BSH will turn this into a Comparator
@@ -72,15 +77,7 @@ public class SortMacro extends MacroImpl implements RawMacro {
 		// not supported
 	}
 	
-	public void processShallow() {
-		process(MODE_SHALLOW);
-	}
-	
-	public void processDeep() {
-		process(MODE_DEEP);
-	}
-	
-	private void process(int mode) {
+	public void process(int mode) {
 		// Shorthand
 		OutlinerDocument document = Outliner.getMostRecentDocumentTouched();
 		TreeContext tree = document.tree;
@@ -108,7 +105,11 @@ public class SortMacro extends MacroImpl implements RawMacro {
 			textForEval.append("		Node nodeA = (Node) objA;");
 			textForEval.append("		Node nodeB = (Node) objB;");
 			textForEval.append(getComparator());
-			textForEval.append("		return retVal;"); // this can be changed to make ascending/decending.
+			if ((mode & MODE_DECENDING) == MODE_DECENDING) {
+				textForEval.append("		return -retVal;"); // this can be changed to make ascending/decending.	
+			} else {
+				textForEval.append("		return retVal;"); // this can be changed to make ascending/decending.	
+			}
 			textForEval.append("	}");
 			textForEval.append("};");
 			textForEval.append("return this.c;");
@@ -149,7 +150,7 @@ public class SortMacro extends MacroImpl implements RawMacro {
 				indeces[j] = node.currentIndex();
 				
 				// If the node has children then throw it on the list of things to sort
-				if (!node.isLeaf() && mode == MODE_DEEP) {
+				if (!node.isLeaf() && (mode & MODE_DEEP) == MODE_DEEP) {
 					parentNodes.add(node);
 				}
 			}
