@@ -62,7 +62,6 @@ Targets:
 		</target>
 		<target name="javadoc" depends="init" description="Generates source code documentation in the javadoc format.">
 			<delete dir="${doc-api}"/>
-			<mkdir  dir="${doc}/"/>
 			<mkdir  dir="${doc-api}"/>
 			<javadoc packagenames="com.*, gui.*"
 				sourcepath="src"
