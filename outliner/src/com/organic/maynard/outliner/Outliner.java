@@ -290,6 +290,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	
 	// GUI Objects
 	public static FindReplaceFrame findReplace = null;
+	public static FindReplaceResultsDialog findReplaceResultsDialog = null;
 	public static MacroManagerFrame macroManager = null;
 	public static ScriptsManager scriptsManager = null;
 	public static MacroPopupMenu macroPopup = null;
@@ -446,6 +447,9 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		loadPrefsFile(PARSER,SCRIPTS_FILE);
 		System.out.println("Done Loading Scripts.");
 		System.out.println("");
+		
+		// Setup the FindReplaceResultsDialog
+		findReplaceResultsDialog = new FindReplaceResultsDialog();
 		
 		// Generate Icons
 		OutlineButton.createIcons();

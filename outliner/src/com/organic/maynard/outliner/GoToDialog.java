@@ -185,7 +185,6 @@ public class GoToDialog extends AbstractGUITreeJDialog implements ActionListener
 	}
 	
 	private static void go(boolean gotoColumn) {
-	
 		// Get a valid line number
 		int lineNumber = 1;
 		String lineNumberString = lineNumberTextField.getText();
@@ -195,13 +194,41 @@ public class GoToDialog extends AbstractGUITreeJDialog implements ActionListener
 		}
 		try {
 			lineNumber = Integer.parseInt(lineNumberString);
-			if (lineNumber < 1) {
-				lineNumber = 1;
-			}
+		} catch (NumberFormatException nfe) {
+			return;
+		}
+
+		// Geta a valid column number
+		int columnNumber = 0;
+		String columnNumberString = columnNumberTextField.getText();
+		
+		if (columnNumberString == null) {
+			return;
+		}
+		try {
+			columnNumber = Integer.parseInt(columnNumberString);
 		} catch (NumberFormatException nfe) {
 			return;
 		}
 		
+		Node currentNode = goToLineAndColumn(doc, lineNumber, columnNumber, countDepthCheckBox.isSelected(), gotoColumn);
+		
+		// draw and Set Focus
+		if (gotoColumn) {
+			doc.panel.layout.draw(currentNode, OutlineLayoutManager.TEXT);
+		} else {
+			doc.panel.layout.draw(currentNode, OutlineLayoutManager.ICON);
+		}
+	
+		dialog.hide();
+	}
+
+	public static Node goToLineAndColumn(OutlinerDocument doc, int lineNumber, int columnNumber, boolean countDepth, boolean gotoColumn) {
+		// Get a valid line number
+		if (lineNumber < 1) {
+			lineNumber = 1;
+		}
+
 		// Find the nth node.
 		Node currentNode = doc.tree.getRootNode();
 		Node nextNode;
@@ -214,29 +241,15 @@ public class GoToDialog extends AbstractGUITreeJDialog implements ActionListener
 			}
 		}
 
-		
 		// Geta a valid column number
-		int columnNumber = 0;
-		String columnNumberString = columnNumberTextField.getText();
+		if (countDepth) {
+			columnNumber -= currentNode.getDepth();
+		}
 		
-		if (columnNumberString == null) {
-			return;
+		if (columnNumber < 0) {
+			columnNumber = 0;
 		}
-		try {
-			columnNumber = Integer.parseInt(columnNumberString);
-			
-			// Handle indents if neccessary
-			if (countDepthCheckBox.isSelected()) {
-				columnNumber -= currentNode.getDepth();
-			}
-			
-			if (columnNumber < 0) {
-				columnNumber = 0;
-			}
-		} catch (NumberFormatException nfe) {
-			return;
-		}
-				
+
 		// Insert the node into the visible nodes.
 		doc.tree.insertNode(currentNode);
 
@@ -255,10 +268,6 @@ public class GoToDialog extends AbstractGUITreeJDialog implements ActionListener
 			doc.tree.setCursorPosition(columnNumber);
 			doc.setPreferredCaretPosition(columnNumber);
 			doc.tree.setComponentFocus(OutlineLayoutManager.TEXT);
-
-			// draw and Set Focus
-			doc.panel.layout.draw(currentNode, OutlineLayoutManager.TEXT);
-		
 		} else {
 			// Select the node
 			doc.tree.setSelectedNodesParent(currentNode.getParent());
@@ -266,16 +275,10 @@ public class GoToDialog extends AbstractGUITreeJDialog implements ActionListener
 			
 			// Record the EditingNode and CursorPosition and ComponentFocus
 			doc.tree.setComponentFocus(OutlineLayoutManager.ICON);
-
-			// draw and Set Focus
-			doc.panel.layout.draw(currentNode, OutlineLayoutManager.ICON);
 		}
 		
-
-		
-		dialog.hide();
+		return currentNode;
 	}
-
 	
 	private static void cancel() {
 		dialog.hide();
