@@ -56,6 +56,8 @@
 		<asset type="text" key="sort" value="Sort"/>
 		<asset type="text" key="sort_shallow" value="Shallow"/>
 		<asset type="text" key="sort_deep" value="Deep"/>
+		<asset type="text" key="sort_ascending" value="Ascending"/>
+		<asset type="text" key="sort_descending" value="Descending"/>
 		<asset type="text" key="line_terminator" value="Line Terminator"/>
 		<asset type="text" key="file_encoding" value="File Encoding"/>
 		<asset type="text" key="file_format" value="File Format"/>
