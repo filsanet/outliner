@@ -28,21 +28,18 @@ import javax.swing.table.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 
-public class AttributesPanel extends JTable {
+public abstract class AbstractAttributesPanel extends JTable {
 
-	public OutlinerDocument doc = null;
-	private TableCellRenderer removeColRenderer = new RemoveColumnRenderer(this);
-	private TableCellEditor removeColEditor = new RemoveColumnRenderer(this);
+	protected TableCellRenderer removeColRenderer = new RemoveColumnRenderer(this);
+	protected TableCellEditor removeColEditor = new RemoveColumnRenderer(this);
 
-	private RemoveColumnHeaderRenderer removeColumnHeaderRenderer = new RemoveColumnHeaderRenderer();
+	protected RemoveColumnHeaderRenderer removeColumnHeaderRenderer = new RemoveColumnHeaderRenderer();
 	
 	// GUI Fields
-	private AttributeTableModel model = null;
+	protected AttributeTableModel model = null;
 
 	// The Constructor
-	public AttributesPanel(OutlinerDocument doc) {
-		this.doc = doc;
-
+	public AbstractAttributesPanel() {
 		model = new AttributeTableModel(this);
 		setModel(model);
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -59,6 +56,34 @@ public class AttributesPanel extends JTable {
 		getTableHeader().setReorderingAllowed(false); 
 	}
 	
+	// Data Display
+	public abstract void update();
+
+	// Data Modification
+	public abstract void newAttribute(String key, Object value, AttributeTableModel model);
+	
+	// Delete Attribute
+	public abstract void deleteAttribute(int row, AttributeTableModel model);
+
+	// Set Value
+    public abstract void setValueAt(Object value, int row, AttributeTableModel model);
+		
+	// Misc
+    protected abstract boolean isCellEditable();
+}
+
+
+public class AttributesPanel extends AbstractAttributesPanel {
+
+	protected OutlinerDocument doc = null;
+
+	// The Constructor
+	public AttributesPanel(OutlinerDocument doc) {
+		super();
+		
+		this.doc = doc;
+	}
+		
 	// Data Display
 	public void update() {
 		if (doc.isShowingAttributes()) {
@@ -83,6 +108,75 @@ public class AttributesPanel extends JTable {
 			model.fireTableDataChanged();
 		}
 	}
+
+	// Data Modification
+	public void newAttribute(String key, Object value, AttributeTableModel model) {
+ 		model.keys.add(key);
+		model.values.add(value);
+
+	   	Node node = doc.tree.getEditingNode();
+		node.setAttribute(key, value);
+				
+		// undo
+		CompoundUndoable undoable = new CompoundUndoablePropertyChange(doc.tree);
+		Undoable primitive = new PrimitiveUndoableAttributeChange(node, null, null, key, value);
+		undoable.addPrimitive(primitive);
+		doc.undoQueue.add(undoable);
+
+		model.fireTableDataChanged();
+	}
+	
+	// Delete Attribute
+	public void deleteAttribute(int row, AttributeTableModel model) {
+	
+    	Node node = doc.tree.getEditingNode();
+		String key = (String) model.keys.get(row);
+		
+		Object oldValue = node.getAttribute(key);
+		
+		node.removeAttribute(key);
+		model.keys.remove(row);
+		model.values.remove(row);
+				
+		// undo
+		CompoundUndoable undoable = new CompoundUndoablePropertyChange(doc.tree);
+		Undoable primitive = new PrimitiveUndoableAttributeChange(node, key, oldValue, null, null);
+		undoable.addPrimitive(primitive);
+		doc.undoQueue.add(undoable);
+		
+		model.fireTableRowsDeleted(row, row);
+	}
+
+	// Set Value
+    public void setValueAt(Object value, int row, AttributeTableModel model) {
+    	Node node = doc.tree.getEditingNode();
+		String key = (String) model.keys.get(row);
+		
+		Object oldValue = node.getAttribute(key);
+		node.setAttribute(key, value);
+		model.values.set(row, value);
+		
+		if (oldValue.equals(value)) {
+			return;
+		}
+		
+		// undo
+		CompoundUndoable undoable = new CompoundUndoablePropertyChange(doc.tree);
+		Undoable primitive = new PrimitiveUndoableAttributeChange(node, key, oldValue, key, value);
+		undoable.addPrimitive(primitive);
+		doc.undoQueue.add(undoable);
+	}
+		
+	// Misc
+    protected boolean isCellEditable() {
+    	Node node = doc.tree.getEditingNode();
+    	
+    	if (!node.isEditable()) {
+    		return false;
+    	}
+    	
+    	return true;
+	}
 }
 
 
@@ -91,12 +185,12 @@ class AttributeTableModel extends AbstractTableModel implements MouseListener {
 
 	private static NewAttributeDialog dialog = new NewAttributeDialog();
 	
-	public AttributesPanel panel = null;
+	public AbstractAttributesPanel panel = null;
 	
 	public Vector keys = new Vector();
 	public Vector values = new Vector();
 	
-	public AttributeTableModel(AttributesPanel panel) {
+	public AttributeTableModel(AbstractAttributesPanel panel) {
 		super();
 		this.panel = panel;
 	}
@@ -130,9 +224,8 @@ class AttributeTableModel extends AbstractTableModel implements MouseListener {
 	}
 
     public boolean isCellEditable(int row, int col) {
-    	Node node = panel.doc.tree.getEditingNode();
-    	
-    	if (!node.isEditable()) {
+    
+    	if (!panel.isCellEditable()) {
     		return false;
     	}
     	
@@ -145,22 +238,7 @@ class AttributeTableModel extends AbstractTableModel implements MouseListener {
 
     public void setValueAt(Object value, int row, int col) {
     	if (col == 2) {
-	    	Node node = panel.doc.tree.getEditingNode();
-			String key = (String) keys.get(row);
-			
-			Object oldValue = node.getAttribute(key);
-			node.setAttribute(key, value);
-			values.set(row, value);
-			
-			if (oldValue.equals(value)) {
-				return;
-			}
-			
-			// undo
-			CompoundUndoable undoable = new CompoundUndoablePropertyChange(panel.doc.tree);
-			Undoable primitive = new PrimitiveUndoableAttributeChange(node, key, oldValue, key, value);
-			undoable.addPrimitive(primitive);
-			panel.doc.undoQueue.add(undoable);
+    		panel.setValueAt(value, row, this);
 			
 			fireTableCellUpdated(row, col);
 		}
@@ -171,12 +249,10 @@ class AttributeTableModel extends AbstractTableModel implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		int col = panel.getTableHeader().columnAtPoint(e.getPoint());
 		if (col == 0) {
-		
-			Node node = panel.doc.tree.getEditingNode();
-			
-			if (!node.isEditable()) {
-				return;
-			}
+
+	    	if (!panel.isCellEditable()) {
+	    		return;
+	    	}
 		
 			dialog.show(panel);
 		} else if (col == 1) {
@@ -194,9 +270,9 @@ class AttributeTableModel extends AbstractTableModel implements MouseListener {
 
 class RemoveColumnRenderer extends AbstractCellEditor implements ActionListener, TableCellRenderer, TableCellEditor {
 	private JButton button = new JButton("Delete");
-	private AttributesPanel panel = null;
+	private AbstractAttributesPanel panel = null;
 	
-	public RemoveColumnRenderer(AttributesPanel panel) {
+	public RemoveColumnRenderer(AbstractAttributesPanel panel) {
 		super();
 		this.panel = panel;
 		button.addActionListener(this);
@@ -229,29 +305,7 @@ class RemoveColumnRenderer extends AbstractCellEditor implements ActionListener,
 	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		int row = panel.getEditingRow();
-		deleteAttribute(row, (AttributeTableModel) panel.getModel());
-	}
-	
-	private void deleteAttribute(int row, AttributeTableModel model) {
-	
-    	Node node = panel.doc.tree.getEditingNode();
-		String key = (String) model.keys.get(row);
-		
-		Object oldValue = node.getAttribute(key);
-		
-		node.removeAttribute(key);
-		model.keys.remove(row);
-		model.values.remove(row);
-				
-		// undo
-		CompoundUndoable undoable = new CompoundUndoablePropertyChange(panel.doc.tree);
-		Undoable primitive = new PrimitiveUndoableAttributeChange(node, key, oldValue, null, null);
-		undoable.addPrimitive(primitive);
-		panel.doc.undoQueue.add(undoable);
-		
-		model.fireTableRowsDeleted(row, row);
-	
+		panel.deleteAttribute(panel.getEditingRow(), (AttributeTableModel) panel.getModel());
 	}
 }
 
@@ -296,7 +350,7 @@ class NewAttributeDialog extends JDialog implements ActionListener {
 	private JLabel errorLabel = new JLabel(" ");
 
 	// Context
-	private AttributesPanel panel = null;
+	private AbstractAttributesPanel panel = null;
 
 	// Constructors	
 	public NewAttributeDialog() {
@@ -350,7 +404,7 @@ class NewAttributeDialog extends JDialog implements ActionListener {
 		getRootPane().setDefaultButton(buttonOK);
 	}
 	
-	public void show(AttributesPanel panel) {
+	public void show(AbstractAttributesPanel panel) {
 		this.panel = panel;
 		
 		attributeField.setText("");
@@ -395,19 +449,7 @@ class NewAttributeDialog extends JDialog implements ActionListener {
 		}
 		
 		// All is good so lets make the change
-    	Node node = panel.doc.tree.getEditingNode();
-		
-		node.setAttribute(key, value);
-		model.keys.add(key);
-		model.values.add(value);
-				
-		// undo
-		CompoundUndoable undoable = new CompoundUndoablePropertyChange(panel.doc.tree);
-		Undoable primitive = new PrimitiveUndoableAttributeChange(node, null, null, key, value);
-		undoable.addPrimitive(primitive);
-		panel.doc.undoQueue.add(undoable);
-		
-		model.fireTableDataChanged();
+		panel.newAttribute(key, value, model);
 		
 		this.hide();
 	}

@@ -23,7 +23,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-public class TreeContext {
+public class TreeContext extends AttributeContainerImpl {
 
 	// Instance Variables
 	public OutlinerDocument doc = null;
@@ -31,6 +31,8 @@ public class TreeContext {
 	public ArrayList visibleNodes = new ArrayList(1000);
 	public ArrayList selectedNodes = new ArrayList(100);
 	public Node rootNode = null;
+
+	private HashMap attributes = null;
 
 
 	// The Constructors

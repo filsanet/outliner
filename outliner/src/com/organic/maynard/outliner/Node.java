@@ -18,10 +18,9 @@
  
 package com.organic.maynard.outliner;
 
-import java.awt.*;
 import java.util.*;
 
-public interface Node {
+public interface Node extends AttributeContainer {
 
 	public void destroy();
 	
@@ -139,12 +138,6 @@ public interface Node {
 	// Data Methods
 	public void setValue(String str);
 	public String getValue();
-	
-	public void setAttribute(String key, Object value);
-	public Object getAttribute(String key);
-	public void removeAttribute(String key);
-	public int getAttributeCount();
-	public Iterator getAttributeKeys();
 
 	// String Representation Methods
 	public void depthPaddedValue(StringBuffer buf, String lineEndString);

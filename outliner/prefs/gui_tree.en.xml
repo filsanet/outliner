@@ -221,6 +221,7 @@
 			<separator/>
 			<menuitem id="preferences" class="com.organic.maynard.outliner.PreferencesMenuItem" text="Application Preferences..."/>
 			<menuitem id="edit_document_settings" class="com.organic.maynard.outliner.EditDocumentSettingsMenuItem" text="Document Preferences..."/>
+			<menuitem id="edit_document_attributes" class="com.organic.maynard.outliner.EditDocumentAttributesMenuItem" text="Document Attributes..."/>
 		</menu>
 		<menu id="outline" class="com.organic.maynard.outliner.OutlineMenu" text="Outline">
 			<menuitem id="comment_submenu" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Comments">
@@ -276,7 +277,7 @@
 			<menuitem id="find" class="com.organic.maynard.outliner.FindMenuItem" text="Find/Replace..." keybinding="F" keybindingmodifiers="control"/>
 		</menu>
 		<menu id="script" class="com.organic.maynard.outliner.ScriptMenu" text="Script">
-			<menuitem id="macros" class="com.organic.maynard.outliner.MacrosMenuItem" text="Macros..."/>
+			<menuitem id="macros" class="com.organic.maynard.outliner.MacrosMenuItem" text="Macro Manager..."/>
 			<separator/>
 			<run_as_bsh_script id="run_as_bsh_script" class="com.organic.maynard.outliner.RunAsBSHScriptMenuItem" text="Run as Bean Shell Script"/>
 			<menuitem id="bsh_console" class="com.organic.maynard.outliner.BSHConsoleMenuItem" text="Bean Shell Console"/>
@@ -302,6 +303,7 @@
 	</menubar>
 	<!-- MISC COMPONENTS -->
 		<document_settings_view id="document_settings_view" class="com.organic.maynard.outliner.DocumentSettingsView" title="Document Preferences"/>
+		<document_attributes_view id="document_attributes_view" class="com.organic.maynard.outliner.DocumentAttributesView" title="Document Attributes"/>
 		<document_statistics id="document_statistics" class="com.organic.maynard.outliner.DocumentStatistics" title="Document Statistics"/>
 		<macro_manager id="macro_manager" class="com.organic.maynard.outliner.MacroManagerFrame" title="Macro Manager"/>
 		<macro_editor id="macro_editor" class="com.organic.maynard.outliner.MacroEditor" title="Macro Editor"/>

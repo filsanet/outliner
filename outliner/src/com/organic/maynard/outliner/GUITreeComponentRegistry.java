@@ -53,6 +53,7 @@ public class GUITreeComponentRegistry {
 	public static final String SELECT_NONE_MENU_ITEM = "select_none";
 	public static final String SELECT_INVERSE_MENU_ITEM = "select_inverse";
 	public static final String EDIT_DOCUMENT_SETTINGS_MENU_ITEM = "edit_document_settings";
+	public static final String EDIT_DOCUMENT_ATTRIBUTES_MENU_ITEM = "edit_document_attributes";
 
 	public static final String OUTLINE_TOGGLE_ATTRIBUTES_MENU_ITEM = "toggle_attributes";
 	public static final String OUTLINE_TOGGLE_COMMENT_MENU_ITEM = "toggle_comment";

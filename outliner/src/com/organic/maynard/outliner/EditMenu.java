@@ -67,6 +67,7 @@ public class EditMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 		JMenuItem selectNoneItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SELECT_NONE_MENU_ITEM);
 		JMenuItem selectInverseItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SELECT_INVERSE_MENU_ITEM);
 		JMenuItem editDocumentSettingsItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EDIT_DOCUMENT_SETTINGS_MENU_ITEM);
+		JMenuItem editDocumentAttributesItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EDIT_DOCUMENT_ATTRIBUTES_MENU_ITEM);
 
 		UndoQueue.updateMenuBar(doc);
 		if (doc == null) {
@@ -78,11 +79,13 @@ public class EditMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 			selectNoneItem.setEnabled(false);
 			selectInverseItem.setEnabled(false);
 			editDocumentSettingsItem.setEnabled(false);
+			editDocumentAttributesItem.setEnabled(false);
 		} else {
 			pasteItem.setEnabled(true);
 			selectAllItem.setEnabled(true);
 			selectNoneItem.setEnabled(true);
 			editDocumentSettingsItem.setEnabled(true);
+			editDocumentAttributesItem.setEnabled(true);
 			
 			// Updates menu based on caret and mark.
 			doc.tree.updateEditMenu();

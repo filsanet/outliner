@@ -21,13 +21,13 @@ package com.organic.maynard.outliner;
 import java.util.*;
 import java.awt.*;
 
-public class NodeImpl implements Node {
+public class NodeImpl extends AttributeContainerImpl implements Node {
 	
 	// Instance Fields		
 	private TreeContext tree = null;
 	private Node parent = null;
 	private String value = null;
-	private HashMap attributes = null;
+	//private HashMap attributes = null;
 	protected ArrayList children = null;
 	private static final int INITIAL_ARRAY_LIST_SIZE = 10;
 
@@ -670,40 +670,6 @@ public class NodeImpl implements Node {
 	// Data Methods
 	public void setValue(String value) {this.value = value;}
 	public String getValue() {return value;}
-
-	public void setAttribute(String key, Object value) {
-		if (attributes == null) {
-			attributes = new HashMap();
-		}
-		attributes.put(key, value);
-	}
-
-	public void removeAttribute(String key) {
-		if (attributes != null && key != null) {
-			attributes.remove(key);
-		}
-	}
-	
-	public Object getAttribute(String key) {
-		if (attributes != null && key != null) {
-			return attributes.get(key);
-		}
-		return null;
-	}
-	
-	public int getAttributeCount() {
-		if (attributes != null) {
-			return attributes.size();
-		}
-		return 0;
-	}
-	
-	public Iterator getAttributeKeys() {
-		if (attributes != null) {
-			return attributes.keySet().iterator();
-		}
-		return null;
-	}
 
 
 	// String Representation Methods	
