@@ -1,4 +1,4 @@
-1.8.9 - ???
+1.8.9 - 07/12/02
 	New Features:
 		1) Feature Request #548169. Added the following two editing actions:
 			Shift-doubleclick on an expanded node now collapses the node without collapsing the node's children. When you expand the node with a regular doubleclick the childrens expansion state is preserved.
@@ -7,13 +7,15 @@
 		2) Added a new Editor preference for single click expand/collapse for nodes. This is by default turned off since that is the pre-existing functionality. When turned on, clicking on a node will cause it to expand/collapse rather than having to double-click it as in the past.
 	Feature Enhancements:
 		1) Dramatically sped up document closing times by doing the object destruction in a separate thread after after the window has been closed.
-		2) Moderately sped up application launch time by more pervasive use of lazy instantiation.
+		2) Moderately sped up application launch time by more pervasive use of lazy instantiation. I also eliminated most of the startup spew which may or may not be a good thing, but I was in the mood.
 		3) When changing the format in the Save or Export file system view, the file extension is automatically updated to the default for that format.
 		4) Implemented feature request #579791. Added menu mnemonics for each of the main menus. This will only work correctly under jdk 1.4.0 because of Swing bug #4309156, and the necessary work around, which exists in previous versions of the jdk.
 	Other Changes:
 		1) Updated jar for BeanShell from 1.2b1 to 1.2b6.
 		2) Updated jar for Jakarata ORO from 2.0.4 to 2.0.6.
 		3) Updated the xmlrpc libarary from the old helma code to xml.apache.orgs xmlrpc version 1.1. Apache's code is the latest version of the helma code since they turned it over to apache.
+		4) Began moving code into a more structured package hierarchy. Java docs are marginally better as well.
+		5) Preliminary support for "modules". Modules are sets of menus, preferences and java code that can be installed into the "modules" directory allowing extended functionality without cluttering up the base JOE build. I'll be releasing an XML module soon.
 	Bug Fixes:
 		1) Fixed a bug where "insert new node above" and "split current node and insert above" would throw an exception when you tried to undo them if the new node was the very first node in the document.
 		2) Fixed bug where the warning for doing a "Save As"/"Export" over an existing file didn't work. Now the warning shows up as it should. The warning for "Open"/"Import" of a non-existant file is also fixed.
