@@ -65,6 +65,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	protected static int pIndent = 0;
 	protected static int pVerticalSpacing = 0;
 	protected static boolean pShowLineNumbers = true;
+	protected static boolean pShowIndicators = true;
 	protected static Color pCommentColor = null;
 	protected static Color pForegroundColor = null;
 	protected static Color pBackgroundColor = null;
@@ -75,8 +76,12 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	protected static boolean pApplyFontStyleForComments = true;
 	protected static boolean pApplyFontStyleForEditability = true;
 	protected static boolean pApplyFontStyleForMoveability = true;
+
+	static {
+		updateFonts();
+	}
 	
-	
+	// Instance Fields
 	public Node node = null;
 	public OutlineButton button = new OutlineButton(this);
 	public OutlineCommentIndicator iComment = new OutlineCommentIndicator(this);
@@ -85,10 +90,6 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	public OutlineLineNumber lineNumber = new OutlineLineNumber(this);
 	
 	public int height = 0;
-	
-	static {
-		updateFonts();
-	}
 
 
 	// The Constructors
@@ -120,6 +121,9 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		
 		button = null;
 		lineNumber = null;
+		iComment = null;
+		iEditable = null;
+		iMoveable = null;
 	}
 		
 	public boolean isManagingFocus() {
@@ -132,26 +136,6 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		readOnlyFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.ITALIC, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
 		immoveableFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.BOLD, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
 		immoveableReadOnlyFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.BOLD + Font.ITALIC, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
-		/*
-		if (Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur) {
-			readOnlyFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.ITALIC, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
-			if (Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur) {
-				immoveableFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.BOLD, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
-				immoveableReadOnlyFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.BOLD + Font.ITALIC, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
-			} else {
-				immoveableFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.PLAIN, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
-				immoveableReadOnlyFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.ITALIC, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
-			}
-		} else {
-			readOnlyFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.PLAIN, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
-			if (Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur) {
-				immoveableFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.BOLD, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
-				immoveableReadOnlyFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.BOLD, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
-			} else {
-				immoveableFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.PLAIN, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
-				immoveableReadOnlyFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.PLAIN, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
-			}
-		}*/
 	}
 
 	// Used to fire key events
@@ -164,36 +148,29 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	public void setVisible(boolean visibility) {
 		super.setVisible(visibility);
 		button.setVisible(visibility);
-		iComment.setVisible(visibility);
-		iEditable.setVisible(visibility);
-		iMoveable.setVisible(visibility);
 		lineNumber.setVisible(visibility);
+		if (pShowIndicators) {
+			iComment.setVisible(visibility);
+			iEditable.setVisible(visibility);
+			iMoveable.setVisible(visibility);
+		} else {
+			iComment.setVisible(false);
+			iEditable.setVisible(false);
+			iMoveable.setVisible(false);		
+		}
 	}
 	
 	protected void verticalShift (int amount) {
-		Point lp = lineNumber.getLocation();
-		lp.y += amount;
-		lineNumber.setLocation(lp);
-		
-		Point tp = getLocation();
-		tp.y += amount;
-		setLocation(tp);
-
-		Point bp = button.getLocation();
-		bp.y += amount;
-		button.setLocation(bp);
-
-		Point icp = iComment.getLocation();
-		icp.y += amount;
-		iComment.setLocation(icp);
-
-		Point iep = iEditable.getLocation();
-		iep.y += amount;
-		iEditable.setLocation(iep);
-
-		Point imp = iMoveable.getLocation();
-		imp.y += amount;
-		iMoveable.setLocation(imp);
+		setLocation(getX(), getY() + amount);
+		button.setLocation(button.getX(), button.getY() + amount);
+		if (pShowLineNumbers) {
+			lineNumber.setLocation(lineNumber.getX(), lineNumber.getY() + amount);
+		}
+		if (pShowIndicators) {
+			iComment.setLocation(iComment.getX(), iComment.getY() + amount);
+			iEditable.setLocation(iEditable.getX(), iEditable.getY() + amount);
+			iMoveable.setLocation(iMoveable.getX(), iMoveable.getY() + amount);
+		}
 	}
 	
 	public void drawUp(Point p, Node node) {
@@ -204,11 +181,6 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		
 		// Update the button
 		updateButton();
-
-		// Update the Indicators
-		updateCommentIndicator();
-		updateEditableIndicator();
-		updateMoveableIndicator();
 		
 		// Update font
 		updateFont();
@@ -238,7 +210,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 				lineNumber.setText("" + node.getLineNumber(node.getTree().getLineCountKey()));
 			}
 		}
-
+		
 		lineNumber.setBounds(
 			lineNumberOffset, 
 			p.y, 
@@ -247,26 +219,33 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		);
 
 		// Draw Indicators
-		iComment.setBounds(
-			commentOffset, 
-			p.y, 
-			OutlineCommentIndicator.BUTTON_WIDTH, 
-			height
-		);
+		if (pShowIndicators) {
+			// Update the Indicators
+			updateCommentIndicator();
+			updateEditableIndicator();
+			updateMoveableIndicator();
 
-		iEditable.setBounds(
-			editableOffset, 
-			p.y, 
-			OutlineEditableIndicator.BUTTON_WIDTH, 
-			height
-		);
+			iComment.setBounds(
+				commentOffset, 
+				p.y, 
+				OutlineCommentIndicator.BUTTON_WIDTH, 
+				height
+			);
 
-		iMoveable.setBounds(
-			moveableOffset, 
-			p.y, 
-			OutlineMoveableIndicator.BUTTON_WIDTH, 
-			height
-		);
+			iEditable.setBounds(
+				editableOffset, 
+				p.y, 
+				OutlineEditableIndicator.BUTTON_WIDTH, 
+				height
+			);
+
+			iMoveable.setBounds(
+				moveableOffset, 
+				p.y, 
+				OutlineMoveableIndicator.BUTTON_WIDTH, 
+				height
+			);
+		}
 	}
 		
 	public void drawDown(Point p, Node node) {
@@ -277,11 +256,6 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 				
 		// Update the button
 		updateButton();
-		
-		// Update the Indicators
-		updateCommentIndicator();
-		updateEditableIndicator();
-		updateMoveableIndicator();
 
 		// Update font
 		updateFont();
@@ -319,26 +293,33 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		);
 
 		// Draw Indicators
-		iComment.setBounds(
-			commentOffset, 
-			p.y, 
-			OutlineCommentIndicator.BUTTON_WIDTH, 
-			height
-		);
+		if (pShowIndicators) {
+			// Update the Indicators
+			updateCommentIndicator();
+			updateEditableIndicator();
+			updateMoveableIndicator();
 
-		iEditable.setBounds(
-			editableOffset, 
-			p.y, 
-			OutlineEditableIndicator.BUTTON_WIDTH, 
-			height
-		);
+			iComment.setBounds(
+				commentOffset, 
+				p.y, 
+				OutlineCommentIndicator.BUTTON_WIDTH, 
+				height
+			);
 
-		iMoveable.setBounds(
-			moveableOffset, 
-			p.y, 
-			OutlineMoveableIndicator.BUTTON_WIDTH, 
-			height
-		);
+			iEditable.setBounds(
+				editableOffset, 
+				p.y, 
+				OutlineEditableIndicator.BUTTON_WIDTH, 
+				height
+			);
+
+			iMoveable.setBounds(
+				moveableOffset, 
+				p.y, 
+				OutlineMoveableIndicator.BUTTON_WIDTH, 
+				height
+			);
+		}
 						
 		p.y += height + pVerticalSpacing;	
 

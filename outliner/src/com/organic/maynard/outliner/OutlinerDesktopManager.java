@@ -34,6 +34,8 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.Document;
+
 import java.awt.*;
 import javax.swing.*;
 
@@ -68,6 +70,8 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 	private int startingY = 0;
 	private int startingHeight = 0;
 
+	public static boolean activationBlock = false;
+
 	
 	// The Constructor
 	public OutlinerDesktopManager() {
@@ -81,7 +85,10 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 	public boolean isMaximized() {
 		return Preferences.getPreferenceBoolean(Preferences.IS_MAXIMIZED).cur;
 	}
-	public void setMaximized(boolean b) {Preferences.getPreferenceBoolean(Preferences.IS_MAXIMIZED).cur = b;}
+	
+	public void setMaximized(boolean b) {
+		Preferences.getPreferenceBoolean(Preferences.IS_MAXIMIZED).cur = b;
+	}
 	
 	// DesktopManagerInterface
 	public void beginResizingFrame(JComponent f, int direction) {
@@ -162,8 +169,6 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 		super.endDraggingFrame(f);
 		updateDesktopSize(true);
 	}
-
-	public static boolean activationBlock = false;
 	
 	public void activateFrame(JInternalFrame f) {
 		if (activationBlock) {return;}
@@ -171,33 +176,17 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 		//System.out.println("activateFrame " + f.getTitle());
 		super.activateFrame(f);
 
-		if (f instanceof OutlinerDocument) {
-			OutlinerDocument doc = (OutlinerDocument) f;
-			
-			Outliner.setMostRecentDocumentTouched(doc);
-			
-			// Update the Menus
-			FileMenu.updateFileMenuItems();
-			FileMenu.updateSaveAllMenuItem();
-			
-			EditMenu.updateEditMenu(doc);
-			OutlineMenu.updateOutlineMenu(doc);
-			SearchMenu.updateSearchMenu(doc);
-			ScriptMenu.updateScriptMenu(doc);
-			WindowMenu.updateWindowMenu();
-			HelpMenu.updateHelpMenu() ;	// [srk] 8/11/01 12:03PM
-			
-			doc.hoistStack.updateOutlinerMenuHoisting();
+
+		if (f instanceof Document) {
+			Outliner.documents.setMostRecentDocumentTouched((Document) f);
 		}
 		
-		// Move the frame back so it's visible if it's outside the visible rect.
+		// Move the internalframe back so it's visible if it's outside the visible rect.
 		Rectangle r = Outliner.jsp.getViewport().getViewRect();
 		Rectangle r2 = f.getBounds();
 		
 		if (!r.intersects(r2)) {
-			if (f instanceof OutlinerDocument) {
-				setBoundsForFrame(f, r.x + 5, r.y + 5, f.getWidth(), f.getHeight());
-			}			
+			setBoundsForFrame(f, r.x + 5, r.y + 5, f.getWidth(), f.getHeight());			
 		}
 	}
 

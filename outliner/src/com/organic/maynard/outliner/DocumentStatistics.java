@@ -104,7 +104,7 @@ public class DocumentStatistics extends AbstractGUITreeJDialog {
 	}
 	
 	public void show() {
-		OutlinerDocument doc = Outliner.getMostRecentDocumentTouched();
+		OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
 		documentTitleValue.setText(doc.getTitle());
 		
 		int lineCount = doc.tree.getLineCount();

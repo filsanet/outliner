@@ -100,7 +100,6 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		NodeImpl nodeImpl = new NodeImpl(tree,value);
 		
 		nodeImpl.setDepth(depth);
-		
 		nodeImpl.setCommentState(commentState);
 		
 		// clone the attributes
@@ -114,8 +113,9 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		}
 		
 		// And clone the children
-		for (int i = 0; i < numOfChildren(); i++) {
-			nodeImpl.insertChild(getChild(i).cloneClean(),i);
+		int childCount = numOfChildren();
+		for (int i = 0; i < childCount; i++) {
+			nodeImpl.insertChild(getChild(i).cloneClean(), i);
 		}
 		
 		return nodeImpl;
@@ -228,11 +228,6 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		// Set the childs Depth
 		node.setDepth(getDepth() + 1);
 		
-		// Insert the new child into the list of visible nodes if we are expanded.
-		if (isExpanded()) {
-			tree.insertNodeAfter(this, node);
-		}
-		
 		// Adjust Counts
 		adjustDecendantCount(node.getDecendantCount() + 1);
 	}
@@ -319,39 +314,6 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		}
 	}
 	
-	public Node getYoungestVisibleAncestor() {
-		Node parent = getParent();
-		
-		if (parent.isRoot()) {
-			return parent;
-		} else if (tree.getVisibleNodes().contains(parent)) {
-			return parent;
-		} else {
-			return parent.getYoungestVisibleAncestor();
-		}
-	}
-	
-	// This method could be optomized better by first finding the range and then doing a batch insert.
-	public int insertChildrenIntoVisibleNodesCache(int index) {
-		if (isExpanded()) {
-			int childrenCount = this.numOfChildren();
-			for (int i = 0; i < childrenCount; i++) {
-				index++;
-				Node child = getChild(i);
-				
-				if (index < tree.getVisibleNodes().size()) {
-					if (tree.getVisibleNodes().get(index) != child) {
-						tree.getVisibleNodes().add(index,child);
-					}
-				} else {
-					tree.getVisibleNodes().add(index,child);
-				}
-				index = child.insertChildrenIntoVisibleNodesCache(index);
-			}		
-		}
-		return index;
-	}
-	
 	public void insertChild(Node node, int i) {
 		if (children == null) {
 			children = Outliner.newNodeList(INITIAL_ARRAY_LIST_SIZE);
@@ -362,7 +324,6 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 
 		// Adjust Counts
 		adjustDecendantCount(node.getDecendantCount() + 1);
-		//adjustDecendantCharCount(node.getDecendantCharCount() + node.getValue().length());
 	}
 	
 	public int getChildIndex(Node node) {
@@ -758,7 +719,8 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		}
 		
 		// Recursive Part
-		for (int i = 0; i < numOfChildren(); i++) {
+		int childCount = numOfChildren();
+		for (int i = 0; i < childCount; i++) {
 			getChild(i).depthPaddedValue(buf, lineEndString);
 		}
 	}
@@ -769,7 +731,9 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 			buf.append(getValue()).append(lineEndString);
 		}
 		
-		for (int i = 0; i < numOfChildren(); i++) {
+		// Recursive Part
+		int childCount = numOfChildren();
+		for (int i = 0; i < childCount; i++) {
 			getChild(i).getRecursiveValue(buf, lineEndString, includeComments);
 		}
 	}
@@ -778,7 +742,8 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		buf.append(getValue());
 		
 		// Recursive Part
-		for (int i = 0; i < numOfChildren(); i++) {
+		int childCount = numOfChildren();
+		for (int i = 0; i < childCount; i++) {
 			getChild(i).getMergedValue(buf);
 		}
 	}
@@ -795,7 +760,8 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		}
 		
 		// Recursive Part
-		for (int i = 0; i < numOfChildren(); i++) {
+		int childCount = numOfChildren();
+		for (int i = 0; i < childCount; i++) {
 			getChild(i).getMergedValue(buf);
 		}
 	}

@@ -51,7 +51,7 @@ public class ExpandEverythingMenuItem extends AbstractOutlinerMenuItem implement
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		expandEverything(Outliner.getMostRecentDocumentTouched());
+		expandEverything((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched());
 	}
 
 	private static void expandEverything(OutlinerDocument doc) {

@@ -84,9 +84,9 @@ public class OutlineButton extends JLabel {
 	
 	public void destroy() {
 		removeAll();
-		
+		removeNotify();
+		setIcon(null);		
 		renderer = null;
-		
 	}
 	
 	public boolean isManagingFocus() {return true;}

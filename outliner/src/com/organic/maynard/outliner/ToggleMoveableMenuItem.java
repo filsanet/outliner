@@ -51,7 +51,7 @@ public class ToggleMoveableMenuItem extends AbstractOutlinerMenuItem implements 
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		OutlineMenu.fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.SHIFT_MASK, KeyEvent.VK_F12, false);
+		OutlineMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), Event.SHIFT_MASK, KeyEvent.VK_F12, false);
 	}
 }
 
@@ -65,7 +65,7 @@ class ToggleMoveableInheritanceMenuItem extends AbstractOutlinerMenuItem impleme
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		OutlineMenu.fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.CTRL_MASK, KeyEvent.VK_F12, false);
+		OutlineMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), Event.CTRL_MASK, KeyEvent.VK_F12, false);
 	}
 }
 
@@ -79,7 +79,7 @@ class ClearMoveablesMenuItem extends AbstractOutlinerMenuItem implements ActionL
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		OutlineMenu.fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.CTRL_MASK + Event.SHIFT_MASK, KeyEvent.VK_F12, false);
+		OutlineMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), Event.CTRL_MASK + Event.SHIFT_MASK, KeyEvent.VK_F12, false);
 	}
 }
 
@@ -93,6 +93,6 @@ class ToggleMoveableAndClearMenuItem extends AbstractOutlinerMenuItem implements
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		OutlineMenu.fireKeyEvent(Outliner.getMostRecentDocumentTouched(), 0, KeyEvent.VK_F12, false);
+		OutlineMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), 0, KeyEvent.VK_F12, false);
 	}
 }

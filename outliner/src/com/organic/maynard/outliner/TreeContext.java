@@ -97,12 +97,12 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 	}
 	
 	public void incrementLineCountKey() {
+		lineCountKey++;
+		
 		// Lets not grow forever since it could be possible to 
 		// exceed max int although very very very unlikely, but still, better to be safe.
 		if (lineCountKey > 1000000) {
 			lineCountKey = 0;
-		} else {
-			lineCountKey++;
 		}
 	}
 
@@ -143,14 +143,22 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 
 	public void setCursorMarkPosition(int cursorMarkPosition) {
 		this.cursorMarkPosition = cursorMarkPosition;
+
+		// fireEvent
+		Outliner.documents.fireSelectionChangedEvent(this, getComponentFocus());
 	}
+	
 	public int getCursorMarkPosition() {
 		return cursorMarkPosition;
 	}
 
 	public void setComponentFocus(int componentFocus) {
 		this.componentFocus = componentFocus;
-		updateEditMenu();
+		
+		// fireEvent
+		Outliner.documents.fireSelectionChangedEvent(this, componentFocus);
+		
+		//updateEditMenu();
 	}
 	
 	public int getComponentFocus() {
@@ -166,76 +174,18 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 		if (setMark) {
 			setCursorMarkPosition(cursorPosition);
 		}
-		updateEditMenu();
+
+		// fireEvent
+		Outliner.documents.fireSelectionChangedEvent(this, getComponentFocus());
+
+		//updateEditMenu();
 	}
 	
 	public int getCursorPosition() {
 		return cursorPosition;
 	}
-
-	private static JMenuItem cutItem = null;
-	private static JMenuItem copyItem = null;
-	private static JMenuItem deleteItem = null;
-	private static JMenuItem selectInverseItem = null;
-	private static JMenuItem exportSelectionItem = null;
-	private static JMenuItem hoistItem = null;
-
-	public void updateEditMenu() {
-		if (cutItem == null) {
-			cutItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CUT_MENU_ITEM);
-			copyItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.COPY_MENU_ITEM);
-			deleteItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.DELETE_MENU_ITEM);
-			selectInverseItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SELECT_INVERSE_MENU_ITEM);
-			exportSelectionItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_SELECTION_MENU_ITEM);
-			hoistItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.OUTLINE_HOIST_MENU_ITEM);
-		}
-		
-		Node node = getEditingNode();
-
-		if (getComponentFocus() == OutlineLayoutManager.TEXT) {
-			selectInverseItem.setEnabled(false);
-			
-			if (getCursorPosition() == getCursorMarkPosition()) {
-				copyItem.setEnabled(false);
-				cutItem.setEnabled(false);
-				deleteItem.setEnabled(false);
-				exportSelectionItem.setEnabled(false);
-			} else {
-				copyItem.setEnabled(true);
-				cutItem.setEnabled(true);
-				deleteItem.setEnabled(true);
-				exportSelectionItem.setEnabled(true);
-			}
-
-			if (node.isLeaf()) {
-				hoistItem.setEnabled(false);
-			} else {
-				hoistItem.setEnabled(true);
-			}
-		} else if (getComponentFocus() == OutlineLayoutManager.ICON) {
-			selectInverseItem.setEnabled(true);
-			
-			if (selectedNodes.size() == 0) {
-				// Can this really ever happen? Seems not unless something has gone horribly wrong.
-				copyItem.setEnabled(false);
-				cutItem.setEnabled(false);
-				deleteItem.setEnabled(false);
-				exportSelectionItem.setEnabled(false);
-			} else {
-				if (selectedNodes.size() == 1) {
-					if (node.isLeaf()) {
-						hoistItem.setEnabled(false);
-					} else {
-						hoistItem.setEnabled(true);
-					}
-				}
-				copyItem.setEnabled(true);
-				cutItem.setEnabled(true);
-				deleteItem.setEnabled(true);
-				exportSelectionItem.setEnabled(true);
-			}			
-		}	
-	}
+	
+	// TBD: need a method that sets componentfocus, mark and cursor all in one and only sends one event.
 
 
 	// Tree Methods
@@ -270,13 +220,13 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 
 	public void insertNode(Node node) {
 		// Find the first Ancestor that is in the cache or Root
-		Node ancestor = node.getYoungestVisibleAncestor();
+		Node ancestor = TreeContext.getYoungestVisibleAncestor(node, this);
 		
 		// Expand all nodes in the path down to the node
 		node.expandAllAncestors();
 		
 		// Walk the tree Downwards inserting all expanded nodes and their children
-		ancestor.insertChildrenIntoVisibleNodesCache(visibleNodes.indexOf(ancestor));
+		insertChildrenIntoVisibleNodesCache(ancestor, this, visibleNodes.indexOf(ancestor));
 	}
 
 	public int insertNodeAfter(Node existingNode, Node newNode) {
@@ -526,5 +476,37 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 		document = null;
 	}
 	
-	
+	// Static Methods formerly instance methods of Node
+	public static Node getYoungestVisibleAncestor(Node node, TreeContext tree) {
+		Node parent = node.getParent();
+		
+		if (parent.isRoot()) {
+			return parent;
+		} else if (tree.getVisibleNodes().contains(parent)) {
+			return parent;
+		} else {
+			return getYoungestVisibleAncestor(parent, tree);
+		}
+	}
+
+	// This method could be optomized better by first finding the range and then doing a batch insert.
+	public static int insertChildrenIntoVisibleNodesCache(Node node, TreeContext tree, int index) {
+		if (node.isExpanded()) {
+			int childrenCount = node.numOfChildren();
+			for (int i = 0; i < childrenCount; i++) {
+				index++;
+				Node child = node.getChild(i);
+				
+				if (index < tree.getVisibleNodes().size()) {
+					if (tree.getVisibleNodes().get(index) != child) {
+						tree.getVisibleNodes().add(index, child);
+					}
+				} else {
+					tree.getVisibleNodes().add(index, child);
+				}
+				index = insertChildrenIntoVisibleNodesCache(child, tree, index);
+			}		
+		}
+		return index;
+	}
 }

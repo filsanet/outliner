@@ -34,16 +34,41 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
 import java.awt.event.*;
 import org.xml.sax.*;
 
-public class CloseAllFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public class CloseAllFileMenuItem extends AbstractOutlinerMenuItem implements DocumentRepositoryListener, ActionListener, GUITreeComponent {
+
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {
+		// Enable menu since we've got at least one document now.
+		setEnabled(true);
+	}
+	
+	public void documentRemoved(DocumentRepositoryEvent e) {
+		if (e.getDocument().getDocumentRepository().openDocumentCount() <= 0) {
+			// Disable menu since no documents are open.
+			setEnabled(false);
+		}
+	}
+
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {}
+
 
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
 		
 		addActionListener(this);
+		Outliner.documents.addDocumentRepositoryListener(this);
 		
 		setEnabled(false);
 	}
@@ -55,8 +80,8 @@ public class CloseAllFileMenuItem extends AbstractOutlinerMenuItem implements Ac
 	}
 
 	protected static boolean closeAllOutlinerDocuments() {
-		for (int i = Outliner.openDocumentCount() - 1; i >= 0; i--) {
-			if (!OutlinerWindowMonitor.closeInternalFrame(Outliner.getDocument(i))) {
+		for (int i = Outliner.documents.openDocumentCount() - 1; i >= 0; i--) {
+			if (!OutlinerWindowMonitor.closeInternalFrame((OutlinerDocument) Outliner.documents.getDocument(i))) {
 				return false;
 			}
 		}

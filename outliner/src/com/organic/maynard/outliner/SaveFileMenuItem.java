@@ -34,25 +34,74 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
 import java.awt.event.*;
 import javax.swing.*;
 import org.xml.sax.*;
 
-public class SaveFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public class SaveFileMenuItem extends AbstractOutlinerMenuItem implements DocumentListener, DocumentRepositoryListener, ActionListener, GUITreeComponent {
+
+	// DocumentListener Interface
+	public void modifiedStateChanged(DocumentEvent e) {
+		calculateEnabledState(e.getDocument());
+	}
+
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {}
+	
+	public void documentRemoved(DocumentRepositoryEvent e) {}
+	
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
+		calculateEnabledState(e.getDocument());
+	}
+
+	private void calculateEnabledState(Document doc) {
+		// if there was none ...
+		if (doc == null) {
+			setEnabled(false);
+
+		// else if it has no name (e.g., it's a new doc, not yet saved) ...
+		} else if (doc.getFileName().equals("")) {
+			setEnabled(true);
+
+		// else if it has a name, thus it's not a new doc, and it's been modified
+		} else if (doc.isModified()) {
+			// If we're imported then we can't save.
+			if (doc.getDocumentInfo().isImported()) {
+				setEnabled(false);
+			} else {
+				setEnabled(true);
+			}
+		
+		// else it has a name, but has not been modified
+		} else {
+			setEnabled(false);
+		}
+	}
+
 
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
+
+		setEnabled(false);
 		
 		addActionListener(this);
-		
-		setEnabled(false);
+		Outliner.documents.addDocumentListener(this);
+		Outliner.documents.addDocumentRepositoryListener(this);
 	}
 
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		saveOutlinerDocument(Outliner.getMostRecentDocumentTouched());
+		saveOutlinerDocument((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched());
 	}
 
 	public static void saveOutlinerDocument(OutlinerDocument document) {

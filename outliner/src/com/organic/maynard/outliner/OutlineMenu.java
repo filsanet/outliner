@@ -34,6 +34,9 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -41,7 +44,12 @@ import javax.swing.*;
 
 import org.xml.sax.*;
 
-public class OutlineMenu extends AbstractOutlinerMenu implements GUITreeComponent {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public class OutlineMenu extends AbstractOutlinerMenu implements DocumentRepositoryListener, GUITreeComponent {
 
 	public static String OUTLINE_HOIST = "";
 
@@ -51,17 +59,37 @@ public class OutlineMenu extends AbstractOutlinerMenu implements GUITreeComponen
 	}
 
 
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {
+		// Enable menu since we've got at least one document now.
+		setEnabled(true);
+	}
+	
+	public void documentRemoved(DocumentRepositoryEvent e) {
+		if (e.getDocument().getDocumentRepository().openDocumentCount() <= 0) {
+			// Disable menu since no documents are open.
+			setEnabled(false);
+		}
+	}
+	
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {}
+	
+	
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
+		
 		Outliner.menuBar.outlineMenu = this;
 		setEnabled(false);
 	}
 	
 	public void endSetup(AttributeList atts) {
 		super.endSetup(atts);
+		
 		JMenuItem hoistItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.OUTLINE_HOIST_MENU_ITEM);
 		OUTLINE_HOIST = hoistItem.getText();
+		
+		Outliner.documents.addDocumentRepositoryListener(this);
 	}
 
 
@@ -84,22 +112,6 @@ public class OutlineMenu extends AbstractOutlinerMenu implements GUITreeComponen
 			}
 		} catch (Exception e) {
 			System.out.println("Exception: " + e);
-		}
-	}
-
-
-	// Misc Methods
-	public static void updateOutlineMenu(OutlinerDocument doc) {
-		if (doc == null) {
-			Outliner.menuBar.outlineMenu.setEnabled(false);
-		} else {
-			Outliner.menuBar.outlineMenu.setEnabled(true);
-			ToggleAttributesMenuItem toggleAttributesItem = (ToggleAttributesMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.OUTLINE_TOGGLE_ATTRIBUTES_MENU_ITEM);
-			if (doc.isShowingAttributes()) {
-				toggleAttributesItem.setShowMode(false);
-			} else {
-				toggleAttributesItem.setShowMode(true);
-			}
 		}
 	}
 }

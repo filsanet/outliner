@@ -60,41 +60,19 @@ import java.awt.event.*;
 import javax.swing.*;
 import org.xml.sax.*;
 
-public class HelpMenu 
-	extends AbstractOutlinerMenu 
-	implements GUITreeComponent {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
-	// constructors
-	public HelpMenu() {
-		super();
-	
-		} // end constructor HelpMenu
-
+public class HelpMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
-
-		// let the ancestors set up first
 		super.startSetup(atts);
-
-		// let ourselves be known
 		Outliner.menuBar.helpMenu = this;
 
-		// we're live
-		setEnabled(true) ;
-		
 		// call startSetup on the Help documents manager
-		Outliner.helpDoxMgr.startSetup() ;
-
-		} // end method startSetup
-
-
-	// Misc Methods
-	public static void updateHelpMenu() {
-
-		// route the call to the particular menu item
-		JMenuItem item = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.GOTO_MENU_ITEM);
-		
-		}  // end method updateHelpMenu
-	
-	}  // end class HelpMenu
+		Outliner.helpDoxMgr.startSetup();
+	}
+}

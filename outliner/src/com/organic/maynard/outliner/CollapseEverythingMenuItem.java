@@ -51,7 +51,7 @@ public class CollapseEverythingMenuItem extends AbstractOutlinerMenuItem impleme
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		collapseEverything(Outliner.getMostRecentDocumentTouched());
+		collapseEverything((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched());
 	}
 
 	private static void collapseEverything(OutlinerDocument doc) {

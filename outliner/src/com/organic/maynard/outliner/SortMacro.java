@@ -95,7 +95,7 @@ public class SortMacro extends MacroImpl implements RawMacro {
 	
 	public void process(int mode) {
 		// Shorthand
-		OutlinerDocument document = Outliner.getMostRecentDocumentTouched();
+		OutlinerDocument document = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
 		JoeTree tree = document.tree;
 
 		// Abort if nodes aren't selected.

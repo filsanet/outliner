@@ -34,6 +34,9 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -41,14 +44,31 @@ import javax.swing.*;
 
 import org.xml.sax.*;
 
-public class ToggleAttributesMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+public class ToggleAttributesMenuItem extends AbstractOutlinerMenuItem implements OutlinerDocumentListener, ActionListener, GUITreeComponent {
 	
 	private static final String A_SHOW = "show";
 	private static final String A_HIDE = "hide";
 	
 	private static String SHOW_ATTRIBUTES = "";
 	private static String HIDE_ATTRIBUTES = "";
+
+
+	// OutlinerDocumentListener Interface
+	public void modifiedStateChanged(DocumentEvent e) {}
 	
+	public void attributesVisibilityChanged(OutlinerDocumentEvent e) {
+		if (e.getOutlinerDocument() != null) {
+			if (e.getOutlinerDocument().isShowingAttributes()) {
+				setShowMode(false);
+			} else {
+				setShowMode(true);
+			}
+		}	
+	}
+
+	public void hoistDepthChanged(OutlinerDocumentEvent e) {}
+
+
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
@@ -57,12 +77,13 @@ public class ToggleAttributesMenuItem extends AbstractOutlinerMenuItem implement
 		HIDE_ATTRIBUTES = atts.getValue(A_HIDE);
 		
 		addActionListener(this);
+		Outliner.documents.addOutlinerDocumentListener(this);
 	}
 
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		OutlinerDocument doc = Outliner.getMostRecentDocumentTouched();
+		OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
 		if (doc.isShowingAttributes()) {
 			doc.showAttributes(false);
 			setShowMode(true);
@@ -72,7 +93,7 @@ public class ToggleAttributesMenuItem extends AbstractOutlinerMenuItem implement
 		}
 	}
 	
-	public void setShowMode(boolean b) {
+	private void setShowMode(boolean b) {
 		if (b) {
 			setText(SHOW_ATTRIBUTES);
 		} else {

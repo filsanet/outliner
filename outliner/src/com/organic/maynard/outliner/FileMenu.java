@@ -394,7 +394,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				document.setTitle(title) ;
 
 				// Update the Window Menu
-				WindowMenu.updateWindow(document);
+				Outliner.menuBar.windowMenu.updateWindow(document);
 				break ;
 
 			case MODE_EXPORT:
@@ -714,7 +714,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 
 	private static void setupAndDraw(DocumentInfo docInfo, OutlinerDocument doc, int openOrImportResult) {
-		String title ;
+		String title;
 		
 		// grab a ref to the tree
 		JoeTree tree = doc.tree;
@@ -760,7 +760,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		doc.setTitle(title) ;
 
 		// update window menu entry
-		WindowMenu.updateWindow(doc) ;
+		Outliner.menuBar.windowMenu.updateWindow(doc) ;
 		
 		// Expand Nodes
 		ArrayList expandedNodes = docInfo.getExpandedNodes();
@@ -829,86 +829,5 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		} else {
 			return SUCCESS;
 		}
-	}
-
-
-	// Menu Updates
-	public static void updateFileMenuItems() {
-		// grab the menu items
-		JMenuItem saveItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_MENU_ITEM);
-		JMenuItem saveAsItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
-		JMenuItem revertItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.REVERT_MENU_ITEM);
-		JMenuItem closeItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CLOSE_MENU_ITEM);
-		JMenuItem closeAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CLOSE_ALL_MENU_ITEM);
-		JMenuItem exportItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_MENU_ITEM);
-		JMenuItem exportSelectionItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_SELECTION_MENU_ITEM);
-
-		// try to grab the topmost doc
-		OutlinerDocument topmostDoc = Outliner.getMostRecentDocumentTouched();
-
-		// if there was none ...
-		if (topmostDoc == null) {
-			saveItem.setEnabled(false);
-			saveAsItem.setEnabled(false);
-			revertItem.setEnabled(false);
-			exportItem.setEnabled(false);
-			exportSelectionItem.setEnabled(false);
-			closeItem.setEnabled(false);
-			closeAllItem.setEnabled(false);
-		// else if it has no name (e.g., it's a new doc, not yet saved) ...
-		} else if (topmostDoc.getFileName().equals("")) {
-			saveItem.setEnabled(true);
-			saveAsItem.setEnabled(true);
-			revertItem.setEnabled(false);
-			exportItem.setEnabled(true);
-			closeItem.setEnabled(true);
-			closeAllItem.setEnabled(true);
-		// else if it has a name, thus it's not a new doc, and it's been modified
-		} else if (topmostDoc.isFileModified()) {
-			saveItem.setEnabled(! topmostDoc.getDocumentInfo().isImported());
-			saveAsItem.setEnabled(true);
-			revertItem.setEnabled(true);
-			exportItem.setEnabled(true);
-			closeItem.setEnabled(true);
-			closeAllItem.setEnabled(true);
-		// else it has a name, but has not been modified
-		} else {
-			saveItem.setEnabled(false);
-			saveAsItem.setEnabled(true);
-			revertItem.setEnabled(false);
-			exportItem.setEnabled(true);
-			closeItem.setEnabled(true);
-			closeAllItem.setEnabled(true);
-		}
-	}
-
-	public static void updateSaveAllMenuItem() {
-		// start out disabled
-		boolean enabledState = false;
-
-		// for each open document ...
-		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
-
-			// get its doc reference
-			OutlinerDocument doc = Outliner.getDocument(i);
-
-			// if it wasn't imported ....
-			if (! doc.getDocumentInfo().isImported()) {
-
-				// if it's been modified or it's a new and unsaved doc
-				if (doc.isFileModified() || doc.getFileName().equals("")) {
-
-					// enable Save All
-					enabledState = true;
-
-					// break outta the loop, we're done
-					break;
-				} // end if modified or not yet saved
-
-			}
-		}
-
-		JMenuItem saveAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_ALL_MENU_ITEM);
-		saveAllItem.setEnabled(enabledState);
 	}
 }

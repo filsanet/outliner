@@ -34,22 +34,48 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import org.xml.sax.*;
 
-public class SelectAllMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public class SelectAllMenuItem extends AbstractOutlinerMenuItem implements DocumentRepositoryListener, ActionListener, GUITreeComponent {
+
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {}
+	
+	public void documentRemoved(DocumentRepositoryEvent e) {}
+	
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
+		if (e.getDocument() == null) {
+			setEnabled(false);
+		} else {
+			setEnabled(true);
+		}
+	}
+
+
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
-		addActionListener(this);
+		
 		setEnabled(false);
+		
+		addActionListener(this);
+		Outliner.documents.addDocumentRepositoryListener(this);
 	}
 
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		EditMenu.fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.CTRL_MASK, KeyEvent.VK_A);
+		EditMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), Event.CTRL_MASK, KeyEvent.VK_A);
 	}
 }

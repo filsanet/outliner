@@ -51,7 +51,7 @@ public class CollapseToParentMenuItem extends AbstractOutlinerMenuItem implement
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		collapseToParent(Outliner.getMostRecentDocumentTouched());
+		collapseToParent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched());
 	}
 
 	private static void collapseToParent(OutlinerDocument doc) {

@@ -34,10 +34,18 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
 import java.awt.event.*;
 import javax.swing.*;
 import org.xml.sax.*;
 import com.organic.maynard.util.string.Replace;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
 public class ExportSelectionFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
 
@@ -49,13 +57,10 @@ public class ExportSelectionFileMenuItem extends AbstractOutlinerMenuItem implem
 		addActionListener(this);
 	}
 
+
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
-		
-		//addActionListener(this);
-		
-		//setEnabled(false);
 	}
 
 	
@@ -72,7 +77,7 @@ public class ExportSelectionFileMenuItem extends AbstractOutlinerMenuItem implem
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		exportOutlinerDocument(Outliner.getMostRecentDocumentTouched(), getProtocol());
+		exportOutlinerDocument((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), getProtocol());
 	}
 
 	protected static void exportOutlinerDocument(OutlinerDocument document, FileProtocol protocol) {

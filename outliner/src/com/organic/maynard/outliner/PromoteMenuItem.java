@@ -51,6 +51,6 @@ public class PromoteMenuItem extends AbstractOutlinerMenuItem implements ActionL
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		OutlineMenu.fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.SHIFT_MASK, KeyEvent.VK_TAB, false);
+		OutlineMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), Event.SHIFT_MASK, KeyEvent.VK_TAB, false);
 	}
 }

@@ -34,17 +34,62 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
 import java.awt.event.*;
 import javax.swing.*;
 import org.xml.sax.*;
 
-public class SaveAllFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public class SaveAllFileMenuItem extends AbstractOutlinerMenuItem implements DocumentListener, DocumentRepositoryListener, ActionListener, GUITreeComponent {
+
+	// DocumentListener Interface
+	public void modifiedStateChanged(DocumentEvent e) {
+		calculateEnabledState();
+	}
+
+
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {
+		calculateEnabledState();
+	}
+	
+	public void documentRemoved(DocumentRepositoryEvent e) {
+		calculateEnabledState();
+	}
+
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
+		calculateEnabledState();
+	}
+
+	private void calculateEnabledState() {
+		for (int i = 0; i < Outliner.documents.openDocumentCount(); i++) {
+			Document doc = Outliner.documents.getDocument(i);
+
+			if (!doc.getDocumentInfo().isImported()) {
+				if (doc.isModified() || doc.getFileName().equals("")) {
+					setEnabled(true);
+					return;
+				}
+			}
+		}
+
+		setEnabled(false);	
+	}
+
 
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
 		
 		addActionListener(this);
+		Outliner.documents.addDocumentListener(this);
+		Outliner.documents.addDocumentRepositoryListener(this);
 		
 		setEnabled(false);
 	}
@@ -59,8 +104,8 @@ public class SaveAllFileMenuItem extends AbstractOutlinerMenuItem implements Act
 	protected static void saveAllOutlinerDocuments() {
 		
 		// for each open document ...
-		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
-			OutlinerDocument doc = Outliner.getDocument(i);
+		for (int i = 0; i < Outliner.documents.openDocumentCount(); i++) {
+			OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getDocument(i);
 			
 			// if it wasn't imported ...
 			if (! doc.getDocumentInfo().isImported()) {

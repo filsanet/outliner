@@ -84,7 +84,7 @@ public class HelpTutorialsMenuItem
 			
 			// make sure it's frontmost
 			Outliner.menuBar.windowMenu.changeToWindow
-				(Outliner.getDocument(Outliner.helpDoxMgr.getDocPath 
+				((OutlinerDocument) Outliner.documents.getDocument(Outliner.helpDoxMgr.getDocPath 
 				(Outliner.helpDoxMgr.TUTORIALS)));
 			
 			} // end if

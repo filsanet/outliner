@@ -34,22 +34,72 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import org.xml.sax.*;
 
-public class DeleteMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public class DeleteMenuItem extends AbstractOutlinerMenuItem implements TreeSelectionListener, DocumentRepositoryListener, ActionListener, GUITreeComponent {
+
+	// TreeSelectionListener Interface
+	public void selectionChanged(TreeSelectionEvent e) {
+		JoeTree tree = e.getTree();
+		Document doc = tree.getDocument();
+		
+		if (doc == Outliner.documents.getMostRecentDocumentTouched()) {
+			calculateEnabledState(tree);
+		}
+	}
+	
+	private void calculateEnabledState(JoeTree tree) {
+		if (tree.getComponentFocus() == OutlineLayoutManager.ICON) {
+			setEnabled(true);
+		} else {
+			if (tree.getCursorPosition() == tree.getCursorMarkPosition()) {
+				setEnabled(false);
+			} else {
+				setEnabled(true);
+			}
+		}	
+	}
+
+
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {}
+	
+	public void documentRemoved(DocumentRepositoryEvent e) {}
+	
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
+		if (e.getDocument() == null) {
+			setEnabled(false);
+		} else {
+			calculateEnabledState(e.getDocument().getTree());
+		}
+	}
+
+
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
-		addActionListener(this);
+		
 		setEnabled(false);
+		
+		addActionListener(this);
+		Outliner.documents.addTreeSelectionListener(this);
+		Outliner.documents.addDocumentRepositoryListener(this);
 	}
 
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		EditMenu.fireKeyEvent(Outliner.getMostRecentDocumentTouched(), 0, KeyEvent.VK_DELETE);
+		EditMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), 0, KeyEvent.VK_DELETE);
 	}
 }

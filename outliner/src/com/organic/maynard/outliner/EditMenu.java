@@ -34,6 +34,8 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -69,42 +71,6 @@ public class EditMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 			}
 		} catch (Exception e) {
 			System.out.println("Exception: " + e);
-		}
-	}
-	
-	
-	// Misc Methods
-	public static void updateEditMenu(OutlinerDocument doc) {
-		JMenuItem cutItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CUT_MENU_ITEM);
-		JMenuItem copyItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.COPY_MENU_ITEM);
-		JMenuItem pasteItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.PASTE_MENU_ITEM);
-		JMenuItem deleteItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.DELETE_MENU_ITEM);
-		JMenuItem selectAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SELECT_ALL_MENU_ITEM);
-		JMenuItem selectNoneItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SELECT_NONE_MENU_ITEM);
-		JMenuItem selectInverseItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SELECT_INVERSE_MENU_ITEM);
-		JMenuItem editDocumentSettingsItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EDIT_DOCUMENT_SETTINGS_MENU_ITEM);
-		JMenuItem editDocumentAttributesItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EDIT_DOCUMENT_ATTRIBUTES_MENU_ITEM);
-
-		UndoQueue.updateMenuBar(doc);
-		if (doc == null) {
-			cutItem.setEnabled(false);
-			copyItem.setEnabled(false);
-			pasteItem.setEnabled(false);
-			deleteItem.setEnabled(false);
-			selectAllItem.setEnabled(false);
-			selectNoneItem.setEnabled(false);
-			selectInverseItem.setEnabled(false);
-			editDocumentSettingsItem.setEnabled(false);
-			editDocumentAttributesItem.setEnabled(false);
-		} else {
-			pasteItem.setEnabled(true);
-			selectAllItem.setEnabled(true);
-			selectNoneItem.setEnabled(true);
-			editDocumentSettingsItem.setEnabled(true);
-			editDocumentAttributesItem.setEnabled(true);
-			
-			// Updates menu based on caret and mark.
-			doc.tree.updateEditMenu();
 		}
 	}
 }

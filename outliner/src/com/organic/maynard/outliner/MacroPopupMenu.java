@@ -317,7 +317,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		Macro macro = getMacro(e.getActionCommand());
 
 		// Shorthand
-		OutlinerDocument document = Outliner.getMostRecentDocumentTouched();
+		OutlinerDocument document = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
 		JoeTree tree = document.tree;
 		
 		// Handle Undoability Confirmation

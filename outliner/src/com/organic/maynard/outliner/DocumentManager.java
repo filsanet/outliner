@@ -70,19 +70,24 @@
 
 package com.organic.maynard.outliner;
 
-// we manage a set of documents
-public class DocumentManager 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
 
-	extends Object 
-	implements JoeReturnCodes {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+// we manage a set of documents
+public class DocumentManager implements DocumentRepositoryListener, JoeReturnCodes {
 	
 	// private instance vars
-	private boolean [] docOpenStates ;
-	private String [] docPaths ;
-	private int [] docAlfaOrder ;
-	private int ourDocsOpen = 0 ;
+	private boolean[] docOpenStates;
+	private String[] docPaths;
+	private int[] docAlfaOrder;
+	private int ourDocsOpen = 0;
 	
-	// constructor 
+	// Constructor 
 	public DocumentManager(int sizeOfDocSet) {
 		// call on the ancestors
 		super();
@@ -92,15 +97,55 @@ public class DocumentManager
 		docPaths = new String[sizeOfDocSet] ;
 		docAlfaOrder = new int[sizeOfDocSet] ;
 		
-		} // end constructor DocumentManager
+		Outliner.documents.addDocumentRepositoryListener(this);
+	}
+
+
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {
+		// local vars
+		int whichOne = isThisOneOfOurs(e.getDocument().getDocumentInfo().getPath());
+		
+		// if it's one of ours ...
+		if (whichOne != DOCUMENT_NOT_FOUND) {
+			
+			// mark it open
+			docOpenStates[whichOne] = true;
+		}
+			
+		// increment ourDocsOpen counter
+		ourDocsOpen ++ ;
+	}
+	
+	public void documentRemoved(DocumentRepositoryEvent e) {
+		// local vars
+		int whichOne = isThisOneOfOurs(e.getDocument().getDocumentInfo().getPath());
+		
+		// if it's one of ours ...
+		if (whichOne != DOCUMENT_NOT_FOUND) {
+			// mark it closed
+			docOpenStates[whichOne] = false;
+			
+			// decrement ourDocsOpen counter
+			ourDocsOpen--;
+	
+			// do other document closing stuff
+			docClosingChores(e.getDocument());
+		}
+	}
+
+	// do document closing stuff
+	// meant for subclassing
+	// no need for subclasses to call super
+	protected void docClosingChores(Document document) {}	
+
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {}
 
 
 	// determine whether one of our documents is currently open
 	public boolean documentIsOpen(int docSelector) {
-		
 		return docOpenStates[docSelector] ;
-		
-		} // end method documentIsOpen
+	}
 
 
 	// is a doc spec'd by its pathname a member of our set ? 
@@ -133,14 +178,14 @@ public class DocumentManager
 				// return its selector
 				return selector ;	
 				
-				} // end if
+			} // end if
 			
-			} // end for
+		} // end for
 		
 		// if we get this far, it's not one of ours
 		return DOCUMENT_NOT_FOUND ;
 		
-		} // end method isThisOneOfOurs
+	} // end method isThisOneOfOurs
 
 	
 	// set the pathname of one of our documents 
@@ -167,7 +212,7 @@ public class DocumentManager
 		// exit triumphant
 		return SUCCESS;
 		
-		} // end method setDocPath
+	} // end method setDocPath
 
 
 	// get the pathname of one of our documents 
@@ -179,66 +224,14 @@ public class DocumentManager
 			// ... return bupkis
 			return null ;
 			
-			} // end if
+		} // end if
 		
 		// we're in bounds. return the path name
 		return docPaths[docSelector] ;
 		
-		} // end method getDocPath
-
-
-	// a document just opened
-	// if it's one of ours, mark it so
-	public void someDocumentJustOpened (OutlinerDocument document) {	
-		
-		// local vars
-		int whichOne = isThisOneOfOurs(document.getDocumentInfo().getPath());
-		
-		// if it's one of ours ...
-		if (whichOne != DOCUMENT_NOT_FOUND) {
-			
-			// mark it open
-			docOpenStates[whichOne] = true ;
-			} // END if
-			
-			// increment ourDocsOpen counter
-			ourDocsOpen ++ ;
-		
-		} // end method someDocumentJustOpened
-
-		
-	// a document just closed
-	// if it's one of ours, mark it so
-	public void someDocumentJustClosed (OutlinerDocument document) {	
-		
-		// local vars
-		int whichOne = isThisOneOfOurs(document.getDocumentInfo().getPath());
-		
-		// if it's one of ours ...
-		if (whichOne != DOCUMENT_NOT_FOUND) {
-			
-			// mark it closed
-			docOpenStates[whichOne] = false ;
-			
-			// decrement ourDocsOpen counter
-			ourDocsOpen -- ;
+	} // end method getDocPath
 	
-			// do other document closing stuff
-			docClosingChores(document) ;
-			
-			} // END if
-		
-		} // end method someDocumentJustClosed
-
-	// do document closing stuff
-	// meant for subclassing
-	// no need for subclasses to call super
-	protected void docClosingChores (OutlinerDocument document) {
-	} // end docClosingChores		
-	
-	
-	// -------------------- accessors
-	
-	int getOurDocsOpen () { return ourDocsOpen ; }
-
-	} // END DocumentManager class
+	int getOurDocsOpen() {
+		return ourDocsOpen;
+	}
+}

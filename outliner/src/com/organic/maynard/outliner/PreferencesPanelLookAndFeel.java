@@ -84,13 +84,13 @@ public class PreferencesPanelLookAndFeel
 		Outliner.desktop.setBackground(pDesktopBackgroundColor.cur);
 
 		// Set the Panel Background color.
-		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
-			Outliner.getDocument(i).panel.setBackground(pPanelBackgroundColor.cur);
+		for (int i = 0; i < Outliner.documents.openDocumentCount(); i++) {
+			((OutlinerDocument) Outliner.documents.getDocument(i)).panel.setBackground(pPanelBackgroundColor.cur);
 		}
 		// for each open document ...
-		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
+		for (int i = 0; i < Outliner.documents.openDocumentCount(); i++) {
 			// get the document
-			OutlinerDocument doc = Outliner.getDocument(i);
+			OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getDocument(i);
 
 			// Update the cellRenderers
 			for (int j = 0; j < OutlineLayoutManager.CACHE_SIZE; j++) {

@@ -34,6 +34,10 @@
  
 package com.organic.maynard.outliner.util.find;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.DocumentRepositoryListener;
+import com.organic.maynard.outliner.event.DocumentRepositoryEvent;
+
 import com.organic.maynard.outliner.util.ProgressDialog;
 import com.organic.maynard.swing.ProgressMonitor;
 
@@ -65,7 +69,7 @@ import org.apache.oro.text.regex.MatchResult;
  * @version $Revision$, $Date$
  */
 
-public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionListener, KeyListener, ListSelectionListener {
+public class FindReplaceFrame extends AbstractGUITreeJDialog implements DocumentRepositoryListener, ActionListener, KeyListener, ListSelectionListener {
 
 	// Constants
 	private static final int MINIMUM_WIDTH = 550;
@@ -197,7 +201,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	// Static Methods
 	private static boolean documentRadiosEnabled = true;
 	
-	public static void enableButtons() {
+	private static void enableButtons() {
 		RADIO_CURRENT_DOCUMENT.setEnabled(true);
 		RADIO_ALL_OPEN_DOCUMENTS.setEnabled(true);
 		
@@ -263,7 +267,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		documentRadiosEnabled = true;
 	}
 
-	public static void disableButtons() {
+	private static void disableButtons() {
 		RADIO_CURRENT_DOCUMENT.setEnabled(false);
 		RADIO_ALL_OPEN_DOCUMENTS.setEnabled(false);
 
@@ -450,6 +454,20 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	}
 
 
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {}
+	
+	public void documentRemoved(DocumentRepositoryEvent e) {}
+	
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
+		if(e.getDocument() == null) {
+			disableButtons();
+		} else {
+			enableButtons();
+		}		
+	}
+
+
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
@@ -458,6 +476,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 
 		model = new FindReplaceModel();
 		findReplaceDialog = new FindReplaceDialog();
+		
+		Outliner.documents.addDocumentRepositoryListener(this);
 			
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new BorderLayout());
@@ -671,12 +691,12 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		int mode = model.getSelectionMode();
 		if (mode == FindReplaceModel.MODE_CURRENT_DOCUMENT) {
 			RADIO_CURRENT_DOCUMENT.setSelected(true);
-			if (Outliner.openDocumentCount() > 0) {
+			if (Outliner.documents.openDocumentCount() > 0) {
 				updateForCurrentDocumentRadio();
 			}
 		} else if (mode == FindReplaceModel.MODE_ALL_OPEN_DOCUMENTS) {
 			RADIO_ALL_OPEN_DOCUMENTS.setSelected(true);
-			if (Outliner.openDocumentCount() > 0) {
+			if (Outliner.documents.openDocumentCount() > 0) {
 				updateForAllOpenDocumentsRadio();
 			}
 		} else if (mode == FindReplaceModel.MODE_FILE_SYSTEM) {
@@ -700,13 +720,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	public void actionPerformed(ActionEvent e) {
 		// File Menu
 		if (e.getActionCommand().equals(FIND)) {
-			find(Outliner.getMostRecentDocumentTouched());
+			find((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched());
 		} else if (e.getActionCommand().equals(FIND_ALL)) {
-			find_all(Outliner.getMostRecentDocumentTouched());
+			find_all((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched());
 		} else if (e.getActionCommand().equals(REPLACE)) {
-			replace(Outliner.getMostRecentDocumentTouched());
+			replace((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched());
 		} else if (e.getActionCommand().equals(REPLACE_ALL)) {
-			replace_all(Outliner.getMostRecentDocumentTouched());
+			replace_all((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched());
 		} else if (e.getActionCommand().equals(NEW)) {
 			newFindReplace();
 		} else if (e.getActionCommand().equals(DELETE)) {
@@ -1111,7 +1131,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 					CHECKBOX_REGEXP.isSelected()
 				);
 				
-				Outliner.redrawAllOpenDocuments();
+				Outliner.documents.redrawAllOpenDocuments();
 				break;
 			
 			case FindReplaceModel.MODE_FILE_SYSTEM:
@@ -1332,7 +1352,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		boolean wrapAround,
 		boolean isRegexp
 	) {
-		Iterator openDocuments = Outliner.getLoopedOpenDocumentIterator();
+		Iterator openDocuments = Outliner.documents.getLoopedOpenDocumentIterator();
 		
 		boolean matchFound = false;
 		
@@ -1341,7 +1361,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			
 			NodeRangePair location = null;
 			
-			if (doc == Outliner.getMostRecentDocumentTouched()) {
+			if (doc == (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched()) {
 				location = findLocation(
 					doc, 
 					sFind, 
@@ -1409,7 +1429,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		if (!matchFound) {
 			// One last try on the entire current doc since we may have missed a match in the portion of the doc before the cursor..
 			find(
-				Outliner.getMostRecentDocumentTouched(), 
+				(OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), 
 				sFind,
 				sReplace,
 				false,
@@ -1433,7 +1453,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		boolean wrapAround,
 		boolean isRegexp
 	) {
-		Iterator openDocuments = Outliner.getLoopedOpenDocumentIterator();
+		Iterator openDocuments = Outliner.documents.getLoopedOpenDocumentIterator();
 		
 		while (openDocuments.hasNext()) {
 			OutlinerDocument doc = (OutlinerDocument) openDocuments.next();
@@ -1682,7 +1702,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 										
 			int oldPosition = location.endIndex;
 			int newPosition = location.endIndex + difference;
-			doc.undoQueue.add(new UndoableEdit(location.node,oldText,newText,oldPosition,newPosition,oldPosition,location.startIndex));
+			doc.getUndoQueue().add(new UndoableEdit(location.node,oldText,newText,oldPosition,newPosition,oldPosition,location.startIndex));
 
 			// Update the model
 			location.node.setValue(newText);
@@ -1728,7 +1748,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		boolean wrapAround,
 		boolean isRegexp
 	) {
-		Iterator openDocuments = Outliner.getLoopedOpenDocumentIterator();
+		Iterator openDocuments = Outliner.documents.getLoopedOpenDocumentIterator();
 		
 		boolean matchFound = false;
 		
@@ -1737,7 +1757,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			
 			NodeRangePair location = null;
 			
-			if (doc == Outliner.getMostRecentDocumentTouched()) {
+			if (doc == (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched()) {
 				location = findLocation(
 					doc, 
 					sFind, 
@@ -1792,7 +1812,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 											
 				int oldPosition = location.endIndex;
 				int newPosition = location.endIndex + difference;
-				doc.undoQueue.add(new UndoableEdit(location.node,oldText,newText,oldPosition,newPosition,oldPosition,location.startIndex));
+				doc.getUndoQueue().add(new UndoableEdit(location.node,oldText,newText,oldPosition,newPosition,oldPosition,location.startIndex));
 	
 				// Update the model
 				location.node.setValue(newText);
@@ -1825,7 +1845,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		if (!matchFound) {
 			// One last try on the entire current doc since we may have missed a match in the portion of the doc before the cursor..
 			replace(
-				Outliner.getMostRecentDocumentTouched(), 
+				(OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), 
 				sFind,
 				sReplace,
 				false,
@@ -1849,7 +1869,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		boolean wrapAround,
 		boolean isRegexp
 	) {
-		Iterator openDocuments = Outliner.getLoopedOpenDocumentIterator();
+		Iterator openDocuments = Outliner.documents.getLoopedOpenDocumentIterator();
 		
 		while (openDocuments.hasNext()) {
 			OutlinerDocument doc = (OutlinerDocument) openDocuments.next();
@@ -1938,7 +1958,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						if (location.loopedOver) {break;}
 						
 						if (!undoableAdded) {
-							doc.undoQueue.add(undoable);
+							doc.getUndoQueue().add(undoable);
 							undoableAdded = true;
 						}
 						
@@ -2016,7 +2036,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						if (location.loopedOver) {break;}
 						
 						if (!undoableAdded) {
-							doc.undoQueue.add(undoable);
+							doc.getUndoQueue().add(undoable);
 							undoableAdded = true;
 						}
 						
@@ -2092,7 +2112,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				if (location.loopedOver) {break;}
 				
 				if (!undoableAdded) {
-					doc.undoQueue.add(undoable);
+					doc.getUndoQueue().add(undoable);
 					undoableAdded = true;
 				}
 				

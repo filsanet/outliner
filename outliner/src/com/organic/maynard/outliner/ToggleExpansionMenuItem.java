@@ -51,6 +51,6 @@ public class ToggleExpansionMenuItem extends AbstractOutlinerMenuItem implements
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		OutlineMenu.fireKeyEvent(Outliner.getMostRecentDocumentTouched(), 0, KeyEvent.VK_PAGE_DOWN, false);
+		OutlineMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), 0, KeyEvent.VK_PAGE_DOWN, false);
 	}
 }

@@ -74,11 +74,10 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		//NodeImpl.updateSimpleDateFormat(pCreateModDatesFormat.cur);
 		
 		// Update the undo queue for all the documents immediatly if it is being downsized.
-		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
-			Outliner.getDocument(i).undoQueue.trim();
+		for (int i = 0; i < Outliner.documents.openDocumentCount(); i++) {
+			Outliner.documents.getDocument(i).getUndoQueue().trim();
 		}
-		UndoQueue.updateMenuBar(Outliner.getMostRecentDocumentTouched());
-
+		
 		// Update the line numbers
 		if (pShowLineNumbers.cur) {
 			OutlineLineNumber.LINE_NUMBER_WIDTH = OutlineLineNumber.LINE_NUMBER_WIDTH_DEFAULT;
@@ -107,8 +106,8 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		OutlinerCellRendererImpl.updateFonts();
 		
 		// Update renderers in existing docs
-		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
-			OutlinerDocument doc = Outliner.getDocument(i);
+		for (int i = 0; i < Outliner.documents.openDocumentCount(); i++) {
+			OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getDocument(i);
 			for (int j = 0; j < OutlineLayoutManager.CACHE_SIZE; j++) {
 				doc.panel.layout.textAreas[j].setWrapStyleWord(line_wrap);
 				

@@ -69,7 +69,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 			
 			// if it's untitled, do a Save As ...
 			if (doc.getFileName().equals("")) {
-				if (doc.tree.isDocumentEmpty() && doc.undoQueue.isEmpty()) {
+				if (doc.tree.isDocumentEmpty() && doc.getUndoQueue().isEmpty()) {
 					// Do Nothing since it doesn't look like the user has touched the document.
 				} else {
 					// set up dialog
@@ -107,6 +107,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 				} else if (result == JOptionPane.CANCEL_OPTION) {
 					return false;
 				} // end if-else chain
+				
 			// else it IS imported, do a Save As
 			} else {
 				// set up dialog
@@ -125,7 +126,6 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 					return false;
 				} // end if-else chain
 			} // end else it's imported
-			
 		} // end if the document is modified
 		
 		// Record current state into DocumentInfo in the RecentFileList if we can
@@ -138,7 +138,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 		doc.setVisible(false);
 
 		// Remove the document.
-		Outliner.removeDocument(doc);
+		Outliner.documents.removeDocument(doc);
 
 		// Explicitly Destroy since Swing has problems letting go.
 		// Seems to make a difference when we also use -Xincgc.

@@ -33,17 +33,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+package com.organic.maynard.outliner;
+
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
+import java.awt.event.*;
+import javax.swing.*;
+
 /**
  * @author  $Author$
  * @version $Revision$, $Date$
  */
-
-// we're part of this
-package com.organic.maynard.outliner;
-
-// we use these
-import java.awt.event.*;
-import javax.swing.*;
 
 public class SaveAsFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener {
 
@@ -65,11 +66,11 @@ public class SaveAsFileMenuItem extends AbstractOutlinerMenuItem implements Acti
 		this.protocol = protocol;
 		setText(protocol.getName());
 	}
-	
+
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		saveAsOutlinerDocument(Outliner.getMostRecentDocumentTouched(), getProtocol());
+		saveAsOutlinerDocument((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), getProtocol());
 	}
 
 	protected static void saveAsOutlinerDocument(OutlinerDocument document, FileProtocol protocol) {

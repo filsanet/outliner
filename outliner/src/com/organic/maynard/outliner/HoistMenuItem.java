@@ -34,24 +34,101 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
-
 import org.xml.sax.*;
 
-public class HoistMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public class HoistMenuItem extends AbstractOutlinerMenuItem implements OutlinerDocumentListener, DocumentRepositoryListener, TreeSelectionListener, ActionListener, GUITreeComponent {
+
+	// OutlinerDocumentListener Interface
+	public void modifiedStateChanged(DocumentEvent e) {}
+	
+	public void attributesVisibilityChanged(OutlinerDocumentEvent e) {}
+
+	public void hoistDepthChanged(OutlinerDocumentEvent e) {
+		if (e.getOutlinerDocument() == Outliner.documents.getMostRecentDocumentTouched()) {
+			updateText(e.getOutlinerDocument());
+		}
+	}
+
+
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {}
+	
+	public void documentRemoved(DocumentRepositoryEvent e) {}
+	
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
+		OutlinerDocument doc = (OutlinerDocument) e.getDocument();
+		updateText(doc);
+		if (doc != null) {
+			calculateEnabledState(doc.getTree());
+		}
+	}
+	
+	private void updateText(OutlinerDocument doc) {
+		if (doc == null) {
+			return;
+		}
+
+		setText(OutlineMenu.OUTLINE_HOIST + " (" + doc.hoistStack.getHoistDepth() + ")");	
+	}
+
+
+	// TreeSelectionListener Interface
+	public void selectionChanged(TreeSelectionEvent e) {
+		calculateEnabledState(e.getTree());
+	}
+	
+	private void calculateEnabledState(JoeTree tree) {
+		Document doc = tree.getDocument();
+		
+		if (doc == Outliner.documents.getMostRecentDocumentTouched()) {
+			Node node = tree.getEditingNode();
+
+			if (tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
+				if (node.isLeaf()) {
+					setEnabled(false);
+				} else {
+					setEnabled(true);
+				}
+			} else if (tree.getComponentFocus() == OutlineLayoutManager.ICON) {
+				if (tree.getNumberOfSelectedNodes() == 1) {
+					if (node.isLeaf()) {
+						setEnabled(false);
+					} else {
+						setEnabled(true);
+					}
+				}		
+			}
+		}	
+	}
+
+
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
+		
 		addActionListener(this);
+		Outliner.documents.addOutlinerDocumentListener(this);
+		Outliner.documents.addDocumentRepositoryListener(this);
+		Outliner.documents.addTreeSelectionListener(this);
+		
+		setEnabled(false);
 	}
 
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		hoist(Outliner.getMostRecentDocumentTouched());
+		hoist((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched());
 	}
 
 	private static void hoist(OutlinerDocument doc) {

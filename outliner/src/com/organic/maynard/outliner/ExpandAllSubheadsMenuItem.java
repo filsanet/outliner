@@ -51,7 +51,7 @@ public class ExpandAllSubheadsMenuItem extends AbstractOutlinerMenuItem implemen
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		expandAllSubheads(Outliner.getMostRecentDocumentTouched());
+		expandAllSubheads((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched());
 	}
 
 	private static void expandAllSubheads(OutlinerDocument doc) {

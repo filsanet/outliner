@@ -36,6 +36,9 @@ package com.organic.maynard.outliner.util.find;
 
 import com.organic.maynard.outliner.*;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -47,7 +50,7 @@ import javax.swing.event.*;
  * @version $Revision$, $Date$
  */
 
-public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements MouseListener {
+public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements DocumentRepositoryListener, MouseListener {
 
 	// Constants
 	private static final int MINIMUM_WIDTH = 400;
@@ -72,17 +75,31 @@ public class FindReplaceResultsDialog extends AbstractOutlinerJDialog implements
 		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
 		
 		table.addMouseListener(this);
+		Outliner.documents.addDocumentRepositoryListener(this);
+		
 		JScrollPane jsp = new JScrollPane(table);
 		getContentPane().add(jsp, BorderLayout.CENTER);
 		getContentPane().add(totalMatches, BorderLayout.SOUTH);
 
 		setTitle("Find/Replace All Results");
-		
-		//pack();
 
 		setVisible(false);
 	}
+
+
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {}
 	
+	public void documentRemoved(DocumentRepositoryEvent e) {
+		if (isVisible()) {
+			getModel().removeAllResultsForDocument(e.getDocument());
+		}	
+	}
+	
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {}
+
+
+
 	public FindReplaceResultsModel getModel() {return this.model;}
 	
 	public void show(FindReplaceResultsModel model) {

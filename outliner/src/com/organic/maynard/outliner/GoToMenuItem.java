@@ -34,22 +34,47 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
 import java.awt.event.*;
 import org.xml.sax.*;
 
-public class GoToMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public class GoToMenuItem extends AbstractOutlinerMenuItem implements DocumentRepositoryListener, ActionListener, GUITreeComponent {
+
+
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {}
+	
+	public void documentRemoved(DocumentRepositoryEvent e) {}
+	
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
+		if (e.getDocument() == null) {
+			setEnabled(false);
+		} else {
+			setEnabled(true);
+		}
+	}
+
 
 	// GUITreeComponent interface	
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
 
 		setEnabled(false);
+		
 		addActionListener(this);
+		Outliner.documents.addDocumentRepositoryListener(this);
 	}
 
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		GoToDialog.setStateAndShow(Outliner.getMostRecentDocumentTouched());
+		GoToDialog.setStateAndShow((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched());
 	}
 }

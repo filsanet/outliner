@@ -51,6 +51,6 @@ public class DemoteMenuItem extends AbstractOutlinerMenuItem implements ActionLi
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		OutlineMenu.fireKeyEvent(Outliner.getMostRecentDocumentTouched(), 0, KeyEvent.VK_TAB, true);
+		OutlineMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), 0, KeyEvent.VK_TAB, true);
 	}
 }

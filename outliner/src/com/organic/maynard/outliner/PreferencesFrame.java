@@ -197,7 +197,7 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 		Preferences.applyTemporaryToCurrent();
 		Preferences.applyCurrentToApplication();
 		Preferences.saveConfigFile(Outliner.CONFIG_FILE);
-		Outliner.redrawAllOpenDocuments();
+		Outliner.documents.redrawAllOpenDocuments();
 	}
 
 	public void main_cancel() {

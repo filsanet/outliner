@@ -70,13 +70,17 @@
 
 package com.organic.maynard.outliner;
 
-// we manage a set of Help system documents
-public class HelpDocumentsManager 
+import com.organic.maynard.outliner.dom.Document;
 
-	extends DocumentManager
-	implements JoeReturnCodes {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+// we manage a set of Help system documents
+public class HelpDocumentsManager extends DocumentManager implements JoeReturnCodes {
 	
-	// public class constants
+	// Constants
 	public static final int USER_GUIDE = 0 ;
 	public static final int DEVELOPER_GUIDE = 1 ;
 	public static final int BOOKMARKS = 2 ;
@@ -84,12 +88,10 @@ public class HelpDocumentsManager
 	public static final int ABOUT = 4 ;
 	public static final int HELP_DOX_COUNT = 5 ;
 	
-	// constructor method
+	// Constructors
 	public HelpDocumentsManager() {
-		// call the ancestor's constructor
 		super(HELP_DOX_COUNT);
-		
-		} // end constructor method HelpDocumentsManager
+	}
 
 	// this next is called by a new Help menu's startSetup GUITreeComponent interface
 	// we've got to wait for that call to do this, because it means the preference files have been read
@@ -102,27 +104,14 @@ public class HelpDocumentsManager
 		 * 	they are relative to Outliner's root directory,
 		 * 	and setDocPath makes 'em absolute
 		 */	
-		setDocPath(USER_GUIDE, 
-			Preferences.getPreferenceString(Preferences.USER_GUIDE_PATH).def);
-		setDocPath(DEVELOPER_GUIDE, 
-			Preferences.getPreferenceString(Preferences.DEVELOPER_GUIDE_PATH).def);
-		setDocPath(BOOKMARKS,
-			Preferences.getPreferenceString(Preferences.BOOKMARKS_PATH).def);
-		setDocPath(TUTORIALS,
-			Preferences.getPreferenceString(Preferences.TUTORIALS_PATH).def);
-		setDocPath(ABOUT,
-			Preferences.getPreferenceString(Preferences.ABOUT_PATH).def);
-		
-		} // end method startSetup	
+		setDocPath(USER_GUIDE,      Preferences.getPreferenceString(Preferences.USER_GUIDE_PATH).def);
+		setDocPath(DEVELOPER_GUIDE, Preferences.getPreferenceString(Preferences.DEVELOPER_GUIDE_PATH).def);
+		setDocPath(BOOKMARKS,       Preferences.getPreferenceString(Preferences.BOOKMARKS_PATH).def);
+		setDocPath(TUTORIALS,       Preferences.getPreferenceString(Preferences.TUTORIALS_PATH).def);
+		setDocPath(ABOUT,           Preferences.getPreferenceString(Preferences.ABOUT_PATH).def);
+	}
 
-	// do special subclass document closing stuff
-	protected void docClosingChores (OutlinerDocument document) {
-		
-		// remove it from frameInfoList
+	protected void docClosingChores(Document document) {
 		RecentFilesList.removeFileNameFromList(document.getDocumentInfo());
-		
-	} // end docClosingChores		
-	
-
-		
-	} // end class HelpDocumentsManager
+	}		
+}

@@ -34,17 +34,52 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
 import java.awt.event.*;
 import javax.swing.*;
 import org.xml.sax.*;
 
-public class RevertFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public class RevertFileMenuItem extends AbstractOutlinerMenuItem implements DocumentListener, DocumentRepositoryListener, ActionListener, GUITreeComponent {
+
+
+	// DocumentListener Interface
+	public void modifiedStateChanged(DocumentEvent e) {
+		calculateEnabledState(e.getDocument());
+	}
+
+
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {}
+	
+	public void documentRemoved(DocumentRepositoryEvent e) {}
+
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
+		calculateEnabledState(e.getDocument());
+	}
+	
+	private void calculateEnabledState(Document doc) {
+		if (doc != null && doc.isModified() && !doc.getFileName().equals("")) {
+			setEnabled(true);
+		} else {
+			setEnabled(false);
+		}	
+	}
+
 
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
 		
 		addActionListener(this);
+		Outliner.documents.addDocumentListener(this);
+		Outliner.documents.addDocumentRepositoryListener(this);
 		
 		setEnabled(false);
 	}
@@ -52,7 +87,7 @@ public class RevertFileMenuItem extends AbstractOutlinerMenuItem implements Acti
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		revertOutlinerDocument(Outliner.getMostRecentDocumentTouched());
+		revertOutlinerDocument((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched());
 	}
 
 	protected static void revertOutlinerDocument(OutlinerDocument document) {

@@ -36,6 +36,7 @@
 package com.organic.maynard.outliner;
 
 import com.organic.maynard.outliner.util.find.*;
+import com.organic.maynard.outliner.dom.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -296,6 +297,9 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	public static MacroPopupMenu macroPopup = null;
 	public static FileFormatManager fileFormatManager = null;
 	public static FileProtocolManager fileProtocolManager = null;
+	
+	// DOM Objects
+	public static DocumentRepository documents = new DocumentRepository();
 
 
 	// GUI Settings
@@ -313,7 +317,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 
 
 	// Help system	[srk] 8/5/01 1:28PM
-	public static HelpDocumentsManager helpDoxMgr = null ;
+	public static HelpDocumentsManager helpDoxMgr = null;
 
 
 	// GUITreeComponent interface	
@@ -545,141 +549,6 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		} // end if
 		
 	} // end method main
-	
-	
-	// Open Document Repository
-	private static ArrayList openDocuments = new ArrayList();
-	private static OutlinerDocument mostRecentDocumentTouched = null;
-	
-	public static Iterator getOpenDocumentIterator(int index) {
-		ArrayList temp = new ArrayList();
-		temp.addAll(openDocuments.subList(index, openDocuments.size()));
-		temp.addAll(openDocuments.subList(0, index));
-		return temp.iterator();
-	}
-	
-	public static Iterator getLoopedOpenDocumentIterator() {
-		return getOpenDocumentIterator(indexOfOpenDocument(mostRecentDocumentTouched));
-	}
-
-	public static Iterator getDefaultOpenDocumentIterator() {
-		return getOpenDocumentIterator(0);
-	}
-	
-	public static int indexOfOpenDocument(OutlinerDocument doc) {
-		return openDocuments.indexOf(doc);
-	}
-
-	public static OutlinerDocument getMostRecentDocumentTouched() {
-		return mostRecentDocumentTouched;
-	}
-	
-	public static void setMostRecentDocumentTouched(OutlinerDocument doc) {
-		mostRecentDocumentTouched = doc;
-		
-		if(mostRecentDocumentTouched != null) {
-			Outliner.menuBar.windowMenu.selectWindow(doc);
-			FindReplaceFrame.enableButtons();
-		} else {
-			FindReplaceFrame.disableButtons();
-			
-			FileMenu.updateFileMenuItems();
-			FileMenu.updateSaveAllMenuItem();
-			
-			UndoQueue.updateMenuBar(doc);
-			EditMenu.updateEditMenu(doc);
-			
-			OutlineMenu.updateOutlineMenu(doc);
-			SearchMenu.updateSearchMenu(doc);
-			ScriptMenu.updateScriptMenu(doc);
-			WindowMenu.updateWindowMenu();
-			HelpMenu.updateHelpMenu();	// [srk] 8/5/01 1:06PM
-		} // end if-else
-	} // end method setMostRecentDocumentTouched
-	
-	
-	public static void addDocument(OutlinerDocument document) {
-		openDocuments.add(document);
-
-		// Add it to the WindowMenu
-		WindowMenu.addWindow(document);
-		
-		// Update the close menu items
-		CloseFileMenuItem closeItem = (CloseFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CLOSE_MENU_ITEM);
-		CloseAllFileMenuItem closeAllItem = (CloseAllFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CLOSE_ALL_MENU_ITEM);
-		
-		closeItem.setEnabled(true);
-		closeAllItem.setEnabled(true);
-
-		// Notify the Help documents manager	[srk 8/5/01 1:12PM]
-		helpDoxMgr.someDocumentJustOpened(document) ;
-	} // end method addDocument
-	
-	
-	public static OutlinerDocument getDocument(int i) {
-		return (OutlinerDocument) openDocuments.get(i);
-	} // end method getDocument
-	
-	
-	public static OutlinerDocument getDocument(String filename) {
-		for (int i = 0; i < openDocuments.size(); i++) {
-			OutlinerDocument doc = getDocument(i);
-			if (filename.equals(doc.getFileName())) {
-				return doc;
-			} // end if
-		} // end for
-		return null;	
-	} // end method getDocument
-	
-	
-	public static void removeDocument(OutlinerDocument document) {
-		// Remove the document from the window menus
-		WindowMenu.removeWindow(document);
-		
-		openDocuments.remove(document);
-		
-		IS_CURRENT_DOCUMENT: if (mostRecentDocumentTouched == document) {
-			if (openDocumentCount() > 0) {
-				for (int i = openDocumentCount() - 1; i >= 0; i--) {
-					OutlinerDocument newDoc = getDocument(i);
-					if (!newDoc.isIcon()) {
-						Outliner.menuBar.windowMenu.changeToWindow(newDoc);
-						break IS_CURRENT_DOCUMENT;
-					}
-				}
-			}
-			setMostRecentDocumentTouched(null);
-			
-		}
-		
-		// Update the Save All Menu Item
-		FileMenu.updateFileMenuItems();
-		FileMenu.updateSaveAllMenuItem();
-
-		// Notify the Help documents manager	[srk 8/5/01 1:23PM]
-		helpDoxMgr.someDocumentJustClosed(document);
-		
-		// If the FindReplaceResultsDialog is visible, remove any references to this document
-		if (findReplaceResultsDialog.isVisible()) {
-			FindReplaceResultsModel model = findReplaceResultsDialog.getModel();
-			model.removeAllResultsForDocument(document);
-		}
-	}
-	
-	public static int openDocumentCount() {
-		return openDocuments.size();
-	}
-	
-	public static boolean isFileNameUnique(String filename) {
-		for (int i = 0; i < openDocuments.size(); i++) {
-			if (PlatformCompatibility.areFilenamesEquivalent(filename, getDocument(i).getFileName())) {
-				return false;
-			}
-		}		
-
-		return true;
-	}
-
 
 	// ClipboardOwner Interface
 	public static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -701,11 +570,6 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		}	
 	}
 
-	public static void redrawAllOpenDocuments() {
-		for (int i = 0; i < openDocuments.size(); i++) {
-			getDocument(i).panel.layout.redraw();
-		}		
-	}
 	
 	
 	// all calls for a new JoeTree come thru here

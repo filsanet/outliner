@@ -34,13 +34,24 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
+import com.organic.maynard.outliner.util.undo.*;
+
+import com.organic.maynard.outliner.dom.*;
 import java.util.*;
 import javax.swing.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
 public class UndoQueue {
 	private OutlinerDocument doc = null;
 	
-	private Vector queue = new Vector(Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).cur);
+	private UndoableList queue = new UndoableList(Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).cur);
 	private int cursor = -1;
 	
 	// The Constructors
@@ -67,19 +78,20 @@ public class UndoQueue {
 		
 		if (queue.size() < queueSize) {
 			cursor++;
-			queue.addElement(undoable);
+			queue.add(undoable);
 		} else {
-			queue.removeElementAt(0);
-			queue.addElement(undoable);
+			queue.remove(0);
+			queue.add(undoable);
 		}
 		
-		updateMenuBar(doc);
+		// Fire Event
+		Outliner.documents.fireUndoQueueEvent(doc, UndoQueueEvent.ADD);
 	}
 	
 	public Undoable get() {
 		try {
-			return (Undoable) queue.elementAt(cursor);
-		} catch (ArrayIndexOutOfBoundsException aiobe) {
+			return queue.get(cursor);
+		} catch (IndexOutOfBoundsException aiobe) {
 			return null;
 		}
 	}
@@ -94,21 +106,26 @@ public class UndoQueue {
 
 	public void trim() {
 		// First trim off any redoables
-		queue.setSize(cursor + 1);
+		queue.trim(cursor + 1);
 		
 		// Next, trim undoables from oldest to newest until the size matches the UNDO_QUEUE_SIZE preference.
 		// This could be optimized with System.arraycopy.
 		while (queue.size() > Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).cur) {
-			queue.removeElementAt(0);
+			queue.remove(0);
 			cursor--;
 		}
+
+		// Fire Event
+		Outliner.documents.fireUndoQueueEvent(doc, UndoQueueEvent.TRIM);
 	}
 
 	public void clear() {
 		//System.out.println("Clear");
 		cursor = -1;
-		queue.setSize(0);
-		updateMenuBar(doc);
+		queue.clear();
+
+		// Fire Event
+		Outliner.documents.fireUndoQueueEvent(doc, UndoQueueEvent.CLEAR);
 	}
 	
 	public boolean isEmpty() {
@@ -124,8 +141,10 @@ public class UndoQueue {
 	public void undo() {
 		if (isUndoable()) {
 			primitiveUndo();
-			updateMenuBar(doc);
 			doc.setFileModified(true);
+
+			// Fire Event
+			Outliner.documents.fireUndoQueueEvent(doc, UndoQueueEvent.UNDO);
 		}
 	}
 
@@ -133,12 +152,14 @@ public class UndoQueue {
 		while (isUndoable()) {
 			primitiveUndo();
 		}
-		updateMenuBar(doc);
 		doc.setFileModified(true);
+
+		// Fire Event
+		Outliner.documents.fireUndoQueueEvent(doc, UndoQueueEvent.UNDO_ALL);
 	}
 
 	private void primitiveUndo() {
-		((Undoable) queue.elementAt(cursor)).undo();
+		queue.get(cursor).undo();
 		cursor--;
 	}
 	
@@ -155,8 +176,10 @@ public class UndoQueue {
 	public void redo() {
 		if (isRedoable()) {
 			primitiveRedo();
-			updateMenuBar(doc);
-			doc.setFileModified(true);	
+			doc.setFileModified(true);
+
+			// Fire Event
+			Outliner.documents.fireUndoQueueEvent(doc, UndoQueueEvent.REDO);
 		}	
 	}
 
@@ -164,13 +187,15 @@ public class UndoQueue {
 		while (isRedoable()) {
 			primitiveRedo();
 		}
-		updateMenuBar(doc);
-		doc.setFileModified(true);	
+		doc.setFileModified(true);
+
+		// Fire Event
+		Outliner.documents.fireUndoQueueEvent(doc, UndoQueueEvent.REDO_ALL);
 	}
 	
 	private void primitiveRedo() {
 		cursor++;
-		((Undoable) queue.elementAt(cursor)).redo();
+		queue.get(cursor).redo();
 	}
 
 	public boolean isRedoable() {
@@ -178,46 +203,6 @@ public class UndoQueue {
 			return true;
 		} else {
 			return false;
-		}
-	}
-
-
-	// Static Methods
-	private static JMenuItem undoItem = null;
-	private static JMenuItem redoItem = null;
-	private static JMenuItem undoAllItem = null;
-	private static JMenuItem redoAllItem = null;
-	
-	public static void updateMenuBar(OutlinerDocument doc) {
-		// Lazy instantiation of references to JMenuItems.
-		if (undoItem == null) {
-			undoItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.UNDO_MENU_ITEM);
-			redoItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.REDO_MENU_ITEM);
-			undoAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.UNDO_ALL_MENU_ITEM);
-			redoAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.REDO_ALL_MENU_ITEM);
-		}
-		
-		if (doc == null) {
-			undoItem.setEnabled(false);
-			undoAllItem.setEnabled(false);
-			redoItem.setEnabled(false);
-			redoAllItem.setEnabled(false);
-		} else {
-			if(doc.undoQueue.isUndoable()) {
-				undoItem.setEnabled(true);
-				undoAllItem.setEnabled(true);
-			} else {
-				undoItem.setEnabled(false);
-				undoAllItem.setEnabled(false);
-			}
-	
-			if(doc.undoQueue.isRedoable()) {
-				redoItem.setEnabled(true);
-				redoAllItem.setEnabled(true);
-			} else {
-				redoItem.setEnabled(false);
-				redoAllItem.setEnabled(false);
-			}
 		}
 	}
 }

@@ -34,25 +34,65 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import org.xml.sax.*;
 
-public class UndoAllMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public class UndoAllMenuItem extends AbstractOutlinerMenuItem implements UndoQueueListener, DocumentRepositoryListener, ActionListener, GUITreeComponent {
+
+	// UndoQueueListener Interface
+	public void undo(UndoQueueEvent e) {
+		if (e.getDocument() == Outliner.documents.getMostRecentDocumentTouched()) {
+			calculateEnabledState(e.getDocument());
+		}
+	}
+	
+	private void calculateEnabledState(Document doc) {
+		if (doc == null) {
+			setEnabled(false);
+		} else {
+			if(doc.getUndoQueue().isUndoable()) {
+				setEnabled(true);
+			} else {
+				setEnabled(false);
+			}
+		}	
+	}
+
+
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {}
+	
+	public void documentRemoved(DocumentRepositoryEvent e) {}
+	
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
+		calculateEnabledState(e.getDocument());
+	}
+
 
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
 		
-		addActionListener(this);
-		
 		setEnabled(false);
+		
+		addActionListener(this);
+		Outliner.documents.addUndoQueueListener(this);
+		Outliner.documents.addDocumentRepositoryListener(this);
 	}
 
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		Outliner.getMostRecentDocumentTouched().undoQueue.undoAll();
+		Outliner.documents.getMostRecentDocumentTouched().getUndoQueue().undoAll();
 	}
 }

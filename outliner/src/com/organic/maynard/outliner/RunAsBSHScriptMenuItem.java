@@ -34,19 +34,43 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
 import bsh.Interpreter;
 import bsh.NameSpace;
 import javax.swing.*;
 import java.awt.event.*;
 import org.xml.sax.*;
 
-public class RunAsBSHScriptMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public class RunAsBSHScriptMenuItem extends AbstractOutlinerMenuItem implements DocumentRepositoryListener, ActionListener, GUITreeComponent {
+
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {}
+	
+	public void documentRemoved(DocumentRepositoryEvent e) {}
+	
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
+		if (e.getDocument() == null) {
+			setEnabled(false);
+		} else {
+			setEnabled(true);
+		}
+	}
+	
+	
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
 
 		setEnabled(false);
+		
 		addActionListener(this);
+		Outliner.documents.addDocumentRepositoryListener(this);
 	}
 
 
@@ -59,7 +83,7 @@ public class RunAsBSHScriptMenuItem extends AbstractOutlinerMenuItem implements 
 	
 	private void runAsScript() {
 		// Get the script from the document.
-		OutlinerDocument doc = Outliner.getMostRecentDocumentTouched();
+		OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
 		
 		if (doc == null) {
 			return;

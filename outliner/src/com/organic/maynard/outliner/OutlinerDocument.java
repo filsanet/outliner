@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -48,7 +49,7 @@ import com.organic.maynard.util.string.StanStringTools ;
  * @version $Revision$, $Date$
  */
 
-public class OutlinerDocument extends JInternalFrame implements ComponentListener, PropertyChangeListener {
+public class OutlinerDocument extends JInternalFrame implements Document, ComponentListener, PropertyChangeListener {
 
 	// Constants
 	//public static final String UNTITLED_DOCUMENT_NAME = "Untitled";
@@ -91,13 +92,18 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	} // end static initializer code
 		
 	// Instance Variables
+	private DocumentRepository repository = null;
+	
+	private String fileName = "";
+	private boolean fileModified = true;
+	
 	public OutlinerPanel panel = new OutlinerPanel(this);
 	
 	public DummyJScrollPane dummy = null;
 	
 	public DocumentSettings settings = new DocumentSettings(this);
 	public JoeTree tree = Outliner.newTree(this);
-	public UndoQueue undoQueue = new UndoQueue(this);
+	protected UndoQueue undoQueue = new UndoQueue(this);
 	public HoistStack hoistStack = new HoistStack(this);
 	public AttributesPanel attPanel = new AttributesPanel(this);
 	
@@ -127,8 +133,10 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 			setTitle(title);
 		}
 		
+		setFileName(docInfo.getPath());
+		
 		// Add it to the openDocuments list
-		Outliner.addDocument(this);
+		Outliner.documents.addDocument(this);
 		
 		// Set the Component & Window Listeners
 		addComponentListener(this);
@@ -170,6 +178,15 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	}
 	
 	// Accessors
+	public void setDocumentRepository(DocumentRepository repository) {this.repository = repository;}
+	public DocumentRepository getDocumentRepository() {return this.repository;}
+
+	public void setTree(JoeTree tree) {this.tree = tree;}
+	public JoeTree getTree() {return this.tree;}
+
+	public void setUndoQueue(UndoQueue queue) {this.undoQueue = queue;}
+	public UndoQueue getUndoQueue() {return this.undoQueue;}
+	
 	public DocumentInfo getDocumentInfo() {
 		return this.docInfo;
 	}
@@ -210,6 +227,9 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 			validate();
 			panel.layout.redraw();
 		}
+		
+		// Fire Event
+		Outliner.documents.fireAttributesVisibilityChangedEvent(this);
 	}
 	
 	public void destroy() {
@@ -291,36 +311,28 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	public void componentShown(ComponentEvent e) {}
 
 
-	// File Saving and Modification
-	private String fileName = "";
-	private boolean fileModified = true;
-	
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-		FileMenu.updateFileMenuItems();
-	}
-	
 	// accessors
+	public void setFileName(String fileName) {this.fileName = fileName;}
 	public String getFileName() {return fileName;}
 
-	static int getTitleNameForm() {	return titleNameForm ;}
+	static int getTitleNameForm() {return titleNameForm;}
+	static void setTitleNameForm(int nameForm) {titleNameForm = nameForm;}
 
-	static void setTitleNameForm(int nameForm) {titleNameForm = nameForm ;}
-
-
-
-
-
-	public void setFileModified(boolean fileModified) {
+	public void setFileModified(boolean fileModified) { // Depricated
+		setModified(fileModified);
+	}
+	
+	public void setModified(boolean fileModified) {
 		// Abort if we're not changing state.
 		if (fileModified == this.fileModified) {
 			return;
 		}
 		
 		this.fileModified = fileModified;
-		FileMenu.updateFileMenuItems();
-		FileMenu.updateSaveAllMenuItem();
 		
+		// Fire DocumentEvent
+		getDocumentRepository().fireModifiedStateChangedEvent(this);
+
 		if (fileModified) {
 			setFrameIcon(ICON_DOCUMENT_UNSAVED);
 		} else {
@@ -328,7 +340,8 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		}
 	}
 	
-	public boolean isFileModified() {return fileModified;}
+	public boolean isFileModified() {return fileModified;} // Depricated
+	public boolean isModified() {return fileModified;}
 	
 	
 	// Text Caret Positioning
@@ -409,9 +422,9 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 			titleNameForm = nameFormIndex ;
 
 			// for each open document ...
-			for (int i = 0; i < Outliner.openDocumentCount(); i++) {
+			for (int i = 0; i < Outliner.documents.openDocumentCount(); i++) {
 				// get the document, then its docInfo, then its pathname
-				OutlinerDocument doc = Outliner.getDocument(i);
+				OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getDocument(i);
 				DocumentInfo docInfo = doc.getDocumentInfo() ;
 				String pathname = docInfo.getPath () ;
 				
@@ -438,7 +451,7 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 				doc.setTitle(newTitle) ;
 				
 				// update the entry in the windows menu
-				WindowMenu.updateWindow(doc) ;
+				Outliner.menuBar.windowMenu.updateWindow(doc) ;
 				
 			} // end for each open document
 			

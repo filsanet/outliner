@@ -34,39 +34,38 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
+import org.xml.sax.*;
 
 /**
  * @author  $Author$
  * @version $Revision$, $Date$
  */
 
-public abstract class ScriptConfigImpl extends JPanel implements ScriptConfig {
-	
-	public static String NAME = null;
-	
-	// The Constructor
-	public ScriptConfigImpl() {
-		NAME = GUITreeLoader.reg.getText("script_name");
+public class SaveAsSubMenuItem extends OutlinerSubMenuItem implements DocumentRepositoryListener {
+
+	// Constructors
+	public SaveAsSubMenuItem() {
+		super();
+		Outliner.documents.addDocumentRepositoryListener(this);
 	}
 
-	
-	// ScriptConfig Interface
-	private Script script = null;
 
-	public void init(Script script) {
-		this.script = script;
-	}
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {}
 	
-	public Script getScript() {return this.script;}
-	
-	public boolean cancel() {
-		// Should Always return true.
-		return true;
-	}
-	
-	public boolean delete() {
-		// Should Always return true.
-		return true;
+	public void documentRemoved(DocumentRepositoryEvent e) {}
+
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
+		if (e.getDocument() == null) {
+			setEnabled(false);
+		} else {
+			setEnabled(true);
+		}
 	}
 }

@@ -69,7 +69,7 @@ public class MaximizeHorizontalMenuItem
 		if (!Outliner.desktop.desktopManager.isMaximized()) {
 			
 			// grabaholda the topmost doc
-			OutlinerDocument doc = Outliner.getMostRecentDocumentTouched();
+			OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
 			
 			// see how wide we can get
 			Dimension curAvailSpace = Outliner.desktop.getCurrentAvailableSpace() ; 

@@ -34,8 +34,16 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
 import java.awt.event.*;
 import javax.swing.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
 public class ExportFileMenuItem extends AbstractOutlinerMenuItem implements ActionListener {
 
@@ -61,7 +69,7 @@ public class ExportFileMenuItem extends AbstractOutlinerMenuItem implements Acti
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		exportOutlinerDocument(Outliner.getMostRecentDocumentTouched(), getProtocol());
+		exportOutlinerDocument((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), getProtocol());
 	}
 
 	protected static void exportOutlinerDocument(OutlinerDocument document, FileProtocol protocol) {

@@ -51,7 +51,7 @@ public class ToggleEditableMenuItem extends AbstractOutlinerMenuItem implements 
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		OutlineMenu.fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.SHIFT_MASK, KeyEvent.VK_F11, false);
+		OutlineMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), Event.SHIFT_MASK, KeyEvent.VK_F11, false);
 	}
 }
 
@@ -65,7 +65,7 @@ class ToggleEditableInheritanceMenuItem extends AbstractOutlinerMenuItem impleme
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		OutlineMenu.fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.CTRL_MASK, KeyEvent.VK_F11, false);
+		OutlineMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), Event.CTRL_MASK, KeyEvent.VK_F11, false);
 	}
 }
 
@@ -79,7 +79,7 @@ class ClearEditablesMenuItem extends AbstractOutlinerMenuItem implements ActionL
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		OutlineMenu.fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.CTRL_MASK + Event.SHIFT_MASK, KeyEvent.VK_F11, false);
+		OutlineMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), Event.CTRL_MASK + Event.SHIFT_MASK, KeyEvent.VK_F11, false);
 	}
 }
 
@@ -93,6 +93,6 @@ class ToggleEditableAndClearMenuItem extends AbstractOutlinerMenuItem implements
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		OutlineMenu.fireKeyEvent(Outliner.getMostRecentDocumentTouched(), 0, KeyEvent.VK_F11, false);
+		OutlineMenu.fireKeyEvent((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(), 0, KeyEvent.VK_F11, false);
 	}
 }

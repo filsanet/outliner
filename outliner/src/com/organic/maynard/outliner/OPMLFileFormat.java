@@ -40,10 +40,7 @@ import com.organic.maynard.util.string.StringTools;
 
 import org.xml.sax.*;
 
-public class OPMLFileFormat 
-
-	extends HandlerBase 
-	implements SaveFileFormat, OpenFileFormat, JoeReturnCodes {
+public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFileFormat, JoeReturnCodes {
 
 	// Constants
 	public static final String ELEMENT_OPML = "opml";
@@ -282,6 +279,13 @@ public class OPMLFileFormat
 		} catch (Exception e) {
 			success = FAILURE;
 		}
+		
+		// Cleanup
+		this.tree = null;
+		this.docInfo = null;
+		this.elementStack = null;
+		this.attributesStack = null;
+		this.currentParent = null;
 				
 		return success;
 	}

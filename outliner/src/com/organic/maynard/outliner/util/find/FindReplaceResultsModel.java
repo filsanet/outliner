@@ -36,6 +36,8 @@ package com.organic.maynard.outliner.util.find;
 
 import com.organic.maynard.outliner.*;
 
+import com.organic.maynard.outliner.dom.*;
+
 import javax.swing.table.*;
 import java.util.*;
 import java.io.*;
@@ -79,11 +81,9 @@ public class FindReplaceResultsModel extends AbstractTableModel {
 		results.remove(index);
 	}
 	
-	public void removeAllResultsForDocument(OutlinerDocument doc) {
+	public void removeAllResultsForDocument(Document doc) {
 		for (int i = results.size() - 1; i >= 0; i--) {
-			FindReplaceResult result = getResult(i);
-			OutlinerDocument resultDoc = result.getDocument();
-			if (doc == resultDoc) {
+			if (doc == getResult(i).getDocument()) {
 				removeResult(i);
 			}
 		}

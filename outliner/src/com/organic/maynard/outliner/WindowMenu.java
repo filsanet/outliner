@@ -34,24 +34,77 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
-
 import org.xml.sax.*;
 
-public class WindowMenu extends AbstractOutlinerMenu implements ActionListener, GUITreeComponent {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public class WindowMenu extends AbstractOutlinerMenu implements DocumentRepositoryListener, ActionListener, GUITreeComponent {
 	
 	// Class Fields
 	protected static int WINDOW_LIST_START = -1;
 	protected static int indexOfOldSelection = -1;
 
 
-	// The Constructors
-	public WindowMenu() {
-		super();
-	}	
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {
+		// Enable menu since we've got at least one document now.
+		setEnabled(true);
+		
+		// Add WindowMenuItem
+		OutlinerDocument document = (OutlinerDocument) e.getDocument();
+		WindowMenuItem item = new WindowMenuItem(document.getTitle(),document);
+		item.addActionListener(this);
+		add(item);
+	}
+	
+	public void documentRemoved(DocumentRepositoryEvent e) {
+		// Remove WindowMenuItem
+		OutlinerDocument document = (OutlinerDocument) e.getDocument();
+		int index = getIndexOfDocument(document);
+		WindowMenuItem item = (WindowMenuItem) getItem(index);
+		remove(index);
+		item.destroy();
+		
+		if (e.getDocument().getDocumentRepository().openDocumentCount() <= 0) {
+			// Disable menu since no documents are open.
+			setEnabled(false);
+		}
+	}
+
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
+		if(e.getDocument() != null) {
+			// DeSelect Old Window
+			if ((WindowMenu.indexOfOldSelection >= WindowMenu.WINDOW_LIST_START) && (WindowMenu.indexOfOldSelection < getItemCount())) {
+				getItem(indexOfOldSelection).setSelected(false);
+			}
+
+			// Select New Window
+			WindowMenu.indexOfOldSelection = getIndexOfDocument(e.getDocument());
+			getItem(indexOfOldSelection).setSelected(true);
+		}	
+	}
+
+	private int getIndexOfDocument(Document doc) {
+		for (int i = 0; i < getItemCount(); i++) {
+			JMenuItem item = getItem(i);
+			if (item instanceof WindowMenuItem) {
+				WindowMenuItem wmItem = (WindowMenuItem) item;
+				if (doc == wmItem.doc) {
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
 
 
 	// GUITreeComponent interface
@@ -64,51 +117,15 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener, 
 	
 	public void endSetup(AttributeList atts) {
 		WINDOW_LIST_START = getItemCount();
+
+		Outliner.documents.addDocumentRepositoryListener(this);
 	}
 	
 
-	// Accessors
-	public static void addWindow(OutlinerDocument doc) {
-		WindowMenuItem item = new WindowMenuItem(doc.getTitle(),doc);
-		item.addActionListener(Outliner.menuBar.windowMenu);
-		Outliner.menuBar.windowMenu.add(item);
-	}
-
-	public static void removeWindow(OutlinerDocument doc) {
-		int index = getIndexOfDocument(doc);
-		WindowMenuItem item = (WindowMenuItem) Outliner.menuBar.windowMenu.getItem(index);
-		Outliner.menuBar.windowMenu.remove(index);
-		item.destroy();
-	}
-	
-	public static void updateWindow(OutlinerDocument doc) {
+	// Misc Methods
+	public void updateWindow(OutlinerDocument doc) {
 		int index = getIndexOfDocument(doc);
 		Outliner.menuBar.windowMenu.getItem(index).setText(doc.getTitle());
-	}
-	
-	public static void selectWindow(OutlinerDocument doc) {
-		// DeSelect Old Window
-		if ((indexOfOldSelection >= WINDOW_LIST_START) && (indexOfOldSelection < Outliner.menuBar.windowMenu.getItemCount())) {
-			Outliner.menuBar.windowMenu.getItem(indexOfOldSelection).setSelected(false);
-		}
-
-		// Select New Window
-		indexOfOldSelection = getIndexOfDocument(doc);
-		Outliner.menuBar.windowMenu.getItem(indexOfOldSelection).setSelected(true);
-	}
-		
-	private static int getIndexOfDocument(OutlinerDocument doc) {
-		WindowMenu menu = Outliner.menuBar.windowMenu;
-		for (int i = 0; i < menu.getItemCount(); i++) {
-			JMenuItem item = menu.getItem(i);
-			if (item instanceof WindowMenuItem) {
-				WindowMenuItem wmItem = (WindowMenuItem) item;
-				if (doc == wmItem.doc) {
-					return i;
-				}
-			}
-		}
-		return -1;
 	}
 
 
@@ -117,13 +134,12 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener, 
 		changeToWindow(((WindowMenuItem) e.getSource()).doc);
 	}
 
-
 	// Window Menu Methods	
 	public static void changeToWindow(OutlinerDocument doc) {
 		if (doc == null) {return;}
 		
 		try {
-			OutlinerDocument prevDoc = Outliner.getMostRecentDocumentTouched();
+			OutlinerDocument prevDoc = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
 			
 			if (prevDoc == doc) {
 				return;
@@ -151,17 +167,6 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener, 
 
 		} catch (java.beans.PropertyVetoException pve) {
 			pve.printStackTrace();
-		}
-	}
-	
-
-	// Misc Methods
-	public static void updateWindowMenu() {
-	
-		if (Outliner.openDocumentCount() > 0) {
-			Outliner.menuBar.windowMenu.setEnabled(true);
-		} else {
-			Outliner.menuBar.windowMenu.setEnabled(false);
 		}
 	}
 }

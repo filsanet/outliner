@@ -75,8 +75,6 @@ public interface JoeTree
 	public void setCursorPosition(int cursorPosition, boolean setMark);
 	public int getCursorPosition();
 
-	public void updateEditMenu();
-
 	public Node getPrevNode(Node existingNode);
 	public Node getNextNode(Node existingNode);
 	public void addNode(Node node);

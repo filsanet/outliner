@@ -69,10 +69,10 @@ public class StackMenuItem extends AbstractOutlinerMenuItem implements ActionLis
 			
 			int upperBound = getUpperScreenBoundary();
 			
-			OutlinerDocument mostRecentDocumentTouched = Outliner.getMostRecentDocumentTouched();
+			OutlinerDocument mostRecentDocumentTouched = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
 			
-			for (int i = 0; i < Outliner.openDocumentCount(); i++) {
-				OutlinerDocument doc = Outliner.getDocument(i);
+			for (int i = 0; i < Outliner.documents.openDocumentCount(); i++) {
+				OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getDocument(i);
 				
 				// Restore Size
 				doc.restoreWindowToInitialSize();

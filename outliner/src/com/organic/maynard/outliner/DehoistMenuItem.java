@@ -34,6 +34,9 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -41,17 +44,58 @@ import javax.swing.*;
 
 import org.xml.sax.*;
 
-public class DehoistMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+public class DehoistMenuItem extends AbstractOutlinerMenuItem implements OutlinerDocumentListener, DocumentRepositoryListener, ActionListener, GUITreeComponent {
+
+	// OutlinerDocumentListener Interface
+	public void modifiedStateChanged(DocumentEvent e) {}
+	
+	public void attributesVisibilityChanged(OutlinerDocumentEvent e) {}
+
+	public void hoistDepthChanged(OutlinerDocumentEvent e) {
+		if (e.getOutlinerDocument() == Outliner.documents.getMostRecentDocumentTouched()) {
+			calculateEnabledState(e.getOutlinerDocument());
+		}
+	}
+
+
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {}
+	
+	public void documentRemoved(DocumentRepositoryEvent e) {}
+	
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
+		calculateEnabledState((OutlinerDocument) e.getDocument());
+	}
+	
+	private void calculateEnabledState(OutlinerDocument doc) {
+		if (doc == null) {
+			setEnabled(false);
+			return;
+		}
+
+		if (doc.hoistStack.isHoisted()) {
+			setEnabled(true);
+		} else {
+			setEnabled(false);
+		}	
+	}
+
+
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
+		
 		addActionListener(this);
+		Outliner.documents.addOutlinerDocumentListener(this);
+		Outliner.documents.addDocumentRepositoryListener(this);
+		
+		setEnabled(false);
 	}
 
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		dehoist(Outliner.getMostRecentDocumentTouched());
+		dehoist((OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched());
 	}
 
 	private static void dehoist(OutlinerDocument doc) {

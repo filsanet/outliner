@@ -672,7 +672,7 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 	public void actionPerformed(ActionEvent e) {
 		DocumentInfo docInfo = ((RecentFilesListItem) e.getSource()).getDocumentInfo();
 		String filename = docInfo.getPath();
-		if (!Outliner.isFileNameUnique(filename)) {
+		if (!Outliner.documents.isFileNameUnique(filename)) {
 			String msg = GUITreeLoader.reg.getText("message_file_already_open");
 			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
 			

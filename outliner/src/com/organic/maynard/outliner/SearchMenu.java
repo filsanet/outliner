@@ -34,12 +34,12 @@
  
 package com.organic.maynard.outliner;
 
-import java.awt.*;
-import java.awt.event.*;
-
-import javax.swing.*;
-
 import org.xml.sax.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
 public class SearchMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 
@@ -47,16 +47,5 @@ public class SearchMenu extends AbstractOutlinerMenu implements GUITreeComponent
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
 		Outliner.menuBar.searchMenu = this;
-	}
-
-
-	// Misc Methods
-	public static void updateSearchMenu(OutlinerDocument doc) {
-		JMenuItem item = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.GOTO_MENU_ITEM);
-		if (doc == null) {
-			item.setEnabled(false);
-		} else {
-			item.setEnabled(true);
-		}
 	}
 }

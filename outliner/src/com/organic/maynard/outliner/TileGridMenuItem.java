@@ -133,7 +133,7 @@ public class TileGridMenuItem
 	public void actionPerformed(ActionEvent e) {
 		
 		// determine how many documents are open
-		int openDocCount = Outliner.openDocumentCount() ;
+		int openDocCount = Outliner.documents.openDocumentCount();
 
 		// if no documents are open, leave
 		if (openDocCount == 0){
@@ -150,7 +150,7 @@ public class TileGridMenuItem
 		// for each open document
 		for (int counter = 0; counter < openDocCount; counter++) {
 			// grab the doc ref
-			doc = Outliner.getDocument(counter) ;
+			doc = (OutlinerDocument) Outliner.documents.getDocument(counter);
 			
 			// if we're not iconified
 			if (! doc.isIcon()) {
@@ -173,7 +173,7 @@ public class TileGridMenuItem
 			Outliner.desktop.desktopManager.setMaximized(false) ;
 			
 			// if there's a topmost window
-			doc = Outliner.getMostRecentDocumentTouched(); 
+			doc = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched(); 
 			if (doc != null) {
 				// have it leave the max state
 				try {

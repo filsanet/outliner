@@ -98,7 +98,7 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
    String encoding ;
    String fileFormat ;
 
-   if (!Outliner.isFileNameUnique(filename) && (!filename.equals(document.getFileName()))) {
+   if (!Outliner.documents.isFileNameUnique(filename) && (!filename.equals(document.getFileName()))) {
     String msg = GUITreeLoader.reg.getText("message_cannot_save_file_already_open");
     msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
 

@@ -117,11 +117,15 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	}
 	
 	public void destroy() {
-		panel = null;
-		scrollBar.removeAdjustmentListener(this);
-		scrollBar = null;
-		
+		// Destroy Renderers		
 		for (int i = 0; i < CACHE_SIZE; i++) {
+			panel.remove(textAreas[i]);
+			panel.remove(textAreas[i].button);
+			panel.remove(textAreas[i].lineNumber);
+			panel.remove(textAreas[i].iComment);
+			panel.remove(textAreas[i].iEditable);
+			panel.remove(textAreas[i].iMoveable);
+			
 			textAreas[i].button.removeMouseListener(dndListener);
 			textAreas[i].button.removeKeyListener(iconListener);
 			textAreas[i].button.removeMouseListener(iconListener);
@@ -132,26 +136,55 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			textAreas[i].lineNumber.removeMouseListener(iconListener);
 			textAreas[i].lineNumber.destroy();
 			
-			textAreas[i].iComment.removeMouseListener(dndListener);
+			textAreas[i].iComment.removeMouseListener(indicatorMouseListener);
 			textAreas[i].iComment.destroy();
 
-			textAreas[i].iEditable.removeMouseListener(dndListener);
+			textAreas[i].iEditable.removeMouseListener(indicatorMouseListener);
 			textAreas[i].iEditable.destroy();
 
-			textAreas[i].iMoveable.removeMouseListener(dndListener);
+			textAreas[i].iMoveable.removeMouseListener(indicatorMouseListener);
 			textAreas[i].iMoveable.destroy();
 
 			textAreas[i].removeMouseListener(dndListener);
 			textAreas[i].removeKeyListener(textListener);
 			textAreas[i].removeMouseListener(textListener);
 			textAreas[i].destroy();
+			
+			textAreas[i] = null;
 		}
-		
 		textAreas = null;
 		
+		// Destroy the hidden cell
+		panel.remove(hiddenCell);
+		panel.remove(hiddenCell.button);
+
+		hiddenCell.button.removeKeyListener(iconListener);
+		hiddenCell.button.removeMouseListener(iconListener);
+		hiddenCell.button.destroy();
+
+		hiddenCell.lineNumber.removeKeyListener(iconListener);
+		hiddenCell.lineNumber.removeMouseListener(iconListener);
+		hiddenCell.lineNumber.destroy();
+		
+		hiddenCell.iComment.destroy();
+
+		hiddenCell.iEditable.destroy();
+
+		hiddenCell.iMoveable.destroy();
+
+		hiddenCell.removeKeyListener(textListener);
+		hiddenCell.removeMouseListener(textListener);
 		hiddenCell.destroy();
 		hiddenCell = null;
 		
+		// Destroy Panel
+		panel.remove(scrollBar);
+		scrollBar.removeAdjustmentListener(this);
+		scrollBar = null;
+		panel = null;
+		
+		
+		// Destroy Listeners
 		dndListener.destroy();
 		dndListener = null;
 		
@@ -265,7 +298,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			 - OutlineButton.BUTTON_WIDTH
 			 - Preferences.getPreferenceInt(Preferences.RIGHT_MARGIN).cur 
 			 - scrollBar.getWidth();			 
-
+		
 		// Draw the visible components
 
 			// Hide all the nodes from the previous draw
@@ -298,12 +331,15 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		return;
 	}
 
-	private void drawDown() {
+	private void drawDown() {		
 		// Now Draw as many nodes as neccessary.
 		startPoint.y = Preferences.getPreferenceInt(Preferences.TOP_MARGIN).cur;
 		
 		Node node = getNodeToDrawFrom();
 		if (node == null) {return;}
+		
+		JoeNodeList visibleNodes = panel.doc.tree.getVisibleNodes();
+		int visibleNodesSize = visibleNodes.size();
 		
 		int nodeIndex = ioNodeToDrawFrom;
 		ioFirstVisNode = ioNodeToDrawFrom;
@@ -311,9 +347,21 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		// Pre-compute some values
 		int effectiveBottom = bottom - Preferences.getPreferenceInt(Preferences.BOTTOM_MARGIN).cur;
 		
-		// Increment the LineCountKey
-		node.getTree().incrementLineCountKey();
-		
+		if (OutlinerCellRendererImpl.pShowLineNumbers) {
+			// Increment the LineCountKey
+			panel.doc.tree.incrementLineCountKey();
+
+			// Prep the line numbers since this will improve performance. Don't need to do this for UP since the order preps itself.
+			int index = nodeIndex + CACHE_SIZE;
+			if (index >= visibleNodes.size()) {
+				Node tmpNode = visibleNodes.get(visibleNodes.size() - 1);
+				tmpNode.getLineNumber(panel.doc.tree.getLineCountKey());
+			} else {
+				Node tmpNode = visibleNodes.get(index);
+				tmpNode.getLineNumber(panel.doc.tree.getLineCountKey());
+			}
+		}
+
 		OutlinerCellRendererImpl renderer;
 		while (true) {
 			renderer = textAreas[numNodesDrawn];
@@ -336,10 +384,10 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			
 			// Get the Next Node to Draw
 			nodeIndex++;
-			if (nodeIndex == panel.doc.tree.getVisibleNodes().size()) {
+			if (nodeIndex == visibleNodesSize) {
 				break;
 			}
-			node = panel.doc.tree.getVisibleNodes().get(nodeIndex);
+			node = visibleNodes.get(nodeIndex);
 		}
 
 		// Hide any drawing elements that were not used.
@@ -354,8 +402,8 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		}
 
 		ioLastVisNode = ioFirstVisNode + (numNodesDrawn - 1);
-		if (ioLastVisNode >= panel.doc.tree.getVisibleNodes().size()) {
-			ioLastVisNode = panel.doc.tree.getVisibleNodes().size() - 1;
+		if (ioLastVisNode >= visibleNodesSize) {
+			ioLastVisNode = visibleNodesSize - 1;
 		}
 	}
 	
@@ -365,6 +413,9 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 
 		Node node = getNodeToDrawFrom();
 		if (node == null) {return;}
+
+		JoeNodeList visibleNodes = panel.doc.tree.getVisibleNodes();
+		int visibleNodesSize = visibleNodes.size();
 
 		int nodeIndex = ioNodeToDrawFrom;
 		ioLastVisNode = ioNodeToDrawFrom;
@@ -408,7 +459,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			if (nodeIndex == -1) {
 				break;
 			}
-			node = panel.doc.tree.getVisibleNodes().get(nodeIndex);
+			node = visibleNodes.get(nodeIndex);
 		}
 
 		// Hide any drawing elements that were not used.
@@ -434,14 +485,16 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		}
 		
 		ioFirstVisNode = ioLastVisNode - (numNodesDrawn - 1);
-		if (ioLastVisNode >= panel.doc.tree.getVisibleNodes().size()) {
-			ioLastVisNode = panel.doc.tree.getVisibleNodes().size() - 1;
+		if (ioLastVisNode >= visibleNodesSize) {
+			ioLastVisNode = visibleNodesSize - 1;
 		}
 
 		drawingDirection = DOWN;
 		
 		// Do the extraDrawDown
-		drawDownExtraNodes(ioExtraNodeToDrawFrom);
+		if (numNodesDrawn < CACHE_SIZE) {
+			drawDownExtraNodes(ioExtraNodeToDrawFrom);
+		}
 	}
 
 	private void drawDownExtraNodes(int nodeIndex) {
@@ -455,7 +508,10 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		if (node == null) {
 			return;
 		}
-		
+
+		JoeNodeList visibleNodes = panel.doc.tree.getVisibleNodes();
+		int visibleNodesSize = visibleNodes.size();
+	
 		startPoint.x = OutlinerCellRendererImpl.lineNumberOffset + OutlineLineNumber.LINE_NUMBER_WIDTH;
 		startPoint.y = textAreas[0].getLocation().y + textAreas[0].getBestHeight() + Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).cur;
 		
@@ -484,10 +540,10 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			
 			// Get the Next Node to Draw
 			nodeIndex++;
-			if (nodeIndex == panel.doc.tree.getVisibleNodes().size()) {
+			if (nodeIndex == visibleNodesSize) {
 				break;
 			}
-			node = panel.doc.tree.getVisibleNodes().get(nodeIndex);
+			node = visibleNodes.get(nodeIndex);
 		}
 
 		// Hide any drawing elements that were not used.
@@ -503,18 +559,20 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		}
 		
 		ioLastVisNode = ioFirstVisNode + (numNodesDrawn - 1);		
-		if (ioLastVisNode >= panel.doc.tree.getVisibleNodes().size()) {
-			ioLastVisNode = panel.doc.tree.getVisibleNodes().size() - 1;
+		if (ioLastVisNode >= visibleNodesSize) {
+			ioLastVisNode = visibleNodesSize - 1;
 		}
 	}
 	
 	
 	// Get UI Components
 	public OutlinerCellRendererImpl getUIComponent(Node node) {
-		for (int i = 0; i < CACHE_SIZE; i++) {
-			if ((textAreas[i].node == node) && node.isVisible()) {
-				return textAreas[i];
-			}			
+		if (node.isVisible()) {
+			for (int i = 0; i < CACHE_SIZE; i++) {
+				if (textAreas[i].node == node) {
+					return textAreas[i];
+				}			
+			}
 		}
 		
 		if (getHiddenCell().node == node) {

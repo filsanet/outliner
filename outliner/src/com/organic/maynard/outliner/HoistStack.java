@@ -59,8 +59,8 @@ public class HoistStack {
 	public void clear() {
 		stack.clear();
 		
-		// Update the MenuBar
-		updateOutlinerMenuHoisting();
+		// Fire Event
+		Outliner.documents.fireHoistDepthChangedEvent(this.doc);
 	}
 	
 	public int getHoistDepth() {
@@ -105,12 +105,12 @@ public class HoistStack {
 			OutlineLayoutManager layout = tree.getDocument().panel.layout;
 
 			// Clear the undoQueue
-			if (!doc.undoQueue.isEmpty()) {
+			if (!doc.getUndoQueue().isEmpty()) {
 				String msg = GUITreeLoader.reg.getText("confirm_hoist");
 
 				int result = JOptionPane.showConfirmDialog(doc, msg,"",JOptionPane.OK_CANCEL_OPTION);
 				if (result == JOptionPane.YES_OPTION) {
-					doc.undoQueue.clear();
+					doc.getUndoQueue().clear();
 				} else if (result == JOptionPane.CANCEL_OPTION) {
 					return;
 				}
@@ -139,9 +139,8 @@ public class HoistStack {
 			layout.draw();
 			layout.setFocus(nodeToDrawFrom, OutlineLayoutManager.ICON);
 			
-			// Update the MenuBar
-			updateOutlinerMenuHoisting();
-
+			// Fire Event
+			Outliner.documents.fireHoistDepthChangedEvent(this.doc);
 		}
 		return;
 	}
@@ -154,12 +153,12 @@ public class HoistStack {
 			OutlineLayoutManager layout = doc.panel.layout;
 
 			// Clear the undoQueue
-			if (!doc.undoQueue.isEmpty()) {
+			if (!doc.getUndoQueue().isEmpty()) {
 				String msg = GUITreeLoader.reg.getText("confirm_dehoist");
 
 				int result = JOptionPane.showConfirmDialog(doc, msg,"",JOptionPane.OK_CANCEL_OPTION);
 				if (result == JOptionPane.YES_OPTION) {
-					doc.undoQueue.clear();
+					doc.getUndoQueue().clear();
 				} else if (result == JOptionPane.CANCEL_OPTION) {
 					return;
 				}
@@ -188,8 +187,8 @@ public class HoistStack {
 			layout.draw();
 			layout.setFocus(nodeToDrawFrom, OutlineLayoutManager.ICON);
 			
-			// Update the MenuBar
-			updateOutlinerMenuHoisting();
+			// Fire Event
+			Outliner.documents.fireHoistDepthChangedEvent(this.doc);
 		}
 	}
 	
@@ -201,12 +200,12 @@ public class HoistStack {
 			OutlineLayoutManager layout = doc.panel.layout;
 
 			// Clear the undoQueue
-			if (!doc.undoQueue.isEmpty()) {
+			if (!doc.getUndoQueue().isEmpty()) {
 				String msg = GUITreeLoader.reg.getText("confirm_dehoist");
 
 				int result = JOptionPane.showConfirmDialog(doc, msg,"",JOptionPane.OK_CANCEL_OPTION);
 				if (result == JOptionPane.YES_OPTION) {
-					doc.undoQueue.clear();
+					doc.getUndoQueue().clear();
 				} else if (result == JOptionPane.CANCEL_OPTION) {
 					return;
 				}
@@ -239,23 +238,8 @@ public class HoistStack {
 			layout.draw();
 			layout.setFocus(nodeToDrawFrom, OutlineLayoutManager.ICON);
 			
-			// Update the MenuBar
-			updateOutlinerMenuHoisting();		
+			// Fire Event
+			Outliner.documents.fireHoistDepthChangedEvent(this.doc);
 		}
-	}
-	
-	public void updateOutlinerMenuHoisting() {
-		JMenuItem hoistItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.OUTLINE_HOIST_MENU_ITEM);
-		JMenuItem dehoistItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.OUTLINE_DEHOIST_MENU_ITEM);
-		JMenuItem dehoistAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.OUTLINE_DEHOIST_ALL_MENU_ITEM);
-		
-		if (isHoisted()) {
-			dehoistItem.setEnabled(true);
-			dehoistAllItem.setEnabled(true);
-		} else {
-			dehoistItem.setEnabled(false);
-			dehoistAllItem.setEnabled(false);
-		}
-		hoistItem.setText(OutlineMenu.OUTLINE_HOIST + " (" + getHoistDepth() + ")");
 	}
 }
