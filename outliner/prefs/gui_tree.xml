@@ -12,7 +12,7 @@
 			<validator id="renderer_widgit_cache_size_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="4" max="256" default="40">
 			</validator>
 		</preference>
-		<preferencesframe id="preferences_frame" class="com.organic.maynard.outliner.PreferencesFrame" title="Preferences">
+		<preferencesframe id="preferences_frame" class="com.organic.maynard.outliner.PreferencesFrame" title="Application Preferences">
 			<preferencepanel id="preferences_panel_editor" class="com.organic.maynard.outliner.PreferencesPanelEditor" title="Editor">
 				<preference id="font_face" class="com.organic.maynard.outliner.PreferenceString" default="SansSerif"/>
 				<preference id="font_size" class="com.organic.maynard.outliner.PreferenceInt" default="12">
@@ -126,12 +126,14 @@
 			<menuitem id="cut" class="com.organic.maynard.outliner.CutMenuItem" text="Cut" keybinding="X" keybindingmodifiers="control"/>
 			<menuitem id="copy" class="com.organic.maynard.outliner.CopyMenuItem" text="Copy" keybinding="C" keybindingmodifiers="control"/>
 			<menuitem id="paste" class="com.organic.maynard.outliner.PasteMenuItem" text="Paste" keybinding="V" keybindingmodifiers="control"/>
+			<menuitem id="delete" class="com.organic.maynard.outliner.DeleteMenuItem" text="Delete" keybinding="delete"/>
 			<separator/>
 			<menuitem id="select_all" class="com.organic.maynard.outliner.SelectAllMenuItem" text="Select All" keybinding="A" keybindingmodifiers="control"/>
 			<menuitem id="select_none" class="com.organic.maynard.outliner.SelectNoneMenuItem" text="Select None" keybinding="D" keybindingmodifiers="control"/>
+			<menuitem id="select_inverse" class="com.organic.maynard.outliner.SelectInverseMenuItem" text="Select Inverse" keybinding="I" keybindingmodifiers="control"/>
 			<separator/>
-			<menuitem id="preferences" class="com.organic.maynard.outliner.PreferencesMenuItem" text="Application Settings..."/>
-			<menuitem id="edit_document_settings" class="com.organic.maynard.outliner.EditDocumentSettingsMenuItem" text="Document Settings..."/>
+			<menuitem id="preferences" class="com.organic.maynard.outliner.PreferencesMenuItem" text="Application Preferences..."/>
+			<menuitem id="edit_document_settings" class="com.organic.maynard.outliner.EditDocumentSettingsMenuItem" text="Document Preferences..."/>
 			<menuitem id="macros" class="com.organic.maynard.outliner.MacrosMenuItem" text="Macros..."/>
 		</menu>
 		<menu id="outline" class="com.organic.maynard.outliner.OutlineMenu" text="Outline">
