@@ -5,6 +5,8 @@ REM you installed outliner into.
 REM c:\Progra~1\Metrowerks\projects\outliner\
 cd c:\cvsroot\outliner\
 
+set PATH=%PATH%;.\lib\
+
 set root_path=.\lib\
 
 set CP=%root_path%com.organic.maynard.jar

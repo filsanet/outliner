@@ -1,5 +1,7 @@
 @echo off
 
+set PATH=%PATH%;.\lib\
+
 set root_path=.\lib\
 
 set CP=%root_path%com.organic.maynard.jar
