@@ -382,7 +382,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 	 * @param docInfo contains all the info about the file we're opening.
 	 * @param protocol the Protocol to use when opening the document.
 	 */
-	protected static void openFile(DocumentInfo docInfo, FileProtocol protocol) {
+	public static void openFile(DocumentInfo docInfo, FileProtocol protocol) {
 		openFile (docInfo, protocol, MODE_OPEN) ;
 	}
 	
