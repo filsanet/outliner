@@ -44,7 +44,7 @@ Windows Installation:
     [5] Select the Memory tab. 
     [6] Set Initial Environment -- AKA environment space -- to 2048. 
 
-3) If you want to setup Windows "sendto" then use the sendto.bat file. In
+4) If you want to setup Windows "sendto" then use the sendto.bat file. In
    the batch file you need to change the path for cd to the directory you
    installed JOE into.
 
