@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\About JOE.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Wed, 13 Feb 2002 10:31:50 GMT</dateModified>
+<dateModified>Tue, 3 Sep 2002 12:33:54 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
-<expansionState></expansionState>
+<expansionState>6</expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>33</windowTop>
-<windowLeft>593</windowLeft>
-<windowBottom>483</windowBottom>
-<windowRight>1043</windowRight>
+<windowTop>0</windowTop>
+<windowLeft>0</windowLeft>
+<windowBottom>751</windowBottom>
+<windowRight>574</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -24,14 +24,130 @@
 </outline>
 <outline isEditable="true" isMoveable="true" text="------------" isMoveableInherited="true" isEditableInherited="true"/>
 <outline isEditable="true" isMoveable="true" text="Version" isMoveableInherited="true" isEditableInherited="true">
-	<outline text="1.8.8"/>
-	<outline text="sub-version">
-		<outline text="previous sub-versions">
-			<outline text="&lt;none&gt;"/>
-		</outline>
-	</outline>
+	<outline text="1.8.9.2"/>
 </outline>
 <outline text="Release Notes ">
+	<outline text="1.8.9.2 - 09/01/02">
+		<outline text="New Features:">
+			<outline text="1) Added text actions for moving the current selection. Ctrl-Right Arrow will move the current selection to the right one character, or down to the next line if the selection is at the end of the current text area. Left Arrow works similarly."/>
+			<outline text="2) Added text actions for expanding a selection within a text area with the keyboard. Shift-Up Arrow Selects to the start of the text area. Shift-Down Arrow selects to the end of the text area."/>
+			<outline text="3) Added text actions for expanding a selection within a text area with the keyboard. Right Arrow expands one character to the right. Ctrl-Shift-Right Arrow expands to the next work boundary. Left Arrow works similarly. This functionality existed prior to the addition of the Action code so this is sort of a bug fix as well."/>
+		</outline>
+		<outline text="Feature Enhancements:">
+			<outline text="1) Undo/Redo now displays informative text in the MenuItems about what you are undoing and redoing."/>
+			<outline text="2) Undo All/Redo All now displays your current location within the undo queue, as well as the maximum size of the undo queue."/>
+			<outline text="3) Resizing the max undo queue size no longer clears out the redoables unless unless it proves neccessary."/>
+		</outline>
+		<outline text="Bug Fixes:">
+			<outline text="1) Fixed a bug with JDK1.4 where focus wouldn't change to the hidden component, causing the cursor to track with you as you scroll, rather than staying with the node you were editing."/>
+			<outline text="2) Fixed a bug introduced in 1.8.9.1 where the default text action wasn't working in JTextAreas. This made it impossible to enter text in various places, such as find/replace and some of the preferences panels."/>
+			<outline text="3) Fixed some StackOverflow issues with demoting thousands of nodes at the same time, by unwinding more of the recursive methods in NodeImpl."/>
+			<outline text="4) Fixed an obscure bug with CompoundUndoableReplace where deleting the first node in the tree when it is expanded could cause an exception when you did a &quot;redo&quot; where the previous redo selected a node."/>
+			<outline text="5) Fixed a bug where adjusting the max size of the undo cache to a smaller number than the current undo cache size would leave an extra redo hanging around thus causing an exception if you redid it."/>
+			<outline text="6) Fixed a bug where redoing a Node Attribute modification would cause it to become readonly."/>
+			<outline text="7) XML-RPC Macros now remove the last line ending for the {$value} replacement when a node is selected. Fix for bug #601682."/>
+		</outline>
+	</outline>
+	<outline text="1.8.9.1 - 08/24/02">
+		<outline text="New Features:">
+			<outline text="1) Added a splash screen that displays at startup, giving a user a bit more feedback that something is happening while they wait for the GUI to set itself up."/>
+		</outline>
+		<outline text="Feature Enhancements:">
+			<outline text="1) Added a node number preference to the JustifiedPlainText format. This will number nodes like 1, 1.1, 1.2, 2, 2.1, 2.2, 2.2.1, etc."/>
+		</outline>
+		<outline text="Bug Fixes:">
+			<outline text="1) Fixed bug where doing an export could cause saving to stop working because the default file format would get set incorrectly."/>
+			<outline text="2) Fixed bugs where many of the menu items under &quot;edit&quot; and &quot;outline&quot; would not work and throw a StackOverflow error."/>
+			<outline text="3) Fixed a bug where if you typed really fast and did carriage returns at the same time, characters would appear but then get cleared. This fix was part of the conversion to Actions mentioned below."/>
+			<outline text="4) Fixed a bug where Java Version numbers that contained _ characters would throw an exception."/>
+			<outline text="5) Fixed a bug where doing a merge on a selection that contains a mix of editable and read-only nodes could cause the read-only nodes to wink out of existance."/>
+		</outline>
+		<outline text="Other Changes:">
+			<outline text="1) Image resources are now stored in com.organic.maynard.jar."/>
+			<outline text="2) Moved much of the KeyListener code to Action code. This should make things work a little better under JDK 1.4."/>
+		</outline>
+	</outline>
+	<outline text="1.8.9 - 08/12/02">
+		<outline text="New Features:">
+			<outline text="1) Feature Request #548169. Added the following two editing actions:">
+				<outline text="Shift-doubleclick on an expanded node now collapses the node without collapsing the node's children. When you expand the node with a regular doubleclick the childrens expansion state is preserved."/>
+				<outline text="Shift-doubleclick on a collapsed node now works like the existing menu item, &quot;Expand All Subnodes&quot;."/>
+				<outline text="Shift-pagedown now toggles the expansion state with the same behavior mentioned above."/>
+			</outline>
+			<outline text="2) Added a new Editor preference for single click expand/collapse for nodes. This is by default turned off since that is the pre-existing functionality. When turned on, clicking on a node will cause it to expand/collapse rather than having to double-click it as in the past."/>
+		</outline>
+		<outline text="Feature Enhancements:">
+			<outline text="1) Dramatically sped up document closing times by doing the object destruction in a separate thread after after the window has been closed."/>
+			<outline text="2) Moderately sped up application launch time by more pervasive use of lazy instantiation. I also eliminated most of the startup spew which may or may not be a good thing, but I was in the mood."/>
+			<outline text="3) When changing the format in the Save or Export file system view, the file extension is automatically updated to the default for that format."/>
+			<outline text="4) Implemented feature request #579791. Added menu mnemonics for each of the main menus. This will only work correctly under jdk 1.4.0 because of Swing bug #4309156, and the necessary work around, which exists in previous versions of the jdk."/>
+		</outline>
+		<outline text="Other Changes:">
+			<outline text="1) Updated jar for BeanShell from 1.2b1 to 1.2b6."/>
+			<outline text="2) Updated jar for Jakarata ORO from 2.0.4 to 2.0.6."/>
+			<outline text="3) Updated the xmlrpc libarary from the old helma code to xml.apache.orgs xmlrpc version 1.1. Apache's code is the latest version of the helma code since they turned it over to apache."/>
+			<outline text="4) Began moving code into a more structured package hierarchy. Java docs are marginally better as well."/>
+			<outline text="5) Preliminary support for &quot;modules&quot;. Modules are sets of menus, preferences and java code that can be installed into the &quot;modules&quot; directory allowing extended functionality without cluttering up the base JOE build. I'll be releasing an XML module soon."/>
+		</outline>
+		<outline text="Bug Fixes:">
+			<outline text="1) Fixed a bug where &quot;insert new node above&quot; and &quot;split current node and insert above&quot; would throw an exception when you tried to undo them if the new node was the very first node in the document."/>
+			<outline text="2) Fixed bug where the warning for doing a &quot;Save As&quot;/&quot;Export&quot; over an existing file didn't work. Now the warning shows up as it should. The warning for &quot;Open&quot;/&quot;Import&quot; of a non-existant file is also fixed."/>
+			<outline text="3) The uniqueness check which prevents opening two files with the same path has been fixed. Previously it was only working for the recent files list."/>
+		</outline>
+	</outline>
+	<outline text="1.8.8 - 04/18/02">
+		<outline text="New Features:">
+			<outline text="1) Automatic node level created/modified dates. If turned on via application or document level preferences, node attributes for creation and modification dates will be generated. By default this feature is turned off."/>
+			<outline text="2) Read-only property for node and document attributes. Note: node level settings take precedence, so if the node itself is read-only, you won't be able to adjust attribute level settings."/>
+			<outline text="3) New Selection key commands. You can now use the keyboard to make selections. It is possible to create disconnected selections from the keyboard by using the left and right arrow commands described below. ">
+				<outline text="The following is a list of the key commands added.">
+					<outline text="shift-up: extends the selection up."/>
+					<outline text="shift-down: extends the selection down."/>
+					<outline text="ctrl-shift-up: reduces the selection from below."/>
+					<outline text="ctrl-shift-down: reduces the selection from above."/>
+					<outline text="shift-left: deselects the current youngest selected node and extends the selection up."/>
+					<outline text="shift-right: deselects the current oldest selected node and extends the selection down."/>
+					<outline text="ctrl-shift-left: deselects the current oldest selected node and reduces the selection from below.">
+						<outline text="ctrl-shift-right: deselects the current youngest selected node and reduces the selection from above."/>
+					</outline>
+				</outline>
+				<outline text="To make room for the shift commands, the move commands from previous versions had to be re-mapped. The following is a list of the new move keyboard commands:">
+					<outline text="ctrl-up: Moves current selection up but stays at the current depth."/>
+					<outline text="ctrl-down: Moves current selection down but stays at the current depth."/>
+					<outline text="ctrl-left: Moves current selection up, adjusts depth as needed."/>
+					<outline text="ctrl-right: Moves current selection down, adjusts depth as needed."/>
+				</outline>
+			</outline>
+			<outline text="4) Find/Replace has had a major rewrite. It now support searching over the current document, all open documents, or the file system. The file system find/replace supports file and directory level glob filtering for both inclusion and exclusion (Now I won't mess up my CVS entries when doing a replace). Results are also displayed in a results dialog that lets you jump to the matched text in any of the open document. Currently the filesystem results are displayed, but don't automatically open the file from the file system. The file system find/replace functionality also makes use of a progress dialog that allows you to cancel a find/replace in progress. One caveat, large find/replace operation may cause out of memory errors. Recovery from this is graceful since you can just close the progress dialog and the current results will be displayed. By large I mean 50,000+ matches on searches over 10,000+ files. From what I've seen, the size of the result set is what causes the out of memory error due to the large number of objects created."/>
+			<outline text="5) Added more new key commands.">
+				<outline text="shift-return: insert new node above. "/>
+				<outline text="shift-ctrl-return: Split current node at cursor and insert above."/>
+			</outline>
+			<outline text="6) New BSH Macro, &quot;Format Markup&quot;. This macro will reformat XML/HTML markup into a nice clean hierarchy of nodes. Still a bit rough, but worth a try if you've got markup to format."/>
+		</outline>
+		<outline text="Feature Enhancements:">
+			<outline text="1) Script and Macro editor now have save commands so you don't have to close the script editor to save the script."/>
+			<outline text="2) Inserting a new node when nodes are selected now always puts the new node as the next older sibling of the oldest selected node. Inserting a new node when in text selection mode and the current node is an open branch node still inserts the new node as the first child of the current node rather than as an older sibling."/>
+			<outline text="3) Pasting now works the way inserting new nodes do. See #2 above for more detail."/>
+			<outline text="4) File Export/Save has been modified so that File Formats can throw up there own dialog after the user has gone through the file chooser stage. By returning a null for bytes[] the save/export can be aborted, so user's may cancel at this point if the FileFormat code is written to support it. The updated HTMLExportFileFormat is an example of this."/>
+			<outline text="5) The Export HTML file format has been rewritten to support document templates stored on disk. Now the user is prompted to select a style to use when they export. The templates are stored in prefs/css/."/>
+			<outline text="6) The &quot;Render Image Manifests&quot; script now outputs image aspect ratios and will provided width x height for each image normalized to a fixed area."/>
+		</outline>
+		<outline text="Bug Fixes:">
+			<outline text="1) Fixed a bug where cancelling an &quot;Export&quot; would cause the next save to fail. Same bug also fixed in &quot;Export Selection&quot; where cancelling would also cause you to lose the document tree except for what was selected."/>
+			<outline text="2) Fixed bug where text selection would be lost whenever the user moused over the &quot;Recent Files&quot; menu."/>
+			<outline text="3) Fixed bug where the &quot;inconsistent hierarchy&quot; message was blank."/>
+			<outline text="4) Fixed bug where File Exporters weren't getting all the &quot;meta&quot; data they should have from the DocumentInfo object. This was the result of creating a new DocumentInfo Object rather than cloning the existing one."/>
+			<outline text="5) Fixed bug where the &quot;export selection&quot; menu item was not being disabled after a save when there was no selection."/>
+			<outline text="6) The &quot;Hoist&quot; menu item now gets enabled only when you can actually use it."/>
+			<outline text="7) Fixed a bug where doing a delete that merges into the previous line would cause cursor focus to be lost on a subsequent scroll action. This was an error in UndoableEdit so this may have fixed problems elsewhere as well."/>
+			<outline text="8) Pasting into other apps now will not have extra indenting."/>
+			<outline text="9) Fixed bug #527137 where help docs wouldn't load on linux. Thanks to sjakob for the fix."/>
+			<outline text="10) Fixed bug where document level attributes with an empty value would not get loaded for an OPML document."/>
+			<outline text="11) Fixed some bugs in the way application and document level settings were working."/>
+			<outline text="12) Updated run_joe.sh, provided by Gary Benson (dirtyrat), so that it now handles paths more sensibly, so you can invoke it as: run_joe ../../file.opml."/>
+		</outline>
+	</outline>
 	<outline text="1.8.7 - 2/04/02">
 		<outline text="License Change:">
 			<outline text="1) Switched to a BSD license."/>
