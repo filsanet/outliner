@@ -11,6 +11,8 @@
 			<property name="src-webfilephp" value="${src}/com/yearahead"/>
 			<property name="src-wikiff" value="${src}/com/psm/wiki"/>
 			<property name="lib" value="lib"/>
+			<property name="doc" value="doc"/>
+			<property name="doc-api" value="${doc}/api"/>
 		<target name="init">
 			<tstamp/>
 		</target>
@@ -59,11 +61,12 @@ Targets:
 			<antcall target="clean-wikiff"/>
 		</target>
 		<target name="javadoc" depends="init" description="Generates source code documentation in the javadoc format.">
-			<delete dir="dox/api"/>
-			<mkdir  dir="dox/api"/>
+			<delete dir="${doc-api}"/>
+			<mkdir  dir="${doc}/"/>
+			<mkdir  dir="${doc-api}"/>
 			<javadoc packagenames="com.*, gui.*"
 				sourcepath="src"
-				destdir="dox/api"
+				destdir="${doc-api}"
 				author="true"
 				version="true"
 				use="true"
