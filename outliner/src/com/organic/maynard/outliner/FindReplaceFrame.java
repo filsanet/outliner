@@ -484,7 +484,10 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			isRegexp
 		);
 		
-		if (location != null) {
+		if (location == null) {
+			// Beep to alert user no result found.
+			Outliner.outliner.getToolkit().beep();
+		} else {
 			// Shorthand
 			TreeContext tree = doc.tree;
 
@@ -541,7 +544,10 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			isRegexp
 		);
 		
-		if (location != null) {
+		if (location == null) {
+			// Beep to alert user no result found.
+			Outliner.outliner.getToolkit().beep();
+		} else {
 			// Shorthand
 			TreeContext tree = doc.tree;
 
@@ -610,6 +616,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		String replacement = sReplace;
 		String textToMatch = sFind;
 		if (textToMatch.equals("")) {
+			// Beep to alert user no result found.
+			Outliner.outliner.getToolkit().beep();
+
 			return;
 		}
 		
@@ -620,6 +629,10 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			if (doc.tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
 				if (doc.tree.getCursorPosition() == doc.tree.getCursorMarkPosition()) {
 					// No selection, so return.
+					
+					// Beep to alert user no result found.
+					Outliner.outliner.getToolkit().beep();
+
 					return;
 				} else {
 					int cursor = doc.tree.getCursorPosition();
@@ -651,6 +664,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						
 						if (location == null) {
 							if (count == 0) {
+								// Beep to alert user no result found.
+								Outliner.outliner.getToolkit().beep();
+
 								return;
 							} else {
 								break;
@@ -785,6 +801,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				
 				if (location == null) {
 					if (count == 0) {
+						// Beep to alert user no result found.
+						Outliner.outliner.getToolkit().beep();
+
 						return;
 					} else {
 						break;
@@ -824,7 +843,12 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			}
 		}
 		
-		if (count == 0) {return;}
+		if (count == 0) {
+			// Beep to alert user no result found.
+			Outliner.outliner.getToolkit().beep();
+
+			return;
+		}
 
 		// Bring the window to the front
 		try {
