@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <root id="outliner" class="com.organic.maynard.outliner.Outliner" title="JOE">
+	<!-- COMPATIBLE WITH JOE VERSION: 1.8.6.1 -->
 	<!-- TEXT REPOSITORY -->
 		<asset type="text" key="new_script" value="New Script"/>
 		<asset type="text" key="update_script" value="Update Script"/>
@@ -132,7 +133,6 @@
 		<!-- MISC HIDDEN PREFS -->
 			<preference id="most_recent_open_dir" class="com.organic.maynard.outliner.PreferenceString" default="."/>
 			<preference id="most_recent_save_dir" class="com.organic.maynard.outliner.PreferenceString" default="."/>
-
 			<preference id="is_maximized" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
 				<validator id="is_maximized_validator" class="com.organic.maynard.outliner.BooleanValidator">
 				</validator>
