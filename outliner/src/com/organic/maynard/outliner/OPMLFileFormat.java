@@ -77,7 +77,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		
 		StringBuffer buf = new StringBuffer();
 		
-		buf.append("<?xml version=\"1.0\" encoding=\"").append(docInfo.getEncodingType()).append("\" ?>").append(lineEnding);
+		buf.append("<?xml version=\"1.0\" encoding=\"").append(docInfo.getEncodingType()).append("\"?>").append(lineEnding);
 		buf.append("<").append(ELEMENT_OPML).append(" version=\"1.0\">").append(lineEnding);
 		
 		buf.append("<").append(ELEMENT_HEAD).append(">").append(lineEnding);
@@ -151,6 +151,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		text = StringTools.replace(text, "&", "&amp;");
 		text = StringTools.replace(text, "<", "&lt;");
 		text = StringTools.replace(text, "\"", "&quot;");
+		text = StringTools.replace(text, ">", "&gt;");
 		return text;
 	}
 

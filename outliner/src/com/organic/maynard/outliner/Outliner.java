@@ -108,7 +108,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	
 	
 	// GUI Objects
-	public static PreferencesFrame prefs = null;
+	//public static PreferencesFrame prefs = null;
 	public static FindReplaceFrame findReplace = null;
 	public static MacroManagerFrame macroManager = null;
 	public static MacroPopupMenu macroPopup = null;
@@ -172,7 +172,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		System.out.println("Done Loading File Formats.");
 				
 		// Now setup the Preferences Frame since we now have the prefs loaded from the config file.
-		prefs = new PreferencesFrame();
+		//prefs = new PreferencesFrame();
 		
 		// Setup the FindReplace Frame
 		findReplace = new FindReplaceFrame();
@@ -206,10 +206,6 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		ImageIcon icon = new ImageIcon(GRAPHICS_DIR + System.getProperty("file.separator") + "frame_icon.gif");
 		setIconImage(icon.getImage());
 		
-		// Set the Desktop Color
-		jsp.getViewport().setBackground(Preferences.DESKTOP_BACKGROUND_COLOR.cur);
-		desktop.setBackground(Preferences.DESKTOP_BACKGROUND_COLOR.cur);
-		
 		// WebFile
 		// Note the outliner will have to be restarted if user switches
 		// file system preferences since the chooser is created just once.
@@ -230,6 +226,10 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	}
 	
 	public void endSetup() {
+		// Set the Desktop Color
+		jsp.getViewport().setBackground(Preferences.DESKTOP_BACKGROUND_COLOR.cur);
+		desktop.setBackground(Preferences.DESKTOP_BACKGROUND_COLOR.cur);
+
 		setVisible(true);
 
 		// Create a Document. This must come after visiblity otherwise the window won't be activated.

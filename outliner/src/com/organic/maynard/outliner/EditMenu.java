@@ -251,7 +251,7 @@ public class PreferencesMenuItem extends AbstractOutlinerMenuItem implements Act
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		Outliner.prefs.setVisible(true);
+		((PreferencesFrame) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_FRAME)).setVisible(true);
 		PreferencesFrame.BOTTOM_OK.requestFocus();
 	}
 }

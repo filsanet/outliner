@@ -444,6 +444,7 @@ public class NodeImpl implements Node {
 		}
 		
 		Node node = getParent().getChild(currentIndex() + 1);
+
 		if(node == null) {
 			return this;
 		} else {
@@ -481,6 +482,7 @@ public class NodeImpl implements Node {
 			return getChild(0);
 		} else {
 			Node node = nextSibling();
+			
 			if (node == this) {
 				return nextSiblingOfAnyParent(node);
 			} else {

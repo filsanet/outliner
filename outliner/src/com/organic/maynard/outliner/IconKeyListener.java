@@ -169,11 +169,11 @@ public class IconKeyListener implements KeyListener, MouseListener {
 				break;
 			
 			case KeyEvent.VK_DELETE:
-				delete(tree,layout);
+				delete(tree,layout,true);
 				break;
 
 			case KeyEvent.VK_BACK_SPACE:
-				delete(tree,layout);
+				delete(tree,layout,false);
 				break;
 				
 			case KeyEvent.VK_UP:
@@ -660,7 +660,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		// Put the text onto the clipboard
 		Outliner.clipboard.setContents(new StringSelection(buffer.toString()), Outliner.outliner);
 		
-		delete(tree,layout);
+		delete(tree,layout,false);
 	}
 
 	private void paste(TreeContext tree, outlineLayoutManager layout) {
@@ -789,10 +789,10 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		layout.draw(node,outlineLayoutManager.ICON);
 	}
 	
-	protected void delete (TreeContext tree, outlineLayoutManager layout) {
+	protected void delete (TreeContext tree, outlineLayoutManager layout, boolean deleteMode) {
 		Node youngestNode = tree.getYoungestInSelection();
 		Node parent = tree.getEditingNode().getParent();
-		CompoundUndoableReplace undoable = new CompoundUndoableReplace(parent);
+		CompoundUndoableReplace undoable = new CompoundUndoableReplace(parent, deleteMode);
 
 		if (tree.isWholeDocumentSelected()) {
 			if (tree.isDocumentEmpty()) {return;}

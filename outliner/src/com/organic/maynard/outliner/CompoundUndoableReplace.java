@@ -23,11 +23,17 @@ import java.util.*;
 public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 
 	private Node parent = null;
+	private boolean deleteMode = false;
 	
 	// The Constructors
 	public CompoundUndoableReplace(Node parent) {
+		this(parent, false);
+	}
+
+	public CompoundUndoableReplace(Node parent, boolean delteMode) {
 		super();
 		this.parent = parent;
+		this.deleteMode = delteMode;
 	}
 
 
@@ -108,14 +114,41 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 
 		// Find fallback node for drawing and editing
 		boolean allWillBeDeleted = false;
-		Node fallbackNode = ((PrimitiveUndoableReplace) primitives.firstElement()).getOldNode().prev();
-		if (fallbackNode.isRoot()) {
-			fallbackNode = ((PrimitiveUndoableReplace) primitives.firstElement()).getOldNode().nextUnSelectedNode();
+		Node fallbackNode = null;
+		if (deleteMode) {
+			fallbackNode = ((PrimitiveUndoableReplace) primitives.lastElement()).getOldNode().next();
+
+			if (fallbackNode == parent.nextSibling()) {
+				fallbackNode = ((PrimitiveUndoableReplace) primitives.lastElement()).getOldNode().prevUnSelectedNode();
+				if (fallbackNode == parent) {
+					fallbackNode = parent.nextSibling();
+				}
+			}
+			
 			if (fallbackNode.isRoot()) {
-				System.out.println("B");
-				allWillBeDeleted = true;
+				fallbackNode = ((PrimitiveUndoableReplace) primitives.lastElement()).getOldNode().prevUnSelectedNode();
+				if (fallbackNode.isRoot()) {
+					allWillBeDeleted = true;
+				}
+			}
+		} else {
+			fallbackNode = ((PrimitiveUndoableReplace) primitives.firstElement()).getOldNode().prev();
+
+			if (fallbackNode == parent) {
+				fallbackNode = ((PrimitiveUndoableReplace) primitives.firstElement()).getOldNode().nextUnSelectedNode();
+				if ((fallbackNode == parent.nextSibling()) || fallbackNode.isRoot()) {
+					fallbackNode = parent;
+				}
+			}
+			
+			if (fallbackNode.isRoot()) {
+				fallbackNode = ((PrimitiveUndoableReplace) primitives.firstElement()).getOldNode().nextUnSelectedNode();
+				if (fallbackNode.isRoot()) {
+					allWillBeDeleted = true;
+				}
 			}
 		}
+		
 		
 		tree.setSelectedNodesParent(parent);
 		

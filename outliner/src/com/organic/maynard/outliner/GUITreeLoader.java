@@ -209,6 +209,12 @@ public class GUITreeComponentRegistry {
 	public static final String OUTLINE_HOIST_MENU_ITEM = "hoist";
 	public static final String OUTLINE_DEHOIST_MENU_ITEM = "dehoist";
 	public static final String OUTLINE_DEHOIST_ALL_MENU_ITEM = "dehoist_all";
+
+	public static final String PREFERENCES_FRAME = "preferences_frame";
+	public static final String PREFERENCES_PANEL_EDITOR = "preferences_panel_editor";
+	public static final String PREFERENCES_PANEL_MISC = "preferences_panel_misc";
+	public static final String PREFERENCES_PANEL_OPEN_AND_SAVE = "preferences_panel_open_and_save";
+	public static final String PREFERENCES_PANEL_LOOK_AND_FEEL = "preferences_panel_look_and_feel";
 	
 	private HashMap reg = new HashMap();
 	

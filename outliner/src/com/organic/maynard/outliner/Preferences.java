@@ -23,12 +23,27 @@ import java.awt.*;
 import java.io.*;
 import javax.swing.*;
 
+import org.xml.sax.*;
+
 import com.organic.maynard.util.string.*;
 
-public class Preferences {
+public class Preferences implements GUITreeComponent {
 
 	// The Constructors
 	public Preferences() {}
+	
+
+	// GUITreeComponent interface
+	private String id = null;
+	public String getGUITreeComponentID() {return this.id;}
+	public void setGUITreeComponentID(String id) {this.id = id;}
+
+	public void startSetup(AttributeList atts) {
+		
+	}
+	
+	public void endSetup() {}
+
 	
 	// Constants
 	public static final String DEPTH_PAD_STRING = "\t";

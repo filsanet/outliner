@@ -288,11 +288,19 @@ public class TreeContext {
 	}
 
 	public Node getYoungestInSelection() {
-		return (Node) selectedNodes.get(0);
+		try {
+			return (Node) selectedNodes.get(0);
+		} catch (IndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 	
 	public Node getOldestInSelection() {
-		return (Node) selectedNodes.get(selectedNodes.size() - 1);
+		try {
+			return (Node) selectedNodes.get(selectedNodes.size() - 1);
+		} catch (IndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 
 
