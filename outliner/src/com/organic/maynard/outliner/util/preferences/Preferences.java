@@ -298,7 +298,10 @@ public class Preferences implements GUITreeComponent {
 	public static PreferenceStringList getPreferenceStringList(String key) {
 		return (PreferenceStringList) Outliner.prefs.getPreference(key);
 	}
-	
+
+	public static PreferenceHashMap getPreferenceHashMap(String key) {
+		return (PreferenceHashMap) Outliner.prefs.getPreference(key);
+	}	
 		
 	// Syncing Preferences	
 	public static void restoreCurrentToDefault() {
