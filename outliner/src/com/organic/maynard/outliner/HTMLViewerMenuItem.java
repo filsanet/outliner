@@ -54,7 +54,7 @@ public class HTMLViewerMenuItem extends AbstractOutlinerMenuItem implements Acti
 	
 	
 	// Instance Fields
-	private String resource_path = null;
+	private URL resource_url = null;
 	
 	
 	// GUITreeComponent interface
@@ -62,31 +62,43 @@ public class HTMLViewerMenuItem extends AbstractOutlinerMenuItem implements Acti
 		super.startSetup(atts);
 		
 		String path = atts.getValue(A_PATH);
+		
+		URL url_path = null;
 		if (path == null) {
 			System.out.println("WARNING: path attribute not provided for HTMLViewerMenuItem: " + getText());
+		} else if (path.indexOf("://") != -1) {
+			try {
+				url_path = new URL(path);
+			} catch (java.net.MalformedURLException e) {
+				System.out.println("WARNING: path for HTMLViewerMenuItem: " + getText() + " was not a valid URL: " + path);
+			}
+		} else {
+			url_path = Thread.currentThread().getContextClassLoader().getResource(path);
 		}
-		setResourcePath(path);
 		
-		addActionListener(this);
-		setEnabled(true);
+		if (url_path != null) {
+			setResourceURL(url_path);
+			
+			addActionListener(this);
+			setEnabled(true);
+		} else {
+			setEnabled(false);
+		}
 	}
 	
 	
 	// Accessors
-	public void setResourcePath(String path) {
-		this.resource_path = path;
+	private void setResourceURL(URL url) {
+		resource_url = url;
 	}
 	
-	public String getResourcePath() {
-		return this.resource_path;
+	private URL getResourceURL() {
+		return resource_url;
 	}
 	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		Outliner.html_viewer.show();
-		
-		URL url = Thread.currentThread().getContextClassLoader().getResource(getResourcePath());
-		Outliner.html_viewer.addURL(url);
-
+		Outliner.html_viewer.addURL(getResourceURL());
 	}
 }
