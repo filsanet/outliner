@@ -1,4 +1,4 @@
-1.8.7 - 2/03/02
+1.8.7 - 2/04/02
 	License Change:
 		1) Switched to a BSD license.
 		2) We are now building our own jmousewheel.jar library. Code separation is much cleaner so that there is now only a "uses" relationship between outliner.jar and jmousewheel.jar. This should make things compatible between the use of a BSD license for outliner.jar and the LGPL for jmousewheel.jar.
@@ -11,18 +11,19 @@
 		3) Added file import functionality
 			a) Added new File menu submenu, Import. Import opens up a format that JOE can read but not write.
 			b) Added import format Brain Forest Palm pdb. Import reads node and note text, ignores other data.
-			b) Added import format  Shadow Plan Palm pdb. Import reads node and note text, ignores other data.
-			b) Added import format Thought Manager Palm pdb. Import reads node and note text, ignores other data.
+			c) Added import format Shadow Plan Palm pdb. Import reads node and note text, ignores other data.
+			d) Added import format Thought Manager Palm pdb. Import reads node and note text, ignores other data.
 		4) Added Maximize:Horizontal/Vertical commands to Windows menu
-			a) These commands resize the topmost window so that it is made as large as fits within JOE along the specified axis. The window size does not change along the other axis.	
+			a) These commands resize the topmost window so that it is made as large as fits within JOE along the specified axis. The window size does not change along the other axis.
 		5) Added Tile Horizontal/Vertical/Grid commands to Windows menu
-			a) Each command tiles all non-iconified document windows. The axis tilings maximize the windows along the specified axis. The grid tiling seeks a balanced arrangement.	
+			b) Each command tiles all non-iconified document windows. The axis tilings maximize the windows along the specified axis. The grid tiling seeks a balanced arrangement.
 	Enhanced Features:
 		1) Autosave agent frequency can now be set from the misc panel.
 		2) Added a "ding" when a search/replace finds no matches.
 		3) Andreas Hochsteger (highstick) has provided a German translation of the gui_tree file so that JOE can be run with a German Text in the interface.
 		4) Enhancements to Recent Files list user interface. Users can now set four user-interface properties: list size, ordering, direction, and name form. Setting is done via a Recent Files panel within the Application Preferences Open & Save folder.
-		5) Enhancements to Application Preferences Open & Save panel. New widgets let users specify Default Encoding and Default Format separately for Open, Import, Save, and Export operations.  
+		5) Enhancements to Application Preferences Open & Save panel. New widgets let users specify Default Encoding and Default Format separately for Open, Import, Save, and Export operations.
+		6) Added sub-containers to preference panels so that prefs can be grouped more intelligently.
 	Bug Fixes:
 		1) Fixed a bug where new documents would often have the text area hidden until the next redraw.
 		2) Fixed a bug where open Help files killed the Autosave Agent script.
