@@ -3,23 +3,23 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE User Guide.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Sun, 20 Jan 2002 07:53:38 GMT</dateModified>
+<dateModified>Mon, 21 Jan 2002 10:57:57 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>5</windowTop>
-<windowLeft>5</windowLeft>
-<windowBottom>646</windowBottom>
-<windowRight>576</windowRight>
+<windowTop>22</windowTop>
+<windowLeft>422</windowLeft>
+<windowBottom>680</windowBottom>
+<windowRight>913</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
 </head>
 <body>
-<outline text="JOE User Guide [JUG]" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
-<outline text="-------------------------" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
-<outline text="Front End" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline text="JOE User Guide [JUG]" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true"/>
+<outline text="-------------------------" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true"/>
+<outline text="Front End" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline text="About JOE - the Java Outline Editor">
 		<outline text="What It Is">
 			<outline text="JOE is an outliner. "/>
@@ -132,15 +132,16 @@
 		<outline text="Copyright 2001-2002 by Stanley Krute. All rights reserved."/>
 	</outline>
 	<outline text="Version">
-		<outline text="JUG versionStamp">
-			<outline text="2002.01.20.12.00.00.GMT">
+		<outline text="JUG">
+			<outline text="2002.01.21.19.00.00.GMT">
 				<outline text="yyyy.mm.dd.hh.mm.ss.timeSystem"/>
 			</outline>
 		</outline>
-		<outline text="JOE version">
+		<outline text="JOE">
 			<outline text="1.8.7"/>
 		</outline>
 	</outline>
+	<outline text="Version Notes"/>
 	<outline text="Cataloging Info">
 		<outline text="Library of Congress Classification System"/>
 		<outline text="Dewey Decimal System"/>
@@ -152,7 +153,7 @@
 		<outline text="http://JavaOutlineEditor.org"/>
 	</outline>
 </outline>
-<outline text="Installation and Setup" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline text="Installation and Setup" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline text="Muy Importante: if you encounter any problems following these installation and setup instructions, andor your installation just outandout fails, please contact us ASAP via http://JavaOutlineEditor.org/feedback"/>
 	<outline text="---------"/>
 	<outline text="Prepare your system">
@@ -215,7 +216,8 @@
 	<outline text="Set JOE application preferences"/>
 	<outline text="Set JOE user preferences"/>
 </outline>
-<outline text="Your First Outline" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline text="-------------------------"/>
+<outline text="Your First Outline" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline text="Some terminology"/>
 	<outline text="Create a new outline"/>
 	<outline text="Type in some info"/>
@@ -223,12 +225,12 @@
 	<outline text="Delete nodes"/>
 	<outline text="Save your outline"/>
 </outline>
-<outline text="Creating New Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline text="Creating New Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline text="Options"/>
 	<outline text="Menu commands"/>
 	<outline text="Keystroke Shortcuts"/>
 </outline>
-<outline text="Playing with Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline text="Playing with Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline text="Creating Nodes"/>
 	<outline text="Destroying Nodes"/>
 	<outline text="Read-Only Nodes"/>
@@ -250,12 +252,19 @@
 	<outline text="Nodes by Reference"/>
 	<outline text="Keyboard Shortcuts"/>
 </outline>
-<outline text="Saving  and Exporting Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
-<outline text="Printing Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline text="Saving  and Exporting Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true"/>
+<outline text="Printing Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline text="Printing to a Printer"/>
 	<outline text="Printing to a File"/>
 </outline>
-<outline text="Opening and Importing Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
+<outline text="Closing Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
+	<outline text="File:Close"/>
+	<outline text="File:Close All"/>
+	<outline text="The X Box"/>
+	<outline text="What Makes a File Dirty"/>
+</outline>
+<outline text="Opening and Importing Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true"/>
+<outline text="-------------------------"/>
 <outline text="Node Attributes">
 	<outline text="isComment">
 		<outline text="originator"/>
@@ -303,98 +312,99 @@
 		<outline text="Thought Manager z.zz"/>
 	</outline>
 </outline>
-<outline text="Closing Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
-	<outline text="File:Close"/>
-	<outline text="File:Close All"/>
-	<outline text="The X Box"/>
-	<outline text="What Makes a File Dirty"/>
-</outline>
-<outline text="Hyperlinks in Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline text="Hyperlinks in Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline text="Link Nodes"/>
 	<outline text="Links in Nodes"/>
 </outline>
-<outline text="Connecting Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
-<outline text="Sharing Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
-<outline text="Blogging with JOE">
-	<outline text="Blog Using the Blogger APIs"/>
-	<outline text="Blog Using the Manila APIs"/>
-</outline>
-<outline text="Using JOE To ..." isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline text="Connecting Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true"/>
+<outline text="Sharing Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true"/>
+<outline text="Outline Security"/>
+<outline text="-------------------------"/>
+<outline text="Using JOE To ..." isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
+	<outline text="Blog">
+		<outline text="Blog Using the Blogger APIs"/>
+		<outline text="Blog Using the Manila APIs"/>
+	</outline>
 	<outline text="Connect with Palm OS Outliners"/>
-	<outline text="Edit Bookmarks and Favorites"/>
 	<outline text="Edit HTML Files"/>
 	<outline text="Edit Java Files"/>
 	<outline text="Edit XML Files"/>
 	<outline text="Examine System Directories"/>
+	<outline text="Maintain Bookmarks and Favorites"/>
+	<outline text="Maintain Websites"/>
+	<outline text="Portal Yourself"/>
 </outline>
-<outline text="Scripting JOE"/>
-<outline text="Macros in JOE" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
-<outline text="XML-RPC in JOE" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
-	<outline text="About XML-RPC">
-		<outline text="XML-RPC lets you make remote procedure calls over HTTP."/>
-		<outline text="JOE uses Hannes Wallnoefer's Helma XML-RPC package. Thanks Hannes.">
-			<outline text="http://xmlrpc.helma.org"/>
-		</outline>
-		<outline text="Further info">
-			<outline text="Portal: : http://xmlrpc.org"/>
-			<outline text="Spec: http://xmlrpc.com/spec"/>
-		</outline>
-	</outline>
-	<outline text="Creating an XML-RPC Macro ">
-		<outline text="Give the Script:Macro Manager... menu command. The Macro Manager window appears."/>
-		<outline text="Select XMLRPC from the new macro category dropdown widget."/>
-		<outline text="Click the New button. A New Macro dialog box appears."/>
-		<outline text="The dialog box prompts you for the following: ">
-			<outline text="Macro Name">
-				<outline text="This is the name that shows up in the macro popup. "/>
-				<outline text="I typically name my XML-RPC macros something like &quot;XMLRPC Servername&quot;.  [MD]"/>
+<outline text="Custom JOE">
+	<outline text="Scripting"/>
+	<outline text="Macros" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true"/>
+	<outline text="XML-RPC" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
+		<outline text="About XML-RPC">
+			<outline text="XML-RPC lets you make remote procedure calls over HTTP."/>
+			<outline text="JOE uses Hannes Wallnoefer's Helma XML-RPC package. Thanks Hannes.">
+				<outline text="http://xmlrpc.helma.org"/>
 			</outline>
-			<outline text="Server">
-				<outline text="The server name or ip-address of the XML-RPC server this macro will talk to. "/>
-				<outline text="This defaults to &quot;127.0.0.1&quot; the loopback address for accessing a server running locally."/>
-			</outline>
-			<outline text="Port">
-				<outline text="The port the server is running on. "/>
-				<outline text="This defaults to &quot;8088&quot; for no really good reason other than eights kind of go with HTTP."/>
-			</outline>
-			<outline text="Do Replacement">
-				<outline text="If &quot;yes&quot; then the response from the server will replace the current selection. "/>
-				<outline text="If &quot;no&quot; then the response will be shown in a dialog only. "/>
-				<outline text="This defaults to &quot;no&quot;."/>
+			<outline text="Further info">
+				<outline text="Portal: : http://xmlrpc.org"/>
+				<outline text="Spec: http://xmlrpc.com/spec"/>
 			</outline>
 		</outline>
-		<outline text="Click the Create button and you're done. "/>
-	</outline>
-	<outline text="Using an XML-RPC Macro  ">
-		<outline text="Select an outline node.">
-			<outline text="The selected node should contain text, or a sub-tree that looks something like the following: ">
-				<outline text="&lt;?xml version=&quot;1.0&quot;?&gt;"/>
-				<outline text="&lt;methodCall&gt;">
-					<outline text="&lt;methodName&gt;method_name&lt;/methodName&gt;"/>
-					<outline text="&lt;params&gt;">
-						<outline text="&lt;param&gt;&lt;value&gt;Some Value&lt;/value&gt;&lt;/param&gt;"/>
-						<outline text="&lt;/params&gt;"/>
-					</outline>
-					<outline text="&lt;/methodCall&gt;"/>
+		<outline text="Creating an XML-RPC Macro ">
+			<outline text="Give the Script:Macro Manager... menu command. The Macro Manager window appears."/>
+			<outline text="Select XMLRPC from the new macro category dropdown widget."/>
+			<outline text="Click the New button. A New Macro dialog box appears."/>
+			<outline text="The dialog box prompts you for the following: ">
+				<outline text="Macro Name">
+					<outline text="This is the name that shows up in the macro popup. "/>
+					<outline text="I typically name my XML-RPC macros something like &quot;XMLRPC Servername&quot;.  [MD]"/>
+				</outline>
+				<outline text="Server">
+					<outline text="The server name or ip-address of the XML-RPC server this macro will talk to. "/>
+					<outline text="This defaults to &quot;127.0.0.1&quot; the loopback address for accessing a server running locally."/>
+				</outline>
+				<outline text="Port">
+					<outline text="The port the server is running on. "/>
+					<outline text="This defaults to &quot;8088&quot; for no really good reason other than eights kind of go with HTTP."/>
+				</outline>
+				<outline text="Do Replacement">
+					<outline text="If &quot;yes&quot; then the response from the server will replace the current selection. "/>
+					<outline text="If &quot;no&quot; then the response will be shown in a dialog only. "/>
+					<outline text="This defaults to &quot;no&quot;."/>
 				</outline>
 			</outline>
+			<outline text="Click the Create button and you're done. "/>
 		</outline>
-		<outline text="Right-click the selected node to bring up the macro popup menu. "/>
-		<outline text="Select the macro you want to apply."/>
-		<outline text="You may have to wait a while, depending on how long the operation takes. ">
-			<outline text="The macro blocks the application, so the macro must complete before you can continue working."/>
+		<outline text="Using an XML-RPC Macro  ">
+			<outline text="Select an outline node.">
+				<outline text="The selected node should contain text, or a sub-tree that looks something like the following: ">
+					<outline text="&lt;?xml version=&quot;1.0&quot;?&gt;"/>
+					<outline text="&lt;methodCall&gt;">
+						<outline text="&lt;methodName&gt;method_name&lt;/methodName&gt;"/>
+						<outline text="&lt;params&gt;">
+							<outline text="&lt;param&gt;&lt;value&gt;Some Value&lt;/value&gt;&lt;/param&gt;"/>
+							<outline text="&lt;/params&gt;"/>
+						</outline>
+						<outline text="&lt;/methodCall&gt;"/>
+					</outline>
+				</outline>
+			</outline>
+			<outline text="Right-click the selected node to bring up the macro popup menu. "/>
+			<outline text="Select the macro you want to apply."/>
+			<outline text="You may have to wait a while, depending on how long the operation takes. ">
+				<outline text="The macro blocks the application, so the macro must complete before you can continue working."/>
+			</outline>
+			<outline text="The current implementation of the XML-RPC macro requires that the selected node contain a valid XML-RPC call. ">
+				<outline text="At some point it would probably be good to create an XML-RPC macro that uses the selection as a parameter to a call stored in the macro itself, but that's not how things work currently. "/>
+			</outline>
 		</outline>
-		<outline text="The current implementation of the XML-RPC macro requires that the selected node contain a valid XML-RPC call. ">
-			<outline text="At some point it would probably be good to create an XML-RPC macro that uses the selection as a parameter to a call stored in the macro itself, but that's not how things work currently. "/>
+		<outline text="Strategies">
+			<outline text="One strategy I use when I have a call that takes one dynamic argument, is to create a &quot;text replacement&quot; macro that constructs the XML-RPC call. I then call the XML-RPC macro. [MD]"/>
 		</outline>
+		<outline text="XML-RPC Macro Examples"/>
 	</outline>
-	<outline text="Strategies">
-		<outline text="One strategy I use when I have a call that takes one dynamic argument, is to create a &quot;text replacement&quot; macro that constructs the XML-RPC call. I then call the XML-RPC macro. [MD]"/>
-	</outline>
-	<outline text="XML-RPC Macro Examples"/>
+	<outline text="Skins"/>
 </outline>
-<outline text="Customizing JOE" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
-<outline text="Menu Commands" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline text="-------------------------"/>
+<outline text="Menu Commands" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline text="File">
 		<outline text="New">
 			<outline text="keystroke shortcut: Ctrl+N"/>
@@ -464,7 +474,54 @@
 		<outline text="---"/>
 		<outline text="Document Settings..."/>
 		<outline text="---"/>
-		<outline text="Application Preferences..."/>
+		<outline text="Application Preferences...">
+			<outline text="Editor"/>
+			<outline text="Look &amp; Feel"/>
+			<outline text="Open &amp; Save">
+				<outline text="File Format: Justified Plaintext"/>
+				<outline text="File Protocol: WebFile">
+					<outline text="Remote URL"/>
+					<outline text="Remote username"/>
+					<outline text="Remote password"/>
+				</outline>
+				<outline text="Recent Files List">
+					<outline text="Size">
+						<outline text="The number of items to be shown in the File:Recent Files menu. Permissible values: 0..100"/>
+					</outline>
+					<outline text="Ordering">
+						<outline text="How the items in the Recent Files menu are to be organized."/>
+						<outline text="Permissible values are:">
+							<outline text="Chronological">
+								<outline text="In chronological order as the files were opened/imported."/>
+							</outline>
+							<outline text="Alphabetical">
+								<outline text="In alphabetical order. For example:">
+									<outline text="A"/>
+									<outline text="a"/>
+									<outline text="b"/>
+									<outline text="B"/>
+									<outline text="C"/>
+									<outline text="c"/>
+								</outline>
+							</outline>
+							<outline text="ASCII">
+								<outline text="In ASCII order. This differs from . For example:">
+									<outline text="A"/>
+									<outline text="a"/>
+									<outline text="b"/>
+									<outline text="B"/>
+									<outline text="C"/>
+									<outline text="c"/>
+								</outline>
+							</outline>
+						</outline>
+					</outline>
+					<outline text="Direction"/>
+					<outline text="Name Form"/>
+					<outline text="Restore Defaults"/>
+				</outline>
+			</outline>
+		</outline>
 		<outline text="Document Preferences..."/>
 		<outline text="Document Attributes..."/>
 	</outline>
@@ -548,7 +605,7 @@
 		<outline text="About JOE"/>
 	</outline>
 </outline>
-<outline text="Default Keystroke Shortcuts Reference" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline text="Default Keystroke Shortcuts" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline text="Ctrl-A"/>
 	<outline text="Ctrl-C">
 		<outline text="Edit:Copy menu command"/>
@@ -592,26 +649,40 @@
 	<outline text="Shift-uP"/>
 	<outline text="Tab"/>
 </outline>
-<outline text="Outline Formats" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
-	<outline text="tabbed text">
-		<outline text="each node is terminated by one of these line-ending character sequences">
-			<outline text="0D 0A [CR LF] [DOS Windows standard]"/>
-			<outline text="0D [CR] [Mac standard]"/>
-			<outline text="0A [LF] [Linux/Unix standard] "/>
+<outline text="Outline Formats JOE Knows" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
+	<outline text="Plaintext">
+		<outline text="tabbed text">
+			<outline text="Open and Save"/>
+			<outline text="each node is terminated by one of these line-ending character sequences">
+				<outline text="0D 0A [CR LF] [DOS Windows standard]"/>
+				<outline text="0D [CR] [Mac standard]"/>
+				<outline text="0A [LF] [Linux/Unix standard] "/>
+			</outline>
+			<outline text="hierarchical position is signalled by tab [09] characters"/>
 		</outline>
-		<outline text="hierarchical position is signalled by tab [09] characters"/>
 	</outline>
 	<outline text="OPML">
+		<outline text="Open and Save"/>
 		<outline text="OPML 1.0">
 			<outline text="http://opml.org/spec"/>
 		</outline>
 		<outline text="the Userland attribute extensions"/>
 		<outline text="the JOE attribute extensions"/>
 	</outline>
-	<outline text="BrainForest .pdf"/>
-	<outline text="Thought Manager .pdf"/>
+	<outline text="BrainForest Palm Pdb">
+		<outline text="Import"/>
+		<outline text="Brings in node text and notes"/>
+	</outline>
+	<outline text="Thought Manager Palm pdb">
+		<outline text="Import"/>
+		<outline text="Brings in node text and notes"/>
+	</outline>
+	<outline text="Shadow Plan Palm pdb">
+		<outline text="Import"/>
+		<outline text="Brings in node text and notes"/>
+	</outline>
 </outline>
-<outline text="Glossary" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline text="Glossary" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline text="Abbreviations and Acronyms">
 		<outline text="Three-Letter Acronyms [TLA's]">
 			<outline text="JOE"/>
@@ -707,7 +778,7 @@
 		<outline text="Z"/>
 	</outline>
 </outline>
-<outline text="Index" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline text="Index" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline text="A-E">
 		<outline text="A"/>
 		<outline text="B"/>
