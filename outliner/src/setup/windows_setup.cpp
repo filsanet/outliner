@@ -57,34 +57,40 @@ int main(int argc, char* argv[]){
 	
 	// determine which version of Windows we're running under
 	// and make sure it's got a Java 2 Runtime available
-	if (! determineWindowsVersion()) { failureFeedback(); return 0 ; }
+	if ( determineWindowsVersion()
 	
 	// make sure we're in a suitable environment
 	// (memory, processor speed)
-	if (! ensureSuitableEnvironment()) { failureFeedback(); return 0 ; }
+	&& ensureSuitableEnvironment()
 	
 	// make sure we've got a proper Java 2 Runtime Environment
-	// if (! ensureJ2RE()) { failureFeedback(); return 0 ; }
+	// && ensureJ2RE()
 	
 	// adjust run.bat if there's more than one JRE
-	// if (! adjustRunBat()) { failureFeedback(); return 0 ; }
+	// && adjustRunBat()
 	
 	// set the JOE_HOME environment var
-	if (! set_JOE_HOME ()) { failureFeedback(); return 0 ; }
+	&& set_JOE_HOME ()
 	
 	// per user choice, set up JOE as the handler of OPML files
-	// if (! setJoeAsOpmlHandler()) { failureFeedback(); return 0 ; }
+	// && setJoeAsOpmlHandler()
 	
 	// per user choice, copy JOE.pif to 0 or more of:
 	// Programs menu, Start menu top, desktop, 
 	// quickstart toolbar of taskbar, folders on desktop
-	// if (! copyJoePifPerUserPrefs()) { failureFeedback(); return 0 ; }
+	// && copyJoePifPerUserPrefs()
 
-	// if we make it this far, all went well
-	// give user a chance to look at results
-	// suggest a reboot for systems that need one
-	successFeedback();
-	return 1 ;
+	) {
+		// if we make it here, all went well
+		// give user a chance to look at results
+		// suggest a reboot for systems that need one
+		successFeedback();
+		return 1 ;
+	} else {
+		// we failed
+		failureFeedback () ;
+		return 0 ;
+	} // end if-else
 
 } // end main
 
