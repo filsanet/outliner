@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<script>while (true) {
+	Thread.sleep(30000);
+
+	for (int i = 0; i &lt; Outliner.openDocumentCount(); i++) {
+		OutlinerDocument doc = Outliner.getDocument(i);
+		if (!doc.getFileName().equals("") &amp;&amp; doc.isFileModified()) {
+			System.out.println("Auto-Saving: " + doc.getFileName());
+			FileMenu.saveFile(doc.getFileName(), doc, false);
+		}
+	}
+}</script>
