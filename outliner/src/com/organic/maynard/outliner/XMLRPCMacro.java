@@ -104,6 +104,8 @@ public class XMLRPCMacro extends MacroImpl {
 		} else {
 			StringBuffer buf = new StringBuffer();
 			nodeRangePair.node.getRecursiveValue(buf, Preferences.LINE_END_STRING, true);
+			// Trim last line ending
+			buf.delete(buf.length() - Preferences.LINE_END_STRING.length(), buf.length());
 			requestXmlString = buf.toString();		
 		}
 
@@ -117,7 +119,7 @@ public class XMLRPCMacro extends MacroImpl {
 				requestXmlString = requestXmlString.substring(startIndex, requestXmlString.length());
 			}
 		}
-		
+
 		// Instantiate a Client and make the request
 		try {
 			XmlRpcClient client = new XmlRpcClient(url);
@@ -195,12 +197,12 @@ public class XMLRPCMacro extends MacroImpl {
 
 	// Saving the Macro
 	protected void prepareFile (StringBuffer buf) {
-		buf.append(XMLTools.getXmlDeclaration(null) + "\n");
-		buf.append(XMLTools.getElementStart(E_XMLRPC) + "\n");
-		buf.append(XMLTools.getElementStart(E_URL) + XMLTools.escapeXMLText(getURL()) + XMLTools.getElementEnd(E_URL)+ "\n");
-		buf.append(XMLTools.getElementStart(E_CALL) + XMLTools.escapeXMLText(getCall()) + XMLTools.getElementEnd(E_CALL)+ "\n");
-		buf.append(XMLTools.getElementStart(E_REPLACE) + isReplacing() + XMLTools.getElementEnd(E_REPLACE)+ "\n");
-		buf.append(XMLTools.getElementEnd(E_XMLRPC) + "\n");
+		buf.append(XMLTools.getXmlDeclaration(null)).append("\n");
+		buf.append(XMLTools.getElementStart(E_XMLRPC)).append("\n");
+		buf.append(XMLTools.getElementStart(E_URL)).append(XMLTools.escapeXMLText(getURL())).append(XMLTools.getElementEnd(E_URL)).append("\n");
+		buf.append(XMLTools.getElementStart(E_CALL)).append(XMLTools.escapeXMLText(getCall())).append(XMLTools.getElementEnd(E_CALL)).append("\n");
+		buf.append(XMLTools.getElementStart(E_REPLACE)).append(isReplacing() + XMLTools.getElementEnd(E_REPLACE)).append("\n");
+		buf.append(XMLTools.getElementEnd(E_XMLRPC)).append("\n");
 	}
 
 
