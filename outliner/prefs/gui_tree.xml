@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<root id="outliner" class="com.organic.maynard.outliner.Outliner">
+	<menubar id="menubar" class="com.organic.maynard.outliner.OutlinerDesktopMenuBar">
+		<menu id="file" class="com.organic.maynard.outliner.FileMenu" text="File">
+			<menuitem id="new_file" class="com.organic.maynard.outliner.NewFileMenuItem" text="New" keybinding="N" keybindingmodifiers="control"/>
+			<menuitem id="open_file" class="com.organic.maynard.outliner.OpenFileMenuItem" text="Open..." keybinding="O" keybindingmodifiers="control"/>
+			<menu id="recent_file_list" class="com.organic.maynard.outliner.RecentFilesList" text="Open Recent Files">
+			</menu>
+			<separator/>
+			<menuitem id="save" class="com.organic.maynard.outliner.SaveFileMenuItem" text="Save" keybinding="S" keybindingmodifiers="control"/>
+			<menuitem id="save_all" class="com.organic.maynard.outliner.SaveAllFileMenuItem" text="Save All"/>
+			<menuitem id="save_as" class="com.organic.maynard.outliner.SaveAsFileMenuItem" text="Save As..."/>
+			<menuitem id="revert" class="com.organic.maynard.outliner.RevertFileMenuItem" text="Revert"/>
+			<separator/>
+			<menuitem id="close" class="com.organic.maynard.outliner.CloseFileMenuItem" text="Close" keybinding="W" keybindingmodifiers="control"/>
+			<menuitem id="close_all" class="com.organic.maynard.outliner.CloseAllFileMenuItem" text="Close All"/>
+			<separator/>
+			<menuitem id="quit" class="com.organic.maynard.outliner.QuitMenuItem" text="Quit" keybinding="Q" keybindingmodifiers="control"/>
+		</menu>
+		<menu id="edit" class="com.organic.maynard.outliner.EditMenu" text="Edit">
+			<menuitem id="undo" class="com.organic.maynard.outliner.UndoMenuItem" text="Undo" keybinding="Z" keybindingmodifiers="control"/>
+			<menuitem id="redo" class="com.organic.maynard.outliner.RedoMenuItem" text="Redo" keybinding="Z" keybindingmodifiers="control shift"/>
+			<separator/>
+			<menuitem id="undo_all" class="com.organic.maynard.outliner.UndoAllMenuItem" text="Undo All"/>
+			<menuitem id="redo_all" class="com.organic.maynard.outliner.RedoAllMenuItem" text="Redo All"/>
+			<separator/>
+			<menuitem id="cut" class="com.organic.maynard.outliner.CutMenuItem" text="Cut" keybinding="X" keybindingmodifiers="control"/>
+			<menuitem id="copy" class="com.organic.maynard.outliner.CopyMenuItem" text="Copy" keybinding="C" keybindingmodifiers="control"/>
+			<menuitem id="paste" class="com.organic.maynard.outliner.PasteMenuItem" text="Paste" keybinding="V" keybindingmodifiers="control"/>
+			<separator/>
+			<menuitem id="select_all" class="com.organic.maynard.outliner.SelectAllMenuItem" text="Select All" keybinding="A" keybindingmodifiers="control"/>
+			<separator/>
+			<menuitem id="edit_document_settings" class="com.organic.maynard.outliner.EditDocumentSettingsMenuItem" text="Document Settings..."/>
+			<separator/>
+			<menuitem id="preferences" class="com.organic.maynard.outliner.PreferencesMenuItem" text="Preferences..."/>
+			<menuitem id="macros" class="com.organic.maynard.outliner.MacrosMenuItem" text="Macros..."/>
+		</menu>
+		<menu id="outline" class="com.organic.maynard.outliner.OutlineMenu" text="Outline">
+			<menuitem id="toggle_comment" class="com.organic.maynard.outliner.ToggleCommentMenuItem" text="Toggle Comment" keybinding="page_up"/>
+			<separator/>
+			<menuitem id="toggle_expansion" class="com.organic.maynard.outliner.ToggleExpansionMenuItem" text="Toggle Expansion" keybinding="page_down"/>
+			<separator/>
+			<menuitem id="expand_all_subheads" class="com.organic.maynard.outliner.ExpandAllSubheadsMenuItem" text="Expand All Subheads"/>
+			<menuitem id="expand_everything" class="com.organic.maynard.outliner.ExpandEverythingMenuItem" text="Expand Everything"/>
+			<separator/>
+			<menuitem id="collapse_to_parent" class="com.organic.maynard.outliner.CollapseToParentMenuItem" text="Collapse To Parent"/>
+			<menuitem id="collapse_everything" class="com.organic.maynard.outliner.CollapseEverythingMenuItem" text="Collapse Everything"/>
+			<separator/>
+			<menuitem id="move_up" class="com.organic.maynard.outliner.MoveUpMenuItem" text="Move Up" keybinding="up" keybindingmodifiers="shift"/>
+			<menuitem id="move_down" class="com.organic.maynard.outliner.MoveDownMenuItem" text="Move Down" keybinding="down" keybindingmodifiers="shift"/>
+			<menuitem id="move_left" class="com.organic.maynard.outliner.MoveLeftMenuItem" text="Move Left" keybinding="left" keybindingmodifiers="shift"/>
+			<menuitem id="move_right" class="com.organic.maynard.outliner.MoveRightMenuItem" text="Move Right" keybinding="right" keybindingmodifiers="shift"/>
+			<separator/>
+			<menuitem id="promote" class="com.organic.maynard.outliner.PromoteMenuItem" text="Promote" keybinding="tab" keybindingmodifiers="shift"/>
+			<menuitem id="demote" class="com.organic.maynard.outliner.DemoteMenuItem" text="Demote" keybinding="tab"/>
+			<separator/>
+			<menuitem id="merge" class="com.organic.maynard.outliner.MergeMenuItem" text="Merge" keybinding="M" keybindingmodifiers="control"/>
+			<menuitem id="merge_with_spaces" class="com.organic.maynard.outliner.MergeWithSpacesMenuItem" text="Merge with Spaces" keybinding="M" keybindingmodifiers="control shift"/>
+			<separator/>
+			<menuitem id="hoist" class="com.organic.maynard.outliner.HoistMenuItem" text="Hoist"/>
+			<menuitem id="dehoist" class="com.organic.maynard.outliner.DehoistMenuItem" text="De-Hoist"/>
+			<menuitem id="dehoist_all" class="com.organic.maynard.outliner.DehoistAllMenuItem" text="De-Hoist All"/>
+		</menu>
+		<menu id="search" class="com.organic.maynard.outliner.SearchMenu" text="Search">
+			<menuitem id="goto" class="com.organic.maynard.outliner.GoToMenuItem" text="Go to Line..." keybinding="G" keybindingmodifiers="control"/>
+			<separator/>
+			<menuitem id="find" class="com.organic.maynard.outliner.FindMenuItem" text="Find/Replace..." keybinding="F" keybindingmodifiers="control"/>
+		</menu>
+		<menu id="window" class="com.organic.maynard.outliner.WindowMenu" text="Window">
+			<menuitem id="statistics" class="com.organic.maynard.outliner.StatisticsMenuItem" text="Document Statistics..."/>
+			<separator/>
+			<menuitem id="stack" class="com.organic.maynard.outliner.StackMenuItem" text="Stack"/>
+			<separator/>
+			<menuitem id="next_window" class="com.organic.maynard.outliner.NextWindowMenuItem" text="Next" keybinding="S" keybindingmodifiers="control shift"/>
+			<menuitem id="prev_window" class="com.organic.maynard.outliner.PrevWindowMenuItem" text="Previous" keybinding="A" keybindingmodifiers="control shift"/>
+			<separator/>
+		</menu>
+	</menubar>
+</root>
