@@ -246,7 +246,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 	private void doSimpleUndoableMacro(OutlinerDocument document, TreeContext tree, Macro macro) {
 		CompoundUndoableEdit undoable = new CompoundUndoableEdit(tree);
 		
-		if (tree.getComponentFocus() == outlineLayoutManager.TEXT) {
+		if (tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
 			// Create a nodeRangePair
 			Node node = tree.getEditingNode();
 			int cursor = tree.getCursorPosition();
@@ -296,7 +296,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		
 		int primitiveCount = 0;
 		
-		if (tree.getComponentFocus() == outlineLayoutManager.TEXT) {
+		if (tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
 			// Create a nodeRangePair
 			Node node = tree.getEditingNode();
 			int cursor = tree.getCursorPosition();

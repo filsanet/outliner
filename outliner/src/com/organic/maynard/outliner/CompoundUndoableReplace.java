@@ -52,7 +52,7 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 	public void undo() {		
 		// Shorthand
 		TreeContext tree = parent.getTree();
-		outlineLayoutManager layout = tree.doc.panel.layout;
+		OutlineLayoutManager layout = tree.doc.panel.layout;
 
 		tree.setSelectedNodesParent(parent);
 		
@@ -102,21 +102,21 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 		tree.setEditingNode(newSelectedNode);
 		tree.setCursorPosition(0);
 		tree.setCursorMarkPosition(0);
-		tree.setComponentFocus(outlineLayoutManager.ICON);
+		tree.setComponentFocus(OutlineLayoutManager.ICON);
 		
-		layout.draw(newSelectedNode, outlineLayoutManager.ICON);
+		layout.draw(newSelectedNode, OutlineLayoutManager.ICON);
 	}
 	
 	public void redo() {
 		// Shorthand
 		TreeContext tree = parent.getTree();
-		outlineLayoutManager layout = tree.doc.panel.layout;
+		OutlineLayoutManager layout = tree.doc.panel.layout;
 
 		// Find fallback node for drawing and editing
 		boolean allWillBeDeleted = false;
 		Node fallbackNode = null;
 		if (deleteMode) {
-			fallbackNode = ((PrimitiveUndoableReplace) primitives.lastElement()).getOldNode().next();
+			fallbackNode = ((PrimitiveUndoableReplace) primitives.lastElement()).getOldNode().nextUnSelectedNode();
 
 			if (fallbackNode == parent.nextSibling()) {
 				fallbackNode = ((PrimitiveUndoableReplace) primitives.lastElement()).getOldNode().prevUnSelectedNode();
@@ -192,9 +192,9 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 		tree.setEditingNode(newSelectedNode);
 		tree.setCursorPosition(0);
 		tree.setCursorMarkPosition(0);
-		tree.setComponentFocus(outlineLayoutManager.ICON);
+		tree.setComponentFocus(OutlineLayoutManager.ICON);
 
-		layout.draw(newSelectedNode, outlineLayoutManager.ICON);
+		layout.draw(newSelectedNode, OutlineLayoutManager.ICON);
 	}
 	
 	public int getType() {return Undoable.COMPOUND_REPLACE_TYPE;}

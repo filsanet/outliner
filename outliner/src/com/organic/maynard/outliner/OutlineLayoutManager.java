@@ -27,13 +27,13 @@ import javax.swing.text.Caret;
 import javax.swing.plaf.*;
 import javax.swing.plaf.metal.*;
 
-public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
+public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	
 	static {
 		javax.swing.FocusManager.setCurrentManager(new OutlinerFocusManager());
 	}
 	
-	public outlinerPanel panel = null;
+	public OutlinerPanel panel = null;
 	private JScrollBar scrollBar = new JScrollBar();
 
 	// Event Listeners
@@ -53,7 +53,7 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 	
 
 	// The Constructors
-	public outlineLayoutManager(outlinerPanel panel) {
+	public OutlineLayoutManager(OutlinerPanel panel) {
 		this.panel = panel;
 
 		// Setup and Add the ScrollBar
@@ -514,51 +514,4 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 	public Dimension preferredLayoutSize(Container parent) {return parent.getPreferredSize();}
 	public void addLayoutComponent(String name, Component comp) {}
 	public void removeLayoutComponent(Component comp) {}
-}
-
-
-public class OutlinerScrollBarUI extends MetalScrollBarUI {
-	public static ComponentUI createUI(JComponent c) {
-		return new OutlinerScrollBarUI();
-	}
-
-	public void layoutContainer(Container scrollbarContainer) {
-
-		JScrollBar scrollbar = (JScrollBar) scrollbarContainer;
-		switch (scrollbar.getOrientation()) {
-			case JScrollBar.VERTICAL:
-				layoutVScrollbar(scrollbar);
-				break;
-	            
-			case JScrollBar.HORIZONTAL:
-				layoutHScrollbar(scrollbar);
-				break;
-		}
-	}
-}
-
-// This class allows re-routing of keyEvents back to the correct OutlinerCellRendererImpl.
-// It is possible when a draw is occuring that changes the draw direction that keyEvents will
-// be sent to the old renderer before the focus manager has a chance to catch up. This class
-// intercepts any miss-targetd key events and sends them off to the correct renderer, the one
-// attached to the current editing node. 
-public class OutlinerFocusManager extends DefaultFocusManager {
-
-	public void processKeyEvent(Component c, KeyEvent e) {
-		try {
-			if (c instanceof OutlinerCellRendererImpl) {
-				OutlinerCellRendererImpl renderer = (OutlinerCellRendererImpl) c;
-				TreeContext tree = renderer.node.getTree();
-				if (renderer.node != tree.getEditingNode()) {
-					tree.doc.panel.layout.getUIComponent(tree.getEditingNode()).fireKeyEvent(e);
-					e.consume();
-					return;
-				}
-			}
-		} catch (NullPointerException npe) {
-			// Document may have been destroyed in the interim, so let's abort.
-			return;
-		}
-		super.processKeyEvent(c,e);
-	}
 }

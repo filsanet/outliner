@@ -51,7 +51,7 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 
 
 	// Instance Variables
-	public outlinerPanel panel = new outlinerPanel(this);
+	public OutlinerPanel panel = new OutlinerPanel(this);
 	public TreeContext tree = new TreeContext(this);
 	public UndoQueue undoQueue = new UndoQueue(this);
 	public DocumentSettings settings = new DocumentSettings(this);
@@ -93,7 +93,7 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 
 		setVisible(true);
 				
-		panel.layout.draw((Node) tree.visibleNodes.get(0), outlineLayoutManager.TEXT);
+		panel.layout.draw((Node) tree.visibleNodes.get(0), OutlineLayoutManager.TEXT);
 	}
 	
 	public void destroy() {

@@ -50,7 +50,7 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 		TreeContext tree = youngestNode.getTree();
 
 		// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
-		outlineLayoutManager layout = tree.doc.panel.layout;
+		OutlineLayoutManager layout = tree.doc.panel.layout;
 		Node nodeToDrawFromTmp = layout.getNodeToDrawFrom().nextUnSelectedNode();
 
 		// Do all the Inserts
@@ -62,7 +62,7 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 
 		// Record the EditingNode
 		tree.setEditingNode(youngestNode);
-		tree.setComponentFocus(outlineLayoutManager.ICON);
+		tree.setComponentFocus(OutlineLayoutManager.ICON);
 
 		// Redraw and Set Focus
 		if (layout.getNodeToDrawFrom().isAncestorSelected()) { // Makes sure we dont' stick at the top when multiple nodes are selected.
@@ -76,7 +76,7 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 			}
 		}
 		
-		layout.draw(tree.getYoungestInSelection(), outlineLayoutManager.ICON);
+		layout.draw(tree.getYoungestInSelection(), OutlineLayoutManager.ICON);
 	}
 	
 	public void redo() {
@@ -84,7 +84,7 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 		TreeContext tree = youngestNode.getTree();
 
 		// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
-		outlineLayoutManager layout = tree.doc.panel.layout;
+		OutlineLayoutManager layout = tree.doc.panel.layout;
 		Node nodeToDrawFromTmp = layout.getNodeToDrawFrom().nextUnSelectedNode();
 
 		// Do all the Inserts
@@ -96,7 +96,7 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 
 		// Record the EditingNode
 		tree.setEditingNode(youngestNode);
-		tree.setComponentFocus(outlineLayoutManager.ICON);
+		tree.setComponentFocus(OutlineLayoutManager.ICON);
 
 		// Redraw and Set Focus
 		if (layout.getNodeToDrawFrom().isAncestorSelected()) { // Makes sure we dont' stick at the top when multiple nodes are selected.
@@ -110,7 +110,7 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 			}
 		}
 		
-		layout.draw(tree.getYoungestInSelection(), outlineLayoutManager.ICON);
+		layout.draw(tree.getYoungestInSelection(), OutlineLayoutManager.ICON);
 	}
 	
 	public int getType() {return Undoable.COMPOUND_MOVE_TYPE;}

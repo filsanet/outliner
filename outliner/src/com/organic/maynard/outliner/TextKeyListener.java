@@ -49,7 +49,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
  		// Shorthand
  		Node currentNode = textArea.node;
  		TreeContext tree = currentNode.getTree();
- 		outlineLayoutManager layout = tree.doc.panel.layout;
+ 		OutlineLayoutManager layout = tree.doc.panel.layout;
 
 		// This is detection for Solaris
 		if (e.isPopupTrigger()) {
@@ -77,11 +77,11 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		// Record the EditingNode and CursorPosition and ComponentFocus
 		tree.setEditingNode(currentNode);
 		tree.setCursorPosition(textArea.getCaretPosition());
-		tree.setComponentFocus(outlineLayoutManager.TEXT);
+		tree.setComponentFocus(OutlineLayoutManager.TEXT);
 		
 		// Redraw only if there is a current selection
 		if (selectionSize > 0) {
-			tree.doc.panel.layout.draw(currentNode,outlineLayoutManager.TEXT);
+			tree.doc.panel.layout.draw(currentNode,OutlineLayoutManager.TEXT);
 		}
 		
 		// Freeze Undo Editing
@@ -128,7 +128,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		// Shorthand
 		Node currentNode = textArea.node;
 		TreeContext tree = currentNode.getTree();
-		outlineLayoutManager layout = tree.doc.panel.layout;
+		OutlineLayoutManager layout = tree.doc.panel.layout;
 		
 		switch(e.getKeyCode()) {
 			case KeyEvent.VK_PAGE_DOWN:
@@ -403,7 +403,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		// Create some short names for convienence
 		Node currentNode = textArea.node;
 		TreeContext tree = currentNode.getTree();
-		outlineLayoutManager layout = tree.doc.panel.layout;
+		OutlineLayoutManager layout = tree.doc.panel.layout;
 
 		// Record some Values
 		int caretPosition = textArea.getCaretPosition();
@@ -437,13 +437,13 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 		// Do the Redraw if we have wrapped or if we are currently off screen.
 		if (textArea.getPreferredSize().height != textArea.height || !currentNode.isVisible()) {
-			layout.draw(currentNode, outlineLayoutManager.TEXT);
+			layout.draw(currentNode, OutlineLayoutManager.TEXT);
 		}
 	}
 
 
 	// Key Handlers
-	private void toggleExpansion(TreeContext tree, outlineLayoutManager layout) {
+	private void toggleExpansion(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		
 		if (currentNode.isExpanded()) {
@@ -453,10 +453,10 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		}
 
 		// Redraw
-		layout.draw(currentNode, outlineLayoutManager.TEXT);
+		layout.draw(currentNode, OutlineLayoutManager.TEXT);
 	}
 
-	private void toggleComment(TreeContext tree, outlineLayoutManager layout) {
+	private void toggleComment(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		
 		if (!currentNode.isAncestorComment()) {
@@ -475,10 +475,10 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		}
 
 		// Redraw
-		layout.draw(currentNode, outlineLayoutManager.TEXT);
+		layout.draw(currentNode, OutlineLayoutManager.TEXT);
 	}
 
-	private void moveUp(TreeContext tree, outlineLayoutManager layout) {
+	private void moveUp(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// Get Prev Node
@@ -500,13 +500,13 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 		// Redraw and Set Focus
 		if (prevNode.isVisible()) {
-			layout.setFocus(prevNode,outlineLayoutManager.TEXT);
+			layout.setFocus(prevNode,OutlineLayoutManager.TEXT);
 		} else {
-			layout.draw(prevNode,outlineLayoutManager.TEXT);
+			layout.draw(prevNode,OutlineLayoutManager.TEXT);
 		}
 	}
 
-	private void moveDown(TreeContext tree, outlineLayoutManager layout) {
+	private void moveDown(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// Get Prev Node
@@ -528,13 +528,13 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 		// Redraw and Set Focus
 		if (nextNode.isVisible()) {
-			layout.setFocus(nextNode,outlineLayoutManager.TEXT);
+			layout.setFocus(nextNode,OutlineLayoutManager.TEXT);
 		} else {
-			layout.draw(nextNode,outlineLayoutManager.TEXT);
+			layout.draw(nextNode,OutlineLayoutManager.TEXT);
 		}
 	}
 
-	private void moveLeft(TreeContext tree, outlineLayoutManager layout) {
+	private void moveLeft(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// Update Preferred Caret Position
@@ -545,11 +545,11 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 		// Redraw and Set Focus if this node is currently offscreen
 		if (!currentNode.isVisible()) {
-			layout.draw(currentNode,outlineLayoutManager.TEXT);
+			layout.draw(currentNode,OutlineLayoutManager.TEXT);
 		}
 	}
 
-	private void moveLeftToPrevNode(TreeContext tree, outlineLayoutManager layout) {
+	private void moveLeftToPrevNode(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// Get Prev Node
@@ -573,13 +573,13 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 		// Redraw and Set Focus
 		if (prevNode.isVisible()) {
-			layout.setFocus(prevNode,outlineLayoutManager.TEXT);
+			layout.setFocus(prevNode,OutlineLayoutManager.TEXT);
 		} else {
-			layout.draw(prevNode,outlineLayoutManager.TEXT);
+			layout.draw(prevNode,OutlineLayoutManager.TEXT);
 		}
 	}
 
-	private void moveRight(TreeContext tree, outlineLayoutManager layout) {
+	private void moveRight(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// Update Preferred Caret Position
@@ -590,11 +590,11 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 		// Redraw and Set Focus if this node is currently offscreen
 		if (!currentNode.isVisible()) {
-			layout.draw(currentNode,outlineLayoutManager.TEXT);
+			layout.draw(currentNode,OutlineLayoutManager.TEXT);
 		}
 	}
 
-	private void moveRightToNextNode(TreeContext tree, outlineLayoutManager layout) {
+	private void moveRightToNextNode(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// Get Prev Node
@@ -618,26 +618,26 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 		// Redraw and Set Focus
 		if (nextNode.isVisible()) {
-			layout.setFocus(nextNode,outlineLayoutManager.TEXT);
+			layout.setFocus(nextNode,OutlineLayoutManager.TEXT);
 		} else {
-			layout.draw(nextNode,outlineLayoutManager.TEXT);
+			layout.draw(nextNode,OutlineLayoutManager.TEXT);
 		}
 	}
 
-	private void changeFocusToIcon(TreeContext tree, outlineLayoutManager layout) {
+	private void changeFocusToIcon(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		tree.setSelectedNodesParent(currentNode.getParent());
 		tree.addNodeToSelection(currentNode);
 
 		// Record the EditingNode and CursorPosition
-		tree.setComponentFocus(outlineLayoutManager.ICON);
+		tree.setComponentFocus(OutlineLayoutManager.ICON);
 
 		// Redraw and Set Focus
-		layout.draw(currentNode,outlineLayoutManager.ICON);
+		layout.draw(currentNode,OutlineLayoutManager.ICON);
 	}
 
-	private void insert(TreeContext tree, outlineLayoutManager layout) {
+	private void insert(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// Create a new node and insert it as a sibling immediatly after the last selected node.
@@ -667,7 +667,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		tree.setEditingNode(newNode);
 		tree.setCursorPosition(0);
 		tree.doc.setPreferredCaretPosition(0);
-		tree.setComponentFocus(outlineLayoutManager.TEXT);
+		tree.setComponentFocus(OutlineLayoutManager.TEXT);
 
 		// Put the Undoable onto the UndoQueue
 		CompoundUndoableInsert undoable = new CompoundUndoableInsert(newNodeParent);
@@ -675,10 +675,10 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		tree.doc.undoQueue.add(undoable);
 		
 		// Redraw and Set Focus
-		layout.draw(newNode, visibleIndex, outlineLayoutManager.TEXT);
+		layout.draw(newNode, visibleIndex, OutlineLayoutManager.TEXT);
 	}
 
-	private void mergeWithPrevVisibleNode(TreeContext tree, outlineLayoutManager layout) {
+	private void mergeWithPrevVisibleNode(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		Node prevNode = tree.getPrevNode(currentNode);
 		if (prevNode == null) {
@@ -717,7 +717,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		backspaceMerge = true;
 	}
 
-	private void mergeWithNextVisibleNode(TreeContext tree, outlineLayoutManager layout) {
+	private void mergeWithNextVisibleNode(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		Node nextNode = tree.getNextNode(currentNode);
 		if (nextNode == null) {
@@ -754,7 +754,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		undoable.redo();
 	}
 	
-	private void split(TreeContext tree, outlineLayoutManager layout) {
+	private void split(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// Get Text for nodes.
@@ -799,10 +799,10 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		tree.doc.undoQueue.add(undoable);
 
 		// Redraw and Set Focus
-		layout.draw(newNode,outlineLayoutManager.TEXT);
+		layout.draw(newNode,OutlineLayoutManager.TEXT);
 	}
 	
-	private void promote(TreeContext tree, outlineLayoutManager layout) {
+	private void promote(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// Put the Undoable onto the UndoQueue
@@ -823,10 +823,10 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		tree.promoteNode(currentNode);
 
 		// Redraw and Set Focus
-		layout.draw(currentNode,outlineLayoutManager.TEXT);
+		layout.draw(currentNode,OutlineLayoutManager.TEXT);
 	}
 
-	private void demote(TreeContext tree, outlineLayoutManager layout) {
+	private void demote(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		if (currentNode.isFirstChild()) {
@@ -846,10 +846,10 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		tree.demoteNode(currentNode,targetNode);
 
 		// Redraw and Set Focus
-		layout.draw(currentNode,outlineLayoutManager.TEXT);
+		layout.draw(currentNode,OutlineLayoutManager.TEXT);
 	}
 
-	private void paste(TreeContext tree, outlineLayoutManager layout) {
+	private void paste(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		inlinePaste = true;
@@ -902,10 +902,10 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		// Record the EditingNode and CursorPosition and ComponentFocus
 		tree.setEditingNode(nodeThatMustBeVisible);
 		tree.setCursorPosition(0);
-		tree.setComponentFocus(outlineLayoutManager.ICON);
+		tree.setComponentFocus(OutlineLayoutManager.ICON);
 
 		// Redraw and Set Focus
-		layout.draw(nodeThatMustBeVisible,outlineLayoutManager.ICON);
+		layout.draw(nodeThatMustBeVisible,OutlineLayoutManager.ICON);
 	}
 
 
@@ -940,7 +940,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 	public static void collapseToParent(Node currentNode) {
 		// Shorthand
 		TreeContext tree = currentNode.getTree();
-		outlineLayoutManager layout = tree.doc.panel.layout;
+		OutlineLayoutManager layout = tree.doc.panel.layout;
 		
 		Node parent = currentNode.getParent();
 		if (parent.isRoot()) {
@@ -948,21 +948,21 @@ public class TextKeyListener implements KeyListener, MouseListener {
 			currentNode.CollapseAllSubheads();
 		
 			// Redraw and Set Focus
-			layout.draw(currentNode,outlineLayoutManager.ICON);
+			layout.draw(currentNode,OutlineLayoutManager.ICON);
 		} else {
 			// Collapse
 			parent.CollapseAllSubheads();
 			
 			// Record the EditingNode, Mark and CursorPosition
 			tree.setEditingNode(parent);
-			tree.setComponentFocus(outlineLayoutManager.ICON);
+			tree.setComponentFocus(OutlineLayoutManager.ICON);
 	
 			// Update Selection
 			tree.setSelectedNodesParent(parent.getParent());
 			tree.addNodeToSelection(parent);
 			
 			// Redraw and Set Focus
-			layout.draw(parent,outlineLayoutManager.ICON);
+			layout.draw(parent,OutlineLayoutManager.ICON);
 		}
 		return;
 	}
@@ -975,14 +975,14 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		// Record the EditingNode, Mark and CursorPosition
 		Node firstNode = tree.rootNode.getFirstChild();
 		tree.setEditingNode(firstNode);
-		tree.setComponentFocus(outlineLayoutManager.ICON);
+		tree.setComponentFocus(OutlineLayoutManager.ICON);
 
 		// Update Selection
 		tree.setSelectedNodesParent(tree.rootNode);
 		tree.addNodeToSelection(firstNode);
 		
 		// Redraw and Set Focus
-		tree.doc.panel.layout.draw(firstNode,outlineLayoutManager.ICON);
+		tree.doc.panel.layout.draw(firstNode,OutlineLayoutManager.ICON);
 		
 		return;
 	}

@@ -301,7 +301,7 @@ public class Preferences implements GUITreeComponent {
 
 		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
 			OutlinerDocument doc = Outliner.getDocument(i);
-			for (int j = 0; j < outlineLayoutManager.CACHE_SIZE; j++) {
+			for (int j = 0; j < OutlineLayoutManager.CACHE_SIZE; j++) {
 				doc.panel.layout.textAreas[j].setFont(font);
 				doc.panel.layout.textAreas[j].setSelectionColor(Preferences.TEXTAREA_FOREGROUND_COLOR.cur);
 				doc.panel.layout.textAreas[j].setSelectedTextColor(Preferences.TEXTAREA_BACKGROUND_COLOR.cur);

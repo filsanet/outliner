@@ -37,6 +37,9 @@ import com.yearahead.io.*;
 
 public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent {
 	
+	// Constants
+	private static final String A_TITLE = "title";
+	
 	public static final String USER_OUTLINER_DIR = "outliner";
 	
 	// Directory setup
@@ -199,7 +202,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		);
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-		setTitle("Outliner");
+		setTitle(atts.getValue(A_TITLE));
 		setContentPane(jsp);
 		
 		// Set Frame Icon

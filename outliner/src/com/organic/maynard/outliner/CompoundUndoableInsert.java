@@ -44,7 +44,7 @@ public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 		// Find the node we will change focus too, note may end up null
 		Node youngestNode = ((PrimitiveUndoableInsert) primitives.lastElement()).getNode();
 		TreeContext tree = youngestNode.getTree();
-		outlineLayoutManager layout = tree.doc.panel.layout;
+		OutlineLayoutManager layout = tree.doc.panel.layout;
 		Node newSelectedNode = youngestNode.prev();
 		
 		boolean parentWasSelected = false;
@@ -74,7 +74,7 @@ public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 
 		// Record the EditingNode
 		tree.setEditingNode(newSelectedNode);
-		tree.setComponentFocus(outlineLayoutManager.ICON);
+		tree.setComponentFocus(OutlineLayoutManager.ICON);
 
 		// Redraw and Set Focus
 		// First make sure the node to draw from wasn't removed, it will be root since it is orphaned. 
@@ -83,7 +83,7 @@ public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 			layout.setNodeToDrawFrom(newSelectedNode, tree.visibleNodes.indexOf(newSelectedNode));
 		}
 		tree.insertNode(newSelectedNode); // Just to make it visible
-		layout.draw(newSelectedNode,outlineLayoutManager.ICON);	
+		layout.draw(newSelectedNode,OutlineLayoutManager.ICON);	
 	}
 	
 	public void redo() {
@@ -99,10 +99,10 @@ public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 
 		// Record the EditingNode
 		tree.setEditingNode(youngestNode);
-		tree.setComponentFocus(outlineLayoutManager.ICON);
+		tree.setComponentFocus(OutlineLayoutManager.ICON);
 		
 		// Redraw and Set Focus
-		tree.doc.panel.layout.draw(youngestNode,outlineLayoutManager.ICON);		
+		tree.doc.panel.layout.draw(youngestNode,OutlineLayoutManager.ICON);		
 	}
 	
 	public int getType() {return Undoable.COMPOUND_DELETE_TYPE;}

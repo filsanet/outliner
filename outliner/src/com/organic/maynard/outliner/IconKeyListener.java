@@ -79,7 +79,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		// Record the EditingNode and CursorPosition and ComponentFocus
  		TreeContext tree = textArea.node.getTree();
 		tree.setEditingNode(textArea.node);
-		tree.setComponentFocus(outlineLayoutManager.ICON);
+		tree.setComponentFocus(OutlineLayoutManager.ICON);
 		
 		// Store the node
 		Node node = textArea.node;
@@ -157,7 +157,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	
 		// Create some short names for convienence
 		TreeContext tree = textArea.node.getTree();
-		outlineLayoutManager layout = tree.doc.panel.layout;
+		OutlineLayoutManager layout = tree.doc.panel.layout;
 
 		switch(e.getKeyCode()) {
 			case KeyEvent.VK_PAGE_DOWN:
@@ -314,7 +314,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		// Create some short names for convienence
 		Node currentNode = textArea.node;
 		TreeContext tree = currentNode.getTree();
-		outlineLayoutManager layout = tree.doc.panel.layout;
+		OutlineLayoutManager layout = tree.doc.panel.layout;
 		Node youngestNode = tree.getYoungestInSelection();
 
 		// Clear the selection since focus will change to the textarea.
@@ -327,13 +327,13 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 		// Record the EditingNode and CursorPosition and ComponentFocus
 		tree.setCursorPosition(1);
-		tree.setComponentFocus(outlineLayoutManager.TEXT);
+		tree.setComponentFocus(OutlineLayoutManager.TEXT);
 
 		// Put the Undoable onto the UndoQueue
 		tree.doc.undoQueue.add(new UndoableEdit(youngestNode,oldText,newText,0,1,0,1));
 		
 		// Redraw and Set Focus
-		layout.draw(youngestNode,outlineLayoutManager.TEXT);
+		layout.draw(youngestNode,OutlineLayoutManager.TEXT);
 
 		e.consume();
 		return;
@@ -343,7 +343,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 
 	// Key Handlers
-	private void toggleExpansion(TreeContext tree, outlineLayoutManager layout) {
+	private void toggleExpansion(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		
 		for (int i = 0; i < tree.selectedNodes.size(); i++) {
@@ -355,10 +355,10 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			}
 		}
 
-		layout.draw(currentNode, outlineLayoutManager.ICON);
+		layout.draw(currentNode, OutlineLayoutManager.ICON);
 	}
 
-	private void toggleComment(TreeContext tree, outlineLayoutManager layout) {
+	private void toggleComment(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
@@ -385,10 +385,10 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			tree.doc.undoQueue.add(undoable);
 		}
 
-		layout.draw(currentNode, outlineLayoutManager.ICON);
+		layout.draw(currentNode, OutlineLayoutManager.ICON);
 	}
 
-	private void changeFocusToTextArea(TreeContext tree, outlineLayoutManager layout, int positionType) {
+	private void changeFocusToTextArea(TreeContext tree, OutlineLayoutManager layout, int positionType) {
 		Node currentNode = textArea.node;
 		
 		if (positionType == POSITION_FIRST) {
@@ -400,12 +400,12 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			tree.doc.setPreferredCaretPosition(index);		
 		}
 		
-		tree.setComponentFocus(outlineLayoutManager.TEXT);
+		tree.setComponentFocus(OutlineLayoutManager.TEXT);
 		tree.clearSelection();
-		layout.draw(currentNode,outlineLayoutManager.TEXT);
+		layout.draw(currentNode,OutlineLayoutManager.TEXT);
 	}
 
-	private void changeSelectionToNode(TreeContext tree, outlineLayoutManager layout, int positionType) {
+	private void changeSelectionToNode(TreeContext tree, OutlineLayoutManager layout, int positionType) {
 		Node selectedNode = null;
 		
 		if (positionType == POSITION_FIRST) {
@@ -424,10 +424,10 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		tree.doc.setPreferredCaretPosition(0);
 		
 		// Redraw and Set Focus	
-		layout.draw(selectedNode, outlineLayoutManager.ICON);
+		layout.draw(selectedNode, OutlineLayoutManager.ICON);
 	}
 
-	private void moveUp(TreeContext tree, outlineLayoutManager layout) {
+	private void moveUp(TreeContext tree, OutlineLayoutManager layout) {
 		Node youngestNode = tree.getYoungestInSelection();
 		Node node = youngestNode.prevSibling();
 		if (node == youngestNode) {
@@ -451,7 +451,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		undoable.redo();
 	}
 	
-	private void moveDown(TreeContext tree, outlineLayoutManager layout) {
+	private void moveDown(TreeContext tree, OutlineLayoutManager layout) {
 		Node oldestNode = tree.getOldestInSelection();
 		Node node = oldestNode.nextSibling();
 		if (node == oldestNode) {
@@ -476,7 +476,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		undoable.redo();
 	}
 
-	private void moveLeft(TreeContext tree, outlineLayoutManager layout) {
+	private void moveLeft(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		Node youngestNode = tree.getYoungestInSelection();
 		Node node = tree.getPrevNode(youngestNode);
@@ -507,7 +507,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	}
 
 
-	private void moveRight(TreeContext tree, outlineLayoutManager layout) {
+	private void moveRight(TreeContext tree, OutlineLayoutManager layout) {
 		Node oldestNode = tree.getOldestInSelection();
 		Node node = tree.getNextNode(oldestNode.getLastViewableDecendent());
 		if (node == null) {
@@ -547,7 +547,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		undoable.redo();
 	}
 
-	private void insert(TreeContext tree, outlineLayoutManager layout) {
+	private void insert(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		
 		// Create a new node and insert it as a sibling immediatly after the last selected node.
@@ -577,7 +577,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		tree.setEditingNode(newNode);
 		tree.setCursorPosition(0);
 		tree.doc.setPreferredCaretPosition(0);
-		tree.setComponentFocus(outlineLayoutManager.TEXT);
+		tree.setComponentFocus(OutlineLayoutManager.TEXT);
 
 		// Put the Undoable onto the UndoQueue
 		CompoundUndoableInsert undoable = new CompoundUndoableInsert(newNodeParent);
@@ -586,10 +586,10 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 		// Redraw and Set Focus
 		tree.clearSelection();
-		layout.draw(newNode, visibleIndex, outlineLayoutManager.TEXT);
+		layout.draw(newNode, visibleIndex, OutlineLayoutManager.TEXT);
 	}
 
-	private void promote(TreeContext tree, outlineLayoutManager layout) {
+	private void promote(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		
 		if (currentNode.getParent().isRoot()) {
@@ -613,7 +613,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		undoable.redo();
 	}
 
-	private void demote(TreeContext tree, outlineLayoutManager layout) {
+	private void demote(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		if (tree.getYoungestInSelection().isFirstChild()) {
@@ -637,7 +637,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		undoable.redo();
 	}
 
-	private void copy(TreeContext tree, outlineLayoutManager layout) {
+	private void copy(TreeContext tree, OutlineLayoutManager layout) {
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < tree.selectedNodes.size(); i++) {
 			((Node) tree.selectedNodes.get(i)).depthPaddedValue(buffer, Preferences.LINE_END_STRING);
@@ -649,7 +649,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		Outliner.clipboard.setContents(new StringSelection(buffer.toString()), Outliner.outliner);
 	}
 
-	private void cut(TreeContext tree, outlineLayoutManager layout) {
+	private void cut(TreeContext tree, OutlineLayoutManager layout) {
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < tree.selectedNodes.size(); i++) {
 			((Node) tree.selectedNodes.get(i)).depthPaddedValue(buffer, Preferences.LINE_END_STRING);
@@ -663,7 +663,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		delete(tree,layout,false);
 	}
 
-	private void paste(TreeContext tree, outlineLayoutManager layout) {
+	private void paste(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// Put the Undoable onto the UndoQueue
@@ -707,10 +707,10 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		tree.setEditingNode(tree.getYoungestInSelection());
 
 		// Redraw and Set Focus
-		layout.draw(tree.getYoungestInSelection(),outlineLayoutManager.ICON);
+		layout.draw(tree.getYoungestInSelection(),OutlineLayoutManager.ICON);
 	}
 
-	private void selectAll(TreeContext tree, outlineLayoutManager layout) {
+	private void selectAll(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// select all siblings
@@ -720,10 +720,10 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		tree.selectRangeFromMostRecentNodeTouched(parent.getChild(parent.numOfChildren() - 1));
 
 		// Redraw and Set Focus
-		layout.draw(currentNode,outlineLayoutManager.ICON);
+		layout.draw(currentNode,OutlineLayoutManager.ICON);
 	}
 
-	private void changeToParent(TreeContext tree, outlineLayoutManager layout) {
+	private void changeToParent(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		Node newSelectedNode = currentNode.getParent();
 		if (newSelectedNode.isRoot()) {return;}
@@ -734,7 +734,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		tree.setEditingNode(newSelectedNode);
 		
 		// Redraw and Set Focus
-		layout.draw(newSelectedNode, outlineLayoutManager.ICON);		
+		layout.draw(newSelectedNode, OutlineLayoutManager.ICON);		
 	}
 	
 	private static final int UP = 1;
@@ -742,7 +742,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	private static final int LEFT = 3;
 	private static final int RIGHT = 4;
 	
-	private void navigate(TreeContext tree, outlineLayoutManager layout, int type) {
+	private void navigate(TreeContext tree, OutlineLayoutManager layout, int type) {
 		Node node = null;
 		Node youngestNode = null;
 		Node oldestNode = null;
@@ -786,10 +786,10 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		tree.setEditingNode(node);
 
 		// Redraw and Set Focus
-		layout.draw(node,outlineLayoutManager.ICON);
+		layout.draw(node,OutlineLayoutManager.ICON);
 	}
 	
-	protected void delete (TreeContext tree, outlineLayoutManager layout, boolean deleteMode) {
+	protected void delete (TreeContext tree, OutlineLayoutManager layout, boolean deleteMode) {
 		Node youngestNode = tree.getYoungestInSelection();
 		Node parent = tree.getEditingNode().getParent();
 		CompoundUndoableReplace undoable = new CompoundUndoableReplace(parent, deleteMode);
@@ -819,7 +819,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		return;
 	}
 
-	private void merge(TreeContext tree, outlineLayoutManager layout, boolean withSpaces) {
+	private void merge(TreeContext tree, OutlineLayoutManager layout, boolean withSpaces) {
 		Node youngestNode = tree.getYoungestInSelection();
 		int youngestNodeDepth = youngestNode.getDepth();
 		boolean youngestNodeIsComment = youngestNode.isComment();

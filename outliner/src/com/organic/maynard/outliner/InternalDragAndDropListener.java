@@ -62,7 +62,7 @@ public class InternalDragAndDropListener implements MouseListener {
 					currentRenderer.button.setIcon(OutlineButton.ICON_SE_ARROW);
 				}
 			} else if (targetNode.isSelected() && !targetNode.isFirstChild() && (componentType == TEXT)) {
-				outlineLayoutManager layout = targetNode.getTree().doc.panel.layout;
+				OutlineLayoutManager layout = targetNode.getTree().doc.panel.layout;
 				OutlinerCellRendererImpl renderer = layout.getUIComponent(targetNode.prevSibling());
 				if (renderer != null) {
 					renderer.button.setIcon(OutlineButton.ICON_SE_ARROW);
@@ -75,7 +75,7 @@ public class InternalDragAndDropListener implements MouseListener {
 		if (isDragging) {
 			// Update the UI
 			if (targetNode.isSelected() && !targetNode.isFirstChild() && (componentType == TEXT)) {
-				outlineLayoutManager layout = targetNode.getTree().doc.panel.layout;
+				OutlineLayoutManager layout = targetNode.getTree().doc.panel.layout;
 				OutlinerCellRendererImpl renderer = layout.getUIComponent(targetNode.prevSibling());
 				if (renderer != null) {
 					renderer.button.updateIcon();
@@ -120,7 +120,7 @@ public class InternalDragAndDropListener implements MouseListener {
 						moveAsFirstChild();
 					}
 				} else if (targetNode.isSelected() && !targetNode.isFirstChild() && (componentType == TEXT)) {
-					outlineLayoutManager layout = targetNode.getTree().doc.panel.layout;
+					OutlineLayoutManager layout = targetNode.getTree().doc.panel.layout;
 					OutlinerCellRendererImpl renderer = layout.getUIComponent(targetNode.prevSibling());
 					if (renderer != null) {
 						renderer.button.updateIcon();

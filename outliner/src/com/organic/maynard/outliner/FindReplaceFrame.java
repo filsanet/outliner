@@ -234,7 +234,7 @@ public class FindReplaceFrame extends JInternalFrame implements ActionListener, 
 		if (location != null) {
 			// Shorthand
 			TreeContext tree = doc.tree;
-			outlineLayoutManager layout = doc.panel.layout;
+			OutlineLayoutManager layout = doc.panel.layout;
 
 			// Insert the node into the visible nodes and clear the selection.
 			tree.insertNode(location.node);
@@ -244,7 +244,7 @@ public class FindReplaceFrame extends JInternalFrame implements ActionListener, 
 			tree.setEditingNode(location.node);
 			tree.setCursorPosition(location.endIndex);
 			tree.setCursorMarkPosition(location.startIndex);
-			tree.setComponentFocus(outlineLayoutManager.TEXT);
+			tree.setComponentFocus(OutlineLayoutManager.TEXT);
 			
 			// Update Preferred Caret Position
 			doc.setPreferredCaretPosition(location.endIndex);
@@ -260,7 +260,7 @@ public class FindReplaceFrame extends JInternalFrame implements ActionListener, 
 			}
 
 			// Redraw and Set Focus
-			layout.draw(location.node,outlineLayoutManager.TEXT);
+			layout.draw(location.node,OutlineLayoutManager.TEXT);
 		}
 	}
 
@@ -270,7 +270,7 @@ public class FindReplaceFrame extends JInternalFrame implements ActionListener, 
 		if (location != null) {
 			// Shorthand
 			TreeContext tree = doc.tree;
-			outlineLayoutManager layout = doc.panel.layout;
+			OutlineLayoutManager layout = doc.panel.layout;
 
 			// Create the undoable
 			int difference = TEXTAREA_REPLACE.getText().length() - TEXTAREA_FIND.getText().length();
@@ -292,7 +292,7 @@ public class FindReplaceFrame extends JInternalFrame implements ActionListener, 
 			tree.setEditingNode(location.node);
 			tree.setCursorPosition(location.endIndex + difference);
 			tree.setCursorMarkPosition(location.startIndex);
-			tree.setComponentFocus(outlineLayoutManager.TEXT);
+			tree.setComponentFocus(OutlineLayoutManager.TEXT);
 			
 			// Update Preferred Caret Position
 			doc.setPreferredCaretPosition(location.endIndex);
@@ -308,7 +308,7 @@ public class FindReplaceFrame extends JInternalFrame implements ActionListener, 
 			}
 			
 			// Redraw and Set Focus
-			layout.draw(location.node,outlineLayoutManager.TEXT);
+			layout.draw(location.node,OutlineLayoutManager.TEXT);
 		}
 	}
 
@@ -322,7 +322,7 @@ public class FindReplaceFrame extends JInternalFrame implements ActionListener, 
 		boolean undoableAdded = false;
 		
 		if (CHECKBOX_SELECTION_ONLY.isSelected()) {
-			if (doc.tree.getComponentFocus() == outlineLayoutManager.TEXT) {
+			if (doc.tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
 				if (doc.tree.getCursorPosition() == doc.tree.getCursorMarkPosition()) {
 					// No selection, so return.
 					return;
@@ -499,7 +499,7 @@ public class FindReplaceFrame extends JInternalFrame implements ActionListener, 
 		}
 
 		if (CHECKBOX_SELECTION_ONLY.isSelected()) {
-			if (doc.tree.getComponentFocus() == outlineLayoutManager.TEXT) {
+			if (doc.tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
 				if (doc.tree.getCursorPosition() == doc.tree.getCursorMarkPosition()) {
 					// No selection, so return.
 					return null;
@@ -602,17 +602,6 @@ public class FindReplaceFrame extends JInternalFrame implements ActionListener, 
 			return text.indexOf(match);
 		} else {
 			return text.indexOf(match);
-		}
-	}
-}
-
-public class FindReplaceFrameWindowMonitor extends InternalFrameAdapter {
-	public void internalFrameClosing(InternalFrameEvent e) {
-		e.getInternalFrame().setVisible(false);
-		
-		OutlinerDocument doc = Outliner.getMostRecentDocumentTouched();
-		if (doc != null) {
-			WindowMenu.changeToWindow(doc);
 		}
 	}
 }

@@ -65,7 +65,7 @@ public class PrimitiveUndoableReplace implements Undoable {
 			tree.addNodeToSelection(oldNode);
 	
 			// Handle updating the Node to Draw From
-			/*outlineLayoutManager layout = tree.doc.panel.layout;
+			/*OutlineLayoutManager layout = tree.doc.panel.layout;
 			if (layout.getNodeToDrawFrom() == newNode) {
 				layout.setNodeToDrawFrom(oldNode, tree.visibleNodes.indexOf(oldNode));
 			}*/		
@@ -100,7 +100,7 @@ public class PrimitiveUndoableReplace implements Undoable {
 			tree.addNodeToSelection(newNode);
 	
 			// Handle updating the Node to Draw From
-			//outlineLayoutManager layout = tree.doc.panel.layout;
+			//OutlineLayoutManager layout = tree.doc.panel.layout;
 			//if (layout.getNodeToDrawFrom().isDecendantOf(oldNode)) {
 				//layout.setNodeToDrawFrom(newNode, tree.visibleNodes.indexOf(newNode));
 			//}
@@ -115,7 +115,7 @@ public class PrimitiveUndoableReplace implements Undoable {
 			parent.removeChild(oldNode);
 			
 			// Handle updating the Node to Draw From
-			//outlineLayoutManager layout = tree.doc.panel.layout;
+			//OutlineLayoutManager layout = tree.doc.panel.layout;
 			//if (layout.getNodeToDrawFrom().isDecendantOf(oldNode)) {
 				//layout.setNodeToDrawFrom(nodeToDrawFrom, tree.visibleNodes.indexOf(nodeToDrawFrom));
 			//}		

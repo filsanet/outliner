@@ -110,7 +110,7 @@ public class TreeContext {
 	private Node editingNode = null;
 	private int cursorPosition = 0;
 	private int cursorMarkPosition = 0;
-	private int componentFocus = outlineLayoutManager.TEXT;
+	private int componentFocus = OutlineLayoutManager.TEXT;
 
 	public void setEditingNode(Node editingNode) {this.editingNode = editingNode;}
 	public Node getEditingNode() {return editingNode;}
@@ -143,7 +143,7 @@ public class TreeContext {
 		JMenuItem cutItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CUT_MENU_ITEM);
 		JMenuItem copyItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.COPY_MENU_ITEM);
 
-		if (getComponentFocus() == outlineLayoutManager.TEXT) {
+		if (getComponentFocus() == OutlineLayoutManager.TEXT) {
 			if (getCursorPosition() == getCursorMarkPosition()) {
 				copyItem.setEnabled(false);
 				cutItem.setEnabled(false);
@@ -151,7 +151,7 @@ public class TreeContext {
 				copyItem.setEnabled(true);
 				cutItem.setEnabled(true);
 			}
-		} else if (getComponentFocus() == outlineLayoutManager.ICON) {
+		} else if (getComponentFocus() == OutlineLayoutManager.ICON) {
 			if (selectedNodes.size() == 0) {
 				copyItem.setEnabled(false);
 				cutItem.setEnabled(false);

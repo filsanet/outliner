@@ -86,7 +86,7 @@ public class HoistStack {
 
 			// Shorthand
 			TreeContext tree = currentNode.getTree();
-			outlineLayoutManager layout = tree.doc.panel.layout;
+			OutlineLayoutManager layout = tree.doc.panel.layout;
 
 			// Clear the undoQueue
 			if (!doc.undoQueue.isEmpty()) {
@@ -108,7 +108,7 @@ public class HoistStack {
 			// Record the EditingNode and CursorPosition and ComponentFocus
 			tree.setEditingNode(currentNode.getFirstChild());
 			tree.setCursorPosition(0);
-			tree.setComponentFocus(outlineLayoutManager.ICON);
+			tree.setComponentFocus(OutlineLayoutManager.ICON);
 		
 			// Throw it onto the stack
 			stack.push(item);
@@ -119,7 +119,7 @@ public class HoistStack {
 			layout.setNodeToDrawFrom(nodeToDrawFrom, ioNodeToDrawFrom);
 	
 			layout.draw();
-			layout.setFocus(nodeToDrawFrom, outlineLayoutManager.ICON);
+			layout.setFocus(nodeToDrawFrom, OutlineLayoutManager.ICON);
 			
 			// Update the MenuBar
 			updateOutlinerMenuHoisting();
@@ -133,7 +133,7 @@ public class HoistStack {
 			
 			// Shorthand
 			TreeContext tree = doc.tree;
-			outlineLayoutManager layout = doc.panel.layout;
+			OutlineLayoutManager layout = doc.panel.layout;
 
 			// Clear the undoQueue
 			if (!doc.undoQueue.isEmpty()) {
@@ -158,7 +158,7 @@ public class HoistStack {
 			// Record the EditingNode and CursorPosition and ComponentFocus
 			tree.setEditingNode(item.getNode());
 			tree.setCursorPosition(0);
-			tree.setComponentFocus(outlineLayoutManager.ICON);
+			tree.setComponentFocus(OutlineLayoutManager.ICON);
 	
 			// Redraw and Set Focus
 			Node nodeToDrawFrom = item.getNode();
@@ -166,7 +166,7 @@ public class HoistStack {
 			layout.setNodeToDrawFrom(nodeToDrawFrom, ioNodeToDrawFrom);
 	
 			layout.draw();
-			layout.setFocus(nodeToDrawFrom, outlineLayoutManager.ICON);
+			layout.setFocus(nodeToDrawFrom, OutlineLayoutManager.ICON);
 			
 			// Update the MenuBar
 			updateOutlinerMenuHoisting();
@@ -178,7 +178,7 @@ public class HoistStack {
 		
 			// Shorthand
 			TreeContext tree = doc.tree;
-			outlineLayoutManager layout = doc.panel.layout;
+			OutlineLayoutManager layout = doc.panel.layout;
 
 			// Clear the undoQueue
 			if (!doc.undoQueue.isEmpty()) {
@@ -207,7 +207,7 @@ public class HoistStack {
 			// Record the EditingNode and CursorPosition and ComponentFocus
 			tree.setEditingNode(item.getNode());
 			tree.setCursorPosition(0);
-			tree.setComponentFocus(outlineLayoutManager.ICON);
+			tree.setComponentFocus(OutlineLayoutManager.ICON);
 	
 			// Redraw and Set Focus
 			Node nodeToDrawFrom = item.getNode();
@@ -215,7 +215,7 @@ public class HoistStack {
 			layout.setNodeToDrawFrom(nodeToDrawFrom, ioNodeToDrawFrom);
 	
 			layout.draw();
-			layout.setFocus(nodeToDrawFrom, outlineLayoutManager.ICON);
+			layout.setFocus(nodeToDrawFrom, OutlineLayoutManager.ICON);
 			
 			// Update the MenuBar
 			updateOutlinerMenuHoisting();		
@@ -235,86 +235,5 @@ public class HoistStack {
 			dehoistAllItem.setEnabled(false);
 		}
 		hoistItem.setText(OutlineMenu.OUTLINE_HOIST + " (" + getHoistDepth() + ")");
-	}
-}
-
-
-
-
-
-
-public class HoistStackItem {
-
-	// Instance Variables
-	private Node hoistedNode = null;
-	private Node hoistedNodeParent = null;
-	private int hoistedNodeIndex = -1;
-	private int hoistedNodeDepth = -1;
-	
-	private Node oldNodeSet = null;
-	private int lineCountOffset = 0;
-		
-	
-	// The Constructor
-	public HoistStackItem(Node hoistedNode) {
-		this.hoistedNode = hoistedNode;
-		this.hoistedNodeParent = hoistedNode.getParent();
-		this.hoistedNodeIndex = hoistedNodeParent.getChildIndex(hoistedNode);
-		this.hoistedNodeDepth = hoistedNode.getDepth();
-		
-		this.oldNodeSet = hoistedNode.getTree().getRootNode();
-		this.lineCountOffset = hoistedNode.getLineNumber();
-	}
-	
-	public void destroy() {
-		hoistedNode = null;
-	}
-	
-	
-	// Accessors
-	public Node getNode() {return this.hoistedNode;}
-	public Node getNodeParent() {return this.hoistedNodeParent;}
-
-	public Node getOldNodeSet() {return this.oldNodeSet;}
-	public int getLineCountOffset() {return this.lineCountOffset;}
-	
-	// Methods
-	public void dehoist() {
-		// Shorthand
-		TreeContext tree = hoistedNode.getTree();
-
-		hoistedNode.setHoisted(false);
-
-		// Prune things
-		tree.setRootNode(oldNodeSet);
-		tree.visibleNodes.clear();
-		hoistedNodeParent.insertChild(hoistedNode, hoistedNodeIndex);
-		hoistedNode.setDepthRecursively(hoistedNodeDepth);
-		for (int i = 0; i < oldNodeSet.numOfChildren(); i++) {
-			Node node = oldNodeSet.getChild(i);
-			tree.insertNode(node);
-		}
-				
-		return;
-	}
-	
-	public void hoist() {
-		
-		// Shorthand
-		TreeContext tree = hoistedNode.getTree();
-		
-		hoistedNode.setHoisted(true);
-		
-		// Prune things
-		hoistedNode.getParent().removeChild(hoistedNode);
-		hoistedNode.setDepthRecursively(-1);
-		tree.setRootNode(hoistedNode);
-		tree.visibleNodes.clear();
-		for (int i = 0; i < hoistedNode.numOfChildren(); i++) {
-			Node node = hoistedNode.getChild(i);
-			tree.insertNode(node);
-		}
-		
-		return;
 	}
 }

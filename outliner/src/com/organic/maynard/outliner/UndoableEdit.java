@@ -86,7 +86,7 @@ public class UndoableEdit implements Undoable {
 		node.getTree().setEditingNode(node);
 		node.getTree().clearSelection();
 		node.getTree().insertNode(node); // Used for visibility
-		node.getTree().doc.panel.layout.draw(node, outlineLayoutManager.TEXT);
+		node.getTree().doc.panel.layout.draw(node, OutlineLayoutManager.TEXT);
 	}
 	
 	public void redo() {
@@ -97,7 +97,7 @@ public class UndoableEdit implements Undoable {
 		node.getTree().setEditingNode(node);
 		node.getTree().clearSelection();
 		node.getTree().insertNode(node); // Used for visibility
-		node.getTree().doc.panel.layout.draw(node, outlineLayoutManager.TEXT);
+		node.getTree().doc.panel.layout.draw(node, OutlineLayoutManager.TEXT);
 	}
 	
 	public int getType() {return Undoable.EDIT_TYPE;}

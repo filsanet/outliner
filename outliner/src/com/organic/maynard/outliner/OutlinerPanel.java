@@ -21,16 +21,16 @@ package com.organic.maynard.outliner;
 import javax.swing.*;
 import java.awt.event.*;
 
-public class outlinerPanel extends JPanel {
+public class OutlinerPanel extends JPanel {
 
 
 	// GUI Fields
 	public OutlinerDocument doc = null;
-	public outlineLayoutManager layout = new outlineLayoutManager(this);
+	public OutlineLayoutManager layout = new OutlineLayoutManager(this);
 
 
 	// The Constructor
-	public outlinerPanel(OutlinerDocument doc) {
+	public OutlinerPanel(OutlinerDocument doc) {
 		this.doc = doc;
 		setBackground(Preferences.PANEL_BACKGROUND_COLOR.cur);
 		setLayout(layout);
