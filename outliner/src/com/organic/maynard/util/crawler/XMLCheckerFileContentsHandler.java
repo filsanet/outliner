@@ -36,37 +36,69 @@ import java.util.*;
 
 import com.organic.maynard.io.*;
 import com.organic.maynard.util.string.*;
-
-import org.xml.sax.*;
-import org.apache.xerces.parsers.*;
-
 import com.organic.maynard.xml.*;
 
-public class XMLCheckerFileContentsHandler extends FileContentsInspector {
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
+import org.xml.sax.Attributes;
+import org.xml.sax.XMLReader;
+import org.xml.sax.InputSource;
+import org.xml.sax.helpers.DefaultHandler;
 
-	private SAXParser parser = new SAXParser();
+public class XMLCheckerFileContentsHandler extends FileContentsInspector {
+	
+	// Instance Fields
+	/** The factory that produces the XML parser. */
+	private SAXParserFactory factory = null;
+	
+	/** The SAX2 parser that processes the XML.*/
+	private XMLReader reader = null;
+	
 	private String checkType = null;
+	
 	
 	// Constructors
 	public XMLCheckerFileContentsHandler(String checkType, String lineEnding) {
 		super(lineEnding);
-		
-		// Setup the parser
-		parser.setErrorHandler(new SimpleSAXErrorHandler("    "));
+		init();
 		setCheckType(checkType);
-
+	}
+	
+	/**
+	 * Does initalization for this object. Creates a SAXParserFactory and obtains 
+	 * a SAX2 parser from it. Configures the parser with a content handler and an 
+	 * error handler.
+	 */
+	private void init() {
+		try {
+			// Setup Parser
+			factory = SAXParserFactory.newInstance();
+			factory.setValidating(true);
+			
+			reader = factory.newSAXParser().getXMLReader();
+			reader.setErrorHandler(new SimpleSAXErrorHandler());
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		}
 	}
 
 
 	// Accessors
-	public String getCheckType() {return checkType;}
+	public String getCheckType() {
+		return checkType;
+	}
+	
 	public void setCheckType(String checkType) {
 		this.checkType = checkType;
 		try {
 			if (checkType.equals(XMLChecker.VALID)) {
-				parser.setFeature("http://xml.org/sax/features/validation", true);
+				reader.setFeature("http://xml.org/sax/features/validation", true);
 			} else {
-				parser.setFeature("http://xml.org/sax/features/validation", false);			
+				reader.setFeature("http://xml.org/sax/features/validation", false);			
 			}
 		} catch (Exception e) {
 			System.out.println("Error setting up parser.");
@@ -76,7 +108,6 @@ public class XMLCheckerFileContentsHandler extends FileContentsInspector {
 
 	// Overridden Methods
 	protected void inspectContents(File file, String contents) {
-
 		if (checkType.equals(XMLChecker.VALID)) {
 			System.out.println("  START VALIDATION FOR FILE: " + file.getPath());
 			doParse(contents);
@@ -92,7 +123,7 @@ public class XMLCheckerFileContentsHandler extends FileContentsInspector {
 	private void doParse(String contents) {
 		try {
 			InputSource xmlParserSource = new InputSource(new StringReader(contents));
-			parser.parse(xmlParserSource);
+			reader.parse(xmlParserSource);
 		} catch (IOException ioe) {
 			System.out.println("IOException when running parser.");
 			ioe.printStackTrace();
