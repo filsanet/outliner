@@ -68,8 +68,16 @@ public class FileSystemReplaceFileContentsHandler extends FileContentsHandler {
 	
 	
 	// Constructors
-	public FileSystemReplaceFileContentsHandler(String query, String replacement, FindReplaceResultsModel results, boolean isRegexp, boolean ignoreCase, String lineEnding) {
-		super(lineEnding);
+	public FileSystemReplaceFileContentsHandler(
+		String query, 
+		String replacement, 
+		FindReplaceResultsModel results, 
+		boolean isRegexp, 
+		boolean ignoreCase, 
+		String lineEnding
+	) {
+		super(lineEnding, false, FileContentsHandler.MODE_ARRAYS, Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur, Preferences.getPreferenceString(Preferences.SAVE_ENCODING).cur);
+
 		this.results = results;
 		this.isRegexp = isRegexp;
 		this.ignoreCase = ignoreCase;
@@ -84,16 +92,9 @@ public class FileSystemReplaceFileContentsHandler extends FileContentsHandler {
 	}
 	
 	// Overridden Methods
-	protected String processContents(File file, String contents) {
-		StringBuffer buf = new StringBuffer();
-		
-		// Split it into lines
-		StringSplitter splitter = new StringSplitter(contents, getLineEnding());
-		
-		// Scan each line
-		int lineCount = 1;
-		while (splitter.hasMoreElements()) {
-			String line = (String) splitter.nextElement();
+	protected boolean processContents(File file, ArrayList lines, ArrayList lineEndings) {
+		for (int lineCount = 1; lineCount <= lines.size(); lineCount++) {
+			String line = (String) lines.get(lineCount - 1);
 			
 			if (isRegexp) {
 				// Do the regex find and return result
@@ -174,16 +175,14 @@ public class FileSystemReplaceFileContentsHandler extends FileContentsHandler {
 				}
 			}
 			
-			buf.append(line).append(getLineEnding()); //TBD: preserve real line endings.
-			
-			lineCount++;
+			lines.set(lineCount - 1, line);
 		}
 		
 		if (results.size() == 0) {
 			// If we made no changes then don't write a re-write the file.
-			return null;
+			return false;
 		} else {
-			return buf.toString();
+			return true;
 		}
 	}	
 }
