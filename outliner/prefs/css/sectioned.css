@@ -30,6 +30,22 @@ body {
 	font: bold 14pt Verdana, Geneva, Arial, Helvetica, sans-serif;
 }
 
+.leafcomment0 {
+	margin-left: 0pt;
+	margin-top: 20pt;
+	margin-bottom: 0pt;
+	font: bold 14pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+	color: #ff3300;
+}
+
+.branchcomment0 {
+	margin-left: 0pt;
+	margin-top: 20pt;
+	margin-bottom: 0pt;
+	font: bold 14pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+	color: #ff3300;
+}
+
 .leaf1 {
 	margin-left: 15pt;
 	margin-top: 10pt;
@@ -46,6 +62,22 @@ body {
 	color: #993300;
 }
 
+.leafcomment1 {
+	margin-left: 15pt;
+	margin-top: 10pt;
+	margin-bottom: 0pt;
+	font: italic 12pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+	color: #ff3300;
+}
+
+.branchcomment1 {
+	margin-left: 15pt;
+	margin-top: 10pt;
+	margin-bottom: 0pt;
+	font: italic 12pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+	color: #ff3300;
+}
+
 .leaf {
 	margin-left: 15pt;
 	margin-top: 3pt;
@@ -59,6 +91,22 @@ body {
 	margin-top: 3pt;
 	margin-bottom: 0pt;
 	color: {$textarea_foreground_color}; 
+	font: 9pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+
+.leafcomment {
+	margin-left: 15pt;
+	margin-top: 3pt;
+	margin-bottom: 0pt;
+	color: {$textarea_comment_color}; 
+	font: 9pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+
+.branchcomment {
+	margin-left: 15pt;
+	margin-top: 3pt;
+	margin-bottom: 0pt;
+	color: {$textarea_comment_color}; 
 	font: 9pt Verdana, Geneva, Arial, Helvetica, sans-serif;
 }
 

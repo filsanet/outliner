@@ -20,12 +20,32 @@ body {
 	margin-left: 15pt;
 	margin-top: 3pt;
 	margin-bottom: 3pt;
+	color: {$textarea_foreground_color}; 
+	font: {$font_size}pt {$font_face}, Verdana, Geneva, Arial, Helvetica, sans-serif;
 }
 
 .branch {
 	margin-left: 15pt;
 	margin-top: 3pt;
 	margin-bottom: 3pt;
+	color: {$textarea_foreground_color}; 
+	font: {$font_size}pt {$font_face}, Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+
+.leafcomment {
+	margin-left: 15pt;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+	color: {$textarea_comment_color}; 
+	font: {$font_size}pt {$font_face}, Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+
+.branchcomment {
+	margin-left: 15pt;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+	color: {$textarea_comment_color}; 
+	font: {$font_size}pt {$font_face}, Verdana, Geneva, Arial, Helvetica, sans-serif;
 }
 
 </style>
