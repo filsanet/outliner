@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\About JOE.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Sun, 27 Jan 2002 05:14:05 GMT</dateModified>
+<dateModified>Wed, 30 Jan 2002 10:22:32 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
-<expansionState>3,5,8,14,15</expansionState>
+<expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>0</windowTop>
-<windowLeft>5</windowLeft>
-<windowBottom>681</windowBottom>
-<windowRight>575</windowRight>
+<windowTop>45</windowTop>
+<windowLeft>214</windowLeft>
+<windowBottom>680</windowBottom>
+<windowRight>791</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -27,8 +27,12 @@
 	<outline isEditable="true" isMoveable="true" text="1.8.7.dev"/>
 	<outline text="Version ReadMe ">
 		<outline text="&lt;under construction/&gt;"/>
-		<outline text="Bug Fixes"/>
+		<outline text="Bug Fixes">
+			<outline text="StringTools.replace null pointer crash"/>
+			<outline text=""/>
+		</outline>
 		<outline text="New Features">
+			<outline text="Document Window Titles"/>
 			<outline text="Import">
 				<outline text="There's a new File menu command: Import "/>
 				<outline text="Import opens a file that's in a format that JOE can read but not write"/>
@@ -54,17 +58,16 @@
 				<outline text="There are two new Window menu commands: Maximize:Horizontal and Maximize:Vertical"/>
 				<outline text="They resize the topmost window so that it is maximized along the specified axis"/>
 			</outline>
-			<outline text="Tile Horizontal, Vertical, and Grid">
-				<outline text="There are three new Window menu commands: Tile:Horizontal, Tile:Vertical, and Tile:Grid"/>
-				<outline text="They tile several open windows, maximized along the specified axis."/>
-				<outline text="The number of windows tiled depends on available real estate and user settings"/>
-			</outline>
-			<outline text="Recent Files UI"/>
-			<outline text="Document Window Titles"/>
 			<outline text="Preference Panels">
 				<outline text="Application">
 					<outline text=""/>
 				</outline>
+			</outline>
+			<outline text="Recent Files UI"/>
+			<outline text="Tile Horizontal, Vertical, and Grid">
+				<outline text="There are three new Window menu commands: Tile:Horizontal, Tile:Vertical, and Tile:Grid"/>
+				<outline text="They tile several open windows, maximized along the specified axis."/>
+				<outline text="The number of windows tiled depends on available real estate and user settings"/>
 			</outline>
 		</outline>
 	</outline>
