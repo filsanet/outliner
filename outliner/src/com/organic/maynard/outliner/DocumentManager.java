@@ -15,14 +15,14 @@
  * Extends Object
  *
  * Members
- *	data
+ *	variables
  *		instance
  			protected
  				boolean [] docOpenStates
  *			private
  *				String [] docPaths
  				int [] docAlfaOrder
- *
+ *i
  *	methods
  * 		instance
  			public
