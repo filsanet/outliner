@@ -33,12 +33,20 @@ package com.organic.maynard.util.crawler;
 
 import java.io.*;
 import com.organic.maynard.io.*;
+import java.util.*;
 
 public class FileContentsHandler implements FileHandler {
-
+	// Constants
+	public static final int MODE_UNKNOWN = -1;
+	public static final int MODE_BIG_CHUNK = 1;
+	public static final int MODE_ARRAYS = 2;
+	
 	// Declare Fields
 	private String lineEnding = null;
 	private boolean lineEndingAtEnd = true;
+	private int processMode = MODE_UNKNOWN;
+	private String openEncoding = "UTF-8";
+	private String saveEncoding = "UTF-8";
 	
 	
 	// Constructors
@@ -47,8 +55,21 @@ public class FileContentsHandler implements FileHandler {
 	}
 
 	public FileContentsHandler(String lineEnding, boolean lineEndingAtEnd) {
+		this(lineEnding, lineEndingAtEnd, MODE_BIG_CHUNK, "UTF-8", "UTF-8");
+	}
+	
+	public FileContentsHandler(
+		String lineEnding, 
+		boolean lineEndingAtEnd, 
+		int processMode, 
+		String openEncoding, 
+		String saveEncoding
+	) {
 		setLineEnding(lineEnding);
 		setLineEndingAtEnd(lineEndingAtEnd);
+		setProcessMode(processMode);
+		setOpenEncoding(openEncoding);
+		setSaveEncoding(saveEncoding);
 	}
 	
 	
@@ -59,29 +80,56 @@ public class FileContentsHandler implements FileHandler {
 	public boolean getLineEndingAtEnd() {return lineEndingAtEnd;}
 	public void setLineEndingAtEnd(boolean lineEndingAtEnd) {this.lineEndingAtEnd = lineEndingAtEnd;}
 
+	public int getProcessMode() {return processMode;}
+	public void setProcessMode(int processMode) {this.processMode = processMode;}
+
+	public String getOpenEncoding() {return openEncoding;}
+	public void setOpenEncoding(String openEncoding) {this.openEncoding = openEncoding;}
+
+	public String getSaveEncoding() {return saveEncoding;}
+	public void setSaveEncoding(String saveEncoding) {this.saveEncoding = saveEncoding;}
+
 	
 	// FileHandler Interface
 	public void handleFile(File file) {
-		String contents = FileTools.readFileToString(file, lineEnding);
-		contents = processContents(file, contents);
-		
-		// If contents are null then don't write anything out.
-		if (contents == null) {
-			return;
+		if (getProcessMode() == MODE_BIG_CHUNK) {
+			String contents = FileTools.readFileToString(file, getOpenEncoding(), lineEnding);
+			contents = processContents(file, contents);
+			
+			// If contents are null then don't write anything out.
+			if (contents == null) {
+				return;
+			}
+			
+			// Clean last line ending if neccessary.
+			int lineEndingLength = lineEnding.length();
+			int contentsLength = contents.length();
+			if (!lineEndingAtEnd && (contentsLength >= lineEndingLength)) {
+				contents = contents.substring(0, contentsLength - lineEndingLength);
+			}
+			
+			FileTools.dumpStringToFile(file, contents, getSaveEncoding());
+		} else if (getProcessMode() == MODE_ARRAYS) {
+			ArrayList lines = new ArrayList();
+			ArrayList lineEndings = new ArrayList();
+			FileTools.readFileToArrayOfLines(file, getOpenEncoding(), lines, lineEndings);
+			
+			boolean modified = processContents(file, lines, lineEndings);
+			
+			if (modified) {
+				FileTools.dumpArrayOfLinesToFile(file, getSaveEncoding(), lines, lineEndings);
+			}
+		} else {
+			System.out.println("Error: Unknown process mode.");
 		}
-		
-		// Clean last line ending if neccessary.
-		int lineEndingLength = lineEnding.length();
-		int contentsLength = contents.length();
-		if (!lineEndingAtEnd && (contentsLength >= lineEndingLength)) {
-			contents = contents.substring(0, contentsLength - lineEndingLength);
-		}
-		
-		FileTools.dumpStringToFile(file, contents);
 	}
 	
 	protected String processContents(File file, String contents) {
 		System.out.println("Contents: " + contents);
 		return contents;
+	}
+
+	protected boolean processContents(File file, ArrayList lines, ArrayList lineEndings) {
+		return false;
 	}
 }
