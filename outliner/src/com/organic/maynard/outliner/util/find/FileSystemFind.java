@@ -66,13 +66,9 @@ import java.util.*;
 	) {		
 		// Setup the Crawler
 		crawler.setFileHandler(new FileSystemFindFileContentsHandler(query, model, isRegexp, ignoreCase, PlatformCompatibility.LINE_END_UNIX));
-		
 		crawler.setFileFilter(fileFilter);
 		crawler.setDirectoryFilter(dirFilter);
-		
-		//ProgressDialog monitor = new ProgressDialog();
 		crawler.setProgressDialog(FindReplaceFrame.monitor);
-		
 		crawler.setVerbose(false);
 		
 		// Do the Crawl

@@ -178,7 +178,7 @@ public class DirectoryCrawler {
 				}
 				
 				//System.out.println("" + progressDone + ":" + (progressDone + fileList.size()) + ":" + file.getPath());
-				//monitor.setNote(file.getPath());
+				monitor.setNote(file.getPath());
 				monitor.setMaximum(progressDone + fileList.size());
 				monitor.setProgress(progressDone);
 			}

@@ -68,10 +68,9 @@ import java.util.*;
 		String lineEnd = PlatformCompatibility.platformToLineEnding(Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur);
 		
 		crawler.setFileHandler(new FileSystemReplaceFileContentsHandler(query, replacement, model, isRegexp, ignoreCase, makeBackups, lineEnd));
-		
 		crawler.setFileFilter(fileFilter);
 		crawler.setDirectoryFilter(dirFilter);
-
+		crawler.setProgressDialog(FindReplaceFrame.monitor);
 		crawler.setVerbose(false);
 		
 		// Do the Crawl

@@ -1019,6 +1019,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 					} 
 				});
 				t.start();
+				monitor.setTitle("File System Find");
 				monitor.show(); // Modal dialog, blocks thread.
 				break;
 			
@@ -1078,7 +1079,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	private static void replace_all(OutlinerDocument doc) {
 		int mode = getFindReplaceMode();
 		
-		FindReplaceResultsModel results = new FindReplaceResultsModel();
+		results = new FindReplaceResultsModel();
 		
 		switch (mode) {
 			case MODE_CURRENT_DOCUMENT:
@@ -1115,24 +1116,31 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				break;
 			
 			case MODE_FILE_SYSTEM:
-				replaceAllFileSystem(
-					results,
-					TEXTFIELD_PATH.getText(),
-					CHECKBOX_INCLUDE_SUB_DIRECTORIES.isSelected(),
-					TEXTFIELD_FILE_FILTER_INCLUDE.getText(), 
-					CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.isSelected(), 
-					TEXTFIELD_FILE_FILTER_EXCLUDE.getText(), 
-					CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.isSelected(), 
-					TEXTFIELD_DIR_FILTER_INCLUDE.getText(), 
-					CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.isSelected(), 
-					TEXTFIELD_DIR_FILTER_EXCLUDE.getText(), 
-					CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.isSelected(), 
-					TEXTAREA_FIND.getText(), 
-					TEXTAREA_REPLACE.getText(), 
-					CHECKBOX_IGNORE_CASE.isSelected(), 
-					CHECKBOX_MAKE_BACKUPS.isSelected(), 
-					CHECKBOX_REGEXP.isSelected()
-				);
+				Thread t = new Thread(new Runnable() { 
+					public void run() { 
+						replaceAllFileSystem(
+							results,
+							TEXTFIELD_PATH.getText(),
+							CHECKBOX_INCLUDE_SUB_DIRECTORIES.isSelected(),
+							TEXTFIELD_FILE_FILTER_INCLUDE.getText(), 
+							CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.isSelected(), 
+							TEXTFIELD_FILE_FILTER_EXCLUDE.getText(), 
+							CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.isSelected(), 
+							TEXTFIELD_DIR_FILTER_INCLUDE.getText(), 
+							CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.isSelected(), 
+							TEXTFIELD_DIR_FILTER_EXCLUDE.getText(), 
+							CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.isSelected(), 
+							TEXTAREA_FIND.getText(), 
+							TEXTAREA_REPLACE.getText(), 
+							CHECKBOX_IGNORE_CASE.isSelected(), 
+							CHECKBOX_MAKE_BACKUPS.isSelected(), 
+							CHECKBOX_REGEXP.isSelected()
+						);
+					} 
+				});
+				t.start();
+				monitor.setTitle("File System Replace");
+				monitor.show(); // Modal dialog, blocks thread.
 				break;
 			
 			case MODE_UNKNOWN:
@@ -1147,6 +1155,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		}
 
 		Outliner.findReplaceResultsDialog.show(results);
+		results = null; // cleanup.
 	}
 		
 	// This method is public and should have no direct dependancy on 

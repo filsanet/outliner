@@ -36,6 +36,7 @@ package com.organic.maynard.outliner.util;
 
 import com.organic.maynard.outliner.*;
 
+import javax.swing.border.*;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -51,14 +52,15 @@ public class ProgressDialog extends AbstractOutlinerJDialog implements ActionLis
 
 	// Constants
 	private static final int MINIMUM_WIDTH = 400;
-	private static final int MINIMUM_HEIGHT = 150;
+	private static final int MINIMUM_HEIGHT = 100;
  	private static final int INITIAL_WIDTH = 400;
-	private static final int INITIAL_HEIGHT = 150;
+	private static final int INITIAL_HEIGHT = 100;
 	
 	private static final String CANCEL = "Cancel";
 	
 	private JProgressBar bar = new JProgressBar();
 	private JButton cancel = new JButton(CANCEL);
+	private JLabel note = new JLabel("");
 	
 	private boolean isCanceled = false;
 
@@ -67,23 +69,64 @@ public class ProgressDialog extends AbstractOutlinerJDialog implements ActionLis
 	public ProgressDialog() {
 		super(false, false, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
 		
+		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		addWindowListener(
+			new WindowAdapter() {
+				public void windowClosing(WindowEvent e) {
+					setCanceled(true);
+				}
+			}
+		);
+
 		cancel.addActionListener(this);
 		
 		setMinimum(0);
-		getContentPane().add(bar, BorderLayout.CENTER);
-		getContentPane().add(cancel, BorderLayout.SOUTH);
+		
+		// Setup GUI
+		JPanel panel = new JPanel();
+		
+		GridBagLayout gb = new GridBagLayout();
+		GridBagConstraints c = new GridBagConstraints();
+         
+		panel.setLayout(gb);
+		
+			// Setup GridBagLayout
+			c.anchor = GridBagConstraints.WEST;
+			c.insets = new Insets(0,2,0,2);
+
+			c.gridwidth = GridBagConstraints.REMAINDER;
+			c.weightx = 1.0;
+			gb.setConstraints(note, c);
+			panel.add(note);
+	
+			c.gridwidth = GridBagConstraints.RELATIVE;
+			c.weightx = 0.0;
+			Dimension dim = new Dimension(150,25);
+			bar.setStringPainted(true);
+			bar.setMinimumSize(dim);
+			bar.setMaximumSize(dim);
+			bar.setPreferredSize(dim);
+			gb.setConstraints(bar, c);
+			panel.add(bar);
+	
+			c.gridwidth = GridBagConstraints.REMAINDER;
+			c.weightx = 1.0;
+			gb.setConstraints(cancel, c);
+			panel.add(cancel);
+	    
+	    getContentPane().add(panel);
 	}
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		// File Menu
 		if (e.getActionCommand().equals(CANCEL)) {
-			this.isCanceled = true;
+			setCanceled(true);
 		}
 	}
 	
 	public void show() {
-		this.isCanceled = false;
+		setCanceled(false);
 		super.show();
 	}
 		
@@ -91,8 +134,16 @@ public class ProgressDialog extends AbstractOutlinerJDialog implements ActionLis
 		hide();
 	}
 	
+	public void setCanceled(boolean isCanceled) {
+		this.isCanceled = isCanceled;
+	}
+	
 	public boolean isCanceled() {
 		return isCanceled;
+	}
+	
+	public void setNote(String text) {
+		note.setText(text);
 	}
 	
 	public void setProgress(int i) {
