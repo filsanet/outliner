@@ -52,6 +52,8 @@ import com.organic.maynard.util.*;
 import com.organic.maynard.io.FileTools;
 import com.organic.maynard.util.string.*;
 
+import com.organic.maynard.swing.SplashScreen;
+
 // MouseWheel
 import gui.*;
 
@@ -67,7 +69,12 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	    	
 	// Language Handling
 	public static String LANGUAGE = "en"; // Defaults to English.
-	
+
+	// Splash Screen
+	public static SplashScreen splash = null;
+	static {
+		splash = new SplashScreen(Thread.currentThread().getContextClassLoader().getResource("graphics/splash_screen.gif"));
+	}	
 	
 	// Directory setup
 	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
@@ -529,6 +536,9 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		Preferences.applyCurrentToApplication();
 
 		setVisible(true); // Seems OK to do this now rather than at the end of this method.
+		
+		// Get rid of Splash Screen
+		Outliner.splash.dispose();
 
 		// Generate Icons
 		OutlineButton.createIcons();
