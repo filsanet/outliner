@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE User Guide.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Sun, 3 Feb 2002 08:18:12 GMT</dateModified>
+<dateModified>Mon, 4 Feb 2002 06:20:37 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
 <windowTop>5</windowTop>
 <windowLeft>5</windowLeft>
-<windowBottom>713</windowBottom>
-<windowRight>573</windowRight>
+<windowBottom>455</windowBottom>
+<windowRight>455</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -161,8 +161,6 @@
 	<outline text="Muy Importante: if you encounter any problems following these installation and setup instructions, andor your installation just outandout fails, please contact us ASAP via http://JavaOutlineEditor.org/feedback"/>
 	<outline text="---------"/>
 	<outline text="Prepare your system">
-		<outline text="Linux/Unix/Solaris"/>
-		<outline text="Macintosh"/>
 		<outline text="Windows">
 			<outline text="Ensure that your system has an appropriate Java 2 Runtime Environment (JRE) installed">
 				<outline text="Determine if you have a JRE, andor a Java 2 SDK (JSDK), and if so, which version(s) of each">
@@ -183,20 +181,41 @@
 					</outline>
 					<outline text="If you have two or more entries for either the Runtime Environment or the SDK, you need to uninstall earlier versions, keeping only the highest-numbered version of each"/>
 					<outline text="If your JRE andor SDK is less than version 1.3.1, you need to uninstall those, and then install a 1.3.1 or higher version"/>
+					<outline text="Download sites">
+						<outline text="Java 2 SDK 1.3.1_02">
+							<outline text="http://java.sun.com/j2se/1.3/download-windows.html"/>
+						</outline>
+						<outline text="JRE 1.3.1_02">
+							<outline text="http://java.sun.com/j2se/1.3/jre/download-windows.html"/>
+						</outline>
+					</outline>
 				</outline>
 				<outline text="Uninstall and Install as necessary">
-					<outline text="To uninstall: "/>
+					<outline text="To uninstall:">
+						<outline text="Give the Start:Settings:Control Panel command"/>
+						<outline text="The Control Panel window appears "/>
+						<outline text="Start up the Add/Remove Programs applet"/>
+						<outline text="Look for the Java 2 Runtime... or Java 2 SDK... entry you wish to remove in the list of installed software"/>
+						<outline text="Click the Add/Remove button"/>
+					</outline>
+					<outline text="To install:">
+						<outline text="Get the download from one of the download sites noted above."/>
+						<outline text="Execute it."/>
+					</outline>
 				</outline>
 			</outline>
 			<outline text="Ensure that there your system has sufficient environment space">
 				<outline text="Environment space is where DOS/Windows stores string constants"/>
-				<outline text="It defaults to a very small amount, 256 bytes"/>
-				<outline text="To increase environment space, add a line like this to the file c:\config.sys">
+				<outline text="It can default to a very small amount, 256 bytes"/>
+				<outline text="To increase environment space generally, add a line like this to the file c:\config.sys">
 					<outline text="shell=c:\windows\command.com /e2048 /p"/>
 					<outline text="In this example, Windows is installed on the c drive in a directory named windows, and we are setting the environment to 2048 bytes"/>
 				</outline>
+				<outline text="You can skip this general increase and just increase the environment space of the run.bat file that starts up JOE"/>
 			</outline>
 		</outline>
+		<outline text="Macintosh OS/X"/>
+		<outline text="Linux/Unix/Solaris"/>
 	</outline>
 	<outline text="Download the latest JOE">
 		<outline text="Go to http://sourceforge.net/projects/outliner"/>
@@ -207,18 +226,39 @@
 		</outline>
 	</outline>
 	<outline text="Install the download">
-		<outline text="Windows"/>
+		<outline text="Windows">
+			<outline text="Extract the Outliner directory and its contents from the download file."/>
+			<outline text="If you haven't increased environment space generally, you can instead increase it for the Outliner directory's run.bat file ">
+				<outline text="Find run.bat in the Outliner directory"/>
+				<outline text="Right-click on it and give the Properties menu command"/>
+				<outline text="Select the Memory tab in the run.bat Properties dialog"/>
+				<outline text="Set the Initial Environment widget to a minimum of 2048"/>
+				<outline text="Click OK"/>
+			</outline>
+		</outline>
 		<outline text="Mac OS X"/>
 		<outline text="Linux/Unix/Solaris"/>
 	</outline>
 	<outline text="Create some startup shortcuts">
-		<outline text="Windows"/>
+		<outline text="Windows">
+			<outline text="Create shortcuts to the Outliner directory's run.bat file."/>
+		</outline>
 		<outline text="Mac OS X"/>
 		<outline text="Linux/Unix/Solaris"/>
 	</outline>
-	<outline text="Start JOE up"/>
-	<outline text="Set JOE application preferences"/>
-	<outline text="Set JOE user preferences"/>
+	<outline text="Start JOE up">
+		<outline text="Windows">
+			<outline text="Double-click one of your startup shortcuts"/>
+			<outline text="It'll take JOE 6-15 seconds to start up on a 900 mhz Windows system. The first startup of the day is the slowest."/>
+		</outline>
+		<outline text="Mac OS X"/>
+		<outline text="Linux/Unix/Solaris"/>
+	</outline>
+	<outline text="Set JOE application preferences">
+		<outline text="Give the Edit:Application Preferences menu command"/>
+		<outline text="Go through the preference panels, and set items as desired."/>
+	</outline>
+	<outline text="That's it. Give a File:New/Open/Import command, and start outlining !"/>
 </outline>
 <outline text="-------------------------"/>
 <outline text="Your First Outline" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
