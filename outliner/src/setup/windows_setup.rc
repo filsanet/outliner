@@ -1,0 +1,158 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "windows_setup_resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_MAINFRAME           ICON    DISCARDABLE     "windows_setup.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_NEXT_CANCEL DIALOG DISCARDABLE  0, 0, 180, 100
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "JOE 1.8.8 - Windows Setup Program"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Static",IDC_STATIC_01,12,10,168,60
+    DEFPUSHBUTTON   "Next",ID_NEXT,25,77,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,105,77,50,14
+END
+
+IDD_EXIT DIALOG DISCARDABLE  0, 0, 180, 100
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "JOE 1.8.8 - Windows Setup Program"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Static",IDC_STATIC_01,12,10,168,60
+    DEFPUSHBUTTON   "Exit Setup",ID_EXIT_SETUP,65,77,50,14
+END
+
+IDD_REBOOT_LATER_NOW DIALOG DISCARDABLE  0, 0, 180, 100
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "JOE 1.8.8 - Windows Setup Program"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Static",IDC_STATIC_01,12,10,168,60
+    DEFPUSHBUTTON   "Reboot Now",ID_REBOOT_NOW,25,77,50,14
+    PUSHBUTTON      "Reboot Later",ID_REBOOT_LATER,105,77,50,14
+END
+
+IDD_EXIT_START DIALOG DISCARDABLE  0, 0, 180, 100
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "JOE 1.8.8 - Windows Setup Program"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Static",IDC_STATIC_01,12,10,168,60
+    DEFPUSHBUTTON   "Exit Setup",ID_EXIT_SETUP,25,77,50,14
+    PUSHBUTTON      "Start App",ID_START_APP,105,77,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_CONT_CANCEL, DIALOG
+    BEGIN
+        LEFTMARGIN, 10
+        RIGHTMARGIN, 190
+        TOPMARGIN, 10
+        BOTTOMMARGIN, 90
+    END
+
+    IDD_REBOOT_LATER_NOW, DIALOG
+    BEGIN
+        LEFTMARGIN, 10
+        RIGHTMARGIN, 190
+        TOPMARGIN, 10
+        BOTTOMMARGIN, 90
+    END
+
+    IDD_EXIT_START, DIALOG
+    BEGIN
+        VERTGUIDE, 100
+    END
+
+    IDD_EXIT, DIALOG
+    BEGIN
+        LEFTMARGIN, 10
+        RIGHTMARGIN, 190
+        VERTGUIDE, 90
+        TOPMARGIN, 10
+        BOTTOMMARGIN, 90
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
