@@ -135,19 +135,18 @@ public class OutlinerDesktop extends JDesktopPane implements Scrollable {
 		return false;
 
 	Dimension getCurrentMaxDocSize () {
+		// see if we have scroll bar stuff to deal with
 		int vScrollBarWidth = Outliner.jsp.getVerticalScrollBar().getWidth();
 		int hScrollBarHeight = Outliner.jsp.getHorizontalScrollBar().getHeight();
+
+		// do the figuring
 		int maxWidth = getParent().getWidth() - vScrollBarWidth;
 		int maxHeight = getParent().getHeight() - hScrollBarHeight;
 
-		re
-			Dimension gcmdsize = new Dimension(
-			getParent().getWidth(),
-			getParent().getHeight());
+		// build a Dimension
+		Dimension gcmdsize = new Dimension(maxWidth,maxHeight);
 		
-		// subtract any scroll bar usage
-		// TBD
-		
+		// return it
 		return gcmdsize ;
 	}
 }
