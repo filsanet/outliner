@@ -289,14 +289,14 @@ public class TextKeyListener implements KeyListener, MouseListener {
 					int startSelection = Math.min(oldCaretPosition, oldMarkPosition);
 					int endSelection = Math.max(oldCaretPosition, oldMarkPosition);
 					
-					// TBD [srk] bug here: 2nd arg to oldTextsubstring can have the value -1
+					// TBD [srk] bug here: args to oldTextsubstring can have the value -1
 					//	causing a StringIndexOutOfBoundsException
 					// that's startSelection
 					// which is set to the minimum of oldCaretPosition and oldMarkPosition
 					// so one of them must have the value -1
 					//	-- this needs to be investigated
 					// set a bug trap
-					if (startSelection == -1) {
+					if (startSelection < 0 || endSelection < 0 ) {
 						String msg = "Error at TextKeyListener:keyPressed:VK_DELETE\n" ;
 						msg = msg + "startSelection: -1\n" ;
 						msg = msg + "oldCaretPosition: " + oldCaretPosition + "\n" ;
@@ -433,14 +433,14 @@ public class TextKeyListener implements KeyListener, MouseListener {
 				if (startSelection != endSelection) {
 					newCaretPosition = startSelection;
 					newMarkPosition = startSelection;
-					// TBD [srk] bug here: 2nd arg to substring can have the value -1
+					// TBD [srk] bug here: args to substring can have values < 0
 					//	causing a StringIndexOutOfBoundsException
 					// that's gotta be startSelection
 					// which gets here as the minimum of oldCaretPosition and oldMarkPosition
 					// one of which must have the value -1
 					//	-- this needs to be investigated
 					// set a bug trap
-					if (startSelection == -1) {
+					if (startSelection < 0 || endSelection < 0) {
 						String msg = "Error at TextKeyListener:keyTyped:Backspace:01\n" ;
 						msg = msg + "startSelection: -1\n" ;
 						msg = msg + "oldCaretPosition: " + oldCaretPosition + "\n" ;
@@ -462,7 +462,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 					// which means that startSelection has the value 0
 					//	-- this needs to be investigated
 					// set a bug trap
-					if (newCaretPosition == -1) {
+					if (newCaretPosition < 0) {
 						String msg = "Error at TextKeyListener:keyTyped:Backspace:02\n" ;
 						msg = msg + "startSelection: 0\n" ;
 						msg = msg + "newCaretPosition: -1" ;
