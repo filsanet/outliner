@@ -423,6 +423,14 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 			return;
 		}
 		
+		// Deal with a childless RootNode or an Empty or Null Tree
+		if ((tree != null) && (tree.getRootNode() != null) && (tree.getRootNode().numOfChildren() > 0)) {
+			// Pass on through, we're OK.
+		} else {
+			tree = new TreeContext();
+		}
+		
+		
 		// Create a new document
 		OutlinerDocument newDoc = new OutlinerDocument(filename);
 		tree.doc = newDoc;
@@ -482,6 +490,13 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 			return;
 		} else if (success == OpenFileFormat.FAILURE_USER_ABORTED) {
 			return;
+		}
+
+		// Deal with a childless RootNode or an Empty or Null Tree
+		if ((tree != null) && (tree.getRootNode() != null) && (tree.getRootNode().numOfChildren() > 0)) {
+			// Pass on through, we're OK.
+		} else {
+			tree = new TreeContext();
 		}
 		
 		// Swap in the new tree
