@@ -72,7 +72,7 @@ public class HTMLViewerDialog extends AbstractGUITreeJDialog implements Property
 	
 	// The Constructors
 	public HTMLViewerDialog() {
-		super(false, true, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
 		
 		Outliner.html_viewer = this;
 	}
