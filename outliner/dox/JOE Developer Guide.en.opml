@@ -3,7 +3,7 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide.en.opml</title>
 <dateCreated>Tue, 17 Jul 2001 02:49:03 GMT</dateCreated>
-<dateModified>Wed, 29 Aug 2001 07:51:04 GMT</dateModified>
+<dateModified>Mon, 15 Oct 2001 06:12:23 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
@@ -107,6 +107,7 @@
 		<outline text="Maynard Demmon">
 			<outline text="mailto:maynard@organic.com"/>
 		</outline>
+		<outline text="Daniel Ericsson "/>
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="Thanks">
 		<outline isEditable="true" isMoveable="true" text="Stan thanks ...">
@@ -118,6 +119,11 @@
 		<outline text="[note: copyright holders are listed in chronological order by date of first contribution to the document]"/>
 		<outline isEditable="true" isMoveable="true" text="Portions Copyright 2001 by Stanley Krute. All Rights Reserved."/>
 		<outline text="Portions Copyright 2001 by Maynard Demmon. All Rights Reserved."/>
+	</outline>
+	<outline text="Licensing">
+		<outline text="GPL"/>
+		<outline text="Apache"/>
+		<outline text=""/>
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="Version">
 		<outline isEditable="true" isMoveable="true" text="2001.08.24.15.07.00">
@@ -486,7 +492,40 @@
 		<outline isEditable="true" isMoveable="true" text="Build and Run the Project"/>
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="Linux/Unix [forthcoming]"/>
-	<outline isEditable="true" isMoveable="true" text="Macintosh [forthcoming]"/>
+	<outline isEditable="true" isMoveable="true" text="Macintosh">
+		<outline text="What you need">
+			<outline text="Mac OS X devtools">
+				<outline text="You must have the Mac OS X devtools installed.">
+					<outline text="Get them from:">
+						<outline text="http://connect.apple.com/"/>
+						<outline text="or a Devtools CD that came with Mac OS X "/>
+					</outline>
+				</outline>
+			</outline>
+			<outline text="JOE Source">
+				<outline text="You get the source from the SourceForge hosted  JOE CVS. (http://outliner.sourceforge.net/)"/>
+				<outline text="in the Terminal issue the commands:">
+					<outline text="cd ~"/>
+					<outline text="cvs -d:pserver:anonymous@cvs.outliner.sourceforge.net:/cvsroot/outliner login"/>
+					<outline text="and cvs -z3 -d:pserver:anonymous@cvs.outliner.sourceforge.net:/cvsroot/outliner checkout outliner"/>
+				</outline>
+			</outline>
+		</outline>
+		<outline text="Creating a Project Builder project and building the source">
+			<outline text="In Project Builder create a new project for a Java tool. Name this project outliner. Make sure you save it in a directory different from the one you downloaded the source to."/>
+			<outline text="Remove outliner.java from the project and from disk."/>
+			<outline text="Create the groups">
+				<outline text="gui"/>
+				<outline text="lib"/>
+				<outline text="com.yearahead.io"/>
+				<outline text="com.organic.maynard.outline"/>
+			</outline>
+			<outline text="Open Project Info and uncheck &quot;Index source code files&quot;. This will make the importing of all source code files progess faster."/>
+			<outline text="Open the folder downloaded from the CVS, open the src folder and import the files to their respective group."/>
+			<outline text="Open the lib folder and add the Jars with &quot;Add Framework...&quot; from the Project menu. You should not add outliner.jar since it contains the code that we are trying to build. Make sure to check the outliner target button to add the Jars to the outliner build target. "/>
+			<outline text="You should now be able to build the source. After the build has finished look in the build directory. outliner.jar there should be exchangable with outliner.jar in the outliner lib directory."/>
+		</outline>
+	</outline>
 </outline>
 <outline isEditable="true" isMoveable="true" text="Development Tool Resources" isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="Links">
@@ -949,7 +988,28 @@
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="SourceForge"/>
 	<outline isEditable="true" isMoveable="true" text="Java JDK"/>
-	<outline isEditable="true" isMoveable="true" text="NetBeans"/>
+	<outline isEditable="true" isMoveable="true" text="NetBeans">
+		<outline text="Debugging into Java Sources">
+			<outline text="no problem with a simple app"/>
+			<outline text="a problem with JOE"/>
+			<outline text="areas of investigation">
+				<outline text="JOE's ant build script">
+					<outline text="classpath within javac">
+						<outline text="clue">
+							<outline text="Jesse Glick">
+								<outline text="There is no need to drop JARs into fixed locations, you just need to tell your"/>
+								<outline text="build script where they are. Please see the online help for the IDE, and the"/>
+								<outline text="documentation for Ant, specifically &lt;classpath&gt; inside &lt;javac&gt;. Portable build"/>
+								<outline text="scripts do not rely on the tool's classpath which is usually incidental."/>
+								<outline text=""/>
+								<outline text="-Jesse"/>
+							</outline>
+						</outline>
+					</outline>
+				</outline>
+			</outline>
+		</outline>
+	</outline>
 	<outline isEditable="true" isMoveable="true" text="Ant"/>
 	<outline isEditable="true" isMoveable="true" text="jBuilder"/>
 	<outline isEditable="true" isMoveable="true" text="Metrowerks Java "/>
