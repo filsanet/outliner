@@ -48,7 +48,7 @@ public class OutlinerFileChooser extends JFileChooser {
 	public OutlinerFileChooser(FileSystemView fsv) {		
 		// WebFile
 		super(fsv);
-
+		
 		for (int i = 0; i < Preferences.ENCODINGS.size(); i++) {
 			String encoding = (String) Preferences.ENCODINGS.elementAt(i);
 			saveEncodingComboBox.addItem(encoding);
@@ -158,7 +158,7 @@ public class OutlinerFileChooser extends JFileChooser {
 		if (getDialogType() == JFileChooser.OPEN_DIALOG) {
 			// Alert if file does not exist.
 			if (!file.exists()) {
-				String msg = GUITreeLoader.reg.getText("error_file_not_Found");
+				String msg = GUITreeLoader.reg.getText("error_file_not_found");
 				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, file.getPath());
 
 				JOptionPane.showMessageDialog(this, msg);
