@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir="../" default="all" name="JOE - Java Outline Editor">
 	<!-- TBD:
-		1) Add "javadoc" targets and any related cleaning code.
-		2) Add a "release" target that makes a clean outliner directory and then if possible, a tar.gz file.
-		-->
+		1) Add a "release" target that makes a clean outliner directory and then if possible, a tar.gz file.
+	-->
 	<!-- initialize -->
 		<!-- Set properties for this build -->
 			<property name="src" value="src"/>
@@ -39,7 +38,7 @@
 		</target>
 	<!-- jmousewheel TARGETS -->
 		<target name="compile-jmousewheel" depends="init, clean-jmousewheel" description="Compile classes for jmousewheel.">
-			<javac debug="true" deprecation="false" srcdir="${src-jmousewheel}"/>
+			<javac debug="false" optimize="true" deprecation="false" srcdir="${src-jmousewheel}"/>
 		</target>
 		<target name="jar-jmousewheel" depends="compile-jmousewheel" description="Create jmousewheel.jar">
 			<jar basedir="${src}" compress="true" jarfile="${lib}/jmousewheel.jar">
@@ -56,7 +55,7 @@
 		</target>
 	<!-- webfilephp TARGETS -->
 		<target name="compile-webfilephp" depends="init, clean-webfilephp" description="Compile classes for webfilephp.">
-			<javac debug="true" deprecation="false" srcdir="${src-webfilephp}">
+			<javac debug="false" optimize="true" deprecation="false" srcdir="${src-webfilephp}">
 				<classpath>
 					<pathelement path="${lib}/com.organic.maynard.jar"/>
 					<pathelement path="${lib}/jmousewheel.jar"/>
@@ -80,7 +79,7 @@
 		</target>
 	<!-- wikiff TARGETS -->
 		<target name="compile-wikiff" depends="init, clean-wikiff" description="Compile classes for wikiff.">
-			<javac debug="true" deprecation="false" srcdir="${src-wikiff}">
+			<javac debug="false" optimize="true" deprecation="false" srcdir="${src-wikiff}">
 				<classpath>
 					<pathelement path="${lib}/com.organic.maynard.jar"/>
 					<pathelement path="${lib}/jmousewheel.jar"/>
@@ -104,7 +103,7 @@
 		</target>
 	<!-- maynard TARGETS -->
 		<target name="compile-maynard" depends="init, clean-maynard" description="Compile classes for maynard.">
-			<javac debug="true" deprecation="false" srcdir="${src-maynard}">
+			<javac debug="false" optimize="true" deprecation="false" srcdir="${src-maynard}">
 				<classpath>
 					<pathelement path="${lib}/bsh.jar"/>
 					<pathelement path="${lib}/helma.xmlrpc.jar"/>
@@ -134,7 +133,7 @@
 		</target>
 	<!-- outliner TARGETS -->
 		<target name="compile-outliner" depends="init, clean-outliner" description="Compile classes for outliner.">
-			<javac debug="true" deprecation="false" srcdir="${src-outliner}">
+			<javac debug="true" optimize="true" deprecation="false" srcdir="${src-outliner}">
 				<classpath>
 					<pathelement path="${lib}/bsh.jar"/>
 					<pathelement path="${lib}/com.organic.maynard.jar"/>
