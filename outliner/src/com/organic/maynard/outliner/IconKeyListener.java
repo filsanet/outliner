@@ -309,7 +309,11 @@ public class IconKeyListener implements KeyListener, MouseListener {
 				break;
 
 			case KeyEvent.VK_ENTER:
-				insert(tree,layout);
+				if (e.isShiftDown()) {
+					insertAbove(tree,layout);								
+				} else {
+					insert(tree,layout);				
+				}
 				break;
 
 			case KeyEvent.VK_INSERT:
@@ -797,6 +801,19 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			tree.getDocument().undoQueue.add(undoable);
 			undoable.redo();
 		}
+	}
+
+	private void insertAbove(JoeTree tree, OutlineLayoutManager layout) {
+		Node node = tree.getOldestInSelection();
+
+		// Abort if node is not editable
+		if (!tree.getOldestInSelection().isEditable()) {
+			return;
+		}
+		
+		tree.clearSelection();
+		
+		TextKeyListener.doInsertAbove(node, tree, layout);
 	}
 
 	private void insert(JoeTree tree, OutlineLayoutManager layout) {

@@ -352,7 +352,13 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 			case KeyEvent.VK_ENTER:
 				if (e.isControlDown()) {
-					split(tree,layout);
+					if (e.isShiftDown()) {
+						splitAbove(tree,layout);
+					} else {
+						split(tree,layout);
+					}
+				} else if (e.isShiftDown()) {
+					doInsertAbove(textArea.node, tree,layout);
 				} else {
 					doInsert(textArea.node, tree,layout);
 				}
@@ -872,6 +878,35 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		layout.draw(newNode, visibleIndex, OutlineLayoutManager.TEXT);	
 	}
 
+	protected static void doInsertAbove(Node node, JoeTree tree, OutlineLayoutManager layout) {
+		// Abort if node is not editable
+		if (!node.isEditable()) {
+			return;
+		}
+		
+		Node newNode = new NodeImpl(tree,"");
+		int newNodeIndex = node.currentIndex();
+		Node newNodeParent = node.getParent();
+		
+		newNode.setDepth(node.getDepth());
+		newNodeParent.insertChild(newNode, newNodeIndex);
+		tree.insertNode(newNode);
+
+		// Record the EditingNode and CursorPosition and ComponentFocus
+		tree.setEditingNode(newNode);
+		tree.setCursorPosition(0);
+		tree.getDocument().setPreferredCaretPosition(0);
+		tree.setComponentFocus(OutlineLayoutManager.TEXT);
+
+		// Put the Undoable onto the UndoQueue
+		CompoundUndoableInsert undoable = new CompoundUndoableInsert(newNodeParent);
+		undoable.addPrimitive(new PrimitiveUndoableInsert(newNodeParent, newNode, newNodeIndex));
+		tree.getDocument().undoQueue.add(undoable);
+		
+		// Redraw and Set Focus
+		layout.draw(newNode, OutlineLayoutManager.TEXT);	
+	}
+	
 	private void mergeWithPrevVisibleNode(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		Node prevNode = tree.getPrevNode(currentNode);
@@ -957,7 +992,47 @@ public class TextKeyListener implements KeyListener, MouseListener {
 				
 		undoable.redo();
 	}
-	
+
+	private void splitAbove(JoeTree tree, OutlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+
+		// Get Text for nodes.
+		String oldText = currentNode.getValue();
+		String oldNodeText = currentNode.getValue().substring(0,textArea.getCaretPosition());
+		String newNodeText = currentNode.getValue().substring(textArea.getCaretPosition(), currentNode.getValue().length());
+		currentNode.setValue(oldNodeText);
+		
+		// Create a new node and insert it as a sibling immediatly before this node.
+		Node newNode = new NodeImpl(currentNode.getTree(), newNodeText);
+		newNode.setDepth(currentNode.getDepth());
+		currentNode.getParent().insertChild(newNode,currentNode.currentIndex());
+		
+		tree.insertNode(newNode);
+
+		// Record the EditingNode and CursorPosition
+		tree.setEditingNode(newNode);
+		tree.setCursorPosition(0);
+
+		// Update Preferred Caret Position
+		tree.getDocument().setPreferredCaretPosition(0);
+
+		// Put the Undoable onto the UndoQueue
+		CompoundUndoableEdit undoableEdit = new CompoundUndoableEdit(tree);
+		undoableEdit.addPrimitive(new PrimitiveUndoableEdit(currentNode, oldText, oldNodeText));
+		
+		CompoundUndoableInsert undoableInsert = new CompoundUndoableInsert(newNode.getParent());
+		undoableInsert.addPrimitive(new PrimitiveUndoableInsert(newNode.getParent(),newNode,newNode.currentIndex()));
+		
+		CompoundUndoableImpl undoable = new CompoundUndoableImpl(true);
+		undoable.addPrimitive(undoableEdit);
+		undoable.addPrimitive(undoableInsert);
+		
+		tree.getDocument().undoQueue.add(undoable);
+
+		// Redraw and Set Focus
+		layout.draw(newNode,OutlineLayoutManager.TEXT);
+	}
+		
 	private void split(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
