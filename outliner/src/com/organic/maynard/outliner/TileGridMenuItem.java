@@ -46,13 +46,79 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import org.xml.sax.*;
+import java.util.Vector ;
+import java.lang.Math ;
 
+/* ------------------------
+ * [srk] currently under 
+ * heavy construction.
+ * please ignore the mess.
+ * hope to finish by 1-31-02.
+ * ------------------------
+ */
 // our class
 public class TileGridMenuItem 
 	extends AbstractOutlinerMenuItem 
 	implements ActionListener, GUITreeComponent 
 	{
-
+	// TBD [srk] gui_tree.xml and user-pref this stuff
+	// we don't tile more than this many windows
+	private static final int TILE_LIMIT = 100 ; 
+	// we have styles of tiling
+	// these tile styles deal with the distribution of
+	// regular/fat rows
+	private static final int BOTTOM_HEAVY = 1 ;
+	private static final int TOP_HEAVY = 2 ;
+	private static final int HOUR_GLASS = 3 ;
+	private static final int BLIMP = 4 ;
+	private static int TILE_STYLE = BOTTOM_HEAVY ;
+	
+	// calculate a tiling pattern for a spec'd # of windows
+	private int [] calcTilePattern (int numWindows) {
+		// local vars
+		int numColumns ;
+		int windowsAccountedFor ;
+		
+		// no pattern for no windows
+		if (numWindows < 1) {
+			return null ;
+		} // end if
+		
+		// calculate pattern engine parameters
+		int numRows = Math.round((float)Math.sqrt(numWindows)) ; 
+		boolean uneven = (numWindows % numRows) > 0 ; 
+		int weightChangeRow = numRows - (numWindows % numRows);
+		int regularRowSize = Math.round((float)((numWindows/numRows) - 0.5)); 
+		int fatRowSize = regularRowSize + 1 ;
+		int [] pattern = new int[numRows + 2];
+		int fatCounter = 0 ;
+		
+		// for each row of the pattern
+		for (int rowCounter = 1; rowCounter <= numRows; rowCounter++){
+			
+			// add its number of columns to the pattern
+			// if itza fat row ...
+			if (uneven && (rowCounter > weightChangeRow)) {
+				pattern[rowCounter -1] = fatRowSize ;
+				// may as well count fat rows while we're here
+				// data comes in handy for tiling styling
+				fatCounter++ ;
+			// else itza regular row
+			} else {
+				pattern[rowCounter -1] = regularRowSize ;
+			} // end if-else
+		} // end for each row of the pattern
+		
+		// stick a data tail on the pattern donkey
+		pattern[numRows] = regularRowSize ;
+		pattern[numRows + 1] = fatCounter ;
+		
+		// return the pattern
+		return pattern; 
+		
+	}// end method calcTilePattern ;
+		
+		
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
@@ -61,7 +127,9 @@ public class TileGridMenuItem
 	} // end method startSetup
 
 
-	// ActionListener Interface
+	//------------ ActionListener Interface
+	
+	// we've been clicked - deal with it
 	public void actionPerformed(ActionEvent e) {
 		// determine how many documents are open
 		int openDocCount = Outliner.openDocumentCount() ;
@@ -74,6 +142,30 @@ public class TileGridMenuItem
 		// a general-purpose doc var
 		OutlinerDocument doc = null ;
 		
+		// let's build a list of not-iconified windows
+		// [we don't touch iconified windows]
+		Vector notIconified = new Vector() ;
+		
+		// for each open document
+		for (int counter = 0; counter < openDocCount; counter++) {
+			// grab the doc ref
+			doc = Outliner.getDocument(counter) ;
+			
+			// if we're not iconified
+			if (! doc.isIcon()) {
+				// add us to the list
+				notIconified.add(doc) ;
+			} // end if
+		} // end for
+		
+		// store the count
+		int openNotIconifiedDocCount = notIconified.size() ;
+		
+		// if everybody's iconified, leave
+		if (openNotIconifiedDocCount == 0) {
+			return ;
+		} // end if
+
 		// if we're in a maximized state ...
 		if (Outliner.desktop.desktopManager.isMaximized()) {
 			// leave that state
@@ -98,8 +190,8 @@ public class TileGridMenuItem
 		double availHeight = curAvailSpace.getHeight() ;
 
 		// obtain minimum tiling width and height values
-		// TBD
-		int minTileRowHeight = 60 ;
+		// TBD [srk] make this for real via window features figgern' and user prefs
+		int minTileRowHeight = 45 ;
 		int minTileColumnWidth = 60 ;
 		
 		// determine the maximum number of rows and columns
@@ -107,46 +199,96 @@ public class TileGridMenuItem
 		int maxColumns = (int)availWidth/minTileColumnWidth;
 		
 		// some row and column vars
-		int nominalRowHeight = 0 ;
-		int nominalColumnWidth = 0 ;
+		int regularRowHeight = 0 ;
+		int regularColumnWidth = 0 ;
 		int finalRowHeight = 0 ;
 		int finalColumnWidth = 0 ;
 		int actualRows = 0 ;
-		int actualColumns = 0 ;
+		int actualMaxColumns = 0 ;
 		
-		// plenty of room ?
-		boolean plentyOfRoom = (maxColumns * maxRows) >= openDocCount ;
+		// obtain a tiling pattern
+		int [] pattern = calcTilePattern(openNotIconifiedDocCount) ;
 		
-		// determine actual number of columns we'll need
-		actualColumns = plentyOfRoom
-			? openDocCount 
-			: maxColumns ;
-			
-		// some column arrays
-		int [] columnWidths = new int[actualColumns] ;
-		int [] columnPositions = new int [actualColumns] ;
+		// determine pattern's number of rows
+		int patternRowCount = pattern.length - 2 ;
+		
+		// grab data tail from pattern donkey
+		
+		// determine pattern's regular number of columns
+		int patternRegRowColumnCount = pattern [patternRowCount] ;
+		int patternFatRowColumnCount = patternRegRowColumnCount + 1 ;
+		
+		// determine # of fat and regular rows in pattern
+		int fatRowCount = pattern[patternRowCount + 1] ;
+		int regRowCount = patternRowCount - fatRowCount ;
 
-		// if we have plenty of columns
+		// how many cells in the whole pattern
+		int patternTotalCellCount = patternRegRowColumnCount * regRowCount
+					+ patternFatRowColumnCount * fatRowCount ;
+
+		// plenty of room ?
+		boolean plentyOfRowRoom = patternRowCount <= maxRows ;
+		boolean plentyOfColumnRoom = patternFatRowColumnCount <= maxColumns ;
+		boolean plentyOfRoom = plentyOfRowRoom && plentyOfColumnRoom ;
+
+// don't need these, cuz we fork below		
+//		// determine actual max number of columns we'll need
+//		actualMaxColumns = plentyOfColumnRoom
+//			? patternFatRowColumnCount 
+//			: maxColumns ;
+//		
+//		// determine actual number of rows we'll need
+//		actualRows = plentyOfRowRoom
+//			? patternRowCount 
+//			: maxRows ;
+			
+		// some row and column arrays
+		int [] columnWidths = null;
+		int [] columnPositions = null;
+		int [] rowHeights = null;
+		int [] rowPositions = null;
+
+		// if we have plenty of room
 		if (plentyOfRoom) {
-			// we have a limit
-			int limit = openDocCount - 1 ;
+			// a useful number
+			int docLimit = patternTotalCellCount - 1 ;
+
+			// create arrays to store size and position constants
+			rowHeights = new int[patternRowCount] ;
+			rowPositions = new int [patternRowCount] ;
 			
-			// determine nominal column width
-			nominalColumnWidth = (int) (availWidth/openDocCount) ;
-			// determine final row width
-			finalColumnWidth = (int)availWidth - (nominalColumnWidth * limit) ;
+			// determine column widths
 			
-			// set up all but the last column
-			for (int column = 0; column < limit; column++) {
-				columnWidths[column] = nominalColumnWidth ;
-				columnPositions[column] = column * nominalColumnWidth ;
-			} // end for all but the last column
+			// in a regular row
+			int regRowColumnWidthStd = (int) (availWidth/patternRegRowColumnCount) ;
+			int regRowColumnWidthAdj = (int) availWidth -
+						patternRegRowColumnCount * regRowColumnWidthStd ;
+			// for standard columns and adjustment columns
+			// in a fat row
+			int fatRowColumnWidthStd = (int) (availWidth/patternFatRowColumnCount) ;
+			int fatRowColumnWidthAdj = (int) availWidth -
+						patternFatRowColumnCount * fatRowColumnWidthStd ;
+					
+			int foo = 0 ;
 			
-			// set up the last column
-			columnWidths[limit] = finalColumnWidth ;
-			columnPositions[limit] = (int)availWidth - finalColumnWidth ;
+			// for each row in the pattern
+				
+				
+				// for each column in the row
+				
+//			// set up all but the last column
+//			for (int column = 0; column < limit; column++) {
+//				columnWidths[column] = regularColumnWidth ;
+//				columnPositions[column] = column * regularColumnWidth ;
+//			} // end for all but the last column
+//			
+//			// set up the last column
+//			columnWidths[limit] = finalColumnWidth ;
+//			columnPositions[limit] = (int)availWidth - finalColumnWidth ;
 		} // end if
-		// else we must squeeze extras on bottom rows
+		
+		// else we don't have enuf room, and must limit
+		// ourselves to the size of the pattern
 		else {
 			// how many extras are there ??
 			
@@ -159,6 +301,11 @@ public class TileGridMenuItem
 		} // end else we must squeeze extras on bottom rows
 		
 		// okay, everything's figured
+		
+		// [srk] growth bud detour
+		if (true) {
+			return ;
+		}
 		
 		// some vars for window size and location info
 		Point pLocation = new Point();
