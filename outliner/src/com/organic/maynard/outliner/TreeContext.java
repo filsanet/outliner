@@ -52,7 +52,7 @@ public class TreeContext {
 		insertNode(child);
 		
 		// Record the current location
-		setEditingNode(child, false);	
+		setEditingNode(child, false);
 	}
 	
 	public void destroy() {
@@ -131,7 +131,7 @@ public class TreeContext {
 
 	public void setComponentFocus(int componentFocus) {
 		this.componentFocus = componentFocus;
-		updateForCopyAndCut();
+		updateEditMenu();
 	}
 	
 	public int getComponentFocus() {return componentFocus;}
@@ -145,30 +145,40 @@ public class TreeContext {
 		if (setMark) {
 			setCursorMarkPosition(cursorPosition);
 		}
-		updateForCopyAndCut();
+		updateEditMenu();
 	}
 	
 	public int getCursorPosition() {return cursorPosition;}
 
-	private void updateForCopyAndCut() {
+	public void updateEditMenu() {
 		JMenuItem cutItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CUT_MENU_ITEM);
 		JMenuItem copyItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.COPY_MENU_ITEM);
+		JMenuItem deleteItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.DELETE_MENU_ITEM);
+		JMenuItem selectInverseItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SELECT_INVERSE_MENU_ITEM);
 
 		if (getComponentFocus() == OutlineLayoutManager.TEXT) {
+			selectInverseItem.setEnabled(false);
+			
 			if (getCursorPosition() == getCursorMarkPosition()) {
 				copyItem.setEnabled(false);
 				cutItem.setEnabled(false);
+				deleteItem.setEnabled(false);
 			} else {
 				copyItem.setEnabled(true);
 				cutItem.setEnabled(true);
+				deleteItem.setEnabled(true);
 			}
 		} else if (getComponentFocus() == OutlineLayoutManager.ICON) {
+			selectInverseItem.setEnabled(true);
+			
 			if (selectedNodes.size() == 0) {
 				copyItem.setEnabled(false);
 				cutItem.setEnabled(false);
+				deleteItem.setEnabled(false);
 			} else {
 				copyItem.setEnabled(true);
 				cutItem.setEnabled(true);
+				deleteItem.setEnabled(true);
 			}			
 		}	
 	}

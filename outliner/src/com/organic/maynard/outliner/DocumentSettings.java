@@ -27,10 +27,11 @@ public class DocumentSettings extends JDialog implements ActionListener {
 	
 	
 	// Constants
+	private static final String DOCUMENT_SETTINGS = "Document Preferences";
+
 	private static final String OK = "OK";
 	private static final String CANCEL = "Cancel";
 	private static final String RESTORE_TO_GLOBAL = "Restore to Global";
-	private static final String DOCUMENT_SETTINGS = "Document Settings";
 	private static final String LINE_TERMINATOR = "Line Terminator";
 	private static final String ENCODING_WHEN_SAVING = "Encoding when saving.";
 	private static final String FORMAT_WHEN_SAVING = "Format when saving.";

@@ -64,8 +64,10 @@ public class EditMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 		JMenuItem cutItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CUT_MENU_ITEM);
 		JMenuItem copyItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.COPY_MENU_ITEM);
 		JMenuItem pasteItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.PASTE_MENU_ITEM);
+		JMenuItem deleteItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.DELETE_MENU_ITEM);
 		JMenuItem selectAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SELECT_ALL_MENU_ITEM);
 		JMenuItem selectNoneItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SELECT_NONE_MENU_ITEM);
+		JMenuItem selectInverseItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SELECT_INVERSE_MENU_ITEM);
 		JMenuItem editDocumentSettingsItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EDIT_DOCUMENT_SETTINGS_MENU_ITEM);
 
 		UndoQueue.updateMenuBar(doc);
@@ -73,16 +75,19 @@ public class EditMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 			cutItem.setEnabled(false);
 			copyItem.setEnabled(false);
 			pasteItem.setEnabled(false);
+			deleteItem.setEnabled(false);
 			selectAllItem.setEnabled(false);
 			selectNoneItem.setEnabled(false);
+			selectInverseItem.setEnabled(false);
 			editDocumentSettingsItem.setEnabled(false);
 		} else {
-			cutItem.setEnabled(true);
-			copyItem.setEnabled(true);
 			pasteItem.setEnabled(true);
 			selectAllItem.setEnabled(true);
 			selectNoneItem.setEnabled(true);
 			editDocumentSettingsItem.setEnabled(true);
+			
+			// Updates menu based on caret and mark.
+			doc.tree.updateEditMenu();
 		}
 	}
 }

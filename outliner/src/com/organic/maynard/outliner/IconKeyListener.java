@@ -268,6 +268,14 @@ public class IconKeyListener implements KeyListener, MouseListener {
 					return;
 				}
 
+			case KeyEvent.VK_I:
+				if (e.isControlDown()) {
+					selectInverse(tree,layout);
+					break;
+				} else {
+					return;
+				}
+
 			case KeyEvent.VK_A:
 				if (e.isControlDown() && !e.isShiftDown()) {
 					selectAll(tree,layout);
@@ -729,6 +737,31 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 		// Redraw and Set Focus
 		layout.draw(currentNode,OutlineLayoutManager.ICON);
+	}
+
+	private void selectInverse(TreeContext tree, OutlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+
+		// select all siblings
+		Node parent = currentNode.getParent();
+		
+		for (int i = 0; i < parent.numOfChildren(); i++) {
+			Node child = parent.getChild(i);
+			
+			if (child.isSelected()) {
+				tree.removeNodeFromSelection(child);
+			} else {
+				tree.addNodeToSelection(child);
+			}
+		}
+		
+		if (tree.getNumberOfSelectedNodes() == 0) {
+			// Change to text node if all nodes were deselected.
+			changeFocusToTextArea(tree, layout, POSITION_FIRST);
+		} else {
+			// Redraw and Set Focus
+			layout.draw(currentNode,OutlineLayoutManager.ICON);
+		}
 	}
 
 	private void selectNone(TreeContext tree, OutlineLayoutManager layout) {

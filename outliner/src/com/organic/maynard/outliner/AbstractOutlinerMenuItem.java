@@ -28,6 +28,7 @@ import org.xml.sax.*;
 public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUITreeComponent {
 
 	// Constants
+	public static final String DELETE = "delete";
 	public static final String CTRL = "control";
 	public static final String SHIFT = "shift";
 	public static final String ALT = "alt";
@@ -87,6 +88,8 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 				keyBindingChar = KeyEvent.VK_PAGE_UP;
 			} else if (keyBinding.equals(PAGE_DOWN)) {
 				keyBindingChar = KeyEvent.VK_PAGE_DOWN;
+			} else if (keyBinding.equals(DELETE)) {
+				keyBindingChar = KeyEvent.VK_DELETE;
 			}
 			
 			setAccelerator(KeyStroke.getKeyStroke(keyBindingChar, mask, false));
