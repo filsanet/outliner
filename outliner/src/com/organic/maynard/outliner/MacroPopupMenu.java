@@ -389,7 +389,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 			tree.setCursorMarkPosition(nodeRangePair.startIndex);
 		} else {
 			for (int i = 0; i < tree.selectedNodes.size(); i++) {
-				Node node = tree.selectedNodes.get(i).cloneClean();
+				Node node = tree.selectedNodes.get(i);
 				
 				// Abort if not editable
 				if (!node.isEditable()) {
