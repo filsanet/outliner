@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide.en.opml</title>
 <dateCreated>Tue, 17 Jul 2001 02:49:03 GMT</dateCreated>
-<dateModified>Fri, 24 Aug 2001 10:08:08 GMT</dateModified>
+<dateModified>Wed, 29 Aug 2001 07:34:42 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>52</windowTop>
-<windowLeft>223</windowLeft>
-<windowBottom>621</windowBottom>
-<windowRight>705</windowRight>
+<windowTop>21</windowTop>
+<windowLeft>618</windowLeft>
+<windowBottom>590</windowBottom>
+<windowRight>1100</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -95,6 +95,7 @@
 		</outline>
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="JOE Developer Guide Authors">
+		<outline text="[note: authors are listed in chronological order by date of first contribution to the document]"/>
 		<outline isEditable="true" isMoveable="true" text="Stanley Krute">
 			<outline isEditable="true" isMoveable="true" text="mailto:Stan@JavaOutlineEditor.org"/>
 			<outline isEditable="true" isMoveable="true" text="Stan's Preface">
@@ -102,6 +103,9 @@
 				<outline isEditable="true" isMoveable="true" text="This guide's come about as I wander the learning curve"/>
 				<outline isEditable="true" isMoveable="true" text="Hopefully it'll flatten that curve for those to come"/>
 			</outline>
+		</outline>
+		<outline text="Maynard Demmon">
+			<outline text="mailto:maynard@organic.com"/>
 		</outline>
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="Thanks">
@@ -113,6 +117,7 @@
 	<outline isEditable="true" isMoveable="true" text="Copyright">
 		<outline text="[note: copyright holders are listed in chronological order by date of first contribution to the document]"/>
 		<outline isEditable="true" isMoveable="true" text="Portions Copyright 2001 by Stanley Krute. All Rights Reserved."/>
+		<outline text="Portions Copyright 2001 by Maynard Demmon. All Rights Reserved."/>
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="Version">
 		<outline isEditable="true" isMoveable="true" text="2001.08.24.15.07.00">
@@ -627,6 +632,112 @@
 	</outline>
 </outline>
 <outline isEditable="true" isMoveable="true" text="How-To's" isMoveableInherited="true" isEditableInherited="true">
+	<outline text="Non-Platform-Specific">
+		<outline text="Adding a File Format">
+			<outline text="About this How-To">
+				<outline text="This How-To shows what you need to know to add a file format for opening and saving documents with JOE. "/>
+				<outline text="Note: the code shown here is not really optimal, I'm noticing things that could be cleaned up as I write this, but since the current code works I'll leave it alone for now.  [MD]"/>
+			</outline>
+			<outline text="Editing the file_formats.txt file ">
+				<outline text="Located at: outliner/prefs/file_formats.txt, this file makes JOE aware of which file formats are available to it. "/>
+				<outline text="Each line in this file consists of four arguments seperated by the | character. Typically these lines come in pairs: one line for save and one for open."/>
+				<outline text="For example:">
+					<outline text="file_format|save|com.organic.maynard.outliner.SimpleFileFormat|Plaintext"/>
+					<outline text="file_format|open|com.organic.maynard.outliner.SimpleFileFormat|Plaintext"/>
+					<outline text="file_format|save|com.organic.maynard.outliner.OPMLFileFormat|OPML"/>
+					<outline text="file_format|open|com.organic.maynard.outliner.OPMLFileFormat|OPML"/>
+				</outline>
+				<outline text="The four arguments">
+					<outline text="The first argument will always be file_format, indicating that this is a file format definition."/>
+					<outline text="The second argument will be either save or open for save and open file formats respectively."/>
+					<outline text="The third argument is the java class that implements the OpenFileFormat interface or SaveFileFormat interface you want to include."/>
+					<outline text="The fourth argument is the name that user's will see when selecting a file format. This name should be unique, but I don't think uniqueness is enforced at the moment."/>
+				</outline>
+				<outline text="So, if you create a new file format of class my.package.FileFormat that implements both the open and save interfaces, you would add lines like this to the file:">
+					<outline text="file_format|save|my.package.FileFormat|My Format"/>
+					<outline text="file_format|open|my.package.FileFormat|My Format"/>
+				</outline>
+				<outline text="Special characters and blank lines">
+					<outline text="You can use \ to escape the | char if you need to. Blank lines and lines beginning with the # character are also allowed."/>
+				</outline>
+				<outline text="Future: eventually these entries will likely have a file extension argument as well."/>
+			</outline>
+			<outline text="Implementing Three Interfaces">
+				<outline text="You need to implement three interfaces to read and write file formats within JOE."/>
+				<outline text="Implementing the FileFormat Interface">
+					<outline text="the Extensions methods">
+						<outline text="public void addExtension(String ext, boolean isDefault);"/>
+						<outline text="public void removeExtension(String ext);"/>
+						<outline text="public Iterator getExtensions();"/>
+						<outline text="public String getDefaultExtension();"/>
+						<outline text="public boolean extensionExists(String ext);"/>
+					</outline>
+				</outline>
+				<outline text="Implementing the OpenFileFormat Interface ">
+					<outline text="the Open method">
+						<outline text="public int open(TreeContext tree, DocumentInfo docInfo);">
+							<outline text="Your main task in the open method is to construct and add children to the root node of the tree passed in, or to create your own root node and swap it out with the one in the tree."/>
+							<outline text="A basic starting implementation might look something like this:">
+								<outline text="public int open(TreeContext tree, DocumentInfo docInfo) {">
+									<outline text="int success = OpenFileFormat.FAILURE;"/>
+									<outline text="String text = FileFormatManager.loadFile(docInfo.getPath(), docInfo.getEncodingType());"/>
+									<outline text="if (text != null) {">
+										<outline text="Node newRootNode = new NodeImpl(tree,&quot;&quot;);"/>
+										<outline text="// Implement code to add child nodes with the data from your file."/>
+										<outline text="if (your code succeeded) {">
+											<outline text="tree.setRootNode(newRootNode);"/>
+											<outline text="success = OpenFileFormat.SUCCESS;"/>
+											<outline text="}"/>
+										</outline>
+										<outline text="}"/>
+									</outline>
+									<outline text="return success;"/>
+									<outline text="}"/>
+								</outline>
+							</outline>
+							<outline text="The code above won't work with remote file systems, or set expanded state of nodes, commented nodes, etc. You should look at the OPMLFileFormat class for an example of how to make a more full featured file format. Most of those features involve setting values on the DocumentInfo object."/>
+						</outline>
+					</outline>
+				</outline>
+				<outline text="Implementing the SaveFileFormat Interface ">
+					<outline text="the Save method">
+						<outline text="public boolean save(TreeContext tree, DocumentInfo docInfo)">
+							<outline text="Your main task in the save method is to save your file and return success for failure."/>
+							<outline text=" Here's the outline of a basic implementation:">
+								<outline text="public boolean save(TreeContext tree, DocumentInfo docInfo) {">
+									<outline text="// Implement code to turn the tree into the format you want to save"/>
+									<outline text="if (your code succeded) {">
+										<outline text="return true;"/>
+										<outline text="} "/>
+									</outline>
+									<outline text="else {">
+										<outline text="return false;"/>
+										<outline text="}"/>
+									</outline>
+									<outline text="}"/>
+								</outline>
+							</outline>
+						</outline>
+					</outline>
+					<outline text="the supportsXxxxx Methods">
+						<outline text="boolean supportsComments();">
+							<outline text="This method should return true if the file format supports comments, false if not."/>
+							<outline text="This lets JOE warn a user who is about save a commented outline to a format that doesn't store comments."/>
+						</outline>
+						<outline text="boolean supportsEditability();"/>
+						<outline text="boolean supportsMoveability();"/>
+						<outline text="boolean supportsAttributes();"/>
+						<outline text="boolean supportsDocumentAttributes();"/>
+					</outline>
+				</outline>
+			</outline>
+			<outline text="Examples">
+				<outline text="Simple File Format"/>
+				<outline text="OPML File Format"/>
+				<outline text="Thought Manager Palm pdb File Format"/>
+			</outline>
+		</outline>
+	</outline>
 	<outline isEditable="true" isMoveable="true" text="Windows">
 		<outline isEditable="true" isMoveable="true" text="Updating to Latest File Versions">
 			<outline isEditable="true" isMoveable="true" text="Preparing for a general source update">
