@@ -289,6 +289,22 @@ public class TextKeyListener implements KeyListener, MouseListener {
 					int startSelection = Math.min(oldCaretPosition, oldMarkPosition);
 					int endSelection = Math.max(oldCaretPosition, oldMarkPosition);
 					
+					// TBD [srk] bug here: 2nd arg to oldTextsubstring can have the value -1
+					//	causing a StringIndexOutOfBoundsException
+					// that's startSelection
+					// which is set to the minimum of oldCaretPosition and oldMarkPosition
+					// so one of them must have the value -1
+					//	-- this needs to be investigated
+					// set a bug trap
+					if (startSelection == -1) {
+						String msg = "Error at TextKeyListener:keyPressed:VK_DELETE\n" ;
+						msg = msg + "startSelection: -1\n" ;
+						msg = msg + "oldCaretPosition: " + oldCaretPosition + "\n" ;
+						msg = msg + "oldMarkPosition: " + oldMarkPosition ;
+						System.out.println("Stan_Debug:\t" + msg); 
+						return ;
+					} // end bug trap
+
 					if (startSelection != endSelection) {
 						newCaretPosition = startSelection;
 						newMarkPosition = startSelection;
