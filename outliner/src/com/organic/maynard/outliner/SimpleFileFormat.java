@@ -30,23 +30,11 @@ public class SimpleFileFormat implements SaveFileFormat, OpenFileFormat {
 	
 	// SaveFileFormat Interface
 	public boolean save(TreeContext tree, DocumentInfo docInfo) {
-		boolean success = false;
-
-		try {
-			FileOutputStream fileOutputStream = new FileOutputStream(docInfo.getPath());
-			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, docInfo.getEncodingType());
-			
-			outputStreamWriter.write(tree.rootNode.depthPaddedValue(Preferences.platformToLineEnding(docInfo.getLineEnding())));
-			outputStreamWriter.flush();
-			outputStreamWriter.close();
-			
-			success = true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			success = false;
-		}
-		
-		return success;
+		return FileFormatManager.writeFile(
+			docInfo.getPath(), 
+			docInfo.getEncodingType(), 
+			tree.rootNode.depthPaddedValue(Preferences.platformToLineEnding(docInfo.getLineEnding()))
+		);
 	}
 	
 	
@@ -54,7 +42,7 @@ public class SimpleFileFormat implements SaveFileFormat, OpenFileFormat {
 	public boolean open(TreeContext tree, DocumentInfo docInfo) {
 		boolean success = false;
 
-		String text = loadFile(docInfo.getPath(), docInfo.getEncodingType());
+		String text = FileFormatManager.loadFile(docInfo.getPath(), docInfo.getEncodingType());
 		if (text != null) {
 			tree.setRootNode(PadSelection.pad(text, tree, 0,Preferences.LINE_END_UNIX));
 			success = true;
@@ -63,36 +51,5 @@ public class SimpleFileFormat implements SaveFileFormat, OpenFileFormat {
 		}
 				
 		return success;
-	}
-	
-	
-	// Utility Methods
-	protected static String loadFile(String filename, String encoding) {
-		// This could be optimized to return a string array or List/Vector instead.
-		StringBuffer text = new StringBuffer("");
-		try {
-			FileInputStream fileInputStream = new FileInputStream(filename);
-			InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream,encoding);
-			BufferedReader buffer = new BufferedReader(inputStreamReader);
-			
-			boolean eof = false;
-			while (!eof) {
-				String theLine = buffer.readLine();
-				if (theLine == null) {
-					eof = true;
-				} else {
-					text.append(theLine + Preferences.LINE_END_UNIX);
-				}
-			}
-			
-			fileInputStream.close();
-		} catch (FileNotFoundException fnfe) {
-			fnfe.printStackTrace();
-			return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-		return text.toString();
 	}
 }

@@ -165,4 +165,50 @@ public class FileFormatManager {
 		}
 		return -1;
 	}
+
+	// File Opening/Saving Methods
+	public static String loadFile(String filename, String encoding) {
+		// This could be optimized to return a string array or List/Vector instead.
+		StringBuffer text = new StringBuffer("");
+		try {
+			FileInputStream fileInputStream = new FileInputStream(filename);
+			InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream,encoding);
+			BufferedReader buffer = new BufferedReader(inputStreamReader);
+			
+			boolean eof = false;
+			while (!eof) {
+				String theLine = buffer.readLine();
+				if (theLine == null) {
+					eof = true;
+				} else {
+					text.append(theLine + Preferences.LINE_END_UNIX);
+				}
+			}
+			
+			fileInputStream.close();
+		} catch (FileNotFoundException fnfe) {
+			fnfe.printStackTrace();
+			return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return text.toString();
+	}
+	
+	public static boolean writeFile(String filename, String encoding, String text) {
+		try {
+			FileOutputStream fileOutputStream = new FileOutputStream(filename);
+			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, encoding);
+			
+			outputStreamWriter.write(text);
+			outputStreamWriter.flush();
+			outputStreamWriter.close();
+			
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

@@ -52,6 +52,10 @@ public class TreeContext {
 	}
 	
 	// Accessors
+	public Node getRootNode() {
+		return rootNode;
+	}
+	
 	public void setRootNode(Node node) {
 		this.rootNode = node;
 		rootNode.setExpandedClean(true);
