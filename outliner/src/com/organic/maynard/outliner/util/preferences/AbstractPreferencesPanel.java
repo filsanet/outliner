@@ -43,6 +43,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.util.*;
 
+import javax.swing.table.*;
+
 import org.xml.sax.*;
 
 /**
@@ -179,6 +181,25 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 					buf.append(prefStringList.cur.get(j)).append("\n");
 				}
 				list.setText(buf.toString());
+			} else if (comp instanceof PreferencesGUITreeTableComponent) {
+				JTable table = (JTable) ((JScrollPane) comp.getComponent()).getViewport().getView();
+				PreferenceHashMap prefHashMap = (PreferenceHashMap) pref;
+				
+				DefaultTableModel model = (DefaultTableModel) table.getModel();
+				model.setRowCount(0);
+				HashMap map = prefHashMap.cur;
+
+				Iterator it = map.keySet().iterator();
+				
+				while (it.hasNext()) {
+					String key = (String) it.next();
+					String value = (String) map.get(key);
+					
+					Object[] data = {key,value};
+					model.addRow(data);
+				}
+				
+				table.setModel(model);
 			}
 		}
 	}
@@ -220,6 +241,25 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 						}
 						list.setText(buf.toString());
 				
+					} else if (comp instanceof PreferencesGUITreeTableComponent) {
+						JTable table = (JTable) ((JScrollPane) comp.getComponent()).getViewport().getView();
+						PreferenceHashMap prefHashMap = (PreferenceHashMap) pref;
+						
+						DefaultTableModel model = (DefaultTableModel) table.getModel();
+						model.setRowCount(0);
+						HashMap map = prefHashMap.def;
+		
+						Iterator it = map.keySet().iterator();
+						
+						while (it.hasNext()) {
+							String key = (String) it.next();
+							String value = (String) map.get(key);
+							
+							Object[] data = {key,value};
+							model.addRow(data);
+						}
+						
+						table.setModel(model);
 					}
 					
 					pref.restoreTemporaryToDefault();
