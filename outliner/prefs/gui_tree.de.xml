@@ -409,7 +409,7 @@
 		</preferences>
 	<!-- MENUBARS -->
 		<menubar id="menubar" class="com.organic.maynard.outliner.OutlinerDesktopMenuBar">
-			<menu id="file" class="com.organic.maynard.outliner.FileMenu" text="Datei">
+			<menu id="file" class="com.organic.maynard.outliner.FileMenu" text="Datei" mnemonic="d">
 				<menuitem id="new_file" class="com.organic.maynard.outliner.NewFileMenuItem" text="Neu" keybinding="N" keybindingmodifiers="control"/>
 				<menuitem id="open" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Öffnen..."/>
 				<menu id="recent_file_list" class="com.organic.maynard.outliner.RecentFilesList" text="Zuletzt bearbeitete Dateien">
@@ -430,7 +430,7 @@
 				<separator/>
 				<menuitem id="quit" class="com.organic.maynard.outliner.QuitMenuItem" text="Beenden" keybinding="Q" keybindingmodifiers="control"/>
 			</menu>
-			<menu id="edit" class="com.organic.maynard.outliner.EditMenu" text="Bearbeiten">
+			<menu id="edit" class="com.organic.maynard.outliner.EditMenu" text="Bearbeiten" mnemonic="b">
 				<menuitem id="undo" class="com.organic.maynard.outliner.UndoMenuItem" text="Rückgängig" keybinding="Z" keybindingmodifiers="control"/>
 				<menuitem id="redo" class="com.organic.maynard.outliner.RedoMenuItem" text="Wiederherstellen" keybinding="Z" keybindingmodifiers="control shift"/>
 				<separator/>
@@ -450,7 +450,7 @@
 				<menuitem id="edit_document_settings" class="com.organic.maynard.outliner.EditDocumentSettingsMenuItem" text="Dokumenteinstellungen..."/>
 				<menuitem id="edit_document_attributes" class="com.organic.maynard.outliner.EditDocumentAttributesMenuItem" text="Dokumentattribute..."/>
 			</menu>
-			<menu id="outline" class="com.organic.maynard.outliner.OutlineMenu" text="Outline">
+			<menu id="outline" class="com.organic.maynard.outliner.OutlineMenu" text="Outline" mnemonic="o">
 				<menuitem id="comment_submenu" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Kommentare">
 					<menuitem id="toggle_comment_and_clear" class="com.organic.maynard.outliner.ToggleCommentAndClearMenuItem" text="Kommentar umschalten und Unterknoten löschen" keybinding="page_up"/>
 					<menuitem id="clear_comments" class="com.organic.maynard.outliner.ClearCommentsMenuItem" text="Kommentare in ausgewählten Knoten löschen" keybinding="page_up" keybindingmodifiers="control shift"/>
@@ -498,19 +498,19 @@
 				<separator/>
 				<menuitem id="toggle_attributes" class="com.organic.maynard.outliner.ToggleAttributesMenuItem" text="X" show="Attribute anzeigen" hide="Attribute ausblenden" keybinding="T" keybindingmodifiers="control"/>
 			</menu>
-			<menu id="search" class="com.organic.maynard.outliner.SearchMenu" text="Suchen">
+			<menu id="search" class="com.organic.maynard.outliner.SearchMenu" text="Suchen" mnemonic="s">
 				<menuitem id="goto" class="com.organic.maynard.outliner.GoToMenuItem" text="Gehe zu Zeile..." keybinding="G" keybindingmodifiers="control"/>
 				<separator/>
 				<menuitem id="find" class="com.organic.maynard.outliner.FindMenuItem" text="Suchen/Ersetzen..." keybinding="F" keybindingmodifiers="control"/>
 			</menu>
-			<menu id="script" class="com.organic.maynard.outliner.ScriptMenu" text="Skript">
+			<menu id="script" class="com.organic.maynard.outliner.ScriptMenu" text="Skript" mnemonic="k">
 				<menuitem id="macros" class="com.organic.maynard.outliner.MacrosMenuItem" text="Makro Manager..."/>
 				<separator/>
 				<run_as_bsh_script id="run_as_bsh_script" class="com.organic.maynard.outliner.RunAsBSHScriptMenuItem" text="Als Bean Shell Skript ausführen"/>
 				<menuitem id="bsh_console" class="com.organic.maynard.outliner.BSHConsoleMenuItem" text="Bean Shell Konsole"/>
 				<menuitem id="scripts_manager" class="com.organic.maynard.outliner.ScriptsManagerMenuItem" text="Skript Manager..."/>
 			</menu>
-			<menu id="window" class="com.organic.maynard.outliner.WindowMenu" text="Fenster">
+			<menu id="window" class="com.organic.maynard.outliner.WindowMenu" text="Fenster" mnemonic="f">
 				<menuitem id="statistics" class="com.organic.maynard.outliner.StatisticsMenuItem" text="Dokumentstatistik..."/>
 				<separator/>
 				<menuitem id="stack" class="com.organic.maynard.outliner.StackMenuItem" text="Stapeln"/>
@@ -528,7 +528,7 @@
 				<menuitem id="prev_window" class="com.organic.maynard.outliner.PrevWindowMenuItem" text="Vorheriges" keybinding="A" keybindingmodifiers="control shift"/>
 				<separator/>
 			</menu>
-			<menu id="help" class="com.organic.maynard.outliner.HelpMenu" text="Hilfe">
+			<menu id="help" class="com.organic.maynard.outliner.HelpMenu" text="Hilfe" mnemonic="h">
 				<menuitem id="userGuide" class="com.organic.maynard.outliner.HelpUserGuideMenuItem" text="Benutzerhandbuch"/>
 				<menuitem id="developerGuide" class="com.organic.maynard.outliner.HelpDeveloperGuideMenuItem" text="Entwicklerhandbuch"/>
 				<separator/>
