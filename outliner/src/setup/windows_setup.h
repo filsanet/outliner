@@ -101,13 +101,29 @@ const char * WINDOWS_VERSION_STRINGS [] = {
 	"Unknown V5 Windows",
 	"Unknown V6 Windows",
 	"Unknown V7 Windows",
-	"Very Unknown Windows" }; 
+	"Very Unknown Windows" }; // end string array
 
 // machine requirements
 #define BARE_MIN_MEMORY  32 ;  // barest minimum RAM required to run app
 #define RECMND_MIN_MEMORY  64 ;  // recommended minimum RAM required to run app
 
 #define RECMND_MIN_SPEED 400 ;  // recommended minimum processor speed
+
+// important files
+#define AUTOEXEC_BAT  "autoexec.bat"
+#define CONFIG_SYS  "config.sys"
+#define MS_DOS_SYS  "msdos.sys"
+#define STD_AUTOEXEC_PATH  "c:\\autoexec.bat"
+
+// msdos.sys
+#define HOST_WIN_BOOT_DRV  "HostWinBootDrv"
+#define UNINSTALL_DIR  "UninstallDir"
+#define WIN_DIR  "WinDir"
+#define WIN_BOOT_DIR  "WinBootDir"
+const char * MS_DOS_SYS_SECTION_STRINGS [] = {
+	"[PATHS]",
+	"[OPTIONS]"
+	} ; // end string array
 
 // registry
 #define SYSTEM_ENVIRONMENT_ROOT_KEY  HKEY_LOCAL_MACHINE
@@ -169,6 +185,12 @@ enum environment_target {
 	SYSTEM
 	} ; // end enum
 
+enum ms_dos_sys_section {
+	PATHS,
+	OPTIONS,
+	OTHER
+	}; // end enum
+
 typedef struct {
 	int programsMenu;
 	int startMenu;
@@ -183,7 +205,8 @@ typedef struct {
 	char app_doc_open_cmd_path [100] ; // example: "\\Shell\\Open\\Command"
 	
 	} doc_type_info ; // end struct
-	
+
+
 // ---------- global variables
 
 windows_version g_Windows_Version = CANNOT_DETERMINE;
@@ -233,3 +256,4 @@ int weCanRunOnThisSystem() ;
 int weHaveJ2RE() ;
 void welcome() ;
 int wePlugIntoSystem() ;
+int msDosSysExtract(ms_dos_sys_section, char *, char *) ;

@@ -970,21 +970,76 @@ int setAutoExecEnvVar (char * varName, char * varValue, char * introLines) {
 // if not, returns 0	
 int getAutoExecPath(char * pathBuffer) {
 	
-	// fake for now
-	// TBD make real
-	strcpy (pathBuffer, "c:\\autoexec.bat") ;
+	// local vars
+	int result ;
 	
-	return 1 ;
+	// if there's an msdos.sys file boot drive indicator
+	if (msDosSysExtract(PATHS, HOST_WIN_BOOT_DRV, pathBuffer)) {
+		
+		// use that to build a path
+		strcat(pathBuffer, ":\\") ;
+		strcat(pathBuffer, AUTOEXEC_BAT) ;
+		
+	// else we use the standard path, good for most systems
+	} else {
+		strcpy(pathBuffer, STD_AUTOEXEC_PATH) ;
+	} // end if-else
 	
-	// real 
-	// determine boot volume
+	// if the pathed file exists ...
+	if (fileExists(pathBuffer))
+		return 1 ;
+	else {
+		// try to create the file
+		
+		// return result of new existence test
+		return fileExists(pathBuffer) ;
+	} // end else
+	
+	
+		
+//	#define HOST_WIN_BOOT_DRV  "HostWinBootDrv"
+//	#define UNINSTALL_DIR  "UninstallDir"
+//	#define WIN_DIR  "WinDir"
+//	#define WIN_BOOT_DIR  "WinBootDir"
+//	
+//	WinDir=C:\WINDOWS
+//	WinBootDir=C:\WINDOWS
+//	HostWinBootDrv=C
+//	UninstallDir=C:\
+//
+	// examine msdos.sys
+	// look for HostWinBootDrv
+	// look for UninstallDir
+	// compressed volumes: hmmm ??
 	// does it have an autoexec.bat ??
 	// if it does, cool
 	// if it doesn't, create one
 	
-	
+	return 1 ;
+
 } // end function getAutoExecPath
 
+
+// extract a value from an msdos.sys file
+int msDosSysExtract(ms_dos_sys_section section, char * name, char * valueBuffer) {
+	
+	// extract a value from the msdos.sys file
+	
+	// if the file exists
+		// if it contains ascii data
+			// get to section
+				// until get to section or out of lines
+					// read a line
+					// is it section ?
+			// for each line
+				// is the first word in that line what we are looking for
+	// TBD
+	// fake for now
+	strcpy (valueBuffer, "c") ;
+	
+	return 1 ;
+	
+} // end function msDosSysExtract
 
 // uppercase a string
 int strToUpper (char * someString) {
