@@ -3,7 +3,7 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE User Guide.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Mon, 21 Jan 2002 11:14:01 GMT</dateModified>
+<dateModified>Mon, 21 Jan 2002 11:19:17 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
@@ -131,7 +131,7 @@
 	<outline text="Copyright Notices">
 		<outline text="Copyright 2001-2002 by Stanley Krute. All rights reserved."/>
 	</outline>
-	<outline text="Version">
+	<outline text="Versions">
 		<outline text="JUG">
 			<outline text="2002.01.21.19.00.00.GMT">
 				<outline text="yyyy.mm.dd.hh.mm.ss.timeSystem"/>
@@ -265,6 +265,11 @@
 </outline>
 <outline text="Opening and Importing Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true"/>
 <outline text="-------------------------"/>
+<outline text="Notes"/>
+<outline text="Hyperlinks" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
+	<outline text="Link Nodes"/>
+	<outline text="Links in Nodes"/>
+</outline>
 <outline text="Node Attributes">
 	<outline text="isComment">
 		<outline text="originator"/>
@@ -312,10 +317,7 @@
 		<outline text="Thought Manager z.zz"/>
 	</outline>
 </outline>
-<outline text="Hyperlinks in Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
-	<outline text="Link Nodes"/>
-	<outline text="Links in Nodes"/>
-</outline>
+<outline text="Nodes by Reference"/>
 <outline text="Connecting Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true"/>
 <outline text="Sharing Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true"/>
 <outline text="Outline Security"/>
