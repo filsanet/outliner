@@ -378,7 +378,7 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 			|| !docSettings.getUseCreateModDates().cur == docSettings.getUseCreateModDates().tmp
 			|| !docSettings.getCreateModDatesFormat().cur.equals(docSettings.getCreateModDatesFormat().tmp)
 		) {
-			docSettings.getDocument().setFileModified(true);
+			docSettings.getDocument().setModified(true);
 		}
 
 		// If anything has changed that would effect the GUI then redraw.

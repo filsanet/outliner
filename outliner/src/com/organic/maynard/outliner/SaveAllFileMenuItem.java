@@ -69,14 +69,12 @@ public class SaveAllFileMenuItem extends AbstractOutlinerMenuItem implements Doc
 	}
 
 	private void calculateEnabledState() {
-		for (int i = 0; i < Outliner.documents.openDocumentCount(); i++) {
+		for (int i = 0, limit = Outliner.documents.openDocumentCount(); i < limit; i++) {
 			Document doc = Outliner.documents.getDocument(i);
 
-			if (!doc.getDocumentInfo().isImported()) {
-				if (doc.isModified() || doc.getFileName().equals("")) {
-					setEnabled(true);
-					return;
-				}
+			if ((doc.isModified() || doc.getFileName().equals("")) && !doc.getDocumentInfo().isImported()) {
+				setEnabled(true);
+				return;
 			}
 		}
 
@@ -101,25 +99,18 @@ public class SaveAllFileMenuItem extends AbstractOutlinerMenuItem implements Doc
 		saveAllOutlinerDocuments();
 	}
 
-	// save all changed and non-imported documents
+	/**
+	 * Saves all outliner documents that are currently modified and are not imported.
+	 * We don't want to save imported docs since they won't have a valid current save
+	 * format, i.e. they're imported.
+	 */
 	protected static void saveAllOutlinerDocuments() {
-		
-		// for each open document ...
 		for (int i = 0; i < Outliner.documents.openDocumentCount(); i++) {
 			OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getDocument(i);
 			
-			// if it wasn't imported ...
-			if (! doc.getDocumentInfo().isImported()) {
-				
-				// if it's changed ...
-				if (doc.isFileModified()) {
-					SaveFileMenuItem.saveOutlinerDocument(doc);
-				} // end if
-			
-			} // end if
-		
-		} // end for
-		
-	} // end method saveAllOutlinerDocuments
-
-} // end class SaveAllFileMenuItem
+			if (doc.isModified() && !doc.getDocumentInfo().isImported()) {
+				SaveFileMenuItem.saveOutlinerDocument(doc);
+			}
+		}
+	}
+}

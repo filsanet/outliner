@@ -51,13 +51,10 @@ import com.organic.maynard.outliner.util.Ginsu;
 
 public class OutlinerWindowMonitor extends InternalFrameAdapter {
 	
-	// a window's closing -- deal with it
 	public void internalFrameClosing(InternalFrameEvent e) {
 		closeInternalFrame(e.getInternalFrame());
-	} // end method
+	}
 	
-	
-	// a window's closing -- deal with it
 	public static boolean closeInternalFrame(JInternalFrame w) {		
 		// grab a copy of the document ref
 		OutlinerDocument doc = (OutlinerDocument) w;
@@ -66,7 +63,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 		String msg = null;
 		
 		// if the document is modified ....
-		if (doc.isFileModified()) {
+		if (doc.isModified()) {
 			
 			// if it's untitled, do a Save As ...
 			if (doc.getFileName().equals("")) {
@@ -87,7 +84,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 						// Do Nothing
 					} else if (result == JOptionPane.CANCEL_OPTION) {
 						return false;
-					} // end if-else chain
+					}
 				}
 				
 			// else if it's not imported, do a Save
@@ -107,7 +104,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 					// Do Nothing
 				} else if (result == JOptionPane.CANCEL_OPTION) {
 					return false;
-				} // end if-else chain
+				}
 				
 			// else it IS imported, do a Save As
 			} else {
@@ -125,15 +122,15 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 					// Do Nothing
 				} else if (result == JOptionPane.CANCEL_OPTION) {
 					return false;
-				} // end if-else chain
-			} // end else it's imported
-		} // end if the document is modified
+				}
+			}
+		}
 		
 		// Record current state into DocumentInfo in the RecentFileList if we can
 		DocumentInfo docInfo = RecentFilesList.getDocumentInfo(doc.getFileName());
 		if (docInfo != null) {
 			docInfo.recordWindowPositioning(doc);
-		} // end if
+		}
 
 		// Hide the document
 		doc.setVisible(false);

@@ -48,8 +48,6 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 	private JoeNodeList selectedNodes = Outliner.newNodeList(100);
 	private Node rootNode = null;
 
-	private HashMap attributes = null;
-
 
 	// The Constructors
 	public TreeContext(OutlinerDocument document) {
@@ -63,8 +61,41 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 	public TreeContext() {
 		resetStructure();
 	}
+
+	public void destroy() {
+		visibleNodes = null;
+		selectedNodes = null;
+		rootNode.destroy();
+		rootNode = null;
+		editingNode = null;
+		mostRecentNodeTouched = null;
+		selectedNodesParent = null;
+		document = null;
+	}
+
+	public void reset() {
+		document = null;
+		visibleNodes.clear();
+		selectedNodes.clear();
+		rootNode = null;
+		
+		resetStructure();	
+	}
+
+	private void resetStructure() {
+		// Create an empty Tree
+		setRootNode(new NodeImpl(this,"ROOT"));
+		rootNode.setHoisted(true);
 	
-	
+		NodeImpl child = new NodeImpl(this,"");
+		child.setDepth(0);
+		rootNode.insertChild(child, 0);
+		insertNode(child);
+		
+		// Record the current location
+		setEditingNode(child, false);	
+	}
+
 	
 	// Comments
 	private boolean comment = false;
@@ -445,43 +476,7 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 		rootNode = someNode;
 		rootNode.setExpandedClean(true);
 	}
-	
-	
-	public void reset() {
-		document = null;
-		visibleNodes.clear();
-		selectedNodes.clear();
-		rootNode = null;
-		attributes = null;
 		
-		resetStructure();	
-	}
-
-	private void resetStructure() {
-		// Create an empty Tree
-		setRootNode(new NodeImpl(this,"ROOT"));
-		rootNode.setHoisted(true);
-	
-		NodeImpl child = new NodeImpl(this,"");
-		child.setDepth(0);
-		rootNode.insertChild(child, 0);
-		insertNode(child);
-		
-		// Record the current location
-		setEditingNode(child, false);	
-	}
-	
-	
-	public void destroy() {
-		visibleNodes = null;
-		selectedNodes = null;
-		rootNode.destroy();
-		rootNode = null;
-		editingNode = null;
-		mostRecentNodeTouched = null;
-		selectedNodesParent = null;
-		document = null;
-	}
 	
 	// Static Methods formerly instance methods of Node
 	public static Node getYoungestVisibleAncestor(Node node, TreeContext tree) {

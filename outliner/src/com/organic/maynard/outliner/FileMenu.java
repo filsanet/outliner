@@ -335,7 +335,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 						// Update the Recent File List
 						RecentFilesList.addFileNameToList(docInfo);
 		
-						document.setFileModified(false);
+						document.setModified(false);
 						
 						// case out on the form to build the title
 						switch (OutlinerDocument.getTitleNameForm()) {
@@ -608,11 +608,11 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 			case MODE_OPEN:
 				openOrImportFileFormat = Outliner.fileFormatManager.getOpenFormat(docInfo.getFileFormat());
-				break ;
+				break;
 
 			case MODE_IMPORT:
 				openOrImportFileFormat = Outliner.fileFormatManager.getImportFormat(docInfo.getFileFormat());
-				break ;
+				break;
 
 			default:
 				// Ack, this shouldn't happen.
@@ -644,12 +644,11 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				// Deal with a childless RootNode or an Empty or Null Tree
 				if ((tree.getRootNode() == null) || (tree.getRootNode().numOfChildren() <= 0)) {
 					tree.reset();
-				} // end if
-			} // end else if
-		} // end else
+				}
+			}
+		}
 
-		// no matter what happened,
-		// reset the input stream in the docInfo
+		// no matter what happened, reset the input stream in the docInfo
 		docInfo.setInputStream(null);
 
 		// return the results of our efforts
@@ -677,7 +676,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 		// Update the menuBar
 		doc.setFileName(filename);
-		doc.setFileModified(false);
+		doc.setModified(false);
 		
 		// case out on the form to build the title
 		String title;
@@ -686,11 +685,11 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 			case FULL_PATHNAME:
 			
 			default: 
-				title = filename ;
+				title = filename;
 				break;
 				
 			case TRUNC_PATHNAME: 
-				title = StanStringTools.getTruncatedPathName(filename, TRUNC_STRING) ;
+				title = StanStringTools.getTruncatedPathName(filename, TRUNC_STRING);
 				break;
 				
 			case JUST_FILENAME: 
@@ -699,7 +698,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		}
 		
 		// set the title
-		doc.setTitle(title) ;
+		doc.setTitle(title);
 
 		// update window menu entry
 		Outliner.menuBar.windowMenu.updateWindow(doc) ;
@@ -742,7 +741,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 		// Set document as modified if something happened on open
 		if (openOrImportResult == SUCCESS_MODIFIED) {
-			doc.setFileModified(true);
+			doc.setModified(true);
 		}
 	}
 

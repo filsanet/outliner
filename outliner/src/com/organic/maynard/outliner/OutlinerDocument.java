@@ -56,9 +56,9 @@ import com.organic.maynard.util.string.StanStringTools ;
 public class OutlinerDocument extends JInternalFrame implements Document, ComponentListener, PropertyChangeListener {
 
 	// Constants
-	//public static final String UNTITLED_DOCUMENT_NAME = "Untitled";
-	private static final ImageIcon ICON_DOCUMENT_SAVED = new ImageIcon(Outliner.GRAPHICS_DIR + "document_saved.gif");
-	private static final ImageIcon ICON_DOCUMENT_UNSAVED = new ImageIcon(Outliner.GRAPHICS_DIR + "document_unsaved.gif");
+	private static final String UNTITLED_DOCUMENT_NAME = GUITreeLoader.reg.getText("untitled");
+	private static final ImageIcon ICON_DOCUMENT_SAVED =   new ImageIcon(new StringBuffer().append(Outliner.GRAPHICS_DIR).append("document_saved.gif").toString());
+	private static final ImageIcon ICON_DOCUMENT_UNSAVED = new ImageIcon(new StringBuffer().append(Outliner.GRAPHICS_DIR).append("document_unsaved.gif").toString());
 
 	public static final int MIN_WIDTH = 300;
 	public static final int MIN_HEIGHT = 100;
@@ -66,15 +66,14 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
  	public static final int INITIAL_WIDTH = 450;
 	public static final int INITIAL_HEIGHT = 450;
 
- 	public static final int INITIAL_X = 5;
-	public static final int INITIAL_Y = 5;
-		
+ 	public static final int INITIAL_X = 5; // Default starting location
+	public static final int INITIAL_Y = 5; // Default starting location
+
+
 	// Class Variables
 	private static int untitledDocumentCount = 0;
 	private static OutlinerWindowMonitor monitor = new OutlinerWindowMonitor();
 
-	// title name form options stuff
-	private static int titleNameForm = 0 ;
 
 	// sets of choice strings for combo boxes
 	private static final String [] DOCUMENT_TITLES_NAME_FORMS = {
@@ -84,40 +83,39 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	};
 		
 	// document title name forms
-	private static final int FULL_PATHNAME = 0 ;
-	private static final int TRUNC_PATHNAME = 1 ;
-	private static final int JUST_FILENAME = 2 ;
+	private static final int FULL_PATHNAME = 0;
+	private static final int TRUNC_PATHNAME = 1;
+	private static final int JUST_FILENAME = 2;
 	
 	private static final String TRUNC_STRING = GUITreeLoader.reg.getText("trunc_string");
 
-	// our static initializer code
-	static {
-		syncTitleNameForms() ; 
-	} // end static initializer code
-		
+
 	// Instance Variables
-	private DocumentRepository repository = null;
-	
+	private int preferredCaretPosition = 0;
+	private boolean isShowingAttributes = false;
+	private int dividerPosition = 0;
 	private String fileName = "";
 	private boolean fileModified = true;
-	
-	public OutlinerPanel panel = new OutlinerPanel(this);
-	
+
+	private Border border = null;
+
+	private DocumentRepository repository = null;
+	private DocumentInfo docInfo = null;
+
+	public OutlinerPanel panel = new OutlinerPanel(this); // Needs to come before JoeTree declaration.
 	public DummyJScrollPane dummy = null;
-	
+			
 	public DocumentSettings settings = new DocumentSettings(this);
-	public JoeTree tree = Outliner.newTree(this);
-	protected UndoQueue undoQueue = new UndoQueue(this);
+	public JoeTree tree = Outliner.newTree(this); // Needs to come after OutlinerPanel declaration.
 	public HoistStack hoistStack = new HoistStack(this);
 	public AttributesPanel attPanel = new AttributesPanel(this);
-	
-	private DocumentInfo docInfo = null; // Used for saving/reverting
+	protected UndoQueue undoQueue = new UndoQueue(this);
 	
 	private JSplitPane splitPane = null;
 	private JScrollPane attJSP = new JScrollPane(attPanel);
 
 	
-	// The Constructor
+	// The Constructors
 	public OutlinerDocument(String title) {
 		this(title, new DocumentInfo());
 	}
@@ -132,7 +130,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		// Set the window title
 		if (title.equals("")) {
 			untitledDocumentCount++;
-			setTitle(GUITreeLoader.reg.getText("untitled") + " " + untitledDocumentCount);
+			setTitle(new StringBuffer().append(UNTITLED_DOCUMENT_NAME).append(" ").append(untitledDocumentCount).toString());
 		} else {
 			setTitle(title);
 		}
@@ -180,62 +178,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 
 		setVisible(true);
 	}
-	
-	// Accessors
-	public void setDocumentRepository(DocumentRepository repository) {this.repository = repository;}
-	public DocumentRepository getDocumentRepository() {return this.repository;}
 
-	public void setTree(JoeTree tree) {this.tree = tree;}
-	public JoeTree getTree() {return this.tree;}
-
-	public void setUndoQueue(UndoQueue queue) {this.undoQueue = queue;}
-	public UndoQueue getUndoQueue() {return this.undoQueue;}
-	
-	public DocumentInfo getDocumentInfo() {
-		return this.docInfo;
-	}
-	
-	public void setDocumentInfo(DocumentInfo docInfo) {
-		this.docInfo = docInfo;
-	}
-	
-	
-	// Attributes Panel
-	private boolean isShowingAttributes = false;
-	private int dividerPosition = 0;
-	
-	public boolean isShowingAttributes() {return this.isShowingAttributes;}
-	
-	public void showAttributes(boolean b) {
-		isShowingAttributes = b;
-
-		if (isShowingAttributes()) {
-			// Swap the components
-			getContentPane().remove(dummy);
-			splitPane.setTopComponent(dummy);
-			attPanel.update();
-			getContentPane().add(splitPane, BorderLayout.CENTER);
-			
-			// Restore the divider position.
-			splitPane.setDividerLocation(dividerPosition);
-		} else {
-			// Store the current divider position.
-			dividerPosition = splitPane.getDividerLocation();
-			
-			// Swap the components
-			getContentPane().remove(splitPane);
-			getContentPane().add(dummy, BorderLayout.CENTER);
-		}
-
-		if (isVisible()) {
-			validate();
-			panel.layout.redraw();
-		}
-		
-		// Fire Event
-		Outliner.documents.fireAttributesVisibilityChangedEvent(this);
-	}
-	
 	public void destroy() {
 		removeInternalFrameListener(monitor);
 		removeComponentListener(this);
@@ -273,13 +216,125 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 		dispose();
 	}
 	
+	
+	// Accessors
+	public void setDocumentRepository(DocumentRepository repository) {
+		this.repository = repository;
+	}
+	
+	public DocumentRepository getDocumentRepository() {
+		return this.repository;
+	}
+
+	public void setTree(JoeTree tree) {
+		this.tree = tree;
+	}
+	
+	public JoeTree getTree() {
+		return this.tree;
+	}
+
+	public void setUndoQueue(UndoQueue queue) {
+		this.undoQueue = queue;
+	}
+	
+	public UndoQueue getUndoQueue() {
+		return this.undoQueue;
+	}
+	
+	public DocumentInfo getDocumentInfo() {
+		return this.docInfo;
+	}
+	
+	public void setDocumentInfo(DocumentInfo docInfo) {
+		this.docInfo = docInfo;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	
+	public String getFileName() {
+		return this.fileName;
+	}
+
+	static int getTitleNameForm() {
+		String currentSettingStrung = Preferences.getPreferenceString(Preferences.DOCUMENT_TITLES_NAME_FORM).cur;
+		int nameFormIndex = 0;
+		for (int i = DOCUMENT_TITLES_NAME_FORMS.length - 1; i >= 0; i--) {
+			if (currentSettingStrung.equals(DOCUMENT_TITLES_NAME_FORMS[i])) {
+				nameFormIndex = i;
+				break;
+			}
+		}
+		return nameFormIndex;
+	}
+	
+	public void setModified(boolean fileModified) {
+		// Abort if we're not changing state.
+		if (fileModified == this.fileModified) {
+			return;
+		}
+		
+		this.fileModified = fileModified;
+		
+		// Fire DocumentEvent
+		getDocumentRepository().fireModifiedStateChangedEvent(this);
+
+		if (fileModified) {
+			setFrameIcon(ICON_DOCUMENT_UNSAVED);
+		} else {
+			setFrameIcon(ICON_DOCUMENT_SAVED);
+		}
+	}
+	
+	public boolean isModified() {
+		return this.fileModified;
+	}
+	
+	
+	// Attributes Panel	
+	public boolean isShowingAttributes() {
+		return this.isShowingAttributes;
+	}
+	
+	public void showAttributes(boolean b) {
+		isShowingAttributes = b;
+
+		if (isShowingAttributes()) {
+			// Swap the components
+			getContentPane().remove(dummy);
+			splitPane.setTopComponent(dummy);
+			attPanel.update();
+			getContentPane().add(splitPane, BorderLayout.CENTER);
+			
+			// Restore the divider position.
+			splitPane.setDividerLocation(dividerPosition);
+		} else {
+			// Store the current divider position.
+			dividerPosition = splitPane.getDividerLocation();
+			
+			// Swap the components
+			getContentPane().remove(splitPane);
+			getContentPane().add(dummy, BorderLayout.CENTER);
+		}
+
+		if (isVisible()) {
+			validate();
+			panel.layout.redraw();
+		}
+		
+		// Fire Event
+		Outliner.documents.fireAttributesVisibilityChangedEvent(this);
+	}
+	
+	
 	public void restoreWindowToInitialSize() {
 		setSize(INITIAL_WIDTH,INITIAL_HEIGHT);
 	}
 
-	// Border
-	private Border border = null;
-	
+
+	// Border	
 	public void hideBorder() {
 		border = getBorder();
 		setBorder(null);
@@ -290,11 +345,10 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 			setBorder(border);
 		}
 	}
-	
+
+
 	// This method taken from the workaround for bug #4309079.
 	public void moveToFront() {
-		//System.out.println("move to front " + getTitle());
-		
 		Window window = SwingUtilities.getWindowAncestor(this);
 		Component focusOwner = (window != null) ? window.getFocusOwner() : null;
 		boolean descendant = false;
@@ -322,42 +376,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	public void componentShown(ComponentEvent e) {}
 
 
-	// accessors
-	public void setFileName(String fileName) {this.fileName = fileName;}
-	public String getFileName() {return fileName;}
-
-	static int getTitleNameForm() {return titleNameForm;}
-	static void setTitleNameForm(int nameForm) {titleNameForm = nameForm;}
-
-	public void setFileModified(boolean fileModified) { // Depricated
-		setModified(fileModified);
-	}
-	
-	public void setModified(boolean fileModified) {
-		// Abort if we're not changing state.
-		if (fileModified == this.fileModified) {
-			return;
-		}
-		
-		this.fileModified = fileModified;
-		
-		// Fire DocumentEvent
-		getDocumentRepository().fireModifiedStateChangedEvent(this);
-
-		if (fileModified) {
-			setFrameIcon(ICON_DOCUMENT_UNSAVED);
-		} else {
-			setFrameIcon(ICON_DOCUMENT_SAVED);
-		}
-	}
-	
-	public boolean isFileModified() {return fileModified;} // Depricated
-	public boolean isModified() {return fileModified;}
-	
-	
 	// Text Caret Positioning
-	private int preferredCaretPosition = 0;
-
 	public int getPreferredCaretPosition() {
 		return preferredCaretPosition;
 	}
@@ -373,12 +392,12 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 			retVal = preferredCaretPosition;
 		}
 		
-		if (retVal > node.getValue().length()) {
-			int newPreferredCaretPosition = currentPosition;
-			if (preferredCaretPosition < newPreferredCaretPosition) {
-				preferredCaretPosition = newPreferredCaretPosition; // This might be the source of a bug since this method is static and this might be intended to effect an instance variable.
-			}
-			retVal = node.getValue().length();
+		int nodeLength = node.getValue().length();
+		if (retVal > nodeLength) {
+			//if (preferredCaretPosition < currentPosition) {
+			//	preferredCaretPosition = currentPosition; // This might be the source of a bug since this method is static and this might be intended to effect an instance variable.
+			//}
+			retVal = nodeLength;
 		}
 		return retVal;
 	}
@@ -391,88 +410,53 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 			//panel.layout.setFocus(panel.doc.tree.getEditingNode(), panel.doc.tree.getComponentFocus());
 		}
 	}
-	// fills document title name form choices into combo box
-	// callable by outsiders
-	// currently called by preference panel endSetup methods
+	
+	/**
+	 * fills document title name form choices into combo box in Look And Feel
+	 * preference panel. Currently called by preference panel endSetup methods
+	 */
 	public static void fillTitleNameFormCombo () {
-		
-		AbstractPreferencesPanel.addArrayToComboBox(DOCUMENT_TITLES_NAME_FORMS, 
-			GUITreeComponentRegistry.COMPONENT_DOCUMENT_TITLES_NAME_FORM);
-		} // end method fillTitleNameFormCombo
+		AbstractPreferencesPanel.addArrayToComboBox(DOCUMENT_TITLES_NAME_FORMS, GUITreeComponentRegistry.COMPONENT_DOCUMENT_TITLES_NAME_FORM);
+	}
 		
 
-	// syncs up to the current user choice for title name form
-	// setting gets sucked in from user prefs
-	// any open docs get tweaked
-	// along with their entries in the Windows menu
-	// all future docs will open titled correctly
+	/**
+	 * Syncs up the titles of all open documents to the
+	 * Preferences setting for document titles.
+	 */
 	public static void syncTitleNameForms() {
-		// local vars
-		int nameFormIndex = 0 ;
-		int limit = 0 ;
-		String currentSettingStrung = null ;
-		boolean titleNameFormChange = false ;
+		int nameFormIndex = getTitleNameForm();
 		
-		// grab aholduv our prefs
-		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
-		
-		// deal with document titles name form widget
-		// get a ref to it
-		PreferenceString pDT_Name_Form = (PreferenceString) prefs.getPreference(
-			Preferences.DOCUMENT_TITLES_NAME_FORM);
+		// Make the change
+		for (int i = 0, limit = Outliner.documents.openDocumentCount(); i < limit; i++) {
+			OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getDocument(i);
+			String pathname = doc.getDocumentInfo().getPath();
 			
-		// try to convert it to an int value
-		for (nameFormIndex = 0, limit = DOCUMENT_TITLES_NAME_FORMS.length, currentSettingStrung = pDT_Name_Form.getCur();
-			nameFormIndex < limit ; nameFormIndex++ ) {
-				if (currentSettingStrung.equals(DOCUMENT_TITLES_NAME_FORMS[nameFormIndex])) {
-					break ;
-				} // end if
-			} // end for
+			// case out on the form to build the title
+			String newTitle = null;
+			switch (nameFormIndex) {
 			
-		// were we able to convert, and is there a change in the titles name form ?
-		titleNameFormChange = (nameFormIndex < limit) && (nameFormIndex != titleNameForm) ;
-		
-		// if there was a change, 
-		if (titleNameFormChange) {
-			// let's remember the new value
-			titleNameForm = nameFormIndex ;
-
-			// for each open document ...
-			for (int i = 0; i < Outliner.documents.openDocumentCount(); i++) {
-				// get the document, then its docInfo, then its pathname
-				OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getDocument(i);
-				DocumentInfo docInfo = doc.getDocumentInfo() ;
-				String pathname = docInfo.getPath () ;
-				
-				// case out on the form to build the title
-				String newTitle = null ;
-				switch (titleNameForm) {
-				
 				case FULL_PATHNAME:
+				
 				default: 
-					newTitle = pathname ;
-					break ;
+					newTitle = pathname;
+					break;
 					
 				case TRUNC_PATHNAME: 
-					newTitle = StanStringTools.getTruncatedPathName(pathname, TRUNC_STRING) ;
-					break ;
+					newTitle = StanStringTools.getTruncatedPathName(pathname, TRUNC_STRING);
+					break;
 					
 				case JUST_FILENAME: 
-					newTitle = StanStringTools.getFileNameFromPathName(pathname) ;
-					break ;
-					
-				} // end switch
+					newTitle = StanStringTools.getFileNameFromPathName(pathname);
+					break;
 				
-				// set the title
-				doc.setTitle(newTitle) ;
-				
-				// update the entry in the windows menu
-				Outliner.menuBar.windowMenu.updateWindow(doc) ;
-				
-			} // end for each open document
+			}
 			
-		} // end if we have a valid change in doc title name form
-				
-	} // end method syncTitleNameForms
-
-} // end class OutlinerDocument
+			// set the title
+			doc.setTitle(newTitle);
+			
+			// update the entry in the windows menu
+			Outliner.menuBar.windowMenu.updateWindow(doc);
+		}
+	}
+}
