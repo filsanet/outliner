@@ -223,6 +223,11 @@ public class DeleteAction extends AbstractAction {
 	// IconFocusedMethods
 	public static void delete(JoeTree tree, OutlineLayoutManager layout, boolean deleteMode) {
 		Node youngestNode = tree.getYoungestInSelection();
+		
+		if (youngestNode == null) {
+			return;
+		}
+		
 		Node parent = youngestNode.getParent();
 		CompoundUndoableReplace undoable = new CompoundUndoableReplace(parent, deleteMode);
 
