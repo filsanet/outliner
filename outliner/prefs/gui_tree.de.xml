@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <root id="outliner" class="com.organic.maynard.outliner.Outliner" title="JOE">
-	<!-- COMPATIBLE WITH JOE VERSION: 1.8.9.1 -->
+	<!-- COMPATIBLE WITH JOE VERSION: 1.8.10 -->
 	<!-- TEXT REPOSITORY -->
 		<asset type="text" key="use_create_mod_dates" value="Automatically Generate Node Attributes"/>
 		<asset type="text" key="create_mod_dates_format" value="Date Format for Node Attributes"/>
@@ -36,6 +36,7 @@
 		<asset type="text" key="do_replacement" value="Ersetzung durchführen"/>
 		<asset type="text" key="do_you_want_to_delete" value="Do you want to delete the item."/>
 		<asset type="text" key="document" value="Dokument:"/>
+		<asset type="text" key="done" value="Done"/>
 		<asset type="text" key="encode" value="Kodieren"/>
 		<asset type="text" key="encoding_when_saving" value="Beim Speichern kodieren."/>
 		<asset type="text" key="error_att_key_alpha" value="Fehler: Schlüssel muss alpha-numerisch sein."/>
@@ -116,6 +117,8 @@
 		<asset type="text" key="save" value="Save"/>
 		<asset type="text" key="save_and_close" value="Save and Close"/>
 		<asset type="text" key="selection_only" value="Nur Auswahl"/>
+		<asset type="text" key="skip" value="Skip"/>
+		<asset type="text" key="skip_all" value="Skip All"/>
 		<asset type="text" key="sort" value="Sortierung"/>
 		<asset type="text" key="sort_ascending" value="Aufsteigend"/>
 		<asset type="text" key="sort_deep" value="Tief"/>
@@ -380,6 +383,32 @@
 							</preference>
 						</preferencepanel>
 					</preferencepanel>
+					<preferencepanel id="preferences_panel_spelling" class="com.organic.maynard.outliner.util.preferences.PreferencesPanelImpl" title="Spell Checking">
+						<preference id="ignore_upper_case" class="com.organic.maynard.outliner.util.preferences.PreferenceBoolean" default="false">
+							<validator id="ignore_upper_case_validator" class="com.organic.maynard.outliner.util.preferences.BooleanValidator"/>
+							<preference_component id="ignore_upper_case_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeCheckBoxComponent" label="Ignore upper case"/>
+						</preference>
+						<preference id="ignore_mixed_case" class="com.organic.maynard.outliner.util.preferences.PreferenceBoolean" default="false">
+							<validator id="ignore_mixed_case_validator" class="com.organic.maynard.outliner.util.preferences.BooleanValidator"/>
+							<preference_component id="ignore_mixed_case_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeCheckBoxComponent" label="Ignore mixed case"/>
+						</preference>
+						<preference id="ignore_inetadd" class="com.organic.maynard.outliner.util.preferences.PreferenceBoolean" default="true">
+							<validator id="ignore_inetadd_validator" class="com.organic.maynard.outliner.util.preferences.BooleanValidator"/>
+							<preference_component id="ignore_inetadd_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeCheckBoxComponent" label="Ignore internet addresses"/>
+						</preference>
+						<preference id="ignore_digit_words" class="com.organic.maynard.outliner.util.preferences.PreferenceBoolean" default="false">
+							<validator id="ignore_digit_words_validator" class="com.organic.maynard.outliner.util.preferences.BooleanValidator"/>
+							<preference_component id="ignore_digit_words_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeCheckBoxComponent" label="Ignore digit words"/>
+						</preference>
+						<preference id="ignore_multiple_words" class="com.organic.maynard.outliner.util.preferences.PreferenceBoolean" default="false">
+							<validator id="ignore_multiple_words_validator" class="com.organic.maynard.outliner.util.preferences.BooleanValidator"/>
+							<preference_component id="ignore_multiple_words_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeCheckBoxComponent" label="Ignore multiple words"/>
+						</preference>
+						<preference id="ignore_sentence_cap" class="com.organic.maynard.outliner.util.preferences.PreferenceBoolean" default="false">
+							<validator id="ignore_sentence_cap_validator" class="com.organic.maynard.outliner.util.preferences.BooleanValidator"/>
+							<preference_component id="ignore_sentence_cap_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeCheckBoxComponent" label="Ignore sentence capitalization"/>
+						</preference>
+					</preferencepanel>
 					<preferencepanel id="preferences_panel_misc" class="com.organic.maynard.outliner.util.preferences.PreferencesPanelMisc" title="Sonstiges">
 						<preference id="print_environment" class="com.organic.maynard.outliner.util.preferences.PreferenceBoolean" default="false">
 							<validator id="print_environment_validator" class="com.organic.maynard.outliner.util.preferences.BooleanValidator"/>
@@ -448,6 +477,9 @@
 				<menuitem id="preferences" class="com.organic.maynard.outliner.PreferencesMenuItem" text="Programmeinstellungen..."/>
 				<menuitem id="edit_document_settings" class="com.organic.maynard.outliner.EditDocumentSettingsMenuItem" text="Dokumenteinstellungen..."/>
 				<menuitem id="edit_document_attributes" class="com.organic.maynard.outliner.EditDocumentAttributesMenuItem" text="Dokumentattribute..."/>
+				<separator/>
+				<menuitem id="check_spelling" class="com.organic.maynard.outliner.CheckSpellingMenuItem" text="Check Spelling" keybinding="K" keybindingmodifiers="control"/>
+				<menuitem id="check_spelling_for_selection" class="com.organic.maynard.outliner.CheckSpellingForSelectionMenuItem" text="Check Spelling for Selection" keybinding="K" keybindingmodifiers="control shift"/>
 			</menu>
 			<menu id="outline" class="com.organic.maynard.outliner.OutlineMenu" text="Outline" mnemonic="o">
 				<menuitem id="comment_submenu" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Kommentare">
