@@ -79,8 +79,6 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	
 	// Open File Settings
     private org.xml.sax.Parser parser = new com.jclark.xml.sax.Driver();
-    private DocumentInfo docInfo = null;
-    private JoeTree tree = null;
 	
 	// Constructors
 	public OPMLFileFormat() {
@@ -139,7 +137,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 
 		buf.append("<").append(ELEMENT_BODY).append(">").append(lineEnding);
 		Node node = tree.getRootNode();
-		for (int i = 0; i < node.numOfChildren(); i++) {
+		for (int i = 0, limit = node.numOfChildren(); i < limit; i++) {
 			buildOutlineElement(node.getChild(i), lineEnding, buf);
 		}
 		buf.append("</").append(ELEMENT_BODY).append(">").append(lineEnding);
@@ -198,7 +196,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		} else {
 			buf.append(">").append(lineEnding);
 			
-			for (int i = 0; i < node.numOfChildren(); i++) {
+			for (int i = 0, limit = node.numOfChildren(); i < limit; i++) {
 				buildOutlineElement(node.getChild(i), lineEnding, buf);
 			}
 			
@@ -208,7 +206,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	}
 	
 	private void indent(Node node, StringBuffer buf) {
-		for (int i = 0; i < node.getDepth(); i++) {
+		for (int i = 0, limit = node.getDepth(); i < limit; i++) {
 			buf.append("\t");
 		}
 	}
@@ -252,7 +250,13 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	
 	// OpenFileFormat Interface
 	private boolean errorOccurred = false;
-	
+
+    private DocumentInfo docInfo = null;
+    private JoeTree tree = null;
+	private ArrayList elementStack = new ArrayList();
+	private ArrayList attributesStack = new ArrayList();
+	private Node currentParent = null;
+
 	public int open(JoeTree tree, DocumentInfo docInfo, InputStream stream) {
 		// Set the objects we are going to populate.
 		this.docInfo = docInfo;
@@ -268,23 +272,27 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 
 			parser.parse(new InputSource(buf));
 			if (errorOccurred) {
+				System.out.println("Error Occurred in OPMLFileFormat");
 				success = FAILURE;
 				return success;
 			}
 			success = SUCCESS;
 		} catch (SAXException e) {
+			System.out.println("SAXException: " + e.getMessage());
 			success = FAILURE;
 		} catch (IOException e) {
+			System.out.println("IOException: " + e.getMessage());
 			success = FAILURE;
 		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
 			success = FAILURE;
 		}
 		
 		// Cleanup
 		this.tree = null;
 		this.docInfo = null;
-		this.elementStack = null;
-		this.attributesStack = null;
+		this.elementStack.clear();
+		this.attributesStack.clear();
 		this.currentParent = null;
 				
 		return success;
@@ -301,11 +309,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	}
     
 	public void endDocument () {}
-	
-	private Vector elementStack = new Vector();
-	private Vector attributesStack = new Vector();
-	private Node currentParent = null;
-		
+			
 	public void startElement (String name, AttributeList atts) {
 		//System.out.println("Start element: " + name);
 		elementStack.add(name);
@@ -316,7 +320,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 			
 			String readOnlyAttsList = new String("");
 						
-			for (int i = 0; i < atts.getLength(); i++) {
+			for (int i = 0, limit = atts.getLength(); i < limit; i++) {
 				String attName = atts.getName(i);
 				String attValue = atts.getValue(i);
 				
@@ -386,14 +390,14 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 			currentParent = parentNode;
 		}
 		
-		elementStack.removeElementAt(elementStack.size() - 1);
-		attributesStack.removeElementAt(attributesStack.size() - 1);
+		elementStack.remove(elementStack.size() - 1);
+		attributesStack.remove(attributesStack.size() - 1);
 	}
 	
 	public void characters(char ch[], int start, int length) throws SAXException {
 		String text = new String(ch, start, length);
-		String elementName = (String) elementStack.lastElement();
-		AttributeList atts = (AttributeList) attributesStack.lastElement();
+		String elementName = (String) elementStack.get(elementStack.size() - 1);
+		AttributeList atts = (AttributeList) attributesStack.get(attributesStack.size() - 1);
 		//System.out.println(text);
 		
 		if (elementName.equals(ELEMENT_TITLE)) {

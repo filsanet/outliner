@@ -479,8 +479,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	private void toggleExpansion(JoeTree tree, OutlineLayoutManager layout, boolean shiftDown) {
 		Node currentNode = textArea.node;
 		
-		for (int i = 0, limit = tree.getSelectedNodes().size(); i < limit; i++) {
-			Node node = tree.getSelectedNodes().get(i);
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
+			Node node = nodeList.get(i);
 			if (node.isExpanded()) {
 				node.setExpanded(false, !shiftDown);
 			} else {
@@ -501,8 +502,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		
-		for (int i = 0, limit = tree.getSelectedNodes().size(); i < limit; i++) {
-			clearCommentForSingleNode(tree.getSelectedNodes().get(i), undoable);
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
+			clearCommentForSingleNode(nodeList.get(i), undoable);
 		}
 		
 		if (!undoable.isEmpty()) {
@@ -531,8 +533,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		
-		for (int i = 0, limit = tree.getSelectedNodes().size(); i < limit; i++) {
-			toggleCommentAndClearForSingleNode(tree.getSelectedNodes().get(i), undoable);
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
+			toggleCommentAndClearForSingleNode(nodeList.get(i), undoable);
 		}
 		
 		if (!undoable.isEmpty()) {
@@ -555,8 +558,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		
-		for (int i = 0, limit = tree.getSelectedNodes().size(); i < limit; i++) {
-			toggleCommentForSingleNode(tree.getSelectedNodes().get(i), undoable);
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
+			toggleCommentForSingleNode(nodeList.get(i), undoable);
 		}
 		
 		if (!undoable.isEmpty()) {
@@ -597,8 +601,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		
-		for (int i = 0; i < tree.getSelectedNodes().size(); i++) {
-			toggleCommentInheritanceForSingleNode(tree.getSelectedNodes().get(i), undoable);
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = 0; i < nodeList.size(); i++) {
+			toggleCommentInheritanceForSingleNode(nodeList.get(i), undoable);
 		}
 		
 		if (!undoable.isEmpty()) {
@@ -676,20 +681,20 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		}
 
 		// Put the Undoable onto the UndoQueue
-		CompoundUndoableMove undoable = new CompoundUndoableMove(node.getParent(),node.getParent());
+		CompoundUndoableMove undoable = new CompoundUndoableMove(node.getParent(), node.getParent());
 		int targetIndex = node.currentIndex();
 		
-		for (int i = 0, limit = tree.getSelectedNodes().size(); i < limit; i++) {
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
 			// Record the Insert in the undoable
-			Node nodeToMove = tree.getSelectedNodes().get(i);
+			Node nodeToMove = nodeList.get(i);
 
 			// Abort if node is not moveable
 			if (!nodeToMove.isMoveable()) {
 				continue;
 			}
 		
-			int currentIndex = nodeToMove.currentIndex();
-			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, currentIndex, targetIndex));
+			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), targetIndex));
 			targetIndex++;
 		}
 
@@ -707,21 +712,21 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		}
 
 		// Put the Undoable onto the UndoQueue
-		CompoundUndoableMove undoable = new CompoundUndoableMove(node.getParent(),node.getParent());
+		CompoundUndoableMove undoable = new CompoundUndoableMove(node.getParent(), node.getParent());
 		int targetIndex = node.currentIndex();
 		
 		// Do the move
-		for (int i = tree.getSelectedNodes().size() - 1; i >= 0; i--) {
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = nodeList.size() - 1; i >= 0; i--) {
 			// Record the Insert in the undoable
-			Node nodeToMove = tree.getSelectedNodes().get(i);
+			Node nodeToMove = nodeList.get(i);
 
 			// Abort if node is not moveable
 			if (!nodeToMove.isMoveable()) {
 				continue;
 			}
 		
-			int currentIndex = nodeToMove.currentIndex();
-			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, currentIndex, targetIndex));
+			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), targetIndex));
 			targetIndex--;
 		}
 
@@ -744,9 +749,10 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		int targetIndex = node.currentIndex();
 		int currentIndexAdj = 0;
 		
-		for (int i = 0, limit = tree.getSelectedNodes().size(); i < limit; i++) {
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
 			// Record the Insert in the undoable
-			Node nodeToMove = tree.getSelectedNodes().get(i);
+			Node nodeToMove = nodeList.get(i);
 
 			// Abort if node is not moveable
 			if (!nodeToMove.isMoveable()) {
@@ -790,18 +796,17 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			targetIndex = node.currentIndex();
 		}
 	
-		for (int i = tree.getSelectedNodes().size() - 1; i >= 0; i--) {
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = nodeList.size() - 1; i >= 0; i--) {
 			// Record the Insert in the undoable
-			Node nodeToMove = tree.getSelectedNodes().get(i);
+			Node nodeToMove = nodeList.get(i);
 
 			// Abort if node is not moveable
 			if (!nodeToMove.isMoveable()) {
 				continue;
 			}
 		
-			int currentIndex = nodeToMove.currentIndex();
-			
-			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, currentIndex, targetIndex));
+			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), targetIndex));
 
 			if ((!node.isLeaf() && node.isExpanded()) || (nodeToMove.getParent() != node.getParent())) {
 				// Do Nothing.
@@ -820,7 +825,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		Node node = tree.getOldestInSelection();
 
 		// Abort if node is not editable
-		if (!tree.getOldestInSelection().isEditable()) {
+		if (!node.isEditable()) {
 			return;
 		}
 		
@@ -833,7 +838,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		Node node = tree.getOldestInSelection();
 
 		// Abort if node is not editable
-		if (!tree.getOldestInSelection().isEditable()) {
+		if (!node.isEditable()) {
 			return;
 		}
 		
@@ -866,20 +871,22 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 	private void promote(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
+		Node parent = currentNode.getParent();
 		
-		if (currentNode.getParent().isRoot()) {
+		if (parent.isRoot()) {
 			return;
 		}
 
 		// Put the Undoable onto the UndoQueue
-		Node targetNode = currentNode.getParent().getParent();
-		int targetIndex = currentNode.getParent().currentIndex() + 1;
+		Node targetNode = parent.getParent();
+		int targetIndex = parent.currentIndex() + 1;
 		
-		CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(),targetNode);
+		CompoundUndoableMove undoable = new CompoundUndoableMove(parent, targetNode);
 
-		for (int i = tree.getSelectedNodes().size() - 1; i >= 0; i--) {
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = nodeList.size() - 1; i >= 0; i--) {
 			// Record the Insert in the undoable
-			Node nodeToMove = tree.getSelectedNodes().get(i);
+			Node nodeToMove = nodeList.get(i);
 
 			// Abort if node is not moveable
 			if (!nodeToMove.isMoveable()) {
@@ -901,21 +908,17 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		if (tree.getYoungestInSelection().isFirstChild()) {
 			return;
 		}
-
-		// Abort if node is not moveable
-		if (!currentNode.isMoveable()) {
-			return;
-		}
-				
+	
 		// Put the Undoable onto the UndoQueue
 		Node targetNode = tree.getYoungestInSelection().prevSibling();
 
 		CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(),targetNode);
 		
 		int existingChildren = targetNode.numOfChildren();
-		for (int i = tree.getSelectedNodes().size() - 1; i >= 0; i--) {
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = nodeList.size() - 1; i >= 0; i--) {
 			// Record the Insert in the undoable
-			Node nodeToMove = tree.getSelectedNodes().get(i);
+			Node nodeToMove = nodeList.get(i);
 
 			// Abort if node is not moveable
 			if (!nodeToMove.isMoveable()) {
@@ -929,17 +932,15 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			tree.getDocument().undoQueue.add(undoable);
 			undoable.redo();
 		}
-		
-
 	}
 
 	private void copy(JoeTree tree, OutlineLayoutManager layout) {
 		NodeSet nodeSet = new NodeSet();
-		for (int i = 0, limit = tree.getSelectedNodes().size(); i < limit; i++) {
-			Node node = tree.getSelectedNodes().get(i).cloneClean();
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
+			Node node = nodeList.get(i).cloneClean();
 			node.setDepthRecursively(0);
 			nodeSet.addNode(node);
-			//nodeSet.addNode(tree.getSelectedNodes().get(i).cloneClean());
 		}
 		
 		// [md] This conditional is here since StringSelection subclassing seems to be broken in Java 1.3.1.
@@ -952,8 +953,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 	private void cut(JoeTree tree, OutlineLayoutManager layout) {
 		NodeSet nodeSet = new NodeSet();
-		for (int i = 0, limit = tree.getSelectedNodes().size(); i < limit; i++) {
-			Node node = tree.getSelectedNodes().get(i);
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
+			Node node = nodeList.get(i);
 			
 			// Abort if node is not editable
 			if (!node.isEditable()) {
@@ -1015,7 +1017,6 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 		// Put the Undoable onto the UndoQueue
 		CompoundUndoableInsert undoable = new CompoundUndoableInsert(parentForNewNode);
-		tree.getDocument().undoQueue.add(undoable);
 		
 		if (isNodeSet) {
 			for (int i = nodeSet.getSize() - 1; i >= 0; i--) {
@@ -1047,6 +1048,8 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			}
 		}
 
+		tree.getDocument().undoQueue.add(undoable);
+
 		Node nodeThatMustBeVisible = tree.getYoungestInSelection();
 
 		// Record the EditingNode and CursorPosition and ComponentFocus
@@ -1067,7 +1070,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		tree.selectRangeFromMostRecentNodeTouched(parent.getChild(parent.numOfChildren() - 1));
 
 		// Redraw and Set Focus
-		layout.draw(currentNode,OutlineLayoutManager.ICON);
+		layout.draw(currentNode, OutlineLayoutManager.ICON);
 	}
 
 	private void selectInverse(JoeTree tree, OutlineLayoutManager layout) {
@@ -1091,7 +1094,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			changeFocusToTextArea(tree, layout, POSITION_FIRST);
 		} else {
 			// Redraw and Set Focus
-			layout.draw(currentNode,OutlineLayoutManager.ICON);
+			layout.draw(currentNode, OutlineLayoutManager.ICON);
 		}
 	}
 
@@ -1100,8 +1103,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	}
 
 	private void changeToParent(JoeTree tree, OutlineLayoutManager layout) {
-		Node currentNode = textArea.node;
-		Node newSelectedNode = currentNode.getParent();
+		Node newSelectedNode = textArea.node.getParent();
 		if (newSelectedNode.isRoot()) {return;}
 		
 		tree.setSelectedNodesParent(newSelectedNode.getParent());
@@ -1408,8 +1410,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		
-		for (int i = 0, limit = tree.getSelectedNodes().size(); i < limit; i++) {
-			clearEditableForSingleNode(tree.getSelectedNodes().get(i), undoable);
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
+			clearEditableForSingleNode(nodeList.get(i), undoable);
 		}
 		
 		if (!undoable.isEmpty()) {
@@ -1439,8 +1442,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		
-		for (int i = 0, limit = tree.getSelectedNodes().size(); i < limit; i++) {
-			toggleEditableAndClearForSingleNode(tree.getSelectedNodes().get(i), undoable);
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
+			toggleEditableAndClearForSingleNode(nodeList.get(i), undoable);
 		}
 		
 		if (!undoable.isEmpty()) {
@@ -1464,8 +1468,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		
-		for (int i = 0, limit = tree.getSelectedNodes().size(); i < limit; i++) {
-			toggleEditableForSingleNode(tree.getSelectedNodes().get(i), undoable);
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
+			toggleEditableForSingleNode(nodeList.get(i), undoable);
 		}
 		
 		if (!undoable.isEmpty()) {
@@ -1507,8 +1512,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		
-		for (int i = 0, limit = tree.getSelectedNodes().size(); i < limit; i++) {
-			toggleEditableInheritanceForSingleNode(tree.getSelectedNodes().get(i), undoable);
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
+			toggleEditableInheritanceForSingleNode(nodeList.get(i), undoable);
 		}
 		
 		if (!undoable.isEmpty()) {
@@ -1547,8 +1553,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		
-		for (int i = 0, limit = tree.getSelectedNodes().size(); i < limit; i++) {
-			clearMoveableForSingleNode(tree.getSelectedNodes().get(i), undoable);
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
+			clearMoveableForSingleNode(nodeList.get(i), undoable);
 		}
 		
 		if (!undoable.isEmpty()) {
@@ -1577,8 +1584,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		
-		for (int i = 0, limit = tree.getSelectedNodes().size(); i < limit; i++) {
-			toggleMoveableAndClearForSingleNode(tree.getSelectedNodes().get(i), undoable);
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
+			toggleMoveableAndClearForSingleNode(nodeList.get(i), undoable);
 		}
 		
 		if (!undoable.isEmpty()) {
@@ -1601,8 +1609,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		
-		for (int i = 0, limit = tree.getSelectedNodes().size(); i < limit; i++) {
-			toggleMoveableForSingleNode(tree.getSelectedNodes().get(i), undoable);
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
+			toggleMoveableForSingleNode(nodeList.get(i), undoable);
 		}
 		
 		if (!undoable.isEmpty()) {
@@ -1643,8 +1652,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		
-		for (int i = 0, limit = tree.getSelectedNodes().size(); i < limit; i++) {
-			toggleMoveableInheritanceForSingleNode(tree.getSelectedNodes().get(i), undoable);
+		JoeNodeList nodeList = tree.getSelectedNodes();
+		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
+			toggleMoveableInheritanceForSingleNode(nodeList.get(i), undoable);
 		}
 		
 		if (!undoable.isEmpty()) {

@@ -524,7 +524,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		switch (mode) {
 			case MODE_IMPORT:
 				// we were imported
-				docInfo.setImported(true) ;
+				docInfo.setImported(true);
 				break;
 
 			case MODE_OPEN:
@@ -565,7 +565,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// we succeeded
 
 		// swap in the new tree
-		tree.setDocument(document) ;
+		tree.setDocument(document);
 		document.tree = tree;
 
 		// Clear the UndoQueue
@@ -701,7 +701,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		doc.setTitle(title);
 
 		// update window menu entry
-		Outliner.menuBar.windowMenu.updateWindow(doc) ;
+		Outliner.menuBar.windowMenu.updateWindow(doc);
 		
 		// Expand Nodes
 		ArrayList expandedNodes = docInfo.getExpandedNodes();
