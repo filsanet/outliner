@@ -11,7 +11,8 @@
  *					StanStringTools ()
  *		class
  *			public
- *				String trimFileExtension(String) 
+ *				String trimFileExtension (String)
+ 				String getFileNameFromPathName (String) 
  *
  *		
  * Copyright (C) 2002 Stan Krute <Stan@StanKrute.com>
@@ -54,8 +55,9 @@
 // we're part of this
 package com.organic.maynard.util.string;
 
-// we use this
+// we use these
 import java.util.*;
+import java.io.File ;
 
 // Stan's string tools
 public class StanStringTools {
@@ -82,6 +84,19 @@ public class StanStringTools {
 		}
 		
 		return resultString ;
+		
+	} // end method trimOffAnyFileExtension
+	
+
+	// grab a filename from a pathname
+	public static String getFileNameFromPathName(String pathNameString) {
+		
+		File file = new File (pathNameString) ;
+		if (file == null) {
+			return null ;
+		} else {
+			return file.getName() ;
+		} // end else
 		
 	} // end method trimOffAnyFileExtension
 	
