@@ -106,7 +106,7 @@
 			<javac debug="false" optimize="true" deprecation="false" srcdir="${src-maynard}">
 				<classpath>
 					<pathelement path="${lib}/bsh.jar"/>
-					<pathelement path="${lib}/helma.xmlrpc.jar"/>
+					<pathelement path="${lib}/xmlrpc.jar"/>
 					<pathelement path="${lib}/jakarta-oro.jar"/>
 					<pathelement path="${lib}/sax.jar"/>
 					<pathelement path="${lib}/xerces.jar"/>
@@ -138,7 +138,7 @@
 					<pathelement path="${lib}/bsh.jar"/>
 					<pathelement path="${lib}/com.organic.maynard.jar"/>
 					<pathelement path="${lib}/com.yearahead.io.webfile.jar"/>
-					<pathelement path="${lib}/helma.xmlrpc.jar"/>
+					<pathelement path="${lib}/xmlrpc.jar"/>
 					<pathelement path="${lib}/jakarta-oro.jar"/>
 					<pathelement path="${lib}/jmousewheel.jar"/>
 					<pathelement path="${lib}/sax.jar"/>
