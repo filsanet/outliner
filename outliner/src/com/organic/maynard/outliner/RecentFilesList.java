@@ -52,7 +52,7 @@ import com.organic.maynard.util.string.StringTools;
 import com.organic.maynard.util.string.Replace;
 import com.organic.maynard.util.string.StanStringTools ;
 
-/* NOTICE  [srk] Currently under possibly radical decoupling and reconstructive surgery
+/* NOTICE  [srk] Currently undergoing as-gentle-as-possible minor decoupling and reconstructive surgery
  * while implementing alfa/ascii menu item orderings -- due to complete  * 1-23-02
 */
 
@@ -75,9 +75,17 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	
 	// Static Fields
 	private static ArrayList docInfoList = null;
+	/* [srk] docInfoList holds DocumentInfo data for a number of documents
+		currently that's the number of items shown in the recent files list
+		2B decoupled, so it'll have it's own value
+		that way, one can slide from lotsa files shown to few files shown 
+		and back to lotsa again without losing everybody   */
 	
 	private static TreeSet filenameTree = null ; // [srk] for alfa/ascii ordering, we store filename strings here
 	private static TreeSet pathnameTree = null ; // [srk] for alfa/ascii ordering, we store pathname strings here
+	/* these two treesets are used for alfa/ascii ordering
+		one stores ordered pathnames
+		one stores ordered filenames 	*/	
 	
 	private static int currentDisplayOrdering = -1 ; // [srk] we start with these values to force a menu population
 	private static int currentDisplayNameForm = -1 ;
@@ -144,10 +152,12 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	} // end method applyDisplaySettings
 	
 	// set display options -- rebuild menu and alfaAscii structures if necessary
+	// called from PreferencesPanelRecentFiles
 	void setDisplayOptions (int ordering, int nameForm, int direction) {
+		// has anything changed ?
 		boolean change = false ;
 		
-		// see if we've got a change 
+		// see if we've got a change
 		change = (currentDisplayOrdering != ordering)
 			|| (currentDisplayNameForm !=nameForm)
 			|| (currentDisplayDirection != direction) ;
@@ -170,13 +180,13 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	private void populateMenu () {
 		StrungDocumentInfo sdi = null ;
 		
+		// clear out any existing menu entries
+		removeAll() ;
+		
 		// if docInfoList is empty, do nothing
 		if (docInfoList.size() == 0) {
 			return ;
 		} // end if
-		
-		// clear out any existing menu entries
-		removeAll() ;
 		
 		// switch on ordering
 		switch (currentDisplayOrdering) {
