@@ -109,7 +109,7 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 
 
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		
 		// Define the Bottom Panel
@@ -131,7 +131,7 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 		RIGHT_PANEL.setLayout(CARD_LAYOUT);
 	}
 	
-	public void endSetup(AttributeList atts) {
+	public void endSetup(Attributes atts) {
 		// Define the JTree		
 		tree = new JTree(treeModel);
 		tree.addTreeSelectionListener(this);

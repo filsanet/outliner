@@ -110,7 +110,7 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 	
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		
 		// we start out disabled

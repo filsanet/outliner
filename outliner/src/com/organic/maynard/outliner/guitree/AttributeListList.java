@@ -39,79 +39,79 @@ import com.organic.maynard.outliner.*;
 import java.util.*;
 
 public class AttributeListList {
-
+	
 	// Fields
-	private AttributeList attributeLists[];
+	private Attributes attributeLists[];
 	private int size;
-
+	
 	// Constructors
 	public AttributeListList() {
 		this(10);
 	}
-   
+  
 	public AttributeListList(int initialCapacity) {
 		if (initialCapacity < 0) {
 			throw new IllegalArgumentException("Illegal Capacity: "+ initialCapacity);
 		}
-		this.attributeLists = new AttributeList[initialCapacity];
+		this.attributeLists = new Attributes[initialCapacity];
 	}
-
-
+	
+	
 	// Accessors
 	public int size() {
 		return size;
 	}
-
+	
 	public boolean isEmpty() {
 		return size == 0;
 	}
-
-	public AttributeList get(int index) {
+	
+	public Attributes get(int index) {
 		RangeCheck(index);
 		return attributeLists[index];
 	}
-
-	public void set(int index, AttributeList attributeList) {
+	
+	public void set(int index, Attributes attributeList) {
 		RangeCheck(index);
 		attributeLists[index] = attributeList;
 	}
-
-	public void add(AttributeList attributeList) {
+	
+	public void add(Attributes attributeList) {
 		ensureCapacity(size + 1);
 		attributeLists[size++] = attributeList;
 	}
 	
-	public void add(int index, AttributeList attributeList) {
+	public void add(int index, Attributes attributeList) {
 		if (index > size || index < 0) {
 			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
 		}
-
+		
 		ensureCapacity(size + 1);
 		System.arraycopy(attributeLists, index, attributeLists, index + 1, size - index);
 		attributeLists[index] = attributeList;
 		size++;
 	}
-
+	
 	public void remove(int index) {
 		RangeCheck(index);
-
+		
 		int numMoved = size - index - 1;
 		if (numMoved > 0) {
 			System.arraycopy(attributeLists, index + 1, attributeLists, index, numMoved);
 		}
 		attributeLists[--size] = null; 
 	}
-
+	
 	public void removeRange(int fromIndex, int toIndex) {
 		int numMoved = size - toIndex;
 		System.arraycopy(attributeLists, toIndex, attributeLists, fromIndex, numMoved);
-
+		
 		int newSize = size - (toIndex - fromIndex);
 		while (size != newSize) {
 			attributeLists[--size] = null;
 		}
 	}
-
+	
 	public void trim(int newSize) {
 		if (newSize > size || newSize < 0) {
 			throw new IndexOutOfBoundsException("Index: " + newSize + ", Size: " + size);
@@ -121,25 +121,25 @@ public class AttributeListList {
 			attributeLists[--size] = null;
 		}
 	}
-
+	
 	public void clear() {
 		for (int i = 0; i < size; i++) {
 			attributeLists[i] = null;
 		}
-
+		
 		size = 0;
 	}
-
+	
 	// Index Of
-	public boolean contains(AttributeList attributeList) {
+	public boolean contains(Attributes attributeList) {
 		return indexOf(attributeList) >= 0;
 	}
-
-	public int indexOf(AttributeList attributeList) {
+	
+	public int indexOf(Attributes attributeList) {
 		return firstIndexOf(attributeList);
 	}
-
-	public int firstIndexOf(AttributeList attributeList) {
+	
+	public int firstIndexOf(Attributes attributeList) {
 		for (int i = 0; i < size; i++) {
 			if (attributeLists[i] == attributeList) {
 				return i;
@@ -148,8 +148,8 @@ public class AttributeListList {
 		
 		return -1;
 	}
-
-	public int lastIndexOf(AttributeList attributeList) {
+	
+	public int lastIndexOf(Attributes attributeList) {
 		for (int i = size - 1; i >= 0; i--) {
 			if (attributeLists[i] == attributeList) {
 				return i;
@@ -159,7 +159,7 @@ public class AttributeListList {
 		return -1;
 	}
 	
-	public int indexOf(AttributeList attributeList, int start, int end) {
+	public int indexOf(Attributes attributeList, int start, int end) {
 		RangeCheck(start);
 		RangeCheck(end);
 		
@@ -173,30 +173,30 @@ public class AttributeListList {
 	}
 	
 	// Data Conversion
-	public AttributeList[] toArray() {
-		AttributeList[] result = new AttributeList[size];
+	public Attributes[] toArray() {
+		Attributes[] result = new Attributes[size];
 		System.arraycopy(attributeLists, 0, result, 0, size);
 		return result;
 	}
-    
-    
+	
+  
 	// Misc Methods
 	private void RangeCheck(int index) {
 		if (index >= size || index < 0) {
 			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
 		}
 	}
-
+	
 	public void ensureCapacity(int minCapacity) {
 		int oldCapacity = attributeLists.length;
 		
 		if (minCapacity > oldCapacity) {
-			AttributeList oldData[] = attributeLists;
+			Attributes oldData[] = attributeLists;
 			int newCapacity = (oldCapacity * 3)/2 + 1;
 			if (newCapacity < minCapacity) {
 				newCapacity = minCapacity;
 			}
-			attributeLists = new AttributeList[newCapacity];
+			attributeLists = new Attributes[newCapacity];
 			System.arraycopy(oldData, 0, attributeLists, 0, size);
 		}
 	}

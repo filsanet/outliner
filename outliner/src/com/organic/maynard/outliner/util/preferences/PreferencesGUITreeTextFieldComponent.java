@@ -54,7 +54,7 @@ public class PreferencesGUITreeTextFieldComponent extends AbstractPreferencesGUI
 	// Constants
 	public static final String A_SIZE = "size";
 
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		int size = 10;
 		try {
 			size = Integer.parseInt(atts.getValue(A_SIZE));

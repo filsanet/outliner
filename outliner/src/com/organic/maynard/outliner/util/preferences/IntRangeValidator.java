@@ -69,7 +69,7 @@ public class IntRangeValidator extends AbstractValidator implements Validator, G
 
 
 	// GUITreeComponent Interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		String min = atts.getValue(A_MIN);
 		String max = atts.getValue(A_MAX);
 		String def = atts.getValue(A_DEFAULT);

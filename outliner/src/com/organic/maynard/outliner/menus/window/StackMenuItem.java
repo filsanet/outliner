@@ -54,7 +54,7 @@ public class StackMenuItem extends AbstractOutlinerMenuItem implements ActionLis
 	
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		
 		addActionListener(this);

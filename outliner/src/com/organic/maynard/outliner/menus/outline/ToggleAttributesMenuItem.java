@@ -91,7 +91,7 @@ public class ToggleAttributesMenuItem extends AbstractOutlinerMenuItem implement
 	
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		
 		SHOW_ATTRIBUTES = atts.getValue(A_SHOW);

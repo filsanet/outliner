@@ -53,12 +53,12 @@ public class OutlinerSubMenuItem extends AbstractOutlinerMenu implements GUITree
 	
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		
 		// Add this menuItem to the parent menu.
 		((JMenu) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 2)).add(this);
 	}
 	
-	public void endSetup(AttributeList atts) {}
+	public void endSetup(Attributes atts) {}
 }

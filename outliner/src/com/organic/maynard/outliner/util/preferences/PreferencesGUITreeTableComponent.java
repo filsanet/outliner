@@ -67,7 +67,7 @@ public class PreferencesGUITreeTableComponent extends AbstractPreferencesGUITree
 	protected SimpleTableModel model = new SimpleTableModel();
 	protected TableColumnModel colModel = table.getColumnModel();
 
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		table.setModel(model);
 		
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		

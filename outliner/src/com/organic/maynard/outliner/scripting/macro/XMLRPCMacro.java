@@ -221,9 +221,13 @@ public class XMLRPCMacro extends MacroImpl {
 	// Sax DocumentHandler Implementation
 	protected void handleCharacters(String elementName, String text) {
 		if (elementName.equals(E_URL)) {
-			setURL(text);
+			StringBuffer existingText = new StringBuffer(getURL());
+			existingText.append(text);
+			setURL(existingText.toString());
 		} else if (elementName.equals(E_CALL)) {
-			setCall(text);
+			StringBuffer existingText = new StringBuffer(getCall());
+			existingText.append(text);
+			setCall(existingText.toString());
 		} else if (elementName.equals(E_REPLACE)) {
 			setReplacing(Boolean.valueOf(text).booleanValue());
 		}

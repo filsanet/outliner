@@ -90,7 +90,7 @@ public class DeleteMenuItem extends AbstractOutlinerMenuItem implements TreeSele
 	
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		
 		setEnabled(false);

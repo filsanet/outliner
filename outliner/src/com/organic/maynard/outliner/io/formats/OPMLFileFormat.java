@@ -41,15 +41,16 @@ import com.organic.maynard.outliner.io.*;
 import java.io.*;
 import java.util.*;
 import com.organic.maynard.util.string.StringTools;
-
 import org.xml.sax.*;
+import org.xml.sax.helpers.DefaultHandler;
+import com.organic.maynard.xml.XMLProcessor;
 
 /**
  * @author  $Author$
  * @version $Revision$, $Date$
  */
 
-public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFileFormat, JoeReturnCodes {
+public class OPMLFileFormat extends XMLProcessor implements SaveFileFormat, OpenFileFormat, JoeReturnCodes {
 	
 	// Constants
 	public static final String ELEMENT_OPML = "opml";
@@ -86,13 +87,9 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	public static final String ATTRIBUTE_IS_MOVEABLE = "isMoveable";
 	public static final String ATTRIBUTE_IS_COMMENT = "isComment";
 	
-	// Open File Settings
-	private org.xml.sax.Parser parser = new com.jclark.xml.sax.Driver();
-	
 	// Constructors
 	public OPMLFileFormat() {
-		parser.setDocumentHandler(this);
-		parser.setErrorHandler(this);
+		super();
 	}
 	
 	private String name = null;
@@ -286,10 +283,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		errorOccurred = false;
 		
 		try {
-			InputStreamReader inputStreamReader = new InputStreamReader(stream, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE));
-			BufferedReader buf = new BufferedReader(inputStreamReader);
-			
-			parser.parse(new InputSource(buf));
+			super.process(stream, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE));
 			if (errorOccurred) {
 				System.out.println("Error Occurred in OPMLFileFormat");
 				success = FAILURE;
@@ -304,6 +298,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 			success = FAILURE;
 		} catch (Exception e) {
 			System.out.println("Exception: " + e.getMessage());
+			e.printStackTrace();
 			success = FAILURE;
 		}
 		
@@ -313,7 +308,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		this.elementStack.clear();
 		this.attributesStack.clear();
 		this.currentParent = null;
-				
+		
 		return success;
 	}
 	
@@ -329,18 +324,18 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	
 	public void endDocument () {}
 	
-	public void startElement (String name, AttributeList atts) {
-		//System.out.println("Start element: " + name);
-		elementStack.add(name);
+	public void startElement(String namespaceURI, String localName, String qName, Attributes atts) {
+		//System.out.println("Start element: " + qName);
+		elementStack.add(qName);
 		attributesStack.add(atts);
 		
-		if (name.equals(ELEMENT_OUTLINE)) {
+		if (qName.equals(ELEMENT_OUTLINE)) {
 			NodeImpl node = new NodeImpl(tree, "");
 			
 			String readOnlyAttsList = new String("");
 			
 			for (int i = 0, limit = atts.getLength(); i < limit; i++) {
-				String attName = atts.getName(i);
+				String attName = atts.getQName(i);
 				String attValue = atts.getValue(i);
 				
 				if (attName.equals(ATTRIBUTE_TEXT)) {
@@ -393,7 +388,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 			currentParent.appendChild(node);
 			currentParent = node;
 			
-		} else if (name.equals(ELEMENT_DOCUMENT_ATTRIBUTE)) {
+		} else if (qName.equals(ELEMENT_DOCUMENT_ATTRIBUTE)) {
 			String key = atts.getValue(ATTRIBUTE_KEY);
 			boolean isReadOnly = Boolean.valueOf(atts.getValue(ATTRIBUTE_IS_READ_ONLY)).booleanValue();
 			
@@ -401,10 +396,10 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		}
 	}
 	
-	public void endElement (String name) throws SAXException {
-		//System.out.println("End element: " + name);
+	public void endElement(String namespaceURI, String localName, String qName) {
+		//System.out.println("End element: " + qName);
 		
-		if (name.equals(ELEMENT_OUTLINE)) {
+		if (qName.equals(ELEMENT_OUTLINE)) {
 			Node parentNode = currentParent.getParent();
 			currentParent = parentNode;
 		}
@@ -416,7 +411,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	public void characters(char ch[], int start, int length) throws SAXException {
 		String text = new String(ch, start, length);
 		String elementName = (String) elementStack.get(elementStack.size() - 1);
-		AttributeList atts = (AttributeList) attributesStack.get(attributesStack.size() - 1);
+		Attributes atts = (Attributes) attributesStack.get(attributesStack.size() - 1);
 		
 		if (elementName.equals(ELEMENT_TITLE)) {
 			PropertyContainerUtil.setPropertyAsString(docInfo, DocumentInfo.KEY_TITLE, text);

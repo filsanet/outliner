@@ -67,7 +67,7 @@ public class PreferenceInt extends AbstractPreference implements GUITreeComponen
 
 
 	// GUITreeComponent Interface
-	public void endSetup(AttributeList atts) {
+	public void endSetup(Attributes atts) {
 		super.endSetup(atts);
 	}	
 

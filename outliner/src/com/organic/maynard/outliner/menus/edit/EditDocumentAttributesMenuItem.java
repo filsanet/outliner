@@ -66,7 +66,7 @@ public class EditDocumentAttributesMenuItem extends AbstractOutlinerMenuItem imp
 	
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		
 		setEnabled(false);

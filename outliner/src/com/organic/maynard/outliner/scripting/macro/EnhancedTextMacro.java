@@ -125,7 +125,9 @@ public class EnhancedTextMacro extends MacroImpl {
 	// Sax DocumentHandler Implementation
 	protected void handleCharacters(String elementName, String text) {
 		if (elementName.equals(E_PATTERN)) {
-			setReplacementPattern(text);
+			StringBuffer existingText = new StringBuffer(getReplacementPattern());
+			existingText.append(text);
+			setReplacementPattern(existingText.toString());
 		}
 	}
 }

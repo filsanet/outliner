@@ -82,7 +82,7 @@ public class DehoistAllMenuItem extends AbstractOutlinerMenuItem implements Outl
 	
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		
 		addActionListener(this);

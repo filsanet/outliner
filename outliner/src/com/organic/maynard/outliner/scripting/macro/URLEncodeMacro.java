@@ -36,6 +36,7 @@ package com.organic.maynard.outliner.scripting.macro;
 
 import com.organic.maynard.outliner.*;
 import java.net.*;
+import java.io.UnsupportedEncodingException;
 import com.organic.maynard.xml.XMLTools;
 
 /**
@@ -108,10 +109,14 @@ public class URLEncodeMacro extends MacroImpl {
 	
 	protected String encode(String text) {
 		if (isEncoding()) {
-			return URLEncoder.encode(text);
+			try {
+				return URLEncoder.encode(text, "UTF-8");
+			} catch (UnsupportedEncodingException uee) {
+				return text;
+			}
 		} else {
 			try {
-				return URLDecoder.decode(text);
+				return URLDecoder.decode(text, "UTF-8");
 			} catch (Exception e) {
 				return text;
 			}

@@ -67,7 +67,7 @@ public class PreferenceBoolean extends AbstractPreference implements GUITreeComp
 
 
 	// GUITreeComponent Interface
-	public void endSetup(AttributeList atts) {
+	public void endSetup(Attributes atts) {
 		super.endSetup(atts);
 	}	
 

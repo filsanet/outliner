@@ -35,7 +35,7 @@
 package com.organic.maynard.outliner.guitree;
 
 import com.organic.maynard.outliner.*;
-import org.xml.sax.AttributeList;
+import org.xml.sax.Attributes;
 
 /**
  * A component that can be loaded from a gui_tree.xml file.
@@ -67,7 +67,7 @@ public interface GUITreeComponent {
 	 * @param atts the XML attributes available to this component when
 	 *             it was parsed in the gui_tree.xml file.
 	 */
-	public void startSetup(AttributeList atts);
+	public void startSetup(Attributes atts);
 
 	/**
 	 * Called by the GuiTreeLoader when it handles the end tag for
@@ -76,5 +76,5 @@ public interface GUITreeComponent {
 	 * @param atts the XML attributes available to this component when
 	 *             it was parsed in the gui_tree.xml file.
 	 */
-	public void endSetup(AttributeList atts);
+	public void endSetup(Attributes atts);
 }

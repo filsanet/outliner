@@ -71,7 +71,7 @@ public class PreferencesGUITreeComboBoxComponent extends AbstractPreferencesGUIT
 	
 	
 	// GUITree Component Interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		String listName = atts.getValue(A_LIST);
 		
 		// Set the Component

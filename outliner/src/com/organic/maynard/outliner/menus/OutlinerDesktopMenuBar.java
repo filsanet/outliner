@@ -72,10 +72,10 @@ public class OutlinerDesktopMenuBar extends JMenuBar implements GUITreeComponent
 	public String getGUITreeComponentID() {return this.id;}
 	public void setGUITreeComponentID(String id) {this.id = id;}
 	
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		Outliner.menuBar = this;
 		Outliner.outliner.setJMenuBar(this);
 	}
 	
-	public void endSetup(AttributeList atts) {}
+	public void endSetup(Attributes atts) {}
 }

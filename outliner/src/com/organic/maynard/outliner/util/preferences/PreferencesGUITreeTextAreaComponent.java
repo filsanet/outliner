@@ -52,7 +52,7 @@ import org.xml.sax.*;
 public class PreferencesGUITreeTextAreaComponent extends AbstractPreferencesGUITreeComponent {
 
 	// Constants
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		JTextArea list = new JTextArea();
 		list.setRows(4);
 		list.setColumns(15);

@@ -50,7 +50,7 @@ import com.organic.maynard.outliner.actions.*;
 
 public class MoveDownMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		addActionListener(this);
 	}

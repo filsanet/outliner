@@ -45,12 +45,12 @@ public abstract class AbstractValidator implements Validator, GUITreeComponent {
 	public String getGUITreeComponentID() {return this.id;}
 	public void setGUITreeComponentID(String id) {this.id = id;}
 	
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 
 		// Add this menuItem to the parent menu.
 		Preference pref = (Preference) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 2);
 		pref.setValidator(this);
 	}
 	
-	public void endSetup(AttributeList atts) {}	
+	public void endSetup(Attributes atts) {}	
 }

@@ -319,7 +319,7 @@ public class FindReplaceModel extends HandlerBase {
 	public void startDocument () {}
 	public void endDocument () {}
 	
-	public void startElement (String elementName, AttributeList atts) {
+	public void startElement (String elementName, Attributes atts) {
 		if (elementName.equals(E_ITEM)) {
 			int size = getSize();
 			

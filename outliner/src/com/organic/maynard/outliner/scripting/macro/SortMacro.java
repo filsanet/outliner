@@ -227,7 +227,9 @@ public class SortMacro extends MacroImpl implements RawMacro {
 	// Sax DocumentHandler Implementation
 	protected void handleCharacters(String elementName, String text) {
 		if (elementName.equals(E_COMPARATOR)) {
-			setComparator(text);
+			StringBuffer existingText = new StringBuffer(getComparator());
+			existingText.append(text);
+			setComparator(existingText.toString());
 		}
 	}
 }

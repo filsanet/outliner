@@ -79,7 +79,7 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 	public String getGUITreeComponentID() {return this.id;}
 	public void setGUITreeComponentID(String id) {this.id = id;}
 
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		String title = atts.getValue(A_TITLE);
 		String id = atts.getValue(A_ID);
 
@@ -105,7 +105,7 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 		addSingleItemCentered(new JLabel(new StringBuffer().append("<html><font size=\"+1\">").append(title).append("</font></html>").toString()), this);
 	}
 	
-	public void endSetup(AttributeList atts) {
+	public void endSetup(Attributes atts) {
 		RESTORE_DEFAULT_EDITOR_BUTTON.addActionListener(this);		
 		AbstractPreferencesPanel.addLastItem(RESTORE_DEFAULT_EDITOR_BUTTON, this);
 		

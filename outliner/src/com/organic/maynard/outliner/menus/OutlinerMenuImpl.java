@@ -50,7 +50,7 @@ public class OutlinerMenuImpl extends AbstractOutlinerMenu implements GUITreeCom
 	
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 	}
 }

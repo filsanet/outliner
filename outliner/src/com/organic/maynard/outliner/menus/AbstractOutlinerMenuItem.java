@@ -97,7 +97,7 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 		this.id = id;
 	}
 	
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		// Set the title of the menuItem
 		setText(atts.getValue(A_TEXT));
 		
@@ -187,5 +187,5 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 		((JMenu) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 2)).add(this);
 	}
 	
-	public void endSetup(AttributeList atts) {}
+	public void endSetup(Attributes atts) {}
 }

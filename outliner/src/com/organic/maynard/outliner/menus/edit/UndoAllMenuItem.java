@@ -86,7 +86,7 @@ public class UndoAllMenuItem extends AbstractOutlinerMenuItem implements UndoQue
 	
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		
 		TEXT = atts.getValue(A_TEXT);

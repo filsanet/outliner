@@ -445,7 +445,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	public String getGUITreeComponentID() {return this.id;}
 	public void setGUITreeComponentID(String id) {this.id = id;}
 	
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		outliner = this;
 		
 		setTitle(atts.getValue(A_TITLE));
@@ -460,7 +460,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		loadPrefsFile(PARSER, FILE_FORMATS_FILE);
 	}
 	
-	public void endSetup(AttributeList atts) {
+	public void endSetup(Attributes atts) {
 		// Set the Window Location.
 			// Get Main Window Dimension out of the prefs.
 			PreferenceInt pWidth = Preferences.getPreferenceInt(Preferences.MAIN_WINDOW_W);

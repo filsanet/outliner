@@ -58,7 +58,7 @@ public abstract class AbstractOutlinerMenu extends JMenu implements GUITreeCompo
 	public String getGUITreeComponentID() {return this.id;}
 	public void setGUITreeComponentID(String id) {this.id = id;}
 	
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		setText(atts.getValue(A_TEXT));
 		
 		String mnemonic = atts.getValue(A_MNEMONIC);
@@ -72,7 +72,7 @@ public abstract class AbstractOutlinerMenu extends JMenu implements GUITreeCompo
 		Outliner.menuBar.revalidate();
 	}
 	
-	public void endSetup(AttributeList atts) {}
+	public void endSetup(Attributes atts) {}
 	
 	
 	// Fix for java bug #4309156.

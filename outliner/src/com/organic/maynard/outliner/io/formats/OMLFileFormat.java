@@ -42,13 +42,16 @@ import java.io.*;
 import java.util.*;
 import com.organic.maynard.util.string.StringTools;
 import org.xml.sax.*;
+import org.xml.sax.helpers.DefaultHandler;
+import com.organic.maynard.xml.XMLProcessor;
+import com.organic.maynard.xml.XMLTools;
 
 /**
  * @author  $Author$
  * @version $Revision$, $Date$
  */
 
-public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFileFormat, JoeReturnCodes {
+public class OMLFileFormat extends XMLProcessor implements SaveFileFormat, OpenFileFormat, JoeReturnCodes {
 	
 	// Constants
 		/** The threshold over which we use data elements rather than text atts. */
@@ -94,13 +97,9 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 		public static final String IS_MOVEABLE = "isMoveable";
 		public static final String IS_COMMENT = "isComment";
 	
-	// Open File Settings
-	private org.xml.sax.Parser parser = new com.jclark.xml.sax.Driver();
-	
 	// Constructors
 	public OMLFileFormat() {
-		parser.setDocumentHandler(this);
-		parser.setErrorHandler(this);
+		super();
 	}
 	
 	private String name = null;
@@ -371,7 +370,7 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 		indent(node, buf);
 		buf.append("\t");
 		buf.append("<").append(ELEMENT_ITEM).append(" ").append(ATTRIBUTE_NAME).append("=\"").append(escapeXMLAttribute(name)).append("\">");
-		buf.append("<![CDATA[").append(escapeXMLText(value)).append("]]>");
+		XMLTools.writeCDATA(buf, value);
 		buf.append("</").append(ELEMENT_ITEM).append(">").append(line_ending);
 	}
 	
@@ -382,7 +381,7 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 		indent(node, buf);
 		buf.append("\t");
 		buf.append("<").append(ELEMENT_DATA).append(">");
-		buf.append("<![CDATA[").append(escapeXMLText(value)).append("]]>");
+		XMLTools.writeCDATA(buf, value);
 		buf.append("</").append(ELEMENT_DATA).append(">").append(line_ending);
 	}
 	
@@ -424,10 +423,7 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 		errorOccurred = false;
 		
 		try {
-			InputStreamReader inputStreamReader = new InputStreamReader(stream, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE));
-			BufferedReader buf = new BufferedReader(inputStreamReader);
-			
-			parser.parse(new InputSource(buf));
+			super.process(stream, PropertyContainerUtil.getPropertyAsString(docInfo, DocumentInfo.KEY_ENCODING_TYPE));
 			if (errorOccurred) {
 				System.out.println("Error Occurred in OMLFileFormat");
 				success = FAILURE;
@@ -468,18 +464,18 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
     
 	public void endDocument () {}
 	
-	public void startElement (String name, AttributeList atts) {
-		//System.out.println("Start element: " + name);
-		elementStack.add(name);
+	public void startElement(String namespaceURI, String localName, String qName, Attributes atts) {
+		//System.out.println("Start element: " + qName);
+		elementStack.add(qName);
 		attributesStack.add(atts);
 		
-		if (name.equals(ELEMENT_OUTLINE)) {
+		if (qName.equals(ELEMENT_OUTLINE)) {
 			NodeImpl node = new NodeImpl(tree, "");
 			
 			String readOnlyAttsList = new String("");
 						
 			for (int i = 0, limit = atts.getLength(); i < limit; i++) {
-				String attName = atts.getName(i);
+				String attName = atts.getQName(i);
 				String attValue = atts.getValue(i);
 				
 				if (attName.equals(ATTRIBUTE_TEXT)) {
@@ -495,10 +491,10 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 		}
 	}
 	
-	public void endElement (String name) throws SAXException {
-		//System.out.println("End element: " + name);
+	public void endElement(String namespaceURI, String localName, String qName) {
+		//System.out.println("End element: " + qName);
 		
-		if (name.equals(ELEMENT_OUTLINE)) {
+		if (qName.equals(ELEMENT_OUTLINE)) {
 			Node parentNode = currentParent.getParent();
 			currentParent = parentNode;
 		}
@@ -510,7 +506,7 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 	public void characters(char ch[], int start, int length) throws SAXException {
 		String text = new String(ch, start, length);
 		String elementName = (String) elementStack.get(elementStack.size() - 1);
-		AttributeList atts = (AttributeList) attributesStack.get(attributesStack.size() - 1);
+		Attributes atts = (Attributes) attributesStack.get(attributesStack.size() - 1);
 		//System.out.println(text);
 		
 		if (elementName.equals(ELEMENT_METADATA)) {
@@ -570,7 +566,7 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 	}
 	
 	private boolean handleDataCharacters(String text) {
-		currentParent.setValue(text);
+		currentParent.setValue(currentParent.getValue() + text);
 		return true;
 	}
 	

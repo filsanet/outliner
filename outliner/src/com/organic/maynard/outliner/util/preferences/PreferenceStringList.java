@@ -36,63 +36,82 @@ package com.organic.maynard.outliner.util.preferences;
 
 import java.net.*;
 import java.util.*;
-
+import java.io.UnsupportedEncodingException;
+import org.xml.sax.*;
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.*;
-import org.xml.sax.*;
-
 import com.organic.maynard.data.StringList;
 
 public class PreferenceStringList extends AbstractPreference implements GUITreeComponent {
-
+	
 	// Constants
 	private static final String DELIMITER = ",";
-
-		
+	
+	
 	// Instance Fields
 	public StringList def = new StringList();
 	public StringList cur = new StringList();
 	public StringList tmp = new StringList();
-
-
+	
+	
 	// Constructors
 	public PreferenceStringList() {}
 	
 	public PreferenceStringList(StringList def, String command) {
 		this(def,new StringList(),command);
 	}
-
+	
 	public PreferenceStringList(StringList def, StringList cur, String command) {
 		this.def = def;
 		this.cur = cur;
 		this.tmp = cur;
 		setCommand(command);
 	}
-
-
+	
+	
 	// GUITreeComponent Interface
-	public void endSetup(AttributeList atts) {
+	public void endSetup(Attributes atts) {
 		super.endSetup(atts);
-	}	
-
-
+	}
+	
+	
 	// Setters
-	public void setDef(String value) {this.def = convertToStringList(value);}
-	public void setCur(String value) {this.cur = convertToStringList(value);}
-	public void setTmp(String value) {this.tmp = convertToStringList(value);}
-
-	public String getCur() {return convertToString(cur);}
-	public String getDef() {return convertToString(def);}
-	public String getTmp() {return convertToString(tmp);}
-
-
-	// Misc Methods	
+	public void setDef(String value) {
+		this.def = convertToStringList(value);
+	}
+	
+	public void setCur(String value) {
+		this.cur = convertToStringList(value);
+	}
+	
+	public void setTmp(String value) {
+		this.tmp = convertToStringList(value);
+	}
+	
+	public String getCur() {
+		return convertToString(cur);
+	}
+	
+	public String getDef() {
+		return convertToString(def);
+	}
+	
+	public String getTmp() {
+		return convertToString(tmp);
+	}
+	
+	
+	// Misc Methods
 	public String convertToString(StringList list) {
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < list.size(); i++) {
-			buf.append(URLEncoder.encode(list.get(i)));
-			if (i < list.size() - 1) {
-				buf.append(DELIMITER);
+			try {
+				buf.append(URLEncoder.encode(list.get(i), "UTF-8"));
+				if (i < list.size() - 1) {
+					buf.append(DELIMITER);
+				}
+			} catch (UnsupportedEncodingException uee) {
+				uee.printStackTrace();
 			}
 		}
 		
@@ -105,18 +124,35 @@ public class PreferenceStringList extends AbstractPreference implements GUITreeC
 		StringTokenizer tokenizer = new StringTokenizer(s,DELIMITER);
 		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken();
-			list.add(URLDecoder.decode(token));
+			try {
+				list.add(URLDecoder.decode(token, "UTF-8"));
+			} catch (UnsupportedEncodingException uee) {
+				uee.printStackTrace();
+			}
 		}
 		
 		return list;
 	}
 	
-	public String toString() {return convertToString(cur);}
-
-
+	public String toString() {
+		return convertToString(cur);
+	}
+	
+	
 	// Preference Interface
-	public void restoreCurrentToDefault() {cur = (StringList) def.clone();}
-	public void restoreTemporaryToDefault() {tmp = (StringList) def.clone();}
-	public void restoreTemporaryToCurrent() {tmp = (StringList) cur.clone();}
-	public void applyTemporaryToCurrent() {cur = (StringList) tmp.clone();}
+	public void restoreCurrentToDefault() {
+		cur = (StringList) def.clone();
+	}
+	
+	public void restoreTemporaryToDefault() {
+		tmp = (StringList) def.clone();
+	}
+	
+	public void restoreTemporaryToCurrent() {
+		tmp = (StringList) cur.clone();
+	}
+	
+	public void applyTemporaryToCurrent() {
+		cur = (StringList) tmp.clone();
+	}
 }

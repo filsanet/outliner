@@ -90,7 +90,7 @@ public class CopyMenuItem extends AbstractOutlinerMenuItem implements TreeSelect
 	
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		
 		setEnabled(false);

@@ -110,14 +110,14 @@ public class WindowMenu extends AbstractOutlinerMenu implements DocumentReposito
 	
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		Outliner.menuBar.windowMenu = this;
 		
 		setEnabled(false);
 	}
 	
-	public void endSetup(AttributeList atts) {
+	public void endSetup(Attributes atts) {
 		WINDOW_LIST_START = getItemCount();
 		
 		Outliner.documents.addDocumentRepositoryListener(this);

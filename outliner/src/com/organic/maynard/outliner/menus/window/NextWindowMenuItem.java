@@ -45,7 +45,7 @@ import org.xml.sax.*;
 public class NextWindowMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		
 		addActionListener(this);

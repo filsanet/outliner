@@ -128,7 +128,9 @@ public class BSHMacro extends MacroImpl implements Script {
 	// Sax DocumentHandler Implementation
 	protected void handleCharacters(String elementName, String text) {
 		if (elementName.equals(E_SCRIPT)) {
-			setScript(text);
+			StringBuffer existingScript = new StringBuffer(getScript());
+			existingScript.append(text);
+			setScript(existingScript.toString());
 		}
 	}
 	

@@ -52,35 +52,43 @@ public class ScriptsManagerModel extends AbstractTableModel {
 	public static final int STARTUP_SCRIPT = 0;
 	public static final int SHUTDOWN_SCRIPT = 1;
 	public static final int USER_SCRIPT = 2;
-
+	
 	public static final String STARTUP_SCRIPT_TEXT = "Startup";
 	public static final String SHUTDOWN_SCRIPT_TEXT = "Shutdown";
 	public static final String USER_SCRIPT_TEXT = "User";
 	public static final String UNKNOWN_SCRIPT_TEXT = "Unknown";
 	
-
+	
 	// Fields
 	private ArrayList scripts = new ArrayList(); // Strings
-
+	
 	private static final int SCRIPT_EVENT_COUNT = 2; // Should be equal to the number of boolean isX ArrayLists.	
-
+	
 	// Constructors
 	public ScriptsManagerModel() {
-
+		
 	}
-
-
+	
+	
 	// Static Methods
 	public static void runStartupScripts() {
-		for (int i = 0, limit = Outliner.scriptsManager.model.getSize(); i < limit; i++) {
-			Script script = Outliner.scriptsManager.model.get(i);
-			
-			if (script.isStartupScript()) {
-				runScript(script, STARTUP_SCRIPT);
+		if (Outliner.scriptsManager != null) {
+			if (Outliner.scriptsManager.model != null) {
+				for (int i = 0, limit = Outliner.scriptsManager.model.getSize(); i < limit; i++) {
+					Script script = Outliner.scriptsManager.model.get(i);
+					
+					if (script.isStartupScript()) {
+						runScript(script, STARTUP_SCRIPT);
+					}
+				}
+			} else {
+				System.out.println("Error: ScriptsManagerModel was null");
 			}
+		} else {
+			System.out.println("Error: ScriptsManager was null");
 		}
 	}
-
+	
 	public static void runShutdownScripts() {
 		for (int i = 0, limit = Outliner.scriptsManager.model.getSize(); i < limit; i++) {
 			Script script = Outliner.scriptsManager.model.get(i);

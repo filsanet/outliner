@@ -60,7 +60,7 @@ public class HTMLViewerMenuItem extends AbstractOutlinerMenuItem implements Acti
 	
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		
 		String path = atts.getValue(A_PATH);

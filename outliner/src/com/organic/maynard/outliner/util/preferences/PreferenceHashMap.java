@@ -36,56 +36,72 @@ package com.organic.maynard.outliner.util.preferences;
 
 import java.net.*;
 import java.util.*;
-
+import java.io.UnsupportedEncodingException;
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.*;
 import org.xml.sax.*;
 
 public class PreferenceHashMap extends AbstractPreference implements GUITreeComponent {
-
+	
 	// Constants
 	private static final String DELIMITER_MINOR = ",";
 	private static final String DELIMITER_MAJOR = ";";
-
-		
+	
+	
 	// Instance Fields
 	public HashMap def = new HashMap();
 	public HashMap cur = new HashMap();
 	public HashMap tmp = new HashMap();
-
-
+	
+	
 	// Constructors
 	public PreferenceHashMap() {}
 	
 	public PreferenceHashMap(HashMap def, String command) {
 		this(def,new HashMap(),command);
 	}
-
+	
 	public PreferenceHashMap(HashMap def, HashMap cur, String command) {
 		this.def = def;
 		this.cur = cur;
 		this.tmp = cur;
 		setCommand(command);
 	}
-
-
+	
+	
 	// GUITreeComponent Interface
-	public void endSetup(AttributeList atts) {
+	public void endSetup(Attributes atts) {
 		super.endSetup(atts);
-	}	
-
-
+	}
+	
+	
 	// Setters
-	public void setDef(String value) {this.def = convertToHashMap(value);}
-	public void setCur(String value) {this.cur = convertToHashMap(value);}
-	public void setTmp(String value) {this.tmp = convertToHashMap(value);}
-
-	public String getCur() {return convertToString(cur);}
-	public String getDef() {return convertToString(def);}
-	public String getTmp() {return convertToString(tmp);}
-
-
-	// Misc Methods	
+	public void setDef(String value) {
+		this.def = convertToHashMap(value);
+	}
+	
+	public void setCur(String value) {
+		this.cur = convertToHashMap(value);
+	}
+	
+	public void setTmp(String value) {
+		this.tmp = convertToHashMap(value);
+	}
+	
+	public String getCur() {
+		return convertToString(cur);
+	}
+	
+	public String getDef() {
+		return convertToString(def);
+	}
+	
+	public String getTmp() {
+		return convertToString(tmp);
+	}
+	
+	
+	// Misc Methods
 	public String convertToString(HashMap map) {
 		StringBuffer buf = new StringBuffer();
 		
@@ -95,12 +111,16 @@ public class PreferenceHashMap extends AbstractPreference implements GUITreeComp
 			String key = (String) it.next();
 			String value = (String) map.get(key);
 			
-			buf.append(URLEncoder.encode(key));
-			buf.append(DELIMITER_MINOR);
-			buf.append(URLEncoder.encode(value));
-			
-			if (it.hasNext()) {
-				buf.append(DELIMITER_MAJOR);
+			try {
+				buf.append(URLEncoder.encode(key, "UTF-8"));
+				buf.append(DELIMITER_MINOR);
+				buf.append(URLEncoder.encode(value, "UTF-8"));
+				
+				if (it.hasNext()) {
+					buf.append(DELIMITER_MAJOR);
+				}
+			} catch (UnsupportedEncodingException uee) {
+				uee.printStackTrace();
 			}
 		}
 		
@@ -117,30 +137,36 @@ public class PreferenceHashMap extends AbstractPreference implements GUITreeComp
 			
 			String key = null;
 			String value = null;
-			if (tokenizerMinor.hasMoreTokens()) {
-				key = URLDecoder.decode(tokenizerMinor.nextToken());
+			try {
+				if (tokenizerMinor.hasMoreTokens()) {
+					key = URLDecoder.decode(tokenizerMinor.nextToken(), "UTF-8");
+				}
+				if (tokenizerMinor.hasMoreTokens()) {
+					value = URLDecoder.decode(tokenizerMinor.nextToken(), "UTF-8");
+				}
+				
+				if (value == null) {
+					value = "";
+				}
+				
+				if (key == null) {
+					key = "";
+				}
+				
+				map.put(key,value);
+			} catch (UnsupportedEncodingException uee) {
+				uee.printStackTrace();
 			}
-			if (tokenizerMinor.hasMoreTokens()) {
-				value = URLDecoder.decode(tokenizerMinor.nextToken());
-			}
-			
-			if (value == null) {
-				value = "";
-			}
-			
-			if (key == null) {
-				key = "";
-			}
-			
-			map.put(key,value);
 		}
 		
 		return map;
 	}
 	
-	public String toString() {return convertToString(cur);}
-
-
+	public String toString() {
+		return convertToString(cur);
+	}
+	
+	
 	// Preference Interface
 	public void restoreCurrentToDefault() {
 		copyHashMap(def,cur);
@@ -160,7 +186,7 @@ public class PreferenceHashMap extends AbstractPreference implements GUITreeComp
 	
 	private void copyHashMap(HashMap from, HashMap to) {
 		to.clear();
-
+		
 		Iterator it = from.keySet().iterator();
 		while (it.hasNext()) {
 			String key = (String) it.next();

@@ -89,10 +89,10 @@ public class XMLTools {
 	
 	/**
 	 * Escapes the provided String for use as a CDATA block within an XML document.
-	 * This will convert all instances of the String "]]>" to "]]&gt;".
+	 * This will convert all instances of the String "]]>" to "]]]]><![CDATA[>".
 	 */
 	public static String escapeCDATA(String text) {
-		text = StringTools.replace(text, "]]>", "]]&gt;");
+		text = StringTools.replace(text, "]]>", "]]]]><![CDATA[>");
 		return text;
 	}
 	

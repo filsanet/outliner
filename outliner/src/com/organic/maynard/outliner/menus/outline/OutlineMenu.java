@@ -76,14 +76,14 @@ public class OutlineMenu extends AbstractOutlinerMenu implements DocumentReposit
 	
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		
 		Outliner.menuBar.outlineMenu = this;
 		setEnabled(false);
 	}
 	
-	public void endSetup(AttributeList atts) {
+	public void endSetup(Attributes atts) {
 		super.endSetup(atts);
 		
 		JMenuItem hoistItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.OUTLINE_HOIST_MENU_ITEM);

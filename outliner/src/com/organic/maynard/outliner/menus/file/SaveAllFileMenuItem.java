@@ -86,7 +86,7 @@ public class SaveAllFileMenuItem extends AbstractOutlinerMenuItem implements Doc
 	
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		
 		addActionListener(this);

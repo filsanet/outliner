@@ -221,11 +221,11 @@ public class Preferences implements GUITreeComponent {
 	public String getGUITreeComponentID() {return this.id;}
 	public void setGUITreeComponentID(String id) {this.id = id;}
 
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		Outliner.loadPrefsFile(Outliner.PARSER, Outliner.CONFIG_FILE);	
 	}
 	
-	public void endSetup(AttributeList atts) {}
+	public void endSetup(Attributes atts) {}
 	
 	
 	// PreferencesPanel Registry

@@ -52,7 +52,7 @@ import org.xml.sax.*;
 
 public class PreferencesGUITreeColorButtonComponent extends AbstractPreferencesGUITreeComponent implements ActionListener {
 
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		// Set the Component
 		JButton component = new JButton("");
 		setComponent(component);

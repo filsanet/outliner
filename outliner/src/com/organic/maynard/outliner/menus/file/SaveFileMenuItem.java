@@ -93,7 +93,7 @@ public class SaveFileMenuItem extends AbstractOutlinerMenuItem implements Docume
 	
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		
 		setEnabled(false);

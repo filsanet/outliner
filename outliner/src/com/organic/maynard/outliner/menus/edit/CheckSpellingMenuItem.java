@@ -69,7 +69,7 @@ public class CheckSpellingMenuItem extends AbstractOutlinerMenuItem implements D
 	
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		
 		setEnabled(false);

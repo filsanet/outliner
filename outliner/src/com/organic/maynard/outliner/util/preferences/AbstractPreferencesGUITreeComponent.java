@@ -97,7 +97,7 @@ public abstract class AbstractPreferencesGUITreeComponent implements Preferences
 	public String getGUITreeComponentID() {return this.id;}
 	public void setGUITreeComponentID(String id) {this.id = id;}
 
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		// Set the Label
 		setLabelText(atts.getValue(A_LABEL));
 
@@ -106,7 +106,7 @@ public abstract class AbstractPreferencesGUITreeComponent implements Preferences
 		setPreference(pref);
 	}
 
-	public void endSetup(AttributeList atts) {
+	public void endSetup(Attributes atts) {
 		AbstractPreferencesPanel prefPanel = (AbstractPreferencesPanel) GUITreeLoader.getAncestorElementOfClass("com.organic.maynard.outliner.util.preferences.AbstractPreferencesPanel");
 		
 		// Add it to the PreferenceList in the parent panel

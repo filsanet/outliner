@@ -52,7 +52,7 @@ public class EditMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 	
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		Outliner.menuBar.editMenu = this;
 	}

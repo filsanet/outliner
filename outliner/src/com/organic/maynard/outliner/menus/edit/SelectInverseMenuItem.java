@@ -87,7 +87,7 @@ public class SelectInverseMenuItem extends AbstractOutlinerMenuItem implements T
 	
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		
 		setEnabled(false);

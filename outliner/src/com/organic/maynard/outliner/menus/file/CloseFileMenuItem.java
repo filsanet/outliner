@@ -66,7 +66,7 @@ public class CloseFileMenuItem extends AbstractOutlinerMenuItem implements Docum
 	
 	
 	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
+	public void startSetup(Attributes atts) {
 		super.startSetup(atts);
 		
 		addActionListener(this);

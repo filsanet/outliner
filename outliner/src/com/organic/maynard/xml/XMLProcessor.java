@@ -32,7 +32,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package revenge.util;
+package com.organic.maynard.xml;
 
 import java.io.*;
 import java.util.*;
@@ -187,20 +187,19 @@ public abstract class XMLProcessor extends DefaultHandler implements XMLParserCo
 	 *
 	 * @param filepath the path to the XML file on the file system.
 	 */
-	public void process(String filepath) {
-		try {
-			reset();
+	public void process(String filepath) throws SAXException, IOException {
+		reset();
 			
-			File file = new File(filepath);
-			
-			reader.parse(new InputSource(new BufferedInputStream(new FileInputStream(file))));
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		File file = new File(filepath);
+		reader.parse(new InputSource(new BufferedInputStream(new FileInputStream(file))));
+	}
+	
+	/**
+	 * Processes the XML from the InputStream using the provided encoding.
+	 */
+	public void process(InputStream stream, String encoding) throws SAXException, IOException {
+		reset();
+		reader.parse(new InputSource(new BufferedReader(new InputStreamReader(stream, encoding))));
 	}
 	
 	
@@ -261,7 +260,7 @@ public abstract class XMLProcessor extends DefaultHandler implements XMLParserCo
 	/**
 	 * Characters processing.
 	 */
-	public void characters(char ch[], int start, int length) {
+	public void characters(char ch[], int start, int length) throws SAXException {
 		// String text = new String(ch, start, length);
 	}
 	
