@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\About JOE.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Wed, 26 Dec 2001 11:41:28 GMT</dateModified>
+<dateModified>Thu, 27 Dec 2001 06:20:55 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
 <windowTop>5</windowTop>
 <windowLeft>5</windowLeft>
-<windowBottom>455</windowBottom>
-<windowRight>455</windowRight>
+<windowBottom>561</windowBottom>
+<windowRight>563</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -36,9 +36,9 @@
 <outline isEditable="true" isMoveable="true" text="Copyright" isMoveableInherited="true" isEditableInherited="true">
 	<outline text="JOE developers">
 		<outline isEditable="true" isMoveable="true" text="[copyright holders are listed in chronological order by date of first contribution to the code base]"/>
-		<outline isEditable="true" isMoveable="true" text="Portions Copyright 2000-2001 by Maynard Demmon. All rights reserved."/>
+		<outline isEditable="true" isMoveable="true" text="Portions Copyright 2000-2002 by Maynard Demmon. All rights reserved."/>
 		<outline isEditable="true" isMoveable="true" text="Portions Copyright 2001 by Steven Spencer. All rights reserved."/>
-		<outline isEditable="true" isMoveable="true" text="Portions Copyright 2001 by Stanley Krute. All rights reserved."/>
+		<outline isEditable="true" isMoveable="true" text="Portions Copyright 2001-2002 by Stanley Krute. All rights reserved."/>
 		<outline text="Portions Copyright 2001 by Daniel Ericsson. All rights reserved."/>
 	</outline>
 	<outline text="included Open Source software">
