@@ -51,6 +51,11 @@ import org.xml.sax.helpers.DefaultHandler;
 /**
  * A base class for SAX2 parsers used by this webapp. This class is responsible 
  * for reading in an XML file and populating and parsing it using the SAX2 API.
+ * 
+ * Verbosity can be turned on with a processing instruction in the XML file being
+ * processed. To do this place something like this right after the xml declaration:
+ * <?verbose enabled="true" level="4"?> where the level is one of the values of
+ * the verbosity constants.
  */
 public abstract class XMLProcessor extends DefaultHandler implements XMLParserConstants {
 	
@@ -271,6 +276,13 @@ public abstract class XMLProcessor extends DefaultHandler implements XMLParserCo
 		elements_stack.push(qName);
 		attributes_stack.push(atts);
 		characters_stack.push(new StringBuffer());
+		
+		if (isVerboseEnough(VERBOSITY_DEBUG)) {
+			System.out.println("startElement: [" + qName + "]");
+			for (int i = 0; i < atts.getLength(); i++) {
+				System.out.println("   attribute:   [" + atts.getQName(i) + "] [" + atts.getValue(i) + "]");
+			}
+		}
 	}
 	
 	/**
@@ -281,6 +293,10 @@ public abstract class XMLProcessor extends DefaultHandler implements XMLParserCo
 		elements_stack.pop();
 		attributes_stack.pop();
 		characters_stack.pop();
+		
+		if (isVerboseEnough(VERBOSITY_DEBUG)) {
+			System.out.println("  endElement: [" + qName + "]");
+		}
 	}
 	
 	/**
@@ -289,6 +305,10 @@ public abstract class XMLProcessor extends DefaultHandler implements XMLParserCo
 	public void characters(char ch[], int start, int length) throws SAXException {
 		StringBuffer buf = (StringBuffer) characters_stack.peek();
 		buf.append(new String(ch, start, length));
+		
+		if (isVerboseEnough(VERBOSITY_DEBUG)) {
+			System.out.println("  characters: [" + new String(ch, start, length) + "]");
+		}
 	}
 	
 	
