@@ -111,6 +111,10 @@ public class PasteAction extends AbstractAction {
 					
 					// Need to make a check for inline pastes
 					if ((text.indexOf(Preferences.LINE_END_STRING) == -1) && (text.indexOf(Preferences.DEPTH_PAD_STRING) == -1)) {
+						// Abort if node is not editable
+						if (!currentNode.isEditable()) {
+							return;
+						}
 						String oldText = textArea.getText();
 						int oldCaretPosition = textArea.getCaretPosition();
 						int oldMarkPosition = textArea.getCaret().getMark();
