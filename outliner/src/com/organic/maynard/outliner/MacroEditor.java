@@ -50,13 +50,14 @@ import org.xml.sax.*;
 public class MacroEditor extends AbstractGUITreeJDialog implements ActionListener, JoeReturnCodes {
 
 	// Constants
-	private static final int INITIAL_WIDTH = 350;
-	private static final int INITIAL_HEIGHT = 300;
+	private static final int INITIAL_WIDTH = 450;
+	private static final int INITIAL_HEIGHT = 400;
  	private static final int MINIMUM_WIDTH = 350;
 	private static final int MINIMUM_HEIGHT = 300;
 	
 	private static String CREATE = null;
-	private static String UPDATE = null;
+	private static String SAVE = null;
+	private static String SAVE_AND_CLOSE = null;
 	private static String CANCEL = null;
 	private static String DELETE = null;
 	
@@ -68,7 +69,8 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 	private JLabel macroTypeName = new JLabel();
 	
 	private JButton createButton = null;
-	private JButton updateButton = null;
+	private JButton saveButton = null;
+	private JButton saveAndCloseButton = null;
 	private JButton deleteButton = null;
 	private JButton cancelCreateButton = null;
 	private JButton cancelUpdateButton = null;
@@ -92,14 +94,16 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 		BUTTON_MODE_UPDATE_TITLE = GUITreeLoader.reg.getText("update_macro");
 
 		CREATE = GUITreeLoader.reg.getText("create");
-		UPDATE = GUITreeLoader.reg.getText("update");
+		SAVE = GUITreeLoader.reg.getText("save");
+		SAVE_AND_CLOSE = GUITreeLoader.reg.getText("save_and_close");
 		CANCEL = GUITreeLoader.reg.getText("cancel");
 		DELETE = GUITreeLoader.reg.getText("delete");
 
 		MACRO_TYPE = GUITreeLoader.reg.getText("macro_type");
 
 		createButton = new JButton(CREATE);
-		updateButton = new JButton(UPDATE);
+		saveButton = new JButton(SAVE);
+		saveAndCloseButton = new JButton(SAVE_AND_CLOSE);
 		deleteButton = new JButton(DELETE);
 		cancelCreateButton = new JButton(CANCEL);
 		cancelUpdateButton = new JButton(CANCEL);
@@ -127,7 +131,8 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 		this.getContentPane().setLayout(new BorderLayout());
 		
 		createButton.addActionListener(this);
-		updateButton.addActionListener(this);
+		saveButton.addActionListener(this);
+		saveAndCloseButton.addActionListener(this);
 		deleteButton.addActionListener(this);
 		cancelCreateButton.addActionListener(this);
 		cancelUpdateButton.addActionListener(this);
@@ -136,7 +141,9 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 		createButtonBox.add(Box.createHorizontalStrut(5));
 		createButtonBox.add(cancelCreateButton);
 
-		updateButtonBox.add(updateButton);
+		updateButtonBox.add(saveAndCloseButton);
+		updateButtonBox.add(Box.createHorizontalStrut(5));
+		updateButtonBox.add(saveButton);
 		updateButtonBox.add(Box.createHorizontalStrut(5));
 		updateButtonBox.add(deleteButton);
 		updateButtonBox.add(Box.createHorizontalStrut(5));
@@ -177,8 +184,10 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(CREATE)) {
 			create();
-		} else if (e.getActionCommand().equals(UPDATE)) {
-			update();
+		} else if (e.getActionCommand().equals(SAVE)) {
+			save();
+		} else if (e.getActionCommand().equals(SAVE_AND_CLOSE)) {
+			saveAndClose();
 		} else if (e.getActionCommand().equals(CANCEL)) {
 			cancel();
 		} else if (e.getActionCommand().equals(DELETE)) {
@@ -210,7 +219,12 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 
 	}
 	
-	private void update() {
+	private void saveAndClose() {
+		save();
+		hide();
+	}
+
+	private void save() {
 		Macro macro = macroConfig.getMacro();
 		String oldName = macro.getFileName();
 
@@ -233,9 +247,7 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 			
 			// Save it to disk as a serialized object.
 			deleteMacro(new File(Outliner.MACROS_DIR + oldName));
-			saveMacro(macro);
-		
-			hide();			
+			saveMacro(macro);			
 		} else {
 			JOptionPane.showMessageDialog(this, GUITreeLoader.reg.getText("message_an_error_occurred"));
 		}
