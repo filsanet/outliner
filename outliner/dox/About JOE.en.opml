@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<opml version="1.0">
+<head>
+<title>E:\stan's java projects\Joe\outliner\dox\About JOE.en.opml</title>
+<dateCreated></dateCreated>
+<dateModified>Sun, 12 Aug 2001 07:05:23 GMT</dateModified>
+<ownerName>Stan Krute</ownerName>
+<ownerEmail>Stan@StanKrute.com</ownerEmail>
+<expansionState></expansionState>
+<vertScrollState>1</vertScrollState>
+<windowTop>113</windowTop>
+<windowLeft>118</windowLeft>
+<windowBottom>465</windowBottom>
+<windowRight>501</windowRight>
+</head>
+<body>
+<outline text="About JOE"/>
+<outline text="------------"/>
+<outline text="Version">
+<outline text="1.8.2"/>
+</outline>
+<outline text="Credits">
+<outline text="Maynard Demmon"/>
+<outline text="Philip Suh"/>
+<outline text="Steven Spencer"/>
+<outline text="Stanley Krute">
+<outline text="mailto:Stan@JavaOutlineEditor.org"/>
+</outline>
+</outline>
+<outline text="Copyright"/>
+<outline text="Feedback">
+<outline text="http://JavaOutlineEditor.org/feedback"/>
+</outline>
+<outline text="Website">
+<outline text="http://JavaOutlineEditor.org"/>
+</outline>
+</body>
+</opml>

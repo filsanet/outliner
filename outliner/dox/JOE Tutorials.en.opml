@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<opml version="1.0">
+<head>
+<title>E:\stan's java projects\Joe\outliner\dox\JOE Tutorials.en.opml</title>
+<dateCreated></dateCreated>
+<dateModified>Sun, 12 Aug 2001 05:52:10 GMT</dateModified>
+<ownerName>Stan Krute</ownerName>
+<ownerEmail>Stan@StanKrute.com</ownerEmail>
+<expansionState></expansionState>
+<vertScrollState>1</vertScrollState>
+<windowTop>157</windowTop>
+<windowLeft>219</windowLeft>
+<windowBottom>568</windowBottom>
+<windowRight>597</windowRight>
+</head>
+<body>
+<outline text="JOE Tutorials"/>
+<outline text="---------------"/>
+<outline text="[forthcoming]"/>
+</body>
+</opml>

@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide.en.opml</title>
 <dateCreated>Tue, 17 Jul 2001 02:49:03 GMT</dateCreated>
-<dateModified>Sun, 12 Aug 2001 04:32:05 GMT</dateModified>
+<dateModified>Sun, 12 Aug 2001 04:47:55 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
-<expansionState>7,8,13,14</expansionState>
-<vertScrollState>10</vertScrollState>
-<windowTop>117</windowTop>
-<windowLeft>281</windowLeft>
-<windowBottom>620</windowBottom>
-<windowRight>1014</windowRight>
+<expansionState></expansionState>
+<vertScrollState>1</vertScrollState>
+<windowTop>37</windowTop>
+<windowLeft>301</windowLeft>
+<windowBottom>646</windowBottom>
+<windowRight>1007</windowRight>
 </head>
 <body>
 <outline text="JOE Developer Guide [JDG]"/>
@@ -653,10 +653,10 @@
 </outline>
 <outline text="Renaming a File">
 <outline text="Give these commands, in this order">
-<outline text="copy oldName newName"/>
+<outline text="ren oldName newName"/>
 <outline text="cvs remove oldName"/>
 <outline text="cvs add newName"/>
-<outline text="cvs commit -m &quot;Renamed oldName to newName&quot; oldName newName"/>
+<outline text="cvs commit -m &quot;Renamed oldName to newName&quot;"/>
 </outline>
 </outline>
 <outline text="removing a file from the project"/>
