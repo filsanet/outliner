@@ -22,6 +22,7 @@ Targets:
                  help: Prints this help message to the console.
                   jar: Cleans, compiles, and jars all everything 
 		       for JOE.
+		clean: Cleans calls clean for each sub-project.
               javadoc: Generates source code documentation in the 
 	               javadoc format.
 
@@ -50,6 +51,12 @@ Targets:
 			<antcall target="jar-outliner"/>
 			<antcall target="jar-webfilephp"/>
 			<antcall target="jar-wikiff"/>
+		</target>
+		<target name="clean" depends="init" description="Cleans calls clean for each sub-project.">
+			<antcall target="clean-maynard"/>
+			<antcall target="clean-outliner"/>
+			<antcall target="clean-webfilephp"/>
+			<antcall target="clean-wikiff"/>
 		</target>
 		<target name="javadoc" depends="init" description="Generates source code documentation in the javadoc format.">
 			<delete dir="dox/api"/>
