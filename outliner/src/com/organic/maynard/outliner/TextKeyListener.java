@@ -39,10 +39,11 @@ package com.organic.maynard.outliner;
 import com.organic.maynard.outliner.util.preferences.*;
 import com.organic.maynard.outliner.util.undo.*;
 import javax.swing.*;
+import javax.swing.event.*;
 import java.awt.event.*;
 import java.awt.datatransfer.*;
 
-public class TextKeyListener implements KeyListener, MouseListener {
+public class TextKeyListener implements KeyListener, MouseListener, FocusListener {
 	
 	private OutlinerCellRendererImpl textArea = null;
 	
@@ -50,14 +51,25 @@ public class TextKeyListener implements KeyListener, MouseListener {
 	private boolean backspaceMerge = false;
 	private boolean deleteMerge = false;
 
-
 	// The Constructors
 	public TextKeyListener() {}
 
 	public void destroy() {
 		textArea = null;
 	}
+	
+	
+	// FocusListener Interface
+	public void focusGained(FocusEvent e) {
+		textArea = (OutlinerCellRendererImpl) e.getComponent();
+		textArea.hasFocus = true;
+	}
 
+	public void focusLost(FocusEvent e) {
+		textArea = (OutlinerCellRendererImpl) e.getComponent();
+		textArea.hasFocus = false;
+	}
+	
 
 	// MouseListener Interface
  	public void mouseEntered(MouseEvent e) {}
@@ -118,7 +130,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
  	}
  	
  	public void mouseReleased(MouseEvent e) {
- 		// Catch for Solaris/Mac if they did the popup trigger.
+  		// Catch for Solaris/Mac if they did the popup trigger.
  		if (e.isConsumed()) {
  			return;
  		}
@@ -141,8 +153,8 @@ public class TextKeyListener implements KeyListener, MouseListener {
 	}
 
  	public void mouseClicked(MouseEvent e) {
-  		// Catch for Solaris/Mac if they did the popup trigger.
- 		if (e.isConsumed()) {
+		// Catch for Solaris/Mac if they did the popup trigger.
+		if (e.isConsumed()) {
  			return;
  		}
  		
@@ -167,8 +179,12 @@ public class TextKeyListener implements KeyListener, MouseListener {
 	
 	// KeyListener Interface
 	public void keyPressed(KeyEvent e) {
-		textArea = (OutlinerCellRendererImpl) e.getComponent();
+ 		textArea = (OutlinerCellRendererImpl) e.getComponent();
 		
+ 		if (!textArea.hasFocus) {
+ 			return;
+ 		}
+ 
 		//System.out.println("keyPressed");
 		
 		// Shorthand
@@ -419,8 +435,12 @@ public class TextKeyListener implements KeyListener, MouseListener {
 	}
 	
 	public void keyTyped(KeyEvent e) {
-		textArea = (OutlinerCellRendererImpl) e.getComponent();
+ 		textArea = (OutlinerCellRendererImpl) e.getComponent();
 
+ 		if (!textArea.hasFocus) {
+ 			return;
+ 		}
+ 
 		Node currentNode = textArea.node;
 		
 		// Abort if not editable
@@ -513,9 +533,14 @@ public class TextKeyListener implements KeyListener, MouseListener {
 	}
 	
 	public void keyReleased(KeyEvent e) {
-		textArea = (OutlinerCellRendererImpl) e.getComponent();
-		int keyCode = e.getKeyCode();
+ 		textArea = (OutlinerCellRendererImpl) e.getComponent();
 
+ 		if (!textArea.hasFocus) {
+ 			return;
+ 		}
+ 
+		int keyCode = e.getKeyCode();
+		
 		// Create some short names for convienence
 		Node currentNode = textArea.node;
 		JoeTree tree = currentNode.getTree();

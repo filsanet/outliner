@@ -45,7 +45,7 @@ import javax.swing.*;
  */
 
 public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellRenderer {
-
+	
 	private static Font font = null;
 	private static Font readOnlyFont = null;
 	private static Font immoveableFont = null;
@@ -91,6 +91,8 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	public OutlineLineNumber lineNumber = new OutlineLineNumber(this);
 	
 	public int height = 0;
+
+	public boolean hasFocus = false;
 
 
 	// The Constructors

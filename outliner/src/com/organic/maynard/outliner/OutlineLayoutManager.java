@@ -83,17 +83,20 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		for (int i = 0; i < CACHE_SIZE; i++) {
 			OutlinerCellRendererImpl renderer = new OutlinerCellRendererImpl();
 			panel.add(renderer);
+			renderer.addFocusListener(textListener);
 			renderer.addKeyListener(textListener);
 			renderer.addMouseListener(textListener);
 			renderer.addMouseListener(dndListener);
 			textAreas[i] = renderer;
 			
 			panel.add(renderer.button);
+			renderer.button.addFocusListener(iconListener);
 			renderer.button.addKeyListener(iconListener);
 			renderer.button.addMouseListener(iconListener);
 			renderer.button.addMouseListener(dndListener);
 			
 			panel.add(renderer.lineNumber);
+			renderer.lineNumber.addFocusListener(iconListener);
 			renderer.lineNumber.addKeyListener(iconListener);
 			renderer.lineNumber.addMouseListener(iconListener);
 			renderer.lineNumber.addMouseListener(dndListener);
@@ -109,9 +112,11 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		}
 		
 		// Initialized the hidden components
+		hiddenCell.addFocusListener(textListener);
 		hiddenCell.addKeyListener(textListener);
 		hiddenCell.addMouseListener(textListener);
 		panel.add(hiddenCell);
+		hiddenCell.button.addFocusListener(iconListener);
 		hiddenCell.button.addKeyListener(iconListener);
 		hiddenCell.button.addMouseListener(iconListener);
 		panel.add(hiddenCell.button);
@@ -128,11 +133,13 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			panel.remove(textAreas[i].iMoveable);
 			
 			textAreas[i].button.removeMouseListener(dndListener);
+			textAreas[i].button.removeFocusListener(iconListener);
 			textAreas[i].button.removeKeyListener(iconListener);
 			textAreas[i].button.removeMouseListener(iconListener);
 			textAreas[i].button.destroy();
 
 			textAreas[i].lineNumber.removeMouseListener(dndListener);
+			textAreas[i].lineNumber.removeFocusListener(iconListener);
 			textAreas[i].lineNumber.removeKeyListener(iconListener);
 			textAreas[i].lineNumber.removeMouseListener(iconListener);
 			textAreas[i].lineNumber.destroy();
@@ -147,6 +154,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			textAreas[i].iMoveable.destroy();
 
 			textAreas[i].removeMouseListener(dndListener);
+			textAreas[i].removeFocusListener(textListener);
 			textAreas[i].removeKeyListener(textListener);
 			textAreas[i].removeMouseListener(textListener);
 			textAreas[i].destroy();
@@ -159,6 +167,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		panel.remove(hiddenCell);
 		panel.remove(hiddenCell.button);
 
+		hiddenCell.button.removeFocusListener(iconListener);
 		hiddenCell.button.removeKeyListener(iconListener);
 		hiddenCell.button.removeMouseListener(iconListener);
 		hiddenCell.button.destroy();
@@ -173,6 +182,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 
 		hiddenCell.iMoveable.destroy();
 
+		hiddenCell.removeFocusListener(textListener);
 		hiddenCell.removeKeyListener(textListener);
 		hiddenCell.removeMouseListener(textListener);
 		hiddenCell.destroy();

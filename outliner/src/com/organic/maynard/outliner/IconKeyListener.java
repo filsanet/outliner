@@ -47,7 +47,7 @@ import javax.swing.event.*;
 
 import com.organic.maynard.util.string.*;
 
-public class IconKeyListener implements KeyListener, MouseListener {
+public class IconKeyListener implements KeyListener, MouseListener, FocusListener {
 
 	// Expand/Collapse Mode Constants
 	public static final int MODE_EXPAND_DOUBLE_CLICK = 0;
@@ -80,6 +80,18 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		} else if (c instanceof OutlineCommentIndicator) {
 			textArea = ((OutlineCommentIndicator) c).renderer;
 		}
+	}
+
+
+	// FocusListener Interface
+	public void focusGained(FocusEvent e) {
+		recordRenderer(e.getComponent());
+		textArea.hasFocus = true;
+	}
+
+	public void focusLost(FocusEvent e) {
+		recordRenderer(e.getComponent());
+		textArea.hasFocus = false;
 	}
 
 	// MouseListener Interface
@@ -118,12 +130,8 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		}
 		
 		// Record the EditingNode and CursorPosition and ComponentFocus
- 		//JoeTree tree = textArea.node.getTree();
 		tree.setEditingNode(textArea.node);
 		tree.setComponentFocus(OutlineLayoutManager.ICON);
-		
-		// Store the node since it may get lost by the time we want to throw the new mouse event.
-		//Node node = textArea.node;
 		
 		// Redraw and set focus
 		layout.redraw();
@@ -218,8 +226,12 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	
 	// KeyListener Interface
 	public void keyPressed(KeyEvent e) {
-		recordRenderer(e.getComponent());
-	
+  		recordRenderer(e.getComponent());
+			
+  		if (!textArea.hasFocus) {
+ 			return;
+ 		}
+ 		
 		// Create some short names for convienence
 		JoeTree tree = textArea.node.getTree();
 		OutlineLayoutManager layout = tree.getDocument().panel.layout;
@@ -443,8 +455,12 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	}
 	
 	public void keyTyped(KeyEvent e) {
-		recordRenderer(e.getComponent());
-
+ 		recordRenderer(e.getComponent());
+ 		
+  		if (!textArea.hasFocus) {
+ 			return;
+ 		}
+ 		
 		// Create some short names for convienence
 		Node currentNode = textArea.node;
 		JoeTree tree = currentNode.getTree();
@@ -488,6 +504,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		e.consume();
 		return;
 	}
+	
 	public void keyReleased(KeyEvent e) {}
 
 
