@@ -19,15 +19,12 @@
 package com.organic.maynard.outliner;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
 import javax.swing.*;
-import javax.swing.text.Caret;
 
 import javax.swing.plaf.*;
-import javax.swing.plaf.metal.*;
+import javax.swing.plaf.basic.*;
 
-public class OutlinerScrollBarUI extends MetalScrollBarUI {
+public class OutlinerScrollBarUI extends BasicScrollBarUI {
 	public static ComponentUI createUI(JComponent c) {
 		return new OutlinerScrollBarUI();
 	}
