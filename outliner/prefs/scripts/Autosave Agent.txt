@@ -5,7 +5,7 @@
 
 	for (int i = 0; i &lt; Outliner.openDocumentCount(); i++) {
 		OutlinerDocument doc = Outliner.getDocument(i);
-		if (!doc.getDocumentInfo().getImported()) {
+		if (!doc.getDocumentInfo().isImported()) {
 			if (!doc.getFileName().equals("") &amp;&amp; doc.isFileModified()) {
 				System.out.println("Auto-Saving: " + doc.getFileName());
 				SaveFileMenuItem.saveOutlinerDocument(doc);
