@@ -42,6 +42,13 @@ public class StringTools {
 	
 	// Class Methods
 	public static String replace(String in, String match, String replacement) {
+		// [srk] bug fix
+		// check for null refs
+		if (in == null || match == null || replacement == null) {
+			return null ; 
+		} // end if
+		// [srk] end bug fix
+		
 		StringBuffer out = new StringBuffer();
 		
 		int matchLength = match.length();
