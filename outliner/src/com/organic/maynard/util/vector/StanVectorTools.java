@@ -14,8 +14,8 @@
  *				void moveElementToHead (Vector)
  *				void moveElementToTail (Vector)
  *				void swapElements (Vector, int, int)
- *				[TBD] void removeDupesHeadside (Vector)
- *				void removeDupesTailside (Vector)
+ *				void removeDupesHeadside (Vector)
+ *				[TBD] void removeDupesTailside (Vector)
  *				reverse (Vector) 
  *
  *		
@@ -158,7 +158,7 @@ public class StanVectorTools {
 	} // end method swapElements
 
 
-	// trim's a vector's size
+	// trim a vector's size
 	// if method has to eliminate entries, it eliminates them from the head
 	public static void trimSizeSaveTail(Vector someVector, int goalSize) {
 	
@@ -191,8 +191,8 @@ public class StanVectorTools {
 
 
 	// remove duplicate entries
-	// if method has to eliminate entries, it eliminates them from the tailward side
-	public static void removeDupesTailside(Vector someVector) {
+	// if method has to eliminate entries, it eliminates them from the headward side
+	public static void removeDupesHeadside(Vector someVector) {
 	
 		// we'll be storing census info here
 		TreeSet censusTree = new TreeSet() ;
@@ -206,25 +206,25 @@ public class StanVectorTools {
 		// starting at the tail
 		int position = size - 1;
 		
-		// local var to hold each vector element
-		Object element = null ;
+		// local var to hold each vector element;s hashcode
+		Integer hash = null ;
 		
 		// until we get all the way to the head
 		while (position >= 0) {
 			
-			// grab the element
-			element = someVector.get(position) ;
+			// grab the element's hashcode
+			hash = new Integer(someVector.get(position).hashCode()) ;
 			
-			// if this element isn't in the tree yet
-			if (! censusTree.contains(element)) {
+			// if this element's hashcode isn't in the tree yet
+			if (! censusTree.contains(hash)) {
 				
 				// add it to the tree
-				censusTree.add(element) ;
+				censusTree.add(hash) ;
 				
 			// else this is a dupe
 			} else {
 				// slide more tailward elements headwards
-				moveElementsHeadward(someVector, position, size-1, 1) ;
+				moveElementsHeadward(someVector, position + 1, size-1, 1) ;
 				
 				// that crushes the dupe
 				
@@ -251,7 +251,7 @@ public class StanVectorTools {
 				
 		} // end if our size changed
 			
-	} // end method removeDupesTailside
+	} // end method removeDupesHeadside
 	
 	
 	// moves a range of elements headward
