@@ -112,43 +112,43 @@ public class PdbSPReaderWriter
 	// private class constants
 	
 	// flavor-specific PDB file stuff
-	private final int PDB_SP_RECORD_TYPE = 0 ;  // one byte
-	private final int PDB_SP_RECORD_VERSION = 1 ;  // one byte
-	private final int PDB_SP_RECORD_STATE = 2 ; // four bytes
-	private final int PDB_SP_RECORD_AUTONUMBER = 6 ; // two bytes
-	private final int PDB_SP_RECORD_PRIORITY = 8 ; // two bytes
+	private static final int PDB_SP_RECORD_TYPE = 0 ;  // one byte
+	private static final int PDB_SP_RECORD_VERSION = 1 ;  // one byte
+	private static final int PDB_SP_RECORD_STATE = 2 ; // four bytes
+	private static final int PDB_SP_RECORD_AUTONUMBER = 6 ; // two bytes
+	private static final int PDB_SP_RECORD_PRIORITY = 8 ; // two bytes
 
-	private final int PDB_SP_RECORD_PROGRESS = 10 ;  // two bytes
-	private final int PDB_SP_RECORD_CREATE_TIME = 12 ;  // four bytes
-	private final int PDB_SP_RECORD_TARGET_TIME = 16 ;  // four bytes
-	private final int PDB_SP_RECORD_START_TIME = 20 ;  // four bytes
-	private final int PDB_SP_RECORD_FINISH_TIME = 24 ;  // four bytes
+	private static final int PDB_SP_RECORD_PROGRESS = 10 ;  // two bytes
+	private static final int PDB_SP_RECORD_CREATE_TIME = 12 ;  // four bytes
+	private static final int PDB_SP_RECORD_TARGET_TIME = 16 ;  // four bytes
+	private static final int PDB_SP_RECORD_START_TIME = 20 ;  // four bytes
+	private static final int PDB_SP_RECORD_FINISH_TIME = 24 ;  // four bytes
 
-	private final int PDB_SP_RECORD_DEFAULT_COLOR = 28 ;  // four bytes
-	private final int PDB_SP_RECORD_DISPLAY_FLAGS = 32 ;  // four bytes
-	private final int PDB_SP_RECORD_LINK_TODO_ID = 36 ;  // four bytes
-	private final int PDB_SP_RECORD_LINK_DATEBOOK_ID = 40 ;  // four bytes
-	private final int PDB_SP_RECORD_LINK_FILENAME = 44 ;  // 32 bytes
+	private static final int PDB_SP_RECORD_DEFAULT_COLOR = 28 ;  // four bytes
+	private static final int PDB_SP_RECORD_DISPLAY_FLAGS = 32 ;  // four bytes
+	private static final int PDB_SP_RECORD_LINK_TODO_ID = 36 ;  // four bytes
+	private static final int PDB_SP_RECORD_LINK_DATEBOOK_ID = 40 ;  // four bytes
+	private static final int PDB_SP_RECORD_LINK_FILENAME = 44 ;  // 32 bytes
 
-	private final int PDB_SP_RECORD_EAB_COUNT = 76 ;  // two bytes
-	private final int PDB_SP_RECORD_TITLE_LENGTH = 78 ;  // two bytes
-	private final int PDB_SP_RECORD_NOTE_LENGTH = 80 ;  // four bytes
-	private final int PDB_SP_RECORD_MISC_LENGTH = 84 ;  // two bytes
-	private final int PDB_SP_RECORD_RELATIONS = 86 ;  // two bytes
+	private static final int PDB_SP_RECORD_EAB_COUNT = 76 ;  // two bytes
+	private static final int PDB_SP_RECORD_TITLE_LENGTH = 78 ;  // two bytes
+	private static final int PDB_SP_RECORD_NOTE_LENGTH = 80 ;  // four bytes
+	private static final int PDB_SP_RECORD_MISC_LENGTH = 84 ;  // two bytes
+	private static final int PDB_SP_RECORD_RELATIONS = 86 ;  // two bytes
 
-	private final int PDB_SP_RECORD_FOOTER = 88 ; // title plus note plus misc plus EABs bytes
+	private static final int PDB_SP_RECORD_FOOTER = 88 ; // title plus note plus misc plus EABs bytes
 
-	private final int PDB_SP_RECORD_HAS_SIBLING = 1 ;
-	private final int PDB_SP_RECORD_HAS_CHILD = 2 ;
+	private static final int PDB_SP_RECORD_HAS_SIBLING = 1 ;
+	private static final int PDB_SP_RECORD_HAS_CHILD = 2 ;
 
-	private final String SHADOW_PLAN_NOTE_START_MARKUP = "<ShadowPlanNote>" ;
-	private final String SHADOW_PLAN_NOTE_STOP_MARKUP = "</ShadowPlanNote>" ;
+	private static final String SHADOW_PLAN_NOTE_START_MARKUP = "<ShadowPlanNote>" ;
+	private static final String SHADOW_PLAN_NOTE_STOP_MARKUP = "</ShadowPlanNote>" ;
 	
-	private final String SHADOW_PLAN_MISC_START_MARKUP = "<ShadowPlanMisc>" ;
-	private final String SHADOW_PLAN_MISC_STOP_MARKUP = "</ShadowPlanMisc>" ;
+	private static final String SHADOW_PLAN_MISC_START_MARKUP = "<ShadowPlanMisc>" ;
+	private static final String SHADOW_PLAN_MISC_STOP_MARKUP = "</ShadowPlanMisc>" ;
 	
-	private final String SHADOW_PLAN_EAB_START_MARKUP = "<ShadowPlanEAB>" ;
-	private final String SHADOW_PLAN_EAB_STOP_MARKUP = "</ShadowPlanEAB>" ;
+	private static final String SHADOW_PLAN_EAB_START_MARKUP = "<ShadowPlanEAB>" ;
+	private static final String SHADOW_PLAN_EAB_STOP_MARKUP = "</ShadowPlanEAB>" ;
 	
 	
 	// private class variables
