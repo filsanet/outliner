@@ -67,6 +67,11 @@ public interface Node {
 	public boolean isComment();
 	public boolean isAncestorComment();
 	public boolean isAncestorOrSelfComment();
+
+	// Hoisting Methods
+	public void setHoisted(boolean hoisted);
+	public boolean isHoisted();
+	public Node getHoistedAncestorOrSelf();
 	
 	// Visibility Methods
 	public void setVisible(boolean visible);

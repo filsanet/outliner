@@ -36,6 +36,7 @@ public class NodeImpl implements Node {
 	private boolean partiallyVisible = false;
 	private boolean selected = false;
 	private boolean comment = false;
+	private boolean hoisted = false;
 	
 	private int decendantCount = 0;
 	private int decendantCharCount = 0;
@@ -311,6 +312,20 @@ public class NodeImpl implements Node {
 			return false;
 		} else {
 			return getParent().isAncestorOrSelfComment();
+		}
+	}
+
+	// Hoisting Methods
+	public void setHoisted(boolean hoisted) {this.hoisted = hoisted;}
+	public boolean isHoisted() {return hoisted;}
+	
+	public Node getHoistedAncestorOrSelf() {
+		if (isRoot()) {
+			return null;
+		} else if (isHoisted()) {
+			return this;
+		} else {
+			return getParent().getHoistedAncestorOrSelf();
 		}
 	}
 

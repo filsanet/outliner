@@ -55,6 +55,7 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	public TreeContext tree = new TreeContext(this);
 	public UndoQueue undoQueue = new UndoQueue(this);
 	public DocumentSettings settings = new DocumentSettings(this);
+	public HoistStack hoistStack = new HoistStack(this);
 
 	
 	// The Constructor
@@ -89,10 +90,10 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		
 		// Draw and Set Focus to the First Visible Node
 		Outliner.menuBar.windowMenu.changeToWindow(this);
-				
-		panel.layout.draw((Node) tree.visibleNodes.get(0), outlineLayoutManager.TEXT);
 
 		setVisible(true);
+				
+		panel.layout.draw((Node) tree.visibleNodes.get(0), outlineLayoutManager.TEXT);
 	}
 	
 	public void destroy() {
@@ -111,6 +112,9 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 		
 		settings.destroy();
 		settings = null;
+		
+		hoistStack.destroy();
+		hoistStack = null;
 		
 		border = null;
 		fileName = null;
@@ -161,6 +165,7 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	// ComponentListener Interface
 	public void componentResized(ComponentEvent e) {
 		panel.layout.draw();
+		panel.layout.setFocus(tree.getEditingNode(),tree.getComponentFocus());
 	}
 	
 	public void componentHidden(ComponentEvent e) {} 
@@ -192,8 +197,8 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	}
 	
 	public boolean isFileModified() {return fileModified;}
-
-
+	
+	
 	// Text Caret Positioning
 	private int preferredCaretPosition = 0;
 

@@ -105,7 +105,7 @@ public class DocumentInfo {
 		setWindowBottom(windowBottom);
 		setWindowRight(windowRight);
 		setExpandedNodesString(expandedNodesString);
-		setCommentedNodesString(expandedNodesString);
+		setCommentedNodesString(commentedNodesString);
 	}
 
 	// Accessors

@@ -181,9 +181,6 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 		try {
 			OutlinerDocument prevDoc = Outliner.getMostRecentDocumentTouched();
 			
-			doc.setSelected(true);
-			doc.moveToFront();
-			
 			// DeIconify if neccessary
 			if (doc.isIcon()) {
 				doc.setIcon(false);
@@ -200,6 +197,10 @@ public class WindowMenu extends AbstractOutlinerMenu implements ActionListener {
 				//System.out.println("About to try and maximize");
 				doc.setMaximum(true);
 			}
+
+			doc.setSelected(true);
+			doc.moveToFront();
+
 		} catch (java.beans.PropertyVetoException pve) {
 			pve.printStackTrace();
 		}

@@ -830,6 +830,15 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 
 	// Additional Outline Methods
+	public static void hoist(TreeContext tree) {
+		if (tree.selectedNodes.size() != 1) {
+			return;
+		}
+		
+		TextKeyListener.hoist(tree.getYoungestInSelection());
+		return;
+	}
+
 	public static void expandAllSubheads(TreeContext tree) {
 		for (int i = 0; i < tree.selectedNodes.size(); i++) {
 			((Node) tree.selectedNodes.get(i)).ExpandAllSubheads();

@@ -42,6 +42,9 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 	private static final String OUTLINE_DEMOTE = "Demote";
 	private static final String OUTLINE_MERGE = "Merge";
 	private static final String OUTLINE_MERGE_WITH_SPACES = "Merge with Spaces";
+	public static final String OUTLINE_HOIST = "Hoist";
+	private static final String OUTLINE_DEHOIST = "De-Hoist";
+	private static final String OUTLINE_DEHOIST_ALL = "De-Hoist All";
 
 
 	// The MenuItems.
@@ -65,6 +68,10 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 	// Seperator	
 	public JMenuItem OUTLINE_MERGE_ITEM = new JMenuItem(OUTLINE_MERGE);
 	public JMenuItem OUTLINE_MERGE_WITH_SPACES_ITEM = new JMenuItem(OUTLINE_MERGE_WITH_SPACES);
+	// Seperator	
+	public JMenuItem OUTLINE_HOIST_ITEM = new JMenuItem(OUTLINE_HOIST);
+	public JMenuItem OUTLINE_DEHOIST_ITEM = new JMenuItem(OUTLINE_DEHOIST);
+	public JMenuItem OUTLINE_DEHOIST_ALL_ITEM = new JMenuItem(OUTLINE_DEHOIST_ALL);
 	
 	// The Constructors
 	public OutlineMenu() {
@@ -133,6 +140,19 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 		OUTLINE_MERGE_WITH_SPACES_ITEM.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, Event.CTRL_MASK + Event.SHIFT_MASK, false));
 		OUTLINE_MERGE_WITH_SPACES_ITEM.addActionListener(this);
 		add(OUTLINE_MERGE_WITH_SPACES_ITEM);
+
+		insertSeparator(20);
+
+		OUTLINE_HOIST_ITEM.addActionListener(this);
+		add(OUTLINE_HOIST_ITEM);
+
+		OUTLINE_DEHOIST_ITEM.addActionListener(this);
+		add(OUTLINE_DEHOIST_ITEM);
+		OUTLINE_DEHOIST_ITEM.setEnabled(false);
+
+		OUTLINE_DEHOIST_ALL_ITEM.addActionListener(this);
+		add(OUTLINE_DEHOIST_ALL_ITEM);
+		OUTLINE_DEHOIST_ALL_ITEM.setEnabled(false);
 		
 		setEnabled(false);
 	}
@@ -181,11 +201,48 @@ public class OutlineMenu extends AbstractOutlinerMenu implements ActionListener 
 		} else if (e.getActionCommand().equals(OUTLINE_MERGE_WITH_SPACES)) {
 			fireKeyEvent(Outliner.getMostRecentDocumentTouched(), Event.CTRL_MASK + Event.SHIFT_MASK, KeyEvent.VK_M, false);
 			
+		} else if (e.getActionCommand().startsWith(OUTLINE_HOIST)) {
+			hoist(Outliner.getMostRecentDocumentTouched());
+			
+		} else if (e.getActionCommand().equals(OUTLINE_DEHOIST)) {
+			dehoist(Outliner.getMostRecentDocumentTouched());
+						
+		} else if (e.getActionCommand().equals(OUTLINE_DEHOIST_ALL)) {
+			dehoist_all(Outliner.getMostRecentDocumentTouched());
+						
 		}
 	}
 
 	
 	// Outline Menu Methods
+	private static void hoist(OutlinerDocument doc) {
+		try {
+			if (doc.tree.getComponentFocus() == outlineLayoutManager.TEXT) {
+				TextKeyListener.hoist(doc.tree.getEditingNode());
+			} else if (doc.tree.getComponentFocus() == outlineLayoutManager.ICON) {
+				IconKeyListener.hoist(doc.tree);
+			}
+		} catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+
+	private static void dehoist(OutlinerDocument doc) {
+		try {
+			TextKeyListener.dehoist(doc.tree.getEditingNode());
+		} catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+
+	private static void dehoist_all(OutlinerDocument doc) {
+		try {
+			TextKeyListener.dehoist_all(doc.tree.getEditingNode());
+		} catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+
 	private static void expandAllSubheads(OutlinerDocument doc) {
 		try {
 			if (doc.tree.getComponentFocus() == outlineLayoutManager.TEXT) {

@@ -57,6 +57,7 @@ public class TreeContext {
 		setRootNode(new NodeImpl(this,"ROOT"));
 		NodeImpl child = new NodeImpl(this,"");
 		rootNode.appendChild(child);
+		rootNode.setHoisted(true);
 		
 		// Record the current location
 		setEditingNode(child);	

@@ -18,6 +18,7 @@
  
 package com.organic.maynard.outliner;
 
+import javax.swing.*;
 import java.awt.event.*;
 import java.awt.datatransfer.*;
 
@@ -668,6 +669,21 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 
 	// Additional Outline Methods
+	public static void hoist(Node currentNode) {
+		currentNode.getTree().doc.hoistStack.hoist(new HoistStackItem(currentNode));
+		return;
+	}
+
+	public static void dehoist(Node currentNode) {
+		currentNode.getTree().doc.hoistStack.dehoist();
+		return;
+	}
+
+	public static void dehoist_all(Node currentNode) {
+		currentNode.getTree().doc.hoistStack.dehoistAll();
+		return;
+	}
+
 	public static void expandAllSubheads(Node currentNode) {
 		currentNode.ExpandAllSubheads();
 		currentNode.getTree().doc.panel.layout.draw();
