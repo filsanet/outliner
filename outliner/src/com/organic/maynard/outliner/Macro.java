@@ -49,7 +49,3 @@ public interface Macro extends Serializable {
 	public boolean init(File file);
 	public boolean save(File file);
 }
-
-public interface RawMacro extends Macro {
-	public void process();
-}
