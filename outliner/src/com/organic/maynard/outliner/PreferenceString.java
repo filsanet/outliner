@@ -61,6 +61,10 @@ public class PreferenceString extends AbstractPreference implements GUITreeCompo
 	public void setCur(String value) {this.cur = value;}
 	public void setTmp(String value) {this.tmp = value;}
 
+	public String getCur() {return cur;}
+	public String getDef() {return def;}
+	public String getTmp() {return tmp;}
+
 
 	// Misc Methods
 	public String toString() {return String.valueOf(cur);}

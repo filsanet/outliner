@@ -34,5 +34,9 @@ public interface Preference {
 	public void setCur(String s);
 	public void setDef(String s);
 	public void setTmp(String s);
+	
+	public String getCur();
+	public String getDef();
+	public String getTmp();
 
 }

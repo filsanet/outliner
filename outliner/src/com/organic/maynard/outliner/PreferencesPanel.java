@@ -21,5 +21,9 @@ package com.organic.maynard.outliner;
 public interface PreferencesPanel {
 
 	public void applyTemporaryToCurrent();
-
+	public void setToCurrent();
+	
+	public void addPreference(PreferencesGUITreeComponent pref);
+	public PreferencesGUITreeComponent getPreference(int i);
+	public int getPreferenceListSize();
 }

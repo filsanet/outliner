@@ -70,6 +70,9 @@ public class PreferenceBoolean extends AbstractPreference implements GUITreeComp
 	public void setTmp(String value) {this.tmp = ((Boolean) getValidator().getValidValue(value)).booleanValue();}
 	public void setTmp(boolean value) {this.tmp = value;}
 
+	public String getCur() {return String.valueOf(cur);}
+	public String getDef() {return String.valueOf(def);}
+	public String getTmp() {return String.valueOf(tmp);}
 
 	// Misc Methods
 	public String toString() {return String.valueOf(cur);}

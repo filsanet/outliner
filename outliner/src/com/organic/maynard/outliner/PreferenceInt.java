@@ -77,6 +77,9 @@ public class PreferenceInt extends AbstractPreference implements GUITreeComponen
 		this.tmp = ((Integer) getValidator().getValidValue(new Integer(value))).intValue();
 	}
 
+	public String getCur() {return "" + cur;}
+	public String getDef() {return "" + def;}
+	public String getTmp() {return "" + tmp;}
 
 	// Misc Methods
 	public String toString() {return String.valueOf(cur);}

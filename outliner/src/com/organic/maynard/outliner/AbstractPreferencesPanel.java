@@ -22,14 +22,19 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
+import java.util.*;
 
 import org.xml.sax.*;
 
-public abstract class AbstractPreferencesPanel extends JPanel implements PreferencesPanel, GUITreeComponent {
+public abstract class AbstractPreferencesPanel extends JPanel implements PreferencesPanel, GUITreeComponent, ActionListener {
 	
 	// Constants
 	public static final String A_TITLE = "title";
 	public static final String A_ID = "id";
+
+	// GUI Components
+	protected Box box = Box.createVerticalBox();
+	protected final JButton RESTORE_DEFAULT_EDITOR_BUTTON = new JButton(PreferencesFrame.RESTORE_DEFAULTS);
 
 	// The Constructor
 	public AbstractPreferencesPanel() {}
@@ -53,10 +58,107 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 		// Add this panel to the PreferencesPanel Registry
 		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
 		prefs.addPreferencesPanel(id, this);
+
+		// Start setting up box
+		JLabel label = new JLabel(atts.getValue(A_TITLE));
+		addSingleItemCentered(label, box);
+		
+		box.add(Box.createVerticalStrut(10));
 	}
 	
-	public void endSetup(AttributeList atts) {}
+	public void endSetup(AttributeList atts) {
+
+		RESTORE_DEFAULT_EDITOR_BUTTON.addActionListener(this);		
+		
+		box.add(Box.createVerticalStrut(5));
+		AbstractPreferencesPanel.addSingleItemCentered(RESTORE_DEFAULT_EDITOR_BUTTON, box);
+
+		add(box);
+	}
 	
+	
+	// PreferencesPanel Interface
+	private ArrayList prefs = new ArrayList();
+	
+	public void addPreference(PreferencesGUITreeComponent pref) {
+		prefs.add(pref);
+	}
+	
+	public PreferencesGUITreeComponent getPreference(int i) {
+		return (PreferencesGUITreeComponent) prefs.get(i);
+	}
+	
+	public int getPreferenceListSize() {
+		return prefs.size();
+	}
+
+
+	// ActionListener Interface
+	public void actionPerformed(ActionEvent e) {
+		if (e.getActionCommand().equals(PreferencesFrame.RESTORE_DEFAULTS)) {
+			try {
+			
+				for (int i = 0; i < getPreferenceListSize(); i++) {
+					PreferencesGUITreeComponent comp = getPreference(i);
+					Preference pref = comp.getPreference();
+					
+					if (comp instanceof PreferencesGUITreeTextFieldComponent) {
+						JTextField text = (JTextField) comp.getComponent();
+						text.setText(pref.getDef());
+						
+					} else if (comp instanceof PreferencesGUITreeComboBoxComponent) {
+						JComboBox comboBox = (JComboBox) comp.getComponent();
+						comboBox.setSelectedItem(pref.getDef());
+									
+					} else if (comp instanceof PreferencesGUITreeCheckBoxComponent) {
+						JCheckBox checkBox = (JCheckBox) comp.getComponent();
+						checkBox.setSelected(new Boolean(pref.getDef()).booleanValue());
+									
+					} else if (comp instanceof PreferencesGUITreeColorButtonComponent) {
+						JButton button = (JButton) comp.getComponent();
+						PreferenceColor prefColor = (PreferenceColor) pref;
+						button.setBackground(prefColor.def);
+									
+					}
+					
+					pref.restoreTemporaryToDefault();
+				}
+			} catch (Exception ex) {
+				System.out.println("Exception: " + ex);
+			}
+		}
+	}
+
+
+	public void setToCurrent() {
+
+		for (int i = 0; i < getPreferenceListSize(); i++) {
+			PreferencesGUITreeComponent comp = getPreference(i);
+			Preference pref = comp.getPreference();
+			
+			if (comp instanceof PreferencesGUITreeTextFieldComponent) {
+				JTextField text = (JTextField) comp.getComponent();
+				text.setText(pref.getCur());
+				
+			} else if (comp instanceof PreferencesGUITreeComboBoxComponent) {
+				JComboBox comboBox = (JComboBox) comp.getComponent();
+				comboBox.setSelectedItem(pref.getCur());
+							
+			} else if (comp instanceof PreferencesGUITreeCheckBoxComponent) {
+				JCheckBox checkBox = (JCheckBox) comp.getComponent();
+				checkBox.setSelected(new Boolean(pref.getCur()).booleanValue());
+							
+			} else if (comp instanceof PreferencesGUITreeColorButtonComponent) {
+				JButton button = (JButton) comp.getComponent();
+				PreferenceColor prefColor = (PreferenceColor) pref;
+				button.setBackground(prefColor.cur);
+							
+			}
+		}
+	}
+	
+	
+	// Static Methods
 	protected static void addPreferenceItem(String text, JComponent field, Container container) {
 		Box box = Box.createHorizontalBox();
 		box.add(Box.createHorizontalGlue());

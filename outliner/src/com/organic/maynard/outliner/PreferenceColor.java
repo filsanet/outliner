@@ -73,6 +73,9 @@ public class PreferenceColor extends AbstractPreference implements GUITreeCompon
 	public void restoreTemporaryToCurrent(){tmp = new Color(cur.getRGB());}
 	public void applyTemporaryToCurrent(){cur = new Color(tmp.getRGB());}
 
+	public String getCur() {return cur.toString();}
+	public String getDef() {return def.toString();}
+	public String getTmp() {return tmp.toString();}
 
 	// Class Methods
 	protected static final Color parseColor(String rgb) {
