@@ -1,27 +1,5 @@
 /**
- * HelpAboutMenuItem class
- * 
- * Runs the Help:About command
- *	if the Help About document is not open, opens it
- *	if the Help About document is open, makes sure it's foremost
- * 
- * extends AbstractOutlinerMenuItem 
- * implements ActionListener, GUITreeComponent {
-.*
- *
- *  Members
- *	methods
- * 		instance
- * 			public
- * 				void startSetup(AttributeList)
- * 				void actionPerformed(ActionEvent)
- * 		class
- * 			protected
- * 				int openHelpAboutDocument()
- *
- *		
- * Portions copyright (C) 2000-2001 Maynard Demmon <maynard@organic.com>
- * Portions copyright (C) 2001 Stan Krute <Stan@StanKrute.com>
+ * Copyright (C) 2003 Maynard Demmon, maynard@organic.com
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or 
@@ -56,72 +34,29 @@
 
 package com.organic.maynard.outliner;
 
+/**
+ * Loads an HTML based "About JOE" screen.
+ *
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
 import com.organic.maynard.outliner.guitree.*;
 import java.awt.event.*;
 import org.xml.sax.*;
 
-// The Help:About menu item
-public class HelpAboutMenuItem 
-
-	extends AbstractOutlinerMenuItem 
-	implements ActionListener, GUITreeComponent, JoeReturnCodes {
-
+public class HelpAboutMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent, JoeReturnCodes {
+	
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
-		// have the ancestors handle their setup
 		super.startSetup(atts);
-		
-		// let's listen up for action events
 		addActionListener(this);
-		
-		// we start out live
 		setEnabled(true);
-		} // end startSetup
-
-
+	}
+	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		// if the Help About document is open ...
-		if (Outliner.helpDoxMgr.documentIsOpen(Outliner.helpDoxMgr.ABOUT)) {
-			
-			// make sure it's frontmost
-			Outliner.menuBar.windowMenu.changeToWindow
-				((OutlinerDocument) Outliner.documents.getDocument(Outliner.helpDoxMgr.getDocPath 
-				(Outliner.helpDoxMgr.ABOUT)));
-			
-			} // end if
-		else {
-			// Help About's not open; try to open it
-			int result = openHelpAboutDocument() ;
-			
-			} // end else
-		
-		} // end actionPerformed
-
-
-	// try to open up the Help system's About document
-	protected static int openHelpAboutDocument() {
-		// set up 
-		String encoding = "ISO-8859-1";
-		String fileFormat = "OPML";
-		
-		DocumentInfo docInfo = new DocumentInfo();
-		
-		docInfo.setPath(Outliner.helpDoxMgr.getDocPath (Outliner.helpDoxMgr.ABOUT));
-		docInfo.setEncodingType(encoding);
-		docInfo.setFileFormat(fileFormat);
-		
-		// we are a help file
-		docInfo.setHelpFile(true) ;
-		
-		// TODO fix this once FileMenu returns a jrc code
-		// return (FileMenu.openFile(docInfo);
-		// we be tres fakey for now
-		FileMenu.openFile(docInfo, Outliner.fileProtocolManager.getDefault());
-
-		// done
-		return SUCCESS ;
-
-		} // end openHelpAboutDocument
-
-	} // end HelpAboutMenuItem
+		Outliner.html_viewer.setHTML(Thread.currentThread().getContextClassLoader().getResource("rsrc/about.html"));
+		Outliner.html_viewer.show();
+	}
+}

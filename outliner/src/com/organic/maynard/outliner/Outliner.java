@@ -323,6 +323,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	public static FileFormatManager fileFormatManager = null;
 	public static FileProtocolManager fileProtocolManager = null;
 	public static Preferences prefs = null;
+	public static HTMLViewerDialog html_viewer = null;
 	
 	// DOM Objects
 	public static DocumentRepository documents = new DocumentRepository();
@@ -538,6 +539,8 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		Preferences.applyCurrentToApplication();
 		
 		setVisible(true); // Seems OK to do this now rather than at the end of this method.
+		
+		Outliner.html_viewer = new HTMLViewerDialog();
 		
 		// Get rid of Splash Screen
 		Outliner.splash.dispose();
