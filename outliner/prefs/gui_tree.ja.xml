@@ -2,6 +2,8 @@
 <root id="outliner" class="com.organic.maynard.outliner.Outliner" title="JOE">
 	<!-- COMPATIBLE WITH JOE VERSION: 1.8.7 -->
 	<!-- TEXT REPOSITORY -->
+		<asset type="text" key="use_create_mod_dates" value="Automatically Generate Node Attributes"/>
+		<asset type="text" key="create_mod_dates_format" value="Date Format for Node Attributes"/>
 		<asset type="text" key="new_script" value="新しい原稿"/>
 		<asset type="text" key="update_script" value="Update Script"/>
 		<asset type="text" key="script_type" value="Script Type"/>
