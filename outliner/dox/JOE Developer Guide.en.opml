@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide.en.opml</title>
 <dateCreated>Thu, 1 Nov 2001 12:22:52 GMT</dateCreated>
-<dateModified>Thu, 1 Nov 2001 12:23:15 GMT</dateModified>
+<dateModified>Thu, 27 Dec 2001 08:59:40 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>23</windowTop>
-<windowLeft>333</windowLeft>
-<windowBottom>592</windowBottom>
-<windowRight>980</windowRight>
+<windowTop>5</windowTop>
+<windowLeft>5</windowLeft>
+<windowBottom>455</windowBottom>
+<windowRight>455</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -19,7 +19,7 @@
 <body>
 <outline isEditable="true" isMoveable="true" text="JOE Developer Guide [JDG]" isMoveableInherited="true" isEditableInherited="true"/>
 <outline isEditable="true" isMoveable="true" text="-------------------------------" isMoveableInherited="true" isEditableInherited="true"/>
-<outline isEditable="true" isMoveable="true" text="Front End" isMoveableInherited="true" isEditableInherited="true">
+<outline isEditable="true" isMoveable="true" text="Front End " isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="About JOE">
 		<outline isEditable="true" isMoveable="true" text="Notable Features">
 			<outline isEditable="true" isMoveable="true" text="Smooth Solid Feel"/>
@@ -71,15 +71,15 @@
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="About JOE Developer Guide [JDG]">
 		<outline isEditable="true" isMoveable="true" text="This is a work in perpetual progress.">
-			<outline isEditable="true" isMoveable="true" text="Empty/incomplete/missing nodes are generally not bugs, they're just things someone hasn't gotten 'round to thinking thru andor writing about completely yet"/>
+			<outline isEditable="true" isMoveable="true" text="Empty/incomplete/missing nodes are generally not bugs, they're just things someone hasn't gotten 'round to thinking thru andor writing about completely yet">
+				<outline text="Nodes marked [TBF] are partially done, and are To Be Finished "/>
+				<outline text="Nodes marked [TBD] are not done at all, are are To Be Done"/>
+			</outline>
 		</outline>
 		<outline isEditable="true" isMoveable="true" text="Wanna help ?? ">
-			<outline isEditable="true" isMoveable="true" text="Send suggestions for nodes"/>
-			<outline isEditable="true" isMoveable="true" text="Send content contributions">
+			<outline isEditable="true" isMoveable="true" text="Post suggestions for nodes to http://JavaOutlineEditor.org/feedback"/>
+			<outline isEditable="true" isMoveable="true" text="Post links to content contributions to http://JavaOutlineEditor.org/feedback">
 				<outline isEditable="true" isMoveable="true" text="Study the JDG style, write up a node or two, stick the OPML up on the web, and send a link to it"/>
-			</outline>
-			<outline isEditable="true" isMoveable="true" text="Go here to send">
-				<outline isEditable="true" isMoveable="true" text="http://JavaOutlineEditor.org/feedback"/>
 			</outline>
 		</outline>
 	</outline>
@@ -95,6 +95,7 @@
 		<outline isEditable="true" isMoveable="true" text="Stanley Krute">
 			<outline isEditable="true" isMoveable="true" text="Stan@JavaOutlineEditor.org"/>
 		</outline>
+		<outline text="Daniel Ericsson"/>
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="JOE Developer Guide Authors">
 		<outline text="[note: authors are listed in chronological order by date of first contribution to the document]"/>
@@ -139,7 +140,7 @@
 		<outline isEditable="true" isMoveable="true" text="Dewey Decimal System"/>
 	</outline>
 </outline>
-<outline isEditable="true" isMoveable="true" text="JOE on SourceForge" isMoveableInherited="true" isEditableInherited="true">
+<outline isEditable="true" isMoveable="true" text="JOE on SourceForge " isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="entrance">
 		<outline isEditable="true" isMoveable="true" text="http://SourceForge/projects/outliner/"/>
 	</outline>
@@ -157,10 +158,10 @@
 	<outline isEditable="true" isMoveable="true" text="Windows">
 		<outline isEditable="true" isMoveable="true" text="Front Matter">
 			<outline isEditable="true" isMoveable="true" text="This Version">
-				<outline isEditable="true" isMoveable="true" text="2001-07-21"/>
+				<outline isEditable="true" isMoveable="true" text="2001-12-26"/>
 			</outline>
 			<outline isEditable="true" isMoveable="true" text="Latest Version">
-				<outline isEditable="true" isMoveable="true" text="http://StanKrute.com/JOE/Setting Up the JOE Open Source Project on a Windows System.opml"/>
+				<outline isEditable="true" isMoveable="true" text="http://StanKrute.com/JOE/Setting Up a JOE Development Environment.opml"/>
 			</outline>
 			<outline isEditable="true" isMoveable="true" text="Feedback Invited">
 				<outline isEditable="true" isMoveable="true" text="send it to the author, Stan Krute"/>
@@ -338,11 +339,11 @@
 							<outline isEditable="true" isMoveable="true" text="Why NetBeans ?"/>
 						</outline>
 						<outline isEditable="true" isMoveable="true" text="Download it">
-							<outline isEditable="true" isMoveable="true" text="Latest version:"/>
-							<outline isEditable="true" isMoveable="true" text="Available at:"/>
+							<outline isEditable="true" isMoveable="true" text="Latest version: 3.3"/>
+							<outline isEditable="true" isMoveable="true" text="Available at: http://www.netbeans.org/downloads-rel.html"/>
 						</outline>
 						<outline isEditable="true" isMoveable="true" text="basic installation notes">
-							<outline isEditable="true" isMoveable="true" text="Double-click the download .exe file to run the NetBeans 3.2 Installer">
+							<outline isEditable="true" isMoveable="true" text="Double-click the download .exe file to run the NetBeans Installer">
 								<outline isEditable="true" isMoveable="true" text="It should find the Java JDK installation">
 									<outline isEditable="true" isMoveable="true" text="If it doesn't, there's something wrong with your JDK installation, so abort, and re-install the JDK"/>
 								</outline>
@@ -369,9 +370,6 @@
 									<outline isEditable="true" isMoveable="true" text="Unchecked Show Welcome Screen on Startup widget"/>
 									<outline isEditable="true" isMoveable="true" text="Click the Close button"/>
 								</outline>
-								<outline isEditable="true" isMoveable="true" text=""/>
-								<outline isEditable="true" isMoveable="true" text=""/>
-								<outline isEditable="true" isMoveable="true" text=""/>
 							</outline>
 						</outline>
 						<outline isEditable="true" isMoveable="true" text="Okay. You're in NetBeans. "/>
@@ -400,10 +398,10 @@
 								<outline isEditable="true" isMoveable="true" text="Right-click the Filesystems entry at the top of the Filesystems tab"/>
 								<outline isEditable="true" isMoveable="true" text="Give the Mount Directory menu command"/>
 								<outline isEditable="true" isMoveable="true" text="Choose the root directory of your CVS project tree"/>
-								<outline isEditable="true" isMoveable="true" text="In my case, that's e:\stan's java projects\Joe\outliner"/>
+								<outline isEditable="true" isMoveable="true" text="In my case, for example, that's e:\stan's java projects\Joe\outliner"/>
 								<outline isEditable="true" isMoveable="true" text="It shows up in the Filesystems tab"/>
 							</outline>
-							<outline isEditable="true" isMoveable="true" text="Add a CVS Client as a filesystem">
+							<outline isEditable="true" isMoveable="true" text="[TBF] Add a CVS Client as a filesystem">
 								<outline isEditable="true" isMoveable="true" text="Right-click the Filesystems entry at the top of the Filesystems tab"/>
 								<outline isEditable="true" isMoveable="true" text="The CVS Mount Wizard appears">
 									<outline isEditable="true" isMoveable="true" text="Working directory: ">
@@ -434,7 +432,7 @@
 								</outline>
 								<outline isEditable="true" isMoveable="true" text=""/>
 							</outline>
-							<outline isEditable="true" isMoveable="true" text="Do a CVS update">
+							<outline isEditable="true" isMoveable="true" text="[TBF] Do a CVS update">
 								<outline isEditable="true" isMoveable="true" text="Let's do an Update"/>
 								<outline isEditable="true" isMoveable="true" text="Right-click the CVS Client in the Filesystems tab"/>
 								<outline isEditable="true" isMoveable="true" text="Give the CVS Client:Update menu command"/>
@@ -460,7 +458,80 @@
 							</outline>
 						</outline>
 					</outline>
-					<outline isEditable="true" isMoveable="true" text="Set up Ant to control compiles and builds"/>
+					<outline isEditable="true" isMoveable="true" text="Set up Ant to control compiles and builds">
+						<outline text="Here's a sample Ant file used to build JOE in NetBeans">
+							<outline text="e:\Stan's Java Projects\JOE\Outliner\src\build.xml">
+								<outline text="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;"/>
+								<outline text="&lt;project basedir=&quot;.&quot; default=&quot;all&quot; name=&quot;JOE - Java Outline Editor&quot;&gt;">
+									<outline text="&lt;target name=&quot;init&quot;&gt;">
+										<outline text=" &lt;!-- stick initializations here --&gt;"/>
+										<outline text="&lt;!-- nuttin' yet --&gt;"/>
+										<outline text="    &lt;/target&gt;"/>
+									</outline>
+									<outline text="&lt;target depends=&quot;init&quot; name=&quot;compile&quot;&gt;">
+										<outline text="&lt;javac debug=&quot;true&quot; deprecation=&quot;false&quot; srcdir=&quot;.&quot;&gt;">
+											<outline text="&lt;classpath&gt;">
+												<outline text="&lt;pathelement path=&quot;${netbeans.filesystems.path}&quot;/&gt;"/>
+												<outline text="&lt;/classpath&gt;"/>
+											</outline>
+											<outline text="&lt;exclude name=&quot;**/ErrorCodes.java&quot;/&gt;"/>
+											<outline text="&lt;exclude name=&quot;**/stan&amp;apos;s on-deck circle/*.java&quot;/&gt;"/>
+											<outline text="&lt;/javac&gt;"/>
+										</outline>
+										<outline text="    &lt;/target&gt;"/>
+									</outline>
+									<outline text="&lt;target depends=&quot;compile&quot; name=&quot;jar&quot;&gt;">
+										<outline text="        &lt;jar basedir=&quot;.&quot; compress=&quot;true&quot; jarfile=&quot;..\lib\outliner.jar&quot;&gt;"/>
+										<outline text="            &lt;exclude name=&quot;**/*.java&quot;/&gt;"/>
+										<outline text="            &lt;exclude name=&quot;**/*.form&quot;/&gt;"/>
+										<outline text="            &lt;exclude name=&quot;outliner.mf&quot;/&gt;"/>
+										<outline text="            &lt;exclude name=&quot;outliner.jar&quot;/&gt;"/>
+										<outline text="            &lt;exclude name=&quot;apidoc&quot;/&gt;"/>
+										<outline text="        &lt;/jar&gt;"/>
+										<outline text="    &lt;/target&gt;"/>
+									</outline>
+									<outline text="&lt;target description=&quot;Clean all build products.&quot; name=&quot;clean&quot;&gt;">
+										<outline text="&lt;delete&gt;">
+											<outline text="&lt;fileset dir=&quot;.&quot;&gt;">
+												<outline text="&lt;include name=&quot;**/*.class&quot;/&gt;"/>
+												<outline text="&lt;/fileset&gt;"/>
+											</outline>
+											<outline text="&lt;fileset dir=&quot;.&quot;&gt;">
+												<outline text="&lt;include name=&quot;**/*.bak&quot;/&gt;"/>
+												<outline text="&lt;/fileset&gt;"/>
+											</outline>
+											<outline text="&lt;/delete&gt;"/>
+										</outline>
+										<outline text="&lt;!-- let's try without this line for now &lt;delete file=&quot;..\lib\outliner.jar&quot;/&gt;  --&gt;"/>
+										<outline text="&lt;delete dir=&quot;apidoc&quot;/&gt;"/>
+										<outline text="    &lt;/target&gt;"/>
+									</outline>
+									<outline text="&lt;target depends=&quot;clean,jar&quot; description=&quot;Build everything.&quot; name=&quot;theWorks&quot;&gt;">
+										<outline text="        &lt;!-- dependencies cause a cleanup followed by a jar build --&gt;"/>
+										<outline text="        &lt;!-- do the dishes --&gt;"/>
+										<outline text="        &lt;antcall target=&quot;clean&quot;/&gt;"/>
+										<outline text="        &lt;!-- a little feedback --&gt;"/>
+										<outline text="        &lt;echo message=&quot;JOE&amp;apos;s built and ready to outline. Hello ${hello}!&quot;/&gt;"/>
+										<outline text="    &lt;/target&gt;"/>
+									</outline>
+									<outline text="&lt;target depends=&quot;theWorks&quot; description=&quot;Try running it.&quot; name=&quot;test&quot;&gt;">
+										<outline text="        &lt;!-- to be done --&gt;"/>
+										<outline text="     &lt;/target&gt;"/>
+									</outline>
+									<outline text="&lt;target depends=&quot;init&quot; description=&quot;Javadoc for my API.&quot; name=&quot;javadoc&quot;&gt;">
+										<outline text="        &lt;mkdir dir=&quot;apidoc&quot;/&gt;"/>
+										<outline text="        &lt;javadoc destdir=&quot;apidoc&quot; packagenames=&quot;com.foo.mylib.*,com.foo.myapi.*&quot;&gt;"/>
+										<outline text="            &lt;sourcepath&gt;"/>
+										<outline text="                &lt;pathelement location=&quot;.&quot;/&gt;"/>
+										<outline text="            &lt;/sourcepath&gt;"/>
+										<outline text="        &lt;/javadoc&gt;"/>
+										<outline text="    &lt;/target&gt;"/>
+									</outline>
+									<outline text="&lt;/project&gt;"/>
+								</outline>
+							</outline>
+						</outline>
+					</outline>
 				</outline>
 			</outline>
 		</outline>
