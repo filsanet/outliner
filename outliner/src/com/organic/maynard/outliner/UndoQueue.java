@@ -42,8 +42,11 @@ public class UndoQueue {
 	}
 	
 	public void add(Undoable undoable) {
+		doc.setFileModified(true);
+		
 		// Short Circuit if undo is disabled.
 		if (Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).cur == 0) {
+			
 			return;
 		}
 		
@@ -58,7 +61,6 @@ public class UndoQueue {
 		}
 		
 		updateMenuBar(doc);
-		doc.setFileModified(true);
 	}
 	
 	public Undoable get() {
