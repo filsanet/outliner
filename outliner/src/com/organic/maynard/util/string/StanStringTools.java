@@ -58,7 +58,6 @@ package com.organic.maynard.util.string;
 // we use these
 import java.util.*;
 import java.io.File ;
-import com.organic.maynard.outliner.GUITreeLoader ;
 
 // Stan's string tools
 public class StanStringTools {
@@ -103,7 +102,7 @@ public class StanStringTools {
 
 	
 	// return a truncated pathname
-	public static String getTruncatedPathName(String pathNameString) {
+	public static String getTruncatedPathName(String pathNameString, String truncationString) {
 		
 		// we keep info thru the first directory
 		// then separator..separator
@@ -137,7 +136,6 @@ public class StanStringTools {
 		int secondSeparator = -1 ;
 		int lastSeparator = -1 ;
 		int length = pathNameString.length() ;
-		String TRUNC_STRING = GUITreeLoader.reg.getText("trunc_string");
 		
 		// we're scanning the full string
 		for (int scanner = 0, separatorCount = 0; scanner < length; scanner ++) {
@@ -163,7 +161,7 @@ public class StanStringTools {
 		// okay, we have more than 2 separators
 		// [srk] var here just temp for testing ... return directly once cooked
 		String resultString = (pathNameString.substring(0, secondSeparator + 1)
-			+ TRUNC_STRING 
+			+ truncationString
 			+ pathNameString.substring(lastSeparator, length)) ;
 		
 		return resultString ;
