@@ -18,6 +18,7 @@
 		<asset type="text" key="bean_shell_code" value="Bean Shell Code"/>
 		<asset type="text" key="cancel" value="Cancelación"/>
 		<asset type="text" key="characters" value="Characters:"/>
+		<asset type="text" key="close" value="Close"/>
 		<asset type="text" key="comparator" value="Comparator"/>
 		<asset type="text" key="confirm_dehoist" value="De-Hoisting requires that the undo queue be cleared.\nProceed anyway?"/>
 		<asset type="text" key="confirm_delete" value="Confirm Delete"/>
