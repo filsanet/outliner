@@ -44,6 +44,9 @@ import java.lang.reflect.*;
 import javax.swing.*;
 
 /**
+ * Loads the script instances from the "scripts.txt" file and loads them
+ * into the ScriptsManager.
+ * 
  * @author  $Author$
  * @version $Revision$, $Date$
  */
@@ -65,6 +68,16 @@ public class LoadScriptCommand extends Command {
 	public void execute(ArrayList signature) {
 		String path = (String) signature.get(1);
 		String className = (String) signature.get(2);
+		
+		// BACKWARDS COMPATIBILITY: 1.8.10.2 -> 1.8.10.3
+		// Convert classnames from: com.organic.maynard.outliner.*
+		// to: com.organic.maynard.outliner.scripting.macro.*
+		if (className.matches("^com\\.organic\\.maynard\\.outliner\\.\\w+$")) {
+			System.out.println("Doing classname conversion for script for 1.8.10.3+ compatibility.");
+			System.out.println("  Classname before conversion: " + className);
+			className = className.replaceFirst("^com\\.organic\\.maynard\\.outliner\\.","com.organic.maynard.outliner.scripting.macro.");
+			System.out.println("  Classname after conversion: " + className);
+		}
 		
 		boolean isStartupScript = false;
 		if (signature.size() > 3) {
@@ -107,10 +120,8 @@ public class LoadScriptCommand extends Command {
 				System.out.println("  WARNING: duplicate script entry: " + path);			
 			}
 		} catch (ClassNotFoundException cnfe) {
-			
 			System.out.println("Exception: " + className + " " + cnfe);
 		} catch (Exception e) {
-			
 			System.out.println(e);
 		}
 	}

@@ -44,6 +44,9 @@ import java.lang.reflect.*;
 import javax.swing.*;
 
 /**
+ * Loads the macro instances from the "macros.txt" file and loads them
+ * into the MacroManager and MacroPopupMenu.
+ * 
  * @author  $Author$
  * @version $Revision$, $Date$
  */
@@ -65,6 +68,16 @@ public class LoadMacroCommand extends Command {
 	public void execute(ArrayList signature) {
 		String path = (String) signature.get(1);
 		String className = (String) signature.get(2);
+		
+		// BACKWARDS COMPATIBILITY: 1.8.10.2 -> 1.8.10.3
+		// Convert classnames from: com.organic.maynard.outliner.*
+		// to: com.organic.maynard.outliner.scripting.macro.*
+		if (className.matches("^com\\.organic\\.maynard\\.outliner\\.\\w+$")) {
+			System.out.println("Doing classname conversion for macro for 1.8.10.3+ compatibility.");
+			System.out.println("  Classname before conversion: " + className);
+			className = className.replaceFirst("^com\\.organic\\.maynard\\.outliner\\.","com.organic.maynard.outliner.scripting.macro.");
+			System.out.println("  Classname after conversion: " + className);
+		}
 		
 		try {
 			// Create Instance

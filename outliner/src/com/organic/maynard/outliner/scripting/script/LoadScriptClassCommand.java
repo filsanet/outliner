@@ -38,13 +38,17 @@ import com.organic.maynard.outliner.*;
 import com.organic.maynard.util.*;
 import java.util.*;
 
+/**
+ * Loads the script classes from the "script_classes.txt" file and loads them
+ * into the ScriptsManager.
+ */
 public class LoadScriptClassCommand extends Command {
-		
+	
 	// The Constructors
 	public LoadScriptClassCommand(String name) {
 		super(name);
 	}
-
+	
 	public void execute(ArrayList signature) {
 		String className = (String) signature.get(1);
 		String name = (String) signature.get(2);
