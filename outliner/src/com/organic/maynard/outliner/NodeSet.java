@@ -50,6 +50,14 @@ public class NodeSet implements Cloneable {
 		return nodes.size();
 	}
 	
+	public boolean isEmpty() {
+		if (getSize() > 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
 	
 	// Cloneable Interface
 	public Object clone() {

@@ -39,6 +39,8 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 	public static final String RIGHT = "right";
 	public static final String PAGE_UP = "page_up";
 	public static final String PAGE_DOWN = "page_down";
+	public static final String F11 = "f11";
+	public static final String F12 = "f12";
 	
 	public static final String A_TEXT = "text";
 	public static final String A_KEY_BINDING = "keybinding";
@@ -90,6 +92,10 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 				keyBindingChar = KeyEvent.VK_PAGE_DOWN;
 			} else if (keyBinding.equals(DELETE)) {
 				keyBindingChar = KeyEvent.VK_DELETE;
+			} else if (keyBinding.equals(F11)) {
+				keyBindingChar = KeyEvent.VK_F11;
+			} else if (keyBinding.equals(F12)) {
+				keyBindingChar = KeyEvent.VK_F12;
 			}
 			
 			setAccelerator(KeyStroke.getKeyStroke(keyBindingChar, mask, false));

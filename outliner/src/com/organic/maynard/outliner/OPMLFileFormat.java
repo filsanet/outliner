@@ -44,6 +44,13 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	public static final String ELEMENT_OUTLINE = "outline";
 
 	public static final String ATTRIBUTE_TEXT = "text";
+	
+	public static final String ATTRIBUTE_IS_EDITABLE = "isEditable";
+	public static final String ATTRIBUTE_IS_EDITABLE_INHERITED = "isEditableInherited";
+
+	public static final String ATTRIBUTE_IS_MOVEABLE = "isMoveable";
+	public static final String ATTRIBUTE_IS_MOVEABLE_INHERITED = "isMoveableInherited";
+
 	public static final String ATTRIBUTE_IS_COMMENT = "isComment";
 	public static final String ATTRIBUTE_IS_COMMENT_INHERITED = "isCommentInherited";
 
@@ -72,7 +79,8 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	}
 	
 	public boolean supportsComments() {return true;}
-	
+	public boolean supportsEditability() {return true;}
+	public boolean supportsMoveability() {return true;}	
 	public boolean supportsAttributes() {return true;}
 
 	private StringBuffer prepareFile(TreeContext tree, DocumentInfo docInfo) {
@@ -126,7 +134,35 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 				buf.append(ATTRIBUTE_IS_COMMENT).append("=\"true\" ");
 			}
 		}
-		
+
+		if (node.getEditableState() == Node.EDITABLE_TRUE) {
+			buf.append(ATTRIBUTE_IS_EDITABLE).append("=\"true\" ");
+			buf.append(ATTRIBUTE_IS_EDITABLE_INHERITED).append("=\"true\" ");
+			
+		} else if (node.getEditableState() == Node.COMMENT_FALSE) {
+			buf.append(ATTRIBUTE_IS_EDITABLE).append("=\"false\" ");
+			buf.append(ATTRIBUTE_IS_EDITABLE_INHERITED).append("=\"true\" ");
+			
+		} else {
+			if (node.isEditable()) {
+				buf.append(ATTRIBUTE_IS_EDITABLE).append("=\"true\" ");
+			}
+		}
+
+		if (node.getMoveableState() == Node.MOVEABLE_TRUE) {
+			buf.append(ATTRIBUTE_IS_MOVEABLE).append("=\"true\" ");
+			buf.append(ATTRIBUTE_IS_MOVEABLE_INHERITED).append("=\"true\" ");
+			
+		} else if (node.getMoveableState() == Node.MOVEABLE_FALSE) {
+			buf.append(ATTRIBUTE_IS_MOVEABLE).append("=\"false\" ");
+			buf.append(ATTRIBUTE_IS_MOVEABLE_INHERITED).append("=\"true\" ");
+			
+		} else {
+			if (node.isMoveable()) {
+				buf.append(ATTRIBUTE_IS_MOVEABLE).append("=\"true\" ");
+			}
+		}
+				
 		buf.append(ATTRIBUTE_TEXT).append("=\"").append(escapeXMLAttribute(node.getValue())).append("\"");
 		buildAttributes(node, buf);
 		
@@ -219,6 +255,8 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	private Node currentParent = null;
 	
 	private boolean anyIsCommentInheritedAttributesFound = false; // used to provide for better interop with outliners that don't support isCommentInherited.
+	private boolean anyIsEditableInheritedAttributesFound = false; // used to provide for better interop with outliners that don't support isEditableInherited.
+	private boolean anyIsMoveableInheritedAttributesFound = false; // used to provide for better interop with outliners that don't support isMoveableInherited.
 	
 	public void startElement (String name, AttributeList atts) {
 		//System.out.println("Start element: " + name);
@@ -227,6 +265,10 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		if (name.equals(ELEMENT_OUTLINE)) {
 			NodeImpl node = new NodeImpl(tree, "");
 			
+			boolean isEditable = true;
+			boolean isEditableInherited = false;
+			boolean isMoveable = true;
+			boolean isMoveableInherited = false;
 			boolean isComment = false;
 			boolean isCommentInherited = false;
 			
@@ -236,6 +278,27 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 				
 				if (attName.equals(ATTRIBUTE_TEXT)) {
 					node.setValue(attValue);
+					
+				} else if (attName.equals(ATTRIBUTE_IS_EDITABLE)) {
+					if (attValue != null && attValue.equals("false")) {
+						isEditable = false;;
+					}
+				} else if (attName.equals(ATTRIBUTE_IS_EDITABLE_INHERITED)) {
+					if (attValue != null && attValue.equals("true")) {
+						isEditableInherited = true;;
+					}
+					anyIsEditableInheritedAttributesFound = true;
+					
+				} else if (attName.equals(ATTRIBUTE_IS_MOVEABLE)) {
+					if (attValue != null && attValue.equals("false")) {
+						isMoveable = false;;
+					}
+				} else if (attName.equals(ATTRIBUTE_IS_MOVEABLE_INHERITED)) {
+					if (attValue != null && attValue.equals("true")) {
+						isMoveableInherited = true;;
+					}
+					anyIsMoveableInheritedAttributesFound = true;
+
 				} else if (attName.equals(ATTRIBUTE_IS_COMMENT)) {
 					if (attValue != null && attValue.equals("true")) {
 						isComment = true;;
@@ -245,6 +308,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 						isCommentInherited = true;;
 					}
 					anyIsCommentInheritedAttributesFound = true;
+					
 				} else {
 					node.setAttribute(attName, attValue);
 				}
@@ -263,7 +327,35 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 					node.setCommentState(Node.COMMENT_TRUE);
 				}
 			}
-			
+
+			if (anyIsEditableInheritedAttributesFound) {
+				if (isEditableInherited) {
+					if (isEditable) {
+						node.setEditableState(Node.EDITABLE_TRUE);
+					} else {
+						node.setEditableState(Node.EDITABLE_FALSE);
+					}
+				}
+			} else {
+				if (isEditable) {
+					node.setEditableState(Node.EDITABLE_TRUE);
+				}
+			}
+
+			if (anyIsMoveableInheritedAttributesFound) {
+				if (isMoveableInherited) {
+					if (isMoveable) {
+						node.setMoveableState(Node.MOVEABLE_TRUE);
+					} else {
+						node.setMoveableState(Node.MOVEABLE_FALSE);
+					}
+				}
+			} else {
+				if (isMoveable) {
+					node.setMoveableState(Node.MOVEABLE_TRUE);
+				}
+			}
+						
 			currentParent.appendChild(node);
 			currentParent = node;
 		}

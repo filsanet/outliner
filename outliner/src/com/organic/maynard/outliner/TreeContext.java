@@ -69,14 +69,21 @@ public class TreeContext {
 	
 	// Comments
 	private boolean comment = false;
-	
-	public void setRootNodeCommentState(boolean comment) {
-		this.comment = comment;
-	}
-	
-	public boolean getRootNodeCommentState() {
-		return this.comment;
-	}
+
+	public void setRootNodeCommentState(boolean comment) {this.comment = comment;}
+	public boolean getRootNodeCommentState() {return this.comment;}
+
+	// Editablity
+	private boolean editable = true;
+
+	public void setRootNodeEditableState(boolean editable) {this.editable = editable;}
+	public boolean getRootNodeEditableState() {return this.editable;}
+
+	// Moveability
+	private boolean moveable = true;
+
+	public void setRootNodeMoveableState(boolean moveable) {this.moveable = moveable;}
+	public boolean getRootNodeMoveableState() {return this.moveable;}
 
 
 	// Line Count Control

@@ -94,7 +94,7 @@ public class OutlineCommentIndicator extends AbstractOutlineIndicator {
 		System.out.println("  icon: commented");
 		
 		// Lighten color to inherited versions
-		lightenFilter lightenFilter = new lightenFilter(0x00999999);
+		lightenFilter lightenFilter = new lightenFilter(0x00cccccc);
 		FilteredImageSource commentedInheritedSource = new FilteredImageSource(commentedImage2.getSource(), lightenFilter);
 		FilteredImageSource notCommentedInheritedSource = new FilteredImageSource(image.getSource(), lightenFilter);
 		Image commentedInheritedImage = Outliner.outliner.createImage(commentedInheritedSource);

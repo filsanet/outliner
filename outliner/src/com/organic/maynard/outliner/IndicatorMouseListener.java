@@ -75,9 +75,58 @@ public class IndicatorMouseListener implements MouseListener {
 				tree.doc.panel.layout.draw();
 				tree.doc.panel.layout.setFocus(tree.getEditingNode(), tree.getComponentFocus());
 			}
+		} else if (c instanceof OutlineEditableIndicator) {
+			// Make sure it's in the icon, not just the JLabel.
+			Point p = e.getPoint();
+			if ((p.x <= OutlineEditableIndicator.TRUE_WIDTH) && (p.y <= OutlineEditableIndicator.BUTTON_HEIGHT)) {
+				textArea = ((OutlineEditableIndicator) c).renderer;
+				Node node = textArea.node;
+	 			TreeContext tree = textArea.node.getTree();
+				
+				if (e.isControlDown()) {
+					if (e.isShiftDown()) {
+						clearEditable(tree);
+					} else {
+						toggleEditableInheritance(tree);
+					}
+				} else if (e.isShiftDown()) {
+					toggleEditable(tree);
+				} else {
+					toggleEditableAndClear(tree);
+				}			
+	
+				// Redraw and set focus
+				tree.doc.panel.layout.draw();
+				tree.doc.panel.layout.setFocus(tree.getEditingNode(), tree.getComponentFocus());
+			}
+		} else if (c instanceof OutlineMoveableIndicator) {
+			// Make sure it's in the icon, not just the JLabel.
+			Point p = e.getPoint();
+			if ((p.x <= OutlineMoveableIndicator.TRUE_WIDTH) && (p.y <= OutlineMoveableIndicator.BUTTON_HEIGHT)) {
+				textArea = ((OutlineMoveableIndicator) c).renderer;
+				Node node = textArea.node;
+	 			TreeContext tree = textArea.node.getTree();
+				
+				if (e.isControlDown()) {
+					if (e.isShiftDown()) {
+						clearMoveable(tree);
+					} else {
+						toggleMoveableInheritance(tree);
+					}
+				} else if (e.isShiftDown()) {
+					toggleMoveable(tree);
+				} else {
+					toggleMoveableAndClear(tree);
+				}			
+	
+				// Redraw and set focus
+				tree.doc.panel.layout.draw();
+				tree.doc.panel.layout.setFocus(tree.getEditingNode(), tree.getComponentFocus());
+			}
 		}
 	}
 	
+	// Comments
 	private void clearComment(TreeContext tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
@@ -112,6 +161,88 @@ public class IndicatorMouseListener implements MouseListener {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.toggleCommentInheritanceForSingleNode(currentNode, undoable);
+
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+	}
+
+	// Editable
+	private void clearEditable(TreeContext tree) {
+		Node currentNode = textArea.node;
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		IconKeyListener.clearEditableForSingleNode(currentNode, undoable);
+
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+	}
+
+	private void toggleEditableAndClear(TreeContext tree) {
+		Node currentNode = textArea.node;
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		IconKeyListener.toggleEditableAndClearForSingleNode(currentNode, undoable);
+
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+	}
+
+	private void toggleEditable(TreeContext tree) {
+		Node currentNode = textArea.node;
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		IconKeyListener.toggleEditableForSingleNode(currentNode, undoable);
+
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+	}
+
+	private void toggleEditableInheritance(TreeContext tree) {
+		Node currentNode = textArea.node;
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		IconKeyListener.toggleEditableInheritanceForSingleNode(currentNode, undoable);
+
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+	}
+
+	// Moveable
+	private void clearMoveable(TreeContext tree) {
+		Node currentNode = textArea.node;
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		IconKeyListener.clearMoveableForSingleNode(currentNode, undoable);
+
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+	}
+
+	private void toggleMoveableAndClear(TreeContext tree) {
+		Node currentNode = textArea.node;
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		IconKeyListener.toggleMoveableAndClearForSingleNode(currentNode, undoable);
+
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+	}
+
+	private void toggleMoveable(TreeContext tree) {
+		Node currentNode = textArea.node;
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		IconKeyListener.toggleMoveableForSingleNode(currentNode, undoable);
+
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+	}
+
+	private void toggleMoveableInheritance(TreeContext tree) {
+		Node currentNode = textArea.node;
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		IconKeyListener.toggleMoveableInheritanceForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
 			tree.doc.undoQueue.add(undoable);

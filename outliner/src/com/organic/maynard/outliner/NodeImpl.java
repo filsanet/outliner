@@ -37,9 +37,11 @@ public class NodeImpl implements Node {
 	private boolean visible = false;
 	private boolean partiallyVisible = false;
 	private boolean selected = false;
-	//private boolean comment = false;
-	private int commentState = Node.COMMENT_INHERITED;
 	private boolean hoisted = false;
+
+	private int commentState = Node.COMMENT_INHERITED;
+	private int editableState = Node.EDITABLE_INHERITED;
+	private int moveableState = Node.MOVEABLE_INHERITED;
 	
 	private int decendantCount = 0;
 	private int decendantCharCount = 0;
@@ -314,10 +316,7 @@ public class NodeImpl implements Node {
 	public boolean isVisible() {return visible;}
 
 	// Comment Methods	
-	public void setCommentState(int commentState) {
-		this.commentState = commentState;
-	}
-
+	public void setCommentState(int commentState) {this.commentState = commentState;}
 	public int getCommentState() {return commentState;}
 	
 	public boolean isComment() {
@@ -334,7 +333,42 @@ public class NodeImpl implements Node {
 		}
 	}
 
+	// Editability Methods
+	public void setEditableState(int editableState) {this.editableState = editableState;}
+	public int getEditableState() {return editableState;}
 
+	public boolean isEditable() {
+		if (getEditableState() == Node.EDITABLE_TRUE) {
+			return true;
+		} else if (getEditableState() == Node.EDITABLE_FALSE) {
+			return false;
+		} else {
+			if (isRoot()) {
+				return getTree().getRootNodeEditableState();
+			} else {
+				return getParent().isEditable();
+			}
+		}
+	}
+	
+	// Moveability Methods
+	public void setMoveableState(int moveableState) {this.moveableState = moveableState;}
+	public int getMoveableState() {return moveableState;}
+
+	public boolean isMoveable() {
+		if (getMoveableState() == Node.MOVEABLE_TRUE) {
+			return true;
+		} else if (getMoveableState() == Node.MOVEABLE_FALSE) {
+			return false;
+		} else {
+			if (isRoot()) {
+				return getTree().getRootNodeMoveableState();
+			} else {
+				return getParent().isMoveable();
+			}
+		}
+	}
+	
 	// Hoisting Methods
 	public void setHoisted(boolean hoisted) {this.hoisted = hoisted;}
 	public boolean isHoisted() {return hoisted;}

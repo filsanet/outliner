@@ -130,6 +130,12 @@ class AttributeTableModel extends AbstractTableModel implements MouseListener {
 	}
 
     public boolean isCellEditable(int row, int col) {
+    	Node node = panel.doc.tree.getEditingNode();
+    	
+    	if (!node.isEditable()) {
+    		return false;
+    	}
+    	
 		if (col == 0 || col == 2) { 
 			return true;
 		} else {
@@ -165,6 +171,13 @@ class AttributeTableModel extends AbstractTableModel implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		int col = panel.getTableHeader().columnAtPoint(e.getPoint());
 		if (col == 0) {
+		
+			Node node = panel.doc.tree.getEditingNode();
+			
+			if (!node.isEditable()) {
+				return;
+			}
+		
 			dialog.show(panel);
 		} else if (col == 1) {
 			//System.out.println("sort");
@@ -345,10 +358,13 @@ class NewAttributeDialog extends JDialog implements ActionListener {
 		errorLabel.setText(" ");
 		
 		attributeField.requestFocus();
+
+		Rectangle r = Outliner.outliner.getBounds();
+		setLocation((int) (r.getCenterX() - getWidth()/2), (int) (r.getCenterY() - getHeight()/2));
 		
 		super.show();
 	}
-	
+		
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(OK)) {

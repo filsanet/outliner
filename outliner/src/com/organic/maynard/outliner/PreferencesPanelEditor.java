@@ -66,8 +66,12 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		// Update the Indicators
 		if (pShowIndicators.cur) {
 			OutlineCommentIndicator.BUTTON_WIDTH = OutlineCommentIndicator.WIDTH_DEFAULT;
+			OutlineEditableIndicator.BUTTON_WIDTH = OutlineEditableIndicator.WIDTH_DEFAULT;
+			OutlineMoveableIndicator.BUTTON_WIDTH = OutlineMoveableIndicator.WIDTH_DEFAULT;
 		} else {
 			OutlineCommentIndicator.BUTTON_WIDTH = 0;
+			OutlineEditableIndicator.BUTTON_WIDTH = 0;
+			OutlineMoveableIndicator.BUTTON_WIDTH = 0;
 		}
 		
 		// Update the cellRenderers

@@ -236,6 +236,8 @@
     		// Generate Icons
     		OutlineButton.createIcons();
     		OutlineCommentIndicator.createIcons();
+    		OutlineEditableIndicator.createIcons();
+    		OutlineMoveableIndicator.createIcons();
     		
     		// WebFile
     		// Note the outliner will have to be restarted if user switches

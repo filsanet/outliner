@@ -49,6 +49,8 @@ public class PreferencesPanelLookAndFeel extends AbstractPreferencesPanel implem
 		}
 		
 		// Update the Comment Icons
-		OutlineCommentIndicator.createIcons();	
+		OutlineCommentIndicator.createIcons();
+		OutlineEditableIndicator.createIcons();
+		OutlineMoveableIndicator.createIcons();	
 	}
 }

@@ -73,9 +73,25 @@ public interface Node {
 	public void setCommentState(int commentState);
 	public int getCommentState();
 	public boolean isComment();
-	//public boolean isAncestorComment();
-	//public boolean isAncestorOrSelfComment();
 
+	// Editability Methods
+	public static final int EDITABLE_INHERITED = 0;
+	public static final int EDITABLE_TRUE = 1;
+	public static final int EDITABLE_FALSE = 2;
+	
+	public void setEditableState(int editableState);
+	public int getEditableState();
+	public boolean isEditable();
+
+	// Moveability Methods
+	public static final int MOVEABLE_INHERITED = 0;
+	public static final int MOVEABLE_TRUE = 1;
+	public static final int MOVEABLE_FALSE = 2;
+	
+	public void setMoveableState(int moveableState);
+	public int getMoveableState();
+	public boolean isMoveable();
+	
 	// Hoisting Methods
 	public void setHoisted(boolean hoisted);
 	public boolean isHoisted();

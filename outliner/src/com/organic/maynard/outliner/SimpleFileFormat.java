@@ -42,7 +42,8 @@ public class SimpleFileFormat implements SaveFileFormat, OpenFileFormat {
 	}
 	
 	public boolean supportsComments() {return false;}
-	
+	public boolean supportsEditability() {return false;}
+	public boolean supportsMoveability() {return false;}
 	public boolean supportsAttributes() {return false;}
 	
 	

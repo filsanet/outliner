@@ -79,6 +79,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 		}
 		
 		boolean commentExists = false;
+		boolean editableExists = false;
+		boolean moveableExists = false;
 		boolean attributesExist = false;
 		
 		Node node = document.tree.getRootNode();
@@ -93,6 +95,14 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 			
 			if (node.isComment()) {
 				commentExists = true;
+			}
+
+			if (node.isEditable()) {
+				editableExists = true;
+			}
+
+			if (node.isMoveable()) {
+				moveableExists = true;
 			}
 			
 			if (!attributesExist && node.getAttributeCount() > 0) {
@@ -119,6 +129,44 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 			}
 		}
 
+		if (editableExists && !saveFileFormat.supportsEditability()) {
+			Object[] options = {"Yes","No"};
+			int result = JOptionPane.showOptionDialog(Outliner.outliner,
+				"The file format you are saving with: " + fileFormatName + ", does not support editability settings.\nThe document contains editable node settings that will NOT be saved.\nDo you want to save?",
+				"Confirm Open",
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				options,
+				options[0]
+			);
+			
+			if (result == JOptionPane.YES_OPTION) {
+				// Do Nothing
+			} else if (result == JOptionPane.NO_OPTION) {
+				return;
+			}
+		}
+
+		if (moveableExists && !saveFileFormat.supportsMoveability()) {
+			Object[] options = {"Yes","No"};
+			int result = JOptionPane.showOptionDialog(Outliner.outliner,
+				"The file format you are saving with: " + fileFormatName + ", does not support moveability settings.\nThe document contains moveable node settings that will NOT be saved.\nDo you want to save?",
+				"Confirm Open",
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				options,
+				options[0]
+			);
+			
+			if (result == JOptionPane.YES_OPTION) {
+				// Do Nothing
+			} else if (result == JOptionPane.NO_OPTION) {
+				return;
+			}
+		}
+				
 		if (attributesExist && !saveFileFormat.supportsAttributes()) {
 			Object[] options = {"Yes","No"};
 			int result = JOptionPane.showOptionDialog(Outliner.outliner,

@@ -178,7 +178,34 @@ public class IconKeyListener implements KeyListener, MouseListener {
 					toggleCommentAndClear(tree, layout);
 				}
 				break;
-			
+
+			case KeyEvent.VK_F11:
+				if (e.isControlDown()) {
+					if (e.isShiftDown()) {
+						clearEditable(tree, layout);
+					} else {
+						toggleEditableInheritance(tree,layout);
+					}
+				} else if (e.isShiftDown()) {
+					toggleEditable(tree,layout);
+				} else {
+					toggleEditableAndClear(tree, layout);
+				}
+				break;
+
+			case KeyEvent.VK_F12:
+				if (e.isControlDown()) {
+					if (e.isShiftDown()) {
+						clearMoveable(tree, layout);
+					} else {
+						toggleMoveableInheritance(tree,layout);
+					}
+				} else if (e.isShiftDown()) {
+					toggleMoveable(tree,layout);
+				} else {
+					toggleMoveableAndClear(tree, layout);
+				}
+				break;			
 			case KeyEvent.VK_DELETE:
 				delete(tree,layout,true);
 				break;
@@ -325,7 +352,18 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	
 	public void keyTyped(KeyEvent e) {
 		recordRenderer(e.getComponent());
-		
+
+		// Create some short names for convienence
+		Node currentNode = textArea.node;
+		TreeContext tree = currentNode.getTree();
+		OutlineLayoutManager layout = tree.doc.panel.layout;
+		Node youngestNode = tree.getYoungestInSelection();
+
+		// If we're read-only then abort
+		if (!currentNode.isEditable()) {
+			return;
+		}
+				
 		// Catch any unwanted chars that slip through
 		if (e.isControlDown() ||
 			(e.getKeyChar() == KeyEvent.VK_BACK_SPACE) ||
@@ -335,14 +373,6 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		) {
 			return;
 		}
-				
-		//System.out.println("ICON Typed: " + e.paramString());
-
-		// Create some short names for convienence
-		Node currentNode = textArea.node;
-		TreeContext tree = currentNode.getTree();
-		OutlineLayoutManager layout = tree.doc.panel.layout;
-		Node youngestNode = tree.getYoungestInSelection();
 
 		// Clear the selection since focus will change to the textarea.
 		tree.clearSelection();
@@ -385,6 +415,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		layout.draw(currentNode, OutlineLayoutManager.ICON);
 	}
 
+	// Comments
 	private void clearComment(TreeContext tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		
@@ -742,9 +773,19 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	private void cut(TreeContext tree, OutlineLayoutManager layout) {
 		NodeSet nodeSet = new NodeSet();
 		for (int i = 0; i < tree.selectedNodes.size(); i++) {
-			nodeSet.addNode(((Node) tree.selectedNodes.get(i)).cloneClean());
+			Node node = (Node) tree.selectedNodes.get(i);
+			
+			// Abort if node is not editable
+			if (!node.isEditable()) {
+				continue;
+			}
+				
+			nodeSet.addNode(node.cloneClean());
 		}
-		Outliner.clipboard.setContents(new NodeSetTransferable(nodeSet), Outliner.outliner);
+		
+		if (!nodeSet.isEmpty()) {
+			Outliner.clipboard.setContents(new NodeSetTransferable(nodeSet), Outliner.outliner);
+		}
 		
 		// Delete selection
 		delete(tree,layout,false);
@@ -943,18 +984,33 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			// Iterate over the remaining selected nodes deleting each one
 			for (int i = 1; i < tree.getNumberOfSelectedNodes(); i++) {
 				Node node = (Node) tree.selectedNodes.get(i);
+
+				// Abort if node is not editable
+				if (!node.isEditable()) {
+					continue;
+				}
+				
 				undoable.addPrimitive(new PrimitiveUndoableReplace(parent,node,null));
 			}
 		} else {
 			// Iterate over the remaining selected nodes deleting each one
 			for (int i = 0; i < tree.getNumberOfSelectedNodes(); i++) {
 				Node node = (Node) tree.selectedNodes.get(i);
+
+				// Abort if node is not editable
+				if (!node.isEditable()) {
+					continue;
+				}
+				
 				undoable.addPrimitive(new PrimitiveUndoableReplace(parent,node,null));
 			}
 		}
 
-		tree.doc.undoQueue.add(undoable);
-		undoable.redo();
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+			undoable.redo();
+		}
+		
 		return;
 	}
 
@@ -967,17 +1023,39 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 		// Get merged text
 		StringBuffer buf = new StringBuffer();
+		boolean didMerge = false;
 		
 		if (withSpaces) {
 			for (int i = 0; i < tree.selectedNodes.size(); i++) {
-				((Node) tree.selectedNodes.get(i)).getMergedValueWithSpaces(buf);
+				Node node = (Node) tree.selectedNodes.get(i);
+				
+				// Abort if node is not editable
+				if (!node.isEditable()) {
+					continue;
+				}
+				
+				didMerge = true;
+				node.getMergedValueWithSpaces(buf);
 			}
 		} else {
 			for (int i = 0; i < tree.selectedNodes.size(); i++) {
-				((Node) tree.selectedNodes.get(i)).getMergedValue(buf);
+				Node node = (Node) tree.selectedNodes.get(i);
+				
+				// Abort if node is not editable
+				if (!node.isEditable()) {
+					continue;
+				}
+				
+				didMerge = true;
+				node.getMergedValue(buf);
 			}		
 		}
-
+		
+		// It's possible all nodes were read-only. If so then abort.
+		if (!didMerge) {
+			return;
+		}
+		
 		Node newNode = new NodeImpl(tree,buf.toString());
 		newNode.setDepth(youngestNodeDepth);
 		newNode.setCommentState(youngestNodeIsComment);
@@ -986,11 +1064,20 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		// Iterate over the remaining selected nodes deleting each one
 		for (int i = 1; i < tree.getNumberOfSelectedNodes(); i++) {
 			Node node = (Node) tree.selectedNodes.get(i);
+			
+			// Abort if node is not editable
+			if (!node.isEditable()) {
+				continue;
+			}
+
 			undoable.addPrimitive(new PrimitiveUndoableReplace(parent,node,null));
 		}
 
-		tree.doc.undoQueue.add(undoable);
-		undoable.redo();
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+			undoable.redo();		
+		}
+		
 		return;
 	}
 
@@ -1026,5 +1113,275 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	public static void collapseEverything(TreeContext tree) {
 		TextKeyListener.collapseEverything(tree);
 		return;
+	}
+
+
+	// Editable
+	private void clearEditable(TreeContext tree, OutlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		
+		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+			clearEditableForSingleNode((Node) tree.selectedNodes.get(i), undoable);
+		}
+		
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+
+		layout.draw(currentNode, OutlineLayoutManager.ICON);
+	}
+
+	protected static void clearEditableForSingleNode(Node node, CompoundUndoable undoable) {
+		int oldValue = node.getEditableState();
+		int newValue = Node.EDITABLE_INHERITED;
+		
+		if (oldValue != Node.EDITABLE_INHERITED) {
+			node.setEditableState(Node.EDITABLE_INHERITED);
+			undoable.addPrimitive(new PrimitiveUndoableEditableChange(node, oldValue, newValue));
+		}
+				
+		for (int i = 0; i < node.numOfChildren(); i++) {
+			clearEditableForSingleNode(node.getChild(i), undoable);
+		}
+	}
+	
+	private void toggleEditableAndClear(TreeContext tree, OutlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		
+		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+			toggleEditableAndClearForSingleNode((Node) tree.selectedNodes.get(i), undoable);
+		}
+		
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+
+		layout.draw(currentNode, OutlineLayoutManager.ICON);
+	}
+
+	protected static void toggleEditableAndClearForSingleNode(Node node, CompoundUndoable undoable) {
+		toggleEditableForSingleNode(node, undoable);
+		
+		for (int i = 0; i < node.numOfChildren(); i++) {
+			clearEditableForSingleNode(node.getChild(i), undoable);
+		}		
+	}
+			
+	private void toggleEditable(TreeContext tree, OutlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		
+		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+			toggleEditableForSingleNode((Node) tree.selectedNodes.get(i), undoable);
+		}
+		
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+
+		layout.draw(currentNode, OutlineLayoutManager.ICON);
+	}
+
+	protected static void toggleEditableForSingleNode(Node node, CompoundUndoable undoable) {
+		int oldValue = node.getEditableState();
+		int newValue = Node.EDITABLE_INHERITED;
+		boolean isEditable = node.isEditable();
+		
+		if (oldValue == Node.EDITABLE_FALSE) {
+			node.setEditableState(Node.EDITABLE_TRUE);
+			newValue = Node.EDITABLE_TRUE;
+					
+		} else if (oldValue == Node.EDITABLE_TRUE) {
+			node.setEditableState(Node.EDITABLE_FALSE);
+			newValue = Node.EDITABLE_FALSE;
+		
+		} else {
+			if (isEditable) {
+				node.setEditableState(Node.EDITABLE_FALSE);
+				newValue = Node.EDITABLE_FALSE;
+			} else {
+				node.setEditableState(Node.EDITABLE_TRUE);
+				newValue = Node.EDITABLE_TRUE;
+			}
+		}
+				
+		undoable.addPrimitive(new PrimitiveUndoableEditableChange(node, oldValue, newValue));
+	}
+	
+	private void toggleEditableInheritance(TreeContext tree, OutlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		
+		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+			toggleEditableInheritanceForSingleNode((Node) tree.selectedNodes.get(i), undoable);
+		}
+		
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+
+		layout.draw(currentNode, OutlineLayoutManager.ICON);
+	}
+	
+	protected static void toggleEditableInheritanceForSingleNode(Node node, CompoundUndoable undoable) {
+		int oldValue = node.getEditableState();
+		int newValue = Node.EDITABLE_INHERITED;
+		boolean isEditable = node.isEditable();
+		
+		if (oldValue == Node.EDITABLE_INHERITED) {
+			if (isEditable) {
+				node.setEditableState(Node.EDITABLE_TRUE);
+				newValue = Node.EDITABLE_TRUE;
+			} else {
+				node.setEditableState(Node.EDITABLE_FALSE);
+				newValue = Node.EDITABLE_FALSE;
+			}
+								
+		} else {
+			node.setEditableState(Node.EDITABLE_INHERITED);
+		}
+				
+		undoable.addPrimitive(new PrimitiveUndoableEditableChange(node, oldValue, newValue));
+	}
+
+
+	// Moveable
+	private void clearMoveable(TreeContext tree, OutlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		
+		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+			clearMoveableForSingleNode((Node) tree.selectedNodes.get(i), undoable);
+		}
+		
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+
+		layout.draw(currentNode, OutlineLayoutManager.ICON);
+	}
+
+	protected static void clearMoveableForSingleNode(Node node, CompoundUndoable undoable) {
+		int oldValue = node.getMoveableState();
+		int newValue = Node.MOVEABLE_INHERITED;
+		
+		if (oldValue != Node.MOVEABLE_INHERITED) {
+			node.setMoveableState(Node.MOVEABLE_INHERITED);
+			undoable.addPrimitive(new PrimitiveUndoableMoveableChange(node, oldValue, newValue));
+		}
+				
+		for (int i = 0; i < node.numOfChildren(); i++) {
+			clearMoveableForSingleNode(node.getChild(i), undoable);
+		}
+	}
+	
+	private void toggleMoveableAndClear(TreeContext tree, OutlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		
+		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+			toggleMoveableAndClearForSingleNode((Node) tree.selectedNodes.get(i), undoable);
+		}
+		
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+
+		layout.draw(currentNode, OutlineLayoutManager.ICON);
+	}
+
+	protected static void toggleMoveableAndClearForSingleNode(Node node, CompoundUndoable undoable) {
+		toggleMoveableForSingleNode(node, undoable);
+		
+		for (int i = 0; i < node.numOfChildren(); i++) {
+			clearMoveableForSingleNode(node.getChild(i), undoable);
+		}		
+	}
+			
+	private void toggleMoveable(TreeContext tree, OutlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		
+		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+			toggleMoveableForSingleNode((Node) tree.selectedNodes.get(i), undoable);
+		}
+		
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+
+		layout.draw(currentNode, OutlineLayoutManager.ICON);
+	}
+
+	protected static void toggleMoveableForSingleNode(Node node, CompoundUndoable undoable) {
+		int oldValue = node.getMoveableState();
+		int newValue = Node.MOVEABLE_INHERITED;
+		boolean isMoveable = node.isMoveable();
+		
+		if (oldValue == Node.MOVEABLE_FALSE) {
+			node.setMoveableState(Node.MOVEABLE_TRUE);
+			newValue = Node.MOVEABLE_TRUE;
+					
+		} else if (oldValue == Node.MOVEABLE_TRUE) {
+			node.setMoveableState(Node.MOVEABLE_FALSE);
+			newValue = Node.MOVEABLE_FALSE;
+		
+		} else {
+			if (isMoveable) {
+				node.setMoveableState(Node.MOVEABLE_FALSE);
+				newValue = Node.MOVEABLE_FALSE;
+			} else {
+				node.setMoveableState(Node.MOVEABLE_TRUE);
+				newValue = Node.MOVEABLE_TRUE;
+			}
+		}
+				
+		undoable.addPrimitive(new PrimitiveUndoableMoveableChange(node, oldValue, newValue));
+	}
+	
+	private void toggleMoveableInheritance(TreeContext tree, OutlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		
+		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
+		
+		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+			toggleMoveableInheritanceForSingleNode((Node) tree.selectedNodes.get(i), undoable);
+		}
+		
+		if (!undoable.isEmpty()) {
+			tree.doc.undoQueue.add(undoable);
+		}
+
+		layout.draw(currentNode, OutlineLayoutManager.ICON);
+	}
+	
+	protected static void toggleMoveableInheritanceForSingleNode(Node node, CompoundUndoable undoable) {
+		int oldValue = node.getMoveableState();
+		int newValue = Node.MOVEABLE_INHERITED;
+		boolean isMoveable = node.isMoveable();
+		
+		if (oldValue == Node.MOVEABLE_INHERITED) {
+			if (isMoveable) {
+				node.setMoveableState(Node.MOVEABLE_TRUE);
+				newValue = Node.MOVEABLE_TRUE;
+			} else {
+				node.setMoveableState(Node.MOVEABLE_FALSE);
+				newValue = Node.MOVEABLE_FALSE;
+			}
+								
+		} else {
+			node.setMoveableState(Node.MOVEABLE_INHERITED);
+		}
+				
+		undoable.addPrimitive(new PrimitiveUndoableMoveableChange(node, oldValue, newValue));
 	}
 }

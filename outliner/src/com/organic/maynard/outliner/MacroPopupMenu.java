@@ -195,7 +195,6 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		}
 		
 		if (macro.getUndoableType() == Macro.SIMPLE_UNDOABLE) {
-			//doComplexUndoableMacro(document,tree,macro);
 			doSimpleUndoableMacro(document,tree,macro);
 		} else if (macro.getUndoableType() == Macro.COMPLEX_UNDOABLE) {
 			doComplexUndoableMacro(document,tree,macro);
@@ -217,6 +216,12 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		if (tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
 			// Create a nodeRangePair
 			Node node = tree.getEditingNode();
+			
+			// Abort if not editable
+			if (!node.isEditable()) {
+				return;
+			}
+			
 			int cursor = tree.getCursorPosition();
 			int mark = tree.getCursorMarkPosition();
 			int startIndex = Math.min(cursor,mark);
@@ -237,8 +242,15 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 			tree.setCursorMarkPosition(nodeRangePair.startIndex);
 		} else {
 			for (int i = 0; i < tree.selectedNodes.size(); i++) {
+				Node node = (Node) tree.selectedNodes.get(i);
+				
+				// Abort if not editable
+				if (!node.isEditable()) {
+					continue;
+				}
+
 				// Create a nodeRangePair
-				NodeRangePair nodeRangePair = new NodeRangePair((Node) tree.selectedNodes.get(i),-1,-1);
+				NodeRangePair nodeRangePair = new NodeRangePair(node,-1,-1);
 				
 				// Process the macro and create undoable
 				String oldText = nodeRangePair.node.getValue();
@@ -252,7 +264,9 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		}
 
 		if (macro.isUndoable()) {
-			document.undoQueue.add(undoable);
+			if (!undoable.isEmpty()) {
+				document.undoQueue.add(undoable);
+			}
 		} else {
 			document.undoQueue.clear();
 		}	
@@ -262,11 +276,15 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		Node parent = tree.getEditingNode().getParent();
 		CompoundUndoableReplace undoable = new CompoundUndoableReplace(parent);
 		
-		int primitiveCount = 0;
-		
 		if (tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
 			// Create a nodeRangePair
 			Node node = tree.getEditingNode();
+
+			// Abort if not editable
+			if (!node.isEditable()) {
+				return;
+			}
+
 			int cursor = tree.getCursorPosition();
 			int mark = tree.getCursorMarkPosition();
 			int startIndex = Math.min(cursor,mark);
@@ -279,12 +297,17 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 			Object obj = macro.process(nodeRangePair);
 			if (obj != null) {
 				undoable.addPrimitive(new PrimitiveUndoableReplace(parent,node,nodeRangePair.node));
-				primitiveCount++;
 			}
 		} else {
 			for (int i = 0; i < tree.selectedNodes.size(); i++) {
 				// Create a nodeRangePair
 				Node node = (Node) tree.selectedNodes.get(i);
+
+				// Abort if not editable
+				if (!node.isEditable()) {
+					continue;
+				}
+				
 				Node clonedNode = node.cloneClean();
 				NodeRangePair nodeRangePair = new NodeRangePair(clonedNode,-1,-1);
 
@@ -292,14 +315,17 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 				Object obj = macro.process(nodeRangePair);
 				if (obj != null) {
 					undoable.addPrimitive(new PrimitiveUndoableReplace(parent,node,nodeRangePair.node));
-					primitiveCount++;
 				}
 			}
 		}
 
-		if (primitiveCount > 0) {
-			document.undoQueue.add(undoable);
-			undoable.redo();
+		if (macro.isUndoable()) {
+			if (!undoable.isEmpty()) {
+				document.undoQueue.add(undoable);
+				undoable.redo();
+			}
+		} else {
+			document.undoQueue.clear();
 		}
 	}
 
