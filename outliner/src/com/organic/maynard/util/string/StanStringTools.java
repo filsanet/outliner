@@ -99,5 +99,74 @@ public class StanStringTools {
 		} // end else
 		
 	} // end method trimOffAnyFileExtension
+
 	
+	// return a truncated pathname
+	public static String getTruncatedPathName(String pathNameString) {
+		
+		// we keep info thru the first directory
+		// then separator..separator
+		// then filename
+		
+		// if just two separators in pathname, we do nothing
+		// c:\foo.txt
+		// one separator, do nothing
+		
+		// c:\moo\foo.txt
+		// two separators, do nothing
+		
+		// c:\moo\boo\foo.txt
+		// three separators
+		// replace info tween separators 2 and 3 with ..
+		// c:\moo\..\foo.txt
+		
+		// c:\moo\boo\goo\foo.txt
+		// four separators
+		// replace
+		
+		// so: our scheme:
+		// scan for separators, from left
+		// note positions of 2nd and, if more than 2, last
+		
+		// then: build a string out of substring thru 2nd sep
+		// plus our trunc string
+		// plus substring from last sep thru til end
+		
+		// local vars
+		int secondSeparator = -1 ;
+		int lastSeparator = -1 ;
+		int length = pathNameString.length() ;
+		final String TRUNC_STRING = " ... " ;
+		
+		// we're scanning the full string
+		for (int scanner = 0, separatorCount = 0; scanner < length; scanner ++) {
+			// if we find a separator char ...
+			if (pathNameString.charAt(scanner) == File.separatorChar) {
+				// note the find
+				separatorCount ++ ;
+				// if this is the second separator ..
+				if (separatorCount == 2) {
+					secondSeparator = scanner ;
+				// else it's provisionally the last separator
+				} else {
+					lastSeparator = scanner ;
+				} // end if-else
+			} // end if
+		} // end for
+		
+		// if we have 2 or fewer separators, just return the pathname
+		if (lastSeparator < secondSeparator) {
+			return pathNameString ;
+		} // end if
+		
+		// okay, we have more than 2 separators
+		// [srk] var here just temp for testing ... return directly once cooked
+		String resultString = (pathNameString.substring(0, secondSeparator + 1)
+			+ TRUNC_STRING 
+			+ pathNameString.substring(lastSeparator, length)) ;
+		
+		return resultString ;
+		
+	} // end method getTruncatedPathName
+
 } // end class StanStringTools
