@@ -20,28 +20,30 @@ package com.organic.maynard.outliner;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.Window;
-import java.awt.datatransfer.*;
-
-import java.io.*;
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
-import javax.swing.border.*;
-
-import com.organic.maynard.util.string.*;
 
 public class DocumentSettings extends JDialog implements ActionListener {
-	OutlinerDocument doc = null;
+	private OutlinerDocument doc = null;
+	
+	
+	// Constants
+	private static final String OK = "OK";
+	private static final String CANCEL = "Cancel";
+	private static final String RESTORE_TO_GLOBAL = "Restore to Global";
+	private static final String DOCUMENT_SETTINGS = "Document Settings";
+	private static final String LINE_TERMINATOR = "Line Terminator";
+	private static final String ENCODING_WHEN_SAVING = "Encoding when saving.";
+	private static final String FORMAT_WHEN_SAVING = "Format when saving.";
+	private static final String OWNER_NAME = "Owner Name";
+	private static final String OWNER_EMAIL = "Owner Email";
+
 	
 	// Editable Settings
-	String sLineEnd = Preferences.getPreferenceLineEnding(Preferences.LINE_END).cur;
-	String sSaveEncoding = Preferences.getPreferenceString(Preferences.SAVE_ENCODING).cur;
-	String sSaveFormat = Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur;
-	String sOwnerName = Preferences.getPreferenceString(Preferences.OWNER_NAME).cur;
-	String sOwnerEmail = Preferences.getPreferenceString(Preferences.OWNER_EMAIL).cur;
+	private String sLineEnd = Preferences.getPreferenceLineEnding(Preferences.LINE_END).cur;
+	private String sSaveEncoding = Preferences.getPreferenceString(Preferences.SAVE_ENCODING).cur;
+	private String sSaveFormat = Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur;
+	private String sOwnerName = Preferences.getPreferenceString(Preferences.OWNER_NAME).cur;
+	private String sOwnerEmail = Preferences.getPreferenceString(Preferences.OWNER_EMAIL).cur;
 	
 	public PreferenceLineEnding lineEnd = new PreferenceLineEnding(sLineEnd, sLineEnd, "");
 	public PreferenceString saveEncoding = new PreferenceString(sSaveEncoding, sSaveEncoding, "");
@@ -53,21 +55,20 @@ public class DocumentSettings extends JDialog implements ActionListener {
 	// Hidden Settings
 	public String dateCreated = new String("");
 	public String dateModified = new String("");
-	//public PreferenceString title = new PreferenceString(Preferences.SAVE_FORMAT.cur,Preferences.SAVE_FORMAT.cur,"");
 
 	// GUI Elements
-	public JButton buttonOK = new JButton("OK");
-	public JButton buttonCancel = new JButton("Cancel");
-	public JButton buttonRestoreToGlobal = new JButton("Restore to Global");
-	public JComboBox lineEndComboBox = new JComboBox(Preferences.PLATFORM_IDENTIFIERS);
-	public JComboBox saveEncodingComboBox = new JComboBox();
-	public JComboBox saveFormatComboBox = new JComboBox();
-	public JTextField ownerNameField = new JTextField(10);
-	public JTextField ownerEmailField = new JTextField(10);
+	private JButton buttonOK = new JButton(OK);
+	private JButton buttonCancel = new JButton(CANCEL);
+	private JButton buttonRestoreToGlobal = new JButton(RESTORE_TO_GLOBAL);
+	private JComboBox lineEndComboBox = new JComboBox(Preferences.PLATFORM_IDENTIFIERS);
+	private JComboBox saveEncodingComboBox = new JComboBox();
+	private JComboBox saveFormatComboBox = new JComboBox();
+	private JTextField ownerNameField = new JTextField(10);
+	private JTextField ownerEmailField = new JTextField(10);
 
 	// The Constructors
 	public DocumentSettings(OutlinerDocument document) {
-		//super(document,"Document Settings",true);
+		super(Outliner.outliner, DOCUMENT_SETTINGS, true);
 		
 		this.doc = document;
 		
@@ -109,32 +110,32 @@ public class DocumentSettings extends JDialog implements ActionListener {
 		
 		Box box = Box.createVerticalBox();
 
-		addSingleItemCentered(new JLabel("Line Terminator"), box);
-		addSingleItemCentered(lineEndComboBox, box);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(LINE_TERMINATOR), box);
+		AbstractPreferencesPanel.addSingleItemCentered(lineEndComboBox, box);
 
 		box.add(Box.createVerticalStrut(5));
 
-		addSingleItemCentered(new JLabel("Encoding when saving."), box);
-		addSingleItemCentered(saveEncodingComboBox, box);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(ENCODING_WHEN_SAVING), box);
+		AbstractPreferencesPanel.addSingleItemCentered(saveEncodingComboBox, box);
 
 		box.add(Box.createVerticalStrut(5));
 
-		addSingleItemCentered(new JLabel("Format when saving."), box);
-		addSingleItemCentered(saveFormatComboBox, box);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(FORMAT_WHEN_SAVING), box);
+		AbstractPreferencesPanel.addSingleItemCentered(saveFormatComboBox, box);
 
 		box.add(Box.createVerticalStrut(5));
 
-		addSingleItemCentered(new JLabel("Owner Name"), box);
-		addSingleItemCentered(ownerNameField, box);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(OWNER_NAME), box);
+		AbstractPreferencesPanel.addSingleItemCentered(ownerNameField, box);
 
 		box.add(Box.createVerticalStrut(5));
 
-		addSingleItemCentered(new JLabel("Owner Email"), box);
-		addSingleItemCentered(ownerEmailField, box);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(OWNER_EMAIL), box);
+		AbstractPreferencesPanel.addSingleItemCentered(ownerEmailField, box);
 
 		box.add(Box.createVerticalStrut(10));
 
-		addSingleItemCentered(buttonRestoreToGlobal, box);
+		AbstractPreferencesPanel.addSingleItemCentered(buttonRestoreToGlobal, box);
 
 		getContentPane().add(box,BorderLayout.CENTER);
 	
@@ -188,24 +189,15 @@ public class DocumentSettings extends JDialog implements ActionListener {
 		ownerEmail.restoreTemporaryToCurrent();
 		ownerEmailField.setText(ownerEmail.tmp);
 	}
-	
-	// Misc methods
-	private void addSingleItemCentered(JComponent component, Container container) {
-		Box box = Box.createHorizontalBox();
-		box.add(Box.createHorizontalGlue());
-		component.setMaximumSize(component.getPreferredSize());
-		box.add(component);
-		box.add(Box.createHorizontalGlue());
-		container.add(box);
-	}
+
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand().equals("OK")) {
+		if (e.getActionCommand().equals(OK)) {
 			ok();
-		} else if (e.getActionCommand().equals("Cancel")) {
+		} else if (e.getActionCommand().equals(CANCEL)) {
 			cancel();
-		} else if (e.getActionCommand().equals("Restore to Global")) {
+		} else if (e.getActionCommand().equals(RESTORE_TO_GLOBAL)) {
 			restoreToGlobal();
 		}
 	}
