@@ -45,6 +45,8 @@ import org.xml.sax.*;
 
 public abstract class AbstractOutlinerMenu extends JMenu implements GUITreeComponent, JoeXMLConstants {
 
+	// Constants
+	public static final String A_MNEMONIC = "mnemonic";
 	// Constructors
 	public AbstractOutlinerMenu() {}
 
@@ -56,6 +58,13 @@ public abstract class AbstractOutlinerMenu extends JMenu implements GUITreeCompo
 	
 	public void startSetup(AttributeList atts) {
 		setText(atts.getValue(A_TEXT));
+		
+		String mnemonic = atts.getValue(A_MNEMONIC).trim().toUpperCase();
+		if (mnemonic != null && mnemonic.length() > 0) {
+			int mnemonicInt = mnemonic.charAt(0);
+			setMnemonic(mnemonicInt);
+		}
+		
 		Outliner.menuBar.add(this);
 	}
 	
