@@ -1,0 +1,382 @@
+<?xml version="1.0"?>
+<script>final boolean DEBUG = false;
+
+// Element Types
+final String[] ELEMENTS_UNBALANCED = {"br", "hr", "img", "meta"}; // Elements that can exist as &lt;br> rather than &lt;br/> or &lt;br />
+final String[] ELEMENTS_INLINE = {"br", "a", "img", "b", "i", "span"}; // Elements that should be treated as inline text.
+final String[] ELEMENTS_LINE_ENDER = {"br"}; // Elements that should always cause a line end.
+
+// Token Types
+final int TT_UNDEF = -1; // Token Type Undefined.
+final int TT_TEXT = 0; // Token Type Text.
+final int TT_COMMENT = 1; // Token Type Comment.
+final int TT_ELEMENT_START = 2; // Token Type Element Start
+final int TT_ELEMENT_END = 3; // Token Type Element End
+final int TT_ELEMENT_MINIMAL = 4; // Token Type Element Minimal
+
+// Define chars
+String tempChars = new String("\t\n\r ");
+final char CHAR_TAB = tempChars.charAt(0);
+final char CHAR_NEWLINE = tempChars.charAt(1);
+final char CHAR_RETURN = tempChars.charAt(2);
+final char CHAR_SPACE = tempChars.charAt(3);
+
+// Parser State
+char[] chars;
+int i = 0;
+
+ArrayList tokens = new ArrayList();
+ArrayList tokenNames = new ArrayList();
+ArrayList tokenTypes = new ArrayList();
+
+StringBuffer chunk = null;
+int type = TT_TEXT;
+String name = null;
+
+
+// Methods
+boolean isElementType(String name, String[] elementList) {
+	for (int i = 0; i &lt; elementList.length; i++) {
+		String element = elementList[i];
+		if (element.equals(name)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+int indexOfNextNameChar(int index) {
+	for (int lookahead = index; lookahead &lt; chars.length; lookahead++) {
+		char c = chars[lookahead];
+
+		if (Character.isLetterOrDigit(c)) {
+			return lookahead;
+		}
+
+		switch (c) {
+			case '.':
+				return lookahead;
+			case '-':
+				return lookahead;
+			case '_':
+				return lookahead;
+			case ':':
+				return lookahead;
+		}
+	}
+	return -1;
+}
+
+int indexOfNextNonNameChar(int index) {
+	for (int lookahead = index; lookahead &lt; chars.length; lookahead++) {
+		char c = chars[lookahead];
+
+		if (!Character.isLetterOrDigit(c)) {
+			switch (c) {
+				case '.':
+					break;
+				case '-':
+					break;
+				case '_':
+					break;
+				case ':':
+					break;
+				default:
+					return lookahead;
+			}
+		}
+	}
+	return -1;
+}
+
+String getNextWord(int index) {
+	int start = indexOfNextNameChar(index);
+	if (start == -1) {
+		return null;
+	}
+	int end = indexOfNextNonNameChar(start);
+	if (end == -1) {
+		end = chars.length;
+	}
+
+	int length = end - start;
+	char[] word = new char[length];
+	System.arraycopy(chars, start, word, 0, length);
+	return new String(word);
+}
+
+addToken (StringBuffer chunk, int type, String name) {
+	tokens.add(chunk.toString());
+	tokenNames.add(name);
+	tokenTypes.add(new Integer(type));
+}
+
+StringBuffer appendCharToBuffer(StringBuffer chunk, char c) {
+	if (chunk == null) {
+		chunk = new StringBuffer();
+	}
+	chunk.append(c);
+	return chunk;
+}
+
+appendToBuffer(StringBuffer buf, String text, int depth, boolean appendLineEnd) {
+	for (int i = 0; i &lt; depth; i++) {
+		buf.append(CHAR_TAB);
+	}
+	buf.append(text);
+	if (appendLineEnd) {
+		buf.append(CHAR_NEWLINE);
+	}
+}
+
+// Main 
+if ((nodeRangePair.startIndex != -1) &amp;&amp; (nodeRangePair.endIndex != -1)) {
+	return;
+} else {
+	// Get the String value of the node
+	StringBuffer buf = new StringBuffer();
+	node.depthPaddedValue(buf, "\n");
+	chars = buf.toString().toCharArray();
+
+	// Tokenize
+	for (i; i &lt; chars.length; i++) {
+		char c = chars[i];
+
+		switch(c) {
+			case '&lt;':
+				if (type == TT_COMMENT) {
+					chunk = appendCharToBuffer(chunk, c);
+					break;
+				}
+
+				if (chunk != null) {
+					addToken(chunk, type, name);
+				}
+
+				chunk = new StringBuffer();
+				chunk.append(c);
+ 
+				int lookahead = i + 1;
+				if (lookahead &lt; chars.length) {
+					char c2 = chars[lookahead];
+						switch(c2) {
+							case '/':
+								type = TT_ELEMENT_END;
+								name = getNextWord(lookahead + 1);
+								break;
+							case '!':
+								type = TT_COMMENT;
+								name = null;
+								break;
+							default:
+								type = TT_ELEMENT_START;
+								name = getNextWord(lookahead);
+							}
+				} else {
+					type = TT_ELEMENT_START;
+					name = getNextWord(lookahead);
+				}
+				break;
+
+			case '>':
+				if (type == TT_COMMENT) {
+					chunk = appendCharToBuffer(chunk, c);
+					break;
+				}
+				if (chunk != null) {
+					chunk.append(c);
+					addToken(chunk, type, name);
+					chunk = null;
+					type = TT_TEXT;
+					name = null;
+
+					int lookahead = i + 1;
+					if (lookahead &lt; chars.length) {
+						char c2 = chars[lookahead];
+						switch(c2) {
+							case CHAR_NEWLINE:
+								i++;
+						}
+					}
+				}
+				break;
+
+			case '/':
+				if (type == TT_COMMENT) {
+					chunk = appendCharToBuffer(chunk, c);
+					break;
+				}
+				if (chunk != null) {
+					chunk.append(c);
+				}
+
+				int lookahead = i + 1;
+				if (lookahead &lt; chars.length) {
+					char c2 = chars[lookahead];
+					switch(c2) {
+						case '>':
+							type = TT_ELEMENT_MINIMAL;
+					}
+				}
+				break;
+
+			case '-':
+				if (type != TT_COMMENT) {
+					chunk = appendCharToBuffer(chunk, c);
+					break;
+				}
+				if (chunk != null) {
+					chunk.append(c);
+				}
+
+				int lookahead = i + 2;
+				if (lookahead &lt; chars.length) {
+					char c2 = chars[lookahead - 1];
+					char c3 = chars[lookahead];
+					if (c2 == '-' &amp;&amp; c3 == '>') {
+						i = i + 2;
+						chunk.append(c2).append(c3);
+						addToken(chunk, type, name);
+						chunk = null;
+						type = TT_TEXT;
+						name = null;
+
+						int lookahead = i + 1;
+						if (lookahead &lt; chars.length) {
+							char c2 = chars[lookahead];
+							switch(c2) {
+								case CHAR_NEWLINE:
+									i++;
+							}
+						}
+					}
+				}
+				break;
+
+			case CHAR_TAB:
+				if (type == TT_TEXT) {
+					int lookahead = i + 1;
+					if (lookahead &lt; chars.length) {
+						char c2 = chars[lookahead];
+						switch(c2) {
+							case CHAR_NEWLINE:
+								chunk = new StringBuffer();
+						}
+					}
+				} 
+				break;
+
+			case CHAR_NEWLINE:
+				if (type == TT_TEXT) {
+					if (chunk != null) {
+						addToken(chunk, type, name);
+					}
+					int lookahead = i + 1;
+					if (lookahead &lt; chars.length) {
+						char c2 = chars[lookahead];
+						switch(c2) {
+							case CHAR_NEWLINE:
+								chunk = new StringBuffer();
+								break;
+						}
+					}
+					chunk = null;
+				}
+				break;
+
+			default:
+				chunk = appendCharToBuffer(chunk, c);
+		}
+	}
+
+	if (chunk != null) {
+		addToken(chunk, type, name);
+	}
+
+	// Walk the tokens and produce a String
+	StringBuffer out = new StringBuffer();
+	int depth = node.getDepth();
+
+	if (DEBUG) {System.out.println("----------------------------");}
+	for (int j = 0; j &lt; tokens.size(); j++) {
+		String token = (String) tokens.get(j);
+		int type = ((Integer) tokenTypes.get(j)).intValue();
+		String name = (String) tokenNames.get(j);
+		if (DEBUG) {System.out.println("Type: " + type + " Name: " + name +  " Token: " + token);}
+
+		boolean nextTokenIsInline = false;
+		int lookahead = j + 1;
+		if (lookahead &lt; tokens.size()) {
+			int nextTokenType = ((Integer) tokenTypes.get(lookahead)).intValue();
+			String nextTokenName = (String) tokenNames.get(lookahead);
+			if (nextTokenType == TT_TEXT || ((nextTokenType == TT_ELEMENT_START || nextTokenType == TT_ELEMENT_END || nextTokenType == TT_ELEMENT_MINIMAL) &amp;&amp; isElementType(nextTokenName, ELEMENTS_INLINE))) {
+				nextTokenIsInline = true;
+			}
+		}
+
+		switch (type) {
+			case TT_TEXT:
+				if (nextTokenIsInline) {
+					appendToBuffer(out, token, depth, false);
+				} else {
+					appendToBuffer(out, token, depth, true);
+				}
+				break;
+
+			case TT_ELEMENT_START:
+				boolean isUnbalanced = isElementType(name, ELEMENTS_UNBALANCED);
+				boolean isInline = isElementType(name, ELEMENTS_INLINE);
+				boolean isLineEnder = isElementType(name, ELEMENTS_LINE_ENDER);
+				if (!isLineEnder &amp;&amp; isInline &amp;&amp; nextTokenIsInline) {
+					appendToBuffer(out, token, depth, false);
+				} else {
+					appendToBuffer(out, token, depth, true);
+				}
+				if (!isUnbalanced || !isInline) {
+					depth++;
+				}
+				break;
+
+			case TT_ELEMENT_END:
+				boolean isUnbalanced = isElementType(name, ELEMENTS_UNBALANCED);
+				boolean isInline = isElementType(name, ELEMENTS_INLINE);
+				boolean isLineEnder = isElementType(name, ELEMENTS_LINE_ENDER);
+				if (!isUnbalanced || !isInline) {
+					depth--;
+				}
+				if (!isLineEnder &amp;&amp; isInline &amp;&amp; nextTokenIsInline) {
+					appendToBuffer(out, token, depth, false);
+				} else {
+					appendToBuffer(out, token, depth, true);
+				}
+				break;
+
+			case TT_ELEMENT_MINIMAL:
+				boolean isInline = isElementType(name, ELEMENTS_INLINE);
+				boolean isLineEnder = isElementType(name, ELEMENTS_LINE_ENDER);
+				if (!isLineEnder &amp;&amp; isInline &amp;&amp; nextTokenIsInline) {
+					appendToBuffer(out, token, depth, false);
+				} else {
+					appendToBuffer(out, token, depth, true);
+				}
+				break;
+
+			case TT_COMMENT:
+				if (nextTokenIsInline) {
+					appendToBuffer(out, token, depth, false);
+				} else {
+					appendToBuffer(out, token, depth, true);
+				}
+				break;
+		}
+	}
+
+	// Turn the formatted string back into a node heirarchy
+	while(!node.isLeaf()) {
+		Node child = node.getChild(0);
+		node.removeChild(child,0);
+	}
+
+	PadSelection.pad(out.toString(), node.getTree(), node.getDepth() + 1, "\n", node);
+}
+</script>
