@@ -63,7 +63,12 @@ public class FileContentsHandler implements FileHandler {
 	// FileHandler Interface
 	public void handleFile(File file) {
 		String contents = FileTools.readFileToString(file, lineEnding);
-		contents = processContents(contents);
+		contents = processContents(file, contents);
+		
+		// If contents are null then don't write anything out.
+		if (contents == null) {
+			return;
+		}
 		
 		// Clean last line ending if neccessary.
 		int lineEndingLength = lineEnding.length();
@@ -75,7 +80,7 @@ public class FileContentsHandler implements FileHandler {
 		FileTools.dumpStringToFile(file, contents);
 	}
 	
-	protected String processContents(String contents) {
+	protected String processContents(File file, String contents) {
 		System.out.println("Contents: " + contents);
 		return contents;
 	}

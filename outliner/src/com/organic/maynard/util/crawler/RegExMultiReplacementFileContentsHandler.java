@@ -62,7 +62,7 @@ public class RegExMultiReplacementFileContentsHandler extends FileContentsHandle
 	
 	
 	// Overridden Methods
-	protected String processContents(String contents) {
+	protected String processContents(File file, String contents) {
 		for (int i = 0; i < regexes.length; i++) {
 			String regex = regexes[i];
 			try {

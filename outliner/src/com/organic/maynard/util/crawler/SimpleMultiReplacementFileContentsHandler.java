@@ -61,7 +61,7 @@ public class SimpleMultiReplacementFileContentsHandler extends FileContentsHandl
 	
 	
 	// Overridden Methods
-	protected String processContents(String contents) {
+	protected String processContents(File file, String contents) {
 		for (int i = 0; i < matches.size(); i++) {
 			String match = (String) matches.get(i);
 			String replacement = (String) replacements.get(i);
