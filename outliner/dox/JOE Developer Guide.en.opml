@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <opml version="1.0">
 <head>
-<title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide - English.opml</title>
+<title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide.en.opml</title>
 <dateCreated>Tue, 17 Jul 2001 02:49:03 GMT</dateCreated>
-<dateModified>Sat, 11 Aug 2001 05:30:49 GMT</dateModified>
+<dateModified>Sun, 12 Aug 2001 04:32:05 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
-<expansionState></expansionState>
-<vertScrollState>1</vertScrollState>
-<windowTop>13</windowTop>
-<windowLeft>560</windowLeft>
-<windowBottom>624</windowBottom>
-<windowRight>1129</windowRight>
+<expansionState>7,8,13,14</expansionState>
+<vertScrollState>10</vertScrollState>
+<windowTop>117</windowTop>
+<windowLeft>281</windowLeft>
+<windowBottom>620</windowBottom>
+<windowRight>1014</windowRight>
 </head>
 <body>
 <outline text="JOE Developer Guide [JDG]"/>
-<outline text="--------------------------"/>
+<outline text="-------------------------------"/>
 <outline text="Front End">
 <outline text="About JOE">
 <outline text="Notable Features">
@@ -75,17 +75,12 @@
 <outline text="Send content contributions">
 <outline text="Study the JDG style, write up a node or two, stick the OPML up on the web, and send a link to it"/>
 </outline>
-<outline text="Send to Devhead@JavaOutlineEditor.org"/>
+<outline text="Go here to send">
+<outline text="http://JavaOutlineEditor.org/feedback"/>
 </outline>
 </outline>
-<outline text="Feedback">
-<outline text="JOE Developer Guide Feedback">
-<outline text="send feedback/suggestions/links/content contributions concerning JOE Developer Guide to Devhead@JavaOutlineEditor.org"/>
 </outline>
-<outline text="JOE itself Feedback">
-<outline text="send feedback/suggestions/links/content contributions concerning JOE itself to Joe@JavaOutlineEditor.org"/>
-</outline>
-</outline>
+<outline text="Feedback"/>
 <outline text="JOE People">
 <outline text="Maynard Demmon"/>
 <outline text="Philip Suh"/>
@@ -123,9 +118,9 @@
 <outline text="http://SourceForge/projects/outliner/"/>
 </outline>
 <outline text="forums">
-<outline text="Open"/>
-<outline text="Developers"/>
-<outline text="Feature Requests"/>
+<outline text="Open "/>
+<outline text="Developers "/>
+<outline text="Feature Requests "/>
 <outline text="Bugs"/>
 </outline>
 <outline text="code">
@@ -486,6 +481,10 @@
 <outline text="Latest versions">
 <outline text=" http://cvshome.org"/>
 </outline>
+<outline text="Manuals">
+<outline text="http://www.cvshome.org/docs/manual/"/>
+</outline>
+<outline text="Tutorials"/>
 </outline>
 <outline text="SourceForge"/>
 <outline text="Java JDK">
@@ -650,6 +649,14 @@
 <outline text="md newDir"/>
 <outline text="cvs add newDir"/>
 <outline text="cvs commit newDir"/>
+</outline>
+</outline>
+<outline text="Renaming a File">
+<outline text="Give these commands, in this order">
+<outline text="copy oldName newName"/>
+<outline text="cvs remove oldName"/>
+<outline text="cvs add newName"/>
+<outline text="cvs commit -m &quot;Renamed oldName to newName&quot; oldName newName"/>
 </outline>
 </outline>
 <outline text="removing a file from the project"/>
