@@ -196,7 +196,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 
 		if (node.getEditableState() == Node.EDITABLE_TRUE) {
 			buf.append(ATTRIBUTE_IS_EDITABLE).append("=\"true\" ");
-		} else if (node.getEditableState() == Node.COMMENT_FALSE) {
+		} else if (node.getEditableState() == Node.EDITABLE_FALSE) {
 			buf.append(ATTRIBUTE_IS_EDITABLE).append("=\"false\" ");
 		}
 
