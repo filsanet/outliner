@@ -50,14 +50,15 @@ public class OutlinerFileChooser extends JFileChooser {
 	private JPanel saveAccessory = new JPanel();
 	private JPanel exportAccessory = new JPanel();
 	
-	private JComboBox lineEndComboBox = new JComboBox(PlatformCompatibility.PLATFORM_IDENTIFIERS);
-
+	private JComboBox saveLineEndComboBox = new JComboBox(PlatformCompatibility.PLATFORM_IDENTIFIERS);
 	private JComboBox saveEncodingComboBox = new JComboBox();
 	private JComboBox saveFormatComboBox = new JComboBox();
 
+	private JComboBox openLineEndComboBox = new JComboBox(PlatformCompatibility.PLATFORM_IDENTIFIERS);
 	private JComboBox openEncodingComboBox = new JComboBox();
 	private JComboBox openFormatComboBox = new JComboBox();
 
+	private JComboBox importLineEndComboBox = new JComboBox(PlatformCompatibility.PLATFORM_IDENTIFIERS);
 	private JComboBox importEncodingComboBox = new JComboBox();
 	private JComboBox importFormatComboBox = new JComboBox();
 
@@ -106,7 +107,7 @@ public class OutlinerFileChooser extends JFileChooser {
 		Box box = Box.createVerticalBox();
 
 		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("line_terminator")), box);
-		addSingleItemCentered(lineEndComboBox, box);
+		addSingleItemCentered(saveLineEndComboBox, box);
 
 		box.add(Box.createVerticalStrut(5));
 
@@ -142,7 +143,7 @@ public class OutlinerFileChooser extends JFileChooser {
 		Box box2 = Box.createVerticalBox();
 
 		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("line_terminator")), box2);
-		addSingleItemCentered(lineEndComboBox, box2);
+		addSingleItemCentered(openLineEndComboBox, box2);
 
 		box2.add(Box.createVerticalStrut(5));
 		
@@ -160,7 +161,7 @@ public class OutlinerFileChooser extends JFileChooser {
 		Box box4 = Box.createVerticalBox();
 
 		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("line_terminator")), box4);
-		addSingleItemCentered(lineEndComboBox, box4);
+		addSingleItemCentered(importLineEndComboBox, box4);
 
 		box4.add(Box.createVerticalStrut(5));
 		
@@ -221,7 +222,7 @@ public class OutlinerFileChooser extends JFileChooser {
 		setAccessory(saveAccessory);
 		
 		// Set the Accessory GUI state.
-		lineEndComboBox.setSelectedItem(doc.settings.lineEnd.cur);
+		saveLineEndComboBox.setSelectedItem(doc.settings.lineEnd.cur);
 		saveEncodingComboBox.setSelectedItem(doc.settings.saveEncoding.cur);
 		saveFormatComboBox.setSelectedItem(doc.settings.saveFormat.cur);
 
@@ -244,6 +245,7 @@ public class OutlinerFileChooser extends JFileChooser {
 		setAccessory(openAccessory);
 		
 		// Set the Accessory GUI state.
+		openLineEndComboBox.setSelectedItem(Preferences.getPreferenceString(Preferences.OPEN_LINE_END).cur);
 		openEncodingComboBox.setSelectedItem(Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur);
 		openFormatComboBox.setSelectedItem(Preferences.getPreferenceString(Preferences.OPEN_FORMAT).cur);
 
@@ -262,6 +264,7 @@ public class OutlinerFileChooser extends JFileChooser {
 		setAccessory(openAccessory);
 		
 		// Set the Accessory GUI state.
+		importLineEndComboBox.setSelectedItem(Preferences.getPreferenceString(Preferences.IMPORT_LINE_END).cur);
 		importEncodingComboBox.setSelectedItem(Preferences.getPreferenceString(Preferences.IMPORT_ENCODING).cur);
 		importFormatComboBox.setSelectedItem(Preferences.getPreferenceString(Preferences.IMPORT_FORMAT).cur);
 
@@ -273,14 +276,17 @@ public class OutlinerFileChooser extends JFileChooser {
 
 	
 	// Accessors
-	public String getLineEnding() {return (String) lineEndComboBox.getSelectedItem();}
+//	public String getLineEnding() {return (String) lineEndComboBox.getSelectedItem();}
 
+	public String getOpenLineEnding() {return (String) openLineEndComboBox.getSelectedItem();}
 	public String getOpenEncoding() {return (String) openEncodingComboBox.getSelectedItem();}
 	public String getOpenFileFormat() {return (String) openFormatComboBox.getSelectedItem();}
 
+	public String getImportLineEnding() {return (String) importLineEndComboBox.getSelectedItem();}
 	public String getImportEncoding() {return (String) importEncodingComboBox.getSelectedItem();}
 	public String getImportFileFormat() {return (String) importFormatComboBox.getSelectedItem();}
 
+	public String getSaveLineEnding() {return (String) saveLineEndComboBox.getSelectedItem();}
 	public String getSaveEncoding() {return (String) saveEncodingComboBox.getSelectedItem();}
 	public String getSaveFileFormat() {return (String) saveFormatComboBox.getSelectedItem();}
 

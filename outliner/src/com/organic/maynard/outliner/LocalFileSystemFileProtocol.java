@@ -111,7 +111,7 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 			// pull proper preference values from the file chooser
 			switch (type) {
 				case FileProtocol.SAVE:
-					lineEnd = chooser.getLineEnding();
+					lineEnd = chooser.getSaveLineEnding();
 					encoding = chooser.getSaveEncoding();
 					fileFormat = chooser.getSaveFileFormat();
 					break ;
@@ -187,12 +187,12 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 			// pull proper preference values from the file chooser
 			switch (type) {
 				case FileProtocol.OPEN:
-					lineEnding = chooser.getLineEnding();
+					lineEnding = chooser.getOpenLineEnding();
 					encoding = chooser.getOpenEncoding();
 					fileFormat = chooser.getOpenFileFormat();
 					break ;
 				case FileProtocol.IMPORT:
-					lineEnding = chooser.getLineEnding() ;
+					lineEnding = chooser.getImportLineEnding() ;
 					encoding = chooser.getImportEncoding();
 					fileFormat = chooser.getImportFileFormat();
 					break ;

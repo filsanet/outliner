@@ -112,7 +112,7 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 			// Pull Preference Values from the file chooser		[srk] 1/1/02 3:02AM
 			switch (type) {
 				case FileProtocol.SAVE:
-					lineEnd = chooser.getLineEnding();
+					lineEnd = chooser.getSaveLineEnding();
 					encoding = chooser.getSaveEncoding();
 					fileFormat = chooser.getSaveFileFormat();
 					break ;
