@@ -4,8 +4,11 @@
 			Shift-doubleclick on an expanded node now collapses the node without collapsing the node's children. When you expand the node with a regular doubleclick the childrens expansion state is preserved.
 			Shift-doubleclick on a collapsed node now works like the existing menu item, "Expand All Subnodes".
 			Shift-pagedown now toggles the expansion state with the same behavior mentioned above.
+		2) Added a new Editor preference for single click expand/collapse for nodes. This is by default turned off since that is the pre-existing functionality. When turned on, clicking on a node will cause it to expand/collapse rather than having to double-click it as in the past.
 	Feature Enhancements:
 		1) Dramatically sped up document closing times by doing the object destruction in a separate thread after after the window has been closed.
+		2) Moderately sped up application launch time by more pervasive use of lazy instantiation.
+		3) When changing the format in the Save or Export file system view, the file extension is automatically updated to the default for that format.
 	Bug Fixes:
 		1) Fixed a bug where "insert new node above" and "split current node and insert above" would throw an exception when you tried to undo them if the new node was the very first node in the document.
 		2) Fixed bug where the warning for doing a "Save As"/"Export" over an existing file didn't work. Now the warning shows up as it should. The warning for "Open"/"Import" of a non-existant file is also fixed.
