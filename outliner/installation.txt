@@ -32,5 +32,4 @@ Windows Installation:
 
 UNIX Installation:
 
-  Haven't done anything in this area yet. Should be just reproducing the
-  .bat files as .sh scripts.
+1) Edit run_joe.sh so the INSTALL_DIR points to the directory you installed JOE into.
