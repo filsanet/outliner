@@ -1,3 +1,20 @@
+1.8.7 - ???
+	License Change:
+		1) Switched to a BSD license.
+		2) We are now building our own jmousewheel.jar library. Code separation is much cleaner so that there is now only a "uses" relationship between outliner.jar and jmousewheel.jar. This should make things compatible between the use of a BSD license for outliner.jar and the LGPL for jmousewheel.jar.
+	New Features:
+		1) Support for multiple File Protocols added.
+			a) Implemented LocalFileSystemFileProtocol for opening/saving/exporting to the local filesystem.
+			b) Implemented WebFilePHPFileProtocol for opening/saving/exporting to Steven Spencer's PHP based remote file storage system. The WebFile code is now contained in it's own jar: com.yearahead.io.webfile.jar.
+	Enhanced Features:
+		1) Autosave agent frequency can now be set from the misc panel.
+		2) Added a "ding" when a search/replace finds no matches.
+	Bug Fixes:
+		1) Fixed a bug where new documents would often have the text area hidden until the next redraw.
+	Notes:
+		1) If you have a previous version of JOE on your system you will probably need to manually copy the updated autosave agent script from "<install_dir>/prefs/scripts/Autosave Agent.txt" to "<user_home>/outliner/scripts/Autosave Agent.txt". If you don't do this it just means the autosave agent won't work.
+		2) The sources for com.organic.maynard.jar have been put in CVS. Xerces.jar is required to compile com.organic.maynard.jar, but I'm leaving it out of the builds because it is very large (1.7M) and is not used by JOE. I will check in the license and a copy the copy of xerces.jar I'm currently using, so you can download it from CVS or instead get it directly from Apache: http://xml.apache.org/xerces-j/index.html. I'm currently using xerces 1.4.3, but any recent release should be fine.
+		3) We've updated the way the recent files list works, so your current recent files will get blown away if you use the new version.
 1.8.6.1 - 10/20/01
 	Bug Fixes:
 		1) Fixed bug #472934, where macros applied to node selections were not working.
