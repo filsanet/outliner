@@ -1,12 +1,33 @@
-1.8.8 - ???
+1.8.8 - 04/18/02
+	New Features:
+		1) Automatic node level created/modified dates. If turned on via application or document level preferences, node attributes for creation and modification dates will be generated. By default this feature is turned off.
+		2) Read-only property for node and document attributes. Note: node level settings take precedence, so if the node itself is read-only, you won't be able to adjust attribute level settings.
+		3) New Selection key commands. You can now use the keyboard to make selections. It is possible to create disconnected selections from the keyboard by using the left and right arrow commands described below. 
+			The following is a list of the key commands added.
+				shift-up: extends the selection up.
+				shift-down: extends the selection down.
+				ctrl-shift-up: reduces the selection from below.
+				ctrl-shift-down: reduces the selection from above.
+				shift-left: deselects the current youngest selected node and extends the selection up.
+				shift-right: deselects the current oldest selected node and extends the selection down.
+				ctrl-shift-left: deselects the current oldest selected node and reduces the selection from below.
+				ctrl-shift-right: deselects the current youngest selected node and reduces the selection from above.
+			To make room for the shift commands, the move commands from previous versions had to be re-mapped. The following is a list of the new move keyboard commands:
+				ctrl-up: Moves current selection up but stays at the current depth.
+				ctrl-down: Moves current selection down but stays at the current depth.
+				ctrl-left: Moves current selection up, adjusts depth as needed.
+				ctrl-right: Moves current selection down, adjusts depth as needed.
+		4) Find/Replace has had a major rewrite. It now support searching over the current document, all open documents, or the file system. The file system find/replace supports file and directory level glob filtering for both inclusion and exclusion (Now I won't mess up my CVS entries when doing a replace). Results are also displayed in a results dialog that lets you jump to the matched text in any of the open document. Currently the filesystem results are displayed, but don't automatically open the file from the file system. The file system find/replace functionality also makes use of a progress dialog that allows you to cancel a find/replace in progress. One caveat, large find/replace operation may cause out of memory errors. Recovery from this is graceful since you can just close the progress dialog and the current results will be displayed. By large I mean 50,000+ matches on searches over 10,000+ files. From what I've seen, the size of the result set is what causes the out of memory error due to the large number of objects created.
+		5) Added more new key commands.
+			shift-return: insert new node above. 
+			shift-ctrl-return: Split current node at cursor and insert above.
 	Feature Enhancements:
-		1) New Selection key commands.
-		2) Script and Macro editor now have save commands.
-		3) Inserting a new node when nodes are selected now always puts the new node as the next older sibling of the oldest selected node. Inserting a new node when in text selection mode and the current node is an open branch node still inserts the new node as the first child of the current node rather than as an older sibling.
-		4) Pasting now works the way inserting new nodes do. See #3 above for more detail.
-		5) Added insert new node above with shift-return. Split above also works with shift-ctrl-return.
-		6) File Export/Save has been modified so that File Formats can throw up there own dialog after the user has gone through the file chooser stage. By returning a null for bytes[] the save/export can be aborted, so user's may cancel at this point if the FileFormat code is written to support it. The updated HTMLExportFileFormat is an example of this.
-		7) The Export HTML file format has been rewritten to support document templates stored on disk. Now the user is prompted to select a style to use when they export. The templates are stored in prefs/css/.
+		1) Script and Macro editor now have save commands so you don't have to close the script editor to save the script.
+		2) Inserting a new node when nodes are selected now always puts the new node as the next older sibling of the oldest selected node. Inserting a new node when in text selection mode and the current node is an open branch node still inserts the new node as the first child of the current node rather than as an older sibling.
+		3) Pasting now works the way inserting new nodes do. See #2 above for more detail.
+		4) File Export/Save has been modified so that File Formats can throw up there own dialog after the user has gone through the file chooser stage. By returning a null for bytes[] the save/export can be aborted, so user's may cancel at this point if the FileFormat code is written to support it. The updated HTMLExportFileFormat is an example of this.
+		5) The Export HTML file format has been rewritten to support document templates stored on disk. Now the user is prompted to select a style to use when they export. The templates are stored in prefs/css/.
+		6) The "Render Image Manifests" script now outputs image aspect ratios and will provided width x height for each image normalized to a fixed area.
 	Bug Fixes:
 		1) Fixed a bug where cancelling an "Export" would cause the next save to fail. Same bug also fixed in "Export Selection" where cancelling would also cause you to lose the document tree except for what was selected.
 		2) Fixed bug where text selection would be lost whenever the user moused over the "Recent Files" menu.
@@ -17,7 +38,10 @@
 		7) Fixed a bug where doing a delete that merges into the previous line would cause cursor focus to be lost on a subsequent scroll action. This was an error in UndoableEdit so this may have fixed problems elsewhere as well.
 		8) Pasting into other apps now will not have extra indenting.
 		9) Fixed bug #527137 where help docs wouldn't load on linux. Thanks to sjakob for the fix.
-1.8.7 - 2/04/02
+		10) Fixed bug where document level attributes with an empty value would not get loaded for an OPML document.
+		11) Fixed some bugs in the way application and document level settings were working.
+		12) Updated run_joe.sh, provided by Gary Benson (dirtyrat), so that it now handles paths more sensibly, so you can invoke it as: run_joe ../../file.opml.
+1.8.7 - 02/04/02
 	License Change:
 		1) Switched to a BSD license.
 		2) We are now building our own jmousewheel.jar library. Code separation is much cleaner so that there is now only a "uses" relationship between outliner.jar and jmousewheel.jar. This should make things compatible between the use of a BSD license for outliner.jar and the LGPL for jmousewheel.jar.
