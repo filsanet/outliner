@@ -303,11 +303,12 @@ public class TextKeyListener implements KeyListener, MouseListener {
 					// so one of them must have the value -1
 					//	-- this needs to be investigated
 					// set a bug trap
-					if (startSelection < 0 || endSelection < 0 ) {
+					if (startSelection < 0 || endSelection < 0 || oldText.length() < 0) {
 						String msg = "Error at TextKeyListener:keyPressed:VK_DELETE\n" ;
 						msg = msg + "startSelection: -1\n" ;
 						msg = msg + "oldCaretPosition: " + oldCaretPosition + "\n" ;
-						msg = msg + "oldMarkPosition: " + oldMarkPosition ;
+						msg = msg + "oldMarkPosition: " + oldMarkPosition + "\n" ;
+						msg = msg + "oldText.length: " + oldText.length() ;
 						System.out.println("Stan_Debug:\t" + msg); 
 						return ;
 					} // end bug trap
