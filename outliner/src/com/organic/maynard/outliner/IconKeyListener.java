@@ -822,7 +822,13 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		for (int i = 0; i < tree.selectedNodes.size(); i++) {
 			nodeSet.addNode(((Node) tree.selectedNodes.get(i)).cloneClean());
 		}
-		Outliner.clipboard.setContents(new NodeSetTransferable(nodeSet), Outliner.outliner);
+		
+		// [md] This conditional is here since StringSelection subclassing seems to be broken in Java 1.3.1.
+		if (Outliner.isJava131()) {
+			java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(nodeSet.toString()), null);
+		} else {
+			Outliner.clipboard.setContents(new NodeSetTransferable(nodeSet), Outliner.outliner);
+		}
 	}
 
 	private void cut(TreeContext tree, OutlineLayoutManager layout) {
@@ -839,7 +845,12 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		}
 		
 		if (!nodeSet.isEmpty()) {
-			Outliner.clipboard.setContents(new NodeSetTransferable(nodeSet), Outliner.outliner);
+			// [md] This conditional is here since StringSelection subclassing seems to be broken in Java 1.3.1.
+			if (Outliner.isJava131()) {
+				java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(nodeSet.toString()), null);
+			} else {
+				Outliner.clipboard.setContents(new NodeSetTransferable(nodeSet), Outliner.outliner);
+			}
 		}
 		
 		// Delete selection
@@ -897,11 +908,9 @@ public class IconKeyListener implements KeyListener, MouseListener {
 				tree.addNodeToSelection(node);
 			}
 		} else {
-			System.out.println("isNotNodeSet: " + text);
 			Node tempRoot = PadSelection.pad(text, tree, oldestNode.getDepth(), Preferences.LINE_END_STRING);
 		
 			for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
-				System.out.println("adding them.");
 				Node node = tempRoot.getChild(i);
 				parentForNewNode.insertChild(node, indexForNewNode + 1);
 				tree.insertNode(node);
