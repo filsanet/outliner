@@ -29,30 +29,73 @@ import javax.swing.*;
 import com.organic.maynard.util.*;
 
 public class Outliner extends JFrame implements ClipboardOwner {
+	
+	// Directory setup
+	public static String GRAPHICS_DIR = "graphics";
+	public static String PREFS_DIR = "prefs" + System.getProperty("file.separator");
+	public static String USER_PREFS_DIR = PREFS_DIR;
 
-	public static final String PREFS_DIR = "prefs" + System.getProperty("file.separator");
-	public static final String MACROS_DIR = PREFS_DIR + "macros" + System.getProperty("file.separator");
-	public static final String GRAPHICS_DIR = "graphics";
+	// Find out if we've got a home directory to work with for user preferences, if
+	// not then we use the prefs dir as usual.
+	static {
+		String userhome = System.getProperty("user.home");
+		if ((userhome != null) && !userhome.equals("")) {
+			USER_PREFS_DIR = userhome + System.getProperty("file.separator") + "outliner" + System.getProperty("file.separator");
+		}
+	}
+
+	// These prefs should be under the users prefs dir, or if no user prefs dir exists then
+	// they should be under the apps prefs dir.
+	public static String MACROS_DIR = USER_PREFS_DIR + "macros" + System.getProperty("file.separator");
+	public static String CONFIG_FILE = USER_PREFS_DIR + "config.txt";
+	public static String RECENT_FILES_FILE = USER_PREFS_DIR + "recent_files.txt";
+
+	// Make the directories in case they don't exist.
+	static {
+		boolean isCreated = false;
+		
+		File prefsFile = new File(PREFS_DIR);
+		isCreated = prefsFile.mkdirs();
+		if (isCreated) {
+			System.out.println("Created Preferences Directory: " + prefsFile.getPath());
+		}
+		
+		File userPrefsFile = new File(USER_PREFS_DIR);
+		isCreated = userPrefsFile.mkdirs();
+		if (isCreated) {
+			System.out.println("Created User Preferences Directory: " + userPrefsFile.getPath());
+		}
+		
+		File macrosFile = new File(MACROS_DIR);
+		isCreated = macrosFile.mkdirs();
+		if (isCreated) {
+			System.out.println("Created Macros Directory: " + macrosFile.getPath());
+		}
+	}
 	
-	public static final String MACRO_CLASSES_FILE = PREFS_DIR + "macro_classes.txt";
-	public static final String CONFIG_FILE = PREFS_DIR + "config.txt";
-	public static final String RECENT_FILES_FILE = PREFS_DIR + "recent_files.txt";
-	public static final String ENCODINGS_FILE = PREFS_DIR + "encodings.txt";
-	public static final String FILE_FORMATS_FILE = PREFS_DIR + "file_formats.txt";
+	// These dirs should always be under the apps prefs dir.
+	public static String MACRO_CLASSES_FILE = PREFS_DIR + "macro_classes.txt";
+	public static String ENCODINGS_FILE = PREFS_DIR + "encodings.txt";
+	public static String FILE_FORMATS_FILE = PREFS_DIR + "file_formats.txt";
 	
+	
+	// Command Parser
 	public static final String COMMAND_PARSER_SEPARATOR = "|";
 	public static final String COMMAND_SET = "set";
 	public static final String COMMAND_MACRO_CLASS = "macro_class";
 	public static final String COMMAND_FILE_FORMAT = "file_format";
 	public static final CommandParser PARSER = new CommandParser(COMMAND_PARSER_SEPARATOR);
 	
+	
+	// GUI Objects
 	public static PreferencesFrame prefs = null;
 	public static FindReplaceFrame findReplace = null;
 	public static MacroManagerFrame macroManager = null;
 	public static MacroPopupMenu macroPopup = null;
 	public static FileFormatManager fileFormatManager = null;
 
-	// GUI
+
+	// GUI Settings
 	static final int MIN_WIDTH = 450;
 	static final int MIN_HEIGHT = 450;
  
