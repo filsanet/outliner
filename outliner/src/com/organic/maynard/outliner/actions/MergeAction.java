@@ -110,7 +110,7 @@ public class MergeAction extends AbstractAction {
 			for (int i = 0, limit = nodeList.size(); i < limit; i++) {
 				Node node = nodeList.get(i);
 				
-				// Abort if node is not editable
+				// Skip if node is not editable
 				if (!node.isEditable()) {
 					continue;
 				}
@@ -122,7 +122,7 @@ public class MergeAction extends AbstractAction {
 			for (int i = 0, limit = nodeList.size(); i < limit; i++) {
 				Node node = nodeList.get(i);
 				
-				// Abort if node is not editable
+				// Skip if node is not editable
 				if (!node.isEditable()) {
 					continue;
 				}
@@ -136,8 +136,23 @@ public class MergeAction extends AbstractAction {
 		if (!didMerge) {
 			return;
 		}
+		
+		// Get youngest editable node
+		Node youngestNode = null;
+		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
+			Node node = nodeList.get(i);
+			
+			if (node.isEditable()) {
+				youngestNode = node;
+				break;
+			}
+		}		
 
-		Node youngestNode = tree.getYoungestInSelection();
+		// Abort if no editable nodes found.
+		if (youngestNode == null) {
+			return;
+		}
+		
 		Node parent = youngestNode.getParent();
 		CompoundUndoableReplace undoable = new CompoundUndoableReplace(parent);
 
@@ -148,11 +163,11 @@ public class MergeAction extends AbstractAction {
 		undoable.addPrimitive(new PrimitiveUndoableReplace(parent, youngestNode, newNode));
 
 		// Iterate over the remaining selected nodes deleting each one
-		for (int i = 1, limit = nodeList.size(); i < limit; i++) {
+		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
 			Node node = nodeList.get(i);
 			
 			// Abort if node is not editable
-			if (!node.isEditable()) {
+			if (!node.isEditable() || node == youngestNode) {
 				continue;
 			}
 
