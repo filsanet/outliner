@@ -1,8 +1,8 @@
 macro|HTML Bold.txt|com.organic.maynard.outliner.TextMacro
 macro|HTML Escape.txt|com.organic.maynard.outliner.HTMLEscapeMacro
 macro|HTML Un-Escape.txt|com.organic.maynard.outliner.HTMLEscapeMacro
-macro|Sort Alpha-Numeric.txt|com.organic.maynard.outliner.SortMacro
-macro|Sort By Text Length.txt|com.organic.maynard.outliner.SortMacro
+macro|Alpha-Numeric.txt|com.organic.maynard.outliner.SortMacro
+macro|By Text Length.txt|com.organic.maynard.outliner.SortMacro
 macro|URL Decode.txt|com.organic.maynard.outliner.URLEncodeMacro
 macro|URL Encode.txt|com.organic.maynard.outliner.URLEncodeMacro
 macro|XML-RPC StuffedDog Speller.txt|com.organic.maynard.outliner.XMLRPCMacro
