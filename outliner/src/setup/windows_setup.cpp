@@ -41,7 +41,6 @@
  * @version $Revision$, $Date$
  */
 
-
 // include files
 #include <stdio.h>
 #include <windows.h>
@@ -58,12 +57,7 @@ int main(int argc, char* argv[]){
 	// if we make it thru all the steps, we return 1
 	
 	// try to determine which version of Windows we're running under
-	// if (! determineWindowsVersion()) return 0 ;
-	
-	// on some systems, user must be logged on as an adminstrator to
-	// set environment variables -- check for that, and prompt as
-	// necessary
-	// if (! dealWithAdministratorCrap()) return 0 ;
+	if (! determineWindowsVersion()) return 0 ;
 	
 	// try to make sure we've got a proper Java 2 Runtime Environment
 	// if (! ensureJ2RE()) return 0 ;
@@ -82,7 +76,7 @@ int main(int argc, char* argv[]){
 	// quickstart toolbar of taskbar, folders on desktop
 	// if (! copyJoePifPerUserPrefs()) return 0 ;
 	
-	// suggest a reboot for Windows 9x systems
+	// suggest a reboot for systems that need one
 	// if (! suggestWindowsReboot()) return 0 ;
 	
 	return 1 ;
@@ -133,27 +127,46 @@ int getShortPathCurDir (char * shortPathBuffer) {
 // set an environment variable
 int setEnvVar (char * varName, char * varValue, char * introLines) {
 	// local vars
-	int result = 0 ;
+	int result ;
+	
 	// switch out on windows version
-	// switch (gWindowsVersion) {
-		// case WINDOWS_9X:
-		// default:
-			// win 9x uses autoexec.bat and a reboot
-			return setAutoExecEnvVar (varName, varValue, introLines) ;
-			// break ;
-		// case WINDOWS_NT:
-		// case WINDOWS_2K:
-		// case WINDOWS_ME:
-		// case WINDOWS_XP:
-			// win nt/2k/me/xp use the registry for env vars
-			// result = setRegistryEnvVar (varName, varValue) ;
+	switch (gWindowsVersion) {
+		case WIN_95:
+		case WIN_95_OSR2:
+		case WIN_98:
+		case WIN_98_SE:
+			// win 9x use autoexec.bat and a reboot
+			result = setAutoExecEnvVar (varName, varValue, introLines) ;
+			break ;
+			
+		case WIN_ME:
+		case WIN_XP:
+		case WIN_NT_4:
+		case WIN_2K:
+		case WIN_DOT_NET_SERVER:
+		case WIN_UNKNOWN_V4:
+		case WIN_UNKNOWN_V5:
+		case WIN_UNKNOWN_V6:
+		case WIN_UNKNOWN_V7:
+			// win me/xp/nt4/2k/.netServer/unknownsV4andUp use the registry
+			result = setRegistryEnvVar (varName, varValue) ;
+			
+			// if we succeeded, broadcast the news,
+			// 	so as to avoid need to reboot
 			// if (result) result = broadcast the news
-			// return result 
-			// break ;
-		// } // end switch
+			break ;
+			
+		case WIN_NT_351:
+		case WIN_UNKNOWN_V3:
+		case WIN_VERY_UNKNOWN:
+		default:
+			// we don't work on any other windows systems (NT 3.5 and less)
+			result = 0 ;
+			break ;
+	} // end switch
 		
-		// for win nt, 2k, me, xp, use registry
-//		
+	// done
+	return result ;
 	
 } // end setEnvVar
 
@@ -534,7 +547,7 @@ int getWord (int whichWord, char * sourceString, char * wordBuffer) {
 	// -1 if word not found
 	return wordStart ;
 	
-} // end getFirstWord
+} // end getWord
 
 
 // given a pathname, remove the filename
@@ -562,3 +575,147 @@ int trimFileOffPath (char * path) {
 	return strlen(path) ;
 	
 } // end trimFileOffPath
+
+
+// figure out what version of Windows we're running
+int determineWindowsVersion () {
+	// local vars
+	OSVERSIONINFOEX osvi;
+	BOOL bOsVersionInfoEx;
+
+	// clear the data structure
+	ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
+	// set it up as the EX versionInfo
+	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+
+	// if calling GetVersionEx using OSVERSIONINFOEX fails ...
+	if( !(bOsVersionInfoEx = GetVersionEx ((OSVERSIONINFO *) &osvi)) ){
+		
+		// set up as the nonEX versionInfo
+		osvi.dwOSVersionInfoSize = sizeof (OSVERSIONINFO);
+	
+		// if calling GetVersionEx using OSVERSIONINFO fails ...
+		if (! GetVersionEx ( (OSVERSIONINFO *) &osvi) ) 
+			// leave failing
+			// this means we're on a pre-NT_351/95 system
+			return 0;
+	} // end if
+
+	// okay, we have version info in regular or EX form
+	
+	// switch out on major version #
+	switch (osvi.dwMajorVersion) {
+		
+		// NT 351
+		case 3:
+			// switch out on minor version #
+			switch (osvi.dwMinorVersion) {
+				case 51:
+					gWindowsVersion = WIN_NT_351 ;
+					break ;
+				default:
+					gWindowsVersion = WIN_UNKNOWN_V3 ;
+					break ;
+			} // end switch
+			break ;
+		
+		// 95, 95 OSR2, NT 4, 98, 98 SE, or ME	
+		case 4:
+			// switch out on minor version #
+			switch (osvi.dwMinorVersion) {
+				
+				// 95, 95 OSR2, or NT 4
+				case 0:
+					// if it's not NT...
+					if (osvi.dwPlatformId != VER_PLATFORM_WIN32_NT) {
+						// it's 95
+						// regular or OSR2 ?
+						// if it's a B or C
+						if ((osvi.szCSDVersion[1] == 'C')
+							|| (osvi.szCSDVersion[1] == 'B'))
+							gWindowsVersion = WIN_95_OSR2 ;
+						else
+							gWindowsVersion = WIN_95 ;
+					} // end if it's not NT
+					else {
+						// it's NT 4
+						gWindowsVersion = WIN_NT_4 ;
+						
+						// let's get any service pack
+						if (osvi.szCSDVersion[0] != 0) 
+							g_NT_4_SP_Num = osvi.szCSDVersion[strlen(osvi.szCSDVersion) - 1]- '0' ;
+					} // end else it's NT 4
+					break ;
+				
+				// 98 or 98 SE
+				case 10:
+					// if it's SE
+					if (osvi.szCSDVersion[1] == 'A' )
+						gWindowsVersion = WIN_98_SE ;
+					else
+						gWindowsVersion = WIN_98 ;
+					break ;
+					
+				// ME
+				case 90:
+					gWindowsVersion = WIN_ME ;
+					break ;
+					
+				// unknown
+				default:
+					gWindowsVersion = WIN_UNKNOWN_V4 ;
+					break ;
+					
+			} // end switch on minor version #
+			break ;
+		
+		// 2000, XP, or .Net Server	
+		case 5:					
+			// switch out on minor version #
+			switch (osvi.dwMinorVersion) {
+				
+				// 2000
+				case 0:
+					gWindowsVersion = WIN_2K ;
+					break ;
+					
+				// XP or .Net Server
+				case 1:
+					// if we have EX data (we should)
+					if (bOsVersionInfoEx) { 
+						// if we're nt workstation
+						if(osvi.wProductType == VER_NT_WORKSTATION)
+							gWindowsVersion = WIN_XP ;
+						else
+							gWindowsVersion = WIN_DOT_NET_SERVER ;
+					} else 
+						gWindowsVersion = WIN_UNKNOWN_V5 ;
+					break ;
+					
+				default:
+					gWindowsVersion = WIN_UNKNOWN_V5;
+					break ;
+			} // end switch on minor version #
+			break ;
+			
+		// future stuff
+		case 6:
+			gWindowsVersion = WIN_UNKNOWN_V6 ;
+			break ;
+			
+		case 7:
+			gWindowsVersion = WIN_UNKNOWN_V7 ;
+			break ;
+		
+		// very unknown
+		default:
+			gWindowsVersion = WIN_VERY_UNKNOWN ;
+			break ;
+			
+	} // end switch on major version #
+
+	// done
+	return 1 ;
+	
+} // end function determineWindowsVersion
+
