@@ -136,23 +136,23 @@ public class GUITreeLoader extends HandlerBase implements JoeXMLConstants {
 
 
 	// Sax DocumentHandler Implementation
-	public void startDocument () {}
+	public void startDocument() {}
     
-	public void endDocument () {}
+	public void endDocument() {}
 
 	public void startElement (String name, AttributeList atts) {
 		
 		// Special Handling for elements that are not GUITreeComponents
 		try {
-			if (name.equals(E_SEPARATOR)) {
+			if (E_SEPARATOR.equals(name)) {
 				JMenu menu = (JMenu) elementStack.get(elementStack.size() - 1);
 				menu.insertSeparator(menu.getItemCount());
 				return;
-			} else if (name.equals(E_VERTICAL_STRUT)) {
+			} else if (E_VERTICAL_STRUT.equals(name)) {
 				Box box = ((AbstractPreferencesPanel) elementStack.get(elementStack.size() - 1)).box;
 				box.add(Box.createVerticalStrut(Integer.parseInt(atts.getValue(A_SIZE))));
 				return;		
-			} else if (name.equals(E_ASSET)) {
+			} else if (E_ASSET.equals(name)) {
 				reg.addText(atts.getValue(A_KEY), atts.getValue(A_VALUE));
 				return;		
 			}
@@ -196,22 +196,25 @@ public class GUITreeLoader extends HandlerBase implements JoeXMLConstants {
 
 	}
 	
-	public void endElement (String name) throws SAXException {
+	public void endElement(String name) throws SAXException {
 		// Special Handling for elements that are not GUITreeComponents
-		if (name.equals(E_SEPARATOR) || name.equals(E_VERTICAL_STRUT) || name.equals(E_ASSET)) {
+		if (E_SEPARATOR.equals(name) || E_VERTICAL_STRUT.equals(name) || E_ASSET.equals(name)) {
 			return;
 		}
 		
+		int lastElementIndex = elementStack.size() - 1;
+		int lastAttributeIndex = attributesStack.size() - 1;
+		
 		// Get GUITreeComponent from stack
-		GUITreeComponent obj = (GUITreeComponent) elementStack.get(elementStack.size() - 1);
+		GUITreeComponent obj = (GUITreeComponent) elementStack.get(lastElementIndex);
 		
 		// Call endSetup
-		AttributeList atts = (AttributeList) attributesStack.get(attributesStack.size() - 1);
+		AttributeList atts = (AttributeList) attributesStack.get(lastAttributeIndex);
 		obj.endSetup(atts);
 		
 		// Update Stack
-		elementStack.remove(elementStack.size() - 1);
-		attributesStack.remove(attributesStack.size() - 1);
+		elementStack.remove(lastElementIndex);
+		attributesStack.remove(lastAttributeIndex);
 	}
 	
 	public void characters(char ch[], int start, int length) throws SAXException {
