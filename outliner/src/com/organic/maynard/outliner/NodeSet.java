@@ -80,9 +80,18 @@ public class NodeSet implements Cloneable {
 		
 		for (int i = 0; i < nodes.size(); i++) {
 			Node node = (Node) nodes.get(i);
+			
+			// Since a node may be a root node, and depthPaddedValue doesn't throw in root level text,
+			// let's put it back in.
+			if (node.isRoot()) {
+				for (int j = 0; j < node.getDepth(); j++) {
+					buf.append(Preferences.DEPTH_PAD_STRING);
+				}
+				buf.append(node.getValue()).append(Preferences.LINE_END_STRING);
+			}
+			
 			node.depthPaddedValue(buf,  Preferences.LINE_END_STRING);
 		}
-		
 		return buf.toString();
 	}	
 }
@@ -100,12 +109,12 @@ class NodeSetTransferable extends StringSelection implements Transferable {
 		} catch (ClassNotFoundException ex) {}
 	}
 	
-	private static final int NODESET = 0;
-	private static final int STRING = 1;
+	private static final int STRING = 0;
+	private static final int NODESET = 1;
 	
 	private DataFlavor[] flavors = {
-		nsFlavor, 
-		DataFlavor.stringFlavor
+		DataFlavor.stringFlavor,
+		nsFlavor
 	};
 	
 	
