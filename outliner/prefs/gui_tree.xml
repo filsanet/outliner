@@ -62,6 +62,7 @@
 				<preference id="line_number_selected_child_color" class="com.organic.maynard.outliner.PreferenceColor" default="-2302756">
 					<preference_component id="line_number_selected_children_color_component" class="com.organic.maynard.outliner.PreferencesGUITreeColorButtonComponent" label="Line Number Selected Children Color"/>
 				</preference>
+				<vertical_strut size="5"/>
 				<preference id="vertical_spacing" class="com.organic.maynard.outliner.PreferenceInt" default="2">
 					<validator id="vertical_spacing_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="2"/>
 					<preference_component id="vertical_spacing_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Vertical Spacing" size="4"/>
@@ -70,6 +71,7 @@
 					<validator id="indent_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="1" max="99" default="15"/>
 					<preference_component id="indent_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Indent" size="4"/>
 				</preference>
+				<vertical_strut size="5"/>
 				<preference id="left_margin" class="com.organic.maynard.outliner.PreferenceInt" default="5">
 					<validator id="left_margin_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="0" max="99" default="5"/>
 					<preference_component id="left_margin_component" class="com.organic.maynard.outliner.PreferencesGUITreeTextFieldComponent" label="Left Margin" size="4"/>
@@ -89,19 +91,21 @@
 			</preferencepanel>
 			<preferencepanel id="preferences_panel_open_and_save" class="com.organic.maynard.outliner.PreferencesPanelOpenAndSave" title="Open &amp; Save">
 				<preference id="line_end" class="com.organic.maynard.outliner.PreferenceLineEnding">
-					<preference_component id="line_end_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Line Terminator"/>
+					<preference_component id="line_end_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Line Terminator" style="single_centered"/>
 				</preference>
+				<vertical_strut size="5"/>
 				<preference id="open_encoding" class="com.organic.maynard.outliner.PreferenceString" default="ISO-8859-1">
-					<preference_component id="open_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Encoding when opening."/>
+					<preference_component id="open_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Encoding when opening." style="single_centered"/>
 				</preference>
 				<preference id="save_encoding" class="com.organic.maynard.outliner.PreferenceString" default="ISO-8859-1">
-					<preference_component id="save_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Encoding when saving."/>
+					<preference_component id="save_encoding_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Encoding when saving." style="single_centered"/>
 				</preference>
+				<vertical_strut size="5"/>
 				<preference id="open_format" class="com.organic.maynard.outliner.PreferenceString" default="Plaintext">
-					<preference_component id="open_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format when opening."/>
+					<preference_component id="open_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format when opening." style="single_centered"/>
 				</preference>
 				<preference id="save_format" class="com.organic.maynard.outliner.PreferenceString" default="Plaintext">
-					<preference_component id="save_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format when saving."/>
+					<preference_component id="save_format_component" class="com.organic.maynard.outliner.PreferencesGUITreeComboBoxComponent" label="Default Format when saving." style="single_centered"/>
 				</preference>
 			</preferencepanel>
 			<preferencepanel id="preferences_panel_misc" class="com.organic.maynard.outliner.PreferencesPanelMisc" title="Misc.">
