@@ -87,12 +87,12 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 		// Setup the File Chooser to save or export
 		switch (type) {
 			case FileProtocol.SAVE:
-				chooser.configureForSave(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
+				chooser.configureForSave(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_SAVE_DIR).cur);
 				approveButtonText = GUITreeLoader.reg.getText("save");
 				break;
 				
 			case FileProtocol.EXPORT:
-				chooser.configureForExport(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
+				chooser.configureForExport(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_SAVE_DIR).cur);
 				approveButtonText = GUITreeLoader.reg.getText("export");
 				break;
 				

@@ -468,6 +468,10 @@
 							<validator id="new_doc_on_startup_validator" class="com.organic.maynard.outliner.util.preferences.BooleanValidator"/>
 							<preference_component id="new_doc_on_startup_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeCheckBoxComponent" label="New document on startup"/>
 						</preference>
+						<preference id="open_docs_on_startup" class="com.organic.maynard.outliner.util.preferences.PreferenceBoolean" default="true">
+							<validator id="open_docs_on_startup_validator" class="com.organic.maynard.outliner.util.preferences.BooleanValidator"/>
+							<preference_component id="open_docs_on_startup_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeCheckBoxComponent" label="Reopen documents on startup"/>
+						</preference>
 						<preference id="owner_name" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default="">
 							<preference_component id="owner_name_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeTextFieldComponent" label="Owner name" size="10"/>
 						</preference>

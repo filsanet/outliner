@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner.menus.file;
 
+import com.organic.maynard.outliner.dom.*;
 import com.organic.maynard.outliner.scripting.script.*;
 import com.organic.maynard.outliner.menus.*;
 import com.organic.maynard.outliner.*;
@@ -43,6 +44,10 @@ import java.awt.*;
 import java.io.*;
 import java.awt.event.*;
 import org.xml.sax.*;
+import java.util.*;
+import com.organic.maynard.xml.XMLTools;
+import com.organic.maynard.io.FileTools;
+import com.organic.maynard.outliner.model.propertycontainer.*;
 
 /**
  * @author  $Author$
@@ -66,7 +71,9 @@ public class QuitMenuItem extends AbstractOutlinerMenuItem implements ActionList
 	
 	// Static Methods
 	public static void quit() {
-		if (!CloseAllFileMenuItem.closeAllOutlinerDocuments()) {
+		
+		// Store List of Open Documents and close documents
+		if (!saveOpenDocumentList()) {
 			return;
 		}
 		
@@ -95,5 +102,40 @@ public class QuitMenuItem extends AbstractOutlinerMenuItem implements ActionList
 		ScriptsManagerModel.runShutdownScripts();
 		
 		System.exit(0);
+	}
+	
+	/**
+	 * Saves a List of the current open documents to disk so that they can be
+	 * re-opened when JOE is relaunched.
+	 */
+	private static boolean saveOpenDocumentList() {
+		// Harvest Data to save and close each document
+		ArrayList openFileList = new ArrayList();
+		Iterator it = Outliner.documents.getDefaultOpenDocumentIterator();
+		while (it.hasNext()) {
+			OutlinerDocument doc = (OutlinerDocument) it.next();
+			
+			if (OutlinerWindowMonitor.closeInternalFrame(doc)) {
+				if (!doc.isModified()) { // Don't store untitled docs that haven't been saved.
+					openFileList.add(doc.getDocumentInfo());
+				}
+			} else {
+				return false;
+			}
+		}
+		
+		// Save the file
+		StringBuffer buf = new StringBuffer();
+		buf.append(XMLTools.getXMLDeclaration());
+		String line_ending = "\n";
+		buf.append(line_ending);
+		PropertyContainerUtil.writeXML(buf, openFileList, 0, line_ending);
+		try {
+			FileTools.dumpStringToFile(new File(Outliner.OPEN_FILES_FILE), buf.toString(), "UTF-8");
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+		
+		return true;
 	}
 }

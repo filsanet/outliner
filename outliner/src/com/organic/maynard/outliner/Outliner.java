@@ -110,6 +110,7 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	public static String FIND_REPLACE_FILE = new StringBuffer().append(USER_PREFS_DIR).append("find_replace.xml").toString();
 	public static String CONFIG_FILE =       new StringBuffer().append(USER_PREFS_DIR).append("config.txt").toString();
 	public static String RECENT_FILES_FILE = new StringBuffer().append(USER_PREFS_DIR).append("recent_files.xml").toString();
+	public static String OPEN_FILES_FILE =   new StringBuffer().append(USER_PREFS_DIR).append("open_files.xml").toString();
 	public static String ADDED_WORDS_FILE =  new StringBuffer().append(USER_PREFS_DIR).append("added_words.dict").toString();
 	
 	// These dirs/files should always be under the apps prefs dir.
@@ -401,6 +402,17 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		
 		// Run startup scripts. We're doing this just prior to opening any documents.
 		ScriptsManagerModel.runStartupScripts();
+		
+		// Open documents from open documents list.
+		if (Preferences.getPreferenceBoolean(Preferences.OPEN_DOCS_ON_STARTUP).cur) {
+			java.util.List openDocumentsList = PropertyContainerUtil.parseXML(Outliner.OPEN_FILES_FILE);
+			for (int i = 0; i < openDocumentsList.size(); i++) {
+				DocumentInfo docInfo = (DocumentInfo) openDocumentsList.get(i);
+				String protocol_name = (String) docInfo.getProperty(DocumentInfo.KEY_PROTOCOL_NAME);
+				FileProtocol fileProtocol = fileProtocolManager.getProtocol(protocol_name);
+				FileMenu.openFile(docInfo, fileProtocol);
+			}
+		}
 		
 		// See if the command line included a file to be opened.
 		if (args.length > 0) {      // srk - put this test in -- 2002.09.03

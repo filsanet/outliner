@@ -36,16 +36,13 @@ package com.organic.maynard.outliner.util.preferences;
 
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.*;
-
 import java.awt.Font;
 import java.awt.*;
-
 import java.util.*;
 import java.io.*;
 import javax.swing.*;
 import org.xml.sax.*;
 import com.organic.maynard.util.string.*;
-
 import com.organic.maynard.data.StringList;
 
 /**
@@ -54,30 +51,30 @@ import com.organic.maynard.data.StringList;
  */
 
 public class Preferences implements GUITreeComponent {
-
+	
 	// Constants
 	public static final String EXTENSION_SEPARATOR = ".";
 	
 	public static final String DEPTH_PAD_STRING = "\t"; // Specific to Outliner Docs
 	public static final String LINE_END_STRING = "\n"; // Specific to Outliner Docs
-
+	
 	public static String TXT_WORDS = null;
 	public static String TXT_CHARACTERS = null;
 	public static String[] LINE_WRAP_OPTIONS = new String[2];
 	public static String[] FONT_FAMILY_NAMES = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-
+	
 	public static String[] RECENT_FILES_ORDERINGS = new String[3];
 	public static String[] RECENT_FILES_NAME_FORMS = new String[3];
 	public static String[] RECENT_FILES_DIRECTIONS = new String[2];
-
+	
 	public static final StringList ENCODINGS = new StringList();
 	public static final StringList FILE_FORMATS_OPEN = new StringList();
 	public static final StringList FILE_FORMATS_IMPORT = new StringList();
 	public static final StringList FILE_FORMATS_SAVE = new StringList();
 	public static final StringList FILE_FORMATS_EXPORT = new StringList();
-
+	
 	public static final ArrayList FILE_PROTOCOLS = new ArrayList();
-
+	
 	
 	// Start Preference Keys: All the preferences used by the core app are here. If you are adding your own
 	// preferences you don't need to put your keys here. These should probably end up in an interface since
@@ -90,24 +87,24 @@ public class Preferences implements GUITreeComponent {
 			public static final String MOST_RECENT_SAVE_DIR = "most_recent_save_dir";
 			public static final String MOST_RECENT_OPEN_DIR = "most_recent_open_dir";
 			public static final String IS_MAXIMIZED = "is_maximized";
-
+			
 			// Main Window
 			public static final String MAIN_WINDOW_W = "main_window_width";
 			public static final String MAIN_WINDOW_H = "main_window_height";
 			public static final String MAIN_WINDOW_X = "main_window_x_offset";
 			public static final String MAIN_WINDOW_Y = "main_window_y_offset";
-
+			
 			// Help System	[srk] 8/11/01 3:17PM
 			public static final String USER_GUIDE_PATH = "user_guide_path";
 			public static final String DEVELOPER_GUIDE_PATH = "developer_guide_path";
 			public static final String BOOKMARKS_PATH = "bookmarks_path";
 			public static final String TUTORIALS_PATH = "tutorials_path";
 			public static final String ABOUT_PATH = "about_path";
-
+			
 			// InnerFrame State Maintenance [srk]
 			public static final String FRAME_INFO_LIST_SIZE = "frame_info_list_size";
-
-
+			
+			
 		// Editor Panel
 		public static final String FONT_FACE = "font_face";
 		public static final String FONT_SIZE = "font_size";
@@ -122,7 +119,7 @@ public class Preferences implements GUITreeComponent {
 		public static final String APPLY_FONT_STYLE_FOR_MOVEABILITY = "apply_font_style_for_moveability";
 		public static final String USE_CREATE_MOD_DATES = "use_create_mod_dates";
 		public static final String CREATE_MOD_DATES_FORMAT = "create_mod_dates_format";
-	
+		
 		// Look & Feel Panel
 		public static final String DESKTOP_BACKGROUND_COLOR = "desktop_background_color";
 		public static final String PANEL_BACKGROUND_COLOR = "panel_background_color";
@@ -162,11 +159,11 @@ public class Preferences implements GUITreeComponent {
 		
 		// Recent Files List Options
 		public static final String RECENT_FILES_LIST_SIZE = "recent_files_list_size";
-
+		
 		public static final String RECENT_FILES_ORDERING = "recent_files_ordering";
 		public static final String RECENT_FILES_DIRECTION = "recent_files_direction";
 		public static final String RECENT_FILES_NAME_FORM= "recent_files_name_form";
-
+		
 		public static final String RF_D_BOTTOMTOTOP= "rf_d_bottomtotop";
 		public static final String RF_D_TOPTOBOTTOM= "rf_d_toptobottom";
 		
@@ -177,50 +174,51 @@ public class Preferences implements GUITreeComponent {
 		public static final String RF_O_ALPHABETICAL= "rf_o_alphabetical";
 		public static final String RF_O_ASCII= "rf_o_ascii";
 		public static final String RF_O_CHRONOLOGICAL= "rf_o_chronological";
-
+		
 		// Misc Panel
 		public static final String PRINT_ENVIRONMENT = "print_environment";
 		public static final String NEW_DOC_ON_STARTUP = "new_doc_on_startup";
+		public static final String OPEN_DOCS_ON_STARTUP = "open_docs_on_startup";
 		public static final String MOUSE_WHEEL_SCROLL_SPEED = "mouse_wheel_scroll_speed";
 		public static final String OWNER_NAME = "owner_name";
 		public static final String OWNER_EMAIL = "owner_email";
-
+		
 		// WebFile
 		public static final String WEB_FILE_URL = "web_file_url";
 		public static final String WEB_FILE_USER = "web_file_user";
 		public static final String WEB_FILE_PASSWORD = "web_file_password";
-
+		
 	// End Preference Keys
-
-
+	
+	
 	// The Constructors
 	public Preferences() {
 		TXT_WORDS = GUITreeLoader.reg.getText("wrap_words");
 		TXT_CHARACTERS = GUITreeLoader.reg.getText("wrap_characters");
 		LINE_WRAP_OPTIONS[0] = TXT_WORDS;
 		LINE_WRAP_OPTIONS[1] = TXT_CHARACTERS;
-
+		
 		RECENT_FILES_ORDERINGS[0] = GUITreeLoader.reg.getText(RF_O_CHRONOLOGICAL); 
 		RECENT_FILES_ORDERINGS[1] = GUITreeLoader.reg.getText(RF_O_ALPHABETICAL); 
 		RECENT_FILES_ORDERINGS[2] = GUITreeLoader.reg.getText(RF_O_ASCII);
-	
+		
 		RECENT_FILES_NAME_FORMS[0] = GUITreeLoader.reg.getText(RF_NF_FULL_PATHNAME);
 		RECENT_FILES_NAME_FORMS[1] = GUITreeLoader.reg.getText(RF_NF_TRUNC_PATHNAME); 
 		RECENT_FILES_NAME_FORMS[2] = GUITreeLoader.reg.getText(RF_NF_FILENAME);
-	
+		
 		RECENT_FILES_DIRECTIONS[0] = GUITreeLoader.reg.getText(RF_D_TOPTOBOTTOM); 
 		RECENT_FILES_DIRECTIONS[1] = GUITreeLoader.reg.getText(RF_D_BOTTOMTOTOP);
-			
+		
 		// Place a reference to this object in the outliner
 		Outliner.prefs = this;
 	}
 	
-
+	
 	// GUITreeComponent interface
 	private String id = null;
 	public String getGUITreeComponentID() {return this.id;}
 	public void setGUITreeComponentID(String id) {this.id = id;}
-
+	
 	public void startSetup(Attributes atts) {
 		Outliner.loadPrefsFile(Outliner.PARSER, Outliner.CONFIG_FILE);	
 	}
@@ -230,7 +228,7 @@ public class Preferences implements GUITreeComponent {
 	
 	// PreferencesPanel Registry
 	private HashMap prefsPanelReg = new HashMap();
-
+	
 	public void addPreferencesPanel(String key, PreferencesPanel prefPanel) {
 		prefsPanelReg.put(key, prefPanel);
 	}
@@ -249,7 +247,7 @@ public class Preferences implements GUITreeComponent {
 	// loaded. This allows modules which are loaded later to still use the same prefs
 	// as the rest of the application.
 	private HashMap tempValues = new HashMap();
-
+	
 	public void addTempValue(String key, String value) {
 		tempValues.put(key, value);
 	}
@@ -287,32 +285,32 @@ public class Preferences implements GUITreeComponent {
 	public static PreferenceBoolean getPreferenceBoolean(String key) {
 		return (PreferenceBoolean) Outliner.prefs.getPreference(key);
 	}
-
+	
 	public static PreferenceInt getPreferenceInt(String key) {
 		return (PreferenceInt) Outliner.prefs.getPreference(key);
 	}
-
+	
 	public static PreferenceString getPreferenceString(String key) {
 		return (PreferenceString) Outliner.prefs.getPreference(key);
 	}
-
+	
 	public static PreferenceColor getPreferenceColor(String key) {
 		return (PreferenceColor) Outliner.prefs.getPreference(key);
 	}
-
+	
 	public static PreferenceLineEnding getPreferenceLineEnding(String key) {
 		return (PreferenceLineEnding) Outliner.prefs.getPreference(key);
 	}
-
+	
 	public static PreferenceStringList getPreferenceStringList(String key) {
 		return (PreferenceStringList) Outliner.prefs.getPreference(key);
 	}
-
+	
 	public static PreferenceHashMap getPreferenceHashMap(String key) {
 		return (PreferenceHashMap) Outliner.prefs.getPreference(key);
 	}	
-		
-	// Syncing Preferences	
+	
+	// Syncing Preferences
 	public static void restoreCurrentToDefault() {
 		Iterator it = Outliner.prefs.getPreferenceKeys();
 		while (it.hasNext()) {
@@ -320,7 +318,7 @@ public class Preferences implements GUITreeComponent {
 			Outliner.prefs.getPreference(key).restoreCurrentToDefault();
 		}
 	}
-
+	
 	public static void restoreTemporaryToDefault() {
 		Iterator it = Outliner.prefs.getPreferenceKeys();
 		while (it.hasNext()) {
@@ -328,7 +326,7 @@ public class Preferences implements GUITreeComponent {
 			Outliner.prefs.getPreference(key).restoreTemporaryToDefault();
 		}
 	}
-
+	
 	public static void restoreTemporaryToCurrent() {
 		Iterator it = Outliner.prefs.getPreferenceKeys();
 		while (it.hasNext()) {
@@ -336,7 +334,7 @@ public class Preferences implements GUITreeComponent {
 			Outliner.prefs.getPreference(key).restoreTemporaryToCurrent();
 		}
 	}
-
+	
 	public static void applyTemporaryToCurrent() {
 		Iterator it = Outliner.prefs.getPreferenceKeys();
 		while (it.hasNext()) {
@@ -350,10 +348,10 @@ public class Preferences implements GUITreeComponent {
 		while (it.hasNext()) {
 			String key = (String) it.next();
 			Outliner.prefs.getPreferencesPanel(key).applyCurrentToApplication();
-		}	
+		}
 	}
-
-
+	
+	
 	// Saving Config File
 	public static void saveConfigFile(String filename) {
 		try {
@@ -364,10 +362,10 @@ public class Preferences implements GUITreeComponent {
 			JOptionPane.showMessageDialog(null, GUITreeLoader.reg.getText("message_could_not_save_preferences") + ": " + e);
 		}
 	}
-
+	
 	private static String prepareConfigFile() {
 		StringBuffer buffer = new StringBuffer();
-
+		
 		Iterator it = Outliner.prefs.getPreferenceKeys();
 		while (it.hasNext()) {
 			String key = (String) it.next();
@@ -379,7 +377,7 @@ public class Preferences implements GUITreeComponent {
 			buffer.append(StringTools.escape(pref.toString(), '\\', null));
 			buffer.append(PlatformCompatibility.LINE_END_DEFAULT);
 		}
-
+		
 		return buffer.toString();
 	}
 }
