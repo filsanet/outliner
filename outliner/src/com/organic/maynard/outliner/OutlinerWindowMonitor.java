@@ -55,25 +55,30 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 		OutlinerDocument doc = (OutlinerDocument) w;
 		
 		String msg = null;
+		FileProtocol fp = null ; // temporary for debugging [srk]
 		
 		// if the document is modified ....
 		if (doc.isFileModified()) {
 			
-			// if it's untitled or imported, do a Save As ...
-			if ( doc.getFileName().equals("")  |  doc.getDocumentInfo().getImported()) {
+			// if it's untitled, do a Save As ...
+			if ( doc.getFileName().equals("")) {
 				msg = GUITreeLoader.reg.getText("error_window_monitor_untitled_save_changes");
-	
+				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, doc.getTitle());
+				
 				int result = JOptionPane.showConfirmDialog(doc, msg);
 				if (result == JOptionPane.YES_OPTION) {
-					SaveAsFileMenuItem item = (SaveAsFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
-					item.saveAsOutlinerDocument(doc, Outliner.fileProtocolManager.getDefault());
+					// SaveAsFileMenuItem item = (SaveAsFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
+					// next line is temporary, for debugging
+					fp = Outliner.fileProtocolManager.getDefault() ;
+					SaveAsFileMenuItem.saveAsOutlinerDocument(doc, fp);
 				} else if (result == JOptionPane.NO_OPTION) {
 					// Do Nothing
 				} else if (result == JOptionPane.CANCEL_OPTION) {
 					return false;
 				}
-			// else do a Save ...
-			} else {
+				
+			// else if it's not imported, do a Save
+			} else if (! doc.getDocumentInfo().getImported()) {
 				msg = GUITreeLoader.reg.getText("error_window_monitor_untitled_save_changes");
 				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, doc.getFileName());
 	
@@ -86,7 +91,23 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 				} else if (result == JOptionPane.CANCEL_OPTION) {
 					return false;
 				}
-			} // end else do a Save
+			// else it's imported, do a Save As
+			} else {
+				msg = GUITreeLoader.reg.getText("error_window_monitor_untitled_save_changes");
+				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, doc.getFileName());
+			
+				int result = JOptionPane.showConfirmDialog(doc, msg);
+				if (result == JOptionPane.YES_OPTION) {
+					// SaveAsFileMenuItem item = (SaveAsFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
+					// next line is temporary, for debugging
+					fp = Outliner.fileProtocolManager.getProtocol(doc.getDocumentInfo().getProtocolName()) ;
+					SaveAsFileMenuItem.saveAsOutlinerDocument(doc, fp);
+				} else if (result == JOptionPane.NO_OPTION) {
+					// Do Nothing
+				} else if (result == JOptionPane.CANCEL_OPTION) {
+					return false;
+				}
+			} // end else it's imported
 			
 		} // end if the document is modified
 		
