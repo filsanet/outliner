@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <opml version="1.0">
 <head>
-<title>e:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
+<title>E:\stan's java projects\Joe\outliner\dox\JOE User Guide.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Sun, 5 Aug 2001 03:04:24 GMT</dateModified>
+<dateModified>Sun, 12 Aug 2001 03:01:34 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
-<expansionState>19</expansionState>
+<expansionState>20</expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>20</windowTop>
-<windowLeft>217</windowLeft>
-<windowBottom>504</windowBottom>
-<windowRight>544</windowRight>
+<windowTop>35</windowTop>
+<windowLeft>78</windowLeft>
+<windowBottom>568</windowBottom>
+<windowRight>506</windowRight>
 </head>
 <body>
-<outline text="JOE User Guide"/>
-<outline text="-------------------"/>
+<outline text="JOE User Guide [JUG]"/>
+<outline text="-------------------------"/>
 <outline text="Front End">
 <outline text="About JOE - the Java Outline Editor">
 <outline text="What It Is">
@@ -89,18 +89,15 @@
 <outline text="Use JOE"/>
 <outline text="Help Develop JOE">
 <outline text="JOE is an Open Source project">
-<outline text="link to JOE Summary page on SourceForge"/>
+<outline text="http://sourceforge.net/projects/outliner"/>
 </outline>
-<outline text="Here's the JOE Developer Guide">
-<outline text="link to JOE Developer Guide.opml"/>
+<outline text="The JOE Developer Guide">
+<outline text="Give the Help:Developer Guide menu command"/>
 </outline>
 </outline>
 <outline text="Feedback">
-<outline text="JOE User Guide Feedback">
-<outline text="send feedback/suggestions/links/content contributions concerning JOE User Guide to Jughead@JavaOutlineEditor.org"/>
-</outline>
-<outline text="JOE itself Feedback">
-<outline text="send feedback/suggestions/links/content contributions concerning JOE itself to Joe@JavaOutlineEditor.org"/>
+<outline text="Go here to send us feedback. We heart feedback.">
+<outline text="http://JavaOutlineEditor.org/feedback"/>
 </outline>
 </outline>
 <outline text="JOE People">
@@ -118,19 +115,18 @@
 </outline>
 <outline text="Thanks To">
 <outline text="Dave Winer">
-<outline text="the fountainhead of outlining practice"/>
-<outline text="http://www.scripting.com"/>
+<outline text="http://Scripting.com"/>
 </outline>
 <outline text="SourceForge">
-<outline text="23,000 projects"/>
-<outline text="230,000 developers"/>
-<outline text="JOE's happy project home"/>
+<outline text="http://SourceForge.net"/>
 </outline>
-<outline text="the Java community"/>
+<outline text="the Java community">
+<outline text="http://java.sun.com"/>
+</outline>
 </outline>
 <outline text="Copyright"/>
 <outline text="Version">
-<outline text="JUG versionStamp: 2001.07.30.002"/>
+<outline text="JUG versionStamp: 2001.08.11.001"/>
 </outline>
 <outline text="Cataloging Info">
 <outline text="Library of Congress Classification System"/>
@@ -217,6 +213,9 @@
 </outline>
 <outline text="Connecting Outlines"/>
 <outline text="Sharing Outlines"/>
+<outline text="Using JOE To ...">
+<outline text="Edit XML Files"/>
+</outline>
 <outline text="Custom JOE"/>
 <outline text="Macros"/>
 <outline text="XML-RPC"/>
