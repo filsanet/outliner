@@ -90,6 +90,9 @@ public class JDialogFactory  {
 
 /*
  * $Log$
+ * Revision 1.1  2001/11/12 09:05:38  maynardd
+ * Added code from outliner.jar to make this library self contained.
+ *
  * Revision 1.3  2001/06/06 22:22:37  mpowers
  * Fixed logs.
  *

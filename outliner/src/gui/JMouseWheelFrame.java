@@ -166,6 +166,9 @@ public class JMouseWheelFrame extends JFrame {
 
 /*
  * $Log$
+ * Revision 1.3  2002/03/05 20:09:40  stanley_krute
+ * removed lib from LoadLibrary calls
+ *
  * Revision 1.2  2002/02/27 06:09:35  stanley_krute
  * tweeked to deal with moved MouseWheel.dll
  *

@@ -183,6 +183,9 @@ public abstract class JMouseWheelSupport {
 
 /*
  * $Log$
+ * Revision 1.6  2001/11/12 09:22:10  maynardd
+ * import was wrong.
+ *
  * Revision 1.5  2001/11/12 09:05:38  maynardd
  * Added code from outliner.jar to make this library self contained.
  *

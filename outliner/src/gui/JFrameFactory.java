@@ -71,6 +71,9 @@ public class JFrameFactory  {
 
 /*
  * $Log$
+ * Revision 1.1  2001/11/12 09:05:38  maynardd
+ * Added code from outliner.jar to make this library self contained.
+ *
  * Revision 1.4  2001/10/12 21:44:30  mhoesch
  * Added support for MS Java (also for Internet Explorer, if Applets are signed!!!
  * Code for loading DLL to client is missing.., but if copied into WIN System
