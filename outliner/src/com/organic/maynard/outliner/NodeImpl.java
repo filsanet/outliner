@@ -58,7 +58,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	private JoeTree tree = null;
 	private Node parent = null;
 	private String value = null;
-	protected JoeNodeList children = null;
+	public JoeNodeList children = null;
 	
 	private int depth = -1; // -1 so that children of root will be depth 0.
 	

@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner.menus.script;
 
+import com.organic.maynard.outliner.scripting.*;
 import com.organic.maynard.outliner.menus.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.guitree.*;
@@ -43,6 +44,7 @@ import java.awt.event.*;
 import org.xml.sax.*;
 
 public class BSHConsoleMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
+	
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);

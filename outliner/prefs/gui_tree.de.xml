@@ -574,11 +574,11 @@
 		<document_settings_view id="document_settings_view" class="com.organic.maynard.outliner.DocumentSettingsView" title="Dokumenteinstellungen"/>
 		<document_attributes_view id="document_attributes_view" class="com.organic.maynard.outliner.DocumentAttributesView" title="Dokumentattribute"/>
 		<document_statistics id="document_statistics" class="com.organic.maynard.outliner.DocumentStatistics" title="Dokumentstatistik"/>
-		<macro_manager id="macro_manager" class="com.organic.maynard.outliner.MacroManagerFrame" title="Makro Manager"/>
-		<scripts_manager id="macro_manager" class="com.organic.maynard.outliner.ScriptsManager" title="Skript Manager"/>
-		<macro_editor id="macro_editor" class="com.organic.maynard.outliner.MacroEditor" title="Makro Editor"/>
-		<script_editor id="script_editor" class="com.organic.maynard.outliner.ScriptEditor" title="Skript Editor"/>
+		<macro_manager id="macro_manager" class="com.organic.maynard.outliner.scripting.macro.MacroManagerFrame" title="Makro Manager"/>
+		<scripts_manager id="macro_manager" class="com.organic.maynard.outliner.scripting.script.ScriptsManager" title="Skript Manager"/>
+		<macro_editor id="macro_editor" class="com.organic.maynard.outliner.scripting.macro.MacroEditor" title="Makro Editor"/>
+		<script_editor id="script_editor" class="com.organic.maynard.outliner.scripting.script.ScriptEditor" title="Skript Editor"/>
 		<find_replace id="find_replace" class="com.organic.maynard.outliner.util.find.FindReplaceFrame" title="Suchen/Ersetzen"/>
 		<goto_dialog id="goto_dialog" class="com.organic.maynard.outliner.GoToDialog" title="Gehe zu Zeile"/>
-		<bsh_console id="bsh_console" class="com.organic.maynard.outliner.BSHConsole" title="Bean Shell Konsole"/>
+		<bsh_console id="bsh_console" class="com.organic.maynard.outliner.scripting.BSHConsole" title="Bean Shell Konsole"/>
 </root>

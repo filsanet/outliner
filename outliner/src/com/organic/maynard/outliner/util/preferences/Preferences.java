@@ -263,11 +263,19 @@ public class Preferences implements GUITreeComponent {
 	private HashMap prefsReg = new HashMap();
 	
 	public void addPreference(String key, Preference pref) {
-		prefsReg.put(key, pref);
+		if (key != null) {
+			prefsReg.put(key, pref);
+		} else {
+			System.out.println("Warning: attempt addPreference with a NULL key");
+		}
 	}
 	
 	public Preference getPreference(String key) {
-		return (Preference) prefsReg.get(key);
+		if (key != null) {
+			return (Preference) prefsReg.get(key);
+		} else {
+			return null;
+		}
 	}
 	
 	public Iterator getPreferenceKeys() {

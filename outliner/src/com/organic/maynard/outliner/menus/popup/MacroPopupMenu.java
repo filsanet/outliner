@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner.menus.popup;
 
+import com.organic.maynard.outliner.scripting.macro.*;
 import com.organic.maynard.outliner.menus.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.outliner.guitree.*;

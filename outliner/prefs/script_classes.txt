@@ -1,1 +1,1 @@
-script_class|com.organic.maynard.outliner.BSHMacro|BeanShell
+script_class|com.organic.maynard.outliner.scripting.macro.BSHMacro|BeanShell
