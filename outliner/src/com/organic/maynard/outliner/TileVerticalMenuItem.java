@@ -122,8 +122,8 @@ public class TileVerticalMenuItem
 		double availWidth = curAvailSpace.getWidth() ;
 		double availHeight = curAvailSpace.getHeight() ;
 
-		// obtain minimum tiling column height
-		// TBD
+		// obtain minimum tiling column width
+		// TBD make this for real via window features figgern'
 		int minTileColumnWidth = 60 ;
 		
 		// determine the maximum number of columns
