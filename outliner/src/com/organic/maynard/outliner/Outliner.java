@@ -227,6 +227,9 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		System.out.println("Done Loading Macros.");
 		System.out.println("");
 		
+		// Generate Icons
+		OutlineButton.createIcons();
+		
 		// WebFile
 		// Note the outliner will have to be restarted if user switches
 		// file system preferences since the chooser is created just once.
