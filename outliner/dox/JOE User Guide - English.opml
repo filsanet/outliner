@@ -3,15 +3,15 @@
 <head>
 <title>e:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Thu, 26 Jul 2001 08:43:23 GMT</dateModified>
+<dateModified>Thu, 26 Jul 2001 08:50:29 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>9</windowTop>
-<windowLeft>65</windowLeft>
-<windowBottom>468</windowBottom>
-<windowRight>498</windowRight>
+<windowTop>27</windowTop>
+<windowLeft>99</windowLeft>
+<windowBottom>455</windowBottom>
+<windowRight>493</windowRight>
 </head>
 <body>
 <outline text="&lt;this is a work in perpetual progress&gt;">
@@ -93,11 +93,16 @@
 <outline text="Keystroke Shortcuts"/>
 </outline>
 <outline text="Editing Outlines">
+<outline text="Alphabetizing a Set of Nodes"/>
+<outline text="Promoting and Demoting Nodes"/>
 <outline text="Expanding a Node"/>
 <outline text="Collapsing a Node"/>
 </outline>
 <outline text="Saving Outlines"/>
-<outline text="Printing Outlines"/>
+<outline text="Printing Outlines">
+<outline text="Printing to a Printer"/>
+<outline text="Printing to a File"/>
+</outline>
 <outline text="Opening Outlines"/>
 <outline text="Sharing Outlines"/>
 <outline text="Custom JOE"/>
