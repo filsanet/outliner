@@ -72,5 +72,7 @@ public abstract class AbstractOutlinerMenu extends JMenu implements GUITreeCompo
 
 
 	// Fix for java bug #4309156.
+	// This bug is fixed in jdk1.4.0 since this method no longer seems to get called.
+	// Instead jdk1.4.0 calls requestFocus(boolean) to obtain temporary focus.
 	public void requestFocus() {}
 }
