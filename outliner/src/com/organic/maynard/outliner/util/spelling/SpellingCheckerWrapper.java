@@ -166,6 +166,9 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 		}
 	}
 	
+	private int sleep_count = 0;
+	private static final int SLEEP_THROTTLE = 25;
+	
 	private void checkSpelling(Node node) {
 		if (node == null) {
 			return;
@@ -174,7 +177,12 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 		this.current_offset = 0;
 		spellCheck.checkSpelling(new StringWordTokenizer(node.getValue()));
 		
-		//try {Thread.sleep(0);} catch (InterruptedException e) {}
+		if (sleep_count++ >= SLEEP_THROTTLE) {
+			// Makes sure other threads get a chance to update themselves.
+			// The use of the throttle keeps us from sleeping too much.
+			try {Thread.sleep(0);} catch (InterruptedException e) {}
+			sleep_count = 0;
+		}
 		
 		for (int i = 0; i < node.numOfChildren(); i++) {
 			if (this.dialog.shouldStop()) {
@@ -223,6 +231,7 @@ public class SpellingCheckerWrapper implements SpellCheckListener {
 	}
 	
 	public void reset() {
+		this.sleep_count = 0;
 		this.nodes.clear();
 		this.current_node = null;
 		this.offsets.clear();
