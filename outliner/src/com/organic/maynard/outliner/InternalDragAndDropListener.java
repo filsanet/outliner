@@ -58,7 +58,9 @@ public class InternalDragAndDropListener implements MouseListener {
 			} else if (targetNode.isSelected() && !targetNode.isFirstChild() && (componentType == TEXT)) {
 				outlineLayoutManager layout = targetNode.getTree().doc.panel.layout;
 				OutlinerCellRendererImpl renderer = layout.getUIComponent(targetNode.prevSibling());
-				renderer.button.setIcon(OutlineButton.ICON_SE_ARROW);
+				if (renderer != null) {
+					renderer.button.setIcon(OutlineButton.ICON_SE_ARROW);
+				}
 			}
 		}
 	}
@@ -71,7 +73,9 @@ public class InternalDragAndDropListener implements MouseListener {
 			if (targetNode.isSelected() && !targetNode.isFirstChild() && (componentType == TEXT)) {
 				outlineLayoutManager layout = targetNode.getTree().doc.panel.layout;
 				OutlinerCellRendererImpl renderer = layout.getUIComponent(targetNode.prevSibling());
-				renderer.button.updateIcon();
+				if (renderer != null) {
+					renderer.button.updateIcon();
+				}
 			} else {
 				currentRenderer.button.updateIcon();
 			}
@@ -112,7 +116,9 @@ public class InternalDragAndDropListener implements MouseListener {
 				} else if (targetNode.isSelected() && !targetNode.isFirstChild() && (componentType == TEXT)) {
 					outlineLayoutManager layout = targetNode.getTree().doc.panel.layout;
 					OutlinerCellRendererImpl renderer = layout.getUIComponent(targetNode.prevSibling());
-					renderer.button.updateIcon();
+					if (renderer != null) {
+						renderer.button.updateIcon();
+					}
 					
 					targetNode = targetNode.prevSibling();
 					moveAsFirstChild();
@@ -209,7 +215,7 @@ public class InternalDragAndDropListener implements MouseListener {
 			}
 		}
 		
-		layout.draw(targetNode.getLastViewableDecendent(), outlineLayoutManager.ICON);
+		layout.draw(tree.getOldestInSelection(), outlineLayoutManager.ICON);
 	}
 	
 		
