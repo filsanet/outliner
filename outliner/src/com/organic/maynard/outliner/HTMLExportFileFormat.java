@@ -54,7 +54,7 @@ public class HTMLExportFileFormat
 	public boolean supportsAttributes() {return false;}
 	public boolean supportsDocumentAttributes() {return false;}
 	
-	public byte[] save(TreeContext tree, DocumentInfo docInfo) {
+	public byte[] save(JoeTree tree, DocumentInfo docInfo) {
 		StringBuffer buf = prepareFile(tree, docInfo);
 		
 		try {
@@ -65,7 +65,7 @@ public class HTMLExportFileFormat
 		}
 	}
 
-	private StringBuffer prepareFile(TreeContext tree, DocumentInfo docInfo) {
+	private StringBuffer prepareFile(JoeTree tree, DocumentInfo docInfo) {
 		String lineEnding = PlatformCompatibility.platformToLineEnding(docInfo.getLineEnding());
 		
 		StringBuffer buf = new StringBuffer();

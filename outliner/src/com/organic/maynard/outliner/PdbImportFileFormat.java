@@ -18,7 +18,7 @@
  *			protected
  *				PdbReaderWriter ourReaderWriter
  *				DocumentInfo docInfo
- *				TreeContext tree
+ *				JoeTree tree
  *				boolean errorOccurred
  *				Vector elementStack
  *				Node currentNode
@@ -32,7 +32,7 @@
  			public
  				constructors
  					PdbFileFormat ()
- 				int open(TreeContext tree, DocumentInfo docInfo, InputStream stream)
+ 				int open(JoeTree tree, DocumentInfo docInfo, InputStream stream)
  				void startOutline ()
  				void finishOutline ()
  				void addNodeToOutline (NodeImpl node, int level)
@@ -49,7 +49,7 @@
  				String getDefaultExtension()
  				Iterator getExtensions()
  				boolean extensionExists(String ext)
- 				byte[] save(TreeContext tree, DocumentInfo docInfo)
+ 				byte[] save(JoeTree tree, DocumentInfo docInfo)
  *			protected
  *				void createReaderWriter() 
  				
@@ -111,7 +111,7 @@ public class PdbImportFileFormat
 	protected PdbReaderWriter ourReaderWriter= null ;
 
 	protected DocumentInfo docInfo = null;
-	protected TreeContext tree = null;
+	protected JoeTree tree = null;
 
 	protected boolean errorOccurred = false;
 
@@ -194,7 +194,7 @@ public class PdbImportFileFormat
 	
 	// ======== OpenFileFormat interface Implementations ========
 	
-	public int open(TreeContext tree, DocumentInfo docInfo, InputStream stream) {
+	public int open(JoeTree tree, DocumentInfo docInfo, InputStream stream) {
 		// Set the objects we are going to populate.
 		this.docInfo = docInfo;
 		this.tree = tree;
@@ -408,7 +408,7 @@ public class PdbImportFileFormat
 	
 	
 	// save the outline 
-	public byte[] save(TreeContext tree, DocumentInfo docInfo) {
+	public byte[] save(JoeTree tree, DocumentInfo docInfo) {
 		StringBuffer buf = prepareFile(tree, docInfo);
 
 		
@@ -424,7 +424,7 @@ public class PdbImportFileFormat
 	
 	// ======== TBD helpers for SaveFileFormat Implementations ========
 	
-	protected StringBuffer prepareFile(TreeContext tree, DocumentInfo docInfo) {
+	protected StringBuffer prepareFile(JoeTree tree, DocumentInfo docInfo) {
 		//String lineEnding = Preferences.platformToLineEnding(docInfo.getLineEnding());
 		
 		StringBuffer buf = new StringBuffer();

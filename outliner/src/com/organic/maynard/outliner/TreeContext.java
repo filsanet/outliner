@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
+ * Portions Copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
+ * Portions Copyright (C) 2002 Stan Krute <Stan@StanKrute.com>
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or 
@@ -38,83 +39,59 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-public class TreeContext extends AttributeContainerImpl {
+public class TreeContext 
+	extends AttributeContainerImpl 
+	implements JoeTree {
 
-	// Instance Variables
-	public OutlinerDocument doc = null;
+	// Private Instance Variables
+	private OutlinerDocument document = null;
 	
-	public NodeList visibleNodes = new NodeList(1000);
-	public NodeList selectedNodes = new NodeList(100);
-	public Node rootNode = null;
+	private JoeNodeList visibleNodes = Outliner.newNodeList(1000);
+	private JoeNodeList selectedNodes = Outliner.newNodeList(100);
+	private Node rootNode = null;
 
 	private HashMap attributes = null;
 
 
 	// The Constructors
-	public TreeContext(OutlinerDocument doc) {
+	public TreeContext(OutlinerDocument document) {
 		this();
 		
-		this.doc = doc;
-		doc.panel.layout.setNodeToDrawFrom(getEditingNode(),0);
+		this.document = document;
+		document.panel.layout.setNodeToDrawFrom(getEditingNode(),0);
 	}
 
 	public TreeContext() {
 		reset();
 	}
 	
-	public void reset() {
-		doc = null;
-		visibleNodes.clear();
-		selectedNodes.clear();
-		rootNode = null;
-		attributes = null;
-		
-		// Create an empty Tree
-		setRootNode(new NodeImpl(this,"ROOT"));
-		rootNode.setHoisted(true);
-
-		NodeImpl child = new NodeImpl(this,"");
-		child.setDepth(0);
-		rootNode.insertChild(child, 0);
-		insertNode(child);
-		
-		// Record the current location
-		setEditingNode(child, false);	
-	}
-	
-	public void destroy() {
-		visibleNodes = null;
-		selectedNodes = null;
-		rootNode.destroy();
-		rootNode = null;
-		editingNode = null;
-		mostRecentNodeTouched = null;
-		selectedNodesParent = null;
-		doc = null;
-	}
 	
 	
 	// Comments
 	private boolean comment = false;
 
+	// these two methods are part of JoeTree interface
 	public void setRootNodeCommentState(boolean comment) {this.comment = comment;}
 	public boolean getRootNodeCommentState() {return this.comment;}
 
 	// Editablity
 	private boolean editable = true;
 
+	// these two methods are part of JoeTree interface
 	public void setRootNodeEditableState(boolean editable) {this.editable = editable;}
 	public boolean getRootNodeEditableState() {return this.editable;}
 
 	// Moveability
 	private boolean moveable = true;
 
+	// these two methods are part of JoeTree interface
 	public void setRootNodeMoveableState(boolean moveable) {this.moveable = moveable;}
 	public boolean getRootNodeMoveableState() {return this.moveable;}
 
 
 	// Line Count Control
 	private int lineCountKey = 0;
+	
 	
 	public int getLineCountKey() {
 		return lineCountKey;
@@ -132,15 +109,6 @@ public class TreeContext extends AttributeContainerImpl {
 
 	
 	// Accessors
-	public Node getRootNode() {
-		return rootNode;
-	}
-	
-	public void setRootNode(Node node) {
-		this.rootNode = node;
-		rootNode.setExpandedClean(true);
-	}
-
 
 	// Statistics
 	public int getLineCount() {
@@ -166,7 +134,7 @@ public class TreeContext extends AttributeContainerImpl {
 		this.editingNode = editingNode;
 		
 		if (updateAttPanel) {
-			doc.attPanel.update();
+			document.attPanel.update();
 		}
 	}
 	
@@ -471,4 +439,71 @@ public class TreeContext extends AttributeContainerImpl {
 			return false;
 		}
 	}
+	
+	// ----------------------- JoeTree interface ------------------------
+	
+	public OutlinerDocument getDocument () {
+		return document ;
+	} // end method getVisibleNodes
+	
+	
+	public void setDocument (OutlinerDocument someDocument) {
+		document = someDocument ;
+	} // end method getVisibleNodes
+	
+	
+	public JoeNodeList getVisibleNodes () {
+		return visibleNodes ;
+	} // end method getVisibleNodes
+	
+	
+	public JoeNodeList getSelectedNodes () {
+		return selectedNodes ;
+	} // end method getSelectedNodes
+	
+	
+	public Node getRootNode () {
+		return rootNode ;
+	} // end method getSelectedNodes
+	
+	
+	public void setRootNode(Node someNode) {
+		rootNode = someNode;
+		rootNode.setExpandedClean(true);
+	}
+	
+	
+	public void reset() {
+		document = null;
+		visibleNodes.clear();
+		selectedNodes.clear();
+		rootNode = null;
+		attributes = null;
+		
+		// Create an empty Tree
+		setRootNode(new NodeImpl(this,"ROOT"));
+		rootNode.setHoisted(true);
+	
+		NodeImpl child = new NodeImpl(this,"");
+		child.setDepth(0);
+		rootNode.insertChild(child, 0);
+		insertNode(child);
+		
+		// Record the current location
+		setEditingNode(child, false);	
+	}
+	
+	
+	public void destroy() {
+		visibleNodes = null;
+		selectedNodes = null;
+		rootNode.destroy();
+		rootNode = null;
+		editingNode = null;
+		mostRecentNodeTouched = null;
+		selectedNodesParent = null;
+		document = null;
+	}
+	
+	
 }

@@ -81,14 +81,14 @@ public class HoistStackItem {
 	// Methods
 	public void dehoist() {
 		// Shorthand
-		TreeContext tree = hoistedNode.getTree();
+		JoeTree tree = hoistedNode.getTree();
 		tree.setRootNodeCommentState(oldTreeCommentState);
 		
 		hoistedNode.setHoisted(false);
 
 		// Prune things
 		tree.setRootNode(oldNodeSet);
-		tree.visibleNodes.clear();
+		tree.getVisibleNodes().clear();
 		hoistedNodeParent.insertChild(hoistedNode, hoistedNodeIndex);
 		hoistedNode.setDepthRecursively(hoistedNodeDepth);
 		for (int i = 0; i < oldNodeSet.numOfChildren(); i++) {
@@ -102,7 +102,7 @@ public class HoistStackItem {
 	public void hoist() {
 		
 		// Shorthand
-		TreeContext tree = hoistedNode.getTree();
+		JoeTree tree = hoistedNode.getTree();
 		tree.setRootNodeCommentState(newTreeCommentState);
 		
 		hoistedNode.setHoisted(true);
@@ -111,7 +111,7 @@ public class HoistStackItem {
 		hoistedNode.getParent().removeChild(hoistedNode);
 		hoistedNode.setDepthRecursively(-1);
 		tree.setRootNode(hoistedNode);
-		tree.visibleNodes.clear();
+		tree.getVisibleNodes().clear();
 		for (int i = 0; i < hoistedNode.numOfChildren(); i++) {
 			Node node = hoistedNode.getChild(i);
 			tree.insertNode(node);

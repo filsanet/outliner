@@ -71,8 +71,8 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 	
 	public void undo() {		
 		// Shorthand
-		TreeContext tree = parent.getTree();
-		OutlineLayoutManager layout = tree.doc.panel.layout;
+		JoeTree tree = parent.getTree();
+		OutlineLayoutManager layout = tree.getDocument().panel.layout;
 
 		tree.setSelectedNodesParent(parent);
 		
@@ -82,7 +82,7 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 		}
 
 		// Find fallback node for drawing and editing
-		if (tree.selectedNodes.size() <= 0) {
+		if (tree.getSelectedNodes().size() <= 0) {
 			Node fallbackNode = ((PrimitiveUndoableReplace) primitives.get(primitives.size() - 1)).getNewNode();
 			if (fallbackNode != null) {
 				fallbackNode = fallbackNode.next();
@@ -91,7 +91,7 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 					if (fallbackNode.isRoot()) {
 						tree.setSelectedNodesParent(tree.getRootNode());
 					} else {
-						layout.setNodeToDrawFrom(fallbackNode, tree.visibleNodes.indexOf(fallbackNode));
+						layout.setNodeToDrawFrom(fallbackNode, tree.getVisibleNodes().indexOf(fallbackNode));
 						tree.setSelectedNodesParent(fallbackNode.getParent());
 						tree.addNodeToSelection(fallbackNode);
 					}
@@ -114,12 +114,12 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 	
 	public void redo() {
 		// Shorthand
-		TreeContext tree = parent.getTree();
-		OutlineLayoutManager layout = tree.doc.panel.layout;
+		JoeTree tree = parent.getTree();
+		OutlineLayoutManager layout = tree.getDocument().panel.layout;
 
 		// Let's be aware if we are deleting the nodeToDrawFrom.
 		boolean nodeToDrawFromDeleted = false;
-		if (tree.doc.panel.layout.getNodeToDrawFrom().isAncestorSelected()) {
+		if (tree.getDocument().panel.layout.getNodeToDrawFrom().isAncestorSelected()) {
 			nodeToDrawFromDeleted = true;
 		}
 
@@ -155,18 +155,18 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 			((PrimitiveUndoableReplace) primitives.get(i)).redo();
 		}
 		
-		if (tree.selectedNodes.size() <= 0) {
+		if (tree.getSelectedNodes().size() <= 0) {
 			if (fallbackNode.isRoot()) {
 				if (allWillBeDeleted) {
 					tree.setSelectedNodesParent(tree.getRootNode());
 				} else {
-					layout.setNodeToDrawFrom(fallbackNode, tree.visibleNodes.indexOf(fallbackNode));
+					layout.setNodeToDrawFrom(fallbackNode, tree.getVisibleNodes().indexOf(fallbackNode));
 					tree.setSelectedNodesParent(fallbackNode.getParent());
 					tree.addNodeToSelection(fallbackNode);
 				}
 			} else {
 				if (nodeToDrawFromDeleted) {
-					layout.setNodeToDrawFrom(fallbackNode, tree.visibleNodes.indexOf(fallbackNode));
+					layout.setNodeToDrawFrom(fallbackNode, tree.getVisibleNodes().indexOf(fallbackNode));
 				}
 				tree.setSelectedNodesParent(fallbackNode.getParent());
 				tree.addNodeToSelection(fallbackNode);
@@ -184,20 +184,20 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 		layout.draw(newSelectedNode, OutlineLayoutManager.ICON);
 	}
 	
-	private Node determineNewSelectedNode(TreeContext tree) {
+	private Node determineNewSelectedNode(JoeTree tree) {
 		Node newSelectedNode = null;
 
 		// Find the range
 		Node firstNewSelectedNode = tree.getYoungestInSelection();
-		//int ioFirstNewSelectedNode = tree.visibleNodes.indexOf(firstNewSelectedNode);
+		//int ioFirstNewSelectedNode = tree.getVisibleNodes().indexOf(firstNewSelectedNode);
 		Node lastNewSelectedNode = tree.getOldestInSelection();
-		//int ioLastNewSelectedNode = tree.visibleNodes.indexOf(lastNewSelectedNode);
+		//int ioLastNewSelectedNode = tree.getVisibleNodes().indexOf(lastNewSelectedNode);
 
 		// Handle Boundary conditions for the selection.
-		if (firstNewSelectedNode == tree.visibleNodes.get(0)) {
-			tree.doc.panel.layout.setNodeToDrawFrom(firstNewSelectedNode, 0);
+		if (firstNewSelectedNode == tree.getVisibleNodes().get(0)) {
+			tree.getDocument().panel.layout.setNodeToDrawFrom(firstNewSelectedNode, 0);
 			newSelectedNode = firstNewSelectedNode;
-		} else if (lastNewSelectedNode == tree.visibleNodes.get(tree.visibleNodes.size() - 1)) {
+		} else if (lastNewSelectedNode == tree.getVisibleNodes().get(tree.getVisibleNodes().size() - 1)) {
 			newSelectedNode = lastNewSelectedNode;
 		} else {
 			newSelectedNode = firstNewSelectedNode;

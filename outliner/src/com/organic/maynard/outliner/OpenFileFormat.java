@@ -9,7 +9,7 @@
  *	interfaces
  * 		instance
  * 			public
- * 				int open(TreeContext, DocumentInfo, InputStream)
+ * 				int open(JoeTree, DocumentInfo, InputStream)
  * 
  * 
  * Portions copyright (C) 2001 Maynard Demmon <maynard@organic.com>
@@ -56,7 +56,7 @@ public interface OpenFileFormat extends FileFormat {
 	
 	// open a file as an outline	[srk]
 	public int open(
-		TreeContext tree,
+		JoeTree tree,
 		DocumentInfo docInfo,
 		InputStream stream
 	); 

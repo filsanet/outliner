@@ -80,8 +80,8 @@ public interface Node extends AttributeContainer {
 	public boolean isDecendantOf(Node node);
 	
 	// Tree Accessor Methods
-	public TreeContext getTree();
-	public void setTree(TreeContext tree, boolean recursive);
+	public JoeTree getTree();
+	public void setTree(JoeTree tree, boolean recursive);
 	
 	// Comment Methods
 	public static final int COMMENT_INHERITED = 0;

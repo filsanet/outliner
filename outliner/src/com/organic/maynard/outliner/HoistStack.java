@@ -101,8 +101,8 @@ public class HoistStack {
 		if (!currentNode.isLeaf() && !currentNode.isHoisted()) {
 
 			// Shorthand
-			TreeContext tree = currentNode.getTree();
-			OutlineLayoutManager layout = tree.doc.panel.layout;
+			JoeTree tree = currentNode.getTree();
+			OutlineLayoutManager layout = tree.getDocument().panel.layout;
 
 			// Clear the undoQueue
 			if (!doc.undoQueue.isEmpty()) {
@@ -133,7 +133,7 @@ public class HoistStack {
 
 			// Redraw and Set Focus
 			Node nodeToDrawFrom = currentNode.getFirstChild();
-			int ioNodeToDrawFrom = tree.visibleNodes.indexOf(nodeToDrawFrom);
+			int ioNodeToDrawFrom = tree.getVisibleNodes().indexOf(nodeToDrawFrom);
 			layout.setNodeToDrawFrom(nodeToDrawFrom, ioNodeToDrawFrom);
 	
 			layout.draw();
@@ -150,7 +150,7 @@ public class HoistStack {
 		if (isHoisted()) {
 			
 			// Shorthand
-			TreeContext tree = doc.tree;
+			JoeTree tree = doc.tree;
 			OutlineLayoutManager layout = doc.panel.layout;
 
 			// Clear the undoQueue
@@ -182,7 +182,7 @@ public class HoistStack {
 	
 			// Redraw and Set Focus
 			Node nodeToDrawFrom = item.getNode();
-			int ioNodeToDrawFrom = tree.visibleNodes.indexOf(nodeToDrawFrom);
+			int ioNodeToDrawFrom = tree.getVisibleNodes().indexOf(nodeToDrawFrom);
 			layout.setNodeToDrawFrom(nodeToDrawFrom, ioNodeToDrawFrom);
 	
 			layout.draw();
@@ -197,7 +197,7 @@ public class HoistStack {
 		if (isHoisted()) {
 		
 			// Shorthand
-			TreeContext tree = doc.tree;
+			JoeTree tree = doc.tree;
 			OutlineLayoutManager layout = doc.panel.layout;
 
 			// Clear the undoQueue
@@ -233,7 +233,7 @@ public class HoistStack {
 	
 			// Redraw and Set Focus
 			Node nodeToDrawFrom = item.getNode();
-			int ioNodeToDrawFrom = tree.visibleNodes.indexOf(nodeToDrawFrom);
+			int ioNodeToDrawFrom = tree.getVisibleNodes().indexOf(nodeToDrawFrom);
 			layout.setNodeToDrawFrom(nodeToDrawFrom, ioNodeToDrawFrom);
 	
 			layout.draw();

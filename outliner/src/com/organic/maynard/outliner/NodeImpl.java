@@ -40,10 +40,10 @@ import java.awt.*;
 public class NodeImpl extends AttributeContainerImpl implements Node {
 	
 	// Instance Fields		
-	private TreeContext tree = null;
+	private JoeTree tree = null;
 	private Node parent = null;
 	private String value = null;
-	protected NodeList children = null;
+	protected JoeNodeList children = null;
 	private static final int INITIAL_ARRAY_LIST_SIZE = 10;
 
 	private int depth = -1; // -1 so that children of root will be depth 0.
@@ -63,7 +63,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	
 
 	// The Constructors
-	public NodeImpl(TreeContext tree, String value) {
+	public NodeImpl(JoeTree tree, String value) {
 		this.tree = tree;
 		this.value = value;
 	}
@@ -132,7 +132,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 			return lineNumber;
 		}
 		
-		Node next = tree.visibleNodes.get(0);
+		Node next = tree.getVisibleNodes().get(0);
 		int runningTotal = 0;
 		
 		int siblingCount = 0;
@@ -206,7 +206,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	
 	public void appendChild(Node node) {
 		if (children == null) {
-			children = new NodeList(INITIAL_ARRAY_LIST_SIZE);
+			children = Outliner.newNodeList(INITIAL_ARRAY_LIST_SIZE);
 		}
 		
 		children.add(node);
@@ -311,7 +311,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		
 		if (parent.isRoot()) {
 			return parent;
-		} else if (tree.visibleNodes.contains(parent)) {
+		} else if (tree.getVisibleNodes().contains(parent)) {
 			return parent;
 		} else {
 			return parent.getYoungestVisibleAncestor();
@@ -326,12 +326,12 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 				index++;
 				Node child = getChild(i);
 				
-				if (index < tree.visibleNodes.size()) {
-					if (tree.visibleNodes.get(index) != child) {
-						tree.visibleNodes.add(index,child);
+				if (index < tree.getVisibleNodes().size()) {
+					if (tree.getVisibleNodes().get(index) != child) {
+						tree.getVisibleNodes().add(index,child);
 					}
 				} else {
-					tree.visibleNodes.add(index,child);
+					tree.getVisibleNodes().add(index,child);
 				}
 				index = child.insertChildrenIntoVisibleNodesCache(index);
 			}		
@@ -341,7 +341,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	
 	public void insertChild(Node node, int i) {
 		if (children == null) {
-			children = new NodeList(INITIAL_ARRAY_LIST_SIZE);
+			children = Outliner.newNodeList(INITIAL_ARRAY_LIST_SIZE);
 		}
 
 		children.add(i,node);
@@ -381,9 +381,9 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	}
 
 	// Tree Accessor Methods
-	public TreeContext getTree() {return tree;}
+	public JoeTree getTree() {return tree;}
 	
-	public void setTree(TreeContext tree, boolean recursive) {
+	public void setTree(JoeTree tree, boolean recursive) {
 		this.tree = tree;
 		if (recursive) {
 			for (int i = 0; i < numOfChildren(); i++) {
@@ -520,7 +520,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		}
 		
 		if (isExpanded()) {
-			int index = tree.visibleNodes.indexOf(this) + 1;
+			int index = tree.getVisibleNodes().indexOf(this) + 1;
 			for (int i = this.numOfChildren() - 1; i >= 0; i--) {
 				//tree.insertNodeAfter(this,getChild(i));
 				tree.insertNode(getChild(i), index);

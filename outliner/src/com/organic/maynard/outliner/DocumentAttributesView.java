@@ -103,9 +103,9 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 	
 
 	// Configuration 
-	protected TreeContext tree = null;
+	protected JoeTree tree = null;
 	
-	public void configureAndShow(TreeContext tree) {
+	public void configureAndShow(JoeTree tree) {
 		this.tree = tree;
 		
 		attPanel.update(this);
@@ -144,6 +144,6 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 			tree.setAttribute(key, value);
 		}
 		
-		tree.doc.setFileModified(true);
+		tree.getDocument().setFileModified(true);
 	}
 }

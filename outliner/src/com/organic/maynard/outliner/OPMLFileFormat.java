@@ -82,7 +82,7 @@ public class OPMLFileFormat
 	// Open File Settings
     private org.xml.sax.Parser parser = new com.jclark.xml.sax.Driver();
     private DocumentInfo docInfo = null;
-    private TreeContext tree = null;
+    private JoeTree tree = null;
 	
 	// Constructors
 	public OPMLFileFormat() {
@@ -92,7 +92,7 @@ public class OPMLFileFormat
 
 	
 	// SaveFileFormat Interface
-	public byte[] save(TreeContext tree, DocumentInfo docInfo) {
+	public byte[] save(JoeTree tree, DocumentInfo docInfo) {
 		StringBuffer buf = prepareFile(tree, docInfo);
 		
 		try {
@@ -109,7 +109,7 @@ public class OPMLFileFormat
 	public boolean supportsAttributes() {return true;}
 	public boolean supportsDocumentAttributes() {return true;}
 
-	private StringBuffer prepareFile(TreeContext tree, DocumentInfo docInfo) {
+	private StringBuffer prepareFile(JoeTree tree, DocumentInfo docInfo) {
 		String lineEnding = PlatformCompatibility.platformToLineEnding(docInfo.getLineEnding());
 		
 		StringBuffer buf = new StringBuffer();
@@ -150,7 +150,7 @@ public class OPMLFileFormat
 		return buf;
 	}
 	
-	private void buildDocumentAttributes(TreeContext tree, String lineEnding, StringBuffer buf) {
+	private void buildDocumentAttributes(JoeTree tree, String lineEnding, StringBuffer buf) {
 		Iterator it = tree.getAttributeKeys();
 		if (it != null) {
 			while (it.hasNext()) {
@@ -240,7 +240,7 @@ public class OPMLFileFormat
 	// OpenFileFormat Interface
 	private boolean errorOccurred = false;
 	
-	public int open(TreeContext tree, DocumentInfo docInfo, InputStream stream) {
+	public int open(JoeTree tree, DocumentInfo docInfo, InputStream stream) {
 		// Set the objects we are going to populate.
 		this.docInfo = docInfo;
 		this.tree = tree;

@@ -50,7 +50,7 @@ public class PadSelection {
 	public PadSelection() {}
 
 	// This method provides backwards compatibility but is now depricated.
-	public static Node pad(String text, TreeContext tree, int targetDepth, String lineEndString) {
+	public static Node pad(String text, JoeTree tree, int targetDepth, String lineEndString) {
 		Node tempRoot = new NodeImpl(tree,"");
 
 		int success = pad(text, tree, targetDepth, lineEndString, tempRoot);
@@ -62,7 +62,7 @@ public class PadSelection {
 	
 	// This code should be rewritten to use instances of a PadSelection object so that there can be
 	// one object per thread. Synchonizing it is a cheap short term fix.
-	public synchronized static int pad(String text, TreeContext tree, int targetDepth, String lineEndString, Node tempRoot) {
+	public synchronized static int pad(String text, JoeTree tree, int targetDepth, String lineEndString, Node tempRoot) {
 		padRetVal = SUCCESS;
 		
 		tempRoot.setDepth(targetDepth - 1);
@@ -125,7 +125,7 @@ public class PadSelection {
 		return getParentNodeOfDepth(parentNode,depth);
 	}
 	
-	private static void appendChildPaddedForDepth(Node parentNode, Node childNode, TreeContext tree, Node tempRoot) {
+	private static void appendChildPaddedForDepth(Node parentNode, Node childNode, JoeTree tree, Node tempRoot) {
 		if (parentNode == null) { //This should only happen when we are at the top of the tree.
 			Node newNode = new NodeImpl(tree,"");
 			newNode.setDepth(0);

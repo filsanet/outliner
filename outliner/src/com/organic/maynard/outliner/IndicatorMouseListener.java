@@ -73,7 +73,7 @@ public class IndicatorMouseListener implements MouseListener {
 			if ((p.x <= OutlineCommentIndicator.TRUE_WIDTH) && (p.y <= OutlineCommentIndicator.BUTTON_HEIGHT)) {
 				textArea = ((OutlineCommentIndicator) c).renderer;
 				Node node = textArea.node;
-	 			TreeContext tree = textArea.node.getTree();
+	 			JoeTree tree = textArea.node.getTree();
 				
 				if (e.isControlDown()) {
 					if (e.isShiftDown()) {
@@ -88,8 +88,8 @@ public class IndicatorMouseListener implements MouseListener {
 				}			
 	
 				// Redraw and set focus
-				tree.doc.panel.layout.draw();
-				tree.doc.panel.layout.setFocus(tree.getEditingNode(), tree.getComponentFocus());
+				tree.getDocument().panel.layout.draw();
+				tree.getDocument().panel.layout.setFocus(tree.getEditingNode(), tree.getComponentFocus());
 			}
 		} else if (c instanceof OutlineEditableIndicator) {
 			// Make sure it's in the icon, not just the JLabel.
@@ -97,7 +97,7 @@ public class IndicatorMouseListener implements MouseListener {
 			if ((p.x <= OutlineEditableIndicator.TRUE_WIDTH) && (p.y <= OutlineEditableIndicator.BUTTON_HEIGHT)) {
 				textArea = ((OutlineEditableIndicator) c).renderer;
 				Node node = textArea.node;
-	 			TreeContext tree = textArea.node.getTree();
+	 			JoeTree tree = textArea.node.getTree();
 				
 				if (e.isControlDown()) {
 					if (e.isShiftDown()) {
@@ -112,8 +112,8 @@ public class IndicatorMouseListener implements MouseListener {
 				}			
 	
 				// Redraw and set focus
-				tree.doc.panel.layout.draw();
-				tree.doc.panel.layout.setFocus(tree.getEditingNode(), tree.getComponentFocus());
+				tree.getDocument().panel.layout.draw();
+				tree.getDocument().panel.layout.setFocus(tree.getEditingNode(), tree.getComponentFocus());
 			}
 		} else if (c instanceof OutlineMoveableIndicator) {
 			// Make sure it's in the icon, not just the JLabel.
@@ -121,7 +121,7 @@ public class IndicatorMouseListener implements MouseListener {
 			if ((p.x <= OutlineMoveableIndicator.TRUE_WIDTH) && (p.y <= OutlineMoveableIndicator.BUTTON_HEIGHT)) {
 				textArea = ((OutlineMoveableIndicator) c).renderer;
 				Node node = textArea.node;
-	 			TreeContext tree = textArea.node.getTree();
+	 			JoeTree tree = textArea.node.getTree();
 				
 				if (e.isControlDown()) {
 					if (e.isShiftDown()) {
@@ -136,132 +136,132 @@ public class IndicatorMouseListener implements MouseListener {
 				}			
 	
 				// Redraw and set focus
-				tree.doc.panel.layout.draw();
-				tree.doc.panel.layout.setFocus(tree.getEditingNode(), tree.getComponentFocus());
+				tree.getDocument().panel.layout.draw();
+				tree.getDocument().panel.layout.setFocus(tree.getEditingNode(), tree.getComponentFocus());
 			}
 		}
 	}
 	
 	// Comments
-	private void clearComment(TreeContext tree) {
+	private void clearComment(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.clearCommentForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 	}
 
-	private void toggleCommentAndClear(TreeContext tree) {
+	private void toggleCommentAndClear(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.toggleCommentAndClearForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 	}
 
-	private void toggleComment(TreeContext tree) {
+	private void toggleComment(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.toggleCommentForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 	}
 
-	private void toggleCommentInheritance(TreeContext tree) {
+	private void toggleCommentInheritance(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.toggleCommentInheritanceForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 	}
 
 	// Editable
-	private void clearEditable(TreeContext tree) {
+	private void clearEditable(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.clearEditableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 	}
 
-	private void toggleEditableAndClear(TreeContext tree) {
+	private void toggleEditableAndClear(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.toggleEditableAndClearForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 	}
 
-	private void toggleEditable(TreeContext tree) {
+	private void toggleEditable(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.toggleEditableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 	}
 
-	private void toggleEditableInheritance(TreeContext tree) {
+	private void toggleEditableInheritance(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.toggleEditableInheritanceForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 	}
 
 	// Moveable
-	private void clearMoveable(TreeContext tree) {
+	private void clearMoveable(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.clearMoveableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 	}
 
-	private void toggleMoveableAndClear(TreeContext tree) {
+	private void toggleMoveableAndClear(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.toggleMoveableAndClearForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 	}
 
-	private void toggleMoveable(TreeContext tree) {
+	private void toggleMoveable(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.toggleMoveableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 	}
 
-	private void toggleMoveableInheritance(TreeContext tree) {
+	private void toggleMoveableInheritance(JoeTree tree) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.toggleMoveableInheritanceForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 	}
 }

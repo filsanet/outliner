@@ -318,7 +318,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 
 		// Shorthand
 		OutlinerDocument document = Outliner.getMostRecentDocumentTouched();
-		TreeContext tree = document.tree;
+		JoeTree tree = document.tree;
 		
 		// Handle Undoability Confirmation
 		if (!macro.isUndoable()) {
@@ -368,12 +368,12 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		}
 		
 		// Redraw
-		tree.doc.panel.layout.redraw();
+		tree.getDocument().panel.layout.redraw();
 		
 		endWaitCursor();
 	}
 	
-	private void doSimpleUndoableMacro(OutlinerDocument document, TreeContext tree, Macro macro) {
+	private void doSimpleUndoableMacro(OutlinerDocument document, JoeTree tree, Macro macro) {
 		CompoundUndoableEdit undoable = new CompoundUndoableEdit(tree);
 		
 		if (tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
@@ -404,8 +404,8 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 			tree.setCursorPosition(nodeRangePair.endIndex);
 			tree.setCursorMarkPosition(nodeRangePair.startIndex);
 		} else {
-			for (int i = 0; i < tree.selectedNodes.size(); i++) {
-				Node node = tree.selectedNodes.get(i);
+			for (int i = 0; i < tree.getSelectedNodes().size(); i++) {
+				Node node = tree.getSelectedNodes().get(i);
 				
 				// Abort if not editable
 				if (!node.isEditable()) {
@@ -435,7 +435,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		}	
 	}
 
-	private void doComplexUndoableMacro(OutlinerDocument document, TreeContext tree, Macro macro) {
+	private void doComplexUndoableMacro(OutlinerDocument document, JoeTree tree, Macro macro) {
 		Node parent = tree.getEditingNode().getParent();
 		CompoundUndoableReplace undoable = new CompoundUndoableReplace(parent);
 		
@@ -462,9 +462,9 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 				undoable.addPrimitive(new PrimitiveUndoableReplace(parent,node,nodeRangePair.node));
 			}
 		} else {
-			for (int i = 0; i < tree.selectedNodes.size(); i++) {
+			for (int i = 0; i < tree.getSelectedNodes().size(); i++) {
 				// Create a nodeRangePair
-				Node node = tree.selectedNodes.get(i);
+				Node node = tree.getSelectedNodes().get(i);
 
 				// Abort if not editable
 				if (!node.isEditable()) {

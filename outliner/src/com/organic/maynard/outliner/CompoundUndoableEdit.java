@@ -36,14 +36,14 @@ package com.organic.maynard.outliner;
 
 public class CompoundUndoableEdit extends AbstractCompoundUndoable {
 
-	private TreeContext tree = null;
+	private JoeTree tree = null;
 	
 	// The Constructors
-	public CompoundUndoableEdit(TreeContext tree) {
+	public CompoundUndoableEdit(JoeTree tree) {
 		this(true, tree);
 	}
 
-	public CompoundUndoableEdit(boolean isUpdatingGui, TreeContext tree) {
+	public CompoundUndoableEdit(boolean isUpdatingGui, JoeTree tree) {
 		super(isUpdatingGui);
 		this.tree = tree;
 	}
@@ -59,7 +59,7 @@ public class CompoundUndoableEdit extends AbstractCompoundUndoable {
 		for (int i = primitives.size() - 1; i >= 0; i--) {
 			((PrimitiveUndoableEdit) primitives.get(i)).undo();
 		}
-		tree.doc.panel.layout.draw();	
+		tree.getDocument().panel.layout.draw();	
 	}
 	
 	public void redo() {
@@ -67,6 +67,6 @@ public class CompoundUndoableEdit extends AbstractCompoundUndoable {
 		for (int i = 0; i < size; i++) {
 			((PrimitiveUndoableEdit) primitives.get(i)).redo();
 		}
-		tree.doc.panel.layout.draw();	
+		tree.getDocument().panel.layout.draw();	
 	}
 }

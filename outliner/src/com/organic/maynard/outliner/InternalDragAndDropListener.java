@@ -78,7 +78,7 @@ public class InternalDragAndDropListener implements MouseListener {
 					currentRenderer.button.setIcon(OutlineButton.ICON_SE_ARROW);
 				}
 			} else if (targetNode.isSelected() && (componentType == TEXT) && (!targetNode.prevSibling().isSelected())) {
-				OutlineLayoutManager layout = targetNode.getTree().doc.panel.layout;
+				OutlineLayoutManager layout = targetNode.getTree().getDocument().panel.layout;
 				OutlinerCellRendererImpl renderer = layout.getUIComponent(targetNode.prevSibling());
 				if (renderer != null) {
 					renderer.button.setIcon(OutlineButton.ICON_SE_ARROW);
@@ -91,7 +91,7 @@ public class InternalDragAndDropListener implements MouseListener {
 		if (isDragging) {
 			// Update the UI
 			if (targetNode.isSelected() && !targetNode.isFirstChild() && (componentType == TEXT)) {
-				OutlineLayoutManager layout = targetNode.getTree().doc.panel.layout;
+				OutlineLayoutManager layout = targetNode.getTree().getDocument().panel.layout;
 				OutlinerCellRendererImpl renderer = layout.getUIComponent(targetNode.prevSibling());
 				if (renderer != null) {
 					renderer.button.updateIcon();
@@ -136,7 +136,7 @@ public class InternalDragAndDropListener implements MouseListener {
 						moveAsFirstChild();
 					}
 				} else if (targetNode.isSelected() && !targetNode.isFirstChild() && (componentType == TEXT)) {
-					OutlineLayoutManager layout = targetNode.getTree().doc.panel.layout;
+					OutlineLayoutManager layout = targetNode.getTree().getDocument().panel.layout;
 					OutlinerCellRendererImpl renderer = layout.getUIComponent(targetNode.prevSibling());
 					if (renderer != null) {
 						renderer.button.updateIcon();
@@ -159,16 +159,16 @@ public class InternalDragAndDropListener implements MouseListener {
 
 	// Utility Methods
 	private void moveAsOlderSibling() {
-		TreeContext tree = targetNode.getTree();
+		JoeTree tree = targetNode.getTree();
 
 		// Put the Undoable onto the UndoQueue
 		CompoundUndoableMove undoable = new CompoundUndoableMove(tree.getSelectedNodesParent(),targetNode.getParent());
 		int targetIndexAdj = 0;
 		int currentIndexAdj = 0;
 		
-		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+		for (int i = 0; i < tree.getSelectedNodes().size(); i++) {
 			// Record the Insert in the undoable
-			Node nodeToMove = tree.selectedNodes.get(i);
+			Node nodeToMove = tree.getSelectedNodes().get(i);
 
 			// Abort if node is not moveable
 			if (!nodeToMove.isMoveable()) {
@@ -197,19 +197,19 @@ public class InternalDragAndDropListener implements MouseListener {
 		}
 		
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 			undoable.redo();
 		}
 	}
 	
 	private void moveAsFirstChild() {
-		TreeContext tree = targetNode.getTree();
+		JoeTree tree = targetNode.getTree();
 
 		CompoundUndoableMove undoable = new CompoundUndoableMove(tree.getSelectedNodesParent(),targetNode);
 		int currentIndexAdj = 0;
 		
-		for (int i = tree.selectedNodes.size() - 1; i >= 0; i--) {
-			Node nodeToMove = tree.selectedNodes.get(i);
+		for (int i = tree.getSelectedNodes().size() - 1; i >= 0; i--) {
+			Node nodeToMove = tree.getSelectedNodes().get(i);
 
 			// Abort if node is not moveable
 			if (!nodeToMove.isMoveable()) {
@@ -228,7 +228,7 @@ public class InternalDragAndDropListener implements MouseListener {
 		}
 		
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 			undoable.redo();
 		}
 	}

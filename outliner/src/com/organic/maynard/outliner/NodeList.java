@@ -36,7 +36,8 @@ package com.organic.maynard.outliner;
 
 import java.util.*;
 
-public class NodeList {
+public class NodeList 
+	implements JoeNodeList {
 
 	// Fields
 	private Node nodes[];

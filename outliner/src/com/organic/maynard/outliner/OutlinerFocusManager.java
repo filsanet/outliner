@@ -54,9 +54,9 @@ public class OutlinerFocusManager extends DefaultFocusManager {
 		try {
 			if (c instanceof OutlinerCellRendererImpl) {
 				OutlinerCellRendererImpl renderer = (OutlinerCellRendererImpl) c;
-				TreeContext tree = renderer.node.getTree();
+				JoeTree tree = renderer.node.getTree();
 				if (renderer.node != tree.getEditingNode()) {
-					tree.doc.panel.layout.getUIComponent(tree.getEditingNode()).fireKeyEvent(e);
+					tree.getDocument().panel.layout.getUIComponent(tree.getEditingNode()).fireKeyEvent(e);
 					e.consume();
 					return;
 				}

@@ -9,7 +9,7 @@
  *	interfaces
  * 		instance
  * 			public
- * 				byte[] save(TreeContext, DocumentInfo docInfo)
+ * 				byte[] save(JoeTree, DocumentInfo docInfo)
  * 	
  * 	
  * Portions copyright (C) 2001 Maynard Demmon <maynard@organic.com>
@@ -56,7 +56,7 @@ public interface SaveFileFormat
 	
 	// save an outline to a file
 	public byte[] save(
-		TreeContext tree,
+		JoeTree tree,
 		DocumentInfo docInfo
 	);
 }

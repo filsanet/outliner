@@ -72,11 +72,11 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 	public void undo() {
 		// Shorthand
 		Node youngestNode = ((PrimitiveUndoableMove) primitives.get(0)).getNode();
-		TreeContext tree = youngestNode.getTree();
+		JoeTree tree = youngestNode.getTree();
 
 		if (isUpdatingGui()) {
 			// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
-			OutlineLayoutManager layout = tree.doc.panel.layout;
+			OutlineLayoutManager layout = tree.getDocument().panel.layout;
 			Node nodeToDrawFromTmp = layout.getNodeToDrawFrom().nextUnSelectedNode();
 
 			// Do all the Inserts
@@ -112,8 +112,8 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 			// Redraw and Set Focus
 			if (layout.getNodeToDrawFrom().isAncestorSelected()) { // Makes sure we dont' stick at the top when multiple nodes are selected.
 				Node visNode = layout.getNodeToDrawFrom().prev();
-				int ioVisNode = tree.visibleNodes.indexOf(visNode);
-				int ioNodeToDrawFromTmp = tree.visibleNodes.indexOf(nodeToDrawFromTmp);
+				int ioVisNode = tree.getVisibleNodes().indexOf(visNode);
+				int ioNodeToDrawFromTmp = tree.getVisibleNodes().indexOf(nodeToDrawFromTmp);
 				if (ioVisNode < ioNodeToDrawFromTmp) {
 					layout.setNodeToDrawFrom(visNode, ioVisNode);
 				} else {
@@ -148,11 +148,11 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 	public void redo() {
 		// Shorthand
 		Node youngestNode = ((PrimitiveUndoableMove) primitives.get(0)).getNode();
-		TreeContext tree = youngestNode.getTree();
+		JoeTree tree = youngestNode.getTree();
 
 		if (isUpdatingGui()) {
-			// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
-			OutlineLayoutManager layout = tree.doc.panel.layout;
+			// Store nodeToDrawFrom if neccessary. Used when the selection is disconnected.
+			OutlineLayoutManager layout = tree.getDocument().panel.layout;
 			Node nodeToDrawFromTmp = layout.getNodeToDrawFrom().nextUnSelectedNode();
 
 			// Do all the Inserts
@@ -188,8 +188,8 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 			// Redraw and Set Focus
 			if (layout.getNodeToDrawFrom().isAncestorSelected()) { // Makes sure we dont' stick at the top when multiple nodes are selected.
 				Node visNode = layout.getNodeToDrawFrom().prev();
-				int ioVisNode = tree.visibleNodes.indexOf(visNode);
-				int ioNodeToDrawFromTmp = tree.visibleNodes.indexOf(nodeToDrawFromTmp);
+				int ioVisNode = tree.getVisibleNodes().indexOf(visNode);
+				int ioNodeToDrawFromTmp = tree.getVisibleNodes().indexOf(nodeToDrawFromTmp);
 				if (ioVisNode < ioNodeToDrawFromTmp) {
 					layout.setNodeToDrawFrom(visNode, ioVisNode);
 				} else {

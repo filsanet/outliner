@@ -100,7 +100,7 @@ public class BSHMacro extends MacroImpl implements Script {
 		} catch (Exception e) {
 			System.out.println("BSH Exception: " + e.getMessage());
 			
-			JOptionPane.showMessageDialog(node.getTree().doc, "BSH Exception: " + e.getMessage());
+			JOptionPane.showMessageDialog(node.getTree().getDocument(), "BSH Exception: " + e.getMessage());
 			
 			return null;
 		}

@@ -489,7 +489,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			Outliner.outliner.getToolkit().beep();
 		} else {
 			// Shorthand
-			TreeContext tree = doc.tree;
+			JoeTree tree = doc.tree;
 
 			// Insert the node into the visible nodes and clear the selection.
 			tree.insertNode(location.node);
@@ -549,7 +549,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			Outliner.outliner.getToolkit().beep();
 		} else {
 			// Shorthand
-			TreeContext tree = doc.tree;
+			JoeTree tree = doc.tree;
 
 			// Create the undoable
 			int difference = sReplace.length() - (location.endIndex - location.startIndex);
@@ -712,8 +712,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						
 				}
 			} else {
-				for (int i = 0; i < doc.tree.selectedNodes.size(); i++) {					
-					Node nodeStart = doc.tree.selectedNodes.get(i);
+				for (int i = 0; i < doc.tree.getSelectedNodes().size(); i++) {					
+					Node nodeStart = doc.tree.getSelectedNodes().get(i);
 					int cursorStart = 0;
 					Node nodeEnd = nodeStart.getLastDecendent();
 					int cursorEnd = nodeEnd.getValue().length();
@@ -776,9 +776,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 				}
 			}	
 		} else {
-			Node nodeStart = doc.tree.rootNode.getFirstChild();
+			Node nodeStart = doc.tree.getRootNode().getFirstChild();
 			int cursorStart = 0;
-			Node nodeEnd = doc.tree.rootNode.getLastDecendent();
+			Node nodeEnd = doc.tree.getRootNode().getLastDecendent();
 			int cursorEnd = nodeEnd.getValue().length();			
 
 			while (true) {
@@ -905,9 +905,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 					location = findText(node, Math.min(cursor,mark), node, Math.max(cursor,mark), textToMatch, replacement, false, true, isReplace, ignoreCase, includeReadOnlyNodes, wrapAround, isRegexp);
 				}
 			} else {
-				for (int i = 0; i < doc.tree.selectedNodes.size(); i++) {
+				for (int i = 0; i < doc.tree.getSelectedNodes().size(); i++) {
 					// Record the Insert in the undoable
-					Node nodeStart = doc.tree.selectedNodes.get(i);
+					Node nodeStart = doc.tree.getSelectedNodes().get(i);
 					int cursorStart = 0;
 					Node nodeEnd = nodeStart.getLastDecendent();
 					int cursorEnd = nodeEnd.getValue().length();
@@ -929,8 +929,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			int cursorStart = 0;
 	
 			if (startAtTop) {
-				nodeStart = doc.tree.rootNode.getFirstChild();
-				nodeEnd = doc.tree.rootNode.getLastDecendent();
+				nodeStart = doc.tree.getRootNode().getFirstChild();
+				nodeEnd = doc.tree.getRootNode().getLastDecendent();
 				cursorStart = 0;
 			} else {
 				nodeStart = doc.tree.getEditingNode();

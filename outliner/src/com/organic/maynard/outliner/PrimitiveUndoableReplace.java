@@ -64,7 +64,7 @@ public class PrimitiveUndoableReplace implements Undoable {
 	public Node getNewNode() {return newNode;}
 			
 	public void undo() {
-		TreeContext tree = parent.getTree();
+		JoeTree tree = parent.getTree();
 		
 		if (newNode != null) {
 			// Remove node from visible nodes cache
@@ -86,7 +86,7 @@ public class PrimitiveUndoableReplace implements Undoable {
 	
 	// Undoable Interface
 	public void redo() {
-		TreeContext tree = parent.getTree();
+		JoeTree tree = parent.getTree();
 
 		// Remove node from visible nodes cache
 		tree.removeNode(oldNode);

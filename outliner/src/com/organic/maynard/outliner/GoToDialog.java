@@ -203,7 +203,7 @@ public class GoToDialog extends AbstractGUITreeJDialog implements ActionListener
 		}
 		
 		// Find the nth node.
-		Node currentNode = doc.tree.rootNode;
+		Node currentNode = doc.tree.getRootNode();
 		Node nextNode;
 		for (int i = 0; i < lineNumber; i++) {
 			nextNode = currentNode.nextNode();

@@ -64,8 +64,8 @@ public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 		Node newSelectedNode = youngestNode.prev();
 		
 		// Shorthand
-		TreeContext tree = youngestNode.getTree();
-		OutlineLayoutManager layout = tree.doc.panel.layout;
+		JoeTree tree = youngestNode.getTree();
+		OutlineLayoutManager layout = tree.getDocument().panel.layout;
 		
 		// Delete Everything
 		for (int i = 0; i < primitives.size(); i++) {
@@ -78,8 +78,8 @@ public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 		
 		// If the newSelectedNode is null, then select the first node in the tree
 		if (newSelectedNode == null) {
-			tree.setSelectedNodesParent(tree.rootNode);
-			newSelectedNode = tree.rootNode.getFirstChild();
+			tree.setSelectedNodesParent(tree.getRootNode());
+			newSelectedNode = tree.getRootNode().getFirstChild();
 			tree.addNodeToSelection(newSelectedNode);
 		} else {
 			tree.setSelectedNodesParent(newSelectedNode.getParent());
@@ -94,7 +94,7 @@ public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 		// First make sure the node to draw from wasn't removed, it will be root since it is orphaned. 
 		// If so, we need to set the new one before trying to redraw.
 		if (layout.getNodeToDrawFrom().isRoot()) {
-			layout.setNodeToDrawFrom(newSelectedNode, tree.visibleNodes.indexOf(newSelectedNode));
+			layout.setNodeToDrawFrom(newSelectedNode, tree.getVisibleNodes().indexOf(newSelectedNode));
 		}
 		tree.insertNode(newSelectedNode); // Just to make it visible
 		layout.draw(newSelectedNode,OutlineLayoutManager.ICON);	
@@ -102,7 +102,7 @@ public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 	
 	public void redo() {
 		Node youngestNode = ((PrimitiveUndoableInsert) primitives.get(primitives.size() - 1)).getNode();
-		TreeContext tree = youngestNode.getTree();
+		JoeTree tree = youngestNode.getTree();
 
 		// Do all the Inserts
 		tree.setSelectedNodesParent(parent);
@@ -116,6 +116,6 @@ public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 		tree.setComponentFocus(OutlineLayoutManager.ICON);
 		
 		// Redraw and Set Focus
-		tree.doc.panel.layout.draw(youngestNode,OutlineLayoutManager.ICON);		
+		tree.getDocument().panel.layout.draw(youngestNode,OutlineLayoutManager.ICON);		
 	}
 }

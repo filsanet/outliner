@@ -648,4 +648,30 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 			getDocument(i).panel.layout.redraw();
 		}		
 	}
+	
+	
+	// all calls for a new JoeTree come thru here
+	// if changing the class that's implementing JoeTree, do so here
+	public static JoeTree newTree (OutlinerDocument document) {
+		
+		// JoeTree currently implemented by TreeContext
+		if (document == null) {
+			return new TreeContext() ;
+		}
+		else {
+			return new TreeContext(document) ;
+		} // end else
+	} // end method newTree
+
+
+	// all calls for a new JoeNodeList come thru here
+	// if changing the class that's implementing JoeNodeList, do so here
+	public static JoeNodeList newNodeList (int initialCapacity) {
+		
+		// JoeNodeList currently implemented by NodeList
+		return new NodeList(initialCapacity) ;
+		
+	} // end method newNodeList
+	
+
 }

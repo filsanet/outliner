@@ -89,8 +89,8 @@ public class ExportSelectionFileMenuItem extends AbstractOutlinerMenuItem implem
 		document.setDocumentInfo(newDocInfo);
 
 		// We also need to swap out the tree with a new tree that just contains the current selection
-		TreeContext newTree = new TreeContext();
-		TreeContext oldTree = document.tree;
+		JoeTree newTree = Outliner.newTree(null);
+		JoeTree oldTree = document.tree;
 
 		if (document.tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
 			Node node = document.tree.getEditingNode();
@@ -108,8 +108,8 @@ public class ExportSelectionFileMenuItem extends AbstractOutlinerMenuItem implem
 			
 			root.removeChild(root.getFirstChild());
 			
-			for (int i = 0; i < document.tree.selectedNodes.size(); i++) {
-				Node node = document.tree.selectedNodes.get(i).cloneClean();
+			for (int i = 0; i < document.tree.getSelectedNodes().size(); i++) {
+				Node node = document.tree.getSelectedNodes().get(i).cloneClean();
 				newTree.getRootNode().appendChild(node);				
 			}
 		}

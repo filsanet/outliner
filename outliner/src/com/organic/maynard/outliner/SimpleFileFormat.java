@@ -48,9 +48,9 @@ public class SimpleFileFormat
 
 
  // SaveFileFormat Interface
- public byte[] save(TreeContext tree, DocumentInfo docInfo) {
+ public byte[] save(JoeTree tree, DocumentInfo docInfo) {
   StringBuffer buf = new StringBuffer();
-  tree.rootNode.depthPaddedValue(buf, PlatformCompatibility.platformToLineEnding(docInfo.getLineEnding()));
+  tree.getRootNode().depthPaddedValue(buf, PlatformCompatibility.platformToLineEnding(docInfo.getLineEnding()));
 
   try {
    return buf.toString().getBytes(docInfo.getEncodingType());
@@ -68,7 +68,7 @@ public class SimpleFileFormat
 
 
  // OpenFileFormat Interface
- public int open(TreeContext tree, DocumentInfo docInfo, InputStream stream) {
+ public int open(JoeTree tree, DocumentInfo docInfo, InputStream stream) {
   int success = FAILURE;
 
   String text = null;

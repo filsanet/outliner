@@ -96,7 +96,7 @@ public class SortMacro extends MacroImpl implements RawMacro {
 	public void process(int mode) {
 		// Shorthand
 		OutlinerDocument document = Outliner.getMostRecentDocumentTouched();
-		TreeContext tree = document.tree;
+		JoeTree tree = document.tree;
 
 		// Abort if nodes aren't selected.
 		if (tree.getComponentFocus() == OutlineLayoutManager.TEXT) {
@@ -154,8 +154,8 @@ public class SortMacro extends MacroImpl implements RawMacro {
 			int[] indeces;
 
 			if (i == 0) {
-				sortedNodes = tree.selectedNodes.toArray();
-				indeces = new int[tree.selectedNodes.size()];
+				sortedNodes = tree.getSelectedNodes().toArray();
+				indeces = new int[tree.getSelectedNodes().size()];
 			} else {
 				sortedNodes = ((NodeImpl) parent).children.toArray();
 				indeces = new int[parent.numOfChildren()];

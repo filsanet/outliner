@@ -94,37 +94,37 @@ public class UndoableEdit implements Undoable {
 	
 	// Undoable Interface
 	public void undo() {
-		TreeContext tree = node.getTree();
+		JoeTree tree = node.getTree();
 		
 		node.setValue(oldText);
 		tree.setCursorPosition(oldPosition);
-		tree.doc.setPreferredCaretPosition(oldPosition);
+		tree.getDocument().setPreferredCaretPosition(oldPosition);
 		tree.setCursorMarkPosition(oldMarkPosition);
 		tree.setEditingNode(node);
 		tree.clearSelection();
 		tree.insertNode(node); // Used for visibility
 		
-		tree.doc.panel.layout.draw(node, OutlineLayoutManager.TEXT);
+		tree.getDocument().panel.layout.draw(node, OutlineLayoutManager.TEXT);
 	}
 	
 	public void redo() {
-		TreeContext tree = node.getTree();
+		JoeTree tree = node.getTree();
 
 		node.setValue(newText);
 		tree.setCursorPosition(newPosition);
-		tree.doc.setPreferredCaretPosition(newPosition);
+		tree.getDocument().setPreferredCaretPosition(newPosition);
 		tree.setCursorMarkPosition(newMarkPosition);
 		tree.setEditingNode(node);
 		tree.clearSelection();
 		tree.insertNode(node); // Used for visibility
 		
-		tree.doc.panel.layout.draw(node, OutlineLayoutManager.TEXT);
+		tree.getDocument().panel.layout.draw(node, OutlineLayoutManager.TEXT);
 	}
 
 
 	// Static Methods
 	public static void freezeUndoEdit(Node currentNode) {
-		UndoableEdit undoable = currentNode.getTree().doc.undoQueue.getIfEdit();
+		UndoableEdit undoable = currentNode.getTree().getDocument().undoQueue.getIfEdit();
 		if ((undoable != null) && (undoable.getNode() == currentNode)) {
 			undoable.setFrozen(true);
 		}

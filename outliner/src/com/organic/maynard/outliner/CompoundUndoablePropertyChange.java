@@ -38,14 +38,14 @@ import java.util.*;
 
 public class CompoundUndoablePropertyChange extends AbstractCompoundUndoable {
 	
-	private TreeContext tree = null;
+	private JoeTree tree = null;
 	
 	// The Constructors
-	public CompoundUndoablePropertyChange(TreeContext tree) {
+	public CompoundUndoablePropertyChange(JoeTree tree) {
 		this(true, tree);
 	}
 
-	public CompoundUndoablePropertyChange(boolean isUpdatingGui, TreeContext tree) {
+	public CompoundUndoablePropertyChange(boolean isUpdatingGui, JoeTree tree) {
 		super(isUpdatingGui);
 		this.tree = tree;
 	}
@@ -69,8 +69,8 @@ public class CompoundUndoablePropertyChange extends AbstractCompoundUndoable {
 		tree.setComponentFocus(OutlineLayoutManager.ICON);
 
 		tree.insertNode(node);
-		tree.doc.panel.layout.draw(node, OutlineLayoutManager.ICON);
-		tree.doc.attPanel.update();
+		tree.getDocument().panel.layout.draw(node, OutlineLayoutManager.ICON);
+		tree.getDocument().attPanel.update();
 	}
 	
 	public void redo() {
@@ -86,7 +86,7 @@ public class CompoundUndoablePropertyChange extends AbstractCompoundUndoable {
 		tree.setComponentFocus(OutlineLayoutManager.ICON);
 
 		tree.insertNode(node);
-		tree.doc.panel.layout.draw(node, OutlineLayoutManager.ICON);
-		tree.doc.attPanel.update();
+		tree.getDocument().panel.layout.draw(node, OutlineLayoutManager.ICON);
+		tree.getDocument().attPanel.update();
 	}
 }

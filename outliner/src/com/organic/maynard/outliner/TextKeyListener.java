@@ -67,8 +67,8 @@ public class TextKeyListener implements KeyListener, MouseListener {
  		
  		// Shorthand
  		Node currentNode = textArea.node;
- 		TreeContext tree = currentNode.getTree();
- 		OutlineLayoutManager layout = tree.doc.panel.layout;
+ 		JoeTree tree = currentNode.getTree();
+ 		OutlineLayoutManager layout = tree.getDocument().panel.layout;
 
 		// This is detection for Solaris, I think mac does this too.
 		if (e.isPopupTrigger() && (currentNode.isAncestorSelected() || (tree.getEditingNode() == currentNode))) {
@@ -83,7 +83,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		}
 			
  		// Clear the selection
- 		int selectionSize = tree.selectedNodes.size();
+ 		int selectionSize = tree.getSelectedNodes().size();
 		tree.clearSelection();
 		
 		// Clear any text selection in the node that was being edited
@@ -98,7 +98,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		} // end if
 		
 		// Store the preferred caret position
-		tree.doc.setPreferredCaretPosition(textArea.getCaretPosition());
+		tree.getDocument().setPreferredCaretPosition(textArea.getCaretPosition());
 		
 		// Record the EditingNode and CursorPosition and ComponentFocus
 		tree.setEditingNode(currentNode);
@@ -109,7 +109,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		if (selectionSize > 0) {
 			 // This doesn't use redraw() becuase it's important to do a full draw if the node 
 			 // is partially visible.
-			tree.doc.panel.layout.draw(currentNode,OutlineLayoutManager.TEXT);
+			tree.getDocument().panel.layout.draw(currentNode,OutlineLayoutManager.TEXT);
 		}
 		
 		// Freeze Undo Editing
@@ -126,7 +126,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
  		
 		// Shorthand
 		Node currentNode = textArea.node;
- 		TreeContext tree = currentNode.getTree();
+ 		JoeTree tree = currentNode.getTree();
 
 		// Set the Mark
 		tree.setCursorMarkPosition(textArea.getCaret().getMark());
@@ -149,14 +149,14 @@ public class TextKeyListener implements KeyListener, MouseListener {
  		
 		// Shorthand
 		Node currentNode = textArea.node;
- 		TreeContext tree = currentNode.getTree();
+ 		JoeTree tree = currentNode.getTree();
 		
 		// Set the Mark
 		tree.setCursorMarkPosition(textArea.getCaret().getMark());
 		tree.setCursorPosition(textArea.getCaretPosition(),false);
 
 		// Lets record changes to the selection state into the current undoable if it is an UndoableEdit
-		UndoableEdit undoable = tree.doc.undoQueue.getIfEdit();
+		UndoableEdit undoable = tree.getDocument().undoQueue.getIfEdit();
 		if ((undoable != null) && (undoable.getNode() == currentNode)) {
 			undoable.setNewPosition(textArea.getCaretPosition());
 			undoable.setNewMarkPosition(textArea.getCaret().getMark());
@@ -172,8 +172,8 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		
 		// Shorthand
 		Node currentNode = textArea.node;
-		TreeContext tree = currentNode.getTree();
-		OutlineLayoutManager layout = tree.doc.panel.layout;
+		JoeTree tree = currentNode.getTree();
+		OutlineLayoutManager layout = tree.getDocument().panel.layout;
 		
 		switch(e.getKeyCode()) {
 			case KeyEvent.VK_PAGE_DOWN:
@@ -326,7 +326,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 						newText = oldText.substring(0, newCaretPosition) + oldText.substring(newCaretPosition + 1, oldText.length());				
 					}
 	
-					UndoableEdit undoable = tree.doc.undoQueue.getIfEdit();
+					UndoableEdit undoable = tree.getDocument().undoQueue.getIfEdit();
 					if ((undoable != null) && (undoable.getNode() == currentNode) && (!undoable.isFrozen())) {
 						undoable.setNewText(newText);
 						undoable.setNewPosition(newCaretPosition);
@@ -341,7 +341,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 							oldMarkPosition, 
 							newMarkPosition
 						);
-						tree.doc.undoQueue.add(newUndoable);
+						tree.getDocument().undoQueue.add(newUndoable);
 					}
 	
 					currentNode.setValue(newText);
@@ -425,7 +425,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 				backspaceMerge = false;
 				e.consume();
 			} else {
-				TreeContext tree = currentNode.getTree();
+				JoeTree tree = currentNode.getTree();
 				
 				String oldText = currentNode.getValue();
 				String newText = null;
@@ -481,7 +481,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 					newText = oldText.substring(0, newCaretPosition) + oldText.substring(newCaretPosition + 1, oldText.length());				
 				} // end else
 
-				UndoableEdit undoable = tree.doc.undoQueue.getIfEdit();
+				UndoableEdit undoable = tree.getDocument().undoQueue.getIfEdit();
 				if ((undoable != null) && (undoable.getNode() == currentNode) && (!undoable.isFrozen())) {
 					undoable.setNewText(newText);
 					undoable.setNewPosition(newCaretPosition);
@@ -496,7 +496,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 						oldMarkPosition, 
 						newMarkPosition
 					);
-					tree.doc.undoQueue.add(newUndoable);
+					tree.getDocument().undoQueue.add(newUndoable);
 				}
 
 				currentNode.setValue(newText);
@@ -509,8 +509,8 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 		// Create some short names for convienence
 		Node currentNode = textArea.node;
-		TreeContext tree = currentNode.getTree();
-		OutlineLayoutManager layout = tree.doc.panel.layout;
+		JoeTree tree = currentNode.getTree();
+		OutlineLayoutManager layout = tree.getDocument().panel.layout;
 
 		// If we're read-only then abort
 		if (!currentNode.isEditable()) {
@@ -579,17 +579,17 @@ public class TextKeyListener implements KeyListener, MouseListener {
 			currentNode.setValue(newText);
 	
 			// Put the Undoable onto the UndoQueue
-			UndoableEdit undoable = tree.doc.undoQueue.getIfEdit();
+			UndoableEdit undoable = tree.getDocument().undoQueue.getIfEdit();
 			if ((undoable != null) && (undoable.getNode() == currentNode) && (!undoable.isFrozen())) {
 				if (e.isControlDown() && ((e.getKeyCode() == KeyEvent.VK_X) || (e.getKeyCode() == KeyEvent.VK_V))) {
-					tree.doc.undoQueue.add(new UndoableEdit(currentNode, oldText, newText, tree.getCursorPosition(), caretPosition, tree.getCursorMarkPosition(), caretPosition));
+					tree.getDocument().undoQueue.add(new UndoableEdit(currentNode, oldText, newText, tree.getCursorPosition(), caretPosition, tree.getCursorMarkPosition(), caretPosition));
 				} else {
 					undoable.setNewText(newText);
 					undoable.setNewPosition(caretPosition);
 					undoable.setNewMarkPosition(caretPosition);
 				}
 			} else {
-				tree.doc.undoQueue.add(new UndoableEdit(currentNode, oldText, newText, tree.getCursorPosition(), caretPosition, tree.getCursorMarkPosition(), caretPosition));
+				tree.getDocument().undoQueue.add(new UndoableEdit(currentNode, oldText, newText, tree.getCursorPosition(), caretPosition, tree.getCursorMarkPosition(), caretPosition));
 			}
 		}
 
@@ -597,7 +597,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		tree.setEditingNode(currentNode);
 		tree.setCursorMarkPosition(textArea.getCaret().getMark());
 		tree.setCursorPosition(caretPosition, false);
-		tree.doc.setPreferredCaretPosition(caretPosition);
+		tree.getDocument().setPreferredCaretPosition(caretPosition);
 
 		// Do the Redraw if we have wrapped or if we are currently off screen.
 		if (textArea.getPreferredSize().height != textArea.height || !currentNode.isVisible()) {
@@ -607,7 +607,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 
 	// Key Handlers
-	private void toggleExpansion(TreeContext tree, OutlineLayoutManager layout) {
+	private void toggleExpansion(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		
 		if (currentNode.isExpanded()) {
@@ -621,59 +621,59 @@ public class TextKeyListener implements KeyListener, MouseListener {
 	}
 
 	// Comments
-	private void clearComment(TreeContext tree, OutlineLayoutManager layout) {
+	private void clearComment(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.clearCommentForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 
 		// Redraw
 		layout.draw(currentNode, OutlineLayoutManager.TEXT);
 	}
 
-	private void toggleCommentAndClear(TreeContext tree, OutlineLayoutManager layout) {
+	private void toggleCommentAndClear(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.toggleCommentAndClearForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 
 		// Redraw
 		layout.draw(currentNode, OutlineLayoutManager.TEXT);
 	}
 
-	private void toggleComment(TreeContext tree, OutlineLayoutManager layout) {
+	private void toggleComment(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.toggleCommentForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 
 		// Redraw
 		layout.draw(currentNode, OutlineLayoutManager.TEXT);
 	}
 
-	private void toggleCommentInheritance(TreeContext tree, OutlineLayoutManager layout) {
+	private void toggleCommentInheritance(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.toggleCommentInheritanceForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 
 		// Redraw
 		layout.draw(currentNode, OutlineLayoutManager.TEXT);
 	}
 	
-	private void moveUp(TreeContext tree, OutlineLayoutManager layout) {
+	private void moveUp(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// Get Prev Node
@@ -684,7 +684,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 		// Record the EditingNode and CursorPosition
 		tree.setEditingNode(prevNode);
-		tree.setCursorPosition(OutlinerDocument.findNearestCaretPosition(textArea.getCaretPosition(), tree.doc.getPreferredCaretPosition(), prevNode));
+		tree.setCursorPosition(OutlinerDocument.findNearestCaretPosition(textArea.getCaretPosition(), tree.getDocument().getPreferredCaretPosition(), prevNode));
 			
 		// Clear Text Selection
 		textArea.setCaretPosition(0);
@@ -701,7 +701,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		}
 	}
 
-	private void moveDown(TreeContext tree, OutlineLayoutManager layout) {
+	private void moveDown(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// Get Prev Node
@@ -712,7 +712,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 		// Record the EditingNode and CursorPosition
 		tree.setEditingNode(nextNode);
-		tree.setCursorPosition(OutlinerDocument.findNearestCaretPosition(textArea.getCaretPosition(), tree.doc.getPreferredCaretPosition(), nextNode));
+		tree.setCursorPosition(OutlinerDocument.findNearestCaretPosition(textArea.getCaretPosition(), tree.getDocument().getPreferredCaretPosition(), nextNode));
 		
 		// Clear Text Selection
 		textArea.setCaretPosition(0);
@@ -729,11 +729,11 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		}
 	}
 
-	private void moveLeft(TreeContext tree, OutlineLayoutManager layout) {
+	private void moveLeft(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// Update Preferred Caret Position
-		tree.doc.setPreferredCaretPosition(textArea.getCaretPosition() - 1);
+		tree.getDocument().setPreferredCaretPosition(textArea.getCaretPosition() - 1);
 
 		// Record the CursorPosition only since the EditingNode should not have changed
 		tree.setCursorPosition(textArea.getCaretPosition() - 1);
@@ -744,7 +744,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		}
 	}
 
-	private void moveLeftToPrevNode(TreeContext tree, OutlineLayoutManager layout) {
+	private void moveLeftToPrevNode(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// Get Prev Node
@@ -756,7 +756,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		
 		// Update Preferred Caret Position
 		int newLength = prevNode.getValue().length();
-		tree.doc.setPreferredCaretPosition(newLength);
+		tree.getDocument().setPreferredCaretPosition(newLength);
 
 		// Record the EditingNode and CursorPosition
 		tree.setEditingNode(prevNode);
@@ -774,11 +774,11 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		}
 	}
 
-	private void moveRight(TreeContext tree, OutlineLayoutManager layout) {
+	private void moveRight(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// Update Preferred Caret Position
-		tree.doc.setPreferredCaretPosition(textArea.getCaretPosition() + 1);
+		tree.getDocument().setPreferredCaretPosition(textArea.getCaretPosition() + 1);
 
 		// Record the CursorPosition only since the EditingNode should not have changed
 		tree.setCursorPosition(textArea.getCaretPosition() + 1);
@@ -789,7 +789,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		}
 	}
 
-	private void moveRightToNextNode(TreeContext tree, OutlineLayoutManager layout) {
+	private void moveRightToNextNode(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// Get Prev Node
@@ -801,7 +801,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 	
 		// Update Preferred Caret Position
 		int newLength = nextNode.getValue().length();
-		tree.doc.setPreferredCaretPosition(newLength);
+		tree.getDocument().setPreferredCaretPosition(newLength);
 
 		// Record the EditingNode and CursorPosition
 		tree.setEditingNode(nextNode);
@@ -819,7 +819,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		}
 	}
 
-	private void changeFocusToIcon(TreeContext tree, OutlineLayoutManager layout) {
+	private void changeFocusToIcon(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		tree.setSelectedNodesParent(currentNode.getParent());
@@ -832,7 +832,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		layout.draw(currentNode,OutlineLayoutManager.ICON);
 	}
 	
-	protected static void doInsert(Node node, TreeContext tree, OutlineLayoutManager layout) {
+	protected static void doInsert(Node node, JoeTree tree, OutlineLayoutManager layout) {
 
 		// Abort if node is not editable
 		if (!node.isEditable()) {
@@ -859,19 +859,19 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		// Record the EditingNode and CursorPosition and ComponentFocus
 		tree.setEditingNode(newNode);
 		tree.setCursorPosition(0);
-		tree.doc.setPreferredCaretPosition(0);
+		tree.getDocument().setPreferredCaretPosition(0);
 		tree.setComponentFocus(OutlineLayoutManager.TEXT);
 
 		// Put the Undoable onto the UndoQueue
 		CompoundUndoableInsert undoable = new CompoundUndoableInsert(newNodeParent);
 		undoable.addPrimitive(new PrimitiveUndoableInsert(newNodeParent, newNode, newNodeIndex));
-		tree.doc.undoQueue.add(undoable);
+		tree.getDocument().undoQueue.add(undoable);
 		
 		// Redraw and Set Focus
 		layout.draw(newNode, visibleIndex, OutlineLayoutManager.TEXT);	
 	}
 
-	private void mergeWithPrevVisibleNode(TreeContext tree, OutlineLayoutManager layout) {
+	private void mergeWithPrevVisibleNode(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		Node prevNode = tree.getPrevNode(currentNode);
 		if (prevNode == null) {
@@ -908,14 +908,14 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		undoable.addPrimitive(undoableReplace);
 		undoable.addPrimitive(undoableEdit);
 		
-		tree.doc.undoQueue.add(undoable);
+		tree.getDocument().undoQueue.add(undoable);
 				
 		undoable.redo();
 		
 		backspaceMerge = true;
 	}
 
-	private void mergeWithNextVisibleNode(TreeContext tree, OutlineLayoutManager layout) {
+	private void mergeWithNextVisibleNode(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		Node nextNode = tree.getNextNode(currentNode);
 		if (nextNode == null) {
@@ -952,12 +952,12 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		undoable.addPrimitive(undoableReplace);
 		undoable.addPrimitive(undoableEdit);
 		
-		tree.doc.undoQueue.add(undoable);
+		tree.getDocument().undoQueue.add(undoable);
 				
 		undoable.redo();
 	}
 	
-	private void split(TreeContext tree, OutlineLayoutManager layout) {
+	private void split(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// Get Text for nodes.
@@ -986,7 +986,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		tree.setCursorPosition(0);
 
 		// Update Preferred Caret Position
-		tree.doc.setPreferredCaretPosition(0);
+		tree.getDocument().setPreferredCaretPosition(0);
 
 		// Put the Undoable onto the UndoQueue
 		CompoundUndoableEdit undoableEdit = new CompoundUndoableEdit(tree);
@@ -999,13 +999,13 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		undoable.addPrimitive(undoableEdit);
 		undoable.addPrimitive(undoableInsert);
 		
-		tree.doc.undoQueue.add(undoable);
+		tree.getDocument().undoQueue.add(undoable);
 
 		// Redraw and Set Focus
 		layout.draw(newNode,OutlineLayoutManager.TEXT);
 	}
 
-	private void selectNone(TreeContext tree, OutlineLayoutManager layout) {
+	private void selectNone(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// Clear Text Selection
@@ -1015,14 +1015,14 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		textArea.moveCaretPosition(caretPosition);
 		
 		// Update the undoable if neccessary
-		UndoableEdit undoable = tree.doc.undoQueue.getIfEdit();
+		UndoableEdit undoable = tree.getDocument().undoQueue.getIfEdit();
 		if ((undoable != null) && (undoable.getNode() == currentNode) && (!undoable.isFrozen())) {
 			undoable.setNewPosition(caretPosition);
 			undoable.setNewMarkPosition(caretPosition);
 		}
 	}
 		
-	private void promote(TreeContext tree, OutlineLayoutManager layout) {
+	private void promote(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		// Abort if node is not moveable
@@ -1039,7 +1039,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		}
 		
 		CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(),targetNode);
-		tree.doc.undoQueue.add(undoable);
+		tree.getDocument().undoQueue.add(undoable);
 
 		// Record the Insert in the undoable
 		int index = currentNode.currentIndex();
@@ -1051,7 +1051,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		layout.draw(currentNode,OutlineLayoutManager.TEXT);
 	}
 
-	private void demote(TreeContext tree, OutlineLayoutManager layout) {
+	private void demote(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		if (currentNode.isFirstChild()) {
@@ -1067,7 +1067,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		Node targetNode = currentNode.prevSibling();
 
 		CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(), targetNode);
-		tree.doc.undoQueue.add(undoable);
+		tree.getDocument().undoQueue.add(undoable);
 		
 		// Record the Insert in the undoable
 		int index = currentNode.currentIndex();
@@ -1080,7 +1080,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		layout.draw(currentNode,OutlineLayoutManager.TEXT);
 	}
 
-	private void paste(TreeContext tree, OutlineLayoutManager layout) {
+	private void paste(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 
 		inlinePaste = true;
@@ -1114,7 +1114,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 		// Put the Undoable onto the UndoQueue
 		CompoundUndoableInsert undoable = new CompoundUndoableInsert(currentNode.getParent());
-		tree.doc.undoQueue.add(undoable);
+		tree.getDocument().undoQueue.add(undoable);
 
 		Node parentForNewNode = currentNode.getParent();
 		int indexForNewNode = parentForNewNode.getChildIndex(currentNode);
@@ -1164,36 +1164,36 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 	// Additional Outline Methods
 	public static void hoist(Node currentNode) {
-		currentNode.getTree().doc.hoistStack.hoist(new HoistStackItem(currentNode));
+		currentNode.getTree().getDocument().hoistStack.hoist(new HoistStackItem(currentNode));
 		return;
 	}
 
 	public static void dehoist(Node currentNode) {
-		currentNode.getTree().doc.hoistStack.dehoist();
+		currentNode.getTree().getDocument().hoistStack.dehoist();
 		return;
 	}
 
 	public static void dehoist_all(Node currentNode) {
-		currentNode.getTree().doc.hoistStack.dehoistAll();
+		currentNode.getTree().getDocument().hoistStack.dehoistAll();
 		return;
 	}
 
 	public static void expandAllSubheads(Node currentNode) {
 		currentNode.ExpandAllSubheads();
-		currentNode.getTree().doc.panel.layout.draw();
+		currentNode.getTree().getDocument().panel.layout.draw();
 		return;
 	}
 
-	public static void expandEverything(TreeContext tree) {
-		tree.rootNode.ExpandAllSubheads();
-		tree.doc.panel.layout.draw();
+	public static void expandEverything(JoeTree tree) {
+		tree.getRootNode().ExpandAllSubheads();
+		tree.getDocument().panel.layout.draw();
 		return;
 	}
 
 	public static void collapseToParent(Node currentNode) {
 		// Shorthand
-		TreeContext tree = currentNode.getTree();
-		OutlineLayoutManager layout = tree.doc.panel.layout;
+		JoeTree tree = currentNode.getTree();
+		OutlineLayoutManager layout = tree.getDocument().panel.layout;
 		
 		Node parent = currentNode.getParent();
 		if (parent.isRoot()) {
@@ -1220,73 +1220,73 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		return;
 	}
 
-	public static void collapseEverything(TreeContext tree) {
-		for (int i = 0; i < tree.rootNode.numOfChildren(); i++) {
-			((Node) tree.rootNode.getChild(i)).CollapseAllSubheads();
+	public static void collapseEverything(JoeTree tree) {
+		for (int i = 0; i < tree.getRootNode().numOfChildren(); i++) {
+			((Node) tree.getRootNode().getChild(i)).CollapseAllSubheads();
 		}
 
 		// Record the EditingNode, Mark and CursorPosition
-		Node firstNode = tree.rootNode.getFirstChild();
+		Node firstNode = tree.getRootNode().getFirstChild();
 		tree.setEditingNode(firstNode);
 		tree.setComponentFocus(OutlineLayoutManager.ICON);
 
 		// Update Selection
-		tree.setSelectedNodesParent(tree.rootNode);
+		tree.setSelectedNodesParent(tree.getRootNode());
 		tree.addNodeToSelection(firstNode);
 		
 		// Redraw and Set Focus
-		tree.doc.panel.layout.draw(firstNode,OutlineLayoutManager.ICON);
+		tree.getDocument().panel.layout.draw(firstNode,OutlineLayoutManager.ICON);
 		
 		return;
 	}
 
 	// Editable
-	private void clearEditable(TreeContext tree, OutlineLayoutManager layout) {
+	private void clearEditable(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.clearEditableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 
 		// Redraw
 		layout.draw(currentNode, OutlineLayoutManager.TEXT);
 	}
 
-	private void toggleEditableAndClear(TreeContext tree, OutlineLayoutManager layout) {
+	private void toggleEditableAndClear(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.toggleEditableAndClearForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 
 		// Redraw
 		layout.draw(currentNode, OutlineLayoutManager.TEXT);
 	}
 
-	private void toggleEditable(TreeContext tree, OutlineLayoutManager layout) {
+	private void toggleEditable(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.toggleEditableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 
 		// Redraw
 		layout.draw(currentNode, OutlineLayoutManager.TEXT);
 	}
 
-	private void toggleEditableInheritance(TreeContext tree, OutlineLayoutManager layout) {
+	private void toggleEditableInheritance(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.toggleEditableInheritanceForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 
 		// Redraw
@@ -1295,52 +1295,52 @@ public class TextKeyListener implements KeyListener, MouseListener {
 
 
 	// Moveable
-	private void clearMoveable(TreeContext tree, OutlineLayoutManager layout) {
+	private void clearMoveable(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.clearMoveableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 
 		// Redraw
 		layout.draw(currentNode, OutlineLayoutManager.TEXT);
 	}
 
-	private void toggleMoveableAndClear(TreeContext tree, OutlineLayoutManager layout) {
+	private void toggleMoveableAndClear(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.toggleMoveableAndClearForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 
 		// Redraw
 		layout.draw(currentNode, OutlineLayoutManager.TEXT);
 	}
 
-	private void toggleMoveable(TreeContext tree, OutlineLayoutManager layout) {
+	private void toggleMoveable(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.toggleMoveableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 
 		// Redraw
 		layout.draw(currentNode, OutlineLayoutManager.TEXT);
 	}
 
-	private void toggleMoveableInheritance(TreeContext tree, OutlineLayoutManager layout) {
+	private void toggleMoveableInheritance(JoeTree tree, OutlineLayoutManager layout) {
 		Node currentNode = textArea.node;
 		CompoundUndoablePropertyChange undoable = new CompoundUndoablePropertyChange(tree);
 		IconKeyListener.toggleMoveableInheritanceForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
-			tree.doc.undoQueue.add(undoable);
+			tree.getDocument().undoQueue.add(undoable);
 		}
 
 		// Redraw

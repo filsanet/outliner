@@ -37,7 +37,7 @@
  *				void importFile(DocumentInfo, FileProtocol)
  *				void revertFile(OutlinerDocument document)
  *			private
- *				int openOrImportFileAndGetTree(TreeContext, DocumentInfo, FileProtocol, int)
+ *				int openOrImportFileAndGetTree(JoeTree, DocumentInfo, FileProtocol, int)
  *				void setupAndDraw(DocumentInfo, OutlinerDocument, int)
  *				int promptUser(String)
  *
@@ -417,7 +417,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 
 	// open/import a file and store its outline into a tree
-	private static int openOrImportFileAndGetTree(TreeContext tree, DocumentInfo docInfo, FileProtocol protocol, int mode) {
+	private static int openOrImportFileAndGetTree(JoeTree tree, DocumentInfo docInfo, FileProtocol protocol, int mode) {
 
 		// local vars
 		String msg = null;
@@ -505,8 +505,10 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 	// open or import a file
 	protected static void openFile(DocumentInfo docInfo, FileProtocol protocol, int mode) {
 
-		// open the file and pour its outline into a tree
-		TreeContext tree = new TreeContext();
+		// create a fresh new tree
+		JoeTree tree = Outliner.newTree(null);
+		
+		// try to open the file and pour its data into that tree
 		int openOrImportResult = openOrImportFileAndGetTree(tree, docInfo, protocol, mode);
 
 		// if things didn't go well, abort the mission
@@ -533,7 +535,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		newDoc.setDocumentInfo(docInfo);
 
 		// hook the outline tree to the doc, and the doc to the outline tree
-		tree.doc = newDoc;
+		tree.setDocument(newDoc);
 		newDoc.tree = tree;
 
 		// [srk] bug:we can get to this
@@ -631,8 +633,10 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// set mode based on whether we were OPENed or IMPORTed
 		int mode = docInfo.isImported()?MODE_IMPORT:MODE_OPEN;
 
-		// try to open/import the file and put its outline into a tree
-		TreeContext tree = new TreeContext();
+		// create a fresh new tree
+		JoeTree tree = Outliner.newTree(null);
+		
+		// try to open the file and pour its data into that tree
 		int openOrImportResult = openOrImportFileAndGetTree(tree, docInfo, protocol, mode);
 
 		// if we failed somehow, bag it
@@ -643,7 +647,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// we succeeded
 
 		// swap in the new tree
-		tree.doc = document;
+		tree.setDocument(document) ;
 		document.tree = tree;
 
 		// Clear the UndoQueue
@@ -674,7 +678,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		String title ;
 		
 		// grab a ref to the tree
-		TreeContext tree = doc.tree;
+		JoeTree tree = doc.tree;
+		
 		// grab the path
 		String filename = docInfo.getPath();
 
@@ -682,11 +687,11 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		tree.clearSelection();
 
 		// Clear the VisibleNodeCache
-		tree.visibleNodes.clear();
+		tree.getVisibleNodes().clear();
 
 		// Insert nodes into the VisibleNodes Cache
-		for (int i = 0; i < tree.rootNode.numOfChildren(); i++) {
-			tree.addNode(tree.rootNode.getChild(i));
+		for (int i = 0; i < tree.getRootNode().numOfChildren(); i++) {
+			tree.addNode(tree.getRootNode().getChild(i));
 		}
 
 		// Update the menuBar
@@ -723,7 +728,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		for (int i = 0; i < expandedNodes.size(); i++) {
 			int nodeNum = ((Integer) expandedNodes.get(i)).intValue();
 			try {
-				Node node = doc.tree.visibleNodes.get(nodeNum);
+				Node node = doc.tree.getVisibleNodes().get(nodeNum);
 				node.setExpanded(true);
 			} catch (Exception e) {
 				break;
@@ -735,10 +740,10 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		int index = -1;
 		try {
 			index = docInfo.getVerticalScrollState() - 1;
-			firstVisibleNode = tree.visibleNodes.get(index);
+			firstVisibleNode = tree.getVisibleNodes().get(index);
 		} catch (IndexOutOfBoundsException e) {
 			index = 0;
-			firstVisibleNode = tree.visibleNodes.get(0);
+			firstVisibleNode = tree.getVisibleNodes().get(0);
 		}
 
 		// Record Document Settings

@@ -175,7 +175,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	}
 	
 	public void updateNodeToDrawFrom() {
-		ioNodeToDrawFrom = panel.doc.tree.visibleNodes.indexOf(nodeToDrawFrom);
+		ioNodeToDrawFrom = panel.doc.tree.getVisibleNodes().indexOf(nodeToDrawFrom);
 	}
 	
 	public Node getNodeToDrawFrom() {return this.nodeToDrawFrom;}
@@ -202,7 +202,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	}
 	
 	public void draw(Node nodeThatMustBeVis, int focusElement) {
-		draw(nodeThatMustBeVis, panel.doc.tree.visibleNodes.indexOf(nodeThatMustBeVis), focusElement);
+		draw(nodeThatMustBeVis, panel.doc.tree.getVisibleNodes().indexOf(nodeThatMustBeVis), focusElement);
 	}
 		
 	public void draw(Node nodeThatMustBeVis, int ioNodeThatMustBeVis, int focusElement) {
@@ -298,7 +298,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		
 		// Update the scrollbar
 		drawBlock = true;
-		scrollBar.setValues(ioFirstVisNode, numNodesDrawn, 0, panel.doc.tree.visibleNodes.size());
+		scrollBar.setValues(ioFirstVisNode, numNodesDrawn, 0, panel.doc.tree.getVisibleNodes().size());
 		drawBlock = false;
 		
 		return;
@@ -342,10 +342,10 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			
 			// Get the Next Node to Draw
 			nodeIndex++;
-			if (nodeIndex == panel.doc.tree.visibleNodes.size()) {
+			if (nodeIndex == panel.doc.tree.getVisibleNodes().size()) {
 				break;
 			}
-			node = panel.doc.tree.visibleNodes.get(nodeIndex);
+			node = panel.doc.tree.getVisibleNodes().get(nodeIndex);
 		}
 
 		// Hide any drawing elements that were not used.
@@ -360,8 +360,8 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		}
 
 		ioLastVisNode = ioFirstVisNode + (numNodesDrawn - 1);
-		if (ioLastVisNode >= panel.doc.tree.visibleNodes.size()) {
-			ioLastVisNode = panel.doc.tree.visibleNodes.size() - 1;
+		if (ioLastVisNode >= panel.doc.tree.getVisibleNodes().size()) {
+			ioLastVisNode = panel.doc.tree.getVisibleNodes().size() - 1;
 		}
 	}
 	
@@ -414,7 +414,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			if (nodeIndex == -1) {
 				break;
 			}
-			node = panel.doc.tree.visibleNodes.get(nodeIndex);
+			node = panel.doc.tree.getVisibleNodes().get(nodeIndex);
 		}
 
 		// Hide any drawing elements that were not used.
@@ -440,8 +440,8 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		}
 		
 		ioFirstVisNode = ioLastVisNode - (numNodesDrawn - 1);
-		if (ioLastVisNode >= panel.doc.tree.visibleNodes.size()) {
-			ioLastVisNode = panel.doc.tree.visibleNodes.size() - 1;
+		if (ioLastVisNode >= panel.doc.tree.getVisibleNodes().size()) {
+			ioLastVisNode = panel.doc.tree.getVisibleNodes().size() - 1;
 		}
 
 		drawingDirection = DOWN;
@@ -453,7 +453,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 	private void drawDownExtraNodes(int nodeIndex) {
 		Node node = null;
 		try {
-			node = panel.doc.tree.visibleNodes.get(nodeIndex);
+			node = panel.doc.tree.getVisibleNodes().get(nodeIndex);
 		} catch (IndexOutOfBoundsException e) {
 			return;
 		}
@@ -490,10 +490,10 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			
 			// Get the Next Node to Draw
 			nodeIndex++;
-			if (nodeIndex == panel.doc.tree.visibleNodes.size()) {
+			if (nodeIndex == panel.doc.tree.getVisibleNodes().size()) {
 				break;
 			}
-			node = panel.doc.tree.visibleNodes.get(nodeIndex);
+			node = panel.doc.tree.getVisibleNodes().get(nodeIndex);
 		}
 
 		// Hide any drawing elements that were not used.
@@ -509,8 +509,8 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		}
 		
 		ioLastVisNode = ioFirstVisNode + (numNodesDrawn - 1);		
-		if (ioLastVisNode >= panel.doc.tree.visibleNodes.size()) {
-			ioLastVisNode = panel.doc.tree.visibleNodes.size() - 1;
+		if (ioLastVisNode >= panel.doc.tree.getVisibleNodes().size()) {
+			ioLastVisNode = panel.doc.tree.getVisibleNodes().size() - 1;
 		}
 	}
 	
@@ -571,7 +571,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		if (drawBlock) {return;}
 		
 		// Explicit call to draw and focus, so that we can scroll away from our current component focus.
-		setNodeToDrawFrom(panel.doc.tree.visibleNodes.get(e.getValue()), e.getValue());		
+		setNodeToDrawFrom(panel.doc.tree.getVisibleNodes().get(e.getValue()), e.getValue());		
 		drawingDirection = DOWN;
 		redraw();
 	}

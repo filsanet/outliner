@@ -432,12 +432,12 @@ public class DocumentInfo implements Serializable, Cloneable {
 		setWindowBottom(r.y + r.height);
 		setWindowRight(r.x + r.width);
 		
-		int index = document.tree.visibleNodes.indexOf(document.panel.layout.getNodeToDrawFrom()) + 1;
+		int index = document.tree.getVisibleNodes().indexOf(document.panel.layout.getNodeToDrawFrom()) + 1;
 		setVerticalScrollState(index);
 		
 		getExpandedNodes().clear();
-		for (int i = 0; i < document.tree.visibleNodes.size(); i++) {
-			Node node = document.tree.visibleNodes.get(i);
+		for (int i = 0; i < document.tree.getVisibleNodes().size(); i++) {
+			Node node = document.tree.getVisibleNodes().get(i);
 			if (node.isExpanded()) {
 				addExpandedNodeNum(i);
 			}
