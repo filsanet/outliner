@@ -35,7 +35,7 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 
 	// Constants
 	private static final int INITIAL_WIDTH = 350;
-	private static final int INITIAL_HEIGHT = 200;
+	private static final int INITIAL_HEIGHT = 300;
  	private static final int MINIMUM_WIDTH = 350;
 	private static final int MINIMUM_HEIGHT = 200;
 	

@@ -32,13 +32,16 @@ public class XMLRPCMacroConfig extends JPanel implements MacroConfig {
 	private static final String NAME = "Macro Name";
 	private static final String URL = "URL";
 	private static final String DO_REPLACEMENT = "Do Replacement";
+	private static final String CALL = "XML-RPC Call";
 	
 	private JLabel nameLabel = new JLabel(NAME);
 	private JLabel urlLabel = new JLabel(URL);
 	private JLabel doReplacementLabel = new JLabel(DO_REPLACEMENT);
+	private JLabel callLabel = new JLabel(CALL);
 
 	private JTextField nameField = new JTextField();
 	private JTextField urlField = new JTextField();
+	private JTextArea callTextArea = new JTextArea();
 
 	private ButtonGroup buttonGroup = new ButtonGroup();
 	private JRadioButton yesRadio = new JRadioButton("Yes");
@@ -54,6 +57,13 @@ public class XMLRPCMacroConfig extends JPanel implements MacroConfig {
 		nameField.setMargin(insets);
 		urlField.setMargin(insets);
 
+		// Prep the textarea
+		callTextArea.setCursor(new Cursor(Cursor.TEXT_CURSOR));
+		callTextArea.setTabSize(2);
+		callTextArea.setMargin(insets);
+		JScrollPane callScrollPane = new JScrollPane(callTextArea);
+
+		// Setup mainBox
 		Box mainBox = Box.createVerticalBox();
 		
 		mainBox.add(nameLabel);
@@ -77,9 +87,14 @@ public class XMLRPCMacroConfig extends JPanel implements MacroConfig {
 		radioBox.add(noRadio);
 
 		mainBox.add(radioBox);
+
+		mainBox.add(Box.createVerticalStrut(5));
+
+		mainBox.add(callLabel);
 		
 		// Put it all together
 		this.add(mainBox,BorderLayout.NORTH);
+		this.add(callScrollPane,BorderLayout.CENTER);
 	}
 
 	
@@ -90,6 +105,7 @@ public class XMLRPCMacroConfig extends JPanel implements MacroConfig {
 		this.macro = (XMLRPCMacro) xmlrpcMacro;
 		nameField.setText(macro.getName());
 		urlField.setText(macro.getURL());
+		callTextArea.setText(macro.getCall());
 		if (this.macro.isReplacing()) {
 			yesRadio.setSelected(true);
 		} else {
@@ -112,6 +128,7 @@ public class XMLRPCMacroConfig extends JPanel implements MacroConfig {
 		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name)) {
 			macro.setName(name);
 			macro.setURL(url);
+			macro.setCall(callTextArea.getText());
 			if (yesRadio.isSelected()) {
 				macro.setReplacing(true);
 			} else {
@@ -136,6 +153,7 @@ public class XMLRPCMacroConfig extends JPanel implements MacroConfig {
 		if (MacroPopupMenu.validateExistence(name)) {
 			if (name.equals(macro.getName())) {
 				macro.setURL(url);
+				macro.setCall(callTextArea.getText());
 				if (yesRadio.isSelected()) {
 					macro.setReplacing(true);
 				} else {
@@ -145,6 +163,7 @@ public class XMLRPCMacroConfig extends JPanel implements MacroConfig {
 			} else if (MacroPopupMenu.validateUniqueness(name)) {
 				macro.setName(name);
 				macro.setURL(url);
+				macro.setCall(callTextArea.getText());
 				if (yesRadio.isSelected()) {
 					macro.setReplacing(true);
 				} else {

@@ -33,6 +33,7 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 	// Constants
 	private static final String E_XMLRPC = "xmlrpc";	
 	private static final String E_URL = "url";
+	private static final String E_CALL = "xmlrpc_call";
 	private static final String E_REPLACE = "replace";
 	
 	// Instance Fields
@@ -42,6 +43,7 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 		
 	private boolean replace = false;
 	private String url = "http://127.0.0.1/RPC2";
+	private String xmlrpcCall = "";
 
 	// Class Fields
 	public static XMLRPCMacroConfig macroConfig = new XMLRPCMacroConfig();
@@ -69,6 +71,9 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 	public boolean isReplacing() {return this.replace;}
 	public void setReplacing(boolean replace) {this.replace = replace;}
 
+	public String getCall() {return xmlrpcCall;}
+	public void setCall(String xmlrpcCall) {this.xmlrpcCall = xmlrpcCall;}
+
 
 	// Macro Interface	
 	public String getName() {return this.name;}
@@ -86,22 +91,58 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 	public void setConfigurator(MacroConfig macroConfig) {}
 		
 	public NodeRangePair process(NodeRangePair nodeRangePair) {
-		// Create the XMLRPC Request String
-		StringBuffer buf = new StringBuffer();
-		nodeRangePair.node.depthPaddedValue(buf, Preferences.LINE_END_STRING);
-		String requestXmlString = buf.toString();
+		// Get the selected text
+		String requestXmlString = null;
+		String firstChunk = "";
+		String lastChunk = "";
 		
-		// Trim leading crap before the XML declaration
-		requestXmlString = requestXmlString.substring(requestXmlString.indexOf("<"),requestXmlString.length());
+		boolean textSelection = false;
+		if ((nodeRangePair.startIndex != -1) && (nodeRangePair.endIndex != -1)) {
+			textSelection = true;
+			
+			requestXmlString = nodeRangePair.node.getValue();
+			firstChunk = requestXmlString.substring(0,nodeRangePair.startIndex);
+			lastChunk = requestXmlString.substring(nodeRangePair.endIndex, requestXmlString.length());
+			requestXmlString = requestXmlString.substring(nodeRangePair.startIndex, nodeRangePair.endIndex);
+		} else {
+			StringBuffer buf = new StringBuffer();
+			nodeRangePair.node.getRecursiveValue(buf, Preferences.LINE_END_STRING, true);
+			requestXmlString = buf.toString();		
+		}
+
+		if (!xmlrpcCall.equals("")) {
+			// If xmlrpcCall is not empty then munge it
+			requestXmlString = munge(requestXmlString);
+		} else {
+			// Trim leading crap before the XML declaration
+			int startIndex = requestXmlString.indexOf("<");
+			if (startIndex > 0) {
+				requestXmlString = requestXmlString.substring(startIndex, requestXmlString.length());
+			}
+		}
 		
 		// Instantiate a Client and make the request
 		try {
 			XmlRpcClient client = new XmlRpcClient(url);
 			Object obj = client.execute(requestXmlString);
-			Node replacementNode = PadSelection.pad(obj.toString(), nodeRangePair.node.getTree(), nodeRangePair.node.getDepth(), Preferences.LINE_END_UNIX).getFirstChild();
-			nodeRangePair.node = replacementNode;
-			nodeRangePair.startIndex = -1;
-			nodeRangePair.endIndex = -1;
+			String text = obj.toString();
+					
+			Node replacementNode = null;
+			
+			// Do the right replacement for the selection type.
+			if (textSelection) {
+				text = Replace.replace(text, "\t", "");
+				text = Replace.replace(text, "\r", "");
+				text = Replace.replace(text, "\n", "");
+				nodeRangePair.node.setValue(firstChunk + text + lastChunk);
+				nodeRangePair.startIndex = firstChunk.length();
+				nodeRangePair.endIndex = nodeRangePair.startIndex + text.length();
+			} else {
+				replacementNode = PadSelection.pad(text, nodeRangePair.node.getTree(), nodeRangePair.node.getDepth(), Preferences.LINE_END_UNIX).getFirstChild();
+				nodeRangePair.node = replacementNode;
+				nodeRangePair.startIndex = -1;
+				nodeRangePair.endIndex = -1;
+			}
 		
 			// Display the result
 			if (isReplacing()) {
@@ -144,6 +185,7 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 		buf.append(XMLTools.getElementStart(E_XMLRPC) + "\n");
 		
 		buf.append(XMLTools.getElementStart(E_URL) + XMLTools.escapeXMLText(getURL()) + XMLTools.getElementEnd(E_URL)+ "\n");
+		buf.append(XMLTools.getElementStart(E_CALL) + XMLTools.escapeXMLText(getCall()) + XMLTools.getElementEnd(E_CALL)+ "\n");
 		buf.append(XMLTools.getElementStart(E_REPLACE) + isReplacing() + XMLTools.getElementEnd(E_REPLACE)+ "\n");
 
 		buf.append(XMLTools.getElementEnd(E_XMLRPC) + "\n");
@@ -153,6 +195,9 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 		return true;
 	}
 
+	private String munge(String text) {
+		return Replace.replace(xmlrpcCall, "{$value}", text);
+	}
 
 	// Sax DocumentHandler Implementation
 	public void startDocument () {}
@@ -173,6 +218,8 @@ public class XMLRPCMacro extends HandlerBase implements Macro {
 		
 		if (elementName.equals(E_URL)) {
 			setURL(text);
+		} else if (elementName.equals(E_CALL)) {
+			setCall(text);
 		} else if (elementName.equals(E_REPLACE)) {
 			setReplacing(Boolean.valueOf(text).booleanValue());
 		}
