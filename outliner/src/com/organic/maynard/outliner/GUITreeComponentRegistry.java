@@ -18,15 +18,12 @@
  
 package com.organic.maynard.outliner;
 
-import java.io.*;
-import java.util.*;
-import com.organic.maynard.util.string.StringTools;
+import java.util.HashMap;
 
-import java.lang.reflect.*;
-
-import javax.swing.*;
-
-import org.xml.sax.*;
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
 public class GUITreeComponentRegistry {
 
@@ -92,11 +89,10 @@ public class GUITreeComponentRegistry {
 	public static final String COMPONENT_FORMAT_WHEN_SAVING = "save_format_component";
 	
 	private HashMap reg = new HashMap();
-	
+
+
 	// Constructors
-	public GUITreeComponentRegistry() {
-	
-	}
+	public GUITreeComponentRegistry() {}
 	
 	public void add(GUITreeComponent comp) {
 		reg.put(comp.getGUITreeComponentID(), comp);

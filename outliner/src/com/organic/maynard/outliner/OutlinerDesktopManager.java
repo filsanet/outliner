@@ -19,32 +19,31 @@
 package com.organic.maynard.outliner;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.Window;
-import java.awt.datatransfer.*;
-
-import java.io.*;
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
 public class OutlinerDesktopManager extends DefaultDesktopManager {
+
+	// Direction Constants
+	private static final int NORTH = 1;
+	private static final int NORTHEAST = 2;
+	private static final int EAST = 3;
+	private static final int SOUTHEAST = 4;
+	private static final int SOUTH = 5;
+	private static final int SOUTHWEST = 6;
+	private static final int WEST = 7;
+	private static final int NORTHWEST = 8;
 	
-	// Directions
-	public static final int NORTH = 1;
-	public static final int NORTHEAST = 2;
-	public static final int EAST = 3;
-	public static final int SOUTHEAST = 4;
-	public static final int SOUTH = 5;
-	public static final int SOUTHWEST = 6;
-	public static final int WEST = 7;
-	public static final int NORTHWEST = 8;
+	// Minimized Icon Constants
+	private static final int ICON_WIDTH = 150;
+	private static final int ICON_HEIGHT = 25;
+
 	
-	public static final int ICON_WIDTH = 150;
-	public static final int ICON_HEIGHT = 25;
-	
-	private boolean isDragging = false;
+	private boolean isDragging = false;	
 	
 	//JInternalFrame State
 	private int resizeDirection = 0;
@@ -52,17 +51,17 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 	private int startingWidth = 0;
 	private int startingY = 0;
 	private int startingHeight = 0;
-	
-	//JDesktopPane State
-	//private int desktopWidth = 0;
-	//private int desktopHeight = 0;
+
 	
 	// The Constructor
 	public OutlinerDesktopManager() {
 		super();
 	}
 	
-	public boolean isDragging() {return isDragging;}
+	public boolean isDragging() {
+		return isDragging;
+	}
+	
 	public boolean isMaximized() {
 		return Preferences.getPreferenceBoolean(Preferences.IS_MAXIMIZED).cur;
 	}
@@ -89,9 +88,11 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 			if (f instanceof FindReplaceFrame) {
 				minWidth = FindReplaceFrame.MIN_WIDTH;
 				minHeight = FindReplaceFrame.MIN_HEIGHT;
+				
 			} else if (f instanceof PreferencesFrame) {
 				minWidth = PreferencesFrame.MIN_WIDTH;
-				minHeight = PreferencesFrame.MIN_HEIGHT;			
+				minHeight = PreferencesFrame.MIN_HEIGHT;
+							
 			} else if (f instanceof MacroManagerFrame) {
 				minWidth = MacroManagerFrame.MIN_WIDTH;
 				minHeight = MacroManagerFrame.MIN_HEIGHT;			
@@ -121,6 +122,7 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 			newHeight += newY;
 			newY = 0;
 		}
+		
 		if (newX < 0) {
 			newWidth += newX;
 			newX = 0;
@@ -138,8 +140,6 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 	public void beginDraggingFrame(JComponent f) {
 		//System.out.println("beginDraggingFrame");
 		isDragging = true;
-		//desktopWidth = Outliner.desktop.getWidth();
-		//desktopHeight = Outliner.desktop.getHeight();
 		super.beginDraggingFrame(f);
 	}
 	
@@ -286,13 +286,10 @@ public class OutlinerDesktopManager extends DefaultDesktopManager {
 		return value/partition;
 	}
 
-	public void updateDesktopSize(boolean repaint) {
-		//Outliner.desktop.setSize(Outliner.desktop.getPreferredSize());
-		
+	private void updateDesktopSize(boolean repaint) {
+		// This is just flailing to get it to redraw itself.
 		Outliner.jsp.revalidate();
 		Outliner.jsp.validate();
-		
-		//System.out.println(Outliner.desktop.getSize());
 		
 		Outliner.jsp.getHorizontalScrollBar().repaint();
 		Outliner.jsp.getVerticalScrollBar().repaint();

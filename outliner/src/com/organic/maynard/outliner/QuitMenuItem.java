@@ -22,6 +22,11 @@ import java.awt.*;
 import java.awt.event.*;
 import org.xml.sax.*;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
 public class QuitMenuItem extends AbstractOutlinerMenuItem implements ActionListener, GUITreeComponent {
 
 	// GUITreeComponent interface
@@ -35,6 +40,7 @@ public class QuitMenuItem extends AbstractOutlinerMenuItem implements ActionList
 	public void actionPerformed(ActionEvent e) {
 		quit();
 	}
+
 
 	// Static Methods
 	public static void quit() {

@@ -21,18 +21,19 @@ package com.organic.maynard.outliner;
 import java.io.*;
 import java.util.*;
 import java.text.SimpleDateFormat;
-
 import java.awt.*;
-import java.awt.event.*;
-
 import javax.swing.*;
-
 import org.xml.sax.*;
 
 // WebFile
 import com.yearahead.io.*;
 
-public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, JoeReturnCodes {
 	
 	// The Constructors
 	public FileMenu() {
@@ -110,81 +111,24 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 			}
 		}
 		
-		if (commentExists && !saveFileFormat.supportsComments()) {
-			Object[] options = {"Yes","No"};
-			int result = JOptionPane.showOptionDialog(Outliner.outliner,
-				"The file format you are saving with: " + fileFormatName + ", does not support comments.\nThe document contains commented nodes whose commented status will NOT be saved.\nDo you want to save?",
-				"Confirm Open",
-				JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE,
-				null,
-				options,
-				options[0]
-			);
-			
-			if (result == JOptionPane.YES_OPTION) {
-				// Do Nothing
-			} else if (result == JOptionPane.NO_OPTION) {
-				return;
-			}
+		// Check File Format Support
+		if (commentExists && !saveFileFormat.supportsComments() && USER_ABORTED == promptUser("The file format you are saving with: " + fileFormatName + ", does not support comments.\nThe document contains commented nodes whose commented status will NOT be saved.\nDo you want to save?")) {
+			return;
 		}
 
-		if (editableExists && !saveFileFormat.supportsEditability()) {
-			Object[] options = {"Yes","No"};
-			int result = JOptionPane.showOptionDialog(Outliner.outliner,
-				"The file format you are saving with: " + fileFormatName + ", does not support editability settings.\nThe document contains editable node settings that will NOT be saved.\nDo you want to save?",
-				"Confirm Open",
-				JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE,
-				null,
-				options,
-				options[0]
-			);
-			
-			if (result == JOptionPane.YES_OPTION) {
-				// Do Nothing
-			} else if (result == JOptionPane.NO_OPTION) {
-				return;
-			}
+		if (editableExists && !saveFileFormat.supportsEditability() && USER_ABORTED == promptUser("The file format you are saving with: " + fileFormatName + ", does not support editability settings.\nThe document contains editable node settings that will NOT be saved.\nDo you want to save?")) {
+			return;
 		}
 
-		if (moveableExists && !saveFileFormat.supportsMoveability()) {
-			Object[] options = {"Yes","No"};
-			int result = JOptionPane.showOptionDialog(Outliner.outliner,
-				"The file format you are saving with: " + fileFormatName + ", does not support moveability settings.\nThe document contains moveable node settings that will NOT be saved.\nDo you want to save?",
-				"Confirm Open",
-				JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE,
-				null,
-				options,
-				options[0]
-			);
-			
-			if (result == JOptionPane.YES_OPTION) {
-				// Do Nothing
-			} else if (result == JOptionPane.NO_OPTION) {
-				return;
-			}
+		if (moveableExists && !saveFileFormat.supportsMoveability() && USER_ABORTED == promptUser("The file format you are saving with: " + fileFormatName + ", does not support moveability settings.\nThe document contains moveable node settings that will NOT be saved.\nDo you want to save?")) {
+			return;
 		}
-				
-		if (attributesExist && !saveFileFormat.supportsAttributes()) {
-			Object[] options = {"Yes","No"};
-			int result = JOptionPane.showOptionDialog(Outliner.outliner,
-				"The file format you are saving with: " + fileFormatName + ", does not support attributes.\nThe document contains nodes with attribute name/value pairs that will NOT be saved.\nDo you want to save?",
-				"Confirm Open",
-				JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE,
-				null,
-				options,
-				options[0]
-			);
-			
-			if (result == JOptionPane.YES_OPTION) {
-				// Do Nothing
-			} else if (result == JOptionPane.NO_OPTION) {
-				return;
-			}
-		}		
+
+		if (attributesExist && !saveFileFormat.supportsAttributes() && USER_ABORTED == promptUser("The file format you are saving with: " + fileFormatName + ", does not support attributes.\nThe document contains nodes with attribute name/value pairs that will NOT be saved.\nDo you want to save?")) {
+			return;
+		}
+
+	
 		docInfo.setOwnerName(document.settings.ownerName.cur);
 		docInfo.setOwnerEmail(document.settings.ownerEmail.cur);
 		
@@ -203,52 +147,33 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 		
 		// Save the File
 		if (document.hoistStack.isHoisted()) {
-			document.hoistStack.temporaryDehoistAll();
-			
-			// WebFile
-			boolean success = false;
-			byte[] bytes = saveFileFormat.save(document.tree, docInfo);
-			if (Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
-				try {
-					success = WebFile.save(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur, docInfo.getPath(), bytes);
-				} catch(IOException x) {
-					x.printStackTrace();
-					success = false;
-				}
-			} else {
-				success = FileFormatManager.writeFile(docInfo.getPath(), bytes);
+			document.hoistStack.temporaryDehoistAll(); // So that a hoisted doc will be completely saved.
+		}
+		
+		// WebFile
+		boolean success = false;
+		byte[] bytes = saveFileFormat.save(document.tree, docInfo);
+		if (Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
+			try {
+				success = WebFile.save(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur, docInfo.getPath(), bytes);
+			} catch(IOException x) {
+				x.printStackTrace();
+				success = false;
 			}
-
-			
-			
-			//boolean success = saveFileFormat.save(document.tree, docInfo);
-			if (!success) {
-				JOptionPane.showMessageDialog(document, "An error occurred. Could not save file: " + Outliner.chooser.getSelectedFile().getPath());
-				return;
-			}
-			document.hoistStack.temporaryHoistAll();
 		} else {
+			success = FileFormatManager.writeFile(docInfo.getPath(), bytes);
+		}
 
-			// WebFile
-			boolean success = false;
-			byte[] bytes = saveFileFormat.save(document.tree, docInfo);
-			if (Preferences.getPreferenceBoolean(Preferences.WEB_FILE_SYSTEM).cur) {
-				try {
-					success = WebFile.save(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur, docInfo.getPath(), bytes);
-				} catch(IOException x) {
-					x.printStackTrace();
-					success = false;
-				}
-			} else {
-				success = FileFormatManager.writeFile(docInfo.getPath(), bytes);
-			}
+		//boolean success = saveFileFormat.save(document.tree, docInfo);
+		if (!success) {
+			JOptionPane.showMessageDialog(document, "An error occurred. Could not save file: " + Outliner.chooser.getSelectedFile().getPath());
+			return;
+		}
 
-			//boolean success = saveFileFormat.save(document.tree, docInfo);
-			if (!success) {
-				JOptionPane.showMessageDialog(document, "An error occurred. Could not save file: " + Outliner.chooser.getSelectedFile().getPath());
-				return;
-			}
-		}					
+		if (document.hoistStack.isHoisted()) {
+			document.hoistStack.temporaryHoistAll(); // Now that the whole doc was saved, let's put things back the way they were.
+		}
+							
 
 		// Stop collecting text edits into the current undoable.
 		UndoableEdit.freezeUndoEdit(document.tree.getEditingNode());
@@ -488,5 +413,26 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 		layout.setNodeToDrawFrom(firstVisibleNode,index);
 		layout.draw();
 		layout.setFocus(firstVisibleNode, OutlineLayoutManager.TEXT);
+	}
+
+
+	// Utility Methods
+	private static int promptUser(String msg) {
+		Object[] options = {"Yes","No"};
+		int result = JOptionPane.showOptionDialog(Outliner.outliner,
+			msg,
+			"Confirm Save",
+			JOptionPane.YES_NO_OPTION,
+			JOptionPane.QUESTION_MESSAGE,
+			null,
+			options,
+			options[0]
+		);
+		
+		if (result == JOptionPane.NO_OPTION) {
+			return USER_ABORTED;
+		} else {
+			return SUCCESS;
+		}
 	}
 }

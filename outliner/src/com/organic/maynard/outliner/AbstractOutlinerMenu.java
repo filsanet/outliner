@@ -18,19 +18,19 @@
  
 package com.organic.maynard.outliner;
 
-import java.awt.*;
-import java.awt.event.*;
-
 import javax.swing.*;
-
 import org.xml.sax.*;
 
-public abstract class AbstractOutlinerMenu extends JMenu implements GUITreeComponent {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
-	// Constants
-	public static final String A_TEXT = "text";
+public abstract class AbstractOutlinerMenu extends JMenu implements GUITreeComponent, JoeXMLConstants {
 
+	// Constructors
 	public AbstractOutlinerMenu() {}
+
 
 	// GUITreeComponent interface
 	private String id = null;
@@ -38,15 +38,13 @@ public abstract class AbstractOutlinerMenu extends JMenu implements GUITreeCompo
 	public void setGUITreeComponentID(String id) {this.id = id;}
 	
 	public void startSetup(AttributeList atts) {
-		String title = atts.getValue(A_TEXT);
-		setText(title);
-		
+		setText(atts.getValue(A_TEXT));
 		Outliner.menuBar.add(this);
 	}
 	
 	public void endSetup(AttributeList atts) {}
 
 
-	// Fix for bug #4309156.
+	// Fix for java bug #4309156.
 	public void requestFocus() {}
 }

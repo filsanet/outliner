@@ -20,32 +20,42 @@ package com.organic.maynard.outliner;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
-
 import org.xml.sax.*;
 
-public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUITreeComponent {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUITreeComponent, JoeXMLConstants {
 
 	// Constants
-	public static final String DELETE = "delete";
-	public static final String CTRL = "control";
-	public static final String SHIFT = "shift";
-	public static final String ALT = "alt";
-	public static final String TAB = "tab";
-	public static final String UP = "up";
-	public static final String DOWN = "down";
-	public static final String LEFT = "left";
-	public static final String RIGHT = "right";
-	public static final String PAGE_UP = "page_up";
-	public static final String PAGE_DOWN = "page_down";
-	public static final String F11 = "f11";
-	public static final String F12 = "f12";
+	private static final String DELETE = "delete";
+	private static final String CTRL = "control";
+	private static final String SHIFT = "shift";
+	private static final String ALT = "alt";
+	private static final String TAB = "tab";
+	private static final String UP = "up";
+	private static final String DOWN = "down";
+	private static final String LEFT = "left";
+	private static final String RIGHT = "right";
+	private static final String PAGE_UP = "page_up";
+	private static final String PAGE_DOWN = "page_down";
+	private static final String F2 = "f2";
+	private static final String F3 = "f3";
+	private static final String F4 = "f4";
+	private static final String F5 = "f5";
+	private static final String F6 = "f6";
+	private static final String F7 = "f7";
+	private static final String F8 = "f8";
+	private static final String F9 = "f9";
+	private static final String F10 = "f10";
+	private static final String F11 = "f11";
+	private static final String F12 = "f12";
 	
-	public static final String A_TEXT = "text";
-	public static final String A_KEY_BINDING = "keybinding";
-	public static final String A_KEY_BINDING_MODIFIERS = "keybindingmodifiers";
-
+	
+	// Constructors
 	public AbstractOutlinerMenuItem() {}
 
 
@@ -56,8 +66,7 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 	
 	public void startSetup(AttributeList atts) {
 		// Set the title of the menuItem
-		String title = atts.getValue(A_TEXT);
-		setText(title);
+		setText(atts.getValue(A_TEXT));
 		
 		// Set KeyBinding
 		int mask = 0;
@@ -106,8 +115,7 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 		}
 
 		// Add this menuItem to the parent menu.
-		JMenu menu = (JMenu) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 2);
-		menu.add(this);
+		((JMenu) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 2)).add(this);
 	}
 	
 	public void endSetup(AttributeList atts) {}

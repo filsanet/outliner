@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2000 Maynard Demmon, maynard@organic.com
+ * Copyright (C) 2001 Maynard Demmon, maynard@organic.com
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,33 +15,28 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
- 
+     
 package com.organic.maynard.outliner;
-
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import org.xml.sax.*;
 
 /**
  * @author  $Author$
  * @version $Revision$, $Date$
  */
 
-public class OutlinerSubMenuItem extends AbstractOutlinerMenu implements GUITreeComponent, JoeXMLConstants {
+public interface JoeXMLConstants {
 
-	// Constructors
-	public OutlinerSubMenuItem() {}
+	// Attribute Names
+	public static final String A_TEXT = "text";
+   	public static final String A_TITLE = "title";
+	public static final String A_ID = "id";
+	public static final String A_CLASS = "class";
+	public static final String A_POSITION = "position";
+	public static final String A_SIZE = "size";
+	public static final String A_KEY_BINDING = "keybinding";
+	public static final String A_KEY_BINDING_MODIFIERS = "keybindingmodifiers";
 
+	// Element Names
+	public static final String E_SEPARATOR = "separator";
+	public static final String E_VERTICAL_STRUT = "vertical_strut";
 
-	// GUITreeComponent interface
-	public void startSetup(AttributeList atts) {
-		// Set the text of the menuItem
-		setText(atts.getValue(A_TEXT));
-
-		// Add this menuItem to the parent menu.
-		((JMenu) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 2)).add(this);
-	}
-	
-	public void endSetup(AttributeList atts) {}
 }

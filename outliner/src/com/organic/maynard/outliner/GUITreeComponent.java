@@ -18,18 +18,14 @@
  
 package com.organic.maynard.outliner;
 
-import java.io.*;
-import java.util.*;
-import com.organic.maynard.util.string.StringTools;
+import org.xml.sax.AttributeList;
 
-import java.lang.reflect.*;
-
-import javax.swing.*;
-
-import org.xml.sax.*;
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
 public interface GUITreeComponent {
-	// Undoable Types
 	public String getGUITreeComponentID();
 	public void setGUITreeComponentID(String id);
 	

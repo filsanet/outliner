@@ -29,17 +29,7 @@ import javax.swing.*;
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 
-public class GUITreeLoader extends HandlerBase {
-
-	// Constants
-	public static final String E_SEPARATOR = "separator";
-	public static final String E_VERTICAL_STRUT = "vertical_strut";
-
-	public static final String A_ID = "id";
-	public static final String A_CLASS = "class";
-	public static final String A_POSITION = "position";
-	public static final String A_SIZE = "size";
-
+public class GUITreeLoader extends HandlerBase implements JoeXMLConstants {
 
 	// Class Fields
     private static Parser parser = new com.jclark.xml.sax.Driver();

@@ -19,15 +19,12 @@
 package com.organic.maynard.outliner;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.Window;
-import java.awt.datatransfer.*;
-
-import java.io.*;
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
 public class OutlinerDesktop extends JDesktopPane implements Scrollable {
 	
@@ -89,8 +86,10 @@ public class OutlinerDesktop extends JDesktopPane implements Scrollable {
         switch(orientation) {
 	        case SwingConstants.VERTICAL:
 	            return visibleRect.height / 10;
+	            
 	        case SwingConstants.HORIZONTAL:
 	            return visibleRect.width / 10;
+	            
 	        default:
 	            throw new IllegalArgumentException("Invalid orientation: " + orientation);
         }
@@ -101,8 +100,10 @@ public class OutlinerDesktop extends JDesktopPane implements Scrollable {
         switch(orientation) {
 	        case SwingConstants.VERTICAL:
 	            return visibleRect.height;
+	            
 	        case SwingConstants.HORIZONTAL:
 	            return visibleRect.width;
+	            
 	        default:
 	            throw new IllegalArgumentException("Invalid orientation: " + orientation);
         }

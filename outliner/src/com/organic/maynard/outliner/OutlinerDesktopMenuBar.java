@@ -19,8 +19,12 @@
 package com.organic.maynard.outliner;
 
 import javax.swing.JMenuBar;
-
 import org.xml.sax.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
 public class OutlinerDesktopMenuBar extends JMenuBar implements GUITreeComponent {
 
