@@ -1,3 +1,20 @@
+1.8.2 - 08/13/01
+	New Features:
+		1) Comments have been completely re-written.
+		2) Read-Only node support added.
+		3) Immoveable node support added.
+		4) Help Menu added.
+	Bug Fixes:
+		1) Fixed a bug that could cause the find/macro/prefs internal frames to be inaccessible when in maximized mode. Now all internal frame windows will move to your current viewport location if they are completely outside the current viewport when you activate them.
+		2) Fixed bug #448976 where copy/paste between outliner docs was broken.
+		3) Fixed a bug where line numbers would get out of sync. This was caused by the cloneClean method of NodeImpl. Apparently the parent of the cloned node was being set to the old uncloned parent causing the counts to be off.
+		4) Fixed a node drag and drop bug, where it was possible to make a node the first child of itself which makes no sense, so would cause an infinite loop and a hard crash.
+	Feature Enhancements:
+		1) Made the Preferences Frame an InternalFrame.
+		2) Made sure DocumentSettings JDialog, New Attribute JDialog and Statistics JDialog are centered on the Outliner window.
+	Notes:
+		1) The gui_tree.es.xml and gui_tree.ja.xml are no longer in sync with the gui_tree.en.xml. This WILL cause the app not to run if you try to startup with the spanish or japanese gui tree.
+		2) Commented state is no longer stored for recent files. This is now totally reliant on the file format supporting comments.
 1.8.1 - 08/04/01
 	Enhanced Features:
 		1) Now the GUI tree also does the labels, textfields, combo boxes, etc. in the preference panels.
