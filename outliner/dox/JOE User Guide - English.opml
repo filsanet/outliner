@@ -3,35 +3,48 @@
 <head>
 <title>e:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Mon, 30 Jul 2001 05:19:12 GMT</dateModified>
+<dateModified>Mon, 30 Jul 2001 05:39:44 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
-<expansionState></expansionState>
+<expansionState>14</expansionState>
 <vertScrollState>1</vertScrollState>
 <windowTop>0</windowTop>
 <windowLeft>152</windowLeft>
-<windowBottom>432</windowBottom>
-<windowRight>552</windowRight>
+<windowBottom>426</windowBottom>
+<windowRight>550</windowRight>
 </head>
 <body>
 <outline text="Front End">
 <outline text="About JOE">
 <outline text="Notable Features">
 <outline text="Smooth Solid Feel"/>
-<outline text="Straight-Forward UI"/>
+<outline text="Standards-Respectful UI">
+<outline text="Userland-inspired outline-editing UI">
+<outline text="link to Userland outliner site[s]"/>
+</outline>
+<outline text="Best-practices File/Edit/Search/Window/Help menu command sets"/>
+</outline>
 <outline text="Multiple undo">
 <outline text="limit [huge]: available memory"/>
 </outline>
 <outline text="Highly Customizable">
 <outline text="Application Preferences"/>
 <outline text="User Preferences [forthcoming]"/>
+<outline text="Document Preferences"/>
 </outline>
 <outline text="Multi-User Friendly"/>
 <outline text="Multiple Format Support">
 <outline text="Text "/>
 <outline text="XML"/>
-<outline text="OPML"/>
-<outline text="Palm pdf formats [forthcoming]"/>
+<outline text="OPML">
+<outline text="OPML 1.0"/>
+<outline text="Userland node types and attributes"/>
+<outline text="JOE node types and attributes"/>
+</outline>
+<outline text="Palm pdf formats [forthcoming]">
+<outline text="Brain Forest"/>
+<outline text="Thought Manager"/>
+</outline>
 </outline>
 <outline text="'net-Friendly">
 <outline text="http support [forthcoming]"/>
@@ -39,7 +52,9 @@
 <outline text="WebDav support [forthcoming]"/>
 </outline>
 <outline text="OS-Agnostic">
-<outline text="JOE is programmed in Java"/>
+<outline text="JOE is programmed in Java, using the Swing UI classes">
+<outline text="JOE supports native platform look and feel [forthcoming when Sun gets this stuff stable]"/>
+</outline>
 <outline text="JOE releases are available for these platforms">
 <outline text="Windows"/>
 <outline text="Linux/Unix [forthcoming]"/>
@@ -49,9 +64,20 @@
 <outline text="Open Source"/>
 </outline>
 </outline>
-<outline text="About JOE User Guide"/>
+<outline text="About JOE User Guide">
+<outline text="This is a work in perpetual progress."/>
+<outline text="Empty nodes are not bugs, they're just things we just haven't gotten 'round to writin' up yet"/>
+<outline text="Wanna help ??  Study the JUG style, write up a node or two, stick the OPML up on the web, and send a link to JUG@JavaOutlineEditor.org"/>
+</outline>
 <outline text="Use JOE"/>
-<outline text="Develop JOE"/>
+<outline text="Help Develop JOE">
+<outline text="JOE is an Open Source project">
+<outline text="link to JOE Summary page on SourceForge"/>
+</outline>
+<outline text="Here's the JOE Developer Guide">
+<outline text="link to JOE Developer Guide.opml"/>
+</outline>
+</outline>
 <outline text="JOE Feedback">
 <outline text="send feedback/suggestions/links/content contributions concerning JOE itself to Joe@JavaOutlineEditor.org"/>
 </outline>
@@ -67,7 +93,7 @@
 </outline>
 </outline>
 <outline text="JOE User Guide Authors">
-<outline text="Stan Krute"/>
+<outline text="Stanley Krute"/>
 </outline>
 <outline text="Thanks To">
 <outline text="Dave Winer">
@@ -107,7 +133,9 @@
 </outline>
 <outline text="Download the latest JOE">
 <outline text="Go to http://sourceforge.net/projects/outliner"/>
-<outline text="Halfway down the page, in a section labeled &quot;File Releases&quot;, you'll find the latest release of JOE"/>
+<outline text="Halfway down the page, in a section labeled &quot;File Releases&quot;, you'll find the latest release of JOE for your operating system">
+<outline text="currently, Windows-only"/>
+</outline>
 </outline>
 <outline text="Install the download"/>
 <outline text="Create some shortcuts"/>
@@ -141,12 +169,11 @@
 </outline>
 <outline text="Opening Outlines"/>
 <outline text="Sharing Outlines"/>
+<outline text="Connecting Outlines"/>
 <outline text="Custom JOE"/>
 <outline text="Macros"/>
 <outline text="XML-RPC"/>
-<outline text="Help Develop JOE">
-<outline text="link to JOE Developer Guide.opml"/>
-</outline>
+<outline text="Help Develop JOE"/>
 <outline text="Menu Commands Reference">
 <outline text="File">
 <outline text="New">
