@@ -8,16 +8,16 @@
  * following conditions are met:
  * 
  *  - Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
+ *notice, this list of conditions and the following disclaimer. 
  * 
  *  - Redistributions in binary form must reproduce the above 
- *    copyright notice, this list of conditions and the following 
- *    disclaimer in the documentation and/or other materials provided 
- *    with the distribution. 
+ *copyright notice, this list of conditions and the following 
+ *disclaimer in the documentation and/or other materials provided 
+ *with the distribution. 
  * 
  *  - Neither the names "Java Outline Editor", "JOE" nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ *contributors may be used to endorse or promote products derived 
+ *from this software without specific prior written permission. 
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
@@ -59,6 +59,12 @@
 #define START_MENU_SUBPATH  "\\Start Menu\\"
 #define PROGRAMS_MENU_SUBPATH  "\\Start Menu\\Programs\\"
 #define DESKTOP_MENU_SUBPATH  "\\Desktop\\"
+
+#define SYSTEM_DIR_NT  "\\system32"
+#define SYSTEM_DIR_9X  "\\system"
+
+#define LAUNCHER_0  "java.exe"
+#define LAUNCHER_1  "javaw.exe"
 
 #define OS_FEEDBACK_STRING_0  "Your computer is running the "
 #define OS_FEEDBACK_STRING_1  " operating system."
@@ -109,6 +115,9 @@ const char * WINDOWS_VERSION_STRINGS [] = {
 
 #define USER_ENVIRONMENT_ROOT_KEY HKEY_CURRENT_USER
 #define USER_ENVIRONMENT_KEY_PATH "Environment"
+
+#define JAVA_ROOT_KEY  HKEY_LOCAL_MACHINE
+#define JRE_HOME_PATH  "Software\\JavaSoft\\Java Runtime Environment"
 
 #define MAX_REG_PATH 255
 
@@ -186,38 +195,41 @@ char g_App_Home_Path [MAX_PATH] ;
 
 // ---------- functions
 
+int allWin32RegDeleteKey(HKEY, char*) ;
+windows_version determineWindowsVersion() ;
 int ensureSuitableEnvironment() ;
+void failureFeedback() ;
+int fileExists(char *) ;
 int getAutoExecPath(char *);
 int getShortPathCurDir(char *) ;
-int getWord(int, char *, char *) ;
+int getUserChoicesReShortcutPlacement (shortcut_placement *) ;
+int getWord(int, char *, char *) ; 
+int hookupAllDocTypes() ;
+int hookupDocType(doc_type_info *) ;
+int isPif() ;
 int java2available(windows_version) ;
+int javaAppLaunchersCool() ;
+int javaRegEntriesCool() ;
 int machineHasNuffOomph() ;
 int osFeedback(windows_version) ;
+int placeShortcuts() ;
 int rebootRequired(windows_version) ;
-int setAutoExecEnvVar(char *, char *, char *);
-int setAllEnvVars() ;
-int setEnvVar(char *, char *, char *, windows_version);
-int setRegistryEnvVar(char *, char *, environment_target);
 int set_APP_HOME() ;
-int sevFeedback(int, char *, char *) ;
+int setAllEnvVars() ;
+int setAllPaths() ;
+int setAutoExecEnvVar(char *, char *, char *); 
+int setEnvVar(char *, char *, char *, windows_version);
+int setRegistryEnvVar(char *, char *, environment_target);  
+int sevFeedback(int, char *, char *) ; 
+int shortcutToContextMenu() ;
+int shortcutToDesktop() ;
+int shortcutToProgramsMenu() ;
+int shortcutToQuickLaunch() ;
+int shortcutToStartMenu() ;
 int strToUpper(char *) ;
+void successFeedback() ;
 int trimFileOffPath(char *) ;
 int weCanRunOnThisSystem() ;
 int weHaveJ2RE() ;
-int wePlugIntoSystem() ;
-void failureFeedback() ;
-void successFeedback() ;
 void welcome() ;
-windows_version determineWindowsVersion() ;
-int placeShortcuts() ;
-int getUserChoicesReShortcutPlacement (shortcut_placement *) ;
-int shortcutToProgramsMenu() ;
-int shortcutToStartMenu() ;
-int shortcutToDesktop() ;
-int shortcutToQuickLaunch() ;
-int shortcutToContextMenu() ;
-int hookupAllDocTypes() ;
-int hookupDocType(doc_type_info *) ;
-int setAllPaths() ;
-int isPif() ;
-int AllWin32RegDeleteKey(HKEY, char*) ;
+int wePlugIntoSystem() ;

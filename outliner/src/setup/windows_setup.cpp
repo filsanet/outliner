@@ -138,6 +138,24 @@ int weCanRunOnThisSystem () {
 // Make sure that a Java 2 Runtime Environment is properly installed on this system
 // returns 1 if it is, 0 if it isn't
 int weHaveJ2RE () {
+	// local vars
+	int allIsCool = 1 ;
+	
+	// app launchers in place ??
+	allIsCool &= javaAppLaunchersCool() ;
+	
+	// are the required reg entries in place and correct ??
+	allIsCool &= javaRegEntriesCool () ;
+
+	// gut check
+	if (allIsCool) return 1 ;
+
+	// all is not cool
+
+	// let's try to install JRE 
+
+	
+	
 	
 	// TBD
 	// fake for now
@@ -1469,7 +1487,7 @@ int hookupDocType(doc_type_info * ptr2DocTypeInfo) {
 	
 	
 	// delete any existing .doc key
-	AllWin32RegDeleteKey(rootKey, ptr2DocTypeInfo->type_path) ;
+	allWin32RegDeleteKey(rootKey, ptr2DocTypeInfo->type_path) ;
 
 	// try to create a new .doc key
 	if (RegCreateKeyEx (rootKey, ptr2DocTypeInfo->type_path, 0,
@@ -1497,7 +1515,7 @@ int hookupDocType(doc_type_info * ptr2DocTypeInfo) {
 	
 
 	// delete any existing app.type key
-	AllWin32RegDeleteKey(rootKey, ptr2DocTypeInfo->app_doc_path) ;
+	allWin32RegDeleteKey(rootKey, ptr2DocTypeInfo->app_doc_path) ;
 
 	// build up app.type keypath string
 	strcpy(utilString, ptr2DocTypeInfo->app_doc_path) ;
@@ -1554,7 +1572,7 @@ int hookupDocType(doc_type_info * ptr2DocTypeInfo) {
 
 // delete a registry key and all its contents and subkeys
 // takes care of win32 differences in basic registry api's
-int AllWin32RegDeleteKey (HKEY rootKey, char * keyPath) {
+int allWin32RegDeleteKey (HKEY rootKey, char * keyPath) {
 	// local vars
 	int result ;
 	
@@ -1581,7 +1599,7 @@ int AllWin32RegDeleteKey (HKEY rootKey, char * keyPath) {
 		case WIN_NT_4:
 			// if we have the api available, use SH
 			// else do the recursive RegDeleteKey ;
-			// TBD
+			// TBD -- fake for now
 			result = (SHDeleteKey (rootKey, keyPath) == ERROR_SUCCESS) ;
 			break ;
 			
@@ -1600,3 +1618,130 @@ int AllWin32RegDeleteKey (HKEY rootKey, char * keyPath) {
 	
 } // end function 
 
+
+// determine whether the java app launchers
+// are in a good place
+int javaAppLaunchersCool() {
+	// local vars
+	char launcherPath0[MAX_PATH + 1] ;
+	char launcherPath1[MAX_PATH + 1] ;
+	char windowsDirPath[MAX_PATH + 1] ;
+	
+	// build up string to standard location
+	
+	// get location of windows dir
+	if (GetWindowsDirectory(windowsDirPath, MAX_PATH + 1)== 0) return 0 ;
+	
+	// let's see if we're in there
+	strcpy(launcherPath0, windowsDirPath) ;
+	strcat(launcherPath0, "\\") ;
+	strcpy(launcherPath1, launcherPath0) ;
+
+	// bifurcate
+	strcat(launcherPath0, LAUNCHER_0) ;
+	strcat(launcherPath1, LAUNCHER_1) ;
+	
+	// are they there ?
+	if (fileExists(launcherPath0) & fileExists(launcherPath1))
+		return 1 ;
+		
+	// they're not there
+	// let's try the system dirs
+	strcpy(launcherPath0, windowsDirPath) ;
+
+	// case out on windows version
+	switch (g_Windows_Version) {
+		
+	case WIN_95:
+	case WIN_95_OSR2:
+	case WIN_98:
+	case WIN_98_SE:
+	case WIN_ME:
+		strcat (launcherPath0, SYSTEM_DIR_9X) ;
+		break ;
+	
+	case WIN_XP:
+	case WIN_NT_4:
+	case WIN_2K:
+	case WIN_DOT_NET_SERVER:
+	case WIN_UNKNOWN_V4:
+	case WIN_UNKNOWN_V5:
+	case WIN_UNKNOWN_V6:
+	case WIN_UNKNOWN_V7:
+	case WIN_UNKNOWN_V8:
+	case WIN_UNKNOWN_V9:
+	case WIN_UNKNOWN_V10:
+		strcat (launcherPath0, SYSTEM_DIR_NT) ;
+		break ;
+		
+	default:
+		// we shouldn't get here
+		return 0 ;
+		break ;
+		
+	} // end switch
+	
+	
+	// final touches
+	strcat(launcherPath0, "\\") ;
+
+	// copy
+	strcpy(launcherPath1, launcherPath0) ;
+
+	// bifurcate
+	strcat(launcherPath0, LAUNCHER_0) ;
+	strcat(launcherPath1, LAUNCHER_1) ;
+	
+	// are they there ?
+	if (fileExists(launcherPath0) & fileExists(launcherPath1))
+		return 1 ;
+		
+	// done, not found
+	return 0 ;
+
+}  // end function javaAppLaunchersCool
+
+
+// does a file exist ??
+int fileExists (char * fullpath) {
+	// try to open the file for reading 
+	FILE * fp = fopen(fullpath, "r") ;
+	
+	// if we get a handle
+	if (fp != NULL) {
+		// it exists
+		// close it
+		fclose(fp) ;
+		// done
+		return 1 ;
+	} else
+		// doesn't exist
+		return 0 ;
+} // end function fileExists
+
+
+// are the proper Java registry entries in place ?
+// and are they correct ??
+int javaRegEntriesCool() {
+
+	// TBD
+//
+//
+//
+//#define JAVA_ROOT_KEY  HKEY_LOCAL_MACHINE
+//#define JRE_HOME_PATH  "Software\\JavaSoft\\Java Runtime Environment"
+//
+//
+
+	// is there a JRE key ??
+	// does it have subkeys ??
+	// is one of em at least 1.3 ??
+	// if it is ... does it have a JavaHome setting
+	// if so ... does it point to a reality ??
+	// if so .... we cool
+	// otherwise we no cool
+	
+	// fake for now
+	return 1 ;
+	
+}  // end function javaRegEntriesCool
