@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <opml version="1.0">
 <head>
-<title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide.en.opml</title>
+<title>C:\cvsroot\outliner\dox\JOE Developer Guide.en.opml</title>
 <dateCreated>Tue, 17 Jul 2001 02:49:03 GMT</dateCreated>
-<dateModified>Sun, 12 Aug 2001 05:41:22 GMT</dateModified>
+<dateModified>Mon, 13 Aug 2001 08:29:56 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
@@ -14,9 +14,9 @@
 <windowRight>1087</windowRight>
 </head>
 <body>
-<outline text="JOE Developer Guide [JDG]"/>
-<outline text="-------------------------------"/>
-<outline text="Front End">
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="JOE Developer Guide [JDG]"/>
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="-------------------------------"/>
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Front End">
 <outline text="About JOE">
 <outline text="Notable Features">
 <outline text="Smooth Solid Feel"/>
@@ -118,7 +118,7 @@
 <outline text="Dewey Decimal System"/>
 </outline>
 </outline>
-<outline text="JOE on SourceForge">
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="JOE on SourceForge">
 <outline text="entrance">
 <outline text="http://SourceForge/projects/outliner/"/>
 </outline>
@@ -132,7 +132,7 @@
 <outline text="CVS Tree"/>
 </outline>
 </outline>
-<outline text="Setting Up a JOE Development Environment">
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Setting Up a JOE Development Environment">
 <outline text="Windows">
 <outline text="Front Matter">
 <outline text="This Version">
@@ -477,7 +477,7 @@
 <outline text="Linux/Unix [forthcoming]"/>
 <outline text="Macintosh [forthcoming]"/>
 </outline>
-<outline text="Development Tool Resources">
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Development Tool Resources">
 <outline text="Links">
 <outline text="ssh">
 <outline text="Latest versions available at TBD"/>
@@ -620,7 +620,7 @@
 <outline text="CVS"/>
 </outline>
 </outline>
-<outline text="How-To's">
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="How-To's">
 <outline text="Windows">
 <outline text="Updating to Latest File Versions">
 <outline text="Preparing for a general source update">
@@ -677,7 +677,7 @@
 <outline text="Linux/Unix"/>
 <outline text="Macintosh"/>
 </outline>
-<outline text="Open Questions">
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Open Questions">
 <outline text="These are things that the JDG author[s] haven't figured out yet"/>
 <outline text="Got a question that you don't see here about a JOE development tool ?">
 <outline text="Send it to DocHelp@JavaOutlineEditor.org"/>

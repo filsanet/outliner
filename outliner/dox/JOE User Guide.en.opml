@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <opml version="1.0">
 <head>
-<title>E:\stan's java projects\Joe\outliner\dox\JOE User Guide.en.opml</title>
+<title>C:\cvsroot\outliner\dox\JOE User Guide.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Sun, 12 Aug 2001 04:24:24 GMT</dateModified>
+<dateModified>Mon, 13 Aug 2001 08:29:44 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState>20</expansionState>
@@ -14,9 +14,9 @@
 <windowRight>636</windowRight>
 </head>
 <body>
-<outline text="JOE User Guide [JUG]"/>
-<outline text="-------------------------"/>
-<outline text="Front End">
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="JOE User Guide [JUG]"/>
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="-------------------------"/>
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Front End">
 <outline text="About JOE - the Java Outline Editor">
 <outline text="What It Is">
 <outline text="JOE is an outliner. "/>
@@ -133,7 +133,7 @@
 <outline text="Dewey Decimal System"/>
 </outline>
 </outline>
-<outline text="Installation and Setup">
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Installation and Setup">
 <outline text="Prepare your system">
 <outline text="Linux/Unix"/>
 <outline text="Macintosh"/>
@@ -160,7 +160,7 @@
 <outline text="Set JOE application preferences"/>
 <outline text="Set JOE user preferences [forthcoming]"/>
 </outline>
-<outline text="Your First Outline">
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Your First Outline">
 <outline text="Some terminology"/>
 <outline text="Create a new outline"/>
 <outline text="Type in some info"/>
@@ -168,12 +168,12 @@
 <outline text="Delete nodes"/>
 <outline text="Save your outline"/>
 </outline>
-<outline text="Creating Outlines">
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Creating Outlines">
 <outline text="Options"/>
 <outline text="Menu commands"/>
 <outline text="Keystroke Shortcuts"/>
 </outline>
-<outline text="Playing with Outlines">
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Playing with Outlines">
 <outline text="Creating Nodes"/>
 <outline text="Destroying Nodes"/>
 <outline text="Read-Only Nodes"/>
@@ -195,31 +195,31 @@
 <outline text="Nodes by Reference"/>
 <outline text="Keyboard Shortcuts"/>
 </outline>
-<outline text="Saving Outlines"/>
-<outline text="Printing Outlines">
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Saving Outlines"/>
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Printing Outlines">
 <outline text="Printing to a Printer"/>
 <outline text="Printing to a File"/>
 </outline>
-<outline text="Closing Outlines">
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Closing Outlines">
 <outline text="File:Close"/>
 <outline text="File:Close All"/>
 <outline text="The X Box"/>
 <outline text="What Makes a File Dirty"/>
 </outline>
-<outline text="Opening Outlines"/>
-<outline text="Hyperlinks in Outlines">
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Opening Outlines"/>
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Hyperlinks in Outlines">
 <outline text="Link Nodes"/>
 <outline text="Links in Nodes"/>
 </outline>
-<outline text="Connecting Outlines"/>
-<outline text="Sharing Outlines"/>
-<outline text="Using JOE To ...">
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Connecting Outlines"/>
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Sharing Outlines"/>
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Using JOE To ...">
 <outline text="Edit XML Files"/>
 </outline>
-<outline text="Custom JOE"/>
-<outline text="Macros"/>
-<outline text="XML-RPC"/>
-<outline text="Menu Commands Reference">
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Custom JOE"/>
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Macros"/>
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="XML-RPC"/>
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Menu Commands Reference">
 <outline text="File">
 <outline text="New">
 <outline text="keystroke shortcut: Ctrl+N"/>
@@ -300,8 +300,8 @@
 <outline text="Window"/>
 <outline text="Help"/>
 </outline>
-<outline text="Keystroke Shortcuts Reference"/>
-<outline text="Outline Formats">
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Keystroke Shortcuts Reference"/>
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Outline Formats">
 <outline text="tabbed text">
 <outline text="each node is terminated by one of these line-ending character sequences">
 <outline text="0D 0A [CR LF] [DOS Windows standard]"/>
@@ -320,7 +320,7 @@
 <outline text="BrainForest .pdf"/>
 <outline text="Thought Manager .pdf"/>
 </outline>
-<outline text="Glossary">
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Glossary">
 <outline text="Abbreviations and Acronyms">
 <outline text="Three-Letter Acronyms [TLA's]">
 <outline text="JOE"/>
@@ -416,7 +416,7 @@
 <outline text="Z"/>
 </outline>
 </outline>
-<outline text="Index">
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Index">
 <outline text="A-E">
 <outline text="A"/>
 <outline text="B"/>

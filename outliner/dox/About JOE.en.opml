@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <opml version="1.0">
 <head>
-<title>E:\stan's java projects\Joe\outliner\dox\About JOE.en.opml</title>
+<title>C:\cvsroot\outliner\dox\About JOE.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Sun, 12 Aug 2001 06:04:44 GMT</dateModified>
+<dateModified>Mon, 13 Aug 2001 08:32:27 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
@@ -14,25 +14,27 @@
 <windowRight>630</windowRight>
 </head>
 <body>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="About JOE"/>
-<outline isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="------------"/>
-<outline isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Version">
-<outline isEditable="true" isMoveable="true" text="1.8.2"/>
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="About JOE"/>
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="------------"/>
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Version">
+<outline text="1.8.3"/>
 </outline>
-<outline isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Credits">
-<outline isEditable="true" isMoveable="true" text="Maynard Demmon"/>
-<outline isEditable="true" isMoveable="true" text="Philip Suh"/>
-<outline isEditable="true" isMoveable="true" text="Steven Spencer"/>
-<outline isEditable="true" isMoveable="true" text="Stanley Krute">
-<outline isEditable="true" isMoveable="true" text="mailto:Stan@JavaOutlineEditor.org"/>
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Credits">
+<outline text="Maynard Demmon">
+<outline text="mailto:maynard@organic.com"/>
+</outline>
+<outline text="Philip Suh"/>
+<outline text="Steven Spencer"/>
+<outline text="Stanley Krute">
+<outline text="mailto:Stan@JavaOutlineEditor.org"/>
 </outline>
 </outline>
-<outline isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Copyright"/>
-<outline isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Feedback">
-<outline isEditable="true" isMoveable="true" text="http://JavaOutlineEditor.org/feedback"/>
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Copyright"/>
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Feedback">
+<outline text="http://JavaOutlineEditor.org/feedback"/>
 </outline>
-<outline isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Website">
-<outline isEditable="true" isMoveable="true" text="http://JavaOutlineEditor.org"/>
+<outline isEditable="false" isEditableInherited="true" isMoveable="false" isMoveableInherited="true" text="Website">
+<outline text="http://JavaOutlineEditor.org"/>
 </outline>
 </body>
 </opml>
