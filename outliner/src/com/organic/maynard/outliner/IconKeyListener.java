@@ -923,7 +923,10 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	private void copy(JoeTree tree, OutlineLayoutManager layout) {
 		NodeSet nodeSet = new NodeSet();
 		for (int i = 0; i < tree.getSelectedNodes().size(); i++) {
-			nodeSet.addNode(tree.getSelectedNodes().get(i).cloneClean());
+			Node node = tree.getSelectedNodes().get(i).cloneClean();
+			node.setDepthRecursively(0);
+			nodeSet.addNode(node);
+			//nodeSet.addNode(tree.getSelectedNodes().get(i).cloneClean());
 		}
 		
 		// [md] This conditional is here since StringSelection subclassing seems to be broken in Java 1.3.1.
@@ -943,8 +946,10 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			if (!node.isEditable()) {
 				continue;
 			}
-				
-			nodeSet.addNode(node.cloneClean());
+			
+			Node newNode = node.cloneClean();
+			newNode.setDepthRecursively(0);	
+			nodeSet.addNode(newNode);
 		}
 		
 		if (!nodeSet.isEmpty()) {
