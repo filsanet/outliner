@@ -206,7 +206,7 @@ int wePlugIntoSystem () {
 	
 	// per user choice set app to
 	// handle particular types of documents
-	result &= hookupDocTypes() ;
+	result &= hookupAllDocTypes() ;
 	
 	// add to Add/Remove Programs listing
 	// wiring up windows_uninstall.exe
@@ -1419,14 +1419,41 @@ int shortcutToContextMenu() {
 } // end function shortcutToContextMenu
 
 
-//
-int hookupDocTypes() {
+// per user choice, hook the app up so 
+// that it handles some doc types
+int hookupAllDocTypes() {
+	
+//typedef struct {
+//	char type_path [6] ;  // example: ".opml"
+//	char app_doc_path [100] ; // example: "JOE.OPML.document"
+//	char app_doc_open_cmd_path [100] ; // example: "\\Shell\\Open\\Command"
+//	
+//	} doc_type_info	
+
+	// local vars
+	int result = 1 ;
+	doc_type_info someDocTypeInfo ;
+	
 	// TBD generalize this
-	// for each doc type
-		// get its base dealie
-		// set that up
-		// get its app dealie
-		// set that up
+	// an array of doc types info in the .h file
+	// for each doc type in that array
+		// TBD - fake for now
+		strcpy(someDocTypeInfo.type_path, DOC_TYPES_OPML_PATH) ;
+		strcpy(someDocTypeInfo.app_doc_path, DOC_TYPES_JOE_OPML_PATH) ;
+		strcpy(someDocTypeInfo.app_doc_open_cmd_path, DOC_TYPES_JOE_OPML_OPEN_CMD_PATH) ;
+		result &= hookupDocType(& someDocTypeInfo) ;
+
+	// after all doc types are done ...
+	printf ("\n") ;
+	
+	// done
+	return result ;
+	
+} // end function hookupAllDocTypes
+
+
+// hook up one doc type
+int hookupDocType(doc_type_info * ptr2DocTypeInfo) {
 
 	// local vars
 	HKEY rootKey = DOC_TYPES_ROOT_KEY ;
@@ -1440,18 +1467,19 @@ int hookupDocTypes() {
 	int result = 0 ;
 	char feedbackString [MAX_LINE] ;
 	
-	// delete any existing .opml key
-	SHDeleteKey(rootKey, DOC_TYPES_OPML_PATH) ;
+	
+	// delete any existing .doc key
+	AllWin32RegDeleteKey(rootKey, ptr2DocTypeInfo->type_path) ;
 
-	// try to create a new .opml key
-	if (RegCreateKeyEx (rootKey, DOC_TYPES_OPML_PATH, 0,
+	// try to create a new .doc key
+	if (RegCreateKeyEx (rootKey, ptr2DocTypeInfo->type_path, 0,
 				0,REG_OPTION_NON_VOLATILE, KEY_WRITE, 0, 
 				& utilKey, & createKeyDisposition)== ERROR_SUCCESS) {
 	
 		// okay, we've got it
 		
 		// try to write our default value string
-		strcpy(utilString, DOC_TYPES_JOE_OPML_PATH) ;
+		strcpy(utilString, ptr2DocTypeInfo->app_doc_path) ;
 		setResult = RegSetValueEx (utilKey, 0, 0, REG_SZ,
 				(LPBYTE)utilString, strlen(utilString) + 1) ;
 		
@@ -1469,11 +1497,11 @@ int hookupDocTypes() {
 	
 
 	// delete any existing app.type key
-	SHDeleteKey(rootKey, DOC_TYPES_JOE_OPML_PATH) ;
+	AllWin32RegDeleteKey(rootKey, ptr2DocTypeInfo->app_doc_path) ;
 
 	// build up app.type keypath string
-	strcpy(utilString, DOC_TYPES_JOE_OPML_PATH) ;
-	strcat(utilString, DOC_TYPES_JOE_OPML_OPEN_CMD_PATH) ;
+	strcpy(utilString, ptr2DocTypeInfo->app_doc_path) ;
+	strcat(utilString, ptr2DocTypeInfo->app_doc_open_cmd_path) ;
 	
 	// try to create a new app.type key
 	if (RegCreateKeyEx (rootKey, utilString, 0,
@@ -1511,19 +1539,64 @@ int hookupDocTypes() {
 		strcpy (feedbackString, DOC_TYPE_HOOKED) ;
 	else
 		strcpy (feedbackString, DOC_TYPE_NOT_HOOKED) ;
-	strcat(feedbackString, DOC_TYPES_OPML_PATH) ;
+	strcat(feedbackString, ptr2DocTypeInfo->type_path) ;
 	strcat(feedbackString, DOC_TYPE_HOOKER_0) ;
 	strcat(feedbackString, APP_NAME_STRING) ;
 	strcat(feedbackString, ".") ;
 	strcat(feedbackString, "\n") ;
 	printf(feedbackString) ;
 	
-	// after all doc types are done ...
-	printf ("\n") ;
-	
 	// done
 	return result ;
 	
-} // end function hookupDocTypes
+} // end function hookupDocType
 
+
+// delete a registry key and all its contents and subkeys
+// takes care of win32 differences in basic registry api's
+int AllWin32RegDeleteKey (HKEY rootKey, char * keyPath) {
+	// local vars
+	int result ;
+	
+	// case out on the version of windows
+	switch (g_Windows_Version) {
+		case WIN_95:
+		case WIN_95_OSR2:
+			result = (RegDeleteKey(rootKey, keyPath)== ERROR_SUCCESS) ;
+			break ;
+			
+		case WIN_98:
+		case WIN_98_SE:
+		case WIN_ME:
+		case WIN_XP:
+		case WIN_2K:
+		case WIN_DOT_NET_SERVER:
+		case WIN_UNKNOWN_V4:
+		case WIN_UNKNOWN_V5:
+		case WIN_UNKNOWN_V6:
+		case WIN_UNKNOWN_V7:
+			result = (SHDeleteKey (rootKey, keyPath) == ERROR_SUCCESS) ;
+			break ;
+			
+		case WIN_NT_4:
+			// if we have the api available, use SH
+			// else do the recursive RegDeleteKey ;
+			// TBD
+			result = (SHDeleteKey (rootKey, keyPath) == ERROR_SUCCESS) ;
+			break ;
+			
+		case WIN_NT_351:
+		case WIN_UNKNOWN_V3:
+		case WIN_VERY_UNKNOWN:
+		default:
+			// problems
+			result = 0 ;
+			
+			break ;
+			
+		} // end switch out on Windows version
+		
+	return result ;
+	
+} // end function 
 

@@ -113,6 +113,7 @@ const char * WINDOWS_VERSION_STRINGS [] = {
 #define MAX_REG_PATH 255
 
 #define DOC_TYPES_ROOT_KEY  HKEY_CLASSES_ROOT
+
 #define DOC_TYPES_OPML_PATH  ".opml"
 #define DOC_TYPES_JOE_OPML_PATH  "JOE.OPML.document"
 #define DOC_TYPES_JOE_OPML_OPEN_CMD_PATH  "\\Shell\\Open\\Command"
@@ -167,6 +168,13 @@ typedef struct {
 	int contextMenu;
 	} shortcut_placement ; // end struct
 
+typedef struct {
+	char type_path [6] ;  // example: ".opml"
+	char app_doc_path [100] ; // example: "JOE.OPML.document"
+	char app_doc_open_cmd_path [100] ; // example: "\\Shell\\Open\\Command"
+	
+	} doc_type_info ; // end struct
+	
 // ---------- global variables
 
 windows_version g_Windows_Version = CANNOT_DETERMINE;
@@ -208,6 +216,8 @@ int shortcutToStartMenu() ;
 int shortcutToDesktop() ;
 int shortcutToQuickLaunch() ;
 int shortcutToContextMenu() ;
-int hookupDocTypes() ;
+int hookupAllDocTypes() ;
+int hookupDocType(doc_type_info *) ;
 int setAllPaths() ;
 int isPif() ;
+int AllWin32RegDeleteKey(HKEY, char*) ;
