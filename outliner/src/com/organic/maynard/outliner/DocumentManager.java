@@ -12,7 +12,8 @@
  			internet: http://someSite.dom/someDir/someDoc.opml
  			internet: ftp://someSite.dom/someDir/someDoc.opml
  * 
- * Extends Object
+ * extends Object
+ * implements JoeReturnCodes
  *
  * Members
  *	variables
@@ -58,7 +59,8 @@ package com.organic.maynard.outliner;
 // we manage a set of documents
 public class DocumentManager 
 
-	extends Object implements JoeReturnCodes {
+	extends Object 
+	implements JoeReturnCodes {
 	
 	// protected instance vars
 	protected boolean [] docOpenStates ;
