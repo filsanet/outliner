@@ -516,4 +516,39 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 			return false;
 		}
 	}
+	
+	public static boolean validateRestrictedChars(String name) {
+		// This set shouldn't exist in filenames so we need to check for them.
+		if (name.indexOf("\\") != -1) {
+			return false;
+		} else if (name.indexOf("/") != -1) {
+			return false;
+		} else if (name.indexOf(":") != -1) {
+			return false;
+		} else if (name.indexOf("*") != -1) {
+			return false;
+		} else if (name.indexOf("?") != -1) {
+			return false;
+		} else if (name.indexOf("\"") != -1) {
+			return false;
+		} else if (name.indexOf("<") != -1) {
+			return false;
+		} else if (name.indexOf(">") != -1) {
+			return false;
+		} else if (name.indexOf("|") != -1) {
+			return false;
+			
+		// This set shouldn't happen, but let's check anyway.
+		} else if (name.indexOf("\r") != -1) {
+			return false;
+		} else if (name.indexOf("\n") != -1) {
+			return false;
+		} else if (name.indexOf("\t") != -1) {
+			return false;
+		
+		// Looks good.
+		} else {
+			return true;
+		}
+	}
 }

@@ -85,7 +85,7 @@ public class HTMLEscapeMacroConfig extends MacroConfigImpl {
 
 		String name = nameField.getText();
 
-		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name)) {
+		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name) && MacroPopupMenu.validateRestrictedChars(name)) {
 			macro.setName(name);
 			if (escapeRadio.isSelected()) {
 				macro.setEscaping(true);
@@ -113,7 +113,7 @@ public class HTMLEscapeMacroConfig extends MacroConfigImpl {
 				}
 				
 				return true;
-			} else if (MacroPopupMenu.validateUniqueness(name)) {
+			} else if (MacroPopupMenu.validateUniqueness(name) && MacroPopupMenu.validateRestrictedChars(name)) {
 				macro.setName(name);
 				if (escapeRadio.isSelected()) {
 					macro.setEscaping(true);

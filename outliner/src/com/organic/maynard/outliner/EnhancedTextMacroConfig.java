@@ -84,7 +84,7 @@ public class EnhancedTextMacroConfig extends MacroConfigImpl {
 
 		String name = nameField.getText();
 
-		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name)) {
+		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name) && MacroPopupMenu.validateRestrictedChars(name)) {
 			textMacro.setName(name);
 			textMacro.setReplacementPattern(patternTextArea.getText());
 			return true;
@@ -102,7 +102,7 @@ public class EnhancedTextMacroConfig extends MacroConfigImpl {
 			if (name.equals(textMacro.getName())) {
 				textMacro.setReplacementPattern(patternTextArea.getText());
 				return true;
-			} else if (MacroPopupMenu.validateUniqueness(name)) {
+			} else if (MacroPopupMenu.validateUniqueness(name) && MacroPopupMenu.validateRestrictedChars(name)) {
 				textMacro.setName(name);
 				textMacro.setReplacementPattern(patternTextArea.getText());
 				return true;

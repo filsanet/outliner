@@ -139,7 +139,7 @@ public class XMLRPCMacroConfig extends MacroConfigImpl {
 		}
 		
 		// Validate Name and do the create
-		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name)) {
+		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name) && MacroPopupMenu.validateRestrictedChars(name)) {
 			macro.setName(name);
 			macro.setURL(url);
 			macro.setCall(callTextArea.getText());
@@ -176,7 +176,7 @@ public class XMLRPCMacroConfig extends MacroConfigImpl {
 					macro.setReplacing(false);			
 				}
 				return true;
-			} else if (MacroPopupMenu.validateUniqueness(name)) {
+			} else if (MacroPopupMenu.validateUniqueness(name) && MacroPopupMenu.validateRestrictedChars(name)) {
 				macro.setName(name);
 				macro.setURL(url);
 				macro.setCall(callTextArea.getText());

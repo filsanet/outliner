@@ -84,7 +84,7 @@ public class BSHMacroConfig extends MacroConfigImpl {
 
 		String name = nameField.getText();
 
-		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name)) {
+		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name) && MacroPopupMenu.validateRestrictedChars(name)) {
 			bshmacro.setName(name);
 			bshmacro.setScript(patternTextArea.getText());
 			return true;
@@ -102,7 +102,7 @@ public class BSHMacroConfig extends MacroConfigImpl {
 			if (name.equals(bshmacro.getName())) {
 				bshmacro.setScript(patternTextArea.getText());
 				return true;
-			} else if (MacroPopupMenu.validateUniqueness(name)) {
+			} else if (MacroPopupMenu.validateUniqueness(name) && MacroPopupMenu.validateRestrictedChars(name)) {
 				bshmacro.setName(name);
 				bshmacro.setScript(patternTextArea.getText());
 				return true;

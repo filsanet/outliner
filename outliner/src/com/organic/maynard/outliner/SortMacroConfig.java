@@ -83,7 +83,7 @@ public class SortMacroConfig extends MacroConfigImpl {
 
 		String name = nameField.getText();
 
-		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name)) {
+		if (MacroPopupMenu.validateExistence(name) && MacroPopupMenu.validateUniqueness(name) && MacroPopupMenu.validateRestrictedChars(name)) {
 			macro.setName(name);
 			macro.setComparator(comparatorTextArea.getText());
 			return true;
@@ -101,7 +101,7 @@ public class SortMacroConfig extends MacroConfigImpl {
 			if (name.equals(macro.getName())) {
 				macro.setComparator(comparatorTextArea.getText());
 				return true;
-			} else if (MacroPopupMenu.validateUniqueness(name)) {
+			} else if (MacroPopupMenu.validateUniqueness(name) && MacroPopupMenu.validateRestrictedChars(name)) {
 				macro.setName(name);
 				macro.setComparator(comparatorTextArea.getText());
 				return true;
