@@ -50,65 +50,65 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 
 public abstract class AbstractAttributesPanel extends JTable {
-
+	
 	private RemoveColumnHeaderRenderer removeColumnHeaderRenderer = new RemoveColumnHeaderRenderer();
-
+	
 	// GUI Fields
 	protected AttributeTableModel model = null;
-
+	
 	// The Constructor
 	public AbstractAttributesPanel() {
 		model = new AttributeTableModel(this);
 		setModel(model);
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-
+		
+		
 		// Setup Remove Column
 		TableColumn removeColumn = getColumnModel().getColumn(0);
 		
 		removeColumn.setMinWidth(80);
 		removeColumn.setMaxWidth(80);
 		removeColumn.setResizable(false);
-
+		
 		AttributesButtonCellEditor editor = new AttributesButtonCellEditor(this);
 		removeColumn.setCellRenderer(editor);
 		removeColumn.setCellEditor(editor);
-
+		
 		removeColumn.setHeaderRenderer(removeColumnHeaderRenderer);
-
+		
 		// Setup Editable Column
 		TableColumn editableColumn = getColumnModel().getColumn(1);
 		
 		editableColumn.setMinWidth(OutlineEditableIndicator.TRUE_WIDTH);
 		editableColumn.setMaxWidth(OutlineEditableIndicator.TRUE_WIDTH);
 		editableColumn.setResizable(false);
-
+		
 		AttributesImageIconCellEditor editor2 = new AttributesImageIconCellEditor(this);
 		editableColumn.setCellEditor(editor2);
-
+		
 		// Setup Table Header
 		getTableHeader().addMouseListener(model);   
 		getTableHeader().setReorderingAllowed(false); 
 	}
-
+	
 	// Data Display
 	public abstract void update();
-
+	
 	// Data Modification
 	public abstract void newAttribute(String key, Object value, boolean isReadOnly, AttributeTableModel model);
-
+	
 	// Delete Attribute
 	public abstract void deleteAttribute(int row, AttributeTableModel model);
-
+	
 	// Delete Attribute
 	public abstract void toggleEditability(int row, AttributeTableModel model);
-
+	
 	// Set Value
-    public abstract void setValueAt(Object value, int row, AttributeTableModel model);
-
+	public abstract void setValueAt(Object value, int row, AttributeTableModel model);
+	
 	// Misc
-    protected abstract boolean isCellEditable();
-    protected abstract boolean isCellEditable(int row);
+	protected abstract boolean isCellEditable();
+	protected abstract boolean isCellEditable(int row);
 }
 
 
@@ -116,7 +116,7 @@ class RemoveColumnHeaderRenderer extends JButton implements TableCellRenderer {
 	public RemoveColumnHeaderRenderer() {
 		super("New...");
 	}
-
+	
 	public Component getTableCellRendererComponent(
 		JTable table, 
 		Object value, 
@@ -131,30 +131,30 @@ class RemoveColumnHeaderRenderer extends JButton implements TableCellRenderer {
 
 
 class AttributeTableModel extends AbstractTableModel implements MouseListener {
-
+	
 	private static NewAttributeDialog dialog = new NewAttributeDialog();
-
+	
 	public AbstractAttributesPanel panel = null;
-
+	
 	public Vector keys = new Vector();
 	public Vector values = new Vector();
 	public Vector readOnly = new Vector();
-
-
+	
+	
 	public AttributeTableModel(AbstractAttributesPanel panel) {
 		super();
 		this.panel = panel;
 	}
-
+	
 	public int getColumnCount() {
 		return 4;
 	}
-
+	
 	
 	public int getRowCount() {
 		return keys.size();
 	}
-
+	
 	public Object getValueAt(int row, int col) {
 		if (col == 0) {
 			if (panel.isCellEditable(row)) {
@@ -190,9 +190,9 @@ class AttributeTableModel extends AbstractTableModel implements MouseListener {
 		} catch (java.lang.ClassNotFoundException e) {
 			e.printStackTrace();
 			return null;
-		}	
+		}
 	}
-
+	
 	public String getColumnName(int col) {
 		if (col == 0) {
 			return "";
@@ -204,19 +204,19 @@ class AttributeTableModel extends AbstractTableModel implements MouseListener {
 			return "Value";
 		}
 	}
-
-    public boolean isCellEditable(int row, int col) {
+	
+	public boolean isCellEditable(int row, int col) {
 		if (col == 1) {
-	    	if (!panel.isCellEditable()) {
-	    		return false;
-	    	} else {
-	    		return true;
-	    	}		
+			if (!panel.isCellEditable()) {
+				return false;
+			} else {
+				return true;
+			}
 		} else {
-	    	if (!panel.isCellEditable(row)) {
-	    		return false;
-	    	}
-
+			if (!panel.isCellEditable(row)) {
+				return false;
+			}
+			
 			if (col == 0 || col == 3) { 
 				return true;
 			} else {
@@ -224,29 +224,29 @@ class AttributeTableModel extends AbstractTableModel implements MouseListener {
 			}
 		}
 	}
-
-    public void setValueAt(Object value, int row, int col) {
-    	if (col == 3) {
-    		panel.setValueAt(value, row, this);
-
+	
+	public void setValueAt(Object value, int row, int col) {
+		if (col == 3) {
+			panel.setValueAt(value, row, this);
+			
 			fireTableCellUpdated(row, col);
 		}
 	}
-
+	
 	// MouseListener Interface
 	public void mouseClicked(MouseEvent e) {
 		int col = panel.getTableHeader().columnAtPoint(e.getPoint());
 		if (col == 0) {
-	    	if (!panel.isCellEditable()) {
-	    		return;
-	    	}
-
+			if (!panel.isCellEditable()) {
+				return;
+			}
+			
 			dialog.show(panel);
 		} else if (col == 1) {
 			//System.out.println("sort");
 		}
 	}
-
+	
 	public void mouseEntered(MouseEvent e) {}
 	public void mouseExited(MouseEvent e) {}
 	public void mousePressed(MouseEvent e) {}
@@ -255,14 +255,14 @@ class AttributeTableModel extends AbstractTableModel implements MouseListener {
 
 
 class AttributesButtonCellEditor extends ButtonCellEditor {
-
+	
 	private AbstractAttributesPanel panel = null;
-
+	
 	public AttributesButtonCellEditor(AbstractAttributesPanel panel) {
 		super(new JCheckBox());
 		this.panel = panel;
 	}
-
+	
 	protected void doEditing() {
 		if (this.col == 0) {
 			panel.deleteAttribute(this.row, (AttributeTableModel) panel.getModel());
@@ -271,14 +271,14 @@ class AttributesButtonCellEditor extends ButtonCellEditor {
 }
 
 class AttributesImageIconCellEditor extends ImageIconCellEditor {
-
+	
 	private AbstractAttributesPanel panel = null;
-
+	
 	public AttributesImageIconCellEditor(AbstractAttributesPanel panel) {
 		super(new JCheckBox(), OutlineEditableIndicator.ICON_IS_PROPERTY, OutlineEditableIndicator.ICON_IS_NOT_PROPERTY);
 		this.panel = panel;
 	}
-
+	
 	protected void doEditing() {
 		if (this.col == 1) {
 			panel.toggleEditability(this.row, (AttributeTableModel) panel.getModel());
@@ -287,32 +287,32 @@ class AttributesImageIconCellEditor extends ImageIconCellEditor {
 }
 
 class NewAttributeDialog extends JDialog implements ActionListener {
-
+	
 	// Constants
 	private static String OK = null;
 	private static String CANCEL = null;
 	private static String NEW_ATTRIBUTE = null;
 	private static String ATTRIBUTE = null;
 	private static String VALUE = null;
-
+	
 	private static String ERROR_EXISTANCE = null;
 	private static String ERROR_UNIQUENESS = null;
 	private static String ERROR_ALPHA_NUMERIC = null;
-
+	
 	// GUI Elements
 	private JButton buttonOK = null;
 	private JButton buttonCancel = null;
 	private JTextField attributeField = null;
 	private JTextField valueField = null;
 	private JLabel errorLabel = null;
-
+	
 	// Context
 	private AbstractAttributesPanel panel = null;
-
-	// Constructors	
+	
+	// Constructors
 	public NewAttributeDialog() {
 		super(Outliner.outliner, NEW_ATTRIBUTE, true);
-
+		
 		OK = GUITreeLoader.reg.getText("ok");
 		CANCEL = GUITreeLoader.reg.getText("cancel");
 		NEW_ATTRIBUTE = GUITreeLoader.reg.getText("new_attribute");
@@ -321,17 +321,17 @@ class NewAttributeDialog extends JDialog implements ActionListener {
 		ERROR_EXISTANCE = GUITreeLoader.reg.getText("error_att_key_existance");
 		ERROR_UNIQUENESS = GUITreeLoader.reg.getText("error_att_key_uniqueness");
 		ERROR_ALPHA_NUMERIC = GUITreeLoader.reg.getText("error_att_key_alpha");
-
+		
 		buttonOK = new JButton(OK);
 		buttonCancel = new JButton(CANCEL);
 		attributeField = new JTextField(20);
 		valueField = new JTextField(20);
 		errorLabel = new JLabel(" ");
-
+		
 		// Create the Layout
 		setSize(250,180);
 		setResizable(false);
-
+		
 		// Adding window adapter to fix problem where initial focus won't go to the textfield.
 		// Solution found at: http://forums.java.sun.com/thread.jsp?forum=57&thread=124417&start=15&range=15;
 		addWindowListener(
@@ -341,49 +341,49 @@ class NewAttributeDialog extends JDialog implements ActionListener {
 				}
 			}
 		);
-
+		
 		// Define the Bottom Panel
 		JPanel bottomPanel = new JPanel();
-
+		
 		bottomPanel.setLayout(new FlowLayout());
-
+		
 		buttonOK.addActionListener(this);
 		bottomPanel.add(buttonOK);
-
+		
 		buttonCancel.addActionListener(this);
 		bottomPanel.add(buttonCancel);
-
+		
 		getContentPane().add(bottomPanel,BorderLayout.SOUTH);
-
+		
 		// Define the Center Panel
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new GridBagLayout());
-
+		
 		AbstractPreferencesPanel.addPreferenceItem(ATTRIBUTE, attributeField, centerPanel);
 		AbstractPreferencesPanel.addPreferenceItem(VALUE, valueField, centerPanel);
 		AbstractPreferencesPanel.addSingleItemCentered(errorLabel, centerPanel);
-
+		
 		getContentPane().add(centerPanel, BorderLayout.CENTER);
-
+		
 		// Set the default button
 		getRootPane().setDefaultButton(buttonOK);
 	}
-
+	
 	public void show(AbstractAttributesPanel panel) {
 		this.panel = panel;
-
+		
 		attributeField.setText("");
 		valueField.setText("");
 		errorLabel.setText(" ");
-
+		
 		attributeField.requestFocus();
-
+		
 		Rectangle r = Outliner.outliner.getBounds();
 		setLocation((int) (r.getCenterX() - getWidth()/2), (int) (r.getCenterY() - getHeight()/2));
-
+		
 		super.show();
 	}
-
+	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(OK)) {
@@ -392,24 +392,24 @@ class NewAttributeDialog extends JDialog implements ActionListener {
 			cancel();
 		}
 	}
-
+	
 	private void ok() {
 		String key = attributeField.getText();
 		String value = valueField.getText();
 		AttributeTableModel model = (AttributeTableModel) panel.getModel();
-
+		
 		// Validate Existence
 		if ((key == null) || key.equals("")) {
 			errorLabel.setText(ERROR_EXISTANCE);
 			return;
 		}
-
+		
 		// Validate alpha-numeric
 		if (!XMLTools.isValidXMLAttributeName(key)) {
 			errorLabel.setText(ERROR_ALPHA_NUMERIC);
-			return;		
+			return;
 		}
-
+		
 		// Validate Uniqueness
 		for (int i = 0; i < model.keys.size(); i++) {
 			String existingKey = (String) model.keys.get(i);
@@ -418,14 +418,14 @@ class NewAttributeDialog extends JDialog implements ActionListener {
 				return;
 			}
 		}
-
+		
 		// All is good so lets make the change
 		panel.newAttribute(key, value, false, model);
 		panel.update(); // [md] Added so that modification date updates.
-
+		
 		this.hide();
 	}
-
+	
 	private void cancel() {
 		hide();
 	}

@@ -50,11 +50,11 @@ import java.awt.datatransfer.*;
 public class TextKeyListener implements KeyListener, MouseListener, FocusListener {
 	
 	private OutlinerCellRendererImpl textArea = null;
-
-
+	
+	
 	// The Constructors
 	public TextKeyListener() {}
-
+	
 	public void destroy() {
 		textArea = null;
 	}
@@ -65,13 +65,13 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 		textArea = (OutlinerCellRendererImpl) e.getComponent();
 		textArea.hasFocus = true;
 	}
-
+	
 	public void focusLost(FocusEvent e) {
 		textArea = (OutlinerCellRendererImpl) e.getComponent();
 		textArea.hasFocus = false;
 	}
 	
-
+	
 	// MouseListener Interface
  	public void mouseEntered(MouseEvent e) {}
  	public void mouseExited(MouseEvent e) {}
@@ -83,19 +83,19 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
  		Node currentNode = textArea.node;
  		JoeTree tree = currentNode.getTree();
  		OutlineLayoutManager layout = tree.getDocument().panel.layout;
-
+		
 		// This is detection for Solaris, I think mac does this too.
 		if (e.isPopupTrigger() && (currentNode.isAncestorSelected() || (tree.getEditingNode() == currentNode))) {
 			Outliner.macroPopup.show(e.getComponent(),e.getX(), e.getY());
 			e.consume();
 			return;
 		}
-
+		
 		// This is to block clicks when a right click is generated in windows.
 		if ((PlatformCompatibility.isWindows()) && e.getModifiers() == InputEvent.BUTTON3_MASK) {
 			return;
 		}
-			
+		
  		// Clear the selection
  		int selectionSize = tree.getSelectedNodes().size();
 		tree.clearSelection();
@@ -141,18 +141,18 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 		// Shorthand
 		Node currentNode = textArea.node;
  		JoeTree tree = currentNode.getTree();
-
+		
 		// Set the Mark
 		tree.setCursorMarkPosition(textArea.getCaret().getMark());
 		tree.setCursorPosition(textArea.getCaretPosition(),false);
-
+		
 		// This is detection for Windows
 		if (e.isPopupTrigger() && (currentNode.isAncestorSelected() || (tree.getEditingNode() == currentNode))) {
 			Outliner.macroPopup.show(e.getComponent(),e.getX(), e.getY());
 			return;
 		}
 	}
-
+	
  	public void mouseClicked(MouseEvent e) {
 		// Catch for Solaris/Mac if they did the popup trigger.
 		if (e.isConsumed()) {
@@ -168,13 +168,13 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 		// Set the Mark
 		tree.setCursorMarkPosition(textArea.getCaret().getMark());
 		tree.setCursorPosition(textArea.getCaretPosition(),false);
-
+		
 		// Lets record changes to the selection state into the current undoable if it is an UndoableEdit
 		UndoableEdit undoable = tree.getDocument().undoQueue.getIfEdit();
 		if ((undoable != null) && (undoable.getNode() == currentNode)) {
 			undoable.setNewPosition(textArea.getCaretPosition());
 			undoable.setNewMarkPosition(textArea.getCaret().getMark());
-		}	
+		}
  	}
 	
 	
@@ -190,36 +190,36 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 	}
 	
 	public void keyReleased(KeyEvent e) {}
-
-
+	
+	
 	// Additional Outline Methods
 	public static void hoist(Node currentNode) {
 		currentNode.getTree().getDocument().hoistStack.hoist(new HoistStackItem(currentNode));
 		return;
 	}
-
+	
 	public static void dehoist(Node currentNode) {
 		currentNode.getTree().getDocument().hoistStack.dehoist();
 		return;
 	}
-
+	
 	public static void dehoist_all(Node currentNode) {
 		currentNode.getTree().getDocument().hoistStack.dehoistAll();
 		return;
 	}
-
+	
 	public static void expandAllSubheads(Node currentNode) {
 		currentNode.ExpandAllSubheads();
 		currentNode.getTree().getDocument().panel.layout.redraw();
 		return;
 	}
-
+	
 	public static void expandEverything(JoeTree tree) {
 		tree.getRootNode().ExpandAllSubheads();
 		tree.getDocument().panel.layout.redraw();
 		return;
 	}
-
+	
 	public static void collapseToParent(Node currentNode) {
 		// Shorthand
 		JoeTree tree = currentNode.getTree();
@@ -229,7 +229,7 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 		if (parent.isRoot()) {
 			// Collapse
 			currentNode.CollapseAllSubheads();
-		
+			
 			// Redraw and Set Focus
 			layout.draw(currentNode,OutlineLayoutManager.ICON);
 		} else {
@@ -239,7 +239,7 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 			// Record the EditingNode, Mark and CursorPosition
 			tree.setEditingNode(parent);
 			tree.setComponentFocus(OutlineLayoutManager.ICON);
-	
+			
 			// Update Selection
 			tree.setSelectedNodesParent(parent.getParent());
 			tree.addNodeToSelection(parent);
@@ -249,18 +249,18 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 		}
 		return;
 	}
-
+	
 	public static void collapseEverything(JoeTree tree) {
 		int limit = tree.getRootNode().numOfChildren();
 		for (int i = 0; i < limit; i++) {
 			tree.getRootNode().getChild(i).CollapseAllSubheads();
 		}
-
+		
 		// Record the EditingNode, Mark and CursorPosition
 		Node firstNode = tree.getRootNode().getFirstChild();
 		tree.setEditingNode(firstNode);
 		tree.setComponentFocus(OutlineLayoutManager.ICON);
-
+		
 		// Update Selection
 		tree.setSelectedNodesParent(tree.getRootNode());
 		tree.addNodeToSelection(firstNode);

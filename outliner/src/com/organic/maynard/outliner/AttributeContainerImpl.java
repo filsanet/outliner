@@ -36,21 +36,26 @@ package com.organic.maynard.outliner;
 
 import java.util.*;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
 public class AttributeContainerImpl implements AttributeContainer {
-
+	
 	// Instance Variables
 	private HashMap attributes = null;
 	private HashMap isReadOnly = null;
-
-
+	
+	
 	// The Constructors
 	public AttributeContainerImpl() {}
-
-
+	
+	
 	public void setAttribute(String key, Object value) {
 		setAttribute(key, value, false);
 	}
-
+	
 	public void setAttribute(String key, Object value, boolean isReadOnly) {
 		if (attributes == null) {
 			this.attributes = new HashMap();
@@ -59,35 +64,35 @@ public class AttributeContainerImpl implements AttributeContainer {
 		this.attributes.put(key, value);
 		this.isReadOnly.put(key, new Boolean(isReadOnly));
 	}
-
+	
 	public void removeAttribute(String key) {
 		if (attributes != null && key != null) {
 			this.attributes.remove(key);
 			this.isReadOnly.remove(key);
 		}
 	}
-
+	
 	public void clearAttributes() {
 		if (attributes != null) {
 			this.attributes.clear();
 			this.isReadOnly.clear();
 		}
 	}
-
+	
 	public Object getAttribute(String key) {
 		if (attributes != null && key != null) {
 			return attributes.get(key);
 		}
 		return null;
 	}
-
+	
 	public boolean isReadOnly(String key) {
 		if (isReadOnly != null && key != null) {
 			return ((Boolean) isReadOnly.get(key)).booleanValue();
 		}
 		return false;
 	}
-
+	
 	public void setReadOnly(String key, boolean isReadOnly) {
 		if (attributes == null || !(this.isReadOnly.containsKey(key))) {
 			return;
@@ -101,7 +106,7 @@ public class AttributeContainerImpl implements AttributeContainer {
 		}
 		return 0;
 	}
-
+	
 	public Iterator getAttributeKeys() {
 		if (attributes != null) {
 			return attributes.keySet().iterator();

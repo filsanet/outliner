@@ -44,7 +44,7 @@ import java.awt.*;
  */
  
 public class NodeImpl extends AttributeContainerImpl implements Node {
-
+	
 	// Constants
 	private static final int INITIAL_ARRAY_LIST_SIZE = 10;
 	public static final String KEY_CREATED = "created";
@@ -53,13 +53,13 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	// Class Fields
 	//public static boolean isSettingCreateModDates = false;
 	//private static SimpleDateFormat dateFormat = null;
-		
-	// Instance Fields		
+	
+	// Instance Fields
 	private JoeTree tree = null;
 	private Node parent = null;
 	private String value = null;
 	protected JoeNodeList children = null;
-
+	
 	private int depth = -1; // -1 so that children of root will be depth 0.
 	
 	private boolean expanded = false;
@@ -67,7 +67,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	private boolean partiallyVisible = false;
 	private boolean selected = false;
 	private boolean hoisted = false;
-
+	
 	private int commentState = Node.COMMENT_INHERITED;
 	private int editableState = Node.EDITABLE_INHERITED;
 	private int moveableState = Node.MOVEABLE_INHERITED;
@@ -75,21 +75,19 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	protected int decendantCount = 0;
 	private int decendantCharCount = 0;
 	
-
+	
 	// The Constructors
 	public NodeImpl(JoeTree tree, String value) {
-		
 		this.tree = tree;
 		this.value = value;
 		
 		// Set Creation Date
 		if (tree != null && tree.getDocument() != null && tree.getDocument().getSettings().getUseCreateModDates().cur) {
-			setAttribute(KEY_CREATED, tree.getDocument().settings.dateFormat.format(new Date()), true);
+			super.setAttribute(KEY_CREATED, tree.getDocument().settings.dateFormat.format(new Date()), true);
 		}
-			
-	} // end constructor NodeImpl
+	}
 	
-
+	
 	public void destroy() {
 		if (children != null) {
 			for (int i = 0; i < children.size(); i++) {
@@ -103,7 +101,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		value = null;
 		children = null;
 	}
-
+	
 	// Explicit Cloning Method
 	public Node cloneClean() {
 		NodeImpl nodeImpl = new NodeImpl(tree,value);
@@ -129,8 +127,8 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		
 		return nodeImpl;
 	}
-
-
+	
+	
 	// Statistics Methods
 	private int lineNumber = -1;
 	private int lineNumberUpdateKey = -1;
@@ -138,7 +136,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	public void setLineNumber(int lineNumber) {
 		this.lineNumber = lineNumber;
 	}
-
+	
 	public void setLineNumberKey(int lineNumberUpdateKey) {
 		this.lineNumberUpdateKey = lineNumberUpdateKey;
 	}
@@ -161,7 +159,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		
 		while (true) {
 			runningTotal++;
-
+			
 			next.setLineNumber(runningTotal);
 			next.setLineNumberKey(key);
 				
@@ -179,7 +177,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 			}
 		}
 		
-		return lineNumber;		
+		return lineNumber;
 	}
 	
 	public void adjustDecendantCount(int amount) {
@@ -254,11 +252,11 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		
 		node.setParent(null);
 		children.remove(children.indexOf(node));
-
+		
 		// Adjust Counts
 		adjustDecendantCount(-(node.getDecendantCount() + 1));
 	}
-
+	
 	public void removeChild(Node node, int index) {
 		if (children == null) {
 			return;
@@ -266,7 +264,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		
 		node.setParent(null);
 		children.remove(index);
-
+		
 		// Adjust Counts
 		adjustDecendantCount(-(node.getDecendantCount() + 1));
 	}
@@ -282,12 +280,12 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 			return null;
 		}
 	}
-
+	
 	public Node getFirstChild() {
 		if (children == null) {
 			return null;
 		}
-	
+		
 		if (isLeaf()) {
 			return null;
 		} else {
@@ -299,7 +297,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		if (children == null) {
 			return null;
 		}
-
+		
 		if (isLeaf()) {
 			return null;
 		} else {
@@ -310,7 +308,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	public Node getLastDecendent() {
 		Node node = this;
 		Node child = getLastChild();
-				
+		
 		while (child != null) {
 			node = child;
 			child = node.getLastChild();
@@ -318,7 +316,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		
 		return node;
 	}
-
+	
 	public Node getLastViewableDecendent() {
 		// Shortcut since most calls should exit here.
 		if (!isExpanded()) {
@@ -330,7 +328,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		
 		while (node.isExpanded() && child != null) {
 			node = child;
-			child = node.getLastChild();		
+			child = node.getLastChild();
 		}
 		
 		return node;
@@ -340,10 +338,10 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		if (children == null) {
 			children = Outliner.newNodeList(INITIAL_ARRAY_LIST_SIZE);
 		}
-
+		
 		children.add(i,node);
 		node.setParent(this);
-
+		
 		// Adjust Counts
 		adjustDecendantCount(node.getDecendantCount() + 1);
 	}
@@ -352,7 +350,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		if (children == null) {
 			return -1;
 		}
-
+		
 		return children.indexOf(node);
 	}
 	
@@ -360,7 +358,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		if (children == null) {
 			return true;
 		}
-
+		
 		if (children.isEmpty()) {
 			return true;
 		} else {
@@ -375,7 +373,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 			return false;
 		}
 	}
-
+	
 	// Tree Accessor Methods
 	public JoeTree getTree() {
 		return tree;
@@ -392,7 +390,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	}
 	
 	
-	// Visibility Methods	
+	// Visibility Methods
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
@@ -400,8 +398,8 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	public boolean isVisible() {
 		return visible;
 	}
-
-	// Comment Methods	
+	
+	// Comment Methods
 	public void setCommentState(int commentState) {
 		this.commentState = commentState;
 	}
@@ -424,7 +422,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		
 		return getTree().getRootNodeCommentState();
 	}
-
+	
 	// Editability Methods
 	public void setEditableState(int editableState) {
 		this.editableState = editableState;
@@ -433,7 +431,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	public int getEditableState() {
 		return editableState;
 	}
-
+	
 	public boolean isEditable() {
 		Node node = this;
 		
@@ -457,7 +455,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	public int getMoveableState() {
 		return moveableState;
 	}
-
+	
 	public boolean isMoveable() {
 		Node node = this;
 		
@@ -466,7 +464,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 				return true;
 			} else if (node.getMoveableState() == Node.MOVEABLE_FALSE) {
 				return false;
-			}		
+			}
 			node = node.getParent();
 		}
 		
@@ -491,8 +489,8 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 			return getParent().getHoistedAncestorOrSelf();
 		}
 	}
-
-	// Selection Methods	
+	
+	// Selection Methods
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 	}
@@ -500,7 +498,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	public boolean isSelected() {
 		return selected;
 	}
-
+	
 	public boolean isAncestorSelected() {
 		Node node = this;
 		
@@ -527,7 +525,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		
 		return false;
 	}
-
+	
 	// Depth Methods
 	public void setDepth(int depth) {
 		this.depth = depth;
@@ -542,10 +540,10 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		int childrenCount = numOfChildren();
 		for (int i = 0; i < childrenCount; i++) {
 			getChild(i).setDepthRecursively(depth + 1);
-		}						
+		}
 	}
 	
-	// Navigation Methods	
+	// Navigation Methods
 	public void setExpandedClean(boolean expanded) {
 		this.expanded = expanded;
 	}
@@ -581,37 +579,37 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 						child.setExpanded(false);
 					}
 				}
-			}		
+			}
 		}
 	}
 	
 	public boolean isExpanded() {
 		return this.expanded;
 	}
-
+	
 	public void ExpandAllSubheads() {
 		setExpanded(true);
 		for (int i = 0; i < this.numOfChildren(); i++) {
 			getChild(i).ExpandAllSubheads();
-		}				
+		}
 	}
-
+	
 	public void CollapseAllSubheads() {
 		setExpanded(false);
 		for (int i = 0; i < this.numOfChildren(); i++) {
 			getChild(i).CollapseAllSubheads();
-		}				
+		}
 	}
-
+	
 	public void expandAllAncestors() {
 		Node parent = getParent();
 		
 		while (!parent.isRoot()) {
 			parent.setExpandedClean(true);
-			parent = parent.getParent();		
+			parent = parent.getParent();
 		}
 	}
-
+	
 	public int currentIndex() {
 		Node parent = getParent();
 		if (parent == null) {
@@ -628,7 +626,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 			return false;
 		}
 	}
-
+	
 	public boolean isLastChild() {
 		if (currentIndex() == (getParent().numOfChildren() - 1)) {
 			return true;
@@ -643,7 +641,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		}
 		
 		Node node = getParent().getChild(currentIndex() + 1);
-
+		
 		if(node == null) {
 			return this;
 		} else {
@@ -655,14 +653,14 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		if (getParent() == null) {
 			return this;
 		}
-
+		
 		Node node = getParent().getChild(currentIndex() - 1);
 		
 		if (node == null) {
 			return this;
 		} else {
 			return node;
-		}	
+		}
 	}
 	
 	public Node prevSiblingOrParent() {
@@ -673,7 +671,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 				return this;
 			}
 		}
-		return node;		
+		return node;
 	}
 	
 	public Node next() {
@@ -688,7 +686,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 			}
 		}
 	}
-
+	
 	public Node nextNode() {
 		if (!isLeaf()) {
 			return getChild(0);
@@ -712,18 +710,18 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		
 		return node;
 	}
-
+	
 	public Node nextSelectedSibling() {
 		// This does not test the current node.
 		Node node = nextSibling();
-
+		
 		if (node == this) {
 			return null;
 		}
-				
+		
 		while (!node.isAncestorSelected()) {
 			node = node.nextSibling();
-
+			
 			if (node == this) {
 				return null;
 			}
@@ -736,7 +734,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		Node parent = node.getParent();
 		if (parent == null) {
 			return node;
-		}	
+		}
 		Node nextSiblingOfParent = parent.nextSibling();
 		
 		while (parent == nextSiblingOfParent) {
@@ -762,7 +760,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 			return node.getLastViewableDecendent();
 		}
 	}
-
+	
 	public Node prevUnSelectedNode() {
 		// This does not test the current node.
 		Node node = prev();
@@ -773,18 +771,18 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		
 		return node;
 	}
-
+	
 	public Node prevSelectedSibling() {
 		// This does not test the current node.
 		Node node = prevSibling();
-
+		
 		if (node == this) {
 			return null;
 		}
 				
 		while (!node.isAncestorSelected()) {
 			node = node.prevSibling();
-
+			
 			if (node == this) {
 				return null;
 			}
@@ -792,20 +790,22 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		
 		return node;
 	}
-
+	
 	// Data Methods
 	public void setValue(String value) {
 		this.value = value;
 		
 		// Set Modified Date
 		if (tree.getDocument() != null && tree.getDocument().settings.getUseCreateModDates().cur) {
-			setAttribute(KEY_MODIFIED, tree.getDocument().settings.dateFormat.format(new Date()), true);
+			super.setAttribute(KEY_MODIFIED, tree.getDocument().settings.dateFormat.format(new Date()), true);
 		}
 	}
-	public String getValue() {return value;}
-
-
-	// String Representation Methods	
+	public String getValue() {
+		return value;
+	}
+	
+	
+	// String Representation Methods
 	public void depthPaddedValue(StringBuffer buf, String lineEndString) {
 		if (!isRoot()) {
 			for (int i = 0; i < this.depth; i++) {
@@ -820,9 +820,8 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 			getChild(i).depthPaddedValue(buf, lineEndString);
 		}
 	}
-
+	
 	public void getRecursiveValue(StringBuffer buf, String lineEndString, boolean includeComments) {
-
 		if (includeComments || !isComment()) {
 			buf.append(getValue()).append(lineEndString);
 		}
@@ -843,7 +842,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 			getChild(i).getMergedValue(buf);
 		}
 	}
-
+	
 	public void getMergedValueWithSpaces(StringBuffer buf) {
 		if (buf.length() > 0) {
 			if (buf.charAt(buf.length() - 1) != ' ') {
@@ -872,13 +871,13 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 			super.setAttribute(KEY_MODIFIED, tree.getDocument().settings.dateFormat.format(new Date()), true);
 		}
 	}
-
+	
 	public void removeAttribute(String key) {
 		// Set Modified Date
 		if (tree.getDocument() != null && tree.getDocument().settings.getUseCreateModDates().cur && !KEY_MODIFIED.equals(key) && !KEY_CREATED.equals(key)) {
 			super.setAttribute(KEY_MODIFIED, tree.getDocument().settings.dateFormat.format(new Date()), true);
 		}
-
+		
 		super.removeAttribute(key);
 	}
 }

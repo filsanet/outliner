@@ -52,28 +52,28 @@ import javax.swing.tree.*;
  */
  
 public class AttributesPanel extends AbstractAttributesPanel {
-
+	
 	// Instance Fields
 	protected OutlinerDocument doc = null;
-
-
+	
+	
 	// The Constructor
 	public AttributesPanel(OutlinerDocument doc) {
 		super();
 		this.doc = doc;
 	}
-
-
+	
+	
 	// Data Display
 	public void update() {
 		if (doc.isShowingAttributes()) {
 			AttributeContainer node = doc.tree.getEditingNode();
-
+			
 			model.keys.clear();
 			model.values.clear();
 			model.readOnly.clear();
 			clearSelection();
-
+			
 			Iterator it = node.getAttributeKeys();
 			if (it != null) {
 				while (it.hasNext()) {
@@ -85,73 +85,73 @@ public class AttributesPanel extends AbstractAttributesPanel {
 					model.readOnly.add(new Boolean(readOnly));
 				}
 			}
-
+			
 			if (isEditing()) {
 				getCellEditor().cancelCellEditing();
 			}
-
+			
 			model.fireTableDataChanged();
 		}
 	}
-
+	
 	// Data Modification
 	public void newAttribute(String key, Object value, boolean isReadOnly, AttributeTableModel model) {
  		model.keys.add(key);
 		model.values.add(value);
 		model.readOnly.add(new Boolean(isReadOnly));
-
+		
 	   	Node node = doc.tree.getEditingNode();
 		node.setAttribute(key, value, isReadOnly);
-
+		
 		// undo
 		CompoundUndoable undoable = new CompoundUndoablePropertyChange(doc.tree);
 		undoable.setName("New Node Attribute");
 		Undoable primitive = new PrimitiveUndoableAttributeChange(node, null, null, false, key, value, isReadOnly);
 		undoable.addPrimitive(primitive);
 		doc.getUndoQueue().add(undoable);
-
+		
 		model.fireTableDataChanged();
 	}
-
+	
 	// Delete Attribute
 	public void deleteAttribute(int row, AttributeTableModel model) {
-
-    	Node node = doc.tree.getEditingNode();
+		
+		Node node = doc.tree.getEditingNode();
 		String key = (String) model.keys.get(row);
-
+		
 		Object oldValue = node.getAttribute(key);
 		boolean oldReadOnly = node.isReadOnly(key);
-
+		
 		node.removeAttribute(key);
 		model.keys.remove(row);
 		model.values.remove(row);
 		model.readOnly.remove(row);
-
+		
 		// undo
 		CompoundUndoable undoable = new CompoundUndoablePropertyChange(doc.tree);
 		undoable.setName("Delete Node Attribute");
 		Undoable primitive = new PrimitiveUndoableAttributeChange(node, key, oldValue, oldReadOnly, null, null, false);
 		undoable.addPrimitive(primitive);
 		doc.getUndoQueue().add(undoable);
-
+		
 		model.fireTableRowsDeleted(row, row);
 		
 		update(); // [md] Added so that modification date updates.
 	}
-
+	
 	// Toggle Editability
 	public void toggleEditability(int row, AttributeTableModel model) {
 		Node node = doc.tree.getEditingNode();
 		String key = (String) model.keys.get(row);
-
+		
 		Object oldAndNewValue = node.getAttribute(key);
-
+		
 		boolean oldReadOnly = node.isReadOnly(key);
 		boolean readOnly = !oldReadOnly;
 		
 		node.setReadOnly(key, readOnly);
 		model.readOnly.set(row, new Boolean(readOnly));
-
+		
 		// undo
 		CompoundUndoable undoable = new CompoundUndoablePropertyChange(doc.tree);
 		undoable.setName("Toggle Node Attribute Editability");
@@ -161,43 +161,43 @@ public class AttributesPanel extends AbstractAttributesPanel {
 		
 		update(); // [md] Added so that modification date updates.
 	}
-
+	
 	// Set Value
-    public void setValueAt(Object value, int row, AttributeTableModel model) {
-    	Node node = doc.tree.getEditingNode();
+	public void setValueAt(Object value, int row, AttributeTableModel model) {
+		Node node = doc.tree.getEditingNode();
 		String key = (String) model.keys.get(row);
-
+		
 		boolean readOnly = node.isReadOnly(key);
-
+		
 		Object oldValue = node.getAttribute(key);
 		node.setAttribute(key, value);
 		model.values.set(row, value);
-
+		
 		if (oldValue.equals(value)) {
 			return;
 		}
-
+		
 		// undo
 		CompoundUndoable undoable = new CompoundUndoablePropertyChange(doc.tree);
 		undoable.setName("Edit Node Attribute");
 		Undoable primitive = new PrimitiveUndoableAttributeChange(node, key, oldValue, readOnly, key, value, readOnly);
 		undoable.addPrimitive(primitive);
 		doc.getUndoQueue().add(undoable);
-
+		
 		update(); // [md] Added so that modification date updates.
 	}
-
+	
 	// Misc
 	protected boolean isCellEditable() {
 		Node node = doc.tree.getEditingNode();
-
+		
 		if (!node.isEditable()) {
-    		return false;
-    	}
-
-    	return true;
+			return false;
+		}
+		
+    		return true;
 	}
-
+	
 	protected boolean isCellEditable(int row) {
 		if (!isCellEditable()) {
 			return false;
@@ -205,11 +205,11 @@ public class AttributesPanel extends AbstractAttributesPanel {
 		
 		AttributeContainer node = doc.tree.getEditingNode();
 		String key = (String) model.keys.get(row);
-
+		
 		if (node.isReadOnly(key)) {
-    		return false;
-    	}
-
-    	return true;
+			return false;
+		}
+		
+		return true;
 	}
 }
