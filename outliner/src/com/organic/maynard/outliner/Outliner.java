@@ -544,10 +544,29 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	// Open Document Repository
 	private static ArrayList openDocuments = new ArrayList();
 	private static OutlinerDocument mostRecentDocumentTouched = null;
+	
+	public static Iterator getOpenDocumentIterator(int index) {
+		ArrayList temp = new ArrayList();
+		temp.addAll(openDocuments.subList(index, openDocuments.size()));
+		temp.addAll(openDocuments.subList(0, index));
+		return temp.iterator();
+	}
+	
+	public static Iterator getLoopedOpenDocumentIterator() {
+		return getOpenDocumentIterator(indexOfOpenDocument(mostRecentDocumentTouched));
+	}
+
+	public static Iterator getDefaultOpenDocumentIterator() {
+		return getOpenDocumentIterator(0);
+	}
+	
+	public static int indexOfOpenDocument(OutlinerDocument doc) {
+		return openDocuments.indexOf(doc);
+	}
 
 	public static OutlinerDocument getMostRecentDocumentTouched() {
 		return mostRecentDocumentTouched;
-	} // end method getMostRecentDocumentTouched
+	}
 	
 	public static void setMostRecentDocumentTouched(OutlinerDocument doc) {
 		mostRecentDocumentTouched = doc;

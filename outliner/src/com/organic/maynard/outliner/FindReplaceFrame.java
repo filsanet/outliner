@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner;
 
+import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -55,6 +56,11 @@ import org.apache.oro.text.regex.MatchResult;
 public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionListener, KeyListener, ListSelectionListener {
 
 	// Constants
+	private static final int MODE_CURRENT_DOCUMENT = 1;
+	private static final int MODE_ALL_OPEN_DOCUMENTS = 2;
+	private static final int MODE_FILE_SYSTEM = 3;
+	private static final int MODE_UNKNOWN = -1;
+
 	private static final int MINIMUM_WIDTH = 500;
 	private static final int MINIMUM_HEIGHT = 400;
  	private static final int INITIAL_WIDTH = 500;
@@ -90,6 +96,10 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	private static String IGNORE_CASE = null;
 	private static String INCLUDE_READ_ONLY_NODES = null;
 	private static String REGEXP = null;
+	
+	private static String CURRENT_DOCUMENT = "Current Document";
+	private static String ALL_OPEN_DOCUMENTS = "All Open Documents";
+	private static String FILE_SYSTEM = "File System";
 
 	// Define Fields and Buttons
 	private static JCheckBox CHECKBOX_START_AT_TOP = null;
@@ -98,6 +108,10 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	private static JCheckBox CHECKBOX_IGNORE_CASE = null;
 	private static JCheckBox CHECKBOX_INCLUDE_READ_ONLY_NODES = null;
 	private static JCheckBox CHECKBOX_REGEXP = null;
+
+	private static JRadioButton RADIO_CURRENT_DOCUMENT = null;
+	private static JRadioButton RADIO_ALL_OPEN_DOCUMENTS = null;
+	private static JRadioButton RADIO_FILE_SYSTEM = null;
 	
 	private static JButton BUTTON_FIND = null;
 	private static JButton BUTTON_REPLACE = null;
@@ -123,13 +137,51 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	private static FindReplaceDialog findReplaceDialog = null;
 	
 	// Static Methods
+	private static boolean documentRadiosEnabled = true;
+	
 	public static void enableButtons() {
+		RADIO_CURRENT_DOCUMENT.setEnabled(true);
+		RADIO_ALL_OPEN_DOCUMENTS.setEnabled(true);
+		
+		if (RADIO_CURRENT_DOCUMENT.isSelected()) {
+			enableActionButtons();
+			CHECKBOX_START_AT_TOP.setEnabled(true);
+			CHECKBOX_WRAP_AROUND.setEnabled(true);
+			CHECKBOX_SELECTION_ONLY.setEnabled(true);
+			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
+		} else if (RADIO_ALL_OPEN_DOCUMENTS.isSelected()) {
+			enableActionButtons();		
+			CHECKBOX_START_AT_TOP.setEnabled(false);
+			CHECKBOX_WRAP_AROUND.setEnabled(false);
+			CHECKBOX_SELECTION_ONLY.setEnabled(false);
+			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
+		}
+
+		documentRadiosEnabled = true;
+	}
+
+	public static void disableButtons() {
+		RADIO_CURRENT_DOCUMENT.setEnabled(false);
+		RADIO_ALL_OPEN_DOCUMENTS.setEnabled(false);
+
+		if (RADIO_CURRENT_DOCUMENT.isSelected() || RADIO_ALL_OPEN_DOCUMENTS.isSelected()) {
+			disableActionButtons();
+			CHECKBOX_START_AT_TOP.setEnabled(false);
+			CHECKBOX_WRAP_AROUND.setEnabled(false);
+			CHECKBOX_SELECTION_ONLY.setEnabled(false);
+			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(false);
+		}
+				
+		documentRadiosEnabled = false;
+	}
+
+	private static void enableActionButtons() {
 		BUTTON_FIND.setEnabled(true);
 		BUTTON_REPLACE.setEnabled(true);
 		BUTTON_REPLACE_ALL.setEnabled(true);
 	}
 
-	public static void disableButtons() {
+	private static void disableActionButtons() {
 		BUTTON_FIND.setEnabled(false);
 		BUTTON_REPLACE.setEnabled(false);
 		BUTTON_REPLACE_ALL.setEnabled(false);
@@ -162,7 +214,21 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		CHECKBOX_IGNORE_CASE.addActionListener(this);
 		CHECKBOX_INCLUDE_READ_ONLY_NODES = new JCheckBox(INCLUDE_READ_ONLY_NODES);
 		CHECKBOX_INCLUDE_READ_ONLY_NODES.addActionListener(this);
+
+		RADIO_CURRENT_DOCUMENT = new JRadioButton(CURRENT_DOCUMENT);
+		RADIO_CURRENT_DOCUMENT.addActionListener(this);
+		RADIO_ALL_OPEN_DOCUMENTS = new JRadioButton(ALL_OPEN_DOCUMENTS);
+		RADIO_ALL_OPEN_DOCUMENTS.addActionListener(this);
+		RADIO_FILE_SYSTEM = new JRadioButton(FILE_SYSTEM);
+		RADIO_FILE_SYSTEM.addActionListener(this);
 		
+		// Add the radio buttons to a group.
+		ButtonGroup radioButtonGroup = new ButtonGroup();
+		radioButtonGroup.add(RADIO_CURRENT_DOCUMENT);
+		radioButtonGroup.add(RADIO_ALL_OPEN_DOCUMENTS);
+		radioButtonGroup.add(RADIO_FILE_SYSTEM);
+		RADIO_CURRENT_DOCUMENT.setSelected(true);
+
 		BUTTON_FIND = new JButton(FIND);
 		BUTTON_REPLACE = new JButton(REPLACE);
 		BUTTON_REPLACE_ALL = new JButton(REPLACE_ALL);
@@ -182,11 +248,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		TEXTAREA_FIND.setCursor(cursor);
 		TEXTAREA_FIND.setLineWrap(true);
 		TEXTAREA_FIND.setMargin(insets);
+		TEXTAREA_FIND.setRows(3);
 	
 		TEXTAREA_REPLACE.setName(REPLACE);
 		TEXTAREA_REPLACE.setCursor(cursor);
 		TEXTAREA_REPLACE.setLineWrap(true);
 		TEXTAREA_REPLACE.setMargin(insets);
+		TEXTAREA_REPLACE.setRows(3);
 
 		// Left Panel
 		NEW = GUITreeLoader.reg.getText("new");
@@ -198,7 +266,6 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		LIST.setModel(new DefaultListModel());
 		LIST.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		LIST.addListSelectionListener(this);
-		//LIST.setSelectedIndex(0);
 
 		LIST.addMouseListener(
 			new MouseAdapter() {
@@ -236,35 +303,52 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		rightPanel.setLayout(new BorderLayout());
 		rightPanel.setBorder(new CompoundBorder(new BevelBorder(BevelBorder.RAISED), new EmptyBorder(new Insets(5,5,5,5))));
 				
-		// Define the options Box
-		Box optionsBox = Box.createHorizontalBox();
-			
-			// Scope Options
-			Box scopeOptionsBox = Box.createVerticalBox();
-			scopeOptionsBox.add(CHECKBOX_START_AT_TOP);
-			scopeOptionsBox.add(CHECKBOX_WRAP_AROUND);
-			scopeOptionsBox.add(CHECKBOX_SELECTION_ONLY);
-			scopeOptionsBox.add(CHECKBOX_INCLUDE_READ_ONLY_NODES);
-			
-			// Match Options
-			scopeOptionsBox.add(CHECKBOX_REGEXP);
-			scopeOptionsBox.add(CHECKBOX_IGNORE_CASE);
-			
-			// Define Button Box
-			BUTTON_FIND.addActionListener(this);
-			BUTTON_REPLACE.addActionListener(this);
-			BUTTON_REPLACE_ALL.addActionListener(this);
+		// Match Options
+		JPanel matchOptionsPanel = new JPanel();
+		matchOptionsPanel.setLayout(new BorderLayout());
+		matchOptionsPanel.setBorder(new TitledBorder(" Match "));
+		Box matchOptionsBox = Box.createVerticalBox();
+		matchOptionsBox.add(CHECKBOX_REGEXP);
+		matchOptionsBox.add(CHECKBOX_IGNORE_CASE);
+		matchOptionsPanel.add(matchOptionsBox, BorderLayout.CENTER);
+		
+		// Scope Options
+		JPanel scopeOptionsPanel = new JPanel();
+		scopeOptionsPanel.setLayout(new BorderLayout());
+		scopeOptionsPanel.setBorder(new TitledBorder(" Scope "));
+		Box scopeOptionsBox = Box.createVerticalBox();
+		
+		Box documentScopeBox1 = Box.createHorizontalBox();
+		documentScopeBox1.add(RADIO_CURRENT_DOCUMENT);
+		documentScopeBox1.add(Box.createHorizontalStrut(15));
+		documentScopeBox1.add(RADIO_ALL_OPEN_DOCUMENTS);
+		
+		scopeOptionsBox.add(documentScopeBox1);
+		scopeOptionsBox.add(CHECKBOX_START_AT_TOP);
+		scopeOptionsBox.add(CHECKBOX_WRAP_AROUND);
+		scopeOptionsBox.add(CHECKBOX_SELECTION_ONLY);
+		scopeOptionsBox.add(CHECKBOX_INCLUDE_READ_ONLY_NODES);
 
-			Box buttonBox = Box.createVerticalBox();
-			buttonBox.add(BUTTON_FIND);
-			buttonBox.add(Box.createVerticalStrut(5));
-			buttonBox.add(BUTTON_REPLACE);
-			buttonBox.add(Box.createVerticalStrut(5));
-			buttonBox.add(BUTTON_REPLACE_ALL);
-			
-			// Put it all together
-			optionsBox.add(scopeOptionsBox);
-			optionsBox.add(buttonBox);
+		scopeOptionsBox.add(Box.createVerticalStrut(5));
+
+		Box documentScopeBox2 = Box.createHorizontalBox();
+		documentScopeBox2.add(RADIO_FILE_SYSTEM);
+
+		scopeOptionsBox.add(documentScopeBox2);
+
+		scopeOptionsPanel.add(scopeOptionsBox, BorderLayout.CENTER);
+		
+		// Define Button Box
+		BUTTON_FIND.addActionListener(this);
+		BUTTON_REPLACE.addActionListener(this);
+		BUTTON_REPLACE_ALL.addActionListener(this);
+
+		Box buttonBox = Box.createHorizontalBox();
+		buttonBox.add(BUTTON_FIND);
+		buttonBox.add(Box.createHorizontalStrut(5));
+		buttonBox.add(BUTTON_REPLACE);
+		buttonBox.add(Box.createHorizontalStrut(5));
+		buttonBox.add(BUTTON_REPLACE_ALL);
 
 		// Set the default button.
 		getRootPane().setDefaultButton(BUTTON_FIND);
@@ -287,7 +371,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		
 		findReplaceBox.add(Box.createVerticalStrut(10));
 		
-		findReplaceBox.add(optionsBox);
+		findReplaceBox.add(matchOptionsPanel);
+		findReplaceBox.add(scopeOptionsPanel);
+		findReplaceBox.add(buttonBox);
 		
 		rightPanel.add(findReplaceBox, BorderLayout.CENTER);
 		
@@ -391,6 +477,40 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			model.setIncludeReadOnly(currentIndex, CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected());
 		} else if (e.getActionCommand().equals(REGEXP)) {
 			model.setRegExp(currentIndex, CHECKBOX_REGEXP.isSelected());
+		
+		// RadioButtons
+		} else if (e.getActionCommand().equals(CURRENT_DOCUMENT)) {
+			enableActionButtons();
+			CHECKBOX_START_AT_TOP.setEnabled(true);
+			CHECKBOX_WRAP_AROUND.setEnabled(true);
+			CHECKBOX_SELECTION_ONLY.setEnabled(true);
+			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
+
+		} else if (e.getActionCommand().equals(ALL_OPEN_DOCUMENTS)) {
+			enableActionButtons();
+			CHECKBOX_START_AT_TOP.setEnabled(false);
+			CHECKBOX_WRAP_AROUND.setEnabled(false);
+			CHECKBOX_SELECTION_ONLY.setEnabled(false);
+			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
+			
+		} else if (e.getActionCommand().equals(FILE_SYSTEM)) {
+			enableActionButtons();
+			CHECKBOX_START_AT_TOP.setEnabled(false);
+			CHECKBOX_WRAP_AROUND.setEnabled(false);
+			CHECKBOX_SELECTION_ONLY.setEnabled(false);
+			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(false);
+		}
+	}
+	
+	private int getFindReplaceMode() {
+		if (RADIO_CURRENT_DOCUMENT.isSelected()) {
+			return MODE_CURRENT_DOCUMENT;
+		} else if (RADIO_ALL_OPEN_DOCUMENTS.isSelected()) {
+			return MODE_ALL_OPEN_DOCUMENTS;
+		} else if (RADIO_FILE_SYSTEM.isSelected()) {
+			return MODE_FILE_SYSTEM;
+		} else {
+			return MODE_UNKNOWN;
 		}
 	}
 	
@@ -417,45 +537,113 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 	}
 	
 	private void find(OutlinerDocument doc) {
-		find(
-			doc, 
-			TEXTAREA_FIND.getText(), 
-			TEXTAREA_REPLACE.getText(), 
-			CHECKBOX_SELECTION_ONLY.isSelected(), 
-			CHECKBOX_START_AT_TOP.isSelected(),
-			CHECKBOX_IGNORE_CASE.isSelected(), 
-			CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
-			CHECKBOX_WRAP_AROUND.isSelected(),
-			CHECKBOX_REGEXP.isSelected()
-		);
+		int mode = getFindReplaceMode();
+		
+		switch (mode) {
+			case MODE_CURRENT_DOCUMENT:
+				find(
+					doc, 
+					TEXTAREA_FIND.getText(), 
+					TEXTAREA_REPLACE.getText(), 
+					CHECKBOX_SELECTION_ONLY.isSelected(), 
+					CHECKBOX_START_AT_TOP.isSelected(),
+					CHECKBOX_IGNORE_CASE.isSelected(), 
+					CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
+					CHECKBOX_WRAP_AROUND.isSelected(),
+					CHECKBOX_REGEXP.isSelected()
+				);
+				break;
+			
+			case MODE_ALL_OPEN_DOCUMENTS:
+				findAllOpenDocuments(
+					TEXTAREA_FIND.getText(), 
+					TEXTAREA_REPLACE.getText(), 
+					CHECKBOX_SELECTION_ONLY.isSelected(), 
+					CHECKBOX_START_AT_TOP.isSelected(),
+					CHECKBOX_IGNORE_CASE.isSelected(), 
+					CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
+					CHECKBOX_WRAP_AROUND.isSelected(),
+					CHECKBOX_REGEXP.isSelected()
+				);
+				break;
+			
+			case MODE_FILE_SYSTEM:
+				break;
+			
+			case MODE_UNKNOWN:
+				System.out.println("ERROR: Unknown Find/Replace mode.");
+				break;
+		}
 	}
 
 	private void replace(OutlinerDocument doc) {
-		replace(
-			doc, 
-			TEXTAREA_FIND.getText(), 
-			TEXTAREA_REPLACE.getText(), 
-			CHECKBOX_SELECTION_ONLY.isSelected(), 
-			CHECKBOX_START_AT_TOP.isSelected(),
-			CHECKBOX_IGNORE_CASE.isSelected(), 
-			CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
-			CHECKBOX_WRAP_AROUND.isSelected(),
-			CHECKBOX_REGEXP.isSelected()
-		);
+		int mode = getFindReplaceMode();
+
+		switch (mode) {
+			case MODE_CURRENT_DOCUMENT:
+				replace(
+					doc, 
+					TEXTAREA_FIND.getText(), 
+					TEXTAREA_REPLACE.getText(), 
+					CHECKBOX_SELECTION_ONLY.isSelected(), 
+					CHECKBOX_START_AT_TOP.isSelected(),
+					CHECKBOX_IGNORE_CASE.isSelected(), 
+					CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
+					CHECKBOX_WRAP_AROUND.isSelected(),
+					CHECKBOX_REGEXP.isSelected()
+				);
+				break;
+			
+			case MODE_ALL_OPEN_DOCUMENTS:
+				replaceAllOpenDocuments(
+					TEXTAREA_FIND.getText(), 
+					TEXTAREA_REPLACE.getText(), 
+					CHECKBOX_SELECTION_ONLY.isSelected(), 
+					CHECKBOX_START_AT_TOP.isSelected(),
+					CHECKBOX_IGNORE_CASE.isSelected(), 
+					CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
+					CHECKBOX_WRAP_AROUND.isSelected(),
+					CHECKBOX_REGEXP.isSelected()
+				);
+				break;
+			
+			case MODE_FILE_SYSTEM:
+				break;
+			
+			case MODE_UNKNOWN:
+				System.out.println("ERROR: Unknown Find/Replace mode.");
+				break;
+		}
 	}
 
 	private void replace_all(OutlinerDocument doc) {
-		replaceAll(
-			doc, 
-			TEXTAREA_FIND.getText(), 
-			TEXTAREA_REPLACE.getText(), 
-			CHECKBOX_SELECTION_ONLY.isSelected(), 
-			CHECKBOX_START_AT_TOP.isSelected(),
-			CHECKBOX_IGNORE_CASE.isSelected(), 
-			CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
-			CHECKBOX_WRAP_AROUND.isSelected(),
-			CHECKBOX_REGEXP.isSelected()
-		);
+		int mode = getFindReplaceMode();
+
+		switch (mode) {
+			case MODE_CURRENT_DOCUMENT:
+				replaceAll(
+					doc, 
+					TEXTAREA_FIND.getText(), 
+					TEXTAREA_REPLACE.getText(), 
+					CHECKBOX_SELECTION_ONLY.isSelected(), 
+					CHECKBOX_START_AT_TOP.isSelected(),
+					CHECKBOX_IGNORE_CASE.isSelected(), 
+					CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
+					CHECKBOX_WRAP_AROUND.isSelected(),
+					CHECKBOX_REGEXP.isSelected()
+				);
+				break;
+			
+			case MODE_ALL_OPEN_DOCUMENTS:
+				break;
+			
+			case MODE_FILE_SYSTEM:
+				break;
+			
+			case MODE_UNKNOWN:
+				System.out.println("ERROR: Unknown Find/Replace mode.");
+				break;
+		}
 	}
 		
 	// This method is public and should have no direct dependancy on 
@@ -517,6 +705,109 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 
 			// Redraw and Set Focus
 			doc.panel.layout.draw(location.node,OutlineLayoutManager.TEXT);
+		}
+	}
+
+
+	// This method is public and should have no direct dependancy on 
+	// find/replace GUI so that it can be called from other classes.
+	public void findAllOpenDocuments(
+		String sFind,
+		String sReplace,
+		boolean selectionOnly,
+		boolean startAtTop,
+		boolean ignoreCase,
+		boolean includeReadOnlyNodes,
+		boolean wrapAround,
+		boolean isRegexp
+	) {
+		Iterator openDocuments = Outliner.getLoopedOpenDocumentIterator();
+		
+		boolean matchFound = false;
+		
+		while (openDocuments.hasNext()) {
+			OutlinerDocument doc = (OutlinerDocument) openDocuments.next();
+			
+			NodeRangePair location = null;
+			
+			if (doc == Outliner.getMostRecentDocumentTouched()) {
+				location = findLocation(
+					doc, 
+					sFind, 
+					sReplace, 
+					false, 
+					selectionOnly, 
+					startAtTop,
+					ignoreCase, 
+					includeReadOnlyNodes, 
+					wrapAround,
+					isRegexp
+				);
+			} else {
+				Node firstNode = doc.tree.getRootNode().getFirstChild();
+				Node lastNode = doc.tree.getRootNode().getLastChild().getLastDecendent();
+				
+				location = findText(
+					firstNode,
+					0, 
+					lastNode, 
+					lastNode.getValue().length(), 
+					sFind,
+					sReplace, 
+					false, 
+					false,
+					false,
+					ignoreCase,
+					includeReadOnlyNodes,
+					false,
+					isRegexp
+				);
+			}
+
+			if (location == null) {
+				
+			} else {
+				// Shorthand
+				JoeTree tree = doc.tree;
+	
+				// Insert the node into the visible nodes and clear the selection.
+				tree.insertNode(location.node);
+				tree.clearSelection();
+				
+				// Record the EditingNode and CursorPosition
+				tree.setEditingNode(location.node);
+				tree.setCursorPosition(location.endIndex);
+				tree.setCursorMarkPosition(location.startIndex);
+				tree.setComponentFocus(OutlineLayoutManager.TEXT);
+				
+				// Update Preferred Caret Position
+				doc.setPreferredCaretPosition(location.endIndex);
+				
+				// Freeze Undo Editing
+				UndoableEdit.freezeUndoEdit(location.node);
+				
+				// Bring the window to the front
+				Outliner.outliner.requestFocus();
+				WindowMenu.changeToWindow(doc);
+				
+				matchFound = true;
+				break;
+			}
+		}
+		
+		if (!matchFound) {
+			// One last try on the entire current doc since we may have missed a match in the portion of the doc before the cursor..
+			find(
+				Outliner.getMostRecentDocumentTouched(), 
+				sFind,
+				sReplace,
+				false,
+				true,
+				ignoreCase,
+				includeReadOnlyNodes,
+				false,
+				isRegexp
+			);
 		}
 	}
 
@@ -600,6 +891,128 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		}
 	}
 
+	// This method is public and should have no direct dependancy on 
+	// find/replace GUI so that it can be called from other classes.
+	public void replaceAllOpenDocuments(
+		String sFind,
+		String sReplace,
+		boolean selectionOnly,
+		boolean startAtTop,
+		boolean ignoreCase,
+		boolean includeReadOnlyNodes,
+		boolean wrapAround,
+		boolean isRegexp
+	) {
+		Iterator openDocuments = Outliner.getLoopedOpenDocumentIterator();
+		
+		boolean matchFound = false;
+		
+		while (openDocuments.hasNext()) {
+			OutlinerDocument doc = (OutlinerDocument) openDocuments.next();
+			
+			NodeRangePair location = null;
+			
+			if (doc == Outliner.getMostRecentDocumentTouched()) {
+				location = findLocation(
+					doc, 
+					sFind, 
+					sReplace, 
+					false, 
+					selectionOnly, 
+					startAtTop,
+					ignoreCase, 
+					includeReadOnlyNodes, 
+					wrapAround,
+					isRegexp
+				);
+			} else {
+				Node firstNode = doc.tree.getRootNode().getFirstChild();
+				Node lastNode = doc.tree.getRootNode().getLastChild().getLastDecendent();
+				
+				location = findText(
+					firstNode,
+					0, 
+					lastNode, 
+					lastNode.getValue().length(), 
+					sFind,
+					sReplace, 
+					false, 
+					false,
+					false,
+					ignoreCase,
+					includeReadOnlyNodes,
+					false,
+					isRegexp
+				);
+			}
+
+			if (location == null) {
+				
+			} else {
+				// Shorthand
+				JoeTree tree = doc.tree;
+	
+				// Create the undoable
+				int difference = sReplace.length() - (location.endIndex - location.startIndex);
+				if (isRegexp) {
+					difference = this.difference;
+				}
+	
+				String oldText = location.node.getValue();
+				String newText = oldText.substring(0,location.startIndex) + sReplace + oldText.substring(location.endIndex,oldText.length());
+	
+				if (isRegexp) {
+					newText = oldText.substring(0,location.startIndex) + this.replacementText;
+				}
+											
+				int oldPosition = location.endIndex;
+				int newPosition = location.endIndex + difference;
+				doc.undoQueue.add(new UndoableEdit(location.node,oldText,newText,oldPosition,newPosition,oldPosition,location.startIndex));
+	
+				// Update the model
+				location.node.setValue(newText);
+				
+				// Insert the node into the visible nodes and clear the selection.
+				tree.insertNode(location.node);
+				tree.clearSelection();
+				
+				// Record the EditingNode and CursorPosition
+				tree.setEditingNode(location.node);
+				tree.setCursorPosition(location.endIndex + difference);
+				tree.setCursorMarkPosition(location.startIndex);
+				tree.setComponentFocus(OutlineLayoutManager.TEXT);
+				
+				// Update Preferred Caret Position
+				doc.setPreferredCaretPosition(location.endIndex);
+				
+				// Freeze Undo Editing
+				UndoableEdit.freezeUndoEdit(location.node);
+	
+				// Bring the window to the front
+				Outliner.outliner.requestFocus();
+				WindowMenu.changeToWindow(doc);
+				
+				matchFound = true;
+				break;
+			}
+		}
+		
+		if (!matchFound) {
+			// One last try on the entire current doc since we may have missed a match in the portion of the doc before the cursor..
+			replace(
+				Outliner.getMostRecentDocumentTouched(), 
+				sFind,
+				sReplace,
+				false,
+				true,
+				ignoreCase,
+				includeReadOnlyNodes,
+				false,
+				isRegexp
+			);
+		}
+	}
+	
 	public void replaceAll(
 		OutlinerDocument doc, 
 		String sFind,
@@ -1002,7 +1415,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			}
 		}
 		
-		// We rean out of places to look.
+		// We ran out of places to look.
 		if (done) {
 			return null;
 		}
