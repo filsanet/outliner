@@ -159,7 +159,6 @@ public class NodeImpl implements Node {
 		
 		// Adjust Counts
 		adjustDecendantCount(node.getDecendantCount() + 1);
-		//adjustDecendantCharCount(node.getDecendantCharCount() + node.getValue().length());
 	}
 	
 	public void removeChild(Node node) {
@@ -168,7 +167,6 @@ public class NodeImpl implements Node {
 
 		// Adjust Counts
 		adjustDecendantCount(-(node.getDecendantCount() + 1));
-		//adjustDecendantCharCount(-(node.getDecendantCharCount() + node.getValue().length()));
 	}
 	
 	public Node getChild(int i) {
@@ -548,24 +546,14 @@ public class NodeImpl implements Node {
 			return node;
 		}
 	}
-	
-	// Data Methods
-	public void setValue(String value) {
-		//int oldLength = this.value.length();
-		this.value = value;
 
-		// Adjust Counts
-		//if (!isRoot()) {
-		//	getParent().adjustDecendantCharCount(value.length() - oldLength);
-		//}
-	}
+
+	// Data Methods
+	public void setValue(String value) {this.value = value;}
 	public String getValue() {return value;}
 
-	// String Representation Methods
-	public String depthPaddedValue() {
-		return depthPaddedValue(Preferences.platformToLineEnding(Preferences.LINE_END.cur));
-	}
-	
+
+	// String Representation Methods	
 	public String depthPaddedValue(String lineEndString) {
 		StringBuffer retVal = new StringBuffer();
 		

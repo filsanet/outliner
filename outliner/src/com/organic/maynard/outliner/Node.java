@@ -115,7 +115,6 @@ public interface Node {
 	public String getValue();
 
 	// String Representation Methods
-	public String depthPaddedValue();
 	public String depthPaddedValue(String lineEndString);
 	
 	public void getMergedValue(StringBuffer buf);

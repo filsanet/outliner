@@ -49,18 +49,12 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	}
 
 	// MouseListener Interface
-	public void mouseEntered(MouseEvent e) {
-		//System.out.println("ICON Mouse Entered: " + e.paramString());
-	}
+	public void mouseEntered(MouseEvent e) {}
 	
-	public void mouseExited(MouseEvent e) {
-		//System.out.println("ICON Mouse Exited: " + e.paramString());
-	}
+	public void mouseExited(MouseEvent e) {}
 	
 	public void mousePressed(MouseEvent e) {
 		recordRenderer(e.getComponent());
-		
-		//System.out.println("ICON Mouse Pressed: " + e.paramString());
 		
 		// This is detection for Solaris
 		if (e.isPopupTrigger() && textArea.node.isSelected()) {
@@ -79,9 +73,31 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		tree.setEditingNode(textArea.node);
 		tree.setComponentFocus(outlineLayoutManager.ICON);
 		
+		// Store the node
+		Node node = textArea.node;
+		
 		// Redraw and set focus
 		textArea.button.requestFocus();
 		tree.doc.panel.layout.draw();
+		
+		// Consume the current event and then propogate a new event to
+		// the DnD listener since if a drawUp() happened, the old event
+		// will most likely have an invalid component.
+		//OutlinerCellRendererImpl c = tree.doc.panel.layout.getUIComponent(node);
+		//textArea = c;
+		e.consume();
+
+		MouseEvent eNew = new MouseEvent(
+			tree.doc.panel.layout.getUIComponent(node).button, 
+			e.getID(), 
+			e.getWhen(), 
+			e.getModifiers(), 
+			e.getX(), 
+			e.getY(), 
+			e.getClickCount(), 
+			e.isPopupTrigger()
+		);
+		tree.doc.panel.layout.dndListener.mousePressed(eNew);
 	}
 	
 	public void mouseReleased(MouseEvent e) {
@@ -201,13 +217,6 @@ public class IconKeyListener implements KeyListener, MouseListener {
 				} else {
 					demote(tree,layout);
 				}
-				// Update the selection model
-				Node youngestNode = tree.getYoungestInSelection();
-				tree.setSelectedNodesParent(youngestNode.getParent(),false);
-	
-				// Redraw and Set Focus
-				layout.draw(youngestNode,outlineLayoutManager.ICON);
-				
 				break;
 
 			case KeyEvent.VK_C:
@@ -368,36 +377,19 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 		// Put the Undoable onto the UndoQueue
 		CompoundUndoableMove undoable = new CompoundUndoableMove(node.getParent(),node.getParent());
-		tree.doc.undoQueue.add(undoable);
-
-		// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
-		Node nodeToDrawFromTmp = layout.getNodeToDrawFrom().prevUnSelectedNode();
-	
+		int targetIndex = node.currentIndex();
+		
 		for (int i = 0; i < tree.selectedNodes.size(); i++) {
 			// Record the Insert in the undoable
 			Node nodeToMove = (Node) tree.selectedNodes.get(i);
-			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), node.currentIndex()));
-			tree.moveNodeAboveAsSibling(nodeToMove,node);
+			int currentIndex = nodeToMove.currentIndex();
+			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, currentIndex, targetIndex));
+			targetIndex++;
 		}
 
-		// Redraw and Set Focus
-		if (layout.getNodeToDrawFrom().isAncestorSelected()) { // Makes sure we dont' stick at the bottom when multiple nodes are selected.
-			Node visNode = layout.getNodeToDrawFrom().next();
-			int ioVisNode = tree.visibleNodes.indexOf(visNode);
-			int ioNodeToDrawFromTmp = tree.visibleNodes.indexOf(nodeToDrawFromTmp);
-			if (ioVisNode > ioNodeToDrawFromTmp) {
-				layout.setNodeToDrawFrom(visNode, ioVisNode);
-			} else {
-				layout.setNodeToDrawFrom(nodeToDrawFromTmp, ioNodeToDrawFromTmp);
-			}
-		} else {
-			int ioYoungestNode = tree.visibleNodes.indexOf(youngestNode);
-			if (layout.getIndexOfNodeToDrawFrom() == ioYoungestNode) {
-				layout.setNodeToDrawFrom(youngestNode, ioYoungestNode);
-			}
-		}
+		tree.doc.undoQueue.add(undoable);
 		
-		layout.draw(youngestNode,outlineLayoutManager.ICON);
+		undoable.redo();
 	}
 	
 	private void moveDown(TreeContext tree, outlineLayoutManager layout) {
@@ -409,37 +401,20 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 		// Put the Undoable onto the UndoQueue
 		CompoundUndoableMove undoable = new CompoundUndoableMove(node.getParent(),node.getParent());
-		tree.doc.undoQueue.add(undoable);
-	
-		// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
-		Node nodeToDrawFromTmp = layout.getNodeToDrawFrom().nextUnSelectedNode();
+		int targetIndex = node.currentIndex();
 		
 		// Do the move
 		for (int i = tree.selectedNodes.size() - 1; i >= 0; i--) {
 			// Record the Insert in the undoable
 			Node nodeToMove = (Node) tree.selectedNodes.get(i);
-			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), node.currentIndex()));
-			tree.moveNodeBelowAsSibling(nodeToMove,node);
+			int currentIndex = nodeToMove.currentIndex();
+			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, currentIndex, targetIndex));
+			targetIndex--;
 		}
+
+		tree.doc.undoQueue.add(undoable);
 		
-		// Redraw and Set Focus
-		if (layout.getNodeToDrawFrom().isAncestorSelected()) { // Makes sure we dont' stick at the top when multiple nodes are selected.
-			Node visNode = layout.getNodeToDrawFrom().prev();
-			int ioVisNode = tree.visibleNodes.indexOf(visNode);
-			int ioNodeToDrawFromTmp = tree.visibleNodes.indexOf(nodeToDrawFromTmp);
-			if (ioVisNode < ioNodeToDrawFromTmp) {
-				layout.setNodeToDrawFrom(visNode, ioVisNode);
-			} else {
-				layout.setNodeToDrawFrom(nodeToDrawFromTmp, ioNodeToDrawFromTmp);
-			}
-		} else {
-			int ioOldestNode = tree.visibleNodes.indexOf(oldestNode.getLastViewableDecendent());
-			if (layout.getIndexOfNodeToDrawFrom() == ioOldestNode) {
-				layout.setNodeToDrawFrom(oldestNode.getLastViewableDecendent(), ioOldestNode);
-			}
-		}
-		
-		layout.draw(oldestNode.getLastViewableDecendent(), outlineLayoutManager.ICON);
+		undoable.redo();
 	}
 
 	private void moveLeft(TreeContext tree, outlineLayoutManager layout) {
@@ -452,39 +427,24 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 		// Put the Undoable onto the UndoQueue
 		CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(), node.getParent());
-		tree.doc.undoQueue.add(undoable);
-
-		// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
-		Node nodeToDrawFromTmp = layout.getNodeToDrawFrom().prevUnSelectedNode();
-	
+		int targetIndex = node.currentIndex();
+		int currentIndexAdj = 0;
+		
 		for (int i = 0; i < tree.selectedNodes.size(); i++) {
 			// Record the Insert in the undoable
 			Node nodeToMove = (Node) tree.selectedNodes.get(i);
-			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), node.currentIndex()));
-			tree.moveNodeAbove(nodeToMove,node);
+			int currentIndex = nodeToMove.currentIndex() + currentIndexAdj;
+			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, currentIndex, targetIndex));
+			
+			if (nodeToMove.getParent() != node.getParent()) {
+				currentIndexAdj--;
+			}
+			targetIndex++;
 		}
 
-		// Update the selection model
-		tree.setSelectedNodesParent(node.getParent(),false);
-
-		// Redraw and Set Focus
-		if (layout.getNodeToDrawFrom().isAncestorSelected()) { // Makes sure we dont' stick at the bottom when multiple nodes are selected.
-			Node visNode = layout.getNodeToDrawFrom().next();
-			int ioVisNode = tree.visibleNodes.indexOf(visNode);
-			int ioNodeToDrawFromTmp = tree.visibleNodes.indexOf(nodeToDrawFromTmp);
-			if (ioVisNode > ioNodeToDrawFromTmp) {
-				layout.setNodeToDrawFrom(visNode, ioVisNode);
-			} else {
-				layout.setNodeToDrawFrom(nodeToDrawFromTmp, ioNodeToDrawFromTmp);
-			}
-		} else {
-			int ioYoungestNode = tree.visibleNodes.indexOf(youngestNode);
-			if (layout.getIndexOfNodeToDrawFrom() == ioYoungestNode) {
-				layout.setNodeToDrawFrom(youngestNode, ioYoungestNode);
-			}
-		}
+		tree.doc.undoQueue.add(undoable);
 		
-		layout.draw(youngestNode,outlineLayoutManager.ICON);
+		undoable.redo();		
 	}
 
 
@@ -497,56 +457,35 @@ public class IconKeyListener implements KeyListener, MouseListener {
 
 		// Put the Undoable onto the UndoQueue
 		CompoundUndoableMove undoable;
+		int targetIndex = -1;
 		if ((!node.isLeaf() && node.isExpanded())) {
-			undoable = new CompoundUndoableMove(oldestNode.getParent(),node);				
+			undoable = new CompoundUndoableMove(oldestNode.getParent(),node);
+			targetIndex = 0;
+		} else if (tree.getSelectedNodesParent() != node.getParent()) {
+			undoable = new CompoundUndoableMove(oldestNode.getParent(),node.getParent());
+			targetIndex = node.currentIndex() + 1;
 		} else {
 			undoable = new CompoundUndoableMove(oldestNode.getParent(),node.getParent());
+			targetIndex = node.currentIndex();
 		}
-		tree.doc.undoQueue.add(undoable);
-
-		// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
-		Node nodeToDrawFromTmp = layout.getNodeToDrawFrom().nextUnSelectedNode();
 	
 		for (int i = tree.selectedNodes.size() - 1; i >= 0; i--) {
 			// Record the Insert in the undoable
 			Node nodeToMove = (Node) tree.selectedNodes.get(i);
+			int currentIndex = nodeToMove.currentIndex();
 			
-			int targetIndex = 0;
-			if ((!node.isLeaf() && node.isExpanded())) {
-				// do nothing
+			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, currentIndex, targetIndex));
+
+			if ((!node.isLeaf() && node.isExpanded()) || (nodeToMove.getParent() != node.getParent())) {
+				// Do Nothing.
 			} else {
-				targetIndex = node.currentIndex();
+				targetIndex--;
 			}
-
-			if (nodeToMove.getParent() != node.getParent()) {
-				targetIndex++;
-			}
-			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), targetIndex));
-
-			tree.moveNodeBelow(nodeToMove,node);
 		}
 
-		// Update the selection model
-		tree.setSelectedNodesParent(node.getParent(),false);
-
-		// Redraw and Set Focus
-		if (layout.getNodeToDrawFrom().isAncestorSelected()) { // Makes sure we dont' stick at the top when multiple nodes are selected.
-			Node visNode = layout.getNodeToDrawFrom().prev();
-			int ioVisNode = tree.visibleNodes.indexOf(visNode);
-			int ioNodeToDrawFromTmp = tree.visibleNodes.indexOf(nodeToDrawFromTmp);
-			if (ioVisNode < ioNodeToDrawFromTmp) {
-				layout.setNodeToDrawFrom(visNode, ioVisNode);
-			} else {
-				layout.setNodeToDrawFrom(nodeToDrawFromTmp, ioNodeToDrawFromTmp);
-			}
-		} else {
-			int ioOldestNode = tree.visibleNodes.indexOf(oldestNode.getLastViewableDecendent());
-			if (layout.getIndexOfNodeToDrawFrom() == ioOldestNode) {
-				layout.setNodeToDrawFrom(oldestNode.getLastViewableDecendent(), ioOldestNode);
-			}
-		}
+		tree.doc.undoQueue.add(undoable);
 		
-		layout.draw(oldestNode.getLastViewableDecendent(), outlineLayoutManager.ICON);
+		undoable.redo();
 	}
 
 	private void insert(TreeContext tree, outlineLayoutManager layout) {
@@ -598,10 +537,11 @@ public class IconKeyListener implements KeyListener, MouseListener {
 			// Record the Insert in the undoable
 			Node nodeToMove = (Node) tree.selectedNodes.get(i);
 			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), targetIndex));
-			tree.promoteNode(nodeToMove);
 		}
 		
 		tree.doc.undoQueue.add(undoable);
+		
+		undoable.redo();
 	}
 
 	private void demote(TreeContext tree, outlineLayoutManager layout) {
@@ -617,14 +557,15 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(),targetNode);
 		
 		int existingChildren = targetNode.numOfChildren();
-		for (int i = 0; i < tree.selectedNodes.size(); i++) {
+		for (int i = tree.selectedNodes.size() - 1; i >= 0; i--) {
 			// Record the Insert in the undoable
 			Node nodeToMove = (Node) tree.selectedNodes.get(i);
-			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), (existingChildren + i)));
-			tree.demoteNode(nodeToMove,targetNode);
+			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), existingChildren));
 		}
 		
 		tree.doc.undoQueue.add(undoable);
+		
+		undoable.redo();
 	}
 
 	private void copy(TreeContext tree, outlineLayoutManager layout) {

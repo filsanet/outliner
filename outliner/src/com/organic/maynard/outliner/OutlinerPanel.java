@@ -19,6 +19,7 @@
 package com.organic.maynard.outliner;
 
 import javax.swing.*;
+import java.awt.event.*;
 
 public class outlinerPanel extends JPanel {
 
@@ -33,6 +34,8 @@ public class outlinerPanel extends JPanel {
 		this.doc = doc;
 		setBackground(Preferences.PANEL_BACKGROUND_COLOR.cur);
 		setLayout(layout);
+		
+		//addMouseMotionListener(new TestMouseMotionListener());
 	}
 	
 	public void destroy() {
@@ -45,4 +48,12 @@ public class outlinerPanel extends JPanel {
 		
 		removeAll();
 	}
+}
+
+public class TestMouseMotionListener extends MouseMotionAdapter {
+
+	public void mouseMoved(MouseEvent e) {
+		System.out.println("[" + e.getX() + "," + e.getY() + "]");
+	}
+
 }

@@ -39,7 +39,7 @@ public class PreferenceColor extends AbstractPreference {
 	}
 
 	public String toString() {
-		return (cur.getRed() + "," + cur.getGreen() + "," + cur.getBlue());
+		return ("" + cur.getRGB());
 	}
 	
 	// Preference Interface
@@ -58,4 +58,15 @@ public class PreferenceColor extends AbstractPreference {
 	public void applyTemporaryToCurrent(){
 		cur = new Color(tmp.getRGB());
 	}
+
+
+	// Class Methods
+	protected static final Color parseColor(String rgb) {
+		try {
+			return new Color(Integer.parseInt(rgb));
+		} catch (Exception e) {
+			return new Color(0);
+		}
+	}
+
 }

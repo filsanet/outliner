@@ -58,7 +58,7 @@ public class XMLRPCMacro extends MacroImpl {
 		
 	public NodeRangePair process(NodeRangePair nodeRangePair) {
 		// Create the XMLRPC Request String
-		String requestXmlString = nodeRangePair.node.depthPaddedValue();
+		String requestXmlString = nodeRangePair.node.depthPaddedValue(Preferences.LINE_END.cur);
 		
 		// Trim leading crap before the XML declaration
 		requestXmlString = requestXmlString.substring(requestXmlString.indexOf("<"),requestXmlString.length());

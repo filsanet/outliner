@@ -18,20 +18,14 @@
  
 package com.organic.maynard.outliner;
 
-import java.awt.*;
-import java.util.*;
-import java.io.*;
-
 import com.organic.maynard.util.*;
+import java.util.*;
 
 public class LoadMacroClassCommand extends Command {
-	
-	public Outliner outliner = null;
-	
+		
 	// The Constructors
-	public LoadMacroClassCommand(String name, int numOfArgs, Outliner outliner) {
+	public LoadMacroClassCommand(String name, int numOfArgs) {
 		super(name,numOfArgs);
-		this.outliner = outliner;
 	}
 
 	public synchronized void execute(Vector signature) {

@@ -18,20 +18,14 @@
  
 package com.organic.maynard.outliner;
 
-import java.awt.*;
-import java.util.*;
-import java.io.*;
-
 import com.organic.maynard.util.*;
+import java.util.*;
 
 public class LoadFileFormatClassCommand extends Command {
 	
-	public Outliner outliner = null;
-	
 	// The Constructors
-	public LoadFileFormatClassCommand(String name, int numOfArgs, Outliner outliner) {
+	public LoadFileFormatClassCommand(String name, int numOfArgs) {
 		super(name,numOfArgs);
-		this.outliner = outliner;
 	}
 
 	public synchronized void execute(Vector signature) {

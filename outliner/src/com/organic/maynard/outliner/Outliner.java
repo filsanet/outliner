@@ -77,9 +77,9 @@ public class Outliner extends JFrame implements ClipboardOwner {
 		outliner = this;
 		
 		// Load Preferences
-		PARSER.addCommand(new SetPrefCommand(COMMAND_SET,2,this));
-		PARSER.addCommand(new LoadMacroClassCommand(COMMAND_MACRO_CLASS,2,this));
-		PARSER.addCommand(new LoadFileFormatClassCommand(COMMAND_FILE_FORMAT,2,this));
+		PARSER.addCommand(new SetPrefCommand(COMMAND_SET,2));
+		PARSER.addCommand(new LoadMacroClassCommand(COMMAND_MACRO_CLASS,2));
+		PARSER.addCommand(new LoadFileFormatClassCommand(COMMAND_FILE_FORMAT,2));
 
 		System.out.println("Loading Config...");
 		loadPrefsFile(PARSER,CONFIG_FILE);

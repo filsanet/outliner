@@ -27,15 +27,6 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class OutlinerFileChooser extends JFileChooser {
-	
-	// Constants
-	//public static final String MODE_SAVE = "save";
-	//public static final String MODE_OPEN = "open";
-
-	// These 3 prefs seem useless. I think they only deal with setting initial state.
-	//private PreferenceString chooserLineEnd = null;
-	//private PreferenceString chooserEncoding = null;
-	//private PreferenceString chooserFileFormat = null;
 
 	private JPanel openAccessory = new JPanel();
 	private JPanel saveAccessory = new JPanel();
@@ -48,17 +39,7 @@ public class OutlinerFileChooser extends JFileChooser {
 
 	
 	// The Constructor
-	public OutlinerFileChooser() {
-		//chooserLineEnd = new PreferenceString(Preferences.LINE_END.cur,Preferences.LINE_END.cur,"");
-		//chooserEncoding = new PreferenceString(Preferences.SAVE_ENCODING.cur,Preferences.SAVE_ENCODING.cur,"");
-		//chooserFileFormat = new PreferenceString(Preferences.SAVE_FORMAT.cur,Preferences.SAVE_FORMAT.cur,"");
-
-		//lineEndComboBox.addItemListener(new ComboBoxListener(lineEndComboBox, chooserLineEnd));
-		//encodingComboBox.addItemListener(new ComboBoxListener(encodingComboBox, chooserEncoding));
-		//openEncodingComboBox.addItemListener(new ComboBoxListener(openEncodingComboBox, chooserEncoding));
-		//openFormatComboBox.addItemListener(new ComboBoxListener(openFormatComboBox, chooserFileFormat));
-		//saveFormatComboBox.addItemListener(new ComboBoxListener(saveFormatComboBox, chooserFileFormat));
-		
+	public OutlinerFileChooser() {		
 		for (int i = 0; i < Preferences.ENCODINGS.size(); i++) {
 			String encoding = (String) Preferences.ENCODINGS.elementAt(i);
 			saveEncodingComboBox.addItem(encoding);

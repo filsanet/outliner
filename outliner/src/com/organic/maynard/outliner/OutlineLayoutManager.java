@@ -39,7 +39,7 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 	// Event Listeners
 	private TextKeyListener textListener = new TextKeyListener();
 	private IconKeyListener iconListener = new IconKeyListener();
-	private InternalDragAndDropListener dndListener = new InternalDragAndDropListener();
+	protected InternalDragAndDropListener dndListener = new InternalDragAndDropListener();
 		
 	// Widgit Cache
 	public static final int CACHE_SIZE = 40;
@@ -164,10 +164,10 @@ public class outlineLayoutManager implements LayoutManager, AdjustmentListener {
 	public void draw(Node nodeThatMustBeVis, int focusElement) {
 		int ioNodeThatMustBeVis = panel.doc.tree.visibleNodes.indexOf(nodeThatMustBeVis);
 
-		if (ioNodeThatMustBeVis < ioFirstVisNode) {
+		if (ioNodeThatMustBeVis <= ioFirstVisNode) {
 			drawingDirection = DOWN;
 			setNodeToDrawFrom(nodeThatMustBeVis, ioNodeThatMustBeVis);
-		} else if (ioNodeThatMustBeVis > ioLastVisNode) {
+		} else if (ioNodeThatMustBeVis >= ioLastVisNode) {
 			drawingDirection = UP;
 			setNodeToDrawFrom(nodeThatMustBeVis, ioNodeThatMustBeVis);
 		}

@@ -40,6 +40,20 @@ public class TreeContext {
 		this.doc = doc;
 		doc.panel.layout.setNodeToDrawFrom(getEditingNode(),0);
 	}
+
+	public TreeContext() {
+		// Create an empty Tree
+		setRootNode(new NodeImpl(this,"ROOT"));
+		rootNode.setHoisted(true);
+
+		NodeImpl child = new NodeImpl(this,"");
+		child.setDepth(0);
+		rootNode.insertChild(child, 0);
+		insertNode(child);
+		
+		// Record the current location
+		setEditingNode(child);	
+	}
 	
 	public void destroy() {
 		visibleNodes = null;
@@ -52,16 +66,6 @@ public class TreeContext {
 		doc = null;
 	}
 
-	public TreeContext() {
-		// Create an empty Tree
-		setRootNode(new NodeImpl(this,"ROOT"));
-		NodeImpl child = new NodeImpl(this,"");
-		rootNode.appendChild(child);
-		rootNode.setHoisted(true);
-		
-		// Record the current location
-		setEditingNode(child);	
-	}
 	
 	// Accessors
 	public Node getRootNode() {
@@ -176,18 +180,11 @@ public class TreeContext {
 		// Walk the tree Downwards inserting all expanded nodes and their children
 		ancestor.insertChildrenIntoVisibleNodesCache(this,visibleNodes.indexOf(ancestor));
 	}
-		
-	public void insertNodeBefore(Node existingNode, Node newNode) {
-		int nodeIndex = visibleNodes.indexOf(existingNode);
-		if (nodeIndex >= 0) {
-			visibleNodes.add(nodeIndex,newNode);
-		}
-	}
 
 	public void insertNodeAfter(Node existingNode, Node newNode) {
 		int nodeIndex = visibleNodes.indexOf(existingNode) + 1;
 		if (nodeIndex >= 0) {
-			visibleNodes.add(nodeIndex,newNode);
+			visibleNodes.add(nodeIndex, newNode);
 		}
 	}
 
@@ -278,62 +275,6 @@ public class TreeContext {
 
 
 	// Tree Manipulation
-	public void moveNodeAbove(Node currentNode, Node targetNode) {
-		// Remove the selected node from the current parent node.
-		currentNode.getParent().removeChild(currentNode);
-			
-		// Append the selected node to the target nodes parent.
-		targetNode.getParent().insertChild(currentNode,targetNode.currentIndex());
-		currentNode.setDepthRecursively(targetNode.getDepth());
-		
-		// Now Remove and Insert into the VisibleNodes Cache
-		removeNode(currentNode);
-		insertNode(currentNode);	
-	}
-
-	public void moveNodeBelow(Node currentNode, Node targetNode) {
-		// Remove the selected node from the current parent node.
-		currentNode.getParent().removeChild(currentNode);
-			
-		// Append the selected node to the target nodes parent or the node if it has children and is expanded.
-		if (!targetNode.isLeaf() && targetNode.isExpanded()) {
-			targetNode.insertChild(currentNode,0);
-			currentNode.setDepthRecursively(targetNode.getDepth() + 1);
-		} else {
-			targetNode.getParent().insertChild(currentNode,targetNode.currentIndex() + 1);	
-			currentNode.setDepthRecursively(targetNode.getDepth());
-		}
-		
-		// Now Remove and Insert into the VisibleNodes Cache
-		removeNode(currentNode);
-		insertNode(currentNode);	
-	}
-
-	public void moveNodeAboveAsSibling(Node currentNode, Node targetNode) {
-		// Remove the selected node from the current parent node.
-		currentNode.getParent().removeChild(currentNode);
-			
-		// Re-Insert the Node
-		targetNode.getParent().insertChild(currentNode,targetNode.currentIndex());
-		
-		// Now Remove and Insert into the VisibleNodes Cache
-		removeNode(currentNode);
-		insertNode(currentNode);	
-	}
-
-	public void moveNodeBelowAsSibling(Node currentNode, Node targetNode) {
-		// Remove the selected node from the current parent node.
-		currentNode.getParent().removeChild(currentNode);
-			
-		// Re-Insert the Node
-		targetNode.getParent().insertChild(currentNode,targetNode.currentIndex() + 1);	
-		currentNode.setDepthRecursively(targetNode.getDepth());
-		
-		// Now Remove and Insert into the VisibleNodes Cache
-		removeNode(currentNode);
-		insertNode(currentNode);	
-	}
-	
 	public void promoteNode(Node currentNode) {
 		Node targetNode = currentNode.getParent().getParent();
 		int insertIndex = currentNode.getParent().currentIndex() + 1;
@@ -352,10 +293,6 @@ public class TreeContext {
 		// Now Remove and Insert into the VisibleNodes Cache
 		removeNode(currentNode);
 		insertNode(currentNode);
-	}
-	
-	public void demoteNode(Node currentNode) {
-		demoteNode(currentNode,currentNode.prevSibling());
 	}
 	
 	public void demoteNode(Node currentNode, Node targetNode) {
