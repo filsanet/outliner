@@ -120,6 +120,8 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	private static final DownAction downAction = new DownAction();
 	private static final LeftAction leftAction = new LeftAction();
 	private static final RightAction rightAction = new RightAction();
+
+	private static final DefaultAction defaultAction = new DefaultAction();
 	
 	// The Constructors
 	public OutlinerCellRendererImpl() {
@@ -128,6 +130,10 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		// Add Actions to TextArea
 		setupMaps(this.getInputMap(), this.getActionMap());
 		setupMaps(this.button.getInputMap(), this.button.getActionMap());
+		
+		Keymap keymap = this.getKeymap();
+		keymap.setDefaultAction(defaultAction);
+		
 
 		// Settings
 		setFont(font);

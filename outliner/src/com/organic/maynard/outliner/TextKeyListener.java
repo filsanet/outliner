@@ -179,25 +179,7 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 	
 	
 	// KeyListener Interface
-	public void keyPressed(KeyEvent e) {
- 		textArea = (OutlinerCellRendererImpl) e.getComponent();
-		
- 		if (!textArea.hasFocus) {
- 			return;
- 		}
- 
-		//System.out.println("keyPressed");
-		
-		// Shorthand
-		Node currentNode = textArea.node;		
-
-		// If we're read-only then abort
-		if (!currentNode.isEditable()) {
-			if (!e.isControlDown() && !e.isAltDown()) {
-				Outliner.outliner.getToolkit().beep();
-			}
-		}
-	}
+	public void keyPressed(KeyEvent e) {}
 	
 	public void keyTyped(KeyEvent e) {
 		if(e.paramString().indexOf("Backspace") != -1) {
@@ -207,119 +189,7 @@ public class TextKeyListener implements KeyListener, MouseListener, FocusListene
 		}
 	}
 	
-	public void keyReleased(KeyEvent e) {
- 		textArea = (OutlinerCellRendererImpl) e.getComponent();
-
- 		if (!textArea.hasFocus) {
- 			return;
- 		}
- 
-		int keyCode = e.getKeyCode();
-		
-		// Create some short names for convienence
-		Node currentNode = textArea.node;
-		JoeTree tree = currentNode.getTree();
-		OutlineLayoutManager layout = tree.getDocument().panel.layout;
-
-		// If we're read-only then abort
-		if (!currentNode.isEditable()) {
-			return;
-		}
-		
-		// Keep any meta keys from effecting undoability.
-		if (e.isControlDown() || e.isAltDown() || e.isAltGraphDown() || e.isMetaDown()) {
-			return;
-		}
-		
-		// Keep unwanted keystrokes from effecting undoability.
-		boolean doUndo = true;
-		switch(keyCode) {
-			case KeyEvent.VK_ENTER:
-			case KeyEvent.VK_TAB:
-			case KeyEvent.VK_SHIFT:
-			case KeyEvent.VK_CONTROL:
-			case KeyEvent.VK_ALT:
-			case KeyEvent.VK_CAPS_LOCK:
-			case KeyEvent.VK_ESCAPE:
-			case KeyEvent.VK_PAGE_UP:
-			case KeyEvent.VK_PAGE_DOWN:
-			case KeyEvent.VK_LEFT:
-			case KeyEvent.VK_UP:
-			case KeyEvent.VK_RIGHT:
-			case KeyEvent.VK_DOWN:
-			case KeyEvent.VK_NUM_LOCK:
-			case KeyEvent.VK_SCROLL_LOCK:
-			case KeyEvent.VK_F1:
-			case KeyEvent.VK_F2:
-			case KeyEvent.VK_F3:
-			case KeyEvent.VK_F4:
-			case KeyEvent.VK_F5:
-			case KeyEvent.VK_F6:
-			case KeyEvent.VK_F7:
-			case KeyEvent.VK_F8:
-			case KeyEvent.VK_F9:
-			case KeyEvent.VK_F10:
-			case KeyEvent.VK_F11:
-			case KeyEvent.VK_F12:
-			case KeyEvent.VK_F13:
-			case KeyEvent.VK_F14:
-			case KeyEvent.VK_F15:
-			case KeyEvent.VK_F16:
-			case KeyEvent.VK_F17:
-			case KeyEvent.VK_F18:
-			case KeyEvent.VK_F19:
-			case KeyEvent.VK_F20:
-			case KeyEvent.VK_F21:
-			case KeyEvent.VK_F22:
-			case KeyEvent.VK_F23:
-			case KeyEvent.VK_F24:
-			case KeyEvent.VK_PRINTSCREEN:
-			case KeyEvent.VK_INSERT:
-			case KeyEvent.VK_HELP:
-			case KeyEvent.VK_META:
-				return;
-				
-			// These keystrokes should not effect undoablility, but do 
-			// effect cursor position and redraw.
-			case KeyEvent.VK_BACK_SPACE: // Undoability already recorded in keyTyped.
-			case KeyEvent.VK_DELETE: // Undoability already recorded in keyTyped.
-			case KeyEvent.VK_HOME:
-			case KeyEvent.VK_END:
-				doUndo = false;
-				break;
-		}
-
-		// Record some Values
-		int caretPosition = textArea.getCaretPosition();
-
-		if (doUndo) {
-			// Update the value in the node
-			String oldText = currentNode.getValue();
-			String newText = textArea.getText();
-			currentNode.setValue(newText);
-	
-			// Put the Undoable onto the UndoQueue
-			UndoableEdit undoable = tree.getDocument().undoQueue.getIfEdit();
-			if ((undoable != null) && (undoable.getNode() == currentNode) && (!undoable.isFrozen())) {
-				undoable.setNewText(newText);
-				undoable.setNewPosition(caretPosition);
-				undoable.setNewMarkPosition(caretPosition);
-			} else {
-				tree.getDocument().undoQueue.add(new UndoableEdit(currentNode, oldText, newText, tree.getCursorPosition(), caretPosition, tree.getCursorMarkPosition(), caretPosition));
-			}
-		}
-
-		// Record the EditingNode, Mark and CursorPosition
-		tree.setEditingNode(currentNode);
-		tree.setCursorMarkPosition(textArea.getCaret().getMark());
-		tree.setCursorPosition(caretPosition, false);
-		tree.getDocument().setPreferredCaretPosition(caretPosition);
-
-		// Do the Redraw if we have wrapped or if we are currently off screen.
-		if (textArea.getPreferredSize().height != textArea.height || !currentNode.isVisible()) {
-			layout.draw(currentNode, OutlineLayoutManager.TEXT);
-		}
-	}
+	public void keyReleased(KeyEvent e) {}
 
 
 	// Additional Outline Methods
