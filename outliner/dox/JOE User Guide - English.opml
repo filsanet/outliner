@@ -3,11 +3,11 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Wed, 25 Jul 2001 04:53:02 GMT</dateModified>
+<dateModified>Wed, 25 Jul 2001 07:52:17 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
-<expansionState>14,16,19,20</expansionState>
-<vertScrollState>1</vertScrollState>
+<expansionState></expansionState>
+<vertScrollState>5</vertScrollState>
 <windowTop>35</windowTop>
 <windowLeft>35</windowLeft>
 <windowBottom>485</windowBottom>
@@ -171,13 +171,22 @@
 </outline>
 <outline text="Glossary">
 <outline text="A-E">
-<outline text="A"/>
-<outline text="B"/>
-<outline text="C">
-<outline text="child"/>
+<outline text="A">
+<outline text="ancestor"/>
 </outline>
-<outline text="D"/>
-<outline text="E"/>
+<outline text="B">
+<outline text="branch"/>
+</outline>
+<outline text="C">
+<outline text="child "/>
+<outline text="collapse"/>
+</outline>
+<outline text="D">
+<outline text="descendant"/>
+</outline>
+<outline text="E">
+<outline text="expand"/>
+</outline>
 </outline>
 <outline text="F-J">
 <outline text="F"/>
@@ -192,15 +201,19 @@
 </outline>
 <outline text="K-O">
 <outline text="K"/>
-<outline text="L"/>
+<outline text="L">
+<outline text="leaf"/>
+</outline>
 <outline text="M"/>
 <outline text="N">
 <outline text="node">
 <outline text="One line in an outline. An outline consists of a set of nodes. "/>
 <outline text="see also: parent node, subnode, sibling node"/>
 </outline>
+<outline text="nodeset"/>
 </outline>
 <outline text="O">
+<outline text="older sibling"/>
 <outline text="OPML"/>
 <outline text="outline">
 <outline text="An outline is a collection of nodes that are organized in two dimensions: serial and hierarchic. The topmost level of an outline's hierarchic organization is called level 0. Nodes that are hierarchically subjunctive to a given node are called subnodes , or descendants, of that node. Subnodes one level down from a given node are called child nodes, and the given node is their parent. Nodes that share a parent node are called sibling nodes. The topmost set of sibling nodes is said to be at level 0 of the outline. Nodes contain arbitrary sorts of information, some of which is commonly displayed to the user. "/>
@@ -209,18 +222,22 @@
 </outline>
 <outline text="P-T">
 <outline text="P">
-<outline text="parent node">
+<outline text="parent">
 <outline text=""/>
 <outline text="see also: node, subnode, sibling node"/>
 </outline>
 </outline>
 <outline text="Q"/>
-<outline text="R"/>
+<outline text="R">
+<outline text="root"/>
+</outline>
 <outline text="S">
-<outline text="sibling node"/>
+<outline text="sibling"/>
 <outline text="subnode"/>
 </outline>
-<outline text="T"/>
+<outline text="T">
+<outline text="tree"/>
+</outline>
 </outline>
 <outline text="U-Z">
 <outline text="U"/>
@@ -229,7 +246,9 @@
 <outline text="X">
 <outline text="XML-RPC"/>
 </outline>
-<outline text="Y"/>
+<outline text="Y">
+<outline text="younger sibling"/>
+</outline>
 <outline text="Z"/>
 </outline>
 </outline>
