@@ -30,12 +30,12 @@ public class WebFile extends File
 {
 	/** Set to true to turn on debugging. */
 	public static final boolean DEBUG = false;
-
-	private String url;
+	
+	private URL url;
 	private boolean isDir;
-
+	
 	private static File[] FileArrayType = new File[0];
-
+	
 	
 	/**
 	 * Create a new named web file.
@@ -44,30 +44,30 @@ public class WebFile extends File
 	{
 		super(name);
 	}
-
+	
 	/**
 	 * Create a child file - parent is a directory.
 	 */
 	public WebFile(WebFile f, String name)
 	{
 		super(f, name);
-
+		
 		url = f.url;
 		isDir = name.endsWith("/");
 	}
-
+	
 	/**
 	 * Called just once, from WebFileSystem.  This creates the parent
 	 * WebFile from which all others are based.
 	 */
-	public WebFile(String name, String url)
+	public WebFile(String name, URL url)
 	{
 		super(name);
-
+		
 		this.url = url;
 		this.isDir = true;
 	}
-
+	
 	/**
 	 * Returns true if file is a directory.
 	 */
@@ -75,7 +75,7 @@ public class WebFile extends File
 	{
 		return isDir;
 	}
-
+	
 	/**
 	 * Returns true if file exists on web server.
 	 */
@@ -297,38 +297,59 @@ public class WebFile extends File
 	 * @return the data returned from the web server, could either
 	 * be a boolean type result, like "1" or "0", or the actual data.
 	 */
-	public static InputStream httpPost(String url, String path,
-										  String name, String value)
-
-		throws IOException
-	{
-
+	public static InputStream httpPost(
+		String url, String path,
+		String name, 
+		String value
+	) throws IOException {
+		return httpPost(new URL(url), path, name, value);
+	}
+	
+	/**
+	 * All communication between the webserver and outliner takes
+	 * place here.  Performs a HTTP POST to the web server, returning
+	 * the results in a BufferedReader.  For the future, this needs
+	 * to work with basic http authorization.
+	 *
+	 * @param url the url to the web server script, something like
+	 * http://www.example.com/outliner.php
+	 * @param path the relative path (between outliner.php and the files)
+	 * @param name optional extra parameter, needed for everything but
+	 * listFiles
+	 * @param value optional
+	 * @return the data returned from the web server, could either
+	 * be a boolean type result, like "1" or "0", or the actual data.
+	 */
+	 public static InputStream httpPost(
+	 	URL url, 
+		String path,
+		String name, 
+		String value
+	) throws IOException {
 		dbg("httpPost: " + url + " path=" + path + " " + name + "=" + value);
-
-		URL u = new URL(url);
-		
-		URLConnection c = u.openConnection();
+ 		
+		URLConnection c = url.openConnection();
 		c.setDoOutput(true);
-            
+    
 		PrintWriter out = new PrintWriter(c.getOutputStream());
-
+		
 		int index = path.indexOf("/");
-		if (index != -1)
+		if (index != -1) {
 			path = path.substring(index);
-		else
+		} else {
 			path = "/.";
-
+		}
 		dbg("  path: " + path);
 		out.print("path=" + URLEncoder.encode(path));
-
+		
 		if (name != null) {
 			out.print("&" + name + "=" + URLEncoder.encode(value));
 		}
 		out.close();
-
+		
 		return c.getInputStream();
 	}
-
+	
 	/**
 	 * Simple debug method that can be turned on and off thru a static
 	 * public boolean value.

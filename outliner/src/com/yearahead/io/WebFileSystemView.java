@@ -21,8 +21,11 @@ package com.yearahead.io;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.net.Authenticator;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import com.organic.maynard.outliner.guitree.GUITreeLoader;
+import java.net.URL;
 
 /**
  * A plugin to a JFileChooser so that a directory on a web server will
@@ -69,18 +72,24 @@ public class WebFileSystemView extends FileSystemView
 	{
 		NEW_FOLDER = GUITreeLoader.reg.getText("untitled_folder");
 		//int len = "http://".length();
-		int len = url.indexOf("//") + 2; // [md] 11-8-01 This should work better in case it's https://
-		String host = url.substring(len, url.indexOf("/", len));
-
+		String host;
+		URL theUrl;
+		try {
+			theUrl = new URL(url);
+		} catch (MalformedURLException e) {
+			// TODO: What should we do here?
+			throw new RuntimeException(e);
+		}
+		host = theUrl.getHost();
+		
 		// set the username/pw for basic apache authorization.
 		if (user != null && pw != null) {
 			//Authenticator.setDefault(new WebAuthenticator("steve", "ally"));
 			Authenticator.setDefault(new WebAuthenticator(user, pw)); // [md] 11-8-01 Looks like this was hard coded. Let's see if this works.
 		}
-
-		rootDir = new WebFile(host, url);
+		
+		rootDir = new WebFile(host, theUrl);
 	}
-
 	
 	// Returns a File object constructed in dir from the given filename. 
 	public File createFileObject(File dir, String filename)
