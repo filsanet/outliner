@@ -85,7 +85,7 @@ public class FileTools {
 	private static final StringBuffer lineBuf = new StringBuffer();
 	private static final char[] in = new char[BUFFER_SIZE];
 	
-	public static void readFileToArrayOfLines(File file, String encoding, ArrayList lines, ArrayList lineEndings) {
+	public static boolean readFileToArrayOfLines(File file, String encoding, ArrayList lines, ArrayList lineEndings) {
 		try {
 			// First read the contents of the file into a StringBuffer.
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));
@@ -156,11 +156,14 @@ public class FileTools {
 				}
 			}
 			reader.close();
+			
+			return true;
 		} catch (FileNotFoundException fnfe) {
 			System.out.println("Error: FileTools.readFileToArrayOfLines: " + fnfe.getMessage());
 		} catch (Exception e) {
 			System.out.println("Error: FileTools.readFileToArrayOfLines: " + e.getMessage());
 		}
+		return false;
 	}
 
 	public static String readFileToString(File file) {
