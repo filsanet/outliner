@@ -60,7 +60,7 @@ public class JMouseWheelFrame extends JFrame {
 
 					// This invokes: com.ms.security.PolicyEngine.assertPermission(com.ms.security.PermissionID.SYSTEM);
 				}
-				System.loadLibrary("lib\\MouseWheel");
+				System.loadLibrary("MouseWheel");
 				libraryLoaded = true;
 			} catch (Throwable t) {
 				System.err.println("Failed to load MouseWheel Library - Wheel Disabled.");
@@ -166,6 +166,9 @@ public class JMouseWheelFrame extends JFrame {
 
 /*
  * $Log$
+ * Revision 1.2  2002/02/27 06:09:35  stanley_krute
+ * tweeked to deal with moved MouseWheel.dll
+ *
  * Revision 1.1  2001/11/12 09:05:38  maynardd
  * Added code from outliner.jar to make this library self contained.
  *
