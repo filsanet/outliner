@@ -79,6 +79,14 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		saveFile(filename, document, protocol, true, MODE_EXPORT);
 	}
 
+	// part of bug # 495598 fix    this lets a script call saveFile without speccing a protocol    SRK   12/25/01 3:21PM
+	public static void saveFile(String filename, OutlinerDocument document, boolean saveAs) {
+		DocumentInfo docInfo = document.getDocumentInfo();
+		FileProtocol protocol = Outliner.fileProtocolManager.getProtocol(docInfo.getProtocolName());
+		saveFile(filename, document, protocol, saveAs, MODE_SAVE);
+	}
+	// end part of bug # 495598 fix
+
 	public static void saveFile(String filename, OutlinerDocument document, FileProtocol protocol, boolean saveAs) {
 		saveFile(filename, document, protocol, saveAs, MODE_SAVE);
 	}
@@ -86,6 +94,10 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 	public static void saveFile(String filename, OutlinerDocument document, FileProtocol protocol, boolean saveAs, int mode) {
 		DocumentInfo docInfo = document.getDocumentInfo();
 
+		// part of bug # 495598 fix   this field wasn't getting set    SRK   12/25/01 3:26PM
+		docInfo.setProtocolName(protocol.getName()) ;
+		// end part of bug # 495598 fix
+		
 		// Get the file format object
 		String fileFormatName = docInfo.getFileFormat();
 		SaveFileFormat saveFileFormat = null;
