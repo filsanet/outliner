@@ -29,12 +29,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.organic.maynard;
+package com.organic.maynard.util.crawler;
 
 import java.io.*;
 import java.util.*;
 
-import com.organic.maynard.util.crawler.*;
 import com.organic.maynard.io.*;
 import com.organic.maynard.util.string.*;
 
