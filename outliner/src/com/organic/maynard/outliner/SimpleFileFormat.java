@@ -19,7 +19,7 @@
 package com.organic.maynard.outliner;
 
 //import java.awt.*;
-//import javax.swing.*;
+import javax.swing.*;
 import java.io.*;
 
 public class SimpleFileFormat implements SaveFileFormat, OpenFileFormat {
@@ -39,15 +39,49 @@ public class SimpleFileFormat implements SaveFileFormat, OpenFileFormat {
 	
 	
 	// OpenFileFormat Interface
-	public boolean open(TreeContext tree, DocumentInfo docInfo) {
-		boolean success = false;
+	public int open(TreeContext tree, DocumentInfo docInfo) {
+		int success = OpenFileFormat.FAILURE;
 
 		String text = FileFormatManager.loadFile(docInfo.getPath(), docInfo.getEncodingType());
 		if (text != null) {
-			tree.setRootNode(PadSelection.pad(text, tree, 0,Preferences.LINE_END_UNIX));
-			success = true;
+			Node newNode = new NodeImpl(tree,"");
+			int padSuccess = PadSelection.pad(text, tree, 0,Preferences.LINE_END_UNIX, newNode);
+			
+			switch (padSuccess) {
+			
+				case PadSelection.SUCCESS:
+					tree.setRootNode(newNode);
+					success = OpenFileFormat.SUCCESS;
+					break;
+					
+				case PadSelection.SUCCESS_MODIFIED:
+
+					Object[] options = {"Yes","No"};
+					int result = JOptionPane.showOptionDialog(Outliner.outliner,
+						"The file " + docInfo.getPath() + " has an inconsistent heirarchy.\nEmpty nodes will need to be inserted to open it.\nDo you want to open it anyway?",
+						"Confirm Open",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE,
+						null,
+						options,
+						options[0]
+					);
+					
+					if (result == JOptionPane.YES_OPTION) {
+						success = OpenFileFormat.SUCCESS_MODIFIED;
+						tree.setRootNode(newNode);
+						break;
+					} else if (result == JOptionPane.NO_OPTION) {
+						success = OpenFileFormat.FAILURE_USER_ABORTED;
+						break;
+					}
+										
+				case PadSelection.FAILURE:
+					success = OpenFileFormat.FAILURE;
+					break;
+			}
 		} else {
-			success = false;
+			success = OpenFileFormat.FAILURE;
 		}
 				
 		return success;

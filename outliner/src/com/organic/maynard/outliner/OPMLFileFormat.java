@@ -132,13 +132,13 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	// OpenFileFormat Interface
 	private boolean errorOccurred = false;
 	
-	public boolean open(TreeContext tree, DocumentInfo docInfo) {
+	public int open(TreeContext tree, DocumentInfo docInfo) {
 		// Set the objects we are going to populate.
 		this.docInfo = docInfo;
 		this.tree = tree;
 		
 		// Do the Parsing
-		boolean success = false;
+		int success = OpenFileFormat.FAILURE;
 		errorOccurred = false;
 		
 		try {
@@ -148,15 +148,16 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 
 			parser.parse(new InputSource(buffer));
 			if (errorOccurred) {
-				return false;
+				success = OpenFileFormat.FAILURE;
+				return success;
 			}
-			success = true;
+			success = OpenFileFormat.SUCCESS;
 		} catch (SAXException e) {
-			success = false;
+			success = OpenFileFormat.FAILURE;
 		} catch (IOException e) {
-			success = false;
+			success = OpenFileFormat.FAILURE;
 		} catch (Exception e) {
-			success = false;
+			success = OpenFileFormat.FAILURE;
 		}
 				
 		return success;

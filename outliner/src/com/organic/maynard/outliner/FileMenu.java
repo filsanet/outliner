@@ -365,10 +365,12 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		// Load the file
 		TreeContext tree = new TreeContext();
 
-		boolean success = openFileFormat.open(tree, docInfo);
-		if (!success) {
+		int success = openFileFormat.open(tree, docInfo);
+		if (success == OpenFileFormat.FAILURE) {
 			JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. Could not open file: " + filename);
 			RecentFilesList.removeFileNameFromList(filename);
+			return;
+		} else if (success == OpenFileFormat.FAILURE_USER_ABORTED) {
 			return;
 		}
 		
@@ -401,6 +403,11 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		RecentFilesList.updateFileNameInList(filename, docInfo);
 		
 		setupAndDraw(docInfo, newDoc);
+
+		// Set document as modified if something happened on open
+		if (success == OpenFileFormat.SUCCESS_MODIFIED) {
+			newDoc.setFileModified(true);
+		}
 	}
 
 	protected static void revertFile(String filename, OutlinerDocument document) {
@@ -420,9 +427,11 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		docInfo.setPath(filename);
 		docInfo.setEncodingType(document.settings.saveEncoding.cur);
 
-		boolean success = openFileFormat.open(tree, docInfo);
-		if (!success) {
+		int success = openFileFormat.open(tree, docInfo);
+		if (success == OpenFileFormat.FAILURE) {
 			RecentFilesList.removeFileNameFromList(filename); // Not really sure this is appropriate.
+			return;
+		} else if (success == OpenFileFormat.FAILURE_USER_ABORTED) {
 			return;
 		}
 		
@@ -434,6 +443,11 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		document.undoQueue.clear();
 
 		setupAndDraw(docInfo, document);
+
+		// Set document as modified if something happened on open
+		if (success == OpenFileFormat.SUCCESS_MODIFIED) {
+			document.setFileModified(true);
+		}
 	}
 	
 	private static void setupAndDraw(DocumentInfo docInfo, OutlinerDocument doc) {

@@ -25,12 +25,30 @@ import com.organic.maynard.util.string.*;
 
 public class PadSelection {
 	
+	// Constants
+	public static final int FAILURE = 0;
+	public static final int SUCCESS = 1;
+	public static final int SUCCESS_MODIFIED = 2;
+	
 	// The Constructors
 	public PadSelection() {}
-	
+
+	// This method provides backwards compatibility but is now depricated.
 	public static Node pad(String text, TreeContext tree, int targetDepth, String lineEndString) {
-		
 		Node tempRoot = new NodeImpl(tree,"");
+
+		int success = pad(text, tree, targetDepth, lineEndString, tempRoot);
+		
+		return tempRoot;
+	}
+	
+	private static int padRetVal = FAILURE;
+	
+	// This code should be rewritten to use instances of a PadSelection object so that there can be
+	// one object per thread. Synchonizing it is a cheap short term fix.
+	public synchronized static int pad(String text, TreeContext tree, int targetDepth, String lineEndString, Node tempRoot) {
+		padRetVal = SUCCESS;
+		
 		tempRoot.setDepth(targetDepth - 1);
 		
 		// Break the text up into lines
@@ -81,7 +99,7 @@ public class PadSelection {
 			previousNode = node;				
 		}
 		
-		return tempRoot;
+		return padRetVal;
 	}
 	
 	private static Node getParentNodeOfDepth(Node node, int depth) {
@@ -106,6 +124,7 @@ public class PadSelection {
 			newNode.setDepth(parentNode.getDepth() + 1);
 			parentNode.appendChild(newNode);
 			appendChildPaddedForDepth(newNode,childNode,tree,tempRoot);
+			padRetVal = SUCCESS_MODIFIED;
 			return;
 		}
 	}	
