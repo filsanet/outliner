@@ -195,9 +195,13 @@ public class DocumentInfo {
 	}
 	
 	public String getExpandedNodesString() {
+		return getExpandedNodesStringShifted(0);
+	}
+	
+	public String getExpandedNodesStringShifted(int shift) {
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < expandedNodes.size(); i++) {
-			buf.append(((Integer) expandedNodes.elementAt(i)).toString());
+			buf.append("" + (((Integer) expandedNodes.elementAt(i)).intValue() + shift));
 			if (i < expandedNodes.size() - 1) {
 				buf.append(EXPANDED_NODE_SEPERATOR);
 			}
@@ -205,20 +209,29 @@ public class DocumentInfo {
 		return buf.toString();
 	}
 	
+	
 	public void setExpandedNodesString(String nodeList) {
+		setExpandedNodesStringShifted(nodeList, 0);
+	}
+
+	public void setExpandedNodesStringShifted(String nodeList, int shift) {
 		// Clear out the current expandedNodes Vector
 		getExpandedNodes().clear();
 		
 		// Load it up with Integers
 		StringSplitter splitter = new StringSplitter(nodeList,EXPANDED_NODE_SEPERATOR); 
 		while (splitter.hasMoreElements()) {
-			addExpandedNodeNum((String) splitter.nextElement());
+			addExpandedNodeNumShifted((String) splitter.nextElement(), shift);
 		}
 	}
 	
 	public boolean addExpandedNodeNum(String nodeNum) {
+		return addExpandedNodeNumShifted(nodeNum, 0);
+	}
+
+	public boolean addExpandedNodeNumShifted(String nodeNum, int shift) {
 		try {
-			return addExpandedNodeNum(Integer.parseInt(nodeNum));
+			return addExpandedNodeNum(Integer.parseInt(nodeNum) + shift);
 		} catch (NumberFormatException e) {
 			return false;
 		}

@@ -30,10 +30,8 @@ public class Preferences {
 	// The Constructors
 	public Preferences() {}
 	
-
-	// Static Fields (Global Preferences) These are saved.
-	public static final Preference[] pref_list = new Preference[24];
-
+	
+	// Constants
 	public static final String DEPTH_PAD_STRING = "\t";
 	public static final String LINE_END_STRING = "\n";
 
@@ -47,16 +45,22 @@ public class Preferences {
 	
 	public static final String[] PLATFORM_IDENTIFIERS = {PLATFORM_MAC,PLATFORM_WIN,PLATFORM_UNIX};
 
-	public static final Vector ENCODINGS = new Vector();
+	public static final String TXT_WORDS = "words";
+	public static final String TXT_CHARACTERS = "characters";
 
+
+	// Static Fields (Global Preferences) These are saved.
+	public static final Preference[] pref_list = new Preference[26];
+
+	public static final Vector ENCODINGS = new Vector();
 	public static final Vector FILE_FORMATS_OPEN = new Vector();
 	public static final Vector FILE_FORMATS_SAVE = new Vector();
 	
-	public static final String TXT_WORDS = "words";
-	public static final String TXT_CHARACTERS = "characters";
-	
 	// Default Values
+	public static final String MOST_RECENT_SAVE_DIR_DEFAULT = ".";
+	public static final String MOST_RECENT_OPEN_DIR_DEFAULT = ".";
 	public static final boolean IS_MAXIMIZED_DEFAULT = false;
+	
 	public static final boolean PRINT_ENVIRONMENT_DEFAULT = false;
 	public static final boolean NEW_DOC_ON_STARTUP_DEFAULT = true;
 	public static final Color DESKTOP_BACKGROUND_COLOR_DEFAULT = new Color(90,90,90);
@@ -114,12 +118,16 @@ public class Preferences {
 		public static final PreferenceString SAVE_ENCODING = new PreferenceString(SAVE_ENCODING_DEFAULT,SAVE_ENCODING_DEFAULT,"save_encoding");
 		public static final PreferenceString OPEN_FORMAT = new PreferenceString(OPEN_FORMAT_DEFAULT,OPEN_FORMAT_DEFAULT,"open_format");
 		public static final PreferenceString SAVE_FORMAT = new PreferenceString(SAVE_FORMAT_DEFAULT,SAVE_FORMAT_DEFAULT,"save_format");
-		public static final PreferenceBoolean IS_MAXIMIZED = new PreferenceBoolean(IS_MAXIMIZED_DEFAULT,false,"is_maximized");
 		
 	// Misc Settings
 	public static final PreferenceBoolean PRINT_ENVIRONMENT = new PreferenceBoolean(PRINT_ENVIRONMENT_DEFAULT,false,"print_environment");
 	public static final PreferenceBoolean NEW_DOC_ON_STARTUP = new PreferenceBoolean(NEW_DOC_ON_STARTUP_DEFAULT,false,"new_doc_on_startup");
 	public static final PreferenceInt RECENT_FILES_LIST_SIZE = new PreferenceInt(RECENT_FILES_LIST_SIZE_DEFAULT,RECENT_FILES_LIST_SIZE_DEFAULT,"recent_files_list_size",SetPrefCommand.RECENT_FILES_LIST_SIZE_VALIDATOR);
+
+	// Preferences that are not configured through the GUI
+	public static final PreferenceString MOST_RECENT_OPEN_DIR = new PreferenceString(MOST_RECENT_OPEN_DIR_DEFAULT,MOST_RECENT_OPEN_DIR_DEFAULT,"most_recent_open_dir");
+	public static final PreferenceString MOST_RECENT_SAVE_DIR = new PreferenceString(MOST_RECENT_SAVE_DIR_DEFAULT,MOST_RECENT_SAVE_DIR_DEFAULT,"most_recent_save_dir");
+	public static final PreferenceBoolean IS_MAXIMIZED = new PreferenceBoolean(IS_MAXIMIZED_DEFAULT,false,"is_maximized");
 
 	static {
 		pref_list[0] = PRINT_ENVIRONMENT;
@@ -146,6 +154,8 @@ public class Preferences {
 		pref_list[21] = IS_MAXIMIZED;	
 		pref_list[22] = OPEN_FORMAT;	
 		pref_list[23] = SAVE_FORMAT;	
+		pref_list[24] = MOST_RECENT_OPEN_DIR;	
+		pref_list[25] = MOST_RECENT_SAVE_DIR;	
 	}
 		
 	// Static Methods	
@@ -246,7 +256,12 @@ public class Preferences {
 	private static String prepareConfigFile() {
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < pref_list.length; i++) {
-			buffer.append(Outliner.COMMAND_SET + Outliner.COMMAND_PARSER_SEPARATOR + pref_list[i].getCommand() + Outliner.COMMAND_PARSER_SEPARATOR + pref_list[i].toString() + System.getProperty("line.separator"));
+			buffer.append(Outliner.COMMAND_SET);
+			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+			buffer.append(pref_list[i].getCommand());
+			buffer.append(Outliner.COMMAND_PARSER_SEPARATOR);
+			buffer.append(StringTools.escape(pref_list[i].toString(), '\\', null));
+			buffer.append(System.getProperty("line.separator"));
 		}
 		return buffer.toString();
 	}

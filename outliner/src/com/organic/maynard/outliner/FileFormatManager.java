@@ -187,7 +187,7 @@ public class FileFormatManager {
 			
 			fileInputStream.close();
 		} catch (FileNotFoundException fnfe) {
-			fnfe.printStackTrace();
+			System.out.println("File not found.");
 			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
