@@ -1,4 +1,4 @@
-1.8.7 - ???
+1.8.7 - 2/03/02
 	License Change:
 		1) Switched to a BSD license.
 		2) We are now building our own jmousewheel.jar library. Code separation is much cleaner so that there is now only a "uses" relationship between outliner.jar and jmousewheel.jar. This should make things compatible between the use of a BSD license for outliner.jar and the LGPL for jmousewheel.jar.
