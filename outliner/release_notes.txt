@@ -1,4 +1,4 @@
-1.8.9 - 07/12/02
+1.8.9 - 08/12/02
 	New Features:
 		1) Feature Request #548169. Added the following two editing actions:
 			Shift-doubleclick on an expanded node now collapses the node without collapsing the node's children. When you expand the node with a regular doubleclick the childrens expansion state is preserved.
