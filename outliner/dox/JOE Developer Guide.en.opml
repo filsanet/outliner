@@ -3,7 +3,7 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide.en.opml</title>
 <dateCreated>Thu, 1 Nov 2001 12:22:52 GMT</dateCreated>
-<dateModified>Tue, 22 Jan 2002 02:53:45 GMT</dateModified>
+<dateModified>Wed, 23 Jan 2002 04:54:34 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
@@ -750,6 +750,7 @@
 		<outline text="Propagating gui_tree.en.xml">
 			<outline text="When you change this file, copy it to the other language versions and commit those as well"/>
 		</outline>
+		<outline text="Working with gui_tree.en.xml"/>
 		<outline text="Adding a File Format">
 			<outline text="About this How-To">
 				<outline text="This How-To shows what you need to know to add a file format for opening and saving documents with JOE. "/>
