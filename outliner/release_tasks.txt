@@ -1,0 +1,10 @@
+1) Update the compatibility comments in the gui.xml files.
+2) Rev the release notes.
+3) Rev the "About Joe" page.
+4) Rev the splash screen.
+5) Checkin latest versions of the jars.
+6) Run an ant release.
+7) FTP the release to sf.
+8) Add the release through the admin area of sf.
+9) Tag the new build in CVS.
+10) Update the website.
