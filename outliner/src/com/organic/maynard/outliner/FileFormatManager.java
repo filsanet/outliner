@@ -28,6 +28,8 @@ public class FileFormatManager {
 	// Constants
 	public static final String FORMAT_TYPE_OPEN = "open";
 	public static final String FORMAT_TYPE_SAVE = "save";
+	public static final String FORMAT_TYPE_OPEN_DEFAULT = "open_default";
+	public static final String FORMAT_TYPE_SAVE_DEFAULT = "save_default";
 
 
 	private Vector openers = new Vector();
@@ -36,28 +38,25 @@ public class FileFormatManager {
 	private Vector savers = new Vector();
 	private Vector saverNames = new Vector();
 	
+	private OpenFileFormat defaultOpenFileFormat = null;
+	private SaveFileFormat defaultSaveFileFormat = null;
+	
 	// The Constructor
 	public FileFormatManager() {}
 
-	public void createFileFormat(String formatType, String formatName, String className) {
-		if (formatType.equals(FORMAT_TYPE_OPEN)) {
-			try {
-				Class theClass = Class.forName(className);
+	public void createFileFormat(String formatType, String formatName, String className, Vector extensions) {
+		try {
+			Class theClass = Class.forName(className);
+			if (formatType.equals(FORMAT_TYPE_OPEN)) {
 				OpenFileFormat openFileFormat = (OpenFileFormat) theClass.newInstance();
+				setExtensions(openFileFormat, extensions);
 				boolean success = addOpenFormat(formatName, openFileFormat);
 				if (success) {
 					System.out.println("\tOpen: " + className + " -> " + formatName);
 				} else {
 					System.out.println("Duplicate File Format Name: " + formatName);
 				}
-			} catch (ClassNotFoundException cnfe) {
-				System.out.println("Exception: " + className + " " + cnfe);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else if (formatType.equals(FORMAT_TYPE_SAVE)) {
-			try {
-				Class theClass = Class.forName(className);
+			} else if (formatType.equals(FORMAT_TYPE_SAVE)) {
 				SaveFileFormat saveFileFormat = (SaveFileFormat) theClass.newInstance();
 				boolean success = addSaveFormat(formatName, saveFileFormat);
 				if (success) {
@@ -65,15 +64,69 @@ public class FileFormatManager {
 				} else {
 					System.out.println("Duplicate File Format Name: " + formatName);
 				}
-			} catch (ClassNotFoundException cnfe) {
-				System.out.println("Exception: " + className + " " + cnfe);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}		
+			} else if (formatType.equals(FORMAT_TYPE_OPEN_DEFAULT)) {
+				OpenFileFormat openFileFormat = (OpenFileFormat) theClass.newInstance();
+				setExtensions(openFileFormat, extensions);
+				setDefaultOpenFileFormat(openFileFormat);
+				boolean success = addOpenFormat(formatName, openFileFormat);
+				if (success) {
+					System.out.println("\tOpen: " + className + " -> " + formatName);
+				} else {
+					System.out.println("Duplicate File Format Name: " + formatName);
+				}
+			} else if (formatType.equals(FORMAT_TYPE_SAVE_DEFAULT)) {
+				SaveFileFormat saveFileFormat = (SaveFileFormat) theClass.newInstance();
+				setDefaultSaveFileFormat(saveFileFormat);
+				boolean success = addSaveFormat(formatName, saveFileFormat);
+				if (success) {
+					System.out.println("\tSave: " + className + " -> " + formatName);
+				} else {
+					System.out.println("Duplicate File Format Name: " + formatName);
+				}		
+			}
+		} catch (ClassNotFoundException cnfe) {
+			System.out.println("Exception: " + className + " " + cnfe);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void setExtensions(OpenFileFormat format, Vector extensions) {
+		if (extensions == null) {
+			return;
+		}
+		
+		for (int i = 0; i < extensions.size(); i++) {
+			String ext = ((String) extensions.get(i)).toLowerCase();
+			if (i == 0) {
+				format.addExtension(ext, true);
+			} else {
+				format.addExtension(ext, false);
+			}
 		}
 	}
 
 	// Open Accessors
+	public String getOpenFileFormatNameForExtension(String extension) {
+		for (int i = 0; i < openers.size(); i++) {
+			OpenFileFormat format = (OpenFileFormat) openers.get(i);
+			if (format.extensionExists(extension.toLowerCase())) {
+				return (String) openerNames.get(i);
+			}
+		}
+		
+		int index = openers.indexOf(getDefaultOpenFileFormat());
+		return (String) openerNames.get(index);
+	}
+	
+	public OpenFileFormat getDefaultOpenFileFormat() {
+		return defaultOpenFileFormat;
+	}
+
+	public void setDefaultOpenFileFormat(OpenFileFormat defaultOpenFileFormat) {
+		this.defaultOpenFileFormat = defaultOpenFileFormat;
+	}
+
 	public boolean addOpenFormat(String formatName, OpenFileFormat format) {
 		if (isNameUnique(formatName, openerNames)) {
 			openerNames.add(formatName);
@@ -111,6 +164,14 @@ public class FileFormatManager {
 	
 	
 	// Save Accessors
+	public SaveFileFormat getDefaultSaveFileFormat() {
+		return defaultSaveFileFormat;
+	}
+	
+	public void setDefaultSaveFileFormat(SaveFileFormat defaultSaveFileFormat) {
+		this.defaultSaveFileFormat = defaultSaveFileFormat;
+	}
+
 	public boolean addSaveFormat(String formatName, SaveFileFormat format) {
 		if (isNameUnique(formatName, saverNames)) {
 			saverNames.add(formatName);
@@ -196,14 +257,14 @@ public class FileFormatManager {
 		return text.toString();
 	}
 	
-	public static boolean writeFile(String filename, String encoding, String text) {
+	public static boolean writeFile(String filename, byte[] bytes) {
 		try {
 			FileOutputStream fileOutputStream = new FileOutputStream(filename);
-			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, encoding);
+			//OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, encoding);
 			
-			outputStreamWriter.write(text);
-			outputStreamWriter.flush();
-			outputStreamWriter.close();
+			fileOutputStream.write(bytes);
+			fileOutputStream.flush();
+			fileOutputStream.close();
 			
 			return true;
 		} catch (Exception e) {

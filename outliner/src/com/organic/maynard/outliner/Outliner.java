@@ -247,8 +247,26 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 			System.out.println("GUI Loading Error: exiting.");
 			System.exit(0);
 		}
+
+		// See if a file to open was provided at the command line.
+		String filepath = null;
+		try {
+			filepath = args[0];
+			if (filepath != null) {
+				String extension = filepath.substring(filepath.lastIndexOf(".") + 1,filepath.length());
+				String fileFormat = Outliner.fileFormatManager.getOpenFileFormatNameForExtension(extension);
+	
+				DocumentInfo docInfo = new DocumentInfo();
+				docInfo.setPath(filepath);
+				docInfo.setEncodingType(Preferences.OPEN_ENCODING.cur);
+				docInfo.setFileFormat(fileFormat);
+				
+				FileMenu.openFile(docInfo);
+						
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
 		
-		//Outliner outliner = new Outliner();
+		}
 		
 		// For Debug Purposes
 		if (Preferences.PRINT_ENVIRONMENT.cur) {

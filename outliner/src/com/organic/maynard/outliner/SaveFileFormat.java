@@ -22,7 +22,7 @@ import javax.swing.*;
 import java.io.*;
 
 public interface SaveFileFormat {
-	public StringBuffer save(
+	public byte[] save(
 		TreeContext tree,
 		DocumentInfo docInfo
 	);

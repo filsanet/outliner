@@ -138,19 +138,16 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 			
 			// WebFile
 			boolean success = false;
-			StringBuffer buf = saveFileFormat.save(document.tree, docInfo);
+			byte[] bytes = saveFileFormat.save(document.tree, docInfo);
 			if (Preferences.WEB_FILE_SYSTEM.cur) {
 				try {
-					success = WebFile.save(Preferences.WEB_FILE_URL.cur, docInfo.getPath(), buf.toString());
+					success = WebFile.save(Preferences.WEB_FILE_URL.cur, docInfo.getPath(), bytes);
 				} catch(IOException x) {
 					x.printStackTrace();
 					success = false;
 				}
 			} else {
-				success = FileFormatManager.writeFile(
-				    docInfo.getPath(), 
-					docInfo.getEncodingType(), 
-					buf.toString());
+				success = FileFormatManager.writeFile(docInfo.getPath(), bytes);
 			}
 
 			
@@ -165,19 +162,16 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 
 			// WebFile
 			boolean success = false;
-			StringBuffer buf = saveFileFormat.save(document.tree, docInfo);
+			byte[] bytes = saveFileFormat.save(document.tree, docInfo);
 			if (Preferences.WEB_FILE_SYSTEM.cur) {
 				try {
-					success = WebFile.save(Preferences.WEB_FILE_URL.cur, docInfo.getPath(), buf.toString());
+					success = WebFile.save(Preferences.WEB_FILE_URL.cur, docInfo.getPath(), bytes);
 				} catch(IOException x) {
 					x.printStackTrace();
 					success = false;
 				}
 			} else {
-				success = FileFormatManager.writeFile(
-				    docInfo.getPath(), 
-					docInfo.getEncodingType(), 
-					buf.toString());
+				success = FileFormatManager.writeFile(docInfo.getPath(), bytes);
 			}
 
 			//boolean success = saveFileFormat.save(document.tree, docInfo);
@@ -219,10 +213,10 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 		
 		// Load the file
 		TreeContext tree = new TreeContext();
-		BufferedReader buf = null;
+		InputStream stream = null;
 		if (Preferences.WEB_FILE_SYSTEM.cur) {
 			try {
-				buf = WebFile.open(Preferences.WEB_FILE_URL.cur, filename);
+				stream = WebFile.open(Preferences.WEB_FILE_URL.cur, filename);
 			} catch(IOException e) {
 				JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. Could not open file: " + filename);
 				RecentFilesList.removeFileNameFromList(filename);
@@ -230,9 +224,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 			}
 		} else {
 			try {
-				FileInputStream fileInputStream = new FileInputStream(filename);
-				InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, encoding);
-				buf = new BufferedReader(inputStreamReader);
+				stream = new FileInputStream(filename);
 			} catch (FileNotFoundException fnfe) {
 				JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. File not found: " + filename);
 				RecentFilesList.removeFileNameFromList(filename);
@@ -244,7 +236,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 			}
 		}
 
-		int success = openFileFormat.open(tree, docInfo, buf);
+		int success = openFileFormat.open(tree, docInfo, stream);
 		if (success == OpenFileFormat.FAILURE) {
 			JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. Could not open file: " + filename);
 			RecentFilesList.removeFileNameFromList(filename);
@@ -314,10 +306,10 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 		docInfo.setPath(filename);
 		docInfo.setEncodingType(document.settings.saveEncoding.cur);
 
-		BufferedReader buf = null;
+		InputStream stream = null;
 		if (Preferences.WEB_FILE_SYSTEM.cur) {
 			try {
-				buf = WebFile.open(Preferences.WEB_FILE_URL.cur, filename);
+				stream = WebFile.open(Preferences.WEB_FILE_URL.cur, filename);
 			} catch(IOException e) {
 				JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. Could not open file: " + filename);
 				RecentFilesList.removeFileNameFromList(filename);
@@ -325,9 +317,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 			}
 		} else {
 			try {
-				FileInputStream fileInputStream = new FileInputStream(filename);
-				InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, docInfo.getEncodingType());
-				buf = new BufferedReader(inputStreamReader);
+				stream = new FileInputStream(filename);
 			} catch (FileNotFoundException fnfe) {
 				JOptionPane.showMessageDialog(Outliner.outliner, "An error occurred. File not found: " + filename);
 				RecentFilesList.removeFileNameFromList(filename);
@@ -340,7 +330,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent {
 		}
 
 
-		int success = openFileFormat.open(tree, docInfo, buf);
+		int success = openFileFormat.open(tree, docInfo, stream);
 		if (success == OpenFileFormat.FAILURE) {
 			RecentFilesList.removeFileNameFromList(filename); // Not really sure this is appropriate.
 			return;

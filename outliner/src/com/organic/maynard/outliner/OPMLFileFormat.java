@@ -59,8 +59,15 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 
 	
 	// SaveFileFormat Interface
-	public StringBuffer save(TreeContext tree, DocumentInfo docInfo) {
-		return prepareFile(tree, docInfo);
+	public byte[] save(TreeContext tree, DocumentInfo docInfo) {
+		StringBuffer buf = prepareFile(tree, docInfo);
+		
+		try {
+			return buf.toString().getBytes(docInfo.getEncodingType());
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return buf.toString().getBytes();
+		}
 	}
 	
 	public boolean supportsComments() {return true;}
@@ -158,7 +165,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	// OpenFileFormat Interface
 	private boolean errorOccurred = false;
 	
-	public int open(TreeContext tree, DocumentInfo docInfo, BufferedReader buf) {
+	public int open(TreeContext tree, DocumentInfo docInfo, InputStream stream) {
 		// Set the objects we are going to populate.
 		this.docInfo = docInfo;
 		this.tree = tree;
@@ -168,6 +175,9 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		errorOccurred = false;
 		
 		try {
+			InputStreamReader inputStreamReader = new InputStreamReader(stream, docInfo.getEncodingType());
+			BufferedReader buf = new BufferedReader(inputStreamReader);
+
 			parser.parse(new InputSource(buf));
 			if (errorOccurred) {
 				success = OpenFileFormat.FAILURE;
@@ -295,5 +305,47 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	public void warning(SAXParseException e) {
 		System.out.println("SAXParserException Warning: " + e);
 		this.errorOccurred = true;
+	}
+
+
+	// File Extensions
+	private HashMap extensions = new HashMap();
+	
+	public void addExtension(String ext, boolean isDefault) {
+		extensions.put(ext, new Boolean(isDefault));
+	}
+	
+	public void removeExtension(String ext) {
+		extensions.remove(ext);
+	}
+	
+	public String getDefaultExtension() {
+		Iterator i = getExtensions();
+		while (i.hasNext()) {
+			String key = (String) i.next();
+			Boolean value = (Boolean) extensions.get(key);
+			
+			if (value.booleanValue()) {
+				return key;
+			}
+		}
+		
+		return null;
+	}
+	
+	public Iterator getExtensions() {
+		return extensions.keySet().iterator();
+	}
+
+	public boolean extensionExists(String ext) {
+		Iterator it = getExtensions();
+		while (it.hasNext()) {
+			String key = (String) it.next();
+			if (ext.equals(key)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

@@ -46,7 +46,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 		} else if (doc.isFileModified()) {
 			int result = JOptionPane.showConfirmDialog(doc, "The text in the " + doc.getFileName() + " file has changed.\nDo you want to save the changes?");
 			if (result == JOptionPane.YES_OPTION) {
-				SaveFileMenuItem item = (SaveFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
+				SaveFileMenuItem item = (SaveFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_MENU_ITEM);
 				item.saveOutlinerDocument(doc);
 			} else if (result == JOptionPane.NO_OPTION) {
 				// Do Nothing

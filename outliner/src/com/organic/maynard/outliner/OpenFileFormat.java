@@ -20,6 +20,7 @@ package com.organic.maynard.outliner;
 
 import javax.swing.*;
 import java.io.*;
+import java.util.*;
 
 public interface OpenFileFormat {
 
@@ -29,9 +30,20 @@ public interface OpenFileFormat {
 	public static final int SUCCESS_MODIFIED = 2;
 	public static final int FAILURE_USER_ABORTED = 3;
 
+
+	// Methods
 	public int open(
 		TreeContext tree,
 		DocumentInfo docInfo,
-		BufferedReader buf
+		InputStream stream
 	);
+
+	
+	// File Extensions
+	public void addExtension(String ext, boolean isDefault);
+	public void removeExtension(String ext);
+	
+	public String getDefaultExtension();
+	public Iterator getExtensions();
+	public boolean extensionExists(String ext);
 }
