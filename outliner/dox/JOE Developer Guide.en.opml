@@ -2,16 +2,16 @@
 <opml version="1.0">
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide.en.opml</title>
-<dateCreated>Tue, 17 Jul 2001 02:49:03 GMT</dateCreated>
-<dateModified>Mon, 15 Oct 2001 06:12:23 GMT</dateModified>
+<dateCreated>Thu, 1 Nov 2001 12:22:52 GMT</dateCreated>
+<dateModified>Thu, 1 Nov 2001 12:23:15 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>21</windowTop>
-<windowLeft>618</windowLeft>
-<windowBottom>590</windowBottom>
-<windowRight>1100</windowRight>
+<windowTop>23</windowTop>
+<windowLeft>333</windowLeft>
+<windowBottom>592</windowBottom>
+<windowRight>980</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -87,7 +87,9 @@
 		<outline isEditable="true" isMoveable="true" text="http://JavaOutlineEditor.org/feedback"/>
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="JOE People">
-		<outline isEditable="true" isMoveable="true" text="Maynard Demmon"/>
+		<outline isEditable="true" isMoveable="true" text="Maynard Demmon">
+			<outline text="mailto:maynard@organic.com"/>
+		</outline>
 		<outline isEditable="true" isMoveable="true" text="Philip Suh"/>
 		<outline isEditable="true" isMoveable="true" text="Steven Spencer"/>
 		<outline isEditable="true" isMoveable="true" text="Stanley Krute">
@@ -126,8 +128,10 @@
 		<outline text=""/>
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="Version">
-		<outline isEditable="true" isMoveable="true" text="2001.08.24.15.07.00">
-			<outline text="yyyy.mm.dd.hh.mm.ss"/>
+		<outline text="JDG versionStamp">
+			<outline isEditable="true" isMoveable="true" text="2001.10.28.16.00.00.pst">
+				<outline text="yyyy.mm.dd.hh.mm.ss.tz"/>
+			</outline>
 		</outline>
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="Cataloging Info">
@@ -570,7 +574,7 @@
 	<outline isEditable="true" isMoveable="true" text="Hints and Tips">
 		<outline isEditable="true" isMoveable="true" text="ssh"/>
 		<outline isEditable="true" isMoveable="true" text="CVS ">
-			<outline isEditable="true" isMoveable="true" text="Output to a Text File">
+			<outline isEditable="true" isMoveable="true" text="Output CVS Operations to a Text File">
 				<outline isEditable="true" isMoveable="true" text="You can then examine the output at your leisure">
 					<outline isEditable="true" isMoveable="true" text="For example">
 						<outline isEditable="true" isMoveable="true" text="I run a general update like this">
@@ -581,6 +585,30 @@
 				</outline>
 				<outline isEditable="true" isMoveable="true" text="Especially vital in Windows worlds">
 					<outline isEditable="true" isMoveable="true" text="The stock Windows command line window keeps you from getting at anything beyond the last 50 lines of output"/>
+				</outline>
+			</outline>
+			<outline isEditable="true" isMoveable="true" text="CVS Update and Commit Result Codes">
+				<outline isEditable="true" isMoveable="true" text="?">
+					<outline isEditable="true" isMoveable="true" text="The file is unknown to CVS"/>
+				</outline>
+				<outline isEditable="true" isMoveable="true" text="A">
+					<outline isEditable="true" isMoveable="true" text="The file's been added to your world, but needs to be committed to the repository."/>
+				</outline>
+				<outline isEditable="true" isMoveable="true" text="C">
+					<outline isEditable="true" isMoveable="true" text="There's a conflict."/>
+				</outline>
+				<outline isEditable="true" isMoveable="true" text="M">
+					<outline isEditable="true" isMoveable="true" text="The local copy is different from what's in the repository"/>
+					<outline isEditable="true" isMoveable="true" text="You need to diff the files and merge as necessary"/>
+				</outline>
+				<outline isEditable="true" isMoveable="true" text="P">
+					<outline isEditable="true" isMoveable="true" text="CVS has sent a patch for the file in order to have it match what's in the Repository."/>
+				</outline>
+				<outline isEditable="true" isMoveable="true" text="R">
+					<outline isEditable="true" isMoveable="true" text="The file's been removed from your private copy, but won't be removed from the repository until you commit the removal"/>
+				</outline>
+				<outline isEditable="true" isMoveable="true" text="U">
+					<outline isEditable="true" isMoveable="true" text="The file's been Updated to match what's in the Repository."/>
 				</outline>
 			</outline>
 			<outline isEditable="true" isMoveable="true" text="Dealing with M-result Update Items">
@@ -624,30 +652,6 @@
 				</outline>
 				<outline isEditable="true" isMoveable="true" text="Build and test the project"/>
 				<outline isEditable="true" isMoveable="true" text="When all seems well, commit your change[s]-incorporated version back up to the repository"/>
-			</outline>
-			<outline isEditable="true" isMoveable="true" text="CVS Update and Commit Result Codes">
-				<outline isEditable="true" isMoveable="true" text="?">
-					<outline isEditable="true" isMoveable="true" text="The file is unknown to CVS"/>
-				</outline>
-				<outline isEditable="true" isMoveable="true" text="A">
-					<outline isEditable="true" isMoveable="true" text="The file's been added to your world, but needs to be committed to the repository."/>
-				</outline>
-				<outline isEditable="true" isMoveable="true" text="C">
-					<outline isEditable="true" isMoveable="true" text="There's a conflict."/>
-				</outline>
-				<outline isEditable="true" isMoveable="true" text="M">
-					<outline isEditable="true" isMoveable="true" text="The local copy is different from what's in the repository"/>
-					<outline isEditable="true" isMoveable="true" text="You need to diff the files and merge as necessary"/>
-				</outline>
-				<outline isEditable="true" isMoveable="true" text="P">
-					<outline isEditable="true" isMoveable="true" text="CVS has sent a patch for the file in order to have it match what's in the Repository."/>
-				</outline>
-				<outline isEditable="true" isMoveable="true" text="R">
-					<outline isEditable="true" isMoveable="true" text="The file's been removed from your private copy, but won't be removed from the repository until you commit the removal"/>
-				</outline>
-				<outline isEditable="true" isMoveable="true" text="U">
-					<outline isEditable="true" isMoveable="true" text="The file's been Updated to match what's in the Repository."/>
-				</outline>
 			</outline>
 			<outline isEditable="true" isMoveable="true" text="Some links to CVS info that you may find useful"/>
 		</outline>
@@ -785,9 +789,14 @@
 				</outline>
 			</outline>
 			<outline isEditable="true" isMoveable="true" text="Updating all project files">
-				<outline isEditable="true" isMoveable="true" text="open a command line, and go to the project's root directory"/>
-				<outline isEditable="true" isMoveable="true" text="give this command">
-					<outline isEditable="true" isMoveable="true" text="cvs update"/>
+				<outline text="manual">
+					<outline isEditable="true" isMoveable="true" text="open a command line, and go to the project's root directory"/>
+					<outline isEditable="true" isMoveable="true" text="give this command">
+						<outline isEditable="true" isMoveable="true" text="cvs update"/>
+					</outline>
+				</outline>
+				<outline text="batch files">
+					<outline text="JoeUpd.bat"/>
 				</outline>
 			</outline>
 			<outline isEditable="true" isMoveable="true" text="Updating specific project files"/>
