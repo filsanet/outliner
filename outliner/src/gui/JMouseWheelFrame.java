@@ -60,7 +60,7 @@ public class JMouseWheelFrame extends JFrame {
 
 					// This invokes: com.ms.security.PolicyEngine.assertPermission(com.ms.security.PermissionID.SYSTEM);
 				}
-				System.loadLibrary("MouseWheel");
+				System.loadLibrary("lib\\MouseWheel");
 				libraryLoaded = true;
 			} catch (Throwable t) {
 				System.err.println("Failed to load MouseWheel Library - Wheel Disabled.");
@@ -166,6 +166,9 @@ public class JMouseWheelFrame extends JFrame {
 
 /*
  * $Log$
+ * Revision 1.1  2001/11/12 09:05:38  maynardd
+ * Added code from outliner.jar to make this library self contained.
+ *
  * Revision 1.8  2001/10/12 21:44:30  mhoesch
  * Added support for MS Java (also for Internet Explorer, if Applets are signed!!!
  * Code for loading DLL to client is missing.., but if copied into WIN System
