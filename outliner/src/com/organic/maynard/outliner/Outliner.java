@@ -35,6 +35,8 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.util.find.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.datatransfer.*;

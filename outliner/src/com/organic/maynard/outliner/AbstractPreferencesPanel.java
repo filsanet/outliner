@@ -209,14 +209,14 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 	
 	
 	// Static Methods
-	protected static void addArrayToComboBox(Object[] array, String componentID) {
+	public static void addArrayToComboBox(Object[] array, String componentID) {
 		JComboBox component = (JComboBox) ((PreferencesGUITreeComboBoxComponent) GUITreeLoader.reg.get(componentID)).getComponent();
 		for (int i = 0; i < array.length; i++) {
 			component.addItem(array[i].toString());
 		}	
 	}
 	
-	protected static void addPreferenceItem(String text, JComponent field, Container container) {
+	public static void addPreferenceItem(String text, JComponent field, Container container) {
 		Box box = Box.createHorizontalBox();
 		box.add(Box.createHorizontalGlue());
 		box.add(new JLabel(text));
@@ -226,7 +226,7 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 		container.add(box);
 	}
 
-	protected static void addSingleItemCentered(JComponent component, Container container) {
+	public static void addSingleItemCentered(JComponent component, Container container) {
 		Box box = Box.createHorizontalBox();
 		box.add(Box.createHorizontalGlue());
 		component.setMaximumSize(component.getPreferredSize());
