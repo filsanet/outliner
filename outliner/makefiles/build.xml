@@ -149,6 +149,7 @@
 		<target name="jar-outliner" depends="compile-outliner" description="Create outliner.jar">
 			<jar basedir="${src}" compress="true" jarfile="${lib}/outliner.jar">
 				<include name="com/organic/maynard/outliner/**"/>
+				<include name="graphics/**"/>
 				<exclude name="**/*.java"/>
 			</jar>
 		</target>
