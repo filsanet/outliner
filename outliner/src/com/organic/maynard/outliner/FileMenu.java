@@ -26,6 +26,9 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
+	// Temporarily store file formats here until we get a file format manager setup.
+	public static final SimpleFileFormat simpleFileFormat = new SimpleFileFormat();
+
 
 	public static final String FILE_NEW = "New";
 	public static final String FILE_OPEN = "Open...";
@@ -237,15 +240,15 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 	}
 
 	protected static void saveFile(String filename, OutlinerDocument document, boolean saveAs) {
-		try {
-			FileOutputStream fileOutputStream = new FileOutputStream(filename);
-			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream,document.settings.saveEncoding.cur);
-			
-			outputStreamWriter.write(document.tree.rootNode.depthPaddedValue(Preferences.platformToLineEnding(document.settings.lineEnd.cur)));
-			outputStreamWriter.flush();
-			outputStreamWriter.close();
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(document, "Could not save file: " + Outliner.chooser.getSelectedFile().getPath() + " because of: " + e);
+	
+		DocumentInfo docInfo = new DocumentInfo();
+		docInfo.setPath(filename);
+		docInfo.setEncodingType(document.settings.saveEncoding.cur);
+		docInfo.setLineEnding(document.settings.lineEnd.cur);
+		
+		boolean success = simpleFileFormat.save(document.tree, docInfo);
+		if (!success) {
+			JOptionPane.showMessageDialog(document, "An error occurred. Could not save file: " + Outliner.chooser.getSelectedFile().getPath());
 			return;
 		}
 
@@ -266,30 +269,35 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 	}
 		
 	protected static void openFile(String filename, String encoding) {
-		String text = loadFile(filename,encoding);		
-		if (text == null) {return;}
+		// Load the file
+		TreeContext tree = new TreeContext();
+		
+		DocumentInfo docInfo = new DocumentInfo();
+		docInfo.setPath(filename);
+		docInfo.setEncodingType(encoding);
 
+		boolean success = simpleFileFormat.open(tree, docInfo);
+		if (!success) {
+			RecentFilesList.removeFileNameFromList(filename);
+			return;
+		}
+		
 		// Create a new document
 		OutlinerDocument newDoc = new OutlinerDocument(filename);
+		tree.doc = newDoc;
+		newDoc.tree = tree;
 		
 		newDoc.settings.syncPrefs();
 		newDoc.settings.saveEncoding.def = encoding;
 		newDoc.settings.saveEncoding.cur = encoding;
 		newDoc.settings.saveEncoding.tmp = encoding;
 		newDoc.settings.useDocumentSettings = true;
-
-		// Shorthand
-		TreeContext tree = newDoc.tree;
 		
 		// Clear current selection
 		tree.clearSelection();
 		
 		// Clear the VisibleNodeCache
 		tree.visibleNodes.clear();
-		
-		// Swap in the new tree
-		tree.rootNode = PadSelection.pad(text, tree, 0,Preferences.LINE_END_UNIX);
-		tree.rootNode.setExpandedClean(true);
 		
 		// Insert nodes into the VisibleNodes Cache
 		for (int i = 0; i < tree.rootNode.numOfChildren(); i++) {
@@ -316,24 +324,31 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 	}
 
 	protected static void revertFile(String filename, OutlinerDocument document) {
-		String text = loadFile(filename,document.settings.saveEncoding.cur);
-		if (text == null) {return;}
+		// Load the file
+		TreeContext tree = new TreeContext();
+		
+		DocumentInfo docInfo = new DocumentInfo();
+		docInfo.setPath(filename);
+		docInfo.setEncodingType(document.settings.saveEncoding.cur);
 
-		// Shorthand
-		TreeContext tree = document.tree;
+		boolean success = simpleFileFormat.open(tree, docInfo);
+		if (!success) {
+			RecentFilesList.removeFileNameFromList(filename); // Not really sure this is appropriate.
+			return;
+		}
+		
+		// Swap in the new tree
+		tree.doc = document;
+		document.tree = tree;
+		
+		// Clear the UndoQueue
+		document.undoQueue.clear();
 		
 		// Clear current selection
 		tree.clearSelection();
 		
 		// Clear the VisibleNodeCache
 		tree.visibleNodes.clear();
-		
-		// Clear the UndoQueue
-		document.undoQueue.clear();
-		
-		// Swap in the new tree
-		tree.rootNode = PadSelection.pad(text, tree, 0,Preferences.LINE_END_UNIX);
-		tree.rootNode.setExpandedClean(true);
 		
 		// Insert nodes into the VisibleNodes Cache
 		for (int i = 0; i < tree.rootNode.numOfChildren(); i++) {
@@ -353,37 +368,5 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		outlineLayoutManager layout = document.panel.layout;
 		layout.setNodeToDrawFrom((Node) tree.visibleNodes.get(0), 0);
 		layout.draw((Node) tree.visibleNodes.get(0), outlineLayoutManager.TEXT);
-	}
-
-	protected static String loadFile(String filename, String encoding) {
-		StringBuffer text = new StringBuffer("");
-		try {
-			FileInputStream fileInputStream = new FileInputStream(filename);
-			InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream,encoding);
-			BufferedReader buffer = new BufferedReader(inputStreamReader);
-			
-			boolean eof = false;
-			while (!eof) {
-				String theLine = buffer.readLine();
-				if (theLine == null) {
-					eof = true;
-				} else {
-					text.append(theLine + Preferences.LINE_END_UNIX);
-				}
-			}
-			
-			fileInputStream.close();
-		} catch (FileNotFoundException fnfe) {
-			JOptionPane.showMessageDialog(null, "File Not Found: " + filename);
-			
-			// Now remove it from the recent file list.
-			RecentFilesList.removeFileNameFromList(filename);
-
-			return null;
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Could not create FileReader: " + filename);
-			return null;
-		}
-		return text.toString();
 	}
 }
