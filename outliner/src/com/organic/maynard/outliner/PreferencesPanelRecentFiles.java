@@ -61,8 +61,7 @@ public class PreferencesPanelRecentFiles
 
 	private static final String [] RECENT_FILES_NAME_FORMS = {
 		GUITreeLoader.reg.getText(Preferences.RF_NF_FULL_PATHNAME), 
-		/* [srk] enable these once RecentFilesList can handle truncated pathnames
-		GUITreeLoader.reg.getText(Preferences.RF_NF_TRUNC_PATHNAME), */
+		GUITreeLoader.reg.getText(Preferences.RF_NF_TRUNC_PATHNAME), 
 		GUITreeLoader.reg.getText(Preferences.RF_NF_FILENAME) 
 		} ;
 
@@ -95,6 +94,9 @@ public class PreferencesPanelRecentFiles
 		int nameForm = 0 ;
 		int direction = 0 ;
 		
+		// first, deal with any possible size changes
+		RecentFilesList.trim();
+
 		// grab what's been set in the panel
 		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
 
@@ -104,7 +106,6 @@ public class PreferencesPanelRecentFiles
 			Preferences.RECENT_FILES_NAME_FORM);
 		PreferenceString pRF_Direction = (PreferenceString) prefs.getPreference(
 			Preferences.RECENT_FILES_DIRECTION);
-		
 		
 		// find the position of those strings in their arrays
 		for (ordering = 0, limit = RECENT_FILES_ORDERINGS.length, currentSetting = pRF_Ordering.getCur();
