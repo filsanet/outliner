@@ -40,7 +40,7 @@
 		<asset type="text" key="done" value="Done"/>
 		<asset type="text" key="encode" value="Encode"/>
 		<asset type="text" key="encoding_when_saving" value="Encoding when saving."/>
-		<asset type="text" key="error_att_key_alpha" value="Error: key must be alpha-numeric."/>
+		<asset type="text" key="error_att_key_alpha" value="&lt;html&gt;Error: key must be alpha-numeric&lt;br&gt;with no spaces.&lt;/html&gt;"/>
 		<asset type="text" key="error_att_key_existance" value="Error: key cannot be empty."/>
 		<asset type="text" key="error_name_existance" value="Error: name cannot be empty."/>
 		<asset type="text" key="error_att_key_uniqueness" value="Error: key must be unique."/>

@@ -342,9 +342,9 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 				String key = (String) it.next();
 				Object value = node.getAttribute(key);
 				
-				if (isReservedItemName(key)) {
-					continue;
-				}
+				//if (isReservedItemName(key)) {
+				//	continue;
+				//}
 				
 				boolean isReadOnly = node.isReadOnly(key);
 				if (isReadOnly) {
@@ -400,32 +400,6 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	// OpenFileFormat Interface
 	private boolean errorOccurred = false;
 	
@@ -442,15 +416,15 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 		
 		// Do the Parsing
 		int success = FAILURE;
-		/*errorOccurred = false;
+		errorOccurred = false;
 		
 		try {
 			InputStreamReader inputStreamReader = new InputStreamReader(stream, docInfo.getEncodingType());
 			BufferedReader buf = new BufferedReader(inputStreamReader);
-
+			
 			parser.parse(new InputSource(buf));
 			if (errorOccurred) {
-				System.out.println("Error Occurred in OPMLFileFormat");
+				System.out.println("Error Occurred in OMLFileFormat");
 				success = FAILURE;
 				return success;
 			}
@@ -463,6 +437,7 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 			success = FAILURE;
 		} catch (Exception e) {
 			System.out.println("Exception: " + e.getMessage());
+			e.printStackTrace();
 			success = FAILURE;
 		}
 		
@@ -472,10 +447,10 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 		this.elementStack.clear();
 		this.attributesStack.clear();
 		this.currentParent = null;
-		*/
+		
 		return success;
 	}
-	/*
+	
 	// Sax DocumentHandler Implementation
 	public void startDocument () {
 		this.currentParent = tree.getRootNode();
@@ -487,7 +462,7 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 	}
     
 	public void endDocument () {}
-			
+	
 	public void startElement (String name, AttributeList atts) {
 		//System.out.println("Start element: " + name);
 		elementStack.add(name);
@@ -505,58 +480,13 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 				if (attName.equals(ATTRIBUTE_TEXT)) {
 					node.setValue(attValue);
 					
-				} else if (attName.equals(ATTRIBUTE_IS_READ_ONLY_ATTS_LIST)) {
-					if (attValue != null) {
-						readOnlyAttsList = attValue;
-					}
-					
-				} else if (attName.equals(ATTRIBUTE_IS_MOVEABLE)) {
-					if (attValue != null && attValue.equals("false")) {
-						node.setMoveableState(Node.MOVEABLE_FALSE);
-					} else if (attValue != null && attValue.equals("true")) {
-						node.setMoveableState(Node.MOVEABLE_TRUE);
-					}
-					
-				} else if (attName.equals(ATTRIBUTE_IS_EDITABLE)) {
-					if (attValue != null && attValue.equals("false")) {
-						node.setEditableState(Node.EDITABLE_FALSE);
-					} else if (attValue != null && attValue.equals("true")) {
-						node.setEditableState(Node.EDITABLE_TRUE);
-					}
-					
-				} else if (attName.equals(ATTRIBUTE_IS_COMMENT)) {
-					if (attValue != null && attValue.equals("false")) {
-						node.setCommentState(Node.COMMENT_FALSE);
-					} else if (attValue != null && attValue.equals("true")) {
-						node.setCommentState(Node.COMMENT_TRUE);
-					}
-
-				} else if (attName.equals(ATTRIBUTE_CREATED)) {
-					node.setAttribute(attName, attValue, true);
-
-				} else if (attName.equals(ATTRIBUTE_MODIFIED)) {
-					node.setAttribute(attName, attValue, true);
-					
 				} else {
 					node.setAttribute(attName, attValue);
 				}
 			}
 			
-			// Set ReadOnly Property for Attributes
-			StringTokenizer tok = new StringTokenizer(readOnlyAttsList);
-			while (tok.hasMoreTokens()) {
-				String key = tok.nextToken();
-				node.setReadOnly(key, true);
-			}
-						
 			currentParent.appendChild(node);
 			currentParent = node;
-			
-		} else if (name.equals(ELEMENT_DOCUMENT_ATTRIBUTE)) {
-			String key = atts.getValue(ATTRIBUTE_KEY);
-			boolean isReadOnly = Boolean.valueOf(atts.getValue(ATTRIBUTE_IS_READ_ONLY)).booleanValue();
-			
-			tree.setAttribute(key, "", isReadOnly);
 		}
 	}
 	
@@ -578,65 +508,138 @@ public class OMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFi
 		AttributeList atts = (AttributeList) attributesStack.get(attributesStack.size() - 1);
 		//System.out.println(text);
 		
-		if (elementName.equals(ELEMENT_TITLE)) {
+		if (elementName.equals(ELEMENT_METADATA)) {
+			String name = atts.getValue(ATTRIBUTE_NAME);
+			if (!handleMetaDataCharacters(name, text)) {
+				throw new SAXException("Error handling metadata element.");
+			}
+		} else if (elementName.equals(ELEMENT_ITEM)) {
+			String name = atts.getValue(ATTRIBUTE_NAME);
+			if (!handleItemCharacters(name, text)) {
+				throw new SAXException("Error handling item element.");
+			}
+		} else if (elementName.equals(ELEMENT_DATA)) {
+			if (!handleDataCharacters(text)) {
+				throw new SAXException("Error handling data element.");
+			}
+		}
+	}
+	
+	private boolean handleItemCharacters(String name, String text) {
+		if (name.equals(IS_READ_ONLY_ATTS_LIST)) {
+			if (text != null) {
+				// TBD: ensure that read_only_atts_list is process last. Means it must come last when file is saved.
+				StringTokenizer tok = new StringTokenizer(text);
+				while (tok.hasMoreTokens()) {
+					String key = tok.nextToken();
+					currentParent.setReadOnly(key, true);
+				}
+			}
+			
+		} else if (name.equals(IS_MOVEABLE)) {
+			if (text != null && text.equals("false")) {
+				currentParent.setMoveableState(Node.MOVEABLE_FALSE);
+			} else if (text != null && text.equals("true")) {
+				currentParent.setMoveableState(Node.MOVEABLE_TRUE);
+			}
+			
+		} else if (name.equals(IS_EDITABLE)) {
+			if (text != null && text.equals("false")) {
+				currentParent.setEditableState(Node.EDITABLE_FALSE);
+			} else if (text != null && text.equals("true")) {
+				currentParent.setEditableState(Node.EDITABLE_TRUE);
+			}
+			
+		} else if (name.equals(IS_COMMENT)) {
+			if (text != null && text.equals("false")) {
+				currentParent.setCommentState(Node.COMMENT_FALSE);
+			} else if (text != null && text.equals("true")) {
+				currentParent.setCommentState(Node.COMMENT_TRUE);
+			}
+			
+		} else {
+			currentParent.setAttribute(name, text);
+		}
+		
+		return true;
+	}
+	
+	private boolean handleDataCharacters(String text) {
+		currentParent.setValue(text);
+		return true;
+	}
+	
+	private boolean handleMetaDataCharacters(String name, String text) {
+		if (name.equals(IS_READ_ONLY_ATTS_LIST)) {
+			if (text != null) {
+				// TBD: ensure that read_only_atts_list is process last. Means it must come last when file is saved.
+				StringTokenizer tok = new StringTokenizer(text);
+				while (tok.hasMoreTokens()) {
+					String key = tok.nextToken();
+					tree.setReadOnly(key, true);
+				}
+			}
+		} else if (name.equals(TITLE)) {
 			docInfo.setTitle(text);
 		
-		} else if (elementName.equals(ELEMENT_DATE_CREATED)) {
+		} else if (name.equals(DATE_CREATED)) {
 			docInfo.setDateCreated(text);
 		
-		} else if (elementName.equals(ELEMENT_DATE_MODIFIED)) {
+		} else if (name.equals(DATE_MODIFIED)) {
 			docInfo.setDateModified(text);
 		
-		} else if (elementName.equals(ELEMENT_OWNER_NAME)) {
+		} else if (name.equals(OWNER_NAME)) {
 			docInfo.setOwnerName(text);
 		
-		} else if (elementName.equals(ELEMENT_OWNER_EMAIL)) {
+		} else if (name.equals(OWNER_EMAIL)) {
 			docInfo.setOwnerEmail(text);
 		
-		} else if (elementName.equals(ELEMENT_EXPANSION_STATE)) {
+		} else if (name.equals(EXPANSION_STATE)) {
 			docInfo.setExpandedNodesStringShifted(text, -1);
 		
-		} else if (elementName.equals(ELEMENT_VERTICAL_SCROLL_STATE)) {
+		} else if (name.equals(VERTICAL_SCROLL_STATE)) {
 			try {
 				docInfo.setVerticalScrollState(Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
 		
-		} else if (elementName.equals(ELEMENT_WINDOW_TOP)) {
+		} else if (name.equals(WINDOW_TOP)) {
 			try {
 				docInfo.setWindowTop(Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
 		
-		} else if (elementName.equals(ELEMENT_WINDOW_LEFT)) {
+		} else if (name.equals(WINDOW_LEFT)) {
 			try {
 				docInfo.setWindowLeft(Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
 		
-		} else if (elementName.equals(ELEMENT_WINDOW_BOTTOM)) {
+		} else if (name.equals(WINDOW_BOTTOM)) {
 			try {
 				docInfo.setWindowBottom(Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
 		
-		} else if (elementName.equals(ELEMENT_WINDOW_RIGHT)) {
+		} else if (name.equals(WINDOW_RIGHT)) {
 			try {
 				docInfo.setWindowRight(Integer.parseInt(text));
 			} catch (NumberFormatException e) {}
 		
-		} else if (elementName.equals(ELEMENT_APPLY_FONT_STYLE_FOR_COMMENTS)) {
+		} else if (name.equals(APPLY_FONT_STYLE_FOR_COMMENTS)) {
 			docInfo.setApplyFontStyleForComments(Boolean.valueOf(text).booleanValue());
 		
-		} else if (elementName.equals(ELEMENT_APPLY_FONT_STYLE_FOR_EDITABILITY)) {
+		} else if (name.equals(APPLY_FONT_STYLE_FOR_EDITABILITY)) {
 			docInfo.setApplyFontStyleForEditability(Boolean.valueOf(text).booleanValue());
 		
-		} else if (elementName.equals(ELEMENT_APPLY_FONT_STYLE_FOR_MOVEABILITY)) {
+		} else if (name.equals(APPLY_FONT_STYLE_FOR_MOVEABILITY)) {
 			docInfo.setApplyFontStyleForMoveability(Boolean.valueOf(text).booleanValue());
 		
-		} else if (elementName.equals(ELEMENT_DOCUMENT_ATTRIBUTE)) {
-			String key = atts.getValue(ATTRIBUTE_KEY);
-			boolean isReadOnly = tree.isReadOnly(key);
-			tree.setAttribute(key, text, isReadOnly);
+		} else {
+			boolean isReadOnly = tree.isReadOnly(name);
+			tree.setAttribute(name, text, isReadOnly);
 		}
+		
+		return true; // TBD: what types of conditons would cause this to return false?
 	}
-	*/
+	
+	
 	
 	// ErrorHandler Interface
 	public void error(SAXParseException e) {

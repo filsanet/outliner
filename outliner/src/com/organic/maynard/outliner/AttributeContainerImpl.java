@@ -88,7 +88,10 @@ public class AttributeContainerImpl implements AttributeContainer {
 	
 	public boolean isReadOnly(String key) {
 		if (isReadOnly != null && key != null) {
-			return ((Boolean) isReadOnly.get(key)).booleanValue();
+			Boolean b = (Boolean) isReadOnly.get(key);
+			if (b != null) {
+				return b.booleanValue();
+			}
 		}
 		return false;
 	}

@@ -3,6 +3,8 @@ file_format|save_default|com.organic.maynard.outliner.io.formats.SimpleFileForma
 file_format|open_default|com.organic.maynard.outliner.io.formats.SimpleFileFormat|Plaintext|txt htm html xml xsl
 file_format|save|com.organic.maynard.outliner.io.formats.OPMLFileFormat|OPML|opml opm
 file_format|open|com.organic.maynard.outliner.io.formats.OPMLFileFormat|OPML|opml opm
+file_format|save|com.organic.maynard.outliner.io.formats.OMLFileFormat|OML|oml
+file_format|open|com.organic.maynard.outliner.io.formats.OMLFileFormat|OML|oml
 file_format|save|com.psm.wiki.WikiFileFormat|Wiki|wiki
 file_format|open|com.psm.wiki.WikiFileFormat|Wiki|wiki
 file_format|export|com.organic.maynard.outliner.io.formats.HTMLExportFileFormat|HTML|htm html
