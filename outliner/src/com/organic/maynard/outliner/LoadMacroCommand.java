@@ -74,7 +74,7 @@ public class LoadMacroCommand extends Command {
 			fw.write(prepareConfigFile());
 			fw.close();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Could not save recent files config file because of: " + e);
+			JOptionPane.showMessageDialog(null, "Could not save macros config file because of: " + e);
 		}
 	}
 	

@@ -31,15 +31,20 @@ import java.util.*;
 
 public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseListener {
 
-	public static final int UPPER_BUFFER_SIZE = 30;
-	public static final int LOWER_BUFFER_SIZE = 50;
+	// Constants
+	private static final int UPPER_BUFFER_SIZE = 30;
+	private static final int LOWER_BUFFER_SIZE = 50;
 
-	public static Vector macros = new Vector();
-	
+
+	// Fields
+	public static ArrayList macros = new ArrayList();
+
+
 	// The Constructors
 	public MacroPopupMenu() {
 		super();
 	}
+
 
 	// Overrides show in JPopup.
 	public void show(Component invoker, int x, int y) {
@@ -56,7 +61,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		Dimension pmSize = this.getSize();
 		// For the first time the menu is popped up
 		// the size has not yet been initialised
-		if(pmSize.width==0){
+		if(pmSize.width == 0){
 			pmSize = this.getPreferredSize();
 		}
 		
@@ -81,6 +86,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		item.addMouseListener(this);
 		super.insert(item,i);
 	}
+
 
 	// MouseListener Interface
 	public void mouseEntered(MouseEvent e) {
@@ -117,12 +123,13 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
  	public void mousePressed(MouseEvent e) {}
  	public void mouseReleased(MouseEvent e) {}
  	public void mouseClicked(MouseEvent e) {}
-	
-	protected int getLowerScreenBoundary() {
+
+
+	private int getLowerScreenBoundary() {
 		return UPPER_BUFFER_SIZE;
 	}
 	
-	protected int getUpperScreenBoundary() {
+	private int getUpperScreenBoundary() {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		return screenSize.height - LOWER_BUFFER_SIZE;
 	}
@@ -141,13 +148,13 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		// Find the correct spot to add it alphabetically
 		int i;
 		for (i = 0; i < macros.size(); i++) {
-			Macro macroTemp = (Macro) macros.elementAt(i);
+			Macro macroTemp = (Macro) macros.get(i);
 			if (macroTemp.getName().compareTo(macro.getName()) >= 0) {
 				break;
 			}
 		}
 		
-		macros.insertElementAt(macro,i);
+		macros.add(i, macro);
 		JMenuItem item = new JMenuItem(macro.getName());
 		item.addActionListener(this);
 		this.insert(item,i);
@@ -156,25 +163,26 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 	
 	public int removeMacro(Macro macro) {
 		int index = macros.indexOf(macro);
-		macros.removeElementAt(index);
+		macros.remove(index);
 		this.remove(index);
 		return index;
 	}
 	
 	public Macro getMacro(int i) {
-		return (Macro) macros.elementAt(i);	
+		return (Macro) macros.get(i);	
 	}
 	
 	public Macro getMacro(String name) {
 		for (int i = 0; i < macros.size(); i++) {
-			Macro macro = (Macro) macros.elementAt(i);
+			Macro macro = (Macro) macros.get(i);
 			if (macro.getName().equals(name)) {
 				return macro;
 			}
 		}
 		return null;
 	}
-	
+
+
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		startWaitCursor();
@@ -207,10 +215,8 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		
 		endWaitCursor();
 		
-		// Redraw and Set Focus
-		tree.doc.panel.layout.draw();
-		tree.doc.panel.layout.setFocus(tree.getEditingNode(),tree.getComponentFocus());
-		
+		// Redraw
+		tree.doc.panel.layout.redraw();		
 	}
 	
 	private void doSimpleUndoableMacro(OutlinerDocument document, TreeContext tree, Macro macro) {
@@ -333,10 +339,10 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 	}
 
 	// Class Methods
-	public static Cursor normalCursor = null;
-	public static Cursor waitCursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
+	private static Cursor normalCursor = null;
+	private static Cursor waitCursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
 	
-	public static void startWaitCursor() {
+	private static void startWaitCursor() {
 		Component comp = Outliner.outliner.getGlassPane();
 		
 		// Store the normal cursor
@@ -347,7 +353,7 @@ public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseL
 		comp.setCursor(waitCursor);
 	}
 	
-	public static void endWaitCursor() {
+	private static void endWaitCursor() {
 		Component comp = Outliner.outliner.getGlassPane();
 		
 		if (normalCursor != null) {

@@ -54,7 +54,7 @@ public class MacroManagerFrame extends AbstractGUITreeJDialog implements ActionL
 
 	// The Constructor
 	public MacroManagerFrame() {
-		super(false, false, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
 	}
 	
 	
