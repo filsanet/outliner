@@ -49,9 +49,11 @@ import com.organic.maynard.util.string.Replace;
 
 public class OutlinerWindowMonitor extends InternalFrameAdapter {
 	
+	// a window's closing -- deal with it
 	public void internalFrameClosing(InternalFrameEvent e) {
 		closeInternalFrame(e.getInternalFrame());
-	}
+	} // end method
+	
 	
 	// a window's closing -- deal with it
 	public static boolean closeInternalFrame(JInternalFrame w) {
@@ -59,6 +61,7 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 		// grab a copy of the document ref
 		OutlinerDocument doc = (OutlinerDocument) w;
 		
+		// we may have to send messages
 		String msg = null;
 		
 		// if the document is modified ....
@@ -66,24 +69,32 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 			
 			// if it's untitled, do a Save As ...
 			if ( doc.getFileName().equals("")) {
+				// set up dialog
 				msg = GUITreeLoader.reg.getText("error_window_monitor_untitled_save_changes");
 				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, doc.getTitle());
 				
+				// run dialog
 				int result = JOptionPane.showConfirmDialog(doc, msg);
+				
+				// deal with dialog results
 				if (result == JOptionPane.YES_OPTION) {
 					SaveAsFileMenuItem.saveAsOutlinerDocument(doc, Outliner.fileProtocolManager.getDefault());
 				} else if (result == JOptionPane.NO_OPTION) {
 					// Do Nothing
 				} else if (result == JOptionPane.CANCEL_OPTION) {
 					return false;
-				}
+				} // end if-else chain
 				
 			// else if it's not imported, do a Save
 			} else if (! doc.getDocumentInfo().isImported()) {
+				// set up dialog
 				msg = GUITreeLoader.reg.getText("error_window_monitor_untitled_save_changes");
 				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, doc.getFileName());
-	
+				
+				// run dialog
 				int result = JOptionPane.showConfirmDialog(doc, msg);
+				
+				// deal with dialog results
 				if (result == JOptionPane.YES_OPTION) {
 					SaveFileMenuItem item = (SaveFileMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_MENU_ITEM);
 					item.saveOutlinerDocument(doc);
@@ -91,20 +102,24 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 					// Do Nothing
 				} else if (result == JOptionPane.CANCEL_OPTION) {
 					return false;
-				}
-			// else it's imported, do a Save As
+				} // end if-else chain
+			// else it IS imported, do a Save As
 			} else {
+				// set up dialog
 				msg = GUITreeLoader.reg.getText("error_window_monitor_untitled_save_changes");
 				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, doc.getFileName());
 			
+				// run dialog
 				int result = JOptionPane.showConfirmDialog(doc, msg);
+				
+				// deal with dialog results
 				if (result == JOptionPane.YES_OPTION) {
 					SaveAsFileMenuItem.saveAsOutlinerDocument(doc, Outliner.fileProtocolManager.getProtocol(doc.getDocumentInfo().getProtocolName()));
 				} else if (result == JOptionPane.NO_OPTION) {
 					// Do Nothing
 				} else if (result == JOptionPane.CANCEL_OPTION) {
 					return false;
-				}
+				} // end if-else chain
 			} // end else it's imported
 			
 		} // end if the document is modified
@@ -113,14 +128,14 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 		DocumentInfo docInfo = RecentFilesList.getDocumentInfo(doc.getFileName());
 		if (docInfo != null) {
 			docInfo.recordWindowPositioning(doc);
-		}
+		} // end if
 
 		// Hide the document
 		doc.setVisible(false);
 
 		// Remove the document.
 		Outliner.removeDocument(doc);
-		
+
 		// Explicitly Destroy since Swing has problems letting go.
 		// Seems to make a difference when we also use -Xincgc.
 		doc.destroy();
@@ -130,5 +145,5 @@ public class OutlinerWindowMonitor extends InternalFrameAdapter {
 		System.gc();
 		
 		return true;
-	}
-}
+	} // end method
+} // end class
