@@ -244,17 +244,17 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 
 	// Configuration
 	private DocumentSettings docSettings = null;
-
-	public void configureAndShow(DocumentSettings docSettings) {
-
+	
+	public void configure(DocumentSettings docSettings) {
+		
 		// Lazy Instantiation
 		if (!initialized) {
 			initialize();
 			initialized = true;
 		}
-
+		
 		this.docSettings = docSettings;
-
+		
 		// Set the Preference Objects on the Listeners so that changes are always sent to the document level Preferences.
 		lineEndComboBoxListener.setPreference(docSettings.lineEnd);
 		saveEncodingComboBoxListener.setPreference(docSettings.saveEncoding);
@@ -266,7 +266,7 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 		applyFontStyleForMoveabilityCheckBoxListener.setPreference(docSettings.applyFontStyleForMoveability);
 		useCreateModDatesCheckBoxListener.setPreference(docSettings.useCreateModDates);
 		createModDatesFormatTextFieldListener.setPreference(docSettings.createModDatesFormat);
-
+		
 		if (docSettings.useDocumentSettings()) {
 			isInheritingPrefsLabel.setText(IS_USING_DOCUMENT_PREFS);
 			buttonRestoreToGlobal.setEnabled(true);
@@ -276,10 +276,13 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 			docSettings.syncToGlobal();
 		}
 		syncToDocumentSettings();
-				
+	}
+	
+	public void configureAndShow(DocumentSettings docSettings) {
+		configure(docSettings);
   		super.show();
 	}
-
+	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(OK)) {

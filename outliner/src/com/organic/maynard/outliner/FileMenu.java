@@ -470,6 +470,30 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		}
 		
 		// Update DocumentSettings
+		syncDocumentSettingsToDocInfo(newDoc, docInfo, mode);
+		
+		// make any final modal adjustments
+		switch (mode) {
+			case MODE_IMPORT:
+				// we were imported
+				docInfo.setImported(true);
+				break;
+				
+			case MODE_OPEN:
+				break;
+				
+			default:
+				break;
+		}
+		
+		// make sure we're in the Recent Files list
+		RecentFilesList.addFileNameToList(docInfo);
+		
+		setupAndDraw(docInfo, newDoc, openOrImportResult);
+	}
+	
+	protected static void syncDocumentSettingsToDocInfo(OutlinerDocument newDoc, DocumentInfo docInfo, int mode) {
+		// Update DocumentSettings
 		newDoc.settings.getLineEnd().def = docInfo.getLineEnding();
 		newDoc.settings.getLineEnd().restoreCurrentToDefault();
 		newDoc.settings.getLineEnd().restoreTemporaryToDefault();
@@ -511,26 +535,6 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		
 		newDoc.settings.setDateCreated(docInfo.getDateCreated());
 		newDoc.settings.setDateModified(docInfo.getDateModified());
-		
-		
-		// make any final modal adjustments
-		switch (mode) {
-			case MODE_IMPORT:
-				// we were imported
-				docInfo.setImported(true);
-				break;
-				
-			case MODE_OPEN:
-				break;
-				
-			default:
-				break;
-		}
-		
-		// make sure we're in the Recent Files list
-		RecentFilesList.addFileNameToList(docInfo);
-		
-		setupAndDraw(docInfo, newDoc, openOrImportResult);
 	}
 	
 	// revert a file to it's previous state
@@ -561,6 +565,11 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		
 		// Reset the document attributes
 		Outliner.documentAttributes.configure(tree);
+		
+		// Reset the document preferences
+		document.getSettings().setUseDocumentSettings(true);
+		syncDocumentSettingsToDocInfo(document, docInfo, MODE_OPEN); // MODE_OPEN works becuase we're reverting so the existing values are correct.
+		((DocumentSettingsView) GUITreeLoader.reg.get(GUITreeComponentRegistry.JDIALOG_DOCUMENT_SETTINGS_VIEW)).configure(document.getSettings());
 		
 		setupAndDraw(docInfo, document, openOrImportResult);
 	}
