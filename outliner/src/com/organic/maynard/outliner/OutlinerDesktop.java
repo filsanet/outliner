@@ -97,41 +97,51 @@ public class OutlinerDesktop extends JDesktopPane implements Scrollable {
 		return getPreferredSize();
 	}
 
-    public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
-    	//System.out.println("getScrollableUnitIncrement");
-        switch(orientation) {
-	        case SwingConstants.VERTICAL:
-	            return visibleRect.height / 10;
-	            
-	        case SwingConstants.HORIZONTAL:
-	            return visibleRect.width / 10;
-	            
-	        default:
-	            throw new IllegalArgumentException("Invalid orientation: " + orientation);
-        }
-    }
+	public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+		//System.out.println("getScrollableUnitIncrement");
+		switch(orientation) {
+			case SwingConstants.VERTICAL:
+				return visibleRect.height / 10;
+				
+			case SwingConstants.HORIZONTAL:
+				return visibleRect.width / 10;
+				
+			default:
+				throw new IllegalArgumentException("Invalid orientation: " + orientation);
+		}
+	}
 	
 	public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
 		//System.out.println("getScrollableBlockIncrement");
-        switch(orientation) {
-	        case SwingConstants.VERTICAL:
-	            return visibleRect.height;
-	            
-	        case SwingConstants.HORIZONTAL:
-	            return visibleRect.width;
-	            
-	        default:
-	            throw new IllegalArgumentException("Invalid orientation: " + orientation);
-        }
+		switch(orientation) {
+			case SwingConstants.VERTICAL:
+				return visibleRect.height;
+				
+			case SwingConstants.HORIZONTAL:
+				return visibleRect.width;
+				
+			default:
+				throw new IllegalArgumentException("Invalid orientation: " + orientation);
+		}
 	}
 
-    public boolean getScrollableTracksViewportHeight() {
-    	//System.out.println("getScrollableTracksViewportHeight");
-    	return false;
-    }
-    
-    public boolean getScrollableTracksViewportWidth() {
-    	//System.out.println("getScrollableTracksViewportWidth");
-    	return false;
+	public boolean getScrollableTracksViewportHeight() {
+		//System.out.println("getScrollableTracksViewportHeight");
+		return false;
+	}
+	
+	public boolean getScrollableTracksViewportWidth() {
+		//System.out.println("getScrollableTracksViewportWidth");
+		return false;
+
+	Dimension getCurrentMaxDocSize () {
+		Dimension gcmdsize = new Dimension(
+			getParent().getWidth(),
+			getParent().getHeight());
+		
+		// subtract any scroll bar usage
+		// TBD
+		
+		return gcmdsize ;
 	}
 }
