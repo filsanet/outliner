@@ -1,3 +1,13 @@
+1.8.9 - ???
+	New Features:
+		1) Feature Request #548169. Added the following two editing actions:
+			Shift-doubleclick on an expanded node now collapses the node without collapsing the node's children. When you expand the node with a regular doubleclick the childrens expansion state is preserved.
+			Shift-doubleclick on a collapsed node now works like the existing menu item, "Expand All Subnodes".
+			Shift-pagedown now toggles the expansion state with the same behavior mentioned above.
+	Feature Enhancements:
+		1) Dramatically sped up document closing times by doing the object destruction in a separate thread after after the window has been closed.
+	Bug Fixes:
+		1) Fixed a bug where "insert new node above" and "split current node and insert above" would throw an exception when you tried to undo them if the new node was the very first node in the document.
 1.8.8 - 04/18/02
 	New Features:
 		1) Automatic node level created/modified dates. If turned on via application or document level preferences, node attributes for creation and modification dates will be generated. By default this feature is turned off.
