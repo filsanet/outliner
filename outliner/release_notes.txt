@@ -9,6 +9,10 @@
 		1) Dramatically sped up document closing times by doing the object destruction in a separate thread after after the window has been closed.
 		2) Moderately sped up application launch time by more pervasive use of lazy instantiation.
 		3) When changing the format in the Save or Export file system view, the file extension is automatically updated to the default for that format.
+	Other Changes:
+		1) Updated jar for BeanShell from 1.2b1 to 1.2b6.
+		2) Updated jar for Jakarata ORO from 2.0.4 to 2.0.6.
+		3) Updated the xmlrpc libarary from the old helma code to xml.apache.orgs xmlrpc version 1.1. Apache's code is the latest version of the helma code since they turned it over to apache.
 	Bug Fixes:
 		1) Fixed a bug where "insert new node above" and "split current node and insert above" would throw an exception when you tried to undo them if the new node was the very first node in the document.
 		2) Fixed bug where the warning for doing a "Save As"/"Export" over an existing file didn't work. Now the warning shows up as it should. The warning for "Open"/"Import" of a non-existant file is also fixed.
