@@ -46,6 +46,11 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  */ 
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
  
 // we're part of this
 package com.organic.maynard.outliner;
