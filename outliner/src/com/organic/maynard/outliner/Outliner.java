@@ -38,6 +38,9 @@ import com.yearahead.io.*;
 public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent {
 	
 	// Constants
+	// [srk] for [temporary!] conditional debugging code
+	public static final boolean DEBUG = true ;
+	
 	private static final String A_TITLE = "title";
 	
 	public static final String USER_OUTLINER_DIR = "outliner";
