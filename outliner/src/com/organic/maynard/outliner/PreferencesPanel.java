@@ -18,9 +18,14 @@
  
 package com.organic.maynard.outliner;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
 public interface PreferencesPanel {
 
-	public void applyTemporaryToCurrent();
+	public void applyCurrentToApplication();
 	public void setToCurrent();
 	
 	public void addPreference(PreferencesGUITreeComponent pref);

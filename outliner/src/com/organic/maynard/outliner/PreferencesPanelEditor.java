@@ -40,7 +40,8 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 	}
 	
 	
-	public void applyTemporaryToCurrent() {
+	// This is a misnomer, should really by apply current to application.
+	public void applyCurrentToApplication() {
 		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
 		
 		PreferenceInt pUndoQueueSize = (PreferenceInt) prefs.getPreference(Preferences.UNDO_QUEUE_SIZE);
@@ -80,23 +81,29 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 			line_wrap = false;
 		}
 
-		OutlinerCellRendererImpl.updateFonts(); // Updates fonts for new docs.
+		// Update fonts
+		OutlinerCellRendererImpl.updateFonts();
 		
-		// Update fonts for existing docs.
-		Font font = new Font(pFontFace.cur, Font.PLAIN, pFontSize.cur);
-		
+		// Update renderers in existing docs
 		for (int i = 0; i < Outliner.openDocumentCount(); i++) {
 			OutlinerDocument doc = Outliner.getDocument(i);
 			for (int j = 0; j < OutlineLayoutManager.CACHE_SIZE; j++) {
-				//doc.panel.layout.textAreas[j].setFont(font);
 				doc.panel.layout.textAreas[j].setWrapStyleWord(line_wrap);
 				
-				// Updated line number visibility
-				//if (pShowLineNumbers.cur) {
-					doc.panel.layout.textAreas[j].lineNumber.setOpaque(true);
-				//} else {
-				//	doc.panel.layout.textAreas[j].lineNumber.setOpaque(false);
-				//}
+				// Hide line numbers if both indicators and line numbers are turned off.
+				// We leave them showing otherwise, because it creates a better visual
+				// representation in the display when there are indented nodes.
+				OutlineLineNumber lineNumber = doc.panel.layout.textAreas[j].lineNumber;
+				
+				if (pShowLineNumbers.cur || pShowIndicators.cur) {
+					lineNumber.setOpaque(true);
+				} else {
+					lineNumber.setOpaque(false);
+				}
+				
+				if (!pShowLineNumbers.cur) {
+					lineNumber.setText("");
+				}
 			}
 		}
 	}

@@ -20,27 +20,25 @@ package com.organic.maynard.outliner;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.Window;
-
-import java.io.*;
-import java.util.*;
-
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
-
 import org.xml.sax.*;
 
-public class PreferencesFrame extends JInternalFrame implements TreeSelectionListener, ActionListener, GUITreeComponent {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public class PreferencesFrame extends JInternalFrame implements TreeSelectionListener, ActionListener, GUITreeComponent, JoeXMLConstants {
 
 	// Constants
-	static final int MIN_WIDTH = 450;
-	static final int MIN_HEIGHT = 430;
+	protected static final int MIN_WIDTH = 450;
+	protected static final int MIN_HEIGHT = 430;
  
- 	static final int INITIAL_WIDTH = 450;
-	static final int INITIAL_HEIGHT = 430;
+ 	protected static final int INITIAL_WIDTH = 450;
+	protected static final int INITIAL_HEIGHT = 430;
 
-	public static final String A_TITLE = "title";
 
 	// Main Component Containers
 	public static final JPanel RIGHT_PANEL = new JPanel();
@@ -163,6 +161,7 @@ public class PreferencesFrame extends JInternalFrame implements TreeSelectionLis
 
 	private void main_apply() {
 		Preferences.applyTemporaryToCurrent();
+		Preferences.applyCurrentToApplication();
 		Preferences.saveConfigFile(Outliner.CONFIG_FILE);
 		Outliner.redrawAllOpenDocuments();
 	}

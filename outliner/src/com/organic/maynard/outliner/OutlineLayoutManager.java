@@ -203,17 +203,43 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		//System.out.println("Draw Called: " + drawCount++);
 		numNodesDrawn = 0;
 		
-		// Compute the textArea width.
-		OutlinerCellRendererImpl.textAreaWidth = panel.getWidth()
-			 - OutlineLineNumber.LINE_NUMBER_WIDTH
-			 - OutlineButton.BUTTON_WIDTH 
-			 - OutlineCommentIndicator.BUTTON_WIDTH 
-			 - OutlineEditableIndicator.BUTTON_WIDTH 
-			 - OutlineMoveableIndicator.BUTTON_WIDTH 
-			 - scrollBar.getWidth() 
-			 - Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur 
-			 - Preferences.getPreferenceInt(Preferences.RIGHT_MARGIN).cur;
+		// Pre-store some values from the preferences so we don't have to get them once for every renderer.
+		OutlinerCellRendererImpl.pIndent = Preferences.getPreferenceInt(Preferences.INDENT).cur;
+		OutlinerCellRendererImpl.pVerticalSpacing = Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).cur;
+		OutlinerCellRendererImpl.pShowLineNumbers = Preferences.getPreferenceBoolean(Preferences.SHOW_LINE_NUMBERS).cur;
 		
+		OutlinerCellRendererImpl.pCommentColor = Preferences.getPreferenceColor(Preferences.TEXTAREA_COMMENT_COLOR).cur;				
+		OutlinerCellRendererImpl.pForegroundColor = Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur;
+		OutlinerCellRendererImpl.pBackgroundColor = Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).cur;
+		OutlinerCellRendererImpl.pSelectedChildColor = Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur;
+		OutlinerCellRendererImpl.pLineNumberColor = Preferences.getPreferenceColor(Preferences.LINE_NUMBER_COLOR).cur;
+		OutlinerCellRendererImpl.pLineNumberSelectedColor = Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR).cur;
+		OutlinerCellRendererImpl.pLineNumberSelectedChildColor = Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR).cur;
+					
+		// Pre-compute some values so we don't have to do them once for every renderer.
+		OutlinerCellRendererImpl.moveableOffset = Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur; // equiv to left margin
+		OutlinerCellRendererImpl.editableOffset = OutlinerCellRendererImpl.moveableOffset + OutlineMoveableIndicator.BUTTON_WIDTH;
+		OutlinerCellRendererImpl.commentOffset = OutlinerCellRendererImpl.editableOffset + OutlineEditableIndicator.BUTTON_WIDTH;
+		OutlinerCellRendererImpl.lineNumberOffset = OutlinerCellRendererImpl.commentOffset + OutlineCommentIndicator.BUTTON_WIDTH;
+		
+		OutlinerCellRendererImpl.bestHeightComparison = 
+		Math.max(
+			Math.max(
+				Math.max(
+					Math.max(
+						OutlineMoveableIndicator.BUTTON_HEIGHT, 
+					OutlineLineNumber.LINE_NUMBER_HEIGHT), 
+				OutlineCommentIndicator.BUTTON_HEIGHT), 
+			OutlineEditableIndicator.BUTTON_HEIGHT), 
+		OutlineMoveableIndicator.BUTTON_HEIGHT);
+
+		OutlinerCellRendererImpl.textAreaWidth = panel.getWidth()
+			 - OutlinerCellRendererImpl.lineNumberOffset 
+			 - OutlineLineNumber.LINE_NUMBER_WIDTH 
+			 - Preferences.getPreferenceInt(Preferences.RIGHT_MARGIN).cur 
+			 - scrollBar.getWidth();
+			 
+
 		// Draw the visible components
 		switch (drawingDirection) {
 			case DOWN:
@@ -245,11 +271,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		}
 
 		// Now Draw as many nodes as neccessary.
-		startPoint.x = Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur 
-			+ OutlineLineNumber.LINE_NUMBER_WIDTH 
-			+ OutlineCommentIndicator.BUTTON_WIDTH
-			+ OutlineEditableIndicator.BUTTON_WIDTH
-			+ OutlineMoveableIndicator.BUTTON_WIDTH;
+		startPoint.x = OutlinerCellRendererImpl.lineNumberOffset + OutlineLineNumber.LINE_NUMBER_WIDTH;
 		startPoint.y = Preferences.getPreferenceInt(Preferences.TOP_MARGIN).cur;
 		
 		Node node = getNodeToDrawFrom();
@@ -317,11 +339,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		}
 
 		// Now Draw as many nodes as neccessary.
-		startPoint.x = Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur 
-			+ OutlineLineNumber.LINE_NUMBER_WIDTH 
-			+ OutlineCommentIndicator.BUTTON_WIDTH
-			+ OutlineEditableIndicator.BUTTON_WIDTH
-			+ OutlineMoveableIndicator.BUTTON_WIDTH;
+		startPoint.x = OutlinerCellRendererImpl.lineNumberOffset + OutlineLineNumber.LINE_NUMBER_WIDTH;
 		startPoint.y = this.bottom - Preferences.getPreferenceInt(Preferences.BOTTOM_MARGIN).cur;
 
 		Node node = getNodeToDrawFrom();
@@ -416,11 +434,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			return;
 		}
 		
-		startPoint.x = Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur 
-			+ OutlineLineNumber.LINE_NUMBER_WIDTH 
-			+ OutlineCommentIndicator.BUTTON_WIDTH
-			+ OutlineEditableIndicator.BUTTON_WIDTH
-			+ OutlineMoveableIndicator.BUTTON_WIDTH;
+		startPoint.x = OutlinerCellRendererImpl.lineNumberOffset + OutlineLineNumber.LINE_NUMBER_WIDTH;
 		startPoint.y = textAreas[0].getLocation().y + textAreas[0].getBestHeight() + Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).cur;
 		
 		// Pre-compute some values

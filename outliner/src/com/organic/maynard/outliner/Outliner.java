@@ -238,9 +238,6 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		
 		// Generate Icons
 		OutlineButton.createIcons();
-		OutlineCommentIndicator.createIcons();
-		OutlineEditableIndicator.createIcons();
-		OutlineMoveableIndicator.createIcons();
 		
 		// WebFile
 		// Note the outliner will have to be restarted if user switches
@@ -260,11 +257,9 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		// Setup the File Chooser
 		chooser = new OutlinerFileChooser(fsv);	
 
-
-		// Set the Desktop Color
-		jsp.getViewport().setBackground(Preferences.getPreferenceColor(Preferences.DESKTOP_BACKGROUND_COLOR).cur);
-		desktop.setBackground(Preferences.getPreferenceColor(Preferences.DESKTOP_BACKGROUND_COLOR).cur);
-
+		// Apply the Preference Settings
+		Preferences.applyCurrentToApplication();
+		
 		setVisible(true);
 
 		// Create a Document. This must come after visiblity otherwise the window won't be activated.

@@ -1040,7 +1040,6 @@ public class TextKeyListener implements KeyListener, MouseListener {
 			Node tempRoot = PadSelection.pad(text, tree, currentNode.getDepth(), Preferences.LINE_END_STRING);
 		
 			for (int i = tempRoot.numOfChildren() - 1; i >= 0; i--) {
-				System.out.println("adding them.");
 				Node node = tempRoot.getChild(i);
 				parentForNewNode.insertChild(node, indexForNewNode + 1);
 				tree.insertNode(node);

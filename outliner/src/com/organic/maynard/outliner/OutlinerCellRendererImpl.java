@@ -22,6 +22,11 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
 public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellRenderer {
 
 	private static Font font = null;
@@ -32,7 +37,26 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	private static Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
 	private static Insets marginInsets = new Insets(1,3,1,3);
 	
-	public static int textAreaWidth = 0;
+	// Pre-computed values
+	protected static int textAreaWidth = 0;
+	protected static int moveableOffset = 0;
+	protected static int editableOffset = 0;
+	protected static int commentOffset = 0;
+	protected static int lineNumberOffset = 0;
+	protected static int bestHeightComparison = 0;
+	
+	// Pre-stored preference settings
+	protected static int pIndent = 0;
+	protected static int pVerticalSpacing = 0;
+	protected static boolean pShowLineNumbers = true;
+	protected static Color pCommentColor = null;
+	protected static Color pForegroundColor = null;
+	protected static Color pBackgroundColor = null;
+	protected static Color pSelectedChildColor = null;
+	protected static Color pLineNumberColor = null;
+	protected static Color pLineNumberSelectedColor = null;
+	protected static Color pLineNumberSelectedChildColor = null;
+	
 	
 	public Node node = null;
 	public OutlineButton button = new OutlineButton(this);
@@ -46,7 +70,8 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	static {
 		updateFonts();
 	}
-	
+
+
 	// The Constructors
 	public OutlinerCellRendererImpl() {
 		super();
@@ -105,7 +130,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		lineNumber.setVisible(visibility);
 	}
 	
-	public void verticalShift (int amount) {
+	protected void verticalShift (int amount) {
 		Point lp = lineNumber.getLocation();
 		lp.y += amount;
 		lineNumber.setLocation(lp);
@@ -151,20 +176,20 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		// Draw the TextArea
 		setText(node.getValue());
 		
-		int indent = node.getDepth() * Preferences.getPreferenceInt(Preferences.INDENT).cur;
+		int indent = node.getDepth() * pIndent;
 		int width = textAreaWidth - indent;
 		
 		// Size needs to be set twice. The first time forces the lines to flow. The second then sets the correct height.
 		setSize(width,32);
 		height = getBestHeight();
-		p.y -= (height + Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).cur);
+		p.y -= (height + pVerticalSpacing);
 		setBounds(p.x + indent + OutlineButton.BUTTON_WIDTH, p.y, width, height);
 		
 		// Draw the Button
 		button.setBounds(p.x + indent, p.y, OutlineButton.BUTTON_WIDTH, height);
 		
 		// Draw the LineNumber
-		if (Preferences.getPreferenceBoolean(Preferences.SHOW_LINE_NUMBERS).cur) {
+		if (pShowLineNumbers) {
 			if (node.getTree().doc.hoistStack.isHoisted()) {
 				// TODO: This value should be pre-calculated.
 				int offset = node.getTree().doc.hoistStack.getLineCountOffset()  + node.getLineNumber(node.getTree().getLineCountKey());
@@ -172,11 +197,10 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 			} else {
 				lineNumber.setText("" + node.getLineNumber(node.getTree().getLineCountKey()));
 			}
-		} else {
-			lineNumber.setText("");
 		}
+
 		lineNumber.setBounds(
-			Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur + OutlineCommentIndicator.BUTTON_WIDTH + OutlineEditableIndicator.BUTTON_WIDTH + OutlineMoveableIndicator.BUTTON_WIDTH, 
+			lineNumberOffset, 
 			p.y, 
 			OutlineLineNumber.LINE_NUMBER_WIDTH + indent, 
 			height
@@ -184,21 +208,21 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 
 		// Draw Indicators
 		iComment.setBounds(
-			Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur + OutlineEditableIndicator.BUTTON_WIDTH + OutlineMoveableIndicator.BUTTON_WIDTH, 
+			commentOffset, 
 			p.y, 
 			OutlineCommentIndicator.BUTTON_WIDTH, 
 			height
 		);
 
 		iEditable.setBounds(
-			Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur + OutlineMoveableIndicator.BUTTON_WIDTH, 
+			editableOffset, 
 			p.y, 
 			OutlineEditableIndicator.BUTTON_WIDTH, 
 			height
 		);
 
 		iMoveable.setBounds(
-			Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur, 
+			moveableOffset, 
 			p.y, 
 			OutlineMoveableIndicator.BUTTON_WIDTH, 
 			height
@@ -225,7 +249,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		// Draw the TextArea
 		setText(node.getValue());
 		
-		int indent = node.getDepth() * Preferences.getPreferenceInt(Preferences.INDENT).cur;
+		int indent = node.getDepth() * pIndent;
 		int width = textAreaWidth - indent;
 		
 		// Size needs to be set twice. The first time forces the lines to flow. The second then sets the correct height.
@@ -237,7 +261,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		button.setBounds(p.x + indent, p.y, OutlineButton.BUTTON_WIDTH, height);
 
 		// Draw the LineNumber
-		if (Preferences.getPreferenceBoolean(Preferences.SHOW_LINE_NUMBERS).cur) {
+		if (pShowLineNumbers) {
 			if (node.getTree().doc.hoistStack.isHoisted()) {
 				// TODO: This value should be pre-calculated.
 				int offset = node.getTree().doc.hoistStack.getLineCountOffset()  + node.getLineNumber(node.getTree().getLineCountKey());
@@ -245,40 +269,38 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 			} else {
 				lineNumber.setText("" + node.getLineNumber(node.getTree().getLineCountKey()));
 			}
-		} else {
-			lineNumber.setText("");
 		}
+		
 		lineNumber.setBounds(
-			Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur + OutlineCommentIndicator.BUTTON_WIDTH + OutlineEditableIndicator.BUTTON_WIDTH + OutlineMoveableIndicator.BUTTON_WIDTH, 
+			lineNumberOffset, 
 			p.y, 
 			OutlineLineNumber.LINE_NUMBER_WIDTH + indent, 
 			height
 		);
 
-
 		// Draw Indicators
 		iComment.setBounds(
-			Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur + OutlineEditableIndicator.BUTTON_WIDTH + OutlineMoveableIndicator.BUTTON_WIDTH, 
+			commentOffset, 
 			p.y, 
 			OutlineCommentIndicator.BUTTON_WIDTH, 
 			height
 		);
 
 		iEditable.setBounds(
-			Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur + OutlineMoveableIndicator.BUTTON_WIDTH, 
+			editableOffset, 
 			p.y, 
 			OutlineEditableIndicator.BUTTON_WIDTH, 
 			height
 		);
 
 		iMoveable.setBounds(
-			Preferences.getPreferenceInt(Preferences.LEFT_MARGIN).cur, 
+			moveableOffset, 
 			p.y, 
 			OutlineMoveableIndicator.BUTTON_WIDTH, 
 			height
 		);
 						
-		p.y += height + Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).cur;	
+		p.y += height + pVerticalSpacing;	
 
 	}
 	
@@ -305,44 +327,44 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	private void updateColors() {
 		if (node.isAncestorSelected()) {
 			if (node.isComment()) {
-				setForeground(Preferences.getPreferenceColor(Preferences.TEXTAREA_COMMENT_COLOR).cur);				
+				setForeground(pCommentColor);				
 			} else {
-				setForeground(Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).cur);
+				setForeground(pBackgroundColor);
 			}
 			
-			lineNumber.setForeground(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur);
+			lineNumber.setForeground(pSelectedChildColor);
 
 			if (node.isSelected()) {
-				setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
-				lineNumber.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR).cur);
-				button.setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
-				iComment.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR).cur);
-				iEditable.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR).cur);
-				iMoveable.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_COLOR).cur);
+				setBackground(pForegroundColor);
+				lineNumber.setBackground(pLineNumberSelectedColor);
+				button.setBackground(pForegroundColor);
+				iComment.setBackground(pLineNumberSelectedColor);
+				iEditable.setBackground(pLineNumberSelectedColor);
+				iMoveable.setBackground(pLineNumberSelectedColor);
 				
 			} else {
-				setBackground(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur);
-				lineNumber.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR).cur);
-				button.setBackground(Preferences.getPreferenceColor(Preferences.SELECTED_CHILD_COLOR).cur);
-				iComment.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR).cur);
-				iEditable.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR).cur);
-				iMoveable.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_SELECTED_CHILD_COLOR).cur);
+				setBackground(pSelectedChildColor);
+				lineNumber.setBackground(pLineNumberSelectedChildColor);
+				button.setBackground(pSelectedChildColor);
+				iComment.setBackground(pLineNumberSelectedChildColor);
+				iEditable.setBackground(pLineNumberSelectedChildColor);
+				iMoveable.setBackground(pLineNumberSelectedChildColor);
 			}
 			
 		} else {
 			if (node.isComment()) {
-				setForeground(Preferences.getPreferenceColor(Preferences.TEXTAREA_COMMENT_COLOR).cur);				
+				setForeground(pCommentColor);				
 			} else {
-				setForeground(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
+				setForeground(pForegroundColor);
 			}
 			
-			setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).cur);
-			lineNumber.setForeground(Preferences.getPreferenceColor(Preferences.TEXTAREA_FOREGROUND_COLOR).cur);
-			lineNumber.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_COLOR).cur);
-			button.setBackground(Preferences.getPreferenceColor(Preferences.TEXTAREA_BACKGROUND_COLOR).cur);
-			iComment.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_COLOR).cur);
-			iEditable.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_COLOR).cur);
-			iMoveable.setBackground(Preferences.getPreferenceColor(Preferences.LINE_NUMBER_COLOR).cur);
+			setBackground(pBackgroundColor);
+			lineNumber.setForeground(pForegroundColor);
+			lineNumber.setBackground(pLineNumberColor);
+			button.setBackground(pBackgroundColor);
+			iComment.setBackground(pLineNumberColor);
+			iEditable.setBackground(pLineNumberColor);
+			iMoveable.setBackground(pLineNumberColor);
 		}	
 	}
 	
@@ -418,7 +440,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 		iMoveable.updateIcon();
 	}
 	
-	public int getBestHeight() { // This could be optimized so that the only comparison is the textarea, and everything else is already worked out.
-		return Math.max(Math.max(Math.max(getPreferredSize().height, OutlineButton.BUTTON_HEIGHT), OutlineLineNumber.LINE_NUMBER_HEIGHT),  OutlineCommentIndicator.BUTTON_HEIGHT);
+	protected int getBestHeight() {
+		return Math.max(getPreferredSize().height, bestHeightComparison);
 	}
 }

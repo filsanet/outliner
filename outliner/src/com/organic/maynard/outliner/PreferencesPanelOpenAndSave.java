@@ -37,7 +37,7 @@ public class PreferencesPanelOpenAndSave extends AbstractPreferencesPanel implem
 		AbstractPreferencesPanel.addArrayToComboBox(Preferences.FILE_FORMATS_SAVE.toArray(), GUITreeComponentRegistry.COMPONENT_FORMAT_WHEN_SAVING);
 	}
 	
-	public void applyTemporaryToCurrent() {
+	public void applyCurrentToApplication() {
 		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
 		PreferenceLineEnding pLineEnd = (PreferenceLineEnding) prefs.getPreference(Preferences.LINE_END);
 		PreferenceString pSaveEncoding = (PreferenceString) prefs.getPreference(Preferences.SAVE_ENCODING);

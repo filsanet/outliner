@@ -20,7 +20,7 @@ package com.organic.maynard.outliner;
 
 public class PreferencesPanelLookAndFeel extends AbstractPreferencesPanel implements PreferencesPanel, GUITreeComponent {
 
-	public void applyTemporaryToCurrent() {
+	public void applyCurrentToApplication() {
 		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
 
 		PreferenceColor pDesktopBackgroundColor = (PreferenceColor) prefs.getPreference(Preferences.DESKTOP_BACKGROUND_COLOR);

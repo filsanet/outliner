@@ -19,13 +19,15 @@
 package com.organic.maynard.outliner;
 
 import java.util.*;
-import java.awt.*;
 import java.io.*;
 import javax.swing.*;
-
 import org.xml.sax.*;
-
 import com.organic.maynard.util.string.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
 public class Preferences implements GUITreeComponent {
 
@@ -53,7 +55,10 @@ public class Preferences implements GUITreeComponent {
 	public static final Vector FILE_FORMATS_SAVE = new Vector();
 
 	
-	// Start Preference Keys
+	// Start Preference Keys: All the preferences used by the core app are here. If you are adding your own
+	// preferences you don't need to put your keys here. These should probably end up in an interface since
+	// they are called from other classes everywhere. Important: the value of the key must match the
+	// string you use in the "id" attribute of your prefs component in the gui_tree.xml file.
 		// Hidden Prefs
 			// Misc
 			public static final String RENDERER_WIDGIT_CACHE_SIZE = "renderer_widgit_cache_size";
@@ -67,6 +72,13 @@ public class Preferences implements GUITreeComponent {
 			public static final String MAIN_WINDOW_H = "main_window_height";
 			public static final String MAIN_WINDOW_X = "main_window_x_offset";
 			public static final String MAIN_WINDOW_Y = "main_window_y_offset";
+
+			// Help System	[srk] 8/11/01 3:17PM
+			public static final String USER_GUIDE_PATH = "user_guide_path";
+			public static final String DEVELOPER_GUIDE_PATH = "developer_guide_path";
+			public static final String BOOKMARKS_PATH = "bookmarks_path";
+			public static final String TUTORIALS_PATH = "tutorials_path";
+			public static final String ABOUT_PATH = "about_path";
 
 
 		// Editor Panel
@@ -114,13 +126,6 @@ public class Preferences implements GUITreeComponent {
 		public static final String WEB_FILE_URL = "web_file_url";
 		public static final String WEB_FILE_USER = "web_file_user";
 		public static final String WEB_FILE_PASSWORD = "web_file_password";
-		
-		// Help System	[srk] 8/11/01 3:17PM
-		public static final String USER_GUIDE_PATH = "user_guide_path";
-		public static final String DEVELOPER_GUIDE_PATH = "developer_guide_path";
-		public static final String BOOKMARKS_PATH = "bookmarks_path";
-		public static final String TUTORIALS_PATH = "tutorials_path";
-		public static final String ABOUT_PATH = "about_path";
 
 	// End Preference Keys
 
@@ -228,8 +233,7 @@ public class Preferences implements GUITreeComponent {
 		Iterator it = prefs.getPreferenceKeys();
 		while (it.hasNext()) {
 			String key = (String) it.next();
-			Preference pref = prefs.getPreference(key);
-			pref.restoreCurrentToDefault();
+			prefs.getPreference(key).restoreCurrentToDefault();
 		}
 	}
 
@@ -238,8 +242,7 @@ public class Preferences implements GUITreeComponent {
 		Iterator it = prefs.getPreferenceKeys();
 		while (it.hasNext()) {
 			String key = (String) it.next();
-			Preference pref = prefs.getPreference(key);
-			pref.restoreTemporaryToDefault();
+			prefs.getPreference(key).restoreTemporaryToDefault();
 		}
 	}
 
@@ -248,27 +251,26 @@ public class Preferences implements GUITreeComponent {
 		Iterator it = prefs.getPreferenceKeys();
 		while (it.hasNext()) {
 			String key = (String) it.next();
-			Preference pref = prefs.getPreference(key);
-			pref.restoreTemporaryToCurrent();
+			prefs.getPreference(key).restoreTemporaryToCurrent();
 		}
 	}
 
 	public static void applyTemporaryToCurrent() {
 		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
-
 		Iterator it = prefs.getPreferenceKeys();
 		while (it.hasNext()) {
 			String key = (String) it.next();
-			Preference pref = prefs.getPreference(key);
-			pref.applyTemporaryToCurrent();
+			prefs.getPreference(key).applyTemporaryToCurrent();
 		}
-				
-		it = prefs.getPreferencesPanelKeys();
+	}
+	
+	public static void applyCurrentToApplication() {
+		Preferences prefs = (Preferences) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES);
+		Iterator it = prefs.getPreferencesPanelKeys();
 		while (it.hasNext()) {
 			String key = (String) it.next();
-			PreferencesPanel prefPanel = prefs.getPreferencesPanel(key);
-			prefPanel.applyTemporaryToCurrent();
-		}
+			prefs.getPreferencesPanel(key).applyCurrentToApplication();
+		}	
 	}
 
 

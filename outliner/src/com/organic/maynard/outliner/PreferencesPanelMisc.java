@@ -20,7 +20,7 @@ package com.organic.maynard.outliner;
 
 public class PreferencesPanelMisc extends AbstractPreferencesPanel implements PreferencesPanel, GUITreeComponent {
 	
-	public void applyTemporaryToCurrent() {		
+	public void applyCurrentToApplication() {		
 		RecentFilesList.trim();	
 	}
 }
