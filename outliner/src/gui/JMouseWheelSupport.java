@@ -144,6 +144,9 @@ public abstract class JMouseWheelSupport {
 
 /*
  * $Log$
+ * Revision 1.3  2001/10/06 08:27:01  maynardd
+ * fixed a class cast problem with JScrollPane
+ *
  * Revision 1.2  2001/09/28 07:50:22  maynardd
  * Had to make this explicitly use DummyJScrollPane to fix the jump scrolling bug.
  *
