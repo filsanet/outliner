@@ -46,6 +46,8 @@
 #define MAX_LINE 1024
 
 #define EXE_NAME  "JOE.pif"
+#define EXE_IS_PIF  1
+#define EXE_IS_EXE  0
 
 #define APP_NAME_STRING  "JOE"
 #define APP_VERSION_STRING  "1.8.8"
@@ -54,12 +56,16 @@
 #define APP_HOME_REM  "\n\nrem Java Outline Editor [JOE] home directory\n"
 #define APP_HOME  "JOE_HOME"
 
+#define START_MENU_SUBPATH  "\\Start Menu\\"
+#define PROGRAMS_MENU_SUBPATH  "\\Start Menu\\Programs\\"
+#define DESKTOP_MENU_SUBPATH  "\\Desktop\\"
+
 #define OS_FEEDBACK_STRING_0  "Your computer is running the "
 #define OS_FEEDBACK_STRING_1  " operating system."
 
-#define SEV_FEEDBACK_STRING_0  "Successfully "
-#define SEV_FEEDBACK_STRING_1  "Failed to "
-#define SEV_FEEDBACK_STRING_2  "set the environment variable "
+#define SEV_FEEDBACK_STRING_0  "Set "
+#define SEV_FEEDBACK_STRING_1  "Unable to set "
+#define SEV_FEEDBACK_STRING_2  "the environment variable "
 #define SEV_FEEDBACK_STRING_3  "to the value "
 
 #define SUCCESS_FEEDBACK_0  "JOE installed successfully on your system."
@@ -106,6 +112,12 @@ const char * WINDOWS_VERSION_STRINGS [] = {
 
 #define MAX_REG_PATH 255
 
+#define SHORTCUT_ADDED  "Added "
+#define SHORTCUT_NOT_ADDED  "Unable to add "
+#define SHORTCUT_TO_PROG_MENU  " to the Programs menu."
+#define SHORTCUT_TO_START_MENU  " to the top of the Start menu."
+#define SHORTCUT_TO_DESKTOP  " to the Desktop."
+
 
 // ---------- datatypes
 
@@ -138,8 +150,8 @@ enum environment_target {
 	SYSTEM
 	} ; // end enum
 
-typedef struct _shortcut_placement {
-	int programMenu;
+typedef struct {
+	int programsMenu;
 	int startMenu;
 	int desktop;
 	int quickLaunch;
@@ -151,6 +163,8 @@ typedef struct _shortcut_placement {
 windows_version g_Windows_Version = CANNOT_DETERMINE;
 
 int g_NT_4_SP_Num = 0 ;	// NT 4 Service Pack #
+
+char g_App_Home_Path [MAX_PATH] ;
 
 
 // ---------- functions
@@ -180,9 +194,11 @@ void welcome() ;
 windows_version determineWindowsVersion() ;
 int placeShortcuts() ;
 int getUserChoicesReShortcutPlacement (shortcut_placement *) ;
-int shortcutToProgramMenu() ;
+int shortcutToProgramsMenu() ;
 int shortcutToStartMenu() ;
 int shortcutToDesktop() ;
 int shortcutToQuickLaunch() ;
 int shortcutToContextMenu() ;
 int hookupDocTypes() ;
+int setAllPaths() ;
+int isPif() ;

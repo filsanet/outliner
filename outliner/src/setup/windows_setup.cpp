@@ -196,8 +196,11 @@ int wePlugIntoSystem () {
 	
 	// return the result of trying the following:
 	return 
+		// determine paths
+		(setAllPaths() 
+		
 		// set environment variables
-		(setAllEnvVars() 
+		& setAllEnvVars() 
 	
 		// place shortcuts
 		& placeShortcuts()
@@ -501,6 +504,33 @@ int machineHasNuffOomph () {
 } // end function machineHasNuffOomph
 
 
+// sets up paths that are useful to us
+int setAllPaths () {
+	
+	// sets the following paths
+	//	g_AppHomePath
+	
+	// if installed from CD, we are already set
+	// if we installed from another drive, we are already set/
+	// we are installing from dir on hard drive
+	
+	char shortPathBuffer[MAX_PATH] ;
+	
+	// if we can't obtain short pathname for current directory
+	if (! getShortPathCurDir (shortPathBuffer))
+		// leave in failure
+		return 0 ;
+
+	// append a backslash
+	strcat (shortPathBuffer, "\\") ;
+	
+	strcpy (g_App_Home_Path, shortPathBuffer) ;
+	
+	return 1 ;
+
+} // end function setAllPaths
+
+
 // sets up all environment variables
 // we try to keep to a minimal set
 int setAllEnvVars () {
@@ -520,15 +550,22 @@ int placeShortcuts(){
 	// local vars
 	shortcut_placement shortcutPlacement ;
 	int result = 1 ;
+	int shortcutCount = 0 ;
 	
 	// if we can't get user choices, leave
 	if (! getUserChoicesReShortcutPlacement(& shortcutPlacement)) return 0 ; 
 	
 	// if user chose to put shortcut in program menu
-	if (shortcutPlacement.programMenu) result &= shortcutToProgramMenu() ;
+	if (shortcutPlacement.programsMenu){
+		result &= shortcutToProgramsMenu() ;
+		shortcutCount ++ ;
+	} // end if
 	
 	// if user chose to put shortcut in upper part of start menu
-	if (shortcutPlacement.startMenu) result &= shortcutToStartMenu() ;
+	if (shortcutPlacement.startMenu){
+		result &= shortcutToStartMenu() ;
+		shortcutCount ++ ;
+	} // end if
 	
 	// if user chose to put shortcut to desktop
 	if (shortcutPlacement.desktop) result &= shortcutToDesktop() ;
@@ -538,6 +575,9 @@ int placeShortcuts(){
 	
 	// if user chose to put shortcut in popup context menu
 	if (shortcutPlacement.contextMenu) result &= shortcutToContextMenu() ;
+	
+	// if we placed at least one shortcut, print some feedback padding
+	if (shortcutCount > 0) printf ("\n") ;
 	
 	// done
 	return result ;
@@ -549,20 +589,11 @@ int placeShortcuts(){
 // returns 1 if it succeeds, 0 if it fails
 int set_APP_HOME () {
 	// local vars
-	char shortPathBuffer[MAX_PATH] ;
 	char introLines[] = APP_HOME_REM;
 	
-	// if we can't obtain short pathname for current directory
-	if (! getShortPathCurDir (shortPathBuffer))
-		// leave in failure
-		return 0 ;
-
-	// append a backslash
-	strcat (shortPathBuffer, "\\") ;
-	
 	// return result of trying to set 
-	// environment var JOE_HOME to that value
-	return setEnvVar(APP_HOME, shortPathBuffer, introLines, g_Windows_Version);
+	// environment var JOE_HOME to g_App_Home_Path
+	return setEnvVar(APP_HOME, g_App_Home_Path, introLines, g_Windows_Version);
 	
 } // end set_app_HOME
 
@@ -1187,9 +1218,9 @@ int getUserChoicesReShortcutPlacement (shortcut_placement * ptrShortcutPlacment)
 	// TBD
 	
 	// fake for now
-	ptrShortcutPlacment->programMenu = 1 ;
+	ptrShortcutPlacment->programsMenu = 1 ;
 	ptrShortcutPlacment->startMenu = 0 ;
-	ptrShortcutPlacment->desktop = 0 ;
+	ptrShortcutPlacment->desktop = 1 ;
 	ptrShortcutPlacment->quickLaunch = 0 ;
 	ptrShortcutPlacment->contextMenu = 0 ;
 	
@@ -1199,28 +1230,110 @@ int getUserChoicesReShortcutPlacement (shortcut_placement * ptrShortcutPlacment)
 } // end function getUserChoicesReShortcutPlacement
 
 
-// add a shortcut to the app to the Program menu
+// add a shortcut to the app to the Programs menu
 // returns 1 if successful, 0 if not
-int shortcutToProgramMenu() {
-	// TBD
+int shortcutToProgramsMenu() {
+	// local vars
+	char programsMenuPath [MAX_PATH] ;
+	int result = 0 ;
+	char ourInvPath [MAX_PATH] ;
+	BOOL copyCancel = FALSE ;
+	char feedbackString [MAX_LINE] ;
 	
-	// fake for now
+	// get location of windows menu
+	if (GetWindowsDirectory(programsMenuPath, MAX_PATH + 1)== 0) return 0 ;
 	
-	// done 
-	return 1 ;
+	// build path to programs menu directory
+	strcat (programsMenuPath, PROGRAMS_MENU_SUBPATH) ;
 	
-} // end function shortCutToProgramMenu
+	// if our app executable is a PIF file ...
+	if (EXE_IS_PIF) {
+		// add the filename to the programs menu path
+		strcat (programsMenuPath, EXE_NAME) ;
+		
+		// build the source path
+		strcpy (ourInvPath, g_App_Home_Path) ;
+		strcat (ourInvPath, EXE_NAME) ;
+		
+		// store a copy of it in the programs menu dir
+		result = (CopyFile(ourInvPath, programsMenuPath, FALSE) != 0) ;
+		
+	} else if (EXE_IS_EXE) {
+		// create a shortcut to it
+		// TBD
+		
+		// store the shortcut in the programs menu dir
+		result = 1 ;
+		
+	} else
+		result = 0 ;
+		
+	// feedback
+	if (result) 
+		strcpy (feedbackString, SHORTCUT_ADDED) ;
+	else
+		strcpy (feedbackString, SHORTCUT_NOT_ADDED) ;
+	strcat(feedbackString, APP_NAME_STRING) ;
+	strcat(feedbackString, SHORTCUT_TO_PROG_MENU) ;
+	strcat(feedbackString, "\n") ;
+	printf(feedbackString) ;
+		
+	// done
+	return result ;
+	
+} // end function shortCutToProgramsMenu
 
 
-// add a shortcut to the app to the upper half of the Start menu
+// add a shortcut to the app to the top part of the Start menu
 // returns 1 if successful, 0 if not
 int shortcutToStartMenu() {
-	// TBD
+	// local vars
+	char startMenuPath [MAX_PATH] ;
+	int result = 0 ;
+	char ourInvPath [MAX_PATH] ;
+	BOOL copyCancel = FALSE ;
+	char feedbackString [MAX_LINE] ;
 	
-	// fake for now
+	// get location of windows menu
+	if (GetWindowsDirectory(startMenuPath, MAX_PATH + 1)== 0) return 0 ;
 	
-	// done 
-	return 1 ;
+	// build path to start menu directory
+	strcat (startMenuPath, START_MENU_SUBPATH) ;
+	
+	// if our app executable is a PIF file ...
+	if (EXE_IS_PIF) {
+		// add the filename to the programs menu path
+		strcat (startMenuPath, EXE_NAME) ;
+		
+		// build the source path
+		strcpy (ourInvPath, g_App_Home_Path) ;
+		strcat (ourInvPath, EXE_NAME) ;
+		
+		// store a copy of it in the programs menu dir
+		result = (CopyFile(ourInvPath, startMenuPath, FALSE) != 0) ;
+			
+	} else if (EXE_IS_EXE) {
+		// create a shortcut to it
+		// TBD
+		
+		// store the shortcut in the programs menu dir
+		result = 1 ;
+		
+	} else
+		result = 0 ;
+		
+	// feedback
+	if (result) 
+		strcpy (feedbackString, SHORTCUT_ADDED) ;
+	else
+		strcpy (feedbackString, SHORTCUT_NOT_ADDED) ;
+	strcat(feedbackString, APP_NAME_STRING) ;
+	strcat(feedbackString, SHORTCUT_TO_START_MENU) ;
+	strcat(feedbackString, "\n") ;
+	printf(feedbackString) ;
+	
+	// done
+	return result ;
 	
 } // end function shortcutToStartMenu
 
@@ -1228,12 +1341,53 @@ int shortcutToStartMenu() {
 // add a shortcut to the app to the desktop
 // returns 1 if successful, 0 if not
 int shortcutToDesktop() {
-	// TBD
+	// local vars
+	char desktopMenuPath [MAX_PATH] ;
+	int result = 0 ;
+	char ourInvPath [MAX_PATH] ;
+	BOOL copyCancel = FALSE ;
+	char feedbackString [MAX_LINE] ;
 	
-	// fake for now
+	// get location of windows menu
+	if (GetWindowsDirectory(desktopMenuPath, MAX_PATH + 1)== 0) return 0 ;
 	
-	// done 
-	return 1 ;
+	// build path to desktop directory
+	strcat (desktopMenuPath, DESKTOP_MENU_SUBPATH) ;
+	
+	// if our app executable is a PIF file ...
+	if (EXE_IS_PIF) {
+		// add the filename to the programs menu path
+		strcat (desktopMenuPath, EXE_NAME) ;
+		
+		// build the source path
+		strcpy (ourInvPath, g_App_Home_Path) ;
+		strcat (ourInvPath, EXE_NAME) ;
+		
+		// store a copy of it in the programs menu dir
+		result = (CopyFile(ourInvPath, desktopMenuPath, FALSE) != 0) ;
+			
+	} else if (EXE_IS_EXE) {
+		// create a shortcut to it
+		// TBD
+		
+		// store the shortcut in the programs menu dir
+		result = 1 ;
+		
+	} else
+		result = 0 ;
+		
+	// feedback
+	if (result) 
+		strcpy (feedbackString, SHORTCUT_ADDED) ;
+	else
+		strcpy (feedbackString, SHORTCUT_NOT_ADDED) ;
+	strcat(feedbackString, APP_NAME_STRING) ;
+	strcat(feedbackString, SHORTCUT_TO_DESKTOP) ;
+	strcat(feedbackString, "\n") ;
+	printf(feedbackString) ;
+	
+	// done
+	return result ;
 	
 } // end function shortcutToDesktop
 
@@ -1274,4 +1428,5 @@ int hookupDocTypes() {
 	return 1 ;
 	
 } // end function hookupDocTypes
+
 
