@@ -20,63 +20,75 @@ package com.organic.maynard.outliner;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import java.io.*;
 import java.util.*;
-
 import javax.swing.*;
 import javax.swing.event.*;
+import org.xml.sax.*;
 
-public class MacroEditor extends JDialog implements ActionListener {
-	
-	public static final String CREATE = "Create";
-	public static final String UPDATE = "Update";
-	public static final String CANCEL = "Cancel";
-	public static final String DELETE = "Delete";
-	
-	protected Box createButtonBox = Box.createHorizontalBox();
-	protected Box updateButtonBox = Box.createHorizontalBox();
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
-	protected JLabel macroTypeName = new JLabel();
-	
-	protected JScrollPane scrollPane = new JScrollPane();
-	
-	protected JButton createButton = new JButton(CREATE);
-	protected JButton updateButton = new JButton(UPDATE);
-	protected JButton deleteButton = new JButton(DELETE);
-	protected JButton cancelCreateButton = new JButton(CANCEL);
-	protected JButton cancelUpdateButton = new JButton(CANCEL);
+public class MacroEditor extends AbstractGUITreeJDialog implements ActionListener, JoeReturnCodes {
 
-	protected MacroConfig macroConfig = null;
-	protected MacroManagerFrame frame = null;
+	// Constants
+	private static final int INITIAL_WIDTH = 350;
+	private static final int INITIAL_HEIGHT = 200;
+ 	private static final int MINIMUM_WIDTH = 350;
+	private static final int MINIMUM_HEIGHT = 200;
+	
+	private static final String CREATE = "Create";
+	private static final String UPDATE = "Update";
+	private static final String CANCEL = "Cancel";
+	private static final String DELETE = "Delete";
+	
+	private Box createButtonBox = Box.createHorizontalBox();
+	private Box updateButtonBox = Box.createHorizontalBox();
+
+	private JLabel macroTypeName = new JLabel();
+	
+	private JScrollPane scrollPane = new JScrollPane();
+	
+	private JButton createButton = new JButton(CREATE);
+	private JButton updateButton = new JButton(UPDATE);
+	private JButton deleteButton = new JButton(DELETE);
+	private JButton cancelCreateButton = new JButton(CANCEL);
+	private JButton cancelUpdateButton = new JButton(CANCEL);
+
+	private MacroConfig macroConfig = null;
+	private MacroManagerFrame frame = null;
 	
 	// Button Mode
-	public static final String BUTTON_MODE_CREATE_TITLE = "New Macro";
-	public static final String BUTTON_MODE_UPDATE_TITLE = "Update Macro";
+	private static final String BUTTON_MODE_CREATE_TITLE = "New Macro";
+	private static final String BUTTON_MODE_UPDATE_TITLE = "Update Macro";
 
 	public static final int BUTTON_MODE_CREATE = 0;
 	public static final int BUTTON_MODE_UPDATE = 1;
-	
-	private int buttonMode = BUTTON_MODE_CREATE;
 
 	
 	// The Constructor
-	public MacroEditor(MacroManagerFrame frame) {
-		super(Outliner.outliner, BUTTON_MODE_CREATE_TITLE, true);
+	public MacroEditor() {
+		super(false, false, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+	}
+
+
+	// GUITreeComponentInterface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
 		
-		this.frame = frame;
+		frame = Outliner.macroManager;
+		frame.macroEditor = this;
 
-		setSize(350,200);
-		setLocationRelativeTo(frame);
-		addComponentListener(new WindowSizeManager(350,250));
-
-		WindowListener windowListener = new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				MacroEditor me = (MacroEditor) e.getWindow();
-				me.cancel();
+		addWindowListener(
+			new WindowAdapter() {
+				public void windowClosing(WindowEvent e) {
+					MacroEditor me = (MacroEditor) e.getWindow();
+					me.cancel();
+				}
 			}
-		};
-		addWindowListener(windowListener);
+		);
 		
 		// Create the layout
 		this.getContentPane().setLayout(new BorderLayout());
@@ -100,33 +112,29 @@ public class MacroEditor extends JDialog implements ActionListener {
 		// Put it all together
 		this.getContentPane().add(macroTypeName,BorderLayout.NORTH);
 		this.getContentPane().add(scrollPane,BorderLayout.CENTER);
-		this.getContentPane().add(createButtonBox,BorderLayout.SOUTH);
 	}
 
-	public void setButtonMode(int buttonMode) {
+
+	public void setMacroConfigAndShow(MacroConfig macroConfig, int buttonMode) {
+		this.macroConfig = macroConfig;
+
 		if (buttonMode == BUTTON_MODE_CREATE) {
 			this.remove(updateButtonBox);
 			this.getContentPane().add(createButtonBox,BorderLayout.SOUTH);
+			setTitle(BUTTON_MODE_CREATE_TITLE);
 		} else if (buttonMode == BUTTON_MODE_UPDATE) {
 			this.remove(createButtonBox);
-			this.getContentPane().add(updateButtonBox,BorderLayout.SOUTH);	
-		} else {
-			return;
+			this.getContentPane().add(updateButtonBox,BorderLayout.SOUTH);
+			setTitle(BUTTON_MODE_UPDATE_TITLE);
 		}
-		
-		this.buttonMode = buttonMode;
-	}
-	
-	public int getButtonMode() {return this.buttonMode;}
-		
-	public void setMacroConfig(MacroConfig macroConfig) {
-		this.macroConfig = macroConfig;
-		
+						
 		// Swap in the new MacroConfig Panel
 		scrollPane.setViewportView((JComponent) macroConfig);
 		
 		// Update the macroTypeName text with the name of the class of the macroConfig.
 		this.macroTypeName.setText("Macro Type: " + Outliner.macroManager.getMacroTypeNameFromClassName(macroConfig.getMacro().getClass().getName()));
+
+		show();
 	}
 	
 
@@ -144,10 +152,9 @@ public class MacroEditor extends JDialog implements ActionListener {
 	}
 	
 	private void create() {
-		boolean success = macroConfig.create();
-		
-		if (success) {
+		if (macroConfig.create()) {
 			Macro macro = macroConfig.getMacro();
+			
 			// Add it to the Popup Menu
 			int i = Outliner.macroPopup.addMacro(macro);
 			
@@ -155,21 +162,19 @@ public class MacroEditor extends JDialog implements ActionListener {
 			((DefaultListModel) frame.macroList.getModel()).insertElementAt(macro.getName(),i);
 			
 			// Save it to disk as a serialized object.
-			frame.saveMacro(macro);
-			
-			setVisible(false);
+			saveMacro(macro);
 		} else {
 			JOptionPane.showMessageDialog(this,"An Error Occurred.");
 		}
+		
+		hide();
 	}
 	
 	private void update() {
-		Macro macro = macroConfig.getMacro();
-		String oldName = macro.getFileName();
-		
-		boolean success = macroConfig.update();
-		
-		if (success) {
+		if (macroConfig.update()) {
+			Macro macro = macroConfig.getMacro();
+			String oldName = macro.getFileName();
+
 			// Update the popup menu.
 			int oldIndex = Outliner.macroPopup.removeMacro(macro);
 			int newIndex = Outliner.macroPopup.addMacro(macro);
@@ -177,49 +182,80 @@ public class MacroEditor extends JDialog implements ActionListener {
 			// Update the list
 			DefaultListModel model = (DefaultListModel) frame.macroList.getModel();
 			model.remove(oldIndex);
-			model.insertElementAt(macro.getName(),newIndex);
+			model.insertElementAt(macro.getName(), newIndex);
 			
 			// Save it to disk as a serialized object.
-			File oldFile = new File(Outliner.MACROS_DIR + oldName);
-			frame.deleteMacro(oldFile);
-			frame.saveMacro(macro);
+			deleteMacro(new File(Outliner.MACROS_DIR + oldName));
+			saveMacro(macro);
 			
-			setVisible(false);
 		} else {
 			JOptionPane.showMessageDialog(this,"An Error Occurred.");
 		}
+		
+		hide();
 	}
 
 	private void delete() {
-		boolean success = macroConfig.delete();
+		if (USER_ABORTED == promptUser("Do you really want to delete this macro?")) {
+			return;
+		}
 
-		if (success) {
+		if (macroConfig.delete()) {
 			Macro macro = macroConfig.getMacro();
 			
 			// Remove it from the Popup Menu
 			int index = Outliner.macroPopup.removeMacro(macro);
 			
 			// Remove it from the list in the MacroManager
-			DefaultListModel model = (DefaultListModel) frame.macroList.getModel();
-			model.remove(index);
+			((DefaultListModel) frame.macroList.getModel()).remove(index);
 			
 			// Remove it from disk
-			File file = new File(Outliner.MACROS_DIR + macro.getFileName());
-			frame.deleteMacro(file);
-			
-			setVisible(false);
+			deleteMacro(new File(Outliner.MACROS_DIR + macro.getFileName()));
 		} else {
 			JOptionPane.showMessageDialog(this,"An Error Occurred.");
 		}
+		
+		hide();
 	}
 	
 	private void cancel() {
-		boolean success = macroConfig.cancel();
-
-		if (success) {
-			setVisible(false);
-		} else {
+		if (!macroConfig.cancel()) {
 			JOptionPane.showMessageDialog(this,"Uh Oh, something has gone wrong.");
+		}
+		
+		hide();
+	}
+
+
+	// Macro Saving and Loading Methods
+	private void deleteMacro(File file) {
+		file.delete();
+		LoadMacroCommand.saveConfigFile(new File(Outliner.MACROS_FILE));
+	}
+		
+	private void saveMacro(Macro macro) {
+		macro.save(new File(Outliner.MACROS_DIR + macro.getFileName()));
+		LoadMacroCommand.saveConfigFile(new File(Outliner.MACROS_FILE));
+	}
+
+
+	// Utility Methods
+	private static int promptUser(String msg) {
+		Object[] options = {"Yes","No"};
+		int result = JOptionPane.showOptionDialog(Outliner.macroManager.macroEditor,
+			msg,
+			"Confirm Delete",
+			JOptionPane.YES_NO_OPTION,
+			JOptionPane.QUESTION_MESSAGE,
+			null,
+			options,
+			options[0]
+		);
+		
+		if (result == JOptionPane.NO_OPTION) {
+			return USER_ABORTED;
+		} else {
+			return SUCCESS;
 		}
 	}
 }

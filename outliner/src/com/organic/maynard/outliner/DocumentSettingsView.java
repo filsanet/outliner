@@ -24,11 +24,13 @@ import java.util.*;
 import javax.swing.*;
 import org.xml.sax.*;
 
-public class DocumentSettingsView extends JDialog implements ActionListener, GUITreeComponent, JoeXMLConstants {
+public class DocumentSettingsView extends AbstractGUITreeJDialog implements ActionListener {
 	
 	// Constants
 	private static final int INITIAL_WIDTH = 350;
 	private static final int INITIAL_HEIGHT = 400;
+	private static final int MINIMUM_WIDTH = 250;
+	private static final int MINIMUM_HEIGHT = 300;
 
 	protected static final String OK = "OK";
 	protected static final String CANCEL = "Cancel";
@@ -81,21 +83,12 @@ public class DocumentSettingsView extends JDialog implements ActionListener, GUI
 
 	// The Constructors
 	public DocumentSettingsView() {
-		super(Outliner.outliner, "", true);
+		super(false, false, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
 	}
 
 	// GUITreeComponent interface
-	private String id = null;
-	public String getGUITreeComponentID() {return this.id;}
-	public void setGUITreeComponentID(String id) {this.id = id;}
-
 	public void startSetup(AttributeList atts) {
-		setTitle(atts.getValue(A_TITLE));
-		
-		setVisible(false);
-				
-		// Create the Layout
-		setSize(INITIAL_WIDTH,INITIAL_HEIGHT);
+		super.startSetup(atts);
 		
 		// Define the Bottom Panel
 		JPanel bottomPanel = new JPanel();
@@ -197,8 +190,6 @@ public class DocumentSettingsView extends JDialog implements ActionListener, GUI
 		getRootPane().setDefaultButton(buttonOK);
 	}
 	
-	public void endSetup(AttributeList atts) {}
-	
 
 	// Configuration 
 	private DocumentSettings docSettings = null;
@@ -213,10 +204,6 @@ public class DocumentSettingsView extends JDialog implements ActionListener, GUI
 			isInheritingPrefsLabel.setText(IS_USING_APPLICATION_PREFS);
 			syncToGlobal();
 		}
-		
-
-		Rectangle r = Outliner.outliner.getBounds();
-		setLocation((int) (r.getCenterX() - getWidth()/2), (int) (r.getCenterY() - getHeight()/2));
 
 		super.show();
 	}

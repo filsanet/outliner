@@ -21,14 +21,23 @@ package com.organic.maynard.outliner;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
 public class WindowSizeManager implements ComponentListener {
 
+	// Fields
 	private int minWidth = 100;
 	private int minHeight = 100;
 
 	private int initialWidth = 100;
 	private int initialHeight = 100;
 	
+	private boolean resizeOnShow = true;
+
+
 	// The Constructor
 	public WindowSizeManager(int minWidth, int minHeight) {
 		this.minWidth = minWidth;
@@ -36,12 +45,19 @@ public class WindowSizeManager implements ComponentListener {
 	}
 
 	public WindowSizeManager(int initialWidth, int initialHeight, int minWidth, int minHeight) {
+		this(true, initialWidth, initialHeight, minWidth, minHeight);
+	}
+
+	public WindowSizeManager(boolean resizeOnShow, int initialWidth, int initialHeight, int minWidth, int minHeight) {
+		this.resizeOnShow = resizeOnShow;
+		
 		this.minWidth = minWidth;
 		this.minHeight = minHeight;
 		this.initialWidth = initialWidth;
 		this.initialHeight = initialHeight;
 	}
-	
+
+
 	// ComponentListener Interface
 	public void componentResized(ComponentEvent e) {
 		Component comp = e.getComponent();
@@ -67,7 +83,9 @@ public class WindowSizeManager implements ComponentListener {
 	public void componentMoved(ComponentEvent e) {}
 	
 	public void componentShown(ComponentEvent e) {
-		e.getComponent().setSize(initialWidth,initialHeight);
+		if (resizeOnShow) {
+			e.getComponent().setSize(initialWidth, initialHeight);
+		}
 	}
 	
 	public void componentHidden(ComponentEvent e) {}

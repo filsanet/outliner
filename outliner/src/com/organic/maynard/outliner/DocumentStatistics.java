@@ -19,21 +19,22 @@
 package com.organic.maynard.outliner;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.Window;
-import java.awt.datatransfer.*;
-
-import java.io.*;
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
-import javax.swing.border.*;
+import org.xml.sax.*;
 
-import com.organic.maynard.util.string.*;
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
-public class DocumentStatistics extends JDialog {
+public class DocumentStatistics extends AbstractGUITreeJDialog {
+	
+	// Constants
+	private static final int INITIAL_WIDTH = 200;
+	private static final int INITIAL_HEIGHT = 125;
+	private static final int MINIMUM_WIDTH = 200;
+	private static final int MINIMUM_HEIGHT = 125;
+	
 	
 	// GUI Components
 	private static JLabel documentTitleName = new JLabel("Document: ");
@@ -48,12 +49,9 @@ public class DocumentStatistics extends JDialog {
 	
 	// The Constructors
 	public DocumentStatistics() {
-		super(Outliner.outliner,"Document Statistics",true);
+		super(true, true, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
 		
 		// Create the Layout
-		setSize(200,125);
-		setResizable(true);
-		
 		Box vBox = Box.createVerticalBox();
 
 		Box documentTitleBox = Box.createHorizontalBox();
@@ -77,6 +75,13 @@ public class DocumentStatistics extends JDialog {
 		
 		getContentPane().add(vBox,BorderLayout.CENTER);
 	}
+
+
+	// GUITreeComponent Interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		Outliner.statistics = this;
+	}
 	
 	public void show() {
 		OutlinerDocument doc = Outliner.getMostRecentDocumentTouched();
@@ -87,9 +92,6 @@ public class DocumentStatistics extends JDialog {
 		
 		int charCount = doc.tree.getCharCount();
 		charCountValue.setText("" + charCount);
-
-		Rectangle r = Outliner.outliner.getBounds();
-		setLocation((int) (r.getCenterX() - getWidth()/2), (int) (r.getCenterY() - getHeight()/2));
 		
 		super.show();		
 	}

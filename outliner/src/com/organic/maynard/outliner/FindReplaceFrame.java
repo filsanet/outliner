@@ -20,24 +20,22 @@ package com.organic.maynard.outliner;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.Window;
-import java.awt.datatransfer.*;
-
-import java.io.*;
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
-import javax.swing.border.*;
+import org.xml.sax.*;
 
-public class FindReplaceFrame extends JInternalFrame implements ActionListener, KeyListener {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionListener, KeyListener {
+
+	// Constants
+	private static final int MINIMUM_WIDTH = 350;
+	private static final int MINIMUM_HEIGHT = 300;
+ 	private static final int INITIAL_WIDTH = 350;
+	private static final int INITIAL_HEIGHT = 300;
 	
-	static final int MIN_WIDTH = 350;
-	static final int MIN_HEIGHT = 300;
-
-	static final int INITIAL_WIDTH = 350;
-	static final int INITIAL_HEIGHT = 300;
         	
 	// Button Text and Other Copy
 	public static final String FIND = "Find";
@@ -99,25 +97,15 @@ public class FindReplaceFrame extends JInternalFrame implements ActionListener, 
 		
 	// The Constructor
 	public FindReplaceFrame() {
-		super("Find/Replace",true,true,false,false);
-		
-		Outliner.desktop.add(this, JLayeredPane.PALETTE_LAYER);
+		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+	}
 
-		// Set the Component & Window Listeners
-		addInternalFrameListener(new FindReplaceFrameWindowMonitor());
-		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-			
-		// Create the Layout
-		restoreWindowToInitialSize();
-		setLocation(5,5);
-		setBackground(new Color(198,198,198));
-		
-		
-		// Try to get rid of the icon in the frame header.
-		setFrameIcon(null);
 
-		setVisible(false);
-
+	// GUITreeComponent interface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
+		
+		Outliner.findReplace = this;
 		
 		// Define the options Box
 		Box optionsBox = Box.createHorizontalBox();
@@ -175,15 +163,7 @@ public class FindReplaceFrame extends JInternalFrame implements ActionListener, 
 		mainBox.add(buttonBox);
 		mainBox.add(Box.createHorizontalStrut(5));
 		
-		getContentPane().add(mainBox, BorderLayout.CENTER);
-
-		//getContentPane().add(findReplaceBox, BorderLayout.CENTER);
-		//getContentPane().add(buttonBox, BorderLayout.EAST);
-		//getContentPane().add(optionsBox, BorderLayout.SOUTH);
-	}
-
-	public void restoreWindowToInitialSize() {
-		setSize(INITIAL_WIDTH,INITIAL_HEIGHT);
+		getContentPane().add(mainBox, BorderLayout.CENTER);		
 	}
 	
 	// KeyListener Interface

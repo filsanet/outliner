@@ -37,18 +37,7 @@ public class FindMenuItem extends AbstractOutlinerMenuItem implements ActionList
 
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
-		FindReplaceFrame frp = Outliner.findReplace;
-		
-		// Make the preferences window visible and switch focus to it.
-		frp.setVisible(true);
-		Outliner.desktop.desktopManager.activateFrame(frp);
-
-		// Select the frame
-		try {
-			frp.setSelected(true);
-		} catch (java.beans.PropertyVetoException pve) {
-			pve.printStackTrace();
-		}
+		(Outliner.findReplace).show();
 		
 		FindReplaceFrame.TEXTAREA_FIND.requestFocus();
 	}

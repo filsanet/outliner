@@ -30,14 +30,18 @@ import org.xml.sax.*;
  * @version $Revision$, $Date$
  */
 
-public class PreferencesFrame extends JInternalFrame implements TreeSelectionListener, ActionListener, GUITreeComponent, JoeXMLConstants {
+public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSelectionListener, ActionListener, JoeXMLConstants {
 
 	// Constants
-	protected static final int MIN_WIDTH = 450;
-	protected static final int MIN_HEIGHT = 430;
- 
- 	protected static final int INITIAL_WIDTH = 450;
-	protected static final int INITIAL_HEIGHT = 430;
+	private static final int MINIMUM_WIDTH = 450;
+	private static final int MINIMUM_HEIGHT = 430;
+ 	private static final int INITIAL_WIDTH = 450;
+	private static final int INITIAL_HEIGHT = 430;
+
+
+	// Fields
+	private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("");
+	private DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
 
 
 	// Main Component Containers
@@ -59,32 +63,13 @@ public class PreferencesFrame extends JInternalFrame implements TreeSelectionLis
 
 	// The Constructor
 	public PreferencesFrame() {
-		super("",true,true,false,false);	
+		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
 	}
 
 
 	// GUITreeComponent interface
-	private String id = null;
-	public String getGUITreeComponentID() {return this.id;}
-	public void setGUITreeComponentID(String id) {this.id = id;}
-
 	public void startSetup(AttributeList atts) {
-		setTitle(atts.getValue(A_TITLE));
-		setVisible(false);
-		
-		Outliner.desktop.add(this, JLayeredPane.PALETTE_LAYER);
-
-		// Set the Component & Window Listeners
-		addInternalFrameListener(new PreferencesFrameWindowMonitor());
-		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-			
-		// Create the Layout
-		setLocation(5,5);
-		setSize(INITIAL_WIDTH,INITIAL_HEIGHT);
-		setResizable(true);
-
-		// Try to get rid of the icon in the frame header.
-		setFrameIcon(null);
+		super.startSetup(atts);
 		
 		// Define the Bottom Panel
 		BOTTOM_PANEL.setLayout(new FlowLayout());
@@ -121,18 +106,17 @@ public class PreferencesFrame extends JInternalFrame implements TreeSelectionLis
 		splitPane.setResizeWeight(0.0);
 		
 		getContentPane().add(BOTTOM_PANEL, BorderLayout.SOUTH);
-		getContentPane().add(splitPane, BorderLayout.CENTER);		
+		getContentPane().add(splitPane, BorderLayout.CENTER);
+		
+		super.endSetup(atts);		
 	}
 
-
-	private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("");
-	private DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
 	
 	public void addPanelToTree(String name) {
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(name);
-			rootNode.add(node);
+		rootNode.add(new DefaultMutableTreeNode(name));
 	}
-		
+
+	
 	// TreeSelectionListener interface
 	public void valueChanged(TreeSelectionEvent e) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
@@ -154,9 +138,7 @@ public class PreferencesFrame extends JInternalFrame implements TreeSelectionLis
 	
 	private void main_ok() {
 		main_apply();
-		
-		// Hide Window
-		hideAndSwitch();
+		hide();
 	}
 
 	private void main_apply() {
@@ -182,19 +164,7 @@ public class PreferencesFrame extends JInternalFrame implements TreeSelectionLis
 
 		PreferencesPanelEditor ppe = (PreferencesPanelEditor) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_PANEL_EDITOR);
 		ppe.setToCurrent();
-		
-		// Hide Window
-		hideAndSwitch();
-	}
-	
-	private void hideAndSwitch() {
-		// Hide
-		this.setVisible(false);
-		
-		// Switch to most recent document window
-		OutlinerDocument doc = Outliner.getMostRecentDocumentTouched();
-		if (doc != null) {
-			WindowMenu.changeToWindow(doc);
-		}	
+
+		hide();
 	}
 }

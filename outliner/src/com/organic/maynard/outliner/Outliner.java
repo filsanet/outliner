@@ -136,10 +136,10 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	// GUI Settings
 	public static Outliner outliner = null;
 	public static OutlinerDesktop desktop = new OutlinerDesktop();
-	public static JScrollPane jsp;
-	public static OutlinerDesktopMenuBar menuBar;
+	public static JScrollPane jsp = null;
+	public static OutlinerDesktopMenuBar menuBar = null;
 	public static OutlinerFileChooser chooser = null;
-	public static DocumentStatistics statistics = new DocumentStatistics();
+	public static DocumentStatistics statistics = null;
 
 	static {
 		jsp = new JScrollPane(desktop,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED ,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -221,14 +221,9 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		ImageIcon icon = new ImageIcon(GRAPHICS_DIR + "frame_icon.gif");
 		setIconImage(icon.getImage());
 
-
-		// Setup the FindReplace Frame
-		findReplace = new FindReplaceFrame();
 		
 		// Setup the MacroManager and the MacroPopupMenu
-		macroManager = new MacroManagerFrame();
 		loadPrefsFile(PARSER,MACRO_CLASSES_FILE);
-		
 		macroPopup = new MacroPopupMenu();
 		
 		System.out.println("Loading Macros...");

@@ -18,61 +18,52 @@
  
 package com.organic.maynard.outliner;
 
-import java.lang.reflect.*;
-
 import java.awt.*;
 import java.awt.event.*;
-
 import java.io.*;
 import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
+import org.xml.sax.*;
 
-public class MacroManagerFrame extends JInternalFrame implements ActionListener {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+
+public class MacroManagerFrame extends AbstractGUITreeJDialog implements ActionListener {
 
 	// Constants
-	static final int MIN_WIDTH = 350;
-	static final int MIN_HEIGHT = 300;
+	private static final int INITIAL_WIDTH = 275;
+	private static final int INITIAL_HEIGHT = 400;
+ 	private static final int MINIMUM_WIDTH = 275;
+	private static final int MINIMUM_HEIGHT = 200;
+       	
+	private static final String NEW = "New";
 
-	static final int INITIAL_WIDTH = 350;
-	static final int INITIAL_HEIGHT = 300;
-        	
-	public static final String NEW = "New";
-	
-	public MacroEditor macroEditor = null;
-
-	public Vector macroNames = new Vector();
-	public Vector macroClassNames = new Vector();
 
 	// Define Fields and Buttons
-	public JButton newButton = new JButton(NEW);
-	public JComboBox macroType = new JComboBox();	
-	public JList macroList = new JList();
-		
+	protected MacroEditor macroEditor = null;
+
+	protected ArrayList macroNames = new ArrayList();
+	protected ArrayList macroClassNames = new ArrayList();
+
+	private JButton newButton = new JButton(NEW);
+	protected JComboBox macroType = new JComboBox();	
+	protected JList macroList = new JList();
+
+
 	// The Constructor
 	public MacroManagerFrame() {
-		super("Macro Manager",true,true,false,false);
+		super(false, false, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+	}
+	
+	
+	// GUITreeComponentInterface
+	public void startSetup(AttributeList atts) {
+		super.startSetup(atts);
 		
-		macroEditor = new MacroEditor(this);
-
-		Outliner.desktop.add(this, JLayeredPane.PALETTE_LAYER);
-
-		// Set the Component & Window Listeners
-		addInternalFrameListener(new FindReplaceFrameWindowMonitor());
-		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-			
-		// Create the Layout
-		restoreWindowToInitialSize();
-		setLocation(5,5);
-		setBackground(new Color(198,198,198));
+		Outliner.macroManager = this;
 		
-		
-		// Try to get rid of the icon in the frame header.
-		setFrameIcon(null);
-
-		setVisible(false);
-
 		// Define New Macro Pulldown area
 		newButton.addActionListener(this);
 		
@@ -85,34 +76,31 @@ public class MacroManagerFrame extends JInternalFrame implements ActionListener 
 		macroList.setModel(new DefaultListModel());
 		macroList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		MouseListener mouseListener = new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 2) {
-					int index = macroList.locationToIndex(e.getPoint());
-					DefaultListModel model = (DefaultListModel) macroList.getModel();
-					updateMacro((String) model.get(index));
+		macroList.addMouseListener(
+			new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					if (e.getClickCount() == 2) {
+						int index = macroList.locationToIndex(e.getPoint());
+						DefaultListModel model = (DefaultListModel) macroList.getModel();
+						updateMacro((String) model.get(index));
+					}
 				}
 			}
-		};
-		macroList.addMouseListener(mouseListener);
+		);
 		
 		JScrollPane jsp = new JScrollPane(macroList);
 		
 		// Put it all together
 		getContentPane().add(newBox, BorderLayout.NORTH);
-		getContentPane().add(jsp, BorderLayout.CENTER);
-		
+		getContentPane().add(jsp, BorderLayout.CENTER);		
 	}
 
-	public void restoreWindowToInitialSize() {
-		setSize(INITIAL_WIDTH,INITIAL_HEIGHT);
-	}
 
 	private void updateMacro(String macroName) {
 		Macro macro = Outliner.macroPopup.getMacro(macroName);
 		
 		if (macro != null) {
-			displayMacroEditor(macro,MacroEditor.BUTTON_MODE_UPDATE);
+			displayMacroEditor(macro, MacroEditor.BUTTON_MODE_UPDATE);
 		}
 	}
 
@@ -132,7 +120,7 @@ public class MacroManagerFrame extends JInternalFrame implements ActionListener 
 		try {
 			Class theClass = Class.forName(className);
 			Macro macro = (Macro) theClass.newInstance();
-			displayMacroEditor(macro,MacroEditor.BUTTON_MODE_CREATE);
+			displayMacroEditor(macro, MacroEditor.BUTTON_MODE_CREATE);
 		} catch (ClassNotFoundException cnfe) {
 			System.out.println("Exception: " + className + " " + cnfe);
 		} catch (Exception e) {
@@ -140,69 +128,31 @@ public class MacroManagerFrame extends JInternalFrame implements ActionListener 
 		}
 	}
 	
-	public String getClassNameFromMacroTypeName(String macroTypeName) {
-		String className = "";
-		int index = -1;
-		for (int i = 0; i < macroNames.size(); i++) {
-			if (((String) macroNames.elementAt(i)).equals(macroTypeName)) {
-				index = i;
-				break;
-			}
-		}
-		
-		if (index >= 0) {
-			className = (String) macroClassNames.elementAt(index);
-		}
-		
-		return className;
-	}
-
-	public String getMacroTypeNameFromClassName(String className) {
-		String macroTypeName = "";
-		int index = -1;
-		for (int i = 0; i < macroClassNames.size(); i++) {
-			if (((String) macroClassNames.elementAt(i)).equals(className)) {
-				index = i;
-				break;
-			}
-		}
-		
-		if (index >= 0) {
-			macroTypeName = (String) macroNames.elementAt(index);
-		}
-		
-		return macroTypeName;
-	}
-	
 	private void displayMacroEditor(Macro macro, int buttonMode) {
 		MacroConfig macroConfig = (MacroConfig) macro.getConfigurator();
 		macroConfig.init(macro);
-		macroEditor.setMacroConfig(macroConfig);
-		macroEditor.setButtonMode(buttonMode);
-		if (buttonMode == MacroEditor.BUTTON_MODE_CREATE) {
-			macroEditor.setTitle(MacroEditor.BUTTON_MODE_CREATE_TITLE);
-		} else if (buttonMode == MacroEditor.BUTTON_MODE_UPDATE) {
-			macroEditor.setTitle(MacroEditor.BUTTON_MODE_UPDATE_TITLE);
+		macroEditor.setMacroConfigAndShow(macroConfig, buttonMode);
+	}
+
+
+	// Utility Functions
+	public String getClassNameFromMacroTypeName(String macroTypeName) {
+		for (int i = 0; i < macroNames.size(); i++) {
+			if (((String) macroNames.get(i)).equals(macroTypeName)) {
+				return (String) macroClassNames.get(i);
+			}
 		}
-		macroEditor.setVisible(true);
-	}
-	
-	// Macro Saving and Loading Methods
-	public void deleteMacro(File file) {
-		file.delete();
-		LoadMacroCommand.saveConfigFile(new File(Outliner.MACROS_FILE));
-	}
 		
-	public void saveMacro(Macro macro) {
-		File file = new File(Outliner.MACROS_DIR + macro.getFileName());
-		macro.save(file);
-		LoadMacroCommand.saveConfigFile(new File(Outliner.MACROS_FILE));
+		return null;
+	}
+
+	public String getMacroTypeNameFromClassName(String className) {
+		for (int i = 0; i < macroClassNames.size(); i++) {
+			if (((String) macroClassNames.get(i)).equals(className)) {
+				return (String) macroNames.get(i);
+			}
+		}
+		
+		return null;
 	}
 }
-
-
-
-
-
-
-
