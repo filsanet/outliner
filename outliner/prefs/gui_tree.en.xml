@@ -15,11 +15,11 @@
 			</preference>
 		<!-- MAIN WINDOW PREFS -->
 			<preference id="main_window_width" class="com.organic.maynard.outliner.PreferenceInt" default="600">
-				<validator id="main_window_width_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="350" max="2048" default="600">
+				<validator id="main_window_width_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="450" max="2048" default="600">
 				</validator>
 			</preference>
 			<preference id="main_window_height" class="com.organic.maynard.outliner.PreferenceInt" default="600">
-				<validator id="main_window_height_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="250" max="2048" default="600">
+				<validator id="main_window_height_validator" class="com.organic.maynard.outliner.IntRangeValidator" min="450" max="2048" default="600">
 				</validator>
 			</preference>
 			<preference id="main_window_x_offset" class="com.organic.maynard.outliner.PreferenceInt" default="20">
