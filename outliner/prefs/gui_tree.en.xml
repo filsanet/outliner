@@ -344,8 +344,8 @@
 				<menu id="recent_file_list" class="com.organic.maynard.outliner.RecentFilesList" text="Open Recent Files">
 				</menu>
 				<separator/>
-				<!-- Real Soon Now  <menuitem id="import" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Import"/> -->
-				<!-- Real Soon Now <separator/> -->
+				<menuitem id="import" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Import"/>
+				<separator/>
 				<menuitem id="save" class="com.organic.maynard.outliner.SaveFileMenuItem" text="Save" keybinding="S" keybindingmodifiers="control"/>
 				<menuitem id="save_all" class="com.organic.maynard.outliner.SaveAllFileMenuItem" text="Save All"/>
 				<menuitem id="save_as" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Save As"/>
