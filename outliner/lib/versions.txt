@@ -1,0 +1,7 @@
+Versions for the jars contained in the lib directory are noted below. 
+I've begun removing version numbers from the jars so I won't need to
+update the makefiles and run scripts with new jar names when we
+upgrade the jars.
+
+bsh.jar           1.2b6
+jakarta-oro.jar   2.0.6
