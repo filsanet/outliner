@@ -484,6 +484,10 @@
 				<menuitem id="statistics" class="com.organic.maynard.outliner.StatisticsMenuItem" text="Document Statistics..."/>
 				<separator/>
 				<menuitem id="stack" class="com.organic.maynard.outliner.StackMenuItem" text="Stack"/>
+				<menuitem id="maximize_submenu" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Maximize">
+					<menuitem id="maximize_vertically" class="com.organic.maynard.outliner.MaximizeVerticallyMenuItem" text="Vertically"/>
+					<menuitem id="maximize_horizontally" class="com.organic.maynard.outliner.MaximizeHorizontallyMenuItem" text="Horizontally"/>
+				</menuitem>
 				<separator/>
 				<menuitem id="next_window" class="com.organic.maynard.outliner.NextWindowMenuItem" text="Next" keybinding="S" keybindingmodifiers="control shift"/>
 				<menuitem id="prev_window" class="com.organic.maynard.outliner.PrevWindowMenuItem" text="Previous" keybinding="A" keybindingmodifiers="control shift"/>
