@@ -45,6 +45,14 @@ import com.organic.maynard.outliner.*;
 public class PreferencesPanelMisc extends AbstractPreferencesPanel implements PreferencesPanel, GUITreeComponent {
 	
 	public void applyCurrentToApplication() {
+		Preferences prefs = Outliner.prefs;
 		
+		PreferenceString pMergeDelimiter = (PreferenceString) prefs.getPreference(Preferences.MERGE_DELIMITER);
+		PreferenceBoolean pTrimEnabled = (PreferenceBoolean) prefs.getPreference(Preferences.TRIM_ENABLED_FOR_MERGE_WITH_DELIMITER);
+		PreferenceBoolean pIncludeEmptyNodes = (PreferenceBoolean) prefs.getPreference(Preferences.INCLUDE_EMPTY_NODES_FOR_MERGE_WITH_DELIMITER);
+		
+		NodeImpl.merge_delimiter = pMergeDelimiter.cur;
+		NodeImpl.merge_trim_enabled = pTrimEnabled.cur;
+		NodeImpl.merge_empty_nodes_enabled = pIncludeEmptyNodes.cur;
 	}
 }

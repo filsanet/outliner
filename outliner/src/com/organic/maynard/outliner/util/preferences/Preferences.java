@@ -182,6 +182,9 @@ public class Preferences implements GUITreeComponent {
 		public static final String MOUSE_WHEEL_SCROLL_SPEED = "mouse_wheel_scroll_speed";
 		public static final String OWNER_NAME = "owner_name";
 		public static final String OWNER_EMAIL = "owner_email";
+		public static final String TRIM_ENABLED_FOR_MERGE_WITH_DELIMITER = "trim_for_merge_with_delimiter";
+		public static final String INCLUDE_EMPTY_NODES_FOR_MERGE_WITH_DELIMITER = "include_empty_nodes_for_merge_with_delimiter";
+		public static final String MERGE_DELIMITER = "delimiter_for_merge_with_delimiter";
 		
 		// WebFile
 		public static final String WEB_FILE_URL = "web_file_url";

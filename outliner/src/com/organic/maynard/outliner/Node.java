@@ -162,5 +162,5 @@ public interface Node extends AttributeContainer {
 	public void getRecursiveValue(StringBuffer buf, String lineEndString, boolean includeComments);
 	
 	public void getMergedValue(StringBuffer buf);
-	public void getMergedValueWithSpaces(StringBuffer buf);
+	public void getMergedValueWithSpaces(StringBuffer buf, int count);
 }

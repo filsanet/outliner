@@ -116,7 +116,7 @@ public class MergeAction extends AbstractAction {
 				}
 				
 				didMerge = true;
-				node.getMergedValueWithSpaces(buf);
+				node.getMergedValueWithSpaces(buf, i);
 			}
 		} else {
 			for (int i = 0, limit = nodeList.size(); i < limit; i++) {

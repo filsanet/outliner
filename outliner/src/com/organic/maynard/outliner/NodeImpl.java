@@ -843,21 +843,29 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		}
 	}
 	
-	public void getMergedValueWithSpaces(StringBuffer buf) {
-		if (buf.length() > 0) {
-			if (buf.charAt(buf.length() - 1) != ' ') {
-				buf.append(' ').append(getValue());
-			} else {
-				buf.append(getValue());
-			}
+	public static String merge_delimiter = " ";
+	public static boolean merge_trim_enabled = true;
+	public static boolean merge_empty_nodes_enabled = false;
+	
+	public void getMergedValueWithSpaces(StringBuffer buf, int count) {
+		String value = getValue();
+		if (merge_trim_enabled) {
+			value = value.trim();
+		}
+		
+		if (count == 0) {
+			buf.append(value);
 		} else {
-			buf.append(getValue());
+			if (value.length() > 0 || merge_empty_nodes_enabled) {
+				buf.append(merge_delimiter);
+			}
+			buf.append(value);
 		}
 		
 		// Recursive Part
 		int childCount = numOfChildren();
 		for (int i = 0; i < childCount; i++) {
-			getChild(i).getMergedValue(buf);
+			getChild(i).getMergedValueWithSpaces(buf, ++count);
 		}
 	}
 	

@@ -486,6 +486,19 @@
 							<validator id="autosave_frequency_validator" class="com.organic.maynard.outliner.util.preferences.IntRangeValidator" min="10" max="3600" default="30"/>
 							<preference_component id="autosave_frequency_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeTextFieldComponent" label="Autosave Frequency (sec)" size="4"/>
 						</preference>
+						<preference_container id="merge_with_delimiter_preference_container" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeSubContainer" style="titled" label=" Merge Nodes with a Delimiter ">
+							<preference id="delimiter_for_merge_with_delimiter" class="com.organic.maynard.outliner.util.preferences.PreferenceString" default=" ">
+								<preference_component id="delimiter_for_merge_with_delimiter_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeTextFieldComponent" label="Delimiter" size="10"/>
+							</preference>
+							<preference id="trim_for_merge_with_delimiter" class="com.organic.maynard.outliner.util.preferences.PreferenceBoolean" default="true">
+								<validator id="trim_for_merge_with_delimiter_validator" class="com.organic.maynard.outliner.util.preferences.BooleanValidator"/>
+								<preference_component id="trim_for_merge_with_delimiter_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeCheckBoxComponent" label="Trim whitespace"/>
+							</preference>
+							<preference id="include_empty_nodes_for_merge_with_delimiter" class="com.organic.maynard.outliner.util.preferences.PreferenceBoolean" default="false">
+								<validator id="include_empty_nodes_for_merge_with_delimiter_validator" class="com.organic.maynard.outliner.util.preferences.BooleanValidator"/>
+								<preference_component id="include_empty_nodes_for_merge_with_delimiter_component" class="com.organic.maynard.outliner.util.preferences.PreferencesGUITreeCheckBoxComponent" label="Include empty nodes"/>
+							</preference>
+						</preference_container>
 					</preferencepanel>
 				</preferencesframe>
 		</preferences>
@@ -575,7 +588,7 @@
 				<menuitem id="demote" class="com.organic.maynard.outliner.menus.outline.DemoteMenuItem" text="Demote" keybinding="tab" mnemonic="m"/>
 				<separator/>
 				<menuitem id="merge" class="com.organic.maynard.outliner.menus.outline.MergeMenuItem" text="Merge" keybinding="M" keybindingmodifiers="shortcut" mnemonic="g"/>
-				<menuitem id="merge_with_spaces" class="com.organic.maynard.outliner.menus.outline.MergeWithSpacesMenuItem" text="Merge with Spaces" keybinding="M" keybindingmodifiers="shortcut shift" mnemonic="w"/>
+				<menuitem id="merge_with_spaces" class="com.organic.maynard.outliner.menus.outline.MergeWithSpacesMenuItem" text="Merge with Delimiter" keybinding="M" keybindingmodifiers="shortcut shift" mnemonic="w"/>
 				<separator/>
 				<menuitem id="hoist" class="com.organic.maynard.outliner.menus.outline.HoistMenuItem" text="Hoist" mnemonic="h"/>
 				<menuitem id="dehoist" class="com.organic.maynard.outliner.menus.outline.DehoistMenuItem" text="De-Hoist" mnemonic="i"/>
