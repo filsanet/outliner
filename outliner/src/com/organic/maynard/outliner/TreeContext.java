@@ -30,24 +30,31 @@ public class TreeContext {
 	
 	public ArrayList visibleNodes = new ArrayList(1000);
 	public ArrayList selectedNodes = new ArrayList(100);
-	public Node rootNode = new NodeImpl(this,"ROOT");
+	public Node rootNode = null;
 
 
 	// The Constructors
 	public TreeContext(OutlinerDocument doc) {
-		this.doc = doc;
+		this();
 		
+		this.doc = doc;
+		doc.panel.layout.setNodeToDrawFrom(getEditingNode(),0);
+	}
+
+	public TreeContext() {
 		// Create an empty Tree
+		setRootNode(new NodeImpl(this,"ROOT"));
 		NodeImpl child = new NodeImpl(this,"");
 		rootNode.appendChild(child);
-		addNode(child);
-
-		rootNode.setExpandedClean(true);
 		
 		// Record the current location
-		setEditingNode(child);
-		
-		doc.panel.layout.setNodeToDrawFrom(child,0);
+		setEditingNode(child);	
+	}
+	
+	// Accessors
+	public void setRootNode(Node node) {
+		this.rootNode = node;
+		rootNode.setExpandedClean(true);
 	}
 
 	// Tracking the Editing Location
@@ -152,7 +159,7 @@ public class TreeContext {
 
 	public void insertNodeAfter(Node existingNode, Node newNode) {
 		int nodeIndex = visibleNodes.indexOf(existingNode) + 1;
-		if (nodeIndex > 0) {
+		if (nodeIndex >= 0) {
 			visibleNodes.add(nodeIndex,newNode);
 		}
 	}
