@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <opml version="1.0">
 <head>
-<title>E:\stan's java projects\Joe\outliner\dox\JOE User Guide.en.opml</title>
+<title>E:\JOE 183\outliner\dox\JOE User Guide.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Wed, 15 Aug 2001 11:15:32 GMT</dateModified>
+<dateModified>Thu, 23 Aug 2001 04:51:40 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
@@ -11,454 +11,562 @@
 <windowTop>25</windowTop>
 <windowLeft>442</windowLeft>
 <windowBottom>660</windowBottom>
-<windowRight>992</windowRight>
+<windowRight>1037</windowRight>
+<applyStyleForComments>false</applyStyleForComments>
+<applyStyleForEditability>false</applyStyleForEditability>
+<applyStyleForMoveability>false</applyStyleForMoveability>
 </head>
 <body>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="JOE User Guide [JUG]"/>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="-------------------------"/>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Front End">
-<outline isEditable="true" isMoveable="true" text="About JOE - the Java Outline Editor">
-<outline isEditable="true" isMoveable="true" text="What It Is">
-<outline isEditable="true" isMoveable="true" text="JOE is an outliner. "/>
-<outline isEditable="true" isMoveable="true" text="JOE is programmed in Java."/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Notable Features">
-<outline isEditable="true" isMoveable="true" text="Open Source"/>
-<outline isEditable="true" isMoveable="true" text="Supports Industry-Standard Data Formats">
-<outline isEditable="true" isMoveable="true" text="OPML">
-<outline isEditable="true" isMoveable="true" text="OPML 1.0">
-<outline isEditable="true" isMoveable="true" text="TODO: link to OPML spec"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Userland node types and attributes"/>
-<outline isEditable="true" isMoveable="true" text="JOE node types and attributes"/>
-<outline isEditable="true" isMoveable="true" text=""/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Text "/>
-<outline isEditable="true" isMoveable="true" text="XML"/>
-<outline isEditable="true" isMoveable="true" text="Palm pdf formats [forthcoming]">
-<outline isEditable="true" isMoveable="true" text="Brain Forest"/>
-<outline isEditable="true" isMoveable="true" text="Thought Manager"/>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Net-Friendly">
-<outline isEditable="true" isMoveable="true" text="http support [forthcoming]"/>
-<outline isEditable="true" isMoveable="true" text="ftp support [forthcoming]"/>
-<outline isEditable="true" isMoveable="true" text="WebDav support [forthcoming]"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="OS Platform-Agnostic">
-<outline isEditable="true" isMoveable="true" text="JOE is programmed in Java, using the Swing UI classes">
-<outline isEditable="true" isMoveable="true" text="JOE supports native platform look and feel [forthcoming when Sun gets this stuff stable]"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="JOE releases are available for these platforms">
-<outline isEditable="true" isMoveable="true" text="Windows"/>
-<outline isEditable="true" isMoveable="true" text="Linux/Unix [forthcoming]"/>
-<outline isEditable="true" isMoveable="true" text="Macintosh [forthcoming]"/>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Smooth Nimble Solid Feel"/>
-<outline isEditable="true" isMoveable="true" text="Standards-Respectful UI">
-<outline isEditable="true" isMoveable="true" text="Userland-inspired outline-editing UI">
-<outline isEditable="true" isMoveable="true" text="link to Userland outliner site[s]"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Best-practices File/Edit/Search/Window/Help menu command sets"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Multiple undo">
-<outline isEditable="true" isMoveable="true" text="limit [huge]: available memory"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Easy to Customize">
-<outline isEditable="true" isMoveable="true" text="Application Preferences"/>
-<outline isEditable="true" isMoveable="true" text="User Preferences [forthcoming]"/>
-<outline isEditable="true" isMoveable="true" text="Document Preferences"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Multi-User Friendly"/>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="About JOE User Guide [JUG]">
-<outline isEditable="true" isMoveable="true" text="help !!!!">
-<outline isEditable="true" isMoveable="true" text="This is a work in perpetual progress."/>
-<outline isEditable="true" isMoveable="true" text="Empty andor missing nodes are not bugs, they're just things we just haven't gotten 'round to thinking andor writing about yet"/>
-<outline isEditable="true" isMoveable="true" text="You can help:">
-<outline isEditable="true" isMoveable="true" text="Send suggestions for nodes"/>
-<outline isEditable="true" isMoveable="true" text="Send content contributions">
-<outline isEditable="true" isMoveable="true" text="Study the JUG style, write up a node or two, stick the OPML up on the web, and send us a link to it"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Send 'em to DocHelp@JavaOutlineEditor.org"/>
-</outline>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Use JOE"/>
-<outline isEditable="true" isMoveable="true" text="Help Develop JOE">
-<outline isEditable="true" isMoveable="true" text="JOE is an Open Source project">
-<outline isEditable="true" isMoveable="true" text="http://sourceforge.net/projects/outliner"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="The JOE Developer Guide">
-<outline isEditable="true" isMoveable="true" text="Give the Help:Developer Guide menu command"/>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Feedback">
-<outline isEditable="true" isMoveable="true" text="Go here to send us feedback. We heart feedback.">
-<outline isEditable="true" isMoveable="true" text="http://JavaOutlineEditor.org/feedback"/>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="JOE People">
-<outline isEditable="true" isMoveable="true" text="Maynard Demmon"/>
-<outline isEditable="true" isMoveable="true" text="Philip Suh"/>
-<outline isEditable="true" isMoveable="true" text="Steven Spencer"/>
-<outline isEditable="true" isMoveable="true" text="Stanley Krute">
-<outline isEditable="true" isMoveable="true" text="Stan@JavaOutlineEditor.org"/>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="JOE User Guide Authors">
-<outline isEditable="true" isMoveable="true" text="Stanley Krute">
-<outline isEditable="true" isMoveable="true" text="http://StanKrute.com"/>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Thanks To">
-<outline isEditable="true" isMoveable="true" text="Dave Winer">
-<outline isEditable="true" isMoveable="true" text="http://Scripting.com"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="SourceForge">
-<outline isEditable="true" isMoveable="true" text="http://SourceForge.net"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="the Java community">
-<outline isEditable="true" isMoveable="true" text="http://java.sun.com"/>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Copyright"/>
-<outline isEditable="true" isMoveable="true" text="Version">
-<outline isEditable="true" isMoveable="true" text="JUG versionStamp: 2001.08.11.001"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Cataloging Info">
-<outline isEditable="true" isMoveable="true" text="Library of Congress Classification System"/>
-<outline isEditable="true" isMoveable="true" text="Dewey Decimal System"/>
-</outline>
-</outline>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Installation and Setup">
-<outline isEditable="true" isMoveable="true" text="Prepare your system">
-<outline isEditable="true" isMoveable="true" text="Linux/Unix"/>
-<outline isEditable="true" isMoveable="true" text="Macintosh"/>
-<outline isEditable="true" isMoveable="true" text="Windows">
-<outline isEditable="true" isMoveable="true" text="If you're running JOE by invoking run.bat, you need to ensure that there is enough environment space">
-<outline isEditable="true" isMoveable="true" text="Environment space is where DOS/Windows stores string constants"/>
-<outline isEditable="true" isMoveable="true" text="It defaults to a very small amount, 256 bytes"/>
-<outline isEditable="true" isMoveable="true" text="To increase environment space, add a line like this to the file c:\config.sys">
-<outline isEditable="true" isMoveable="true" text="shell=c:\windows\command.com /e2048 /p"/>
-<outline isEditable="true" isMoveable="true" text="In this example, Windows is installed on the c drive in a directory named windows, and we are setting the environment to 2048 bytes"/>
-</outline>
-</outline>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Download the latest JOE">
-<outline isEditable="true" isMoveable="true" text="Go to http://sourceforge.net/projects/outliner"/>
-<outline isEditable="true" isMoveable="true" text="Halfway down the page, in a section labeled &quot;File Releases&quot;, you'll find the latest release of JOE for your operating system">
-<outline isEditable="true" isMoveable="true" text="currently, Windows-only"/>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Install the download"/>
-<outline isEditable="true" isMoveable="true" text="Create some shortcuts"/>
-<outline isEditable="true" isMoveable="true" text="Start 'im up"/>
-<outline isEditable="true" isMoveable="true" text="Set JOE application preferences"/>
-<outline isEditable="true" isMoveable="true" text="Set JOE user preferences [forthcoming]"/>
-</outline>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Your First Outline">
-<outline isEditable="true" isMoveable="true" text="Some terminology"/>
-<outline isEditable="true" isMoveable="true" text="Create a new outline"/>
-<outline isEditable="true" isMoveable="true" text="Type in some info"/>
-<outline isEditable="true" isMoveable="true" text="Move nodes around"/>
-<outline isEditable="true" isMoveable="true" text="Delete nodes"/>
-<outline isEditable="true" isMoveable="true" text="Save your outline"/>
-</outline>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Creating Outlines">
-<outline isEditable="true" isMoveable="true" text="Options"/>
-<outline isEditable="true" isMoveable="true" text="Menu commands"/>
-<outline isEditable="true" isMoveable="true" text="Keystroke Shortcuts"/>
-</outline>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Playing with Outlines">
-<outline isEditable="true" isMoveable="true" text="Creating Nodes"/>
-<outline isEditable="true" isMoveable="true" text="Destroying Nodes"/>
-<outline isEditable="true" isMoveable="true" text="Read-Only Nodes"/>
-<outline isEditable="true" isMoveable="true" text="Hidden Nodes"/>
-<outline isEditable="true" isMoveable="true" text="Immoveable Nodes"/>
-<outline isEditable="true" isMoveable="true" text="Copying Nodes"/>
-<outline isEditable="true" isMoveable="true" text="Pasting Nodes"/>
-<outline isEditable="true" isMoveable="true" text="Alphabetizing Nodes"/>
-<outline isEditable="true" isMoveable="true" text="Promoting Nodes"/>
-<outline isEditable="true" isMoveable="true" text="Demoting Nodes"/>
-<outline isEditable="true" isMoveable="true" text="Expanding Nodes"/>
-<outline isEditable="true" isMoveable="true" text="Collapsing Nodes"/>
-<outline isEditable="true" isMoveable="true" text="Moving Nodes"/>
-<outline isEditable="true" isMoveable="true" text="Merging Nodes"/>
-<outline isEditable="true" isMoveable="true" text="Playing with Node Attributes"/>
-<outline isEditable="true" isMoveable="true" text="Merging Outlines"/>
-<outline isEditable="true" isMoveable="true" text="Hoisting Nodes"/>
-<outline isEditable="true" isMoveable="true" text="Undoing Node Play"/>
-<outline isEditable="true" isMoveable="true" text="Nodes by Reference"/>
-<outline isEditable="true" isMoveable="true" text="Keyboard Shortcuts"/>
-</outline>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Saving Outlines"/>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Printing Outlines">
-<outline isEditable="true" isMoveable="true" text="Printing to a Printer"/>
-<outline isEditable="true" isMoveable="true" text="Printing to a File"/>
-</outline>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Closing Outlines">
-<outline isEditable="true" isMoveable="true" text="File:Close"/>
-<outline isEditable="true" isMoveable="true" text="File:Close All"/>
-<outline isEditable="true" isMoveable="true" text="The X Box"/>
-<outline isEditable="true" isMoveable="true" text="What Makes a File Dirty"/>
-</outline>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Opening Outlines"/>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Hyperlinks in Outlines">
-<outline isEditable="true" isMoveable="true" text="Link Nodes"/>
-<outline isEditable="true" isMoveable="true" text="Links in Nodes"/>
-</outline>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Connecting Outlines"/>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Sharing Outlines"/>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Using JOE To ...">
-<outline isEditable="true" isMoveable="true" text="Edit XML Files"/>
-</outline>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Custom JOE"/>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Macros"/>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="XML-RPC"/>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Menu Commands Reference">
-<outline isEditable="true" isMoveable="true" text="File">
-<outline isEditable="true" isMoveable="true" text="New">
-<outline isEditable="true" isMoveable="true" text="keystroke shortcut: Ctrl+N"/>
-<outline isEditable="true" isMoveable="true" text="Creates a blank new outline, and opens it up in a window for editing. The new outline has a name of the form Untitled &lt;#&gt;, where &lt;#&gt; is a number that tracks the number of new documents created during this JOE session. (Untitled 1, Untitled 2, Untitled 3, etc)"/>
-<outline isEditable="true" isMoveable="true" text="Options">
-<outline isEditable="true" isMoveable="true" text="none"/>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Open">
-<outline isEditable="true" isMoveable="true" text="keystroke shortcut: Ctrl+O"/>
-<outline isEditable="true" isMoveable="true" text="Opens an existing outline. The outline must be in a format that JOE can read. JOE can currently read these formats ">
-<outline isEditable="true" isMoveable="true" text="[link to #0utlineFormats -- expand-in-place]"/>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Open Recent Files..."/>
-<outline isEditable="true" isMoveable="true" text="---"/>
-<outline isEditable="true" isMoveable="true" text="Save"/>
-<outline isEditable="true" isMoveable="true" text="Save As..."/>
-<outline isEditable="true" isMoveable="true" text="Save All"/>
-<outline isEditable="true" isMoveable="true" text="Revert"/>
-<outline isEditable="true" isMoveable="true" text="Rename..."/>
-<outline isEditable="true" isMoveable="true" text="---"/>
-<outline isEditable="true" isMoveable="true" text="Close"/>
-<outline isEditable="true" isMoveable="true" text="Close All"/>
-<outline isEditable="true" isMoveable="true" text="---"/>
-<outline isEditable="true" isMoveable="true" text="Revert"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Edit">
-<outline isEditable="true" isMoveable="true" text="Undo"/>
-<outline isEditable="true" isMoveable="true" text="Redo"/>
-<outline isEditable="true" isMoveable="true" text="---"/>
-<outline isEditable="true" isMoveable="true" text="Undo All"/>
-<outline isEditable="true" isMoveable="true" text="Redo All"/>
-<outline isEditable="true" isMoveable="true" text="---"/>
-<outline isEditable="true" isMoveable="true" text="Cut"/>
-<outline isEditable="true" isMoveable="true" text="Copy"/>
-<outline isEditable="true" isMoveable="true" text="Paste"/>
-<outline isEditable="true" isMoveable="true" text="Delete"/>
-<outline isEditable="true" isMoveable="true" text="---"/>
-<outline isEditable="true" isMoveable="true" text="Select All"/>
-<outline isEditable="true" isMoveable="true" text="Select None"/>
-<outline isEditable="true" isMoveable="true" text="Select Inverse"/>
-<outline isEditable="true" isMoveable="true" text="---"/>
-<outline isEditable="true" isMoveable="true" text="Document Settings..."/>
-<outline isEditable="true" isMoveable="true" text="---"/>
-<outline isEditable="true" isMoveable="true" text="Preferences..."/>
-<outline isEditable="true" isMoveable="true" text="Macros..."/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Outline">
-<outline isEditable="true" isMoveable="true" text="Toggle Comment"/>
-<outline isEditable="true" isMoveable="true" text="---"/>
-<outline isEditable="true" isMoveable="true" text="Toggle Expansion"/>
-<outline isEditable="true" isMoveable="true" text="---"/>
-<outline isEditable="true" isMoveable="true" text="Expand All Subheads"/>
-<outline isEditable="true" isMoveable="true" text="Expand Everything"/>
-<outline isEditable="true" isMoveable="true" text="---"/>
-<outline isEditable="true" isMoveable="true" text="Collapse to Parent"/>
-<outline isEditable="true" isMoveable="true" text="Collapse Everything"/>
-<outline isEditable="true" isMoveable="true" text="---"/>
-<outline isEditable="true" isMoveable="true" text="Move Up"/>
-<outline isEditable="true" isMoveable="true" text="Move Down"/>
-<outline isEditable="true" isMoveable="true" text="Move Left"/>
-<outline isEditable="true" isMoveable="true" text="Move Right"/>
-<outline isEditable="true" isMoveable="true" text="---"/>
-<outline isEditable="true" isMoveable="true" text="Promote"/>
-<outline isEditable="true" isMoveable="true" text="Demote"/>
-<outline isEditable="true" isMoveable="true" text="---"/>
-<outline isEditable="true" isMoveable="true" text="Merge"/>
-<outline isEditable="true" isMoveable="true" text="Merge with Spaces"/>
-<outline isEditable="true" isMoveable="true" text="--- "/>
-<outline isEditable="true" isMoveable="true" text="Hoist"/>
-<outline isEditable="true" isMoveable="true" text="De-Hoist"/>
-<outline isEditable="true" isMoveable="true" text="De-Hoist All"/>
-<outline isEditable="true" isMoveable="true" text="---"/>
-<outline isEditable="true" isMoveable="true" text="Show Attributes"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Search"/>
-<outline isEditable="true" isMoveable="true" text="Window"/>
-<outline isEditable="true" isMoveable="true" text="Help"/>
-</outline>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Keystroke Shortcuts Reference"/>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Outline Formats">
-<outline isEditable="true" isMoveable="true" text="tabbed text">
-<outline isEditable="true" isMoveable="true" text="each node is terminated by one of these line-ending character sequences">
-<outline isEditable="true" isMoveable="true" text="0D 0A [CR LF] [DOS Windows standard]"/>
-<outline isEditable="true" isMoveable="true" text="0D [CR] [Mac standard]"/>
-<outline isEditable="true" isMoveable="true" text="0A [LF] [Linux/Unix standard] "/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="hierarchical position is signalled by tab [09] characters"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="OPML">
-<outline isEditable="true" isMoveable="true" text="OPML 1.0">
-<outline isEditable="true" isMoveable="true" text="http://opml.org/spec"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="the Userland attribute extensions"/>
-<outline isEditable="true" isMoveable="true" text="the JOE attribute extensions"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="BrainForest .pdf"/>
-<outline isEditable="true" isMoveable="true" text="Thought Manager .pdf"/>
-</outline>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Glossary">
-<outline isEditable="true" isMoveable="true" text="Abbreviations and Acronyms">
-<outline isEditable="true" isMoveable="true" text="Three-Letter Acronyms [TLA's]">
-<outline isEditable="true" isMoveable="true" text="JOE"/>
-<outline isEditable="true" isMoveable="true" text="JUG"/>
-<outline isEditable="true" isMoveable="true" text="JDG"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Four-Letter Acronyms [FLAc's]">
-<outline isEditable="true" isMoveable="true" text="OPML"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Seven-Character Acronyms [SevChAc's]">
-<outline isEditable="true" isMoveable="true" text="XML-RPC"/>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="A-E">
-<outline isEditable="true" isMoveable="true" text="A">
-<outline isEditable="true" isMoveable="true" text="ancestor"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="B">
-<outline isEditable="true" isMoveable="true" text="branch"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="C">
-<outline isEditable="true" isMoveable="true" text="child "/>
-<outline isEditable="true" isMoveable="true" text="collapse"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="D">
-<outline isEditable="true" isMoveable="true" text="descendant"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="E">
-<outline isEditable="true" isMoveable="true" text="expand"/>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="F-J">
-<outline isEditable="true" isMoveable="true" text="F"/>
-<outline isEditable="true" isMoveable="true" text="G"/>
-<outline isEditable="true" isMoveable="true" text="H">
-<outline isEditable="true" isMoveable="true" text="hoist">
-<outline isEditable="true" isMoveable="true" text=""/>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="I"/>
-<outline isEditable="true" isMoveable="true" text="J"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="K-O">
-<outline isEditable="true" isMoveable="true" text="K"/>
-<outline isEditable="true" isMoveable="true" text="L">
-<outline isEditable="true" isMoveable="true" text="leaf"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="M"/>
-<outline isEditable="true" isMoveable="true" text="N">
-<outline isEditable="true" isMoveable="true" text="node">
-<outline isEditable="true" isMoveable="true" text="One line in an outline. An outline consists of a set of nodes. "/>
-<outline isEditable="true" isMoveable="true" text="see also: parent node, subnode, sibling node"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="nodeset"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="O">
-<outline isEditable="true" isMoveable="true" text="older sibling"/>
-<outline isEditable="true" isMoveable="true" text="OPML"/>
-<outline isEditable="true" isMoveable="true" text="outline">
-<outline isEditable="true" isMoveable="true" text="An outline is a collection of nodes that are organized in two dimensions: serial and hierarchic. The topmost level of an outline's hierarchic organization is called level 0. Nodes that are hierarchically subjunctive to a given node are called subnodes , or descendants, of that node. Subnodes one level down from a given node are called child nodes, and the given node is their parent. Nodes that share a parent node are called sibling nodes. The topmost set of sibling nodes is said to be at level 0 of the outline. Nodes contain arbitrary sorts of information, some of which is commonly displayed to the user. "/>
-</outline>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="P-T">
-<outline isEditable="true" isMoveable="true" text="P">
-<outline isEditable="true" isMoveable="true" text="parent">
-<outline isEditable="true" isMoveable="true" text=""/>
-<outline isEditable="true" isMoveable="true" text="see also: node, subnode, sibling node"/>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Q"/>
-<outline isEditable="true" isMoveable="true" text="R">
-<outline isEditable="true" isMoveable="true" text="root"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="S">
-<outline isEditable="true" isMoveable="true" text="sibling"/>
-<outline isEditable="true" isMoveable="true" text="subnode"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="T">
-<outline isEditable="true" isMoveable="true" text="tree"/>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="U-Z">
-<outline isEditable="true" isMoveable="true" text="U"/>
-<outline isEditable="true" isMoveable="true" text="V"/>
-<outline isEditable="true" isMoveable="true" text="W"/>
-<outline isEditable="true" isMoveable="true" text="X">
-<outline isEditable="true" isMoveable="true" text="XML-RPC"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Y">
-<outline isEditable="true" isMoveable="true" text="younger sibling"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="Z"/>
-</outline>
-</outline>
-<outline isComment="false" isCommentInherited="true" isEditable="true" isEditableInherited="true" isMoveable="true" isMoveableInherited="true" text="Index">
-<outline isEditable="true" isMoveable="true" text="A-E">
-<outline isEditable="true" isMoveable="true" text="A"/>
-<outline isEditable="true" isMoveable="true" text="B"/>
-<outline isEditable="true" isMoveable="true" text="C"/>
-<outline isEditable="true" isMoveable="true" text="D"/>
-<outline isEditable="true" isMoveable="true" text="E"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="F-J">
-<outline isEditable="true" isMoveable="true" text="F"/>
-<outline isEditable="true" isMoveable="true" text="G"/>
-<outline isEditable="true" isMoveable="true" text="H"/>
-<outline isEditable="true" isMoveable="true" text="I"/>
-<outline isEditable="true" isMoveable="true" text="J"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="K-O">
-<outline isEditable="true" isMoveable="true" text="K"/>
-<outline isEditable="true" isMoveable="true" text="L"/>
-<outline isEditable="true" isMoveable="true" text="M"/>
-<outline isEditable="true" isMoveable="true" text="N">
-<outline isEditable="true" isMoveable="true" text="node">
-<outline isEditable="true" isMoveable="true" text="a set of links to nodes within this document that mention 'node'"/>
-<outline isEditable="true" isMoveable="true" text="for example"/>
-<outline isEditable="true" isMoveable="true" text="#someTerminology, #moveNodesAround, #deleteNodes"/>
-</outline>
-</outline>
-<outline isEditable="true" isMoveable="true" text="O"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="P-T">
-<outline isEditable="true" isMoveable="true" text="P"/>
-<outline isEditable="true" isMoveable="true" text="Q"/>
-<outline isEditable="true" isMoveable="true" text="R"/>
-<outline isEditable="true" isMoveable="true" text="S"/>
-<outline isEditable="true" isMoveable="true" text="T"/>
-</outline>
-<outline isEditable="true" isMoveable="true" text="U-Z">
-<outline isEditable="true" isMoveable="true" text="U"/>
-<outline isEditable="true" isMoveable="true" text="V"/>
-<outline isEditable="true" isMoveable="true" text="W"/>
-<outline isEditable="true" isMoveable="true" text="X"/>
-<outline isEditable="true" isMoveable="true" text="Y"/>
-<outline isEditable="true" isMoveable="true" text="Z"/>
-</outline>
+<outline isComment="false" isEditable="true" isMoveable="true" text="JOE User Guide [JUG]" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
+<outline isComment="false" isEditable="true" isMoveable="true" text="-------------------------" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Front End" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+	<outline isEditable="true" isMoveable="true" text="About JOE - the Java Outline Editor">
+		<outline isEditable="true" isMoveable="true" text="What It Is">
+			<outline isEditable="true" isMoveable="true" text="JOE is an outliner. "/>
+			<outline isEditable="true" isMoveable="true" text="JOE is programmed in Java."/>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="Notable Features">
+			<outline isEditable="true" isMoveable="true" text="Open Source"/>
+			<outline isEditable="true" isMoveable="true" text="Supports Industry-Standard Data Formats">
+				<outline isEditable="true" isMoveable="true" text="OPML">
+					<outline isEditable="true" isMoveable="true" text="OPML 1.0">
+						<outline isEditable="true" isMoveable="true" text="TODO: link to OPML spec"/>
+					</outline>
+					<outline isEditable="true" isMoveable="true" text="Userland node types and attributes"/>
+					<outline isEditable="true" isMoveable="true" text="JOE node types and attributes"/>
+					<outline isEditable="true" isMoveable="true" text=""/>
+				</outline>
+				<outline isEditable="true" isMoveable="true" text="Text "/>
+				<outline isEditable="true" isMoveable="true" text="XML"/>
+				<outline isEditable="true" isMoveable="true" text="Palm pdf formats [forthcoming]">
+					<outline isEditable="true" isMoveable="true" text="Brain Forest"/>
+					<outline isEditable="true" isMoveable="true" text="Thought Manager"/>
+				</outline>
+			</outline>
+			<outline isEditable="true" isMoveable="true" text="Net-Friendly">
+				<outline isEditable="true" isMoveable="true" text="http support [forthcoming]"/>
+				<outline isEditable="true" isMoveable="true" text="ftp support [forthcoming]"/>
+				<outline isEditable="true" isMoveable="true" text="WebDav support [forthcoming]"/>
+			</outline>
+			<outline isEditable="true" isMoveable="true" text="OS Platform-Agnostic">
+				<outline isEditable="true" isMoveable="true" text="JOE is programmed in Java, using the Swing UI classes">
+					<outline isEditable="true" isMoveable="true" text="JOE supports native platform look and feel [forthcoming when Sun gets this stuff stable]"/>
+				</outline>
+				<outline isEditable="true" isMoveable="true" text="JOE releases are available for these platforms">
+					<outline isEditable="true" isMoveable="true" text="Windows"/>
+					<outline isEditable="true" isMoveable="true" text="Linux/Unix [forthcoming]"/>
+					<outline isEditable="true" isMoveable="true" text="Macintosh [forthcoming]"/>
+				</outline>
+			</outline>
+			<outline isEditable="true" isMoveable="true" text="Smooth Nimble Solid Feel"/>
+			<outline isEditable="true" isMoveable="true" text="Standards-Respectful UI">
+				<outline isEditable="true" isMoveable="true" text="Userland-inspired outline-editing UI">
+					<outline isEditable="true" isMoveable="true" text="link to Userland outliner site[s]"/>
+				</outline>
+				<outline isEditable="true" isMoveable="true" text="Best-practices File/Edit/Search/Window/Help menu command sets"/>
+			</outline>
+			<outline isEditable="true" isMoveable="true" text="Multiple undo">
+				<outline isEditable="true" isMoveable="true" text="limit [huge]: available memory"/>
+			</outline>
+			<outline isEditable="true" isMoveable="true" text="Easy to Customize">
+				<outline isEditable="true" isMoveable="true" text="Application Preferences"/>
+				<outline isEditable="true" isMoveable="true" text="User Preferences [forthcoming]"/>
+				<outline isEditable="true" isMoveable="true" text="Document Preferences"/>
+			</outline>
+			<outline isEditable="true" isMoveable="true" text="Multi-User Friendly"/>
+		</outline>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="About JOE User Guide [JUG]">
+		<outline isEditable="true" isMoveable="true" text="help !!!!">
+			<outline isEditable="true" isMoveable="true" text="This is a work in perpetual progress."/>
+			<outline isEditable="true" isMoveable="true" text="Empty andor missing nodes are not bugs, they're just things we just haven't gotten 'round to thinking andor writing about yet"/>
+			<outline isEditable="true" isMoveable="true" text="You can help:">
+				<outline isEditable="true" isMoveable="true" text="Send suggestions for nodes"/>
+				<outline isEditable="true" isMoveable="true" text="Send content contributions">
+					<outline isEditable="true" isMoveable="true" text="Study the JUG style, write up a node or two, stick the OPML up on the web, and send us a link to it"/>
+				</outline>
+				<outline isEditable="true" isMoveable="true" text="Send 'em to DocHelp@JavaOutlineEditor.org"/>
+			</outline>
+		</outline>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="Use JOE"/>
+	<outline isEditable="true" isMoveable="true" text="Help Develop JOE">
+		<outline isEditable="true" isMoveable="true" text="JOE is an Open Source project">
+			<outline isEditable="true" isMoveable="true" text="http://sourceforge.net/projects/outliner"/>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="The JOE Developer Guide">
+			<outline isEditable="true" isMoveable="true" text="Give the Help:Developer Guide menu command"/>
+		</outline>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="Feedback">
+		<outline isEditable="true" isMoveable="true" text="Go here to send us feedback. We heart feedback.">
+			<outline isEditable="true" isMoveable="true" text="http://JavaOutlineEditor.org/feedback"/>
+		</outline>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="JOE People">
+		<outline text="Maynard Demmon">
+			<outline text="mailto:maynard@organic.com"/>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="Philip Suh"/>
+		<outline isEditable="true" isMoveable="true" text="Steven Spencer"/>
+		<outline isEditable="true" isMoveable="true" text="Stanley Krute">
+			<outline isEditable="true" isMoveable="true" text="mailto:Stan@JavaOutlineEditor.org"/>
+		</outline>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="JOE User Guide Authors">
+		<outline isEditable="true" isMoveable="true" text="Stanley Krute">
+			<outline text="mailto:Stan@JavaOutlineEditor.org"/>
+		</outline>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="Thanks To">
+		<outline isEditable="true" isMoveable="true" text="Dave Winer">
+			<outline isEditable="true" isMoveable="true" text="http://Scripting.com"/>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="SourceForge">
+			<outline isEditable="true" isMoveable="true" text="http://SourceForge.net"/>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="the Java community">
+			<outline isEditable="true" isMoveable="true" text="http://java.sun.com"/>
+		</outline>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="Copyright">
+		<outline text="[note: copyright holders are listed in chronological order by date of first contribution to the code base]"/>
+		<outline text="Portions Copyright 2001 by Stanley Krute. All rights reserved."/>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="Version">
+		<outline isEditable="true" isMoveable="true" text="JUG versionStamp: 2001.08.24.001"/>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="Cataloging Info">
+		<outline isEditable="true" isMoveable="true" text="Library of Congress Classification System"/>
+		<outline isEditable="true" isMoveable="true" text="Dewey Decimal System"/>
+	</outline>
+</outline>
+<outline isComment="true" isEditable="true" isMoveable="true" text="Installation and Setup" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+	<outline isEditable="true" isMoveable="true" text="Prepare your system">
+		<outline isEditable="true" isMoveable="true" text="Linux/Unix"/>
+		<outline isEditable="true" isMoveable="true" text="Macintosh"/>
+		<outline isEditable="true" isMoveable="true" text="Windows">
+			<outline isEditable="true" isMoveable="true" text="If you're running JOE by invoking run.bat, you need to ensure that there is enough environment space">
+				<outline isEditable="true" isMoveable="true" text="Environment space is where DOS/Windows stores string constants"/>
+				<outline isEditable="true" isMoveable="true" text="It defaults to a very small amount, 256 bytes"/>
+				<outline isEditable="true" isMoveable="true" text="To increase environment space, add a line like this to the file c:\config.sys">
+					<outline isEditable="true" isMoveable="true" text="shell=c:\windows\command.com /e2048 /p"/>
+					<outline isEditable="true" isMoveable="true" text="In this example, Windows is installed on the c drive in a directory named windows, and we are setting the environment to 2048 bytes"/>
+				</outline>
+			</outline>
+		</outline>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="Download the latest JOE">
+		<outline isEditable="true" isMoveable="true" text="Go to http://sourceforge.net/projects/outliner"/>
+		<outline isEditable="true" isMoveable="true" text="Halfway down the page, in a section labeled &quot;File Releases&quot;, you'll find the latest release of JOE for your operating system">
+			<outline isEditable="true" isMoveable="true" text="currently, Windows-only"/>
+		</outline>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="Install the download"/>
+	<outline isEditable="true" isMoveable="true" text="Create some shortcuts"/>
+	<outline isEditable="true" isMoveable="true" text="Start 'im up"/>
+	<outline isEditable="true" isMoveable="true" text="Set JOE application preferences"/>
+	<outline isEditable="true" isMoveable="true" text="Set JOE user preferences [forthcoming]"/>
+</outline>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Your First Outline" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+	<outline isEditable="true" isMoveable="true" text="Some terminology"/>
+	<outline isEditable="true" isMoveable="true" text="Create a new outline"/>
+	<outline isEditable="true" isMoveable="true" text="Type in some info"/>
+	<outline isEditable="true" isMoveable="true" text="Move nodes around"/>
+	<outline isEditable="true" isMoveable="true" text="Delete nodes"/>
+	<outline isEditable="true" isMoveable="true" text="Save your outline"/>
+</outline>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Creating Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+	<outline isEditable="true" isMoveable="true" text="Options"/>
+	<outline isEditable="true" isMoveable="true" text="Menu commands"/>
+	<outline isEditable="true" isMoveable="true" text="Keystroke Shortcuts"/>
+</outline>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Playing with Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+	<outline isEditable="true" isMoveable="true" text="Creating Nodes"/>
+	<outline isEditable="true" isMoveable="true" text="Destroying Nodes"/>
+	<outline isEditable="true" isMoveable="true" text="Read-Only Nodes"/>
+	<outline isEditable="true" isMoveable="true" text="Hidden Nodes"/>
+	<outline isEditable="true" isMoveable="true" text="Immoveable Nodes"/>
+	<outline isEditable="true" isMoveable="true" text="Copying Nodes"/>
+	<outline isEditable="true" isMoveable="true" text="Pasting Nodes"/>
+	<outline isEditable="true" isMoveable="true" text="Alphabetizing Nodes"/>
+	<outline isEditable="true" isMoveable="true" text="Promoting Nodes"/>
+	<outline isEditable="true" isMoveable="true" text="Demoting Nodes"/>
+	<outline isEditable="true" isMoveable="true" text="Expanding Nodes"/>
+	<outline isEditable="true" isMoveable="true" text="Collapsing Nodes"/>
+	<outline isEditable="true" isMoveable="true" text="Moving Nodes"/>
+	<outline isEditable="true" isMoveable="true" text="Merging Nodes"/>
+	<outline isEditable="true" isMoveable="true" text="Playing with Node Attributes"/>
+	<outline isEditable="true" isMoveable="true" text="Merging Outlines"/>
+	<outline isEditable="true" isMoveable="true" text="Hoisting Nodes"/>
+	<outline isEditable="true" isMoveable="true" text="Undoing Node Play"/>
+	<outline isEditable="true" isMoveable="true" text="Nodes by Reference"/>
+	<outline isEditable="true" isMoveable="true" text="Keyboard Shortcuts"/>
+</outline>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Saving Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Node Attributes">
+	<outline text="isComment">
+		<outline text="originator"/>
+		<outline text="behavior"/>
+		<outline text="default"/>
+		<outline text="inheritance"/>
+		<outline text="setting"/>
+		<outline text="clearing"/>
+	</outline>
+	<outline text="isEditable">
+		<outline text="originator"/>
+		<outline text="behavior"/>
+		<outline text="default"/>
+		<outline text="inheritance"/>
+		<outline text="setting"/>
+		<outline text="clearing"/>
+	</outline>
+	<outline text="isMoveable">
+		<outline text="originator"/>
+		<outline text="behavior"/>
+		<outline text="default"/>
+		<outline text="inheritance"/>
+		<outline text="setting"/>
+		<outline text="clearing"/>
+	</outline>
+	<outline text="url">
+		<outline text="originator"/>
+		<outline text="behavior"/>
+		<outline text="default"/>
+		<outline text="inheritance"/>
+		<outline text="setting"/>
+		<outline text="clearing"/>
+	</outline>
+	<outline text="type">
+		<outline text="originator"/>
+		<outline text="behavior"/>
+		<outline text="default"/>
+		<outline text="inheritance"/>
+		<outline text="setting"/>
+		<outline text="clearing"/>
+	</outline>
+	<outline text="Interop with Other Outliners">
+		<outline text="Radio Userland x.xx"/>
+		<outline text="Frontier y.yy"/>
+		<outline text="Thought Manager z.zz"/>
+	</outline>
+</outline>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Printing Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+	<outline isEditable="true" isMoveable="true" text="Printing to a Printer"/>
+	<outline isEditable="true" isMoveable="true" text="Printing to a File"/>
+</outline>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Closing Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+	<outline isEditable="true" isMoveable="true" text="File:Close"/>
+	<outline isEditable="true" isMoveable="true" text="File:Close All"/>
+	<outline isEditable="true" isMoveable="true" text="The X Box"/>
+	<outline isEditable="true" isMoveable="true" text="What Makes a File Dirty"/>
+</outline>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Opening Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Hyperlinks in Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+	<outline isEditable="true" isMoveable="true" text="Link Nodes"/>
+	<outline isEditable="true" isMoveable="true" text="Links in Nodes"/>
+</outline>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Connecting Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Sharing Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Using JOE To ..." isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+	<outline isEditable="true" isMoveable="true" text="Edit XML Files"/>
+	<outline text="Edit HTML Files"/>
+	<outline text="Edit Java Files"/>
+	<outline text="Blog with Blogger"/>
+	<outline text="Blog with Manila"/>
+</outline>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Custom JOE" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Macros" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
+<outline isComment="false" isEditable="true" isMoveable="true" text="XML-RPC" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Menu Commands Reference" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+	<outline isEditable="true" isMoveable="true" text="File">
+		<outline isEditable="true" isMoveable="true" text="New">
+			<outline isEditable="true" isMoveable="true" text="keystroke shortcut: Ctrl+N"/>
+			<outline isEditable="true" isMoveable="true" text="Creates a blank new outline, and opens it up in a window for editing. The new outline has a name of the form Untitled &lt;#&gt;, where &lt;#&gt; is a number that tracks the number of new documents created during this JOE session. (Untitled 1, Untitled 2, Untitled 3, etc)"/>
+			<outline isEditable="true" isMoveable="true" text="Options">
+				<outline isEditable="true" isMoveable="true" text="none"/>
+			</outline>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="Open">
+			<outline isEditable="true" isMoveable="true" text="keystroke shortcut: Ctrl+O"/>
+			<outline isEditable="true" isMoveable="true" text="Opens an existing outline. The outline must be in a format that JOE can read. JOE can currently read these formats ">
+				<outline isEditable="true" isMoveable="true" text="[link to #0utlineFormats -- expand-in-place]"/>
+			</outline>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="Open Recent Files..."/>
+		<outline isEditable="true" isMoveable="true" text="---"/>
+		<outline isEditable="true" isMoveable="true" text="Save"/>
+		<outline isEditable="true" isMoveable="true" text="Save As..."/>
+		<outline isEditable="true" isMoveable="true" text="Save All"/>
+		<outline isEditable="true" isMoveable="true" text="Revert"/>
+		<outline isEditable="true" isMoveable="true" text="Rename..."/>
+		<outline isEditable="true" isMoveable="true" text="---"/>
+		<outline isEditable="true" isMoveable="true" text="Close"/>
+		<outline isEditable="true" isMoveable="true" text="Close All"/>
+		<outline isEditable="true" isMoveable="true" text="---"/>
+		<outline isEditable="true" isMoveable="true" text="Revert"/>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="Edit">
+		<outline isEditable="true" isMoveable="true" text="Undo"/>
+		<outline isEditable="true" isMoveable="true" text="Redo"/>
+		<outline isEditable="true" isMoveable="true" text="---"/>
+		<outline isEditable="true" isMoveable="true" text="Undo All"/>
+		<outline isEditable="true" isMoveable="true" text="Redo All"/>
+		<outline isEditable="true" isMoveable="true" text="---"/>
+		<outline isEditable="true" isMoveable="true" text="Cut"/>
+		<outline isEditable="true" isMoveable="true" text="Copy"/>
+		<outline isEditable="true" isMoveable="true" text="Paste"/>
+		<outline isEditable="true" isMoveable="true" text="Delete"/>
+		<outline isEditable="true" isMoveable="true" text="---"/>
+		<outline isEditable="true" isMoveable="true" text="Select All"/>
+		<outline isEditable="true" isMoveable="true" text="Select None"/>
+		<outline isEditable="true" isMoveable="true" text="Select Inverse"/>
+		<outline isEditable="true" isMoveable="true" text="---"/>
+		<outline isEditable="true" isMoveable="true" text="Document Settings..."/>
+		<outline isEditable="true" isMoveable="true" text="---"/>
+		<outline isEditable="true" isMoveable="true" text="Preferences..."/>
+		<outline isEditable="true" isMoveable="true" text="Macros..."/>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="Outline">
+		<outline isEditable="true" isMoveable="true" text="Toggle Comment"/>
+		<outline isEditable="true" isMoveable="true" text="---"/>
+		<outline isEditable="true" isMoveable="true" text="Toggle Expansion"/>
+		<outline isEditable="true" isMoveable="true" text="---"/>
+		<outline isEditable="true" isMoveable="true" text="Expand All Subheads"/>
+		<outline isEditable="true" isMoveable="true" text="Expand Everything"/>
+		<outline isEditable="true" isMoveable="true" text="---"/>
+		<outline isEditable="true" isMoveable="true" text="Collapse to Parent"/>
+		<outline isEditable="true" isMoveable="true" text="Collapse Everything"/>
+		<outline isEditable="true" isMoveable="true" text="---"/>
+		<outline isEditable="true" isMoveable="true" text="Move Up"/>
+		<outline isEditable="true" isMoveable="true" text="Move Down"/>
+		<outline isEditable="true" isMoveable="true" text="Move Left"/>
+		<outline isEditable="true" isMoveable="true" text="Move Right"/>
+		<outline isEditable="true" isMoveable="true" text="---"/>
+		<outline isEditable="true" isMoveable="true" text="Promote"/>
+		<outline isEditable="true" isMoveable="true" text="Demote"/>
+		<outline isEditable="true" isMoveable="true" text="---"/>
+		<outline isEditable="true" isMoveable="true" text="Merge"/>
+		<outline isEditable="true" isMoveable="true" text="Merge with Spaces"/>
+		<outline isEditable="true" isMoveable="true" text="--- "/>
+		<outline isEditable="true" isMoveable="true" text="Hoist"/>
+		<outline isEditable="true" isMoveable="true" text="De-Hoist"/>
+		<outline isEditable="true" isMoveable="true" text="De-Hoist All"/>
+		<outline isEditable="true" isMoveable="true" text="---"/>
+		<outline isEditable="true" isMoveable="true" text="Show Attributes"/>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="Search"/>
+	<outline text="Script">
+		<outline text="Macros..."/>
+		<outline text="---"/>
+		<outline text="Run as Bean Shell Script"/>
+		<outline text="Bean Shell Console"/>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="Window"/>
+	<outline isEditable="true" isMoveable="true" text="Help"/>
+</outline>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Keystroke Shortcuts Reference" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+	<outline text="Ctrl-A"/>
+	<outline text="Ctrl-C">
+		<outline text="Edit:Copy menu command"/>
+	</outline>
+	<outline text="Ctrl-D"/>
+	<outline text="Ctrl-F"/>
+	<outline text="Ctrl-G"/>
+	<outline text="Ctrl-I"/>
+	<outline text="Ctrl-M"/>
+	<outline text="Ctrl-N">
+		<outline text="File:New menu command"/>
+	</outline>
+	<outline text="Ctrl-O">
+		<outline text="File:Open menu command"/>
+	</outline>
+	<outline text="Ctrl-Q">
+		<outline text="File:Quit menu command"/>
+	</outline>
+	<outline text="Ctrl-S">
+		<outline text="File:Save menu command"/>
+	</outline>
+	<outline text="Ctrl-T"/>
+	<outline text="Ctrl-X">
+		<outline text="Edit:Cut menu command"/>
+	</outline>
+	<outline text="Ctrl-V"/>
+	<outline text="Ctrl-W">
+		<outline text="File:Close menu command"/>
+	</outline>
+	<outline text="Ctrl-Z">
+		<outline text="Edit:Undo menu command"/>
+	</outline>
+	<outline text="Ctrl-Shift-A"/>
+	<outline text="Ctrl-Shift-M"/>
+	<outline text="Ctrl-Shift-S"/>
+	<outline text="Ctrl-Shift-Z">
+		<outline text="Edit:Redo menu command"/>
+	</outline>
+	<outline text="Del/Delete"/>
+	<outline text="PageDown"/>
+	<outline text="Shift-uP"/>
+	<outline text="Tab"/>
+</outline>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Outline Formats" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+	<outline isEditable="true" isMoveable="true" text="tabbed text">
+		<outline isEditable="true" isMoveable="true" text="each node is terminated by one of these line-ending character sequences">
+			<outline isEditable="true" isMoveable="true" text="0D 0A [CR LF] [DOS Windows standard]"/>
+			<outline isEditable="true" isMoveable="true" text="0D [CR] [Mac standard]"/>
+			<outline isEditable="true" isMoveable="true" text="0A [LF] [Linux/Unix standard] "/>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="hierarchical position is signalled by tab [09] characters"/>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="OPML">
+		<outline isEditable="true" isMoveable="true" text="OPML 1.0">
+			<outline isEditable="true" isMoveable="true" text="http://opml.org/spec"/>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="the Userland attribute extensions"/>
+		<outline isEditable="true" isMoveable="true" text="the JOE attribute extensions"/>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="BrainForest .pdf"/>
+	<outline isEditable="true" isMoveable="true" text="Thought Manager .pdf"/>
+</outline>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Glossary" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+	<outline isEditable="true" isMoveable="true" text="Abbreviations and Acronyms">
+		<outline isEditable="true" isMoveable="true" text="Three-Letter Acronyms [TLA's]">
+			<outline isEditable="true" isMoveable="true" text="JOE"/>
+			<outline isEditable="true" isMoveable="true" text="JUG"/>
+			<outline isEditable="true" isMoveable="true" text="JDG"/>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="Four-Letter Acronyms [FLAc's]">
+			<outline isEditable="true" isMoveable="true" text="OPML"/>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="Seven-Character Acronyms [SevChAc's]">
+			<outline isEditable="true" isMoveable="true" text="XML-RPC"/>
+		</outline>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="A-E">
+		<outline isEditable="true" isMoveable="true" text="A">
+			<outline isEditable="true" isMoveable="true" text="ancestor"/>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="B">
+			<outline isEditable="true" isMoveable="true" text="branch"/>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="C">
+			<outline isEditable="true" isMoveable="true" text="child "/>
+			<outline isEditable="true" isMoveable="true" text="collapse"/>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="D">
+			<outline isEditable="true" isMoveable="true" text="descendant"/>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="E">
+			<outline isEditable="true" isMoveable="true" text="expand"/>
+		</outline>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="F-J">
+		<outline isEditable="true" isMoveable="true" text="F"/>
+		<outline isEditable="true" isMoveable="true" text="G"/>
+		<outline isEditable="true" isMoveable="true" text="H">
+			<outline isEditable="true" isMoveable="true" text="hoist">
+				<outline isEditable="true" isMoveable="true" text=""/>
+			</outline>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="I"/>
+		<outline isEditable="true" isMoveable="true" text="J"/>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="K-O">
+		<outline isEditable="true" isMoveable="true" text="K"/>
+		<outline isEditable="true" isMoveable="true" text="L">
+			<outline isEditable="true" isMoveable="true" text="leaf"/>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="M"/>
+		<outline isEditable="true" isMoveable="true" text="N">
+			<outline isEditable="true" isMoveable="true" text="node">
+				<outline isEditable="true" isMoveable="true" text="One line in an outline. An outline consists of a set of nodes. "/>
+				<outline isEditable="true" isMoveable="true" text="see also: parent node, subnode, sibling node"/>
+			</outline>
+			<outline isEditable="true" isMoveable="true" text="nodeset"/>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="O">
+			<outline isEditable="true" isMoveable="true" text="older sibling"/>
+			<outline isEditable="true" isMoveable="true" text="OPML"/>
+			<outline isEditable="true" isMoveable="true" text="outline">
+				<outline isEditable="true" isMoveable="true" text="An outline is a collection of nodes that are organized in two dimensions: serial and hierarchic. The topmost level of an outline's hierarchic organization is called level 0. Nodes that are hierarchically subjunctive to a given node are called subnodes , or descendants, of that node. Subnodes one level down from a given node are called child nodes, and the given node is their parent. Nodes that share a parent node are called sibling nodes. The topmost set of sibling nodes is said to be at level 0 of the outline. Nodes contain arbitrary sorts of information, some of which is commonly displayed to the user. "/>
+			</outline>
+		</outline>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="P-T">
+		<outline isEditable="true" isMoveable="true" text="P">
+			<outline isEditable="true" isMoveable="true" text="parent">
+				<outline isEditable="true" isMoveable="true" text=""/>
+				<outline isEditable="true" isMoveable="true" text="see also: node, subnode, sibling node"/>
+			</outline>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="Q"/>
+		<outline isEditable="true" isMoveable="true" text="R">
+			<outline isEditable="true" isMoveable="true" text="root"/>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="S">
+			<outline isEditable="true" isMoveable="true" text="sibling"/>
+			<outline isEditable="true" isMoveable="true" text="subnode"/>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="T">
+			<outline isEditable="true" isMoveable="true" text="tree"/>
+		</outline>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="U-Z">
+		<outline isEditable="true" isMoveable="true" text="U"/>
+		<outline isEditable="true" isMoveable="true" text="V"/>
+		<outline isEditable="true" isMoveable="true" text="W"/>
+		<outline isEditable="true" isMoveable="true" text="X">
+			<outline isEditable="true" isMoveable="true" text="XML-RPC"/>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="Y">
+			<outline isEditable="true" isMoveable="true" text="younger sibling"/>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="Z"/>
+	</outline>
+</outline>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Index" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+	<outline isEditable="true" isMoveable="true" text="A-E">
+		<outline isEditable="true" isMoveable="true" text="A"/>
+		<outline isEditable="true" isMoveable="true" text="B"/>
+		<outline isEditable="true" isMoveable="true" text="C"/>
+		<outline isEditable="true" isMoveable="true" text="D"/>
+		<outline isEditable="true" isMoveable="true" text="E"/>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="F-J">
+		<outline isEditable="true" isMoveable="true" text="F"/>
+		<outline isEditable="true" isMoveable="true" text="G"/>
+		<outline isEditable="true" isMoveable="true" text="H"/>
+		<outline isEditable="true" isMoveable="true" text="I"/>
+		<outline isEditable="true" isMoveable="true" text="J"/>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="K-O">
+		<outline isEditable="true" isMoveable="true" text="K"/>
+		<outline isEditable="true" isMoveable="true" text="L"/>
+		<outline isEditable="true" isMoveable="true" text="M"/>
+		<outline isEditable="true" isMoveable="true" text="N">
+			<outline isEditable="true" isMoveable="true" text="node">
+				<outline isEditable="true" isMoveable="true" text="a set of links to nodes within this document that mention 'node'"/>
+				<outline isEditable="true" isMoveable="true" text="for example"/>
+				<outline isEditable="true" isMoveable="true" text="#someTerminology, #moveNodesAround, #deleteNodes"/>
+			</outline>
+		</outline>
+		<outline isEditable="true" isMoveable="true" text="O"/>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="P-T">
+		<outline isEditable="true" isMoveable="true" text="P"/>
+		<outline isEditable="true" isMoveable="true" text="Q"/>
+		<outline isEditable="true" isMoveable="true" text="R"/>
+		<outline isEditable="true" isMoveable="true" text="S"/>
+		<outline isEditable="true" isMoveable="true" text="T"/>
+	</outline>
+	<outline isEditable="true" isMoveable="true" text="U-Z">
+		<outline isEditable="true" isMoveable="true" text="U"/>
+		<outline isEditable="true" isMoveable="true" text="V"/>
+		<outline isEditable="true" isMoveable="true" text="W"/>
+		<outline isEditable="true" isMoveable="true" text="X"/>
+		<outline isEditable="true" isMoveable="true" text="Y"/>
+		<outline isEditable="true" isMoveable="true" text="Z"/>
+	</outline>
 </outline>
 </body>
 </opml>
