@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\About JOE.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Fri, 25 Jan 2002 05:44:56 GMT</dateModified>
+<dateModified>Sun, 27 Jan 2002 05:14:05 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
-<expansionState></expansionState>
+<expansionState>3,5,8,14,15</expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>5</windowTop>
+<windowTop>0</windowTop>
 <windowLeft>5</windowLeft>
-<windowBottom>376</windowBottom>
-<windowRight>392</windowRight>
+<windowBottom>681</windowBottom>
+<windowRight>575</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -24,9 +24,49 @@
 </outline>
 <outline isEditable="true" isMoveable="true" text="------------" isMoveableInherited="true" isEditableInherited="true"/>
 <outline isEditable="true" isMoveable="true" text="Version" isMoveableInherited="true" isEditableInherited="true">
-	<outline isEditable="true" isMoveable="true" text="1.8.7"/>
-	<outline text="Version ReadMe File">
-		<outline text="&lt;forthcoming/&gt;"/>
+	<outline isEditable="true" isMoveable="true" text="1.8.7.dev"/>
+	<outline text="Version ReadMe ">
+		<outline text="&lt;under construction/&gt;"/>
+		<outline text="Bug Fixes"/>
+		<outline text="New Features">
+			<outline text="Import">
+				<outline text="There's a new File menu command: Import "/>
+				<outline text="Import opens a file that's in a format that JOE can read but not write"/>
+				<outline text="JOE v187 can import 3 formats, all of them Palm OS outliner formats">
+					<outline text="Thought Manager Palm pdb format">
+						<outline text="Reads node and note text"/>
+						<outline text="Ignores other data"/>
+						<outline text="version 1.0 of this reader/writer"/>
+					</outline>
+					<outline text="Shadow Plan Palm pdb format">
+						<outline text="Reads node and note text"/>
+						<outline text="Ignores other data"/>
+						<outline text="version 1.0 of this reader/writer"/>
+					</outline>
+					<outline text="Brain Forest Palm pdb format">
+						<outline text="Reads node and note text"/>
+						<outline text="Ignores other data"/>
+						<outline text="version 1.0 of this reader/writer"/>
+					</outline>
+				</outline>
+			</outline>
+			<outline text="Maximize Horizontal and Vertical">
+				<outline text="There are two new Window menu commands: Maximize:Horizontal and Maximize:Vertical"/>
+				<outline text="They resize the topmost window so that it is maximized along the specified axis"/>
+			</outline>
+			<outline text="Tile Horizontal, Vertical, and Grid">
+				<outline text="There are three new Window menu commands: Tile:Horizontal, Tile:Vertical, and Tile:Grid"/>
+				<outline text="They tile several open windows, maximized along the specified axis."/>
+				<outline text="The number of windows tiled depends on available real estate and user settings"/>
+			</outline>
+			<outline text="Recent Files UI"/>
+			<outline text="Document Window Titles"/>
+			<outline text="Preference Panels">
+				<outline text="Application">
+					<outline text=""/>
+				</outline>
+			</outline>
+		</outline>
 	</outline>
 </outline>
 <outline text="------------"/>
