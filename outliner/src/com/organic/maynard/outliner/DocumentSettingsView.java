@@ -170,11 +170,11 @@ public class DocumentSettingsView extends AbstractGUITreeJDialog implements Acti
 
 		// Setup ComboBoxes
 		for (int i = 0; i < Preferences.ENCODINGS.size(); i++) {
-			saveEncodingComboBox.addItem((String) Preferences.ENCODINGS.elementAt(i));
+			saveEncodingComboBox.addItem((String) Preferences.ENCODINGS.get(i));
 		}
 
 		for (int i = 0; i < Preferences.FILE_FORMATS_SAVE.size(); i++) {
-			saveFormatComboBox.addItem((String) Preferences.FILE_FORMATS_SAVE.elementAt(i));
+			saveFormatComboBox.addItem((String) Preferences.FILE_FORMATS_SAVE.get(i));
 		}
 
 		// Add Listeners

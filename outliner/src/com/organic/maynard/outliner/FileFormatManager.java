@@ -429,7 +429,7 @@ public class FileFormatManager {
 			openers.removeElementAt(index);
 
 			// Also remove it from the list of formats stored in the preferences
-			Preferences.FILE_FORMATS_OPEN.removeElementAt(index);
+			Preferences.FILE_FORMATS_OPEN.remove(index);
 
 			return true;
 		}
@@ -488,7 +488,7 @@ public class FileFormatManager {
 			savers.removeElementAt(index);
 
 			// Also remove it from the list of formats stored in the preferences
-			Preferences.FILE_FORMATS_SAVE.removeElementAt(index);
+			Preferences.FILE_FORMATS_SAVE.remove(index);
 
 			return true;
 		}
@@ -563,7 +563,7 @@ public class FileFormatManager {
 			importers.removeElementAt(index);
 
 			// Also remove it from the list of formats stored in the preferences
-			Preferences.FILE_FORMATS_IMPORT.removeElementAt(index);
+			Preferences.FILE_FORMATS_IMPORT.remove(index);
 
 			return true;
 		}
@@ -601,7 +601,7 @@ public class FileFormatManager {
 			exporters.removeElementAt(index);
 
 			// Also remove it from the list of formats stored in the preferences
-			Preferences.FILE_FORMATS_EXPORT.removeElementAt(index);
+			Preferences.FILE_FORMATS_EXPORT.remove(index);
 
 			return true;
 		}

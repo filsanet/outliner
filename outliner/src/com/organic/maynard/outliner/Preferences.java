@@ -54,11 +54,11 @@ public class Preferences implements GUITreeComponent {
 	public static String TXT_WORDS = null;
 	public static String TXT_CHARACTERS = null;
 
-	public static final Vector ENCODINGS = new Vector();
-	public static final Vector FILE_FORMATS_OPEN = new Vector();
-	public static final Vector FILE_FORMATS_IMPORT = new Vector();
-	public static final Vector FILE_FORMATS_SAVE = new Vector();
-	public static final Vector FILE_FORMATS_EXPORT = new Vector();
+	public static final ArrayList ENCODINGS = new ArrayList();
+	public static final ArrayList FILE_FORMATS_OPEN = new ArrayList();
+	public static final ArrayList FILE_FORMATS_IMPORT = new ArrayList();
+	public static final ArrayList FILE_FORMATS_SAVE = new ArrayList();
+	public static final ArrayList FILE_FORMATS_EXPORT = new ArrayList();
 
 	public static final ArrayList FILE_PROTOCOLS = new ArrayList();
 
@@ -126,13 +126,7 @@ public class Preferences implements GUITreeComponent {
 		
 		// Open & Save Panel
 		public static final String FILE_PROTOCOL = "file_protocol";
-		
-	//	public static final String LINE_END = "line_end";
-		
-		public static final String OPEN_LINE_END = "open_line_end";
 		public static final String SAVE_LINE_END = "save_line_end";
-		public static final String IMPORT_LINE_END = "import_line_end";
-		public static final String EXPORT_LINE_END = "export_line_end";
 		
 		public static final String OPEN_ENCODING = "open_encoding";
 		public static final String SAVE_ENCODING = "save_encoding";

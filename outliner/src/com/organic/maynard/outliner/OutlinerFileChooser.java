@@ -86,7 +86,7 @@ public class OutlinerFileChooser extends JFileChooser {
 
 		// TBD [srk] have different encoding prefs for each of these OPs
 		for (int i = 0; i < Preferences.ENCODINGS.size(); i++) {
-			String encoding = (String) Preferences.ENCODINGS.elementAt(i);
+			String encoding = (String) Preferences.ENCODINGS.get(i);
 			saveEncodingComboBox.addItem(encoding);
 			exportEncodingComboBox.addItem(encoding);
 			openEncodingComboBox.addItem(encoding);
@@ -94,19 +94,19 @@ public class OutlinerFileChooser extends JFileChooser {
 		}
 
 		for (int i = 0; i < Preferences.FILE_FORMATS_OPEN.size(); i++) {
-			openFormatComboBox.addItem((String) Preferences.FILE_FORMATS_OPEN.elementAt(i));
+			openFormatComboBox.addItem((String) Preferences.FILE_FORMATS_OPEN.get(i));
 		}
 
 		for (int i = 0; i < Preferences.FILE_FORMATS_IMPORT.size(); i++) {
-			importFormatComboBox.addItem((String) Preferences.FILE_FORMATS_IMPORT.elementAt(i));
+			importFormatComboBox.addItem((String) Preferences.FILE_FORMATS_IMPORT.get(i));
 		}
 
 		for (int i = 0; i < Preferences.FILE_FORMATS_SAVE.size(); i++) {
-			saveFormatComboBox.addItem((String) Preferences.FILE_FORMATS_SAVE.elementAt(i));
+			saveFormatComboBox.addItem((String) Preferences.FILE_FORMATS_SAVE.get(i));
 		}
 
 		for (int i = 0; i < Preferences.FILE_FORMATS_EXPORT.size(); i++) {
-			exportFormatComboBox.addItem((String) Preferences.FILE_FORMATS_EXPORT.elementAt(i));
+			exportFormatComboBox.addItem((String) Preferences.FILE_FORMATS_EXPORT.get(i));
 		}
 
 		// Lay out save panel

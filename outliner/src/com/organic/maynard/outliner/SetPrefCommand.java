@@ -53,7 +53,7 @@ public class SetPrefCommand extends Command {
 		String variableName = (String) signature.elementAt(1);
 		
 		if (variableName.equals(COMMAND_ENCODING)) {
-			Preferences.ENCODINGS.addElement((String) signature.elementAt(2));
+			Preferences.ENCODINGS.add((String) signature.elementAt(2));
 			System.out.println("  Adding encoding type: " + signature.elementAt(2));
 			
 		} else {
