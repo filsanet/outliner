@@ -7,7 +7,7 @@
  * 	
  * 	
  * extends AbstractOutlinerMenuItem 
- * implements ActionListener, GUITreeComponent {
+ * implements ActionListener, GUITreeComponent, JoeReturnCodes {
 
  *
  * Members
@@ -23,7 +23,7 @@
  *		
  * Portions copyright (C) 2000-2001 Maynard Demmon <maynard@organic.com>
  * Portions copyright (C) 2001 Stan Krute <Stan@StanKrute.com>
- * Last Touched: 8/11/01 9:31PM
+ * Last Touched: 8/12/01 9:26PM
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

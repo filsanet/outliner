@@ -60,7 +60,7 @@ package com.organic.maynard.outliner;
 public class HelpDocumentsManager 
 
 	extends DocumentManager
-	implements JOEReturnCodes {
+	implements JoeReturnCodes {
 	
 	// public class constants
 	public static final int USER_GUIDE = 0 ;
