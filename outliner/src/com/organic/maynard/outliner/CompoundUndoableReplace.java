@@ -101,6 +101,12 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 		TreeContext tree = parent.getTree();
 		OutlineLayoutManager layout = tree.doc.panel.layout;
 
+		// Let's be aware if we are deleting the nodeToDrawFrom.
+		boolean nodeToDrawFromDeleted = false;
+		if (tree.doc.panel.layout.getNodeToDrawFrom().isAncestorSelected()) {
+			nodeToDrawFromDeleted = true;
+		}
+
 		// Find fallback node for drawing and editing
 		boolean allWillBeDeleted = false;
 		Node fallbackNode = null;
@@ -143,6 +149,9 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 					tree.addNodeToSelection(fallbackNode);
 				}
 			} else {
+				if (nodeToDrawFromDeleted) {
+					layout.setNodeToDrawFrom(fallbackNode, tree.visibleNodes.indexOf(fallbackNode));
+				}
 				tree.setSelectedNodesParent(fallbackNode.getParent());
 				tree.addNodeToSelection(fallbackNode);
 			}
@@ -164,15 +173,15 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 
 		// Find the range
 		Node firstNewSelectedNode = tree.getYoungestInSelection();
-		int ioFirstNewSelectedNode = tree.visibleNodes.indexOf(firstNewSelectedNode);
+		//int ioFirstNewSelectedNode = tree.visibleNodes.indexOf(firstNewSelectedNode);
 		Node lastNewSelectedNode = tree.getOldestInSelection();
-		int ioLastNewSelectedNode = tree.visibleNodes.indexOf(lastNewSelectedNode);
+		//int ioLastNewSelectedNode = tree.visibleNodes.indexOf(lastNewSelectedNode);
 
 		// Handle Boundary conditions for the selection.
-		if (ioFirstNewSelectedNode == 0) {
-			tree.doc.panel.layout.setNodeToDrawFrom(firstNewSelectedNode, ioFirstNewSelectedNode);
+		if (firstNewSelectedNode == tree.visibleNodes.get(0)) {
+			tree.doc.panel.layout.setNodeToDrawFrom(firstNewSelectedNode, 0);
 			newSelectedNode = firstNewSelectedNode;
-		} else if (ioLastNewSelectedNode == (tree.visibleNodes.size() - 1)) {
+		} else if (lastNewSelectedNode == tree.visibleNodes.get(tree.visibleNodes.size() - 1)) {
 			newSelectedNode = lastNewSelectedNode;
 		} else {
 			newSelectedNode = firstNewSelectedNode;

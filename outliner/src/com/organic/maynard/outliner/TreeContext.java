@@ -378,18 +378,19 @@ public class TreeContext extends AttributeContainerImpl {
 
 	// Tree Manipulation
 	public void promoteNode(Node currentNode, int currentNodeIndex) {
-		Node targetNode = currentNode.getParent().getParent();
-		int insertIndex = currentNode.getParent().currentIndex() + 1;
 		if (currentNode.getParent().isRoot()) {
 			// Our parent is root. Since we can't be promoted to root level, Abort.
 			return;
 		}
+
+		Node targetNode = currentNode.getParent().getParent();
+		int insertIndex = currentNode.getParent().currentIndex() + 1;
 		
 		// Remove the selected node from the current parent node.
 		currentNode.getParent().removeChild(currentNode, currentNodeIndex);
 			
 		// Append the selected node to the target node.
-		targetNode.insertChild(currentNode,insertIndex);
+		targetNode.insertChild(currentNode, insertIndex);
 		currentNode.setDepthRecursively(targetNode.getDepth() + 1);
 		
 		// Now Remove and Insert into the VisibleNodes Cache

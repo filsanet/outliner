@@ -239,6 +239,9 @@ public class GoToDialog extends AbstractGUITreeJDialog implements ActionListener
 			doc.tree.setCursorPosition(columnNumber);
 			doc.setPreferredCaretPosition(columnNumber);
 			doc.tree.setComponentFocus(OutlineLayoutManager.TEXT);
+
+			// draw and Set Focus
+			doc.panel.layout.draw(currentNode, OutlineLayoutManager.TEXT);
 		
 		} else {
 			// Select the node
@@ -247,11 +250,12 @@ public class GoToDialog extends AbstractGUITreeJDialog implements ActionListener
 			
 			// Record the EditingNode and CursorPosition and ComponentFocus
 			doc.tree.setComponentFocus(OutlineLayoutManager.ICON);
+
+			// draw and Set Focus
+			doc.panel.layout.draw(currentNode, OutlineLayoutManager.ICON);
 		}
 		
 
-		// Redraw and Set Focus
-		doc.panel.layout.redraw();		
 		
 		dialog.hide();
 	}

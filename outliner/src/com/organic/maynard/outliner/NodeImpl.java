@@ -42,7 +42,7 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	private int editableState = Node.EDITABLE_INHERITED;
 	private int moveableState = Node.MOVEABLE_INHERITED;
 	
-	private int decendantCount = 0;
+	protected int decendantCount = 0;
 	private int decendantCharCount = 0;
 	
 
@@ -94,8 +94,8 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	
 
 	// Statistics Methods
-	private int lineNumber = -1;
-	private int lineNumberUpdateKey = -1;
+	protected int lineNumber = -1;
+	protected int lineNumberUpdateKey = -1;
 	
 	public int getLineNumber() {
 		// This for when we need to get a line number but we don't want the
@@ -104,24 +104,36 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	}
 	
 	public int getLineNumber(int key) {
-		if (key == lineNumberUpdateKey) {
-			return lineNumber;
-		} else {
-		
-			Node next = prevSiblingOrParent();
-			
-			if (next == this) {
-				lineNumber = 1;
-			} else if (this.getParent() == next) {
-				lineNumber = 1 + next.getLineNumber(key);
-			} else {
-				lineNumber = 1 + next.getDecendantCount() + next.getLineNumber(key);
-			}
-			
-			lineNumberUpdateKey = key;
-			
+		if (lineNumberUpdateKey == key) {
 			return lineNumber;
 		}
+		
+		NodeImpl next = (NodeImpl) tree.visibleNodes.get(0);
+		int runningTotal = 0;
+		
+		int siblingCount = 0;
+		
+		while (true) {
+			runningTotal++;
+
+			next.lineNumber = runningTotal;
+			next.lineNumberUpdateKey = key;
+				
+			if (this.isDecendantOf(next)) {
+				if (next == this) {
+					break;
+				} else {
+					siblingCount = 0;
+					next = (NodeImpl) next.getChild(siblingCount);
+				}
+			} else {
+				runningTotal += next.getDecendantCount();
+				siblingCount++;
+				next = (NodeImpl) next.getParent().getChild(siblingCount);
+			}
+		}
+		
+		return lineNumber;		
 	}
 	
 	public void adjustDecendantCount(int amount) {
@@ -443,10 +455,11 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		}
 	}
 	
+	// Is this a decendant of node?
 	public boolean isDecendantOf(Node node) {
 		if (this == node) {
 			return true;
-		} else if (node.isRoot()) {
+		} else if (isRoot()) {
 			return false;
 		} else {
 			return getParent().isDecendantOf(node);

@@ -1067,36 +1067,31 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		Node parent = tree.getEditingNode().getParent();
 		CompoundUndoableReplace undoable = new CompoundUndoableReplace(parent, deleteMode);
 
+		int startDeleting = 0;
 		if (tree.isWholeDocumentSelected()) {
-			if (tree.isDocumentEmpty()) {return;}
+			// Abort if the doc is empty.
+			if (tree.isDocumentEmpty()) {
+				return;
+			}
 			
+			// Swap in a new node for the first node since a doc always has at least one child of root.
 			Node newNode = new NodeImpl(tree,"");
 			newNode.setDepth(0);
-			undoable.addPrimitive(new PrimitiveUndoableReplace(parent,youngestNode,newNode));
+			undoable.addPrimitive(new PrimitiveUndoableReplace(parent, youngestNode, newNode));
+			
+			startDeleting++;
+		}
 
-			// Iterate over the remaining selected nodes deleting each one
-			for (int i = 1; i < tree.getNumberOfSelectedNodes(); i++) {
-				Node node = tree.selectedNodes.get(i);
+		// Iterate over the remaining selected nodes deleting each one
+		for (int i = startDeleting; i < tree.getNumberOfSelectedNodes(); i++) {
+			Node node = tree.selectedNodes.get(i);
 
-				// Abort if node is not editable
-				if (!node.isEditable()) {
-					continue;
-				}
-				
-				undoable.addPrimitive(new PrimitiveUndoableReplace(parent,node,null));
+			// Abort if node is not editable
+			if (!node.isEditable()) {
+				continue;
 			}
-		} else {
-			// Iterate over the remaining selected nodes deleting each one
-			for (int i = 0; i < tree.getNumberOfSelectedNodes(); i++) {
-				Node node = tree.selectedNodes.get(i);
-
-				// Abort if node is not editable
-				if (!node.isEditable()) {
-					continue;
-				}
-				
-				undoable.addPrimitive(new PrimitiveUndoableReplace(parent,node,null));
-			}
+			
+			undoable.addPrimitive(new PrimitiveUndoableReplace(parent, node, null));
 		}
 
 		if (!undoable.isEmpty()) {

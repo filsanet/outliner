@@ -56,36 +56,29 @@ public class PrimitiveUndoableReplace implements Undoable {
 			
 			// Swap the nodes
 			parent.removeChild(newNode,index);
-			parent.insertChild(oldNode,index);
-			
-			// Insert the node into the visible nodes cache
-			tree.insertNode(oldNode);
-			
-			// Handle Selection
-			tree.addNodeToSelection(oldNode);
-		
-		} else {
-			// Swap the nodes
-			parent.insertChild(oldNode,index);
-			
-			// Insert the node into the visible nodes cache
-			tree.insertNode(oldNode);
-			
-			// Handle Selection
-			tree.addNodeToSelection(oldNode);		
 		}
+
+		// Swap the nodes
+		parent.insertChild(oldNode,index);
+		
+		// Insert the node into the visible nodes cache
+		tree.insertNode(oldNode);
+		
+		// Handle Selection
+		tree.addNodeToSelection(oldNode);	
 	}
 	
 	// Undoable Interface
 	public void redo() {
 		TreeContext tree = parent.getTree();
 
-		if (newNode != null) {
-			// Remove node from visible nodes cache
-			tree.removeNode(oldNode);
+		// Remove node from visible nodes cache
+		tree.removeNode(oldNode);
+		
+		// Swap the nodes
+		parent.removeChild(oldNode, index);	
 			
-			// Swap the nodes
-			parent.removeChild(oldNode, index);
+		if (newNode != null) {
 			parent.insertChild(newNode, index);
 			
 			// Insert the node into the visible nodes cache
@@ -93,13 +86,6 @@ public class PrimitiveUndoableReplace implements Undoable {
 	
 			// Handle Selection
 			tree.addNodeToSelection(newNode);
-	
-		} else {
-			// Remove node from visible nodes cache
-			tree.removeNode(oldNode);
-			
-			// Swap the nodes
-			parent.removeChild(oldNode, index);	
 		}
 	}
 }
