@@ -439,11 +439,13 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 		// Open documents from open documents list.
 		if (Preferences.getPreferenceBoolean(Preferences.OPEN_DOCS_ON_STARTUP).cur) {
 			java.util.List openDocumentsList = PropertyContainerUtil.parseXML(Outliner.OPEN_FILES_FILE);
-			for (int i = 0; i < openDocumentsList.size(); i++) {
-				DocumentInfo docInfo = (DocumentInfo) openDocumentsList.get(i);
-				String protocol_name = (String) docInfo.getProperty(DocumentInfo.KEY_PROTOCOL_NAME);
-				FileProtocol fileProtocol = fileProtocolManager.getProtocol(protocol_name);
-				FileMenu.openFile(docInfo, fileProtocol);
+			if (openDocumentsList != null) {
+				for (int i = 0; i < openDocumentsList.size(); i++) {
+					DocumentInfo docInfo = (DocumentInfo) openDocumentsList.get(i);
+					String protocol_name = (String) docInfo.getProperty(DocumentInfo.KEY_PROTOCOL_NAME);
+					FileProtocol fileProtocol = fileProtocolManager.getProtocol(protocol_name);
+					FileMenu.openFile(docInfo, fileProtocol);
+				}
 			}
 		}
 		
