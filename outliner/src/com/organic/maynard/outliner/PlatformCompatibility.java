@@ -75,6 +75,15 @@ public class PlatformCompatibility {
 			return false;
 		}
 	}
+
+	public static boolean isMac() { // [deric] 31Sep2001  
+		String osName = System.getProperty("os.name");
+		if (osName.toLowerCase().startsWith("mac")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	public static boolean isJava1_3_1() {
 		String javaVersion = System.getProperty("java.version");
