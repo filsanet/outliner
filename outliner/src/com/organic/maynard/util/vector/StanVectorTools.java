@@ -5,15 +5,22 @@
  * 
  * members
  *	methods
- *		class
- *			public
- *				void moveElementToTail (Vector)
- *				void moveElementToHead (Vector)
- *				void swapElements (Vector, int, int)
+ *		public
+ *			class aka static
+ *				[TBD] void ensureSizeSaveHead (Vector, int)
  *				void ensureSizeSaveTail (Vector, int)
+ *				void moveElementsHeadward (Vector, int, int, int) ;
+ *				[TBD] void moveElementsTailward (Vector, int, int, int) ;
+ *				void moveElementToHead (Vector)
+ *				void moveElementToTail (Vector)
+ *				void swapElements (Vector, int, int)
+ *				[TBD] void removeDupesHeadside (Vector)
+ *				void removeDupesTailside (Vector)
+ *				reverse (Vector) 
  *
  *		
  * Copyright (C) 2002 Stan Krute <Stan@StanKrute.com>
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or 
  * without modification, are permitted provided that the 
@@ -55,11 +62,12 @@ package com.organic.maynard.util.vector;
 
 // we use these
 import java.util.Vector ;
+import java.util.TreeSet ;
 
-// Stan's string tools
+// a few useful vector tools
 public class StanVectorTools {
 
-	// Class Methods
+	// Public Class Methods
 	
 	// move an element to the tail end of a vector
 	public static void moveElementToTail(Vector someVector, int index) {
@@ -180,5 +188,112 @@ public class StanVectorTools {
 	} // end if
 	
 	} // end method trimSizeSaveTail
+
+
+	// remove duplicate entries
+	// if method has to eliminate entries, it eliminates them from the tailward side
+	public static void removeDupesTailside(Vector someVector) {
+	
+		// we'll be storing census info here
+		TreeSet censusTree = new TreeSet() ;
+		if (censusTree == null) {
+			return ;
+		} // end if
+		
+		// grab the vector's starting size
+		int size = someVector.size() ;
+		
+		// starting at the tail
+		int position = size - 1;
+		
+		// local var to hold each vector element
+		Object element = null ;
+		
+		// until we get all the way to the head
+		while (position >= 0) {
+			
+			// grab the element
+			element = someVector.get(position) ;
+			
+			// if this element isn't in the tree yet
+			if (! censusTree.contains(element)) {
+				
+				// add it to the tree
+				censusTree.add(element) ;
+				
+			// else this is a dupe
+			} else {
+				// slide more tailward elements headwards
+				moveElementsHeadward(someVector, position, size-1, 1) ;
+				
+				// that crushes the dupe
+				
+				// our size just shrunk
+				size-- ;
+				
+			} // end if-else notIn-isDupe
+			
+			// next !
+			position-- ;
+			
+		} // end while
+		
+		// okay, any dupes are gone
+		
+		// if our size changed ...
+		if (size < someVector.size()) {
+			
+			// resize
+			someVector.setSize(size) ;
+			
+			// setSize cuts off from the tail end
+			// which is correct, since we slid uniques headwards
+				
+		} // end if our size changed
+			
+	} // end method removeDupesTailside
+	
+	
+	// moves a range of elements headward
+	public static void moveElementsHeadward(
+					Vector someVector, 
+					int startElement,
+					int stopElement,
+					int magnitude ){
+		
+		// local vars
+		int size = 0 ;
+		int limit = 0 ;
+		int scratch = 0 ;
+		
+		// make sure start's <=  stop
+		if (startElement > stopElement) {
+			scratch = startElement ;
+			startElement = stopElement ;
+			stopElement = scratch ;
+		} // end if we had to swap stop/start
+						
+		// if something's hinky with the parameters
+		if (	(someVector == null) ||
+			((size = someVector.size()) == 0) ||
+			(startElement < 0) ||
+			(startElement > (limit = size - 1)) ||
+			(stopElement < 0) ||
+			(stopElement > limit) ||
+			((startElement - magnitude) < 0) ||
+			(magnitude == 0) 	
+			) {
+			return ;
+		} // end if bad parms
+		
+		// for each element to be moved
+		for (int position = startElement; position <= stopElement; position ++) {
+			
+			// move it
+			someVector.set(position - magnitude, someVector.get(position)) ;
+			
+		} // end for
+		
+	} // end method moveElementsHeadward
 
 } // end class StanVectorTools
