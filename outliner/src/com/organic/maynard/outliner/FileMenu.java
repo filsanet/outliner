@@ -286,8 +286,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				RecentFilesList.removeFileNameFromList(docInfo.getPath());
 			} else if (success != FAILURE_USER_ABORTED) {
 				// Deal with a childless RootNode or an Empty or Null Tree
-				if ((tree == null) || (tree.getRootNode() == null) || (tree.getRootNode().numOfChildren() <= 0)) {
-					tree = new TreeContext();
+				if ((tree.getRootNode() == null) || (tree.getRootNode().numOfChildren() <= 0)) {
+					tree.reset();
 				}
 			}
 		}
