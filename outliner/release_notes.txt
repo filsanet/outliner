@@ -2,6 +2,7 @@
 	Feature Enhancements:
 		1) New Selection key commands.
 		2) Script and Macro editor now have save commands.
+		3) Pasting now works the way inserting new lines does. When pasting from an open branch node the new lines are inserted inside the branch rather than after.
 	Bug Fixes:
 		1) Fixed a bug where cancelling an "Export" would cause the next save to fail. Same bug also fixed in "Export Selection" where cancelling would also cause you to lose the document tree except for what was selected.
 		2) Fixed bug where text selection would be lost whenever the user moused over the "Recent Files" menu.
