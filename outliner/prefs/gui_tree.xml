@@ -28,6 +28,10 @@
 					<validator id="show_line_numbers_validator" class="com.organic.maynard.outliner.BooleanValidator">
 					</validator>
 				</preference>
+				<preference id="show_attributes" class="com.organic.maynard.outliner.PreferenceBoolean" default="false">
+					<validator id="show_attributes_validator" class="com.organic.maynard.outliner.BooleanValidator">
+					</validator>
+				</preference>
 			</preferencepanel>
 			<preferencepanel id="preferences_panel_look_and_feel" class="com.organic.maynard.outliner.PreferencesPanelLookAndFeel" title="Look &amp; Feel">
 				<preference id="desktop_background_color" class="com.organic.maynard.outliner.PreferenceColor" default="-16777216"/>
