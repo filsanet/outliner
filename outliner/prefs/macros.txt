@@ -11,3 +11,4 @@ macro|XSL value-of disable.txt|com.organic.maynard.outliner.TextMacro
 macro|BSH Lower Case.txt|com.organic.maynard.outliner.BSHMacro
 macro|BSH Upper Case.txt|com.organic.maynard.outliner.BSHMacro
 macro|BSH Get File List.txt|com.organic.maynard.outliner.BSHMacro
+macro|BSH Get Image Dimensions.txt|com.organic.maynard.outliner.BSHMacro
