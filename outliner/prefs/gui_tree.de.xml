@@ -439,14 +439,14 @@
 	<!-- MENUBARS -->
 		<menubar id="menubar" class="com.organic.maynard.outliner.OutlinerDesktopMenuBar">
 			<menu id="file" class="com.organic.maynard.outliner.FileMenu" text="Datei" mnemonic="d">
-				<menuitem id="new_file" class="com.organic.maynard.outliner.NewFileMenuItem" text="Neu" keybinding="N" keybindingmodifiers="control"/>
+				<menuitem id="new_file" class="com.organic.maynard.outliner.NewFileMenuItem" text="Neu" keybinding="N" keybindingmodifiers="shortcut"/>
 				<menuitem id="open" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Öffnen..."/>
 				<menu id="recent_file_list" class="com.organic.maynard.outliner.RecentFilesList" text="Zuletzt bearbeitete Dateien">
 				</menu>
 				<separator/>
 				<menuitem id="import" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Import"/>
 				<separator/>
-				<menuitem id="save" class="com.organic.maynard.outliner.SaveFileMenuItem" text="Speichern" keybinding="S" keybindingmodifiers="control"/>
+				<menuitem id="save" class="com.organic.maynard.outliner.SaveFileMenuItem" text="Speichern" keybinding="S" keybindingmodifiers="shortcut"/>
 				<menuitem id="save_all" class="com.organic.maynard.outliner.SaveAllFileMenuItem" text="Alle speichern"/>
 				<menuitem id="save_as" class="com.organic.maynard.outliner.SaveAsSubMenuItem" text="Speichern unter..."/>
 				<menuitem id="revert" class="com.organic.maynard.outliner.RevertFileMenuItem" text="Neu einlesen"/>
@@ -454,55 +454,55 @@
 				<menuitem id="export" class="com.organic.maynard.outliner.ExportSubMenuItem" text="Exportieren..."/>
 				<menuitem id="export_selection" class="com.organic.maynard.outliner.ExportSelectionSubMenuItem" text="Auswahl exportieren..."/>
 				<separator/>
-				<menuitem id="close" class="com.organic.maynard.outliner.CloseFileMenuItem" text="Schließen" keybinding="W" keybindingmodifiers="control"/>
+				<menuitem id="close" class="com.organic.maynard.outliner.CloseFileMenuItem" text="Schließen" keybinding="W" keybindingmodifiers="shortcut"/>
 				<menuitem id="close_all" class="com.organic.maynard.outliner.CloseAllFileMenuItem" text="Alle schließen"/>
 				<separator/>
-				<menuitem id="quit" class="com.organic.maynard.outliner.QuitMenuItem" text="Beenden" keybinding="Q" keybindingmodifiers="control"/>
+				<menuitem id="quit" class="com.organic.maynard.outliner.QuitMenuItem" text="Beenden" keybinding="Q" keybindingmodifiers="shortcut"/>
 			</menu>
 			<menu id="edit" class="com.organic.maynard.outliner.EditMenu" text="Bearbeiten" mnemonic="b">
-				<menuitem id="undo" class="com.organic.maynard.outliner.UndoMenuItem" text="Rückgängig" keybinding="Z" keybindingmodifiers="control"/>
-				<menuitem id="redo" class="com.organic.maynard.outliner.RedoMenuItem" text="Wiederherstellen" keybinding="Z" keybindingmodifiers="control shift"/>
+				<menuitem id="undo" class="com.organic.maynard.outliner.UndoMenuItem" text="Rückgängig" keybinding="Z" keybindingmodifiers="shortcut"/>
+				<menuitem id="redo" class="com.organic.maynard.outliner.RedoMenuItem" text="Wiederherstellen" keybinding="Z" keybindingmodifiers="shortcut shift"/>
 				<separator/>
 				<menuitem id="undo_all" class="com.organic.maynard.outliner.UndoAllMenuItem" text="Alles rückgängig"/>
 				<menuitem id="redo_all" class="com.organic.maynard.outliner.RedoAllMenuItem" text="Alles wiederherstellen"/>
 				<separator/>
-				<menuitem id="cut" class="com.organic.maynard.outliner.CutMenuItem" text="Ausschneiden" keybinding="X" keybindingmodifiers="control"/>
-				<menuitem id="copy" class="com.organic.maynard.outliner.CopyMenuItem" text="Kopieren" keybinding="C" keybindingmodifiers="control"/>
-				<menuitem id="paste" class="com.organic.maynard.outliner.PasteMenuItem" text="Einfügen" keybinding="V" keybindingmodifiers="control"/>
+				<menuitem id="cut" class="com.organic.maynard.outliner.CutMenuItem" text="Ausschneiden" keybinding="X" keybindingmodifiers="shortcut"/>
+				<menuitem id="copy" class="com.organic.maynard.outliner.CopyMenuItem" text="Kopieren" keybinding="C" keybindingmodifiers="shortcut"/>
+				<menuitem id="paste" class="com.organic.maynard.outliner.PasteMenuItem" text="Einfügen" keybinding="V" keybindingmodifiers="shortcut"/>
 				<menuitem id="delete" class="com.organic.maynard.outliner.DeleteMenuItem" text="Löschen" keybinding="delete"/>
 				<separator/>
-				<menuitem id="select_all" class="com.organic.maynard.outliner.SelectAllMenuItem" text="Alles auswählen" keybinding="A" keybindingmodifiers="control"/>
-				<menuitem id="select_none" class="com.organic.maynard.outliner.SelectNoneMenuItem" text="Nichts auswählen" keybinding="D" keybindingmodifiers="control"/>
-				<menuitem id="select_inverse" class="com.organic.maynard.outliner.SelectInverseMenuItem" text="Auswahl umkehren" keybinding="I" keybindingmodifiers="control"/>
+				<menuitem id="select_all" class="com.organic.maynard.outliner.SelectAllMenuItem" text="Alles auswählen" keybinding="A" keybindingmodifiers="shortcut"/>
+				<menuitem id="select_none" class="com.organic.maynard.outliner.SelectNoneMenuItem" text="Nichts auswählen" keybinding="D" keybindingmodifiers="shortcut"/>
+				<menuitem id="select_inverse" class="com.organic.maynard.outliner.SelectInverseMenuItem" text="Auswahl umkehren" keybinding="I" keybindingmodifiers="shortcut"/>
 				<separator/>
 				<menuitem id="preferences" class="com.organic.maynard.outliner.PreferencesMenuItem" text="Programmeinstellungen..."/>
 				<menuitem id="edit_document_settings" class="com.organic.maynard.outliner.EditDocumentSettingsMenuItem" text="Dokumenteinstellungen..."/>
 				<menuitem id="edit_document_attributes" class="com.organic.maynard.outliner.EditDocumentAttributesMenuItem" text="Dokumentattribute..."/>
 				<separator/>
-				<menuitem id="check_spelling" class="com.organic.maynard.outliner.CheckSpellingMenuItem" text="Check Spelling" keybinding="K" keybindingmodifiers="control"/>
-				<menuitem id="check_spelling_for_selection" class="com.organic.maynard.outliner.CheckSpellingForSelectionMenuItem" text="Check Spelling for Selection" keybinding="K" keybindingmodifiers="control shift"/>
+				<menuitem id="check_spelling" class="com.organic.maynard.outliner.CheckSpellingMenuItem" text="Check Spelling" keybinding="K" keybindingmodifiers="shortcut"/>
+				<menuitem id="check_spelling_for_selection" class="com.organic.maynard.outliner.CheckSpellingForSelectionMenuItem" text="Check Spelling for Selection" keybinding="K" keybindingmodifiers="shortcut shift"/>
 			</menu>
 			<menu id="outline" class="com.organic.maynard.outliner.OutlineMenu" text="Outline" mnemonic="o">
 				<menuitem id="comment_submenu" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Kommentare">
 					<menuitem id="toggle_comment_and_clear" class="com.organic.maynard.outliner.ToggleCommentAndClearMenuItem" text="Kommentar umschalten und Unterknoten löschen" keybinding="page_up"/>
-					<menuitem id="clear_comments" class="com.organic.maynard.outliner.ClearCommentsMenuItem" text="Kommentare in ausgewählten Knoten löschen" keybinding="page_up" keybindingmodifiers="control shift"/>
+					<menuitem id="clear_comments" class="com.organic.maynard.outliner.ClearCommentsMenuItem" text="Kommentare in ausgewählten Knoten löschen" keybinding="page_up" keybindingmodifiers="shortcut shift"/>
 					<separator/>
 					<menuitem id="toggle_comment" class="com.organic.maynard.outliner.ToggleCommentMenuItem" text="Kommentar umschalten" keybinding="page_up" keybindingmodifiers="shift"/>
-					<menuitem id="toggle_comment_inheritance" class="com.organic.maynard.outliner.ToggleCommentInheritanceMenuItem" text="Vererbung der Kommentare umschalten" keybinding="page_up" keybindingmodifiers="control"/>
+					<menuitem id="toggle_comment_inheritance" class="com.organic.maynard.outliner.ToggleCommentInheritanceMenuItem" text="Vererbung der Kommentare umschalten" keybinding="page_up" keybindingmodifiers="shortcut"/>
 				</menuitem>
 				<menuitem id="editable_submenu" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Read-Only Node Settings">
 					<menuitem id="toggle_editable_and_clear" class="com.organic.maynard.outliner.ToggleEditableAndClearMenuItem" text="Toggle Read-Only State and Clear Subnodes" keybinding="f11"/>
-					<menuitem id="clear_editables" class="com.organic.maynard.outliner.ClearEditablesMenuItem" text="Nur-lese-Modus in ausgewählten Knoten löschen" keybinding="f11" keybindingmodifiers="control shift"/>
+					<menuitem id="clear_editables" class="com.organic.maynard.outliner.ClearEditablesMenuItem" text="Nur-lese-Modus in ausgewählten Knoten löschen" keybinding="f11" keybindingmodifiers="shortcut shift"/>
 					<separator/>
 					<menuitem id="toggle_editable" class="com.organic.maynard.outliner.ToggleEditableMenuItem" text="Nur-lese-Modus umschalten" keybinding="f11" keybindingmodifiers="shift"/>
-					<menuitem id="toggle_editable_inheritance" class="com.organic.maynard.outliner.ToggleEditableInheritanceMenuItem" text="Vererbung des Nur-lese-Modus umschalten" keybinding="f11" keybindingmodifiers="control"/>
+					<menuitem id="toggle_editable_inheritance" class="com.organic.maynard.outliner.ToggleEditableInheritanceMenuItem" text="Vererbung des Nur-lese-Modus umschalten" keybinding="f11" keybindingmodifiers="shortcut"/>
 				</menuitem>
 				<menuitem id="moveable_submenu" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Moveable Node Settings">
 					<menuitem id="toggle_moveable_and_clear" class="com.organic.maynard.outliner.ToggleMoveableAndClearMenuItem" text="Verschiebbarkeitseinstellungen umschalten und Unterknoten löschen" keybinding="f12"/>
-					<menuitem id="clear_moveables" class="com.organic.maynard.outliner.ClearMoveablesMenuItem" text="Verschiebbarkeitseinstellung in ausgewählten Knoten löschen" keybinding="f12" keybindingmodifiers="control shift"/>
+					<menuitem id="clear_moveables" class="com.organic.maynard.outliner.ClearMoveablesMenuItem" text="Verschiebbarkeitseinstellung in ausgewählten Knoten löschen" keybinding="f12" keybindingmodifiers="shortcut shift"/>
 					<separator/>
 					<menuitem id="toggle_moveable" class="com.organic.maynard.outliner.ToggleMoveableMenuItem" text="Verschiebbarkeitseinstellung umschalten" keybinding="f12" keybindingmodifiers="shift"/>
-					<menuitem id="toggle_moveable_inheritance" class="com.organic.maynard.outliner.ToggleMoveableInheritanceMenuItem" text="Vererbung der Verschiebbarkeitseinstellung umschalten" keybinding="f12" keybindingmodifiers="control"/>
+					<menuitem id="toggle_moveable_inheritance" class="com.organic.maynard.outliner.ToggleMoveableInheritanceMenuItem" text="Vererbung der Verschiebbarkeitseinstellung umschalten" keybinding="f12" keybindingmodifiers="shortcut"/>
 				</menuitem>
 				<separator/>
 				<menuitem id="toggle_expansion" class="com.organic.maynard.outliner.ToggleExpansionMenuItem" text="Aufklappen umschalten" keybinding="page_down"/>
@@ -513,27 +513,27 @@
 				<menuitem id="collapse_to_parent" class="com.organic.maynard.outliner.CollapseToParentMenuItem" text="Bis Überknoten zuklappen"/>
 				<menuitem id="collapse_everything" class="com.organic.maynard.outliner.CollapseEverythingMenuItem" text="Alles zuklappen"/>
 				<separator/>
-				<menuitem id="move_up" class="com.organic.maynard.outliner.MoveUpMenuItem" text="Nach oben verschieben" keybinding="up" keybindingmodifiers="control"/>
-				<menuitem id="move_down" class="com.organic.maynard.outliner.MoveDownMenuItem" text="Nach unten verschieben" keybinding="down" keybindingmodifiers="control"/>
-				<menuitem id="move_left" class="com.organic.maynard.outliner.MoveLeftMenuItem" text="Nach links verschieben" keybinding="left" keybindingmodifiers="control"/>
-				<menuitem id="move_right" class="com.organic.maynard.outliner.MoveRightMenuItem" text="Nach rechts verschieben" keybinding="right" keybindingmodifiers="control"/>
+				<menuitem id="move_up" class="com.organic.maynard.outliner.MoveUpMenuItem" text="Nach oben verschieben" keybinding="up" keybindingmodifiers="shortcut"/>
+				<menuitem id="move_down" class="com.organic.maynard.outliner.MoveDownMenuItem" text="Nach unten verschieben" keybinding="down" keybindingmodifiers="shortcut"/>
+				<menuitem id="move_left" class="com.organic.maynard.outliner.MoveLeftMenuItem" text="Nach links verschieben" keybinding="left" keybindingmodifiers="shortcut"/>
+				<menuitem id="move_right" class="com.organic.maynard.outliner.MoveRightMenuItem" text="Nach rechts verschieben" keybinding="right" keybindingmodifiers="shortcut"/>
 				<separator/>
 				<menuitem id="promote" class="com.organic.maynard.outliner.PromoteMenuItem" text="Promote" keybinding="tab" keybindingmodifiers="shift"/>
 				<menuitem id="demote" class="com.organic.maynard.outliner.DemoteMenuItem" text="Demote" keybinding="tab"/>
 				<separator/>
-				<menuitem id="merge" class="com.organic.maynard.outliner.MergeMenuItem" text="Zusammenführen" keybinding="M" keybindingmodifiers="control"/>
-				<menuitem id="merge_with_spaces" class="com.organic.maynard.outliner.MergeWithSpacesMenuItem" text="Mit Leerzeichen zusammenführen" keybinding="M" keybindingmodifiers="control shift"/>
+				<menuitem id="merge" class="com.organic.maynard.outliner.MergeMenuItem" text="Zusammenführen" keybinding="M" keybindingmodifiers="shortcut"/>
+				<menuitem id="merge_with_spaces" class="com.organic.maynard.outliner.MergeWithSpacesMenuItem" text="Mit Leerzeichen zusammenführen" keybinding="M" keybindingmodifiers="shortcut shift"/>
 				<separator/>
 				<menuitem id="hoist" class="com.organic.maynard.outliner.HoistMenuItem" text="Hoist"/>
 				<menuitem id="dehoist" class="com.organic.maynard.outliner.DehoistMenuItem" text="De-Hoist"/>
 				<menuitem id="dehoist_all" class="com.organic.maynard.outliner.DehoistAllMenuItem" text="De-Hoist All"/>
 				<separator/>
-				<menuitem id="toggle_attributes" class="com.organic.maynard.outliner.ToggleAttributesMenuItem" text="X" show="Attribute anzeigen" hide="Attribute ausblenden" keybinding="T" keybindingmodifiers="control"/>
+				<menuitem id="toggle_attributes" class="com.organic.maynard.outliner.ToggleAttributesMenuItem" text="X" show="Attribute anzeigen" hide="Attribute ausblenden" keybinding="T" keybindingmodifiers="shortcut"/>
 			</menu>
 			<menu id="search" class="com.organic.maynard.outliner.SearchMenu" text="Suchen" mnemonic="s">
-				<menuitem id="goto" class="com.organic.maynard.outliner.GoToMenuItem" text="Gehe zu Zeile..." keybinding="G" keybindingmodifiers="control"/>
+				<menuitem id="goto" class="com.organic.maynard.outliner.GoToMenuItem" text="Gehe zu Zeile..." keybinding="G" keybindingmodifiers="shortcut"/>
 				<separator/>
-				<menuitem id="find" class="com.organic.maynard.outliner.FindMenuItem" text="Suchen/Ersetzen..." keybinding="F" keybindingmodifiers="control"/>
+				<menuitem id="find" class="com.organic.maynard.outliner.FindMenuItem" text="Suchen/Ersetzen..." keybinding="F" keybindingmodifiers="shortcut"/>
 			</menu>
 			<menu id="script" class="com.organic.maynard.outliner.ScriptMenu" text="Skript" mnemonic="k">
 				<menuitem id="macros" class="com.organic.maynard.outliner.MacrosMenuItem" text="Makro Manager..."/>
@@ -556,8 +556,8 @@
 					<menuitem id="tile_gridly" class="com.organic.maynard.outliner.TileGridMenuItem" text="Grid"/>
 				</menuitem>
 				<separator/>
-				<menuitem id="next_window" class="com.organic.maynard.outliner.NextWindowMenuItem" text="Nächstes" keybinding="S" keybindingmodifiers="control shift"/>
-				<menuitem id="prev_window" class="com.organic.maynard.outliner.PrevWindowMenuItem" text="Vorheriges" keybinding="A" keybindingmodifiers="control shift"/>
+				<menuitem id="next_window" class="com.organic.maynard.outliner.NextWindowMenuItem" text="Nächstes" keybinding="S" keybindingmodifiers="shortcut shift"/>
+				<menuitem id="prev_window" class="com.organic.maynard.outliner.PrevWindowMenuItem" text="Vorheriges" keybinding="A" keybindingmodifiers="shortcut shift"/>
 				<separator/>
 			</menu>
 			<menu id="help" class="com.organic.maynard.outliner.HelpMenu" text="Hilfe" mnemonic="h">

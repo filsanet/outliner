@@ -50,17 +50,17 @@ import java.awt.event.*;
  */
 
 public class FileProtocolManager {
-
+	
 	private static final boolean VERBOSE = false;
-
+	
 	// Instance Fields
 	private ArrayList protocols = new ArrayList();
 	private FileProtocol defaultProtocol = null;
-
+	
 	
 	// The Constructor
 	public FileProtocolManager() {}
-
+	
 	public void createFileProtocol(String protocolName, String className) {
 		try {
 			Class theClass = Class.forName(className);
@@ -83,17 +83,17 @@ public class FileProtocolManager {
 			e.printStackTrace();
 		}
 	}
-
-
+	
+	
 	// Accessors
 	public FileProtocol getDefault() {
 		return defaultProtocol;
 	}
-
+	
 	public void setDefault(FileProtocol defaultProtocol) {
 		this.defaultProtocol = defaultProtocol;
 	}
-
+	
 	public boolean addProtocol(FileProtocol protocol) {
 		if (isNameUnique(protocol)) {
 			protocols.add(protocol);
@@ -121,20 +121,20 @@ public class FileProtocolManager {
 			FileProtocol protocol = (FileProtocol) protocols.get(i);
 			if (protocol.getName().equals(protocolName)) {
 				protocols.remove(i);
-
+				
 				// Also remove it from the list of formats stored in the preferences
 				Preferences.FILE_PROTOCOLS.remove(i);
-
+				
 				return true;
 			}
 		}
 		return false;
 	}
-
+	
 	// Synchronized default to current prefs state.
 	public void synchronizeDefault() {
 		String protocolName = Preferences.getPreferenceString(Preferences.FILE_PROTOCOL).cur;
-
+		
 		FileProtocol protocol = getProtocol(protocolName);
 		
 		setDefault(protocol);
@@ -148,20 +148,20 @@ public class FileProtocolManager {
 		OutlinerSubMenuItem importMenu = (OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.IMPORT_MENU_ITEM);
 		ImportFileMenuItem importMenuItem = (ImportFileMenuItem) importMenu.getItem(0);
 		importMenuItem.setProtocol(getDefault());
-
+		
 		OutlinerSubMenuItem saveAsMenu = (OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
 		SaveAsFileMenuItem saveAsMenuItem = (SaveAsFileMenuItem) saveAsMenu.getItem(0);
 		saveAsMenuItem.setProtocol(getDefault());
-
+		
 		OutlinerSubMenuItem exportMenu = (OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_MENU_ITEM);
 		ExportFileMenuItem exportMenuItem = (ExportFileMenuItem) exportMenu.getItem(0);
 		exportMenuItem.setProtocol(getDefault());
-
+		
 		OutlinerSubMenuItem exportSelectionMenu = (OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_SELECTION_MENU_ITEM);
 		ExportSelectionFileMenuItem exportSelectionMenuItem = (ExportSelectionFileMenuItem) exportSelectionMenu.getItem(0);
 		exportSelectionMenuItem.setProtocol(getDefault());
 	}
-
+	
 	// Menu Synchronization
 	public void synchronizeMenus() {
 		// Get SubMenu Items
@@ -170,13 +170,13 @@ public class FileProtocolManager {
 		OutlinerSubMenuItem saveAsMenuItem = (OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
 		OutlinerSubMenuItem exportMenuItem = (OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_MENU_ITEM);
 		OutlinerSubMenuItem exportSelectionMenuItem = (OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_SELECTION_MENU_ITEM);
-
+		
 		// Add Default Protocol
 		FileProtocol def = getDefault();
 		
 		if (def != null) {
 			JMenuItem openItem = new OpenFileMenuItem(def);
-			openItem.setAccelerator(KeyStroke.getKeyStroke('O', Event.CTRL_MASK, false));
+			openItem.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 			openMenuItem.add(openItem);
 			importMenuItem.add(new ImportFileMenuItem(def));
 			saveAsMenuItem.add(new SaveAsFileMenuItem(def));
@@ -190,7 +190,7 @@ public class FileProtocolManager {
 		saveAsMenuItem.addSeparator();
 		exportMenuItem.addSeparator();
 		exportSelectionMenuItem.addSeparator();
-
+		
 		
 		// Add list of all protocols
 		for (int i = 0, limit = protocols.size(); i < limit; i++) {

@@ -49,6 +49,12 @@ import org.xml.sax.*;
 public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUITreeComponent, JoeXMLConstants {
 	
 	// Constants
+	/** 
+	 * Used in the gui_tree.xml files to designate that a generic platform 
+	 * specific shortcut key is to be used. 
+	 */
+	private static final String SHORTCUT = "shortcut";
+	
 	private static final String SHIFT = "shift";
 	private static final String CTRL = "control";
 	private static final String ALT = "alt";
@@ -82,8 +88,14 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 	
 	// GUITreeComponent interface
 	private String id = null;
-	public String getGUITreeComponentID() {return this.id;}
-	public void setGUITreeComponentID(String id) {this.id = id;}
+	
+	public String getGUITreeComponentID() {
+		return this.id;
+	}
+	
+	public void setGUITreeComponentID(String id) {
+		this.id = id;
+	}
 	
 	public void startSetup(AttributeList atts) {
 		// Set the title of the menuItem
@@ -102,6 +114,9 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 		
 		String keyBindingModifiers = atts.getValue(A_KEY_BINDING_MODIFIERS);
 		if ((keyBindingModifiers != null) && (keyBindingModifiers.length() > 0)) {
+			if (keyBindingModifiers.indexOf(SHORTCUT) != -1) {
+				mask += Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+			}
 			if (keyBindingModifiers.indexOf(CTRL) != -1) {
 				mask += Event.CTRL_MASK;
 			}
@@ -121,6 +136,8 @@ public abstract class AbstractOutlinerMenuItem extends JMenuItem implements GUIT
 		if (keyBinding != null) {
 			if (keyBinding.length() == 1) {
 				setAccelerator(KeyStroke.getKeyStroke(keyBinding.charAt(0), mask, false));
+			} else if (keyBinding.length() == 0) {
+				// Do nothing since no keybinding has been assigned.
 			} else {
 				if (keyBinding.equals(TAB)) {
 					setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, mask, false));

@@ -341,6 +341,9 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 	
 	// Main
 	public static void main(String args[]) {
+		// Property assignment to enable the top-level menubar in Mac OS X (does nothing on other platforms)
+		System.setProperty("apple.laf.useScreenMenuBar","true");
+		
 		// This allows scrollbars to be resized while they are being dragged.
 		UIManager.put("ScrollBarUI", PlatformCompatibility.getScrollBarUIClassName());
 		
