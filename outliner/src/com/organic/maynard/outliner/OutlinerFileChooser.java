@@ -33,7 +33,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * @author  $Author$
  * @version $Revision$, $Date$
@@ -247,7 +246,7 @@ public class OutlinerFileChooser extends JFileChooser {
 			// obtain the current default save format's extension
 			String extension = 	(Outliner.fileFormatManager.getSaveFormat(doc.settings.saveFormat.cur)).getDefaultExtension() ;
 			
-			// set up using the adjusted filename
+			// addemup
 			setSelectedFile(new File(trimmedFileName + "." + extension)) ;
 		
 		// else it's not an imported file
@@ -259,10 +258,19 @@ public class OutlinerFileChooser extends JFileChooser {
 				setSelectedFile(new File(currentFileName));
 				
 			// else it has no name (it's a new file)
-			} else {
+		} else {
+				// use the current directory
 				setCurrentDirectory(new File(currentDirectory));
-				setSelectedFile(null);
-				// [srk] TBD -- use filename currentDirectory + Untitled #.ext, where ext is current default for saving
+				
+				// start with the window title
+				String title = doc.getTitle() ;
+				
+				// obtain the current default save format's extension
+				String extension = 	(Outliner.fileFormatManager.getSaveFormat(doc.settings.saveFormat.cur)).getDefaultExtension() ;
+			
+				// addemup
+				setSelectedFile(new File(title + "." + extension)) ;
+				
 			} // end else it has no name
 			
 		} // end else it's not imported
