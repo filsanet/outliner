@@ -92,7 +92,7 @@ public class DocumentManager
 
 
 	// is a doc spec'd by its pathname a member of our set ? 
-	// if it is, returns that doc's selector, otherwise returns jrc.DOCUMENT_NOT_FOUND
+	// if it is, returns that doc's selector, otherwise returns DOCUMENT_NOT_FOUND
 	public int isThisOneOfOurs (String docPathName) {
 		
 		/* TODO: 
