@@ -48,13 +48,16 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	public static final boolean DEBUG = true;
 	    	
 	// Language Handling
-	public static String LANGUAGE = "";
+	public static String LANGUAGE = "en"; // Defaults to English.
 	
 	
 	// Directory setup
 	public static final String USER_OUTLINER_DIR = "outliner";
-	public static String GRAPHICS_DIR = "graphics" + System.getProperty("file.separator");
-	public static String PREFS_DIR = "prefs" + System.getProperty("file.separator");
+	
+	// [deric] 31sep2001, We want to be able to specify the graphics dir via a Property in the packaging for MacOS X. If it isn't defined it defaults to the usual "graphics". 
+	public static String GRAPHICS_DIR = System.getProperty("com.organic.maynard.outliner.Outliner.graphicsdir", "graphics") + System.getProperty("file.separator");
+	// [deric] 31sep2001, Same as above but for the prefs dir.
+	public static String PREFS_DIR = System.getProperty("com.organic.maynard.outliner.Outliner.prefsdir", "prefs") + System.getProperty("file.separator");
 	public static String USER_PREFS_DIR = PREFS_DIR;
 	public static final String APP_DIR_PATH = System.getProperty("user.dir") + System.getProperty("file.separator");
 
@@ -245,7 +248,7 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 	public static String SCRIPT_CLASSES_FILE = PREFS_DIR + "script_classes.txt";
 	public static String ENCODINGS_FILE = PREFS_DIR + "encodings.txt";
 	public static String FILE_FORMATS_FILE = PREFS_DIR + "file_formats.txt";
-	public static String GUI_TREE_FILE = PREFS_DIR + "gui_tree" + LANGUAGE + ".xml";
+	public static String GUI_TREE_FILE = PREFS_DIR + "gui_tree." + LANGUAGE + ".xml";
 
 
 	// XML Parser
@@ -298,8 +301,9 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		outliner = this;
 		
 		// MouseWheel
-		//setScrollSpeed(1);
-		JMouseWheelSupport.setMinScrollDistance(1);
+		if (PlatformCompatibility.isWindows()) {
+			JMouseWheelSupport.setMinScrollDistance(1);
+		}
 
 		setTitle(atts.getValue(A_TITLE));
 
@@ -450,11 +454,11 @@ public class Outliner extends JMouseWheelFrame implements ClipboardOwner, GUITre
 		try {
 			lang = args[0];
 			if (lang != null && lang.length() == 2) {
-				LANGUAGE = "." + lang;
-				GUI_TREE_FILE = PREFS_DIR + "gui_tree" + LANGUAGE + ".xml";
+				LANGUAGE = lang;
+				GUI_TREE_FILE = PREFS_DIR + "gui_tree." + LANGUAGE + ".xml";
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {}
-
+                
 		// Load the GUI
 		GUITreeLoader loader = new GUITreeLoader();
 		boolean success = loader.load(Outliner.GUI_TREE_FILE);
