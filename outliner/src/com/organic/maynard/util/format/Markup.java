@@ -52,23 +52,25 @@ public class Markup {
 	private static final char CHAR_SPACE = ' ';
 
 	// Element Types
-	private String[] ELEMENTS_UNBALANCED = {"br", "hr", "img", "meta"}; // Elements that can exist as <br> rather than <br/> or <br />
-	private String[] ELEMENTS_INLINE = {"br", "a", "img", "b", "i", "span"}; // Elements that should be treated as inline text.
+	private String[] ELEMENTS_UNBALANCED = {"br", "hr", "img", "meta", "input"}; // Elements that can exist as <br> rather than <br/> or <br />
+	private String[] ELEMENTS_INLINE = {"br", "a", "img", "b", "i", "span", "font"}; // Elements that should be treated as inline text.
 	private String[] ELEMENTS_LINE_ENDER = {"br"}; // Elements that should always cause a line end.
 	
 	
 	// Parser State
 	private char[] chars;
 	private int i = 0;
-	
-	private ArrayList tokens = new ArrayList();
-	private ArrayList tokenNames = new ArrayList();
-	private ArrayList tokenTypes = new ArrayList();
-	
+		
 	private StringBuffer chunk = null;
 	private int type = TT_TEXT;
 	private String name = null;
 	
+	// Behaviour Settings
+	private ArrayList tokens = new ArrayList();
+	private ArrayList tokenNames = new ArrayList();
+	private ArrayList tokenTypes = new ArrayList();
+
+	private boolean ignoreCase = true;	
 	
 	// The Constructor
 	public Markup() {}
@@ -103,14 +105,32 @@ public class Markup {
 	public String[] getElementsLineEnder() {
 		return this.ELEMENTS_LINE_ENDER;
 	}
+	
+	public void setIgnoreCase(boolean ignoreCase) {
+		this.ignoreCase = ignoreCase;
+	}
+	
+	public boolean isIgnoreCase() {
+		return this.ignoreCase;
+	}
 
 
 	// Methods
 	private boolean isElementType(String name, String[] elementList) {
+		if (name == null || elementList == null) {
+			return false;
+		}
+		
 		for (int i = 0; i < elementList.length; i++) {
 			String element = elementList[i];
-			if (element.equals(name)) {
-				return true;
+			if (ignoreCase) {
+				if (element.equalsIgnoreCase(name)) {
+					return true;
+				}
+			} else {
+				if (element.equals(name)) {
+					return true;
+				}			
 			}
 		}
 		return false;
@@ -375,20 +395,23 @@ public class Markup {
 			int type = ((Integer) tokenTypes.get(j)).intValue();
 			String name = (String) tokenNames.get(j);
 			if (DEBUG) {System.out.println("Type: " + type + " Name: " + name +  " Token: " + token);}
+
+
+			boolean isUnbalanced;
+			boolean isInline = isElementType(name, ELEMENTS_INLINE);
+			boolean isLineEnder;
 	
 			boolean nextTokenIsInline = false;
+			int nextTokenType = -1;
 			int lookahead = j + 1;
+			String nextTokenName = null;
 			if (lookahead < tokens.size()) {
-				int nextTokenType = ((Integer) tokenTypes.get(lookahead)).intValue();
-				String nextTokenName = (String) tokenNames.get(lookahead);
-				if (nextTokenType == TT_TEXT || ((nextTokenType == TT_ELEMENT_START || nextTokenType == TT_ELEMENT_END || nextTokenType == TT_ELEMENT_MINIMAL) && isElementType(nextTokenName, ELEMENTS_INLINE))) {
+				nextTokenType = ((Integer) tokenTypes.get(lookahead)).intValue();
+				nextTokenName = (String) tokenNames.get(lookahead);
+				if (isElementType(nextTokenName, ELEMENTS_INLINE)) {
 					nextTokenIsInline = true;
 				}
 			}
-
-			boolean isUnbalanced;
-			boolean isInline;
-			boolean isLineEnder;
 	
 			switch (type) {
 				case TT_TEXT:
@@ -401,26 +424,24 @@ public class Markup {
 	
 				case TT_ELEMENT_START:
 					isUnbalanced = isElementType(name, ELEMENTS_UNBALANCED);
-					isInline = isElementType(name, ELEMENTS_INLINE);
 					isLineEnder = isElementType(name, ELEMENTS_LINE_ENDER);
-					if (!isLineEnder && isInline && nextTokenIsInline) {
+					if (!isLineEnder && isInline && (nextTokenIsInline || nextTokenType == TT_TEXT)) {
 						appendToBuffer(out, token, depth, false);
 					} else {
 						appendToBuffer(out, token, depth, true);
 					}
-					if (!isUnbalanced || !isInline) {
+					if (!isUnbalanced && !isInline) {
 						depth++;
 					}
 					break;
 	
 				case TT_ELEMENT_END:
 					isUnbalanced = isElementType(name, ELEMENTS_UNBALANCED);
-					isInline = isElementType(name, ELEMENTS_INLINE);
 					isLineEnder = isElementType(name, ELEMENTS_LINE_ENDER);
-					if (!isUnbalanced || !isInline) {
+					if (!isUnbalanced && !isInline) {
 						depth--;
 					}
-					if (!isLineEnder && isInline && nextTokenIsInline) {
+					if (!isLineEnder && isInline && (nextTokenIsInline || nextTokenType == TT_TEXT)) {
 						appendToBuffer(out, token, depth, false);
 					} else {
 						appendToBuffer(out, token, depth, true);
@@ -428,9 +449,8 @@ public class Markup {
 					break;
 	
 				case TT_ELEMENT_MINIMAL:
-					isInline = isElementType(name, ELEMENTS_INLINE);
 					isLineEnder = isElementType(name, ELEMENTS_LINE_ENDER);
-					if (!isLineEnder && isInline && nextTokenIsInline) {
+					if (!isLineEnder && isInline && (nextTokenIsInline || nextTokenType == TT_TEXT)) {
 						appendToBuffer(out, token, depth, false);
 					} else {
 						appendToBuffer(out, token, depth, true);
@@ -438,7 +458,7 @@ public class Markup {
 					break;
 	
 				case TT_COMMENT:
-					if (nextTokenIsInline) {
+					if ((nextTokenIsInline || nextTokenType == TT_TEXT)) {
 						appendToBuffer(out, token, depth, false);
 					} else {
 						appendToBuffer(out, token, depth, true);
