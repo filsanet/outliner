@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <opml version="1.0">
 <head>
-<title>E:\JOE 183\outliner\dox\JOE Developer Guide.en.opml</title>
+<title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide.en.opml</title>
 <dateCreated>Tue, 17 Jul 2001 02:49:03 GMT</dateCreated>
-<dateModified>Thu, 23 Aug 2001 04:43:15 GMT</dateModified>
+<dateModified>Fri, 24 Aug 2001 10:08:08 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>47</windowTop>
-<windowLeft>322</windowLeft>
-<windowBottom>730</windowBottom>
-<windowRight>1078</windowRight>
+<windowTop>52</windowTop>
+<windowLeft>223</windowLeft>
+<windowBottom>621</windowBottom>
+<windowRight>705</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -111,10 +111,13 @@
 		</outline>
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="Copyright">
+		<outline text="[note: copyright holders are listed in chronological order by date of first contribution to the document]"/>
 		<outline isEditable="true" isMoveable="true" text="Portions Copyright 2001 by Stanley Krute. All Rights Reserved."/>
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="Version">
-		<outline isEditable="true" isMoveable="true" text="2001.08.12.10.04.00"/>
+		<outline isEditable="true" isMoveable="true" text="2001.08.24.15.07.00">
+			<outline text="yyyy.mm.dd.hh.mm.ss"/>
+		</outline>
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="Cataloging Info">
 		<outline isEditable="true" isMoveable="true" text="Library of Congress Classification System"/>
@@ -639,6 +642,69 @@
 			</outline>
 			<outline isEditable="true" isMoveable="true" text="Updating specific project files"/>
 		</outline>
+		<outline isEditable="true" isMoveable="true" text="Debugging a NetBeans/Ant-built JOE">
+			<outline text="Compile with the debug option">
+				<outline text="example">
+					<outline text="from stan's build.xml's compile node">
+						<outline text="&lt;javac debug=&quot;true&quot; deprecation=&quot;false&quot; srcdir=&quot;.&quot;&gt;"/>
+					</outline>
+				</outline>
+			</outline>
+			<outline text="Invoke the runtime with debug hooks">
+				<outline text="the hooks">
+					<outline text="-Xdebug -Xnoagent  -Xrunjdwp:transport=dt_shmem,server=y,address=someName"/>
+					<outline text="for further detail, look here">
+						<outline text="http://debuggercore.netbeans.org/docs/VM-options.html"/>
+					</outline>
+				</outline>
+				<outline text="example">
+					<outline text="from stan's run.bat">
+						<outline text="java -cp %CP% -Xincgc -Xdebug -Xnoagent -Xrunjdwp:transport=dt_shmem,server=y,address=joeDebug com.organic.maynard.outliner.Outliner en"/>
+					</outline>
+				</outline>
+			</outline>
+			<outline text="In NetBeans, attach the debugger ">
+				<outline text="give the Debug:Attach... menu command"/>
+				<outline text="set options as shown in this example">
+					<outline text="http://JavaOutlineEditor.org/dox/images/debug-AttachToVM.gif"/>
+				</outline>
+			</outline>
+			<outline text="That's it -- let's test it out">
+				<outline text="set up a breakpoint">
+					<outline text="Open up the file Outliner.java in the NetBeans Source Editor window"/>
+					<outline text="Place the cursor in the first statement of the method Main"/>
+					<outline text="Give the Debug:Add Breakpoint... menu command"/>
+					<outline text="Fill in the fields in the Add Breakpoint dialog, and click OK">
+						<outline text="example">
+							<outline text="http://JavaOutlineEditor.org/dox/images/debug-AddBreakpoint.gif"/>
+						</outline>
+					</outline>
+				</outline>
+				<outline text="invoke the runtime with debug hooks">
+					<outline text="see above"/>
+				</outline>
+				<outline text="in NetBeans, attach the debugger">
+					<outline text="see above"/>
+				</outline>
+				<outline text="the app will break at your breakpoint"/>
+			</outline>
+			<outline text="To stop debugging">
+				<outline text="in NetBeans, give the Debug:Finish menu command"/>
+			</outline>
+			<outline text="Thanks to">
+				<outline text="Jan Jancura &lt;jan.jancura@czech.sun.com&gt;">
+					<outline text="He sent the following info. The specific info had some problems, but the link he provided gave me the info I needed to fix those">
+						<outline text="1) You would compile your sources with option -g (javac.exe -g ...)"/>
+						<outline text="2) you would add -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=2569,suspend=n options to your "/>
+						<outline text="java.exe line in your batch file."/>
+						<outline text="3) you can connect to running program: menu Debug / Attach / Default "/>
+						<outline text="Debugger (JPDA) / SocketAttach / port = 2569"/>
+						<outline text="see http://debuggercore.netbeans.org/docs/VM-options.html for more info, "/>
+						<outline text="please."/>
+					</outline>
+				</outline>
+			</outline>
+		</outline>
 		<outline isEditable="true" isMoveable="true" text="Checking In Changed Files">
 			<outline isEditable="true" isMoveable="true" text="Checking in a source file that you've changed">
 				<outline isEditable="true" isMoveable="true" text="cvs commit -m &quot;brief change summary note&quot; filename"/>
@@ -772,9 +838,7 @@
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="SourceForge"/>
 	<outline isEditable="true" isMoveable="true" text="Java JDK"/>
-	<outline isEditable="true" isMoveable="true" text="NetBeans">
-		<outline isEditable="true" isMoveable="true" text="How to debug JOE with the NetBeans step-thru debugger [Windows]"/>
-	</outline>
+	<outline isEditable="true" isMoveable="true" text="NetBeans"/>
 	<outline isEditable="true" isMoveable="true" text="Ant"/>
 	<outline isEditable="true" isMoveable="true" text="jBuilder"/>
 	<outline isEditable="true" isMoveable="true" text="Metrowerks Java "/>
