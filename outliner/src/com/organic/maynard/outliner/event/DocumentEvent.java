@@ -41,6 +41,11 @@ import com.organic.maynard.outliner.dom.Document;
  * @version $Revision$, $Date$
  */
 
+/**
+ * An event which encapsulates information about a document. Currently used
+ * by recieved by DocumentListeners so taht they may know which document has
+ * been modified.
+ */
 public class DocumentEvent {
 
 	// Instance Variables

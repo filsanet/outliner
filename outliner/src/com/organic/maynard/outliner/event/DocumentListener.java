@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
+ * Copyright (C) 2000, 2001, 2004 Maynard Demmon, maynard@organic.com
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or 
@@ -42,5 +42,12 @@ import com.organic.maynard.outliner.*;
  */
 
 public interface DocumentListener {
+	/**
+	 * This method is called on a DocumentListener when a Document has been
+	 * modified in some way. The provided DocumentEvent encapsulates all relevant
+	 * information relating to the modification. The DocumentRepository is the
+	 * current registry for DocumentListeners and the broadcaster of the
+	 * DocumentEvent messages.
+	 */
 	public void modifiedStateChanged(DocumentEvent e);
 }

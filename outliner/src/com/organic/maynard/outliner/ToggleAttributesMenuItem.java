@@ -37,39 +37,57 @@ package com.organic.maynard.outliner;
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.dom.*;
 import com.organic.maynard.outliner.event.*;
-
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
-
 import org.xml.sax.*;
 
-public class ToggleAttributesMenuItem extends AbstractOutlinerMenuItem implements OutlinerDocumentListener, ActionListener, GUITreeComponent {
+public class ToggleAttributesMenuItem extends AbstractOutlinerMenuItem implements DocumentRepositoryListener, OutlinerDocumentListener, ActionListener, GUITreeComponent {
 	
+	// Constants
+	/** 
+	 * The name of the XML attribute found in the gui_tree.xml file used to 
+	 * configure the SHOW_ATTRIBUTES pseudo constant.
+	 */
 	private static final String A_SHOW = "show";
+	/** 
+	 * The name of the XML attribute found in the gui_tree.xml file used to 
+	 * configure the HIDE_ATTRIBUTES pseudo constant.
+	 */
 	private static final String A_HIDE = "hide";
 	
+	// Pseudo Constants
+	/** 
+	 * Holds the "show attributes" text which is configured from the gui_tree.xml 
+	 * file. 
+	 */
 	private static String SHOW_ATTRIBUTES = "";
+	/** 
+	 * Holds the "hide attributes" text which is configured from the gui_tree.xml 
+	 * file. 
+	 */
 	private static String HIDE_ATTRIBUTES = "";
-
-
+	
+	
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {}
+	
+	public void documentRemoved(DocumentRepositoryEvent e) {}
+	
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
+		calculateTextState(e.getDocument());
+	}
+	
 	// OutlinerDocumentListener Interface
 	public void modifiedStateChanged(DocumentEvent e) {}
 	
 	public void attributesVisibilityChanged(OutlinerDocumentEvent e) {
-		if (e.getOutlinerDocument() != null) {
-			if (e.getOutlinerDocument().isShowingAttributes()) {
-				setShowMode(false);
-			} else {
-				setShowMode(true);
-			}
-		}	
+		calculateTextState(e.getOutlinerDocument());
 	}
-
+	
 	public void hoistDepthChanged(OutlinerDocumentEvent e) {}
-
-
+	
+	
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
@@ -79,26 +97,37 @@ public class ToggleAttributesMenuItem extends AbstractOutlinerMenuItem implement
 		
 		addActionListener(this);
 		Outliner.documents.addOutlinerDocumentListener(this);
+		Outliner.documents.addDocumentRepositoryListener(this);
 	}
-
-
+	
+	
 	// ActionListener Interface
+	/**
+	 * Toggles the showAttributes property of an OutlinerDocument each time the
+	 * action is performed. Also triggers an update of the MenuItem text. The
+	 * OutlinerDocument effected is the most recent document touched as determined
+	 * by checking with the DocumentRepository.
+	 */
 	public void actionPerformed(ActionEvent e) {
 		OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getMostRecentDocumentTouched();
 		if (doc.isShowingAttributes()) {
 			doc.showAttributes(false);
-			setShowMode(true);
 		} else {
 			doc.showAttributes(true);
-			setShowMode(false);
 		}
+		calculateTextState(doc);
 	}
 	
-	private void setShowMode(boolean b) {
-		if (b) {
-			setText(SHOW_ATTRIBUTES);
-		} else {
-			setText(HIDE_ATTRIBUTES);
+	/**
+	 * Determines the appropriate text to show in this MenuItem.
+	 */
+	private void calculateTextState(Document doc) {
+		if (doc != null && doc instanceof OutlinerDocument) {
+			if (((OutlinerDocument) doc).isShowingAttributes()) {
+				setText(HIDE_ATTRIBUTES);
+			} else {
+				setText(SHOW_ATTRIBUTES);
+			}
 		}
 	}
 }
