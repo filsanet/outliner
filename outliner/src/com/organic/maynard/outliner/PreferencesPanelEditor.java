@@ -70,8 +70,8 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		PreferenceString pCreateModDatesFormat = (PreferenceString) prefs.getPreference(Preferences.CREATE_MOD_DATES_FORMAT);
 
 		// Update Dates For Node Atts
-		NodeImpl.isSettingCreateModDates = pUseCreateModDates.cur;
-		NodeImpl.updateSimpleDateFormat(pCreateModDatesFormat.cur);
+		//NodeImpl.isSettingCreateModDates = pUseCreateModDates.cur;
+		//NodeImpl.updateSimpleDateFormat(pCreateModDatesFormat.cur);
 		
 		// Update the undo queue for all the documents immediatly if it is being downsized.
 		for (int i = 0; i < Outliner.openDocumentCount(); i++) {

@@ -95,9 +95,9 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	
 	public DummyJScrollPane dummy = null;
 	
+	public DocumentSettings settings = new DocumentSettings(this);
 	public JoeTree tree = Outliner.newTree(this);
 	public UndoQueue undoQueue = new UndoQueue(this);
-	public DocumentSettings settings = new DocumentSettings(this);
 	public HoistStack hoistStack = new HoistStack(this);
 	public AttributesPanel attPanel = new AttributesPanel(this);
 	

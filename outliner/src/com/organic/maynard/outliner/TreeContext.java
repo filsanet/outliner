@@ -39,9 +39,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-public class TreeContext 
-	extends AttributeContainerImpl 
-	implements JoeTree {
+public class TreeContext extends AttributeContainerImpl implements JoeTree {
 
 	// Private Instance Variables
 	private OutlinerDocument document = null;
@@ -55,14 +53,15 @@ public class TreeContext
 
 	// The Constructors
 	public TreeContext(OutlinerDocument document) {
-		this();
-		
 		this.document = document;
+
+		resetStructure();
+		
 		document.panel.layout.setNodeToDrawFrom(getEditingNode(),0);
 	}
 
 	public TreeContext() {
-		reset();
+		resetStructure();
 	}
 	
 	
@@ -497,6 +496,10 @@ public class TreeContext
 		rootNode = null;
 		attributes = null;
 		
+		resetStructure();	
+	}
+
+	private void resetStructure() {
 		// Create an empty Tree
 		setRootNode(new NodeImpl(this,"ROOT"));
 		rootNode.setHoisted(true);

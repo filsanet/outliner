@@ -78,6 +78,8 @@ public class DocumentInfo implements Serializable, Cloneable {
 	private boolean applyFontStyleForComments = true;
 	private boolean applyFontStyleForEditability = true;
 	private boolean applyFontStyleForMoveability = true;
+	private boolean useCreateModDates = true;
+	private String createModDatesFormat = null;
 	private String protocolName = null;
 	private boolean helpFile = false; // help system docs set this true [srk]
 	
@@ -104,6 +106,8 @@ public class DocumentInfo implements Serializable, Cloneable {
 			Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_COMMENTS).cur,
 			Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur,
 			Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur,
+			Preferences.getPreferenceBoolean(Preferences.USE_CREATE_MOD_DATES).cur,
+			Preferences.getPreferenceString(Preferences.CREATE_MOD_DATES_FORMAT).cur,
 			"",
 			false
 		);
@@ -130,6 +134,8 @@ public class DocumentInfo implements Serializable, Cloneable {
 		boolean applyFontStyleForComments,
 		boolean applyFontStyleForEditability,
 		boolean applyFontStyleForMoveability,
+		boolean useCreateModDates,
+		String createModDatesFormat,
 		String protocolName,
 		boolean helpFile 
 		) 
@@ -154,6 +160,8 @@ public class DocumentInfo implements Serializable, Cloneable {
 		setApplyFontStyleForComments(applyFontStyleForComments);
 		setApplyFontStyleForEditability(applyFontStyleForEditability);
 		setApplyFontStyleForMoveability(applyFontStyleForMoveability);
+		setUseCreateModDates(useCreateModDates);
+		setCreateModDatesFormat(createModDatesFormat);
 		setProtocolName(protocolName);
 		setHelpFile(helpFile) ;
 	}
@@ -182,6 +190,8 @@ public class DocumentInfo implements Serializable, Cloneable {
 			applyFontStyleForComments,
 			applyFontStyleForEditability,
 			applyFontStyleForMoveability,
+			useCreateModDates,
+			new String (createModDatesFormat),
 			new String (protocolName),
 			helpFile) ;
 	} // end method clone
@@ -298,6 +308,12 @@ public class DocumentInfo implements Serializable, Cloneable {
 	public boolean getApplyFontStyleForMoveability() {return this.applyFontStyleForMoveability;}
 	public void setApplyFontStyleForMoveability(boolean applyFontStyleForMoveability) {this.applyFontStyleForMoveability = applyFontStyleForMoveability;}
 
+	public boolean getUseCreateModDates() {return this.useCreateModDates;}
+	public void setUseCreateModDates(boolean useCreateModDates) {this.useCreateModDates = useCreateModDates;}
+
+	public String getCreateModDatesFormat() {return this.createModDatesFormat;}
+	public void setCreateModDatesFormat(String createModDatesFormat) {this.createModDatesFormat = createModDatesFormat;}
+
 	public String getProtocolName() {return this.protocolName;}
 	public void setProtocolName(String protocolName) { this.protocolName = protocolName;}
 	
@@ -396,7 +412,7 @@ public class DocumentInfo implements Serializable, Cloneable {
 		setFileFormat(document.settings.saveFormat.cur);
 
 		// These five settings are NOT set by SavAsMenuItem so we have to check if DocumentSettings are being used
-		if (document.settings.useDocumentSettings) {
+		if (document.settings.useDocumentSettings()) {
 			setOwnerName(document.settings.ownerName.cur);
 			setOwnerEmail(document.settings.ownerEmail.cur);
 			setApplyFontStyleForComments(document.settings.applyFontStyleForComments.cur);
@@ -409,6 +425,9 @@ public class DocumentInfo implements Serializable, Cloneable {
 			setApplyFontStyleForEditability(Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY).cur);
 			setApplyFontStyleForMoveability(Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur);
 		}
+
+		setUseCreateModDates(document.settings.getUseCreateModDates().cur); // Don't need to be inside since the conditonal code is in DocumentSettings for these two settings.
+		setCreateModDatesFormat(document.settings.getCreateModDatesFormat().cur);  // Don't need to be inside since the conditonal code is in DocumentSettings for these two settings.
 
 		String currentDateString = getCurrentDateTimeString();
 		

@@ -76,7 +76,7 @@ public class PreferencesPanelOpenAndSave extends AbstractPreferencesPanel implem
 		 OutlinerDocument doc = Outliner.getDocument(i);
 
 			// Only update files that do not have overriding document settings.
-			if (!doc.settings.useDocumentSettings) {
+			if (!doc.settings.useDocumentSettings()) {
 				doc.settings.fileProtocol.def = pFileProtocol.tmp;
 				doc.settings.fileProtocol.cur = pFileProtocol.tmp;
 				doc.settings.fileProtocol.tmp = pFileProtocol.tmp;

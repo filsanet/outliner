@@ -229,7 +229,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		OutlinerCellRendererImpl.pVerticalSpacing = Preferences.getPreferenceInt(Preferences.VERTICAL_SPACING).cur;
 		OutlinerCellRendererImpl.pShowLineNumbers = Preferences.getPreferenceBoolean(Preferences.SHOW_LINE_NUMBERS).cur;
 		
-		if (panel.doc.settings.useDocumentSettings) {
+		if (panel.doc.settings.useDocumentSettings()) {
 			OutlinerCellRendererImpl.pApplyFontStyleForComments = panel.doc.settings.applyFontStyleForComments.cur;
 			OutlinerCellRendererImpl.pApplyFontStyleForEditability = panel.doc.settings.applyFontStyleForEditability.cur;
 			OutlinerCellRendererImpl.pApplyFontStyleForMoveability = panel.doc.settings.applyFontStyleForMoveability.cur;

@@ -36,7 +36,6 @@ package com.organic.maynard.outliner;
 
 import java.util.*;
 import java.awt.*;
-import java.text.SimpleDateFormat;
 
 public class NodeImpl extends AttributeContainerImpl implements Node {
 
@@ -46,8 +45,8 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 	public static final String KEY_MODIFIED = "modified";
 	
 	// Class Fields
-	public static boolean isSettingCreateModDates = false;
-	private static SimpleDateFormat dateFormat = null;
+	//public static boolean isSettingCreateModDates = false;
+	//private static SimpleDateFormat dateFormat = null;
 		
 	// Instance Fields		
 	private JoeTree tree = null;
@@ -77,8 +76,8 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		this.value = value;
 		
 		// Set Creation Date
-		if (isSettingCreateModDates) {
-			setAttribute(KEY_CREATED, dateFormat.format(new Date()), true);
+		if (tree.getDocument() != null && tree.getDocument().settings.getUseCreateModDates().cur) {
+			setAttribute(KEY_CREATED, tree.getDocument().settings.dateFormat.format(new Date()), true);
 		}
 	}
 
@@ -122,13 +121,6 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		return nodeImpl;
 	}
 
-	// Date Methods
-	public static void updateSimpleDateFormat(String format) {
-		NodeImpl.dateFormat = new SimpleDateFormat(format);
-		if (!Preferences.getPreferenceString(Preferences.TIME_ZONE_FOR_SAVING_DATES).cur.equals("")) {
-			NodeImpl.dateFormat.setTimeZone(TimeZone.getTimeZone(Preferences.getPreferenceString(Preferences.TIME_ZONE_FOR_SAVING_DATES).cur));
-		}
-	}
 
 	// Statistics Methods
 	private int lineNumber = -1;
@@ -749,8 +741,8 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		this.value = value;
 		
 		// Set Modified Date
-		if (isSettingCreateModDates) {
-			setAttribute(KEY_MODIFIED, dateFormat.format(new Date()), true);
+		if (tree.getDocument() != null && tree.getDocument().settings.getUseCreateModDates().cur) {
+			setAttribute(KEY_MODIFIED, tree.getDocument().settings.dateFormat.format(new Date()), true);
 		}
 	}
 	public String getValue() {return value;}
@@ -814,15 +806,15 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		super.setAttribute(key, value, isReadOnly);
 		
 		// Set Modified Date
-		if (isSettingCreateModDates && !KEY_MODIFIED.equals(key) && !KEY_CREATED.equals(key)) {
-			super.setAttribute(KEY_MODIFIED, dateFormat.format(new Date()), true);
+		if (tree.getDocument() != null && tree.getDocument().settings.getUseCreateModDates().cur && !KEY_MODIFIED.equals(key) && !KEY_CREATED.equals(key)) {
+			super.setAttribute(KEY_MODIFIED, tree.getDocument().settings.dateFormat.format(new Date()), true);
 		}
 	}
 
 	public void removeAttribute(String key) {
 		// Set Modified Date
-		if (isSettingCreateModDates && !KEY_MODIFIED.equals(key) && !KEY_CREATED.equals(key)) {
-			super.setAttribute(KEY_MODIFIED, dateFormat.format(new Date()), true);
+		if (tree.getDocument() != null && tree.getDocument().settings.getUseCreateModDates().cur && !KEY_MODIFIED.equals(key) && !KEY_CREATED.equals(key)) {
+			super.setAttribute(KEY_MODIFIED, tree.getDocument().settings.dateFormat.format(new Date()), true);
 		}
 
 		super.removeAttribute(key);

@@ -213,7 +213,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 
 		// we're going to use the document settings
-		document.settings.useDocumentSettings = true;
+		document.settings.setUseDocumentSettings(true);
 
 		// Check to see what special features the outline has
 		// That's because some save/export formats don't support all special features
@@ -431,8 +431,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 	// open/import a file and store its outline into a tree
 	private static int openOrImportFileAndGetTree(JoeTree tree, DocumentInfo docInfo, FileProtocol protocol, int mode) {
 		// Stop updating mod/create dates
-		boolean tempIsSettingCreateModDates = NodeImpl.isSettingCreateModDates;
-		NodeImpl.isSettingCreateModDates = false;
+		boolean tempIsSettingCreateModDates = tree.getDocument().settings.getUseCreateModDates().cur;
+		tree.getDocument().settings.getUseCreateModDates().cur = false;
 		
 		// local vars
 		String msg = null;
@@ -442,7 +442,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		// try to open the file
 		if (!protocol.openFile(docInfo)) {
 			// Restore
-			NodeImpl.isSettingCreateModDates = tempIsSettingCreateModDates;
+			tree.getDocument().settings.getUseCreateModDates().cur = tempIsSettingCreateModDates;
 
 			return FAILURE;
 		} // end if
@@ -464,7 +464,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				System.out.println("FileMenu:OpenFile: bad mode parameter");
 
 				// Restore
-				NodeImpl.isSettingCreateModDates = tempIsSettingCreateModDates;
+				tree.getDocument().settings.getUseCreateModDates().cur = tempIsSettingCreateModDates;
 
 				return FAILURE;
 			} // end switch
@@ -500,7 +500,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		docInfo.setInputStream(null);
 		
 		// Restore
-		NodeImpl.isSettingCreateModDates = tempIsSettingCreateModDates;
+		tree.getDocument().settings.getUseCreateModDates().cur = tempIsSettingCreateModDates;
 
 		// return the results of our efforts
 		return openOrImportResult;
@@ -621,10 +621,18 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		newDoc.settings.applyFontStyleForMoveability.restoreCurrentToDefault();
 		newDoc.settings.applyFontStyleForMoveability.restoreTemporaryToDefault();
 
+		newDoc.settings.getUseCreateModDates().def = docInfo.getUseCreateModDates();
+		newDoc.settings.getUseCreateModDates().restoreCurrentToDefault();
+		newDoc.settings.getUseCreateModDates().restoreTemporaryToDefault();
+
+		newDoc.settings.getCreateModDatesFormat().def = docInfo.getCreateModDatesFormat();
+		newDoc.settings.getCreateModDatesFormat().restoreCurrentToDefault();
+		newDoc.settings.getCreateModDatesFormat().restoreTemporaryToDefault();
+
 		newDoc.settings.dateCreated = docInfo.getDateCreated();
 		newDoc.settings.dateModified = docInfo.getDateModified();
 
-		newDoc.settings.useDocumentSettings = true;
+		newDoc.settings.setUseDocumentSettings(true);
 
 		// make any final modal adjustments
 		switch (mode) {
