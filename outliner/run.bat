@@ -11,4 +11,4 @@ set CP=%CP%;%root_path%bsh-1_2b1.jar
 
 @echo on
 REM java -cp %CP% -Duser.language=ja -Duser.region=JP -Xincgc com.organic.maynard.outliner.Outliner ja
-c:\jdk1.3\bin\java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner en
+java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner en
