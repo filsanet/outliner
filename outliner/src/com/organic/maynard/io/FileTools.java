@@ -39,6 +39,10 @@ public class FileTools {
 	public static final String LINE_ENDING_UNIX = "\n";
 	public static final String LINE_ENDING_WIN = "\r\n";
 	public static final String LINE_ENDING_MAC = "\r";
+	
+	public static final char LF = '\n';
+	public static final char CR = '\r';
+	public static final char EOF = (char) -1;
 
 	public static final String DEFAULT_ENCODING = "ISO-8859-1";
 	
@@ -47,8 +51,6 @@ public class FileTools {
 
 
 	// Class Methods
-	public static final char EOF = (char) -1;
-	
 	public static void dumpArrayOfLinesToFile(File file, String encoding, ArrayList lines, ArrayList lineEndings) {
 		try {
 			// Create Parent Directories
@@ -76,70 +78,80 @@ public class FileTools {
 	
 	public static void readFileToArrayOfLines(File file, String encoding, ArrayList lines, ArrayList lineEndings) {
 		try {
-			FileInputStream fileInputStream = new FileInputStream(file);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream, encoding));
+			// First read the contents of the file into a StringBuffer.
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));
 			
-			StringBuffer lineBuf = new StringBuffer();
+			StringBuffer fileBuf = new StringBuffer();
 			
 			boolean done = false;
 			while (!done) {
-				char c = (char) reader.read();
+				char[] in = new char[8192];
+				
+				int result = reader.read(in, 0, 8192);
+				if (result == -1) {
+					done = true;
+				} else {
+					fileBuf.append(in, 0, result);
+				}
+			}
+			
+			// Now Process the contents into ArrayLists
+			StringBuffer lineBuf = new StringBuffer();
+			
+			for (int i = 0; i < fileBuf.length(); i++) {
+				char c = fileBuf.charAt(i);
 				
 				switch (c) {
-					case EOF:
+					case CR:
 						lines.add(lineBuf.toString());
 						lineBuf.setLength(0);
-						lineEndings.add(null);
-						done = true;
+						
+						i++;
+						if (i < fileBuf.length()) {
+							char lookahead = fileBuf.charAt(i);
+							switch (lookahead) {
+								case CR:
+									lineEndings.add(LINE_ENDING_MAC);
+									lines.add("");
+									lineEndings.add(LINE_ENDING_MAC);
+									break;
+								
+								case LF:
+									lineEndings.add(LINE_ENDING_WIN);
+									break;
+								
+								default:
+									lineEndings.add(LINE_ENDING_MAC);
+									lineBuf.append(lookahead);
+									if (i == fileBuf.length() - 1) {
+										lines.add(lineBuf.toString());
+										lineEndings.add(null);
+									}
+									break;
+							}
+						}	
 						break;
-						
-					case '\r':
+
+					case LF:
 						lines.add(lineBuf.toString());
 						lineBuf.setLength(0);
-						
-						char lookahead = (char) reader.read();
-						switch (lookahead) {
-							case EOF:
-								lineEndings.add("\r");
-								done = true;
-								break;
-							
-							case '\r':
-								lineEndings.add("\r");
-								lines.add("");
-								lineEndings.add("\r");
-								break;
-							
-							case '\n':
-								lineEndings.add("\r\n");
-								break;
-							
-							default:
-								lineEndings.add("\r");
-								lineBuf.append(lookahead);
-								break;
-						}
-						
-						break;
-						
-					
-					case '\n':
-						lines.add(lineBuf.toString());
-						lineBuf.setLength(0);
-						lineEndings.add("\n");
+						lineEndings.add(LINE_ENDING_UNIX);
 						break;
 					
 					default:
 						lineBuf.append(c);
+						if (i == fileBuf.length() - 1) {
+							lines.add(lineBuf.toString());
+							lineEndings.add(null);
+						}
 						break;
 				}
 			}
-			
-			fileInputStream.close();
+			reader.close();
 		} catch (FileNotFoundException fnfe) {
-			fnfe.printStackTrace();
+			System.out.println("Error: FileTools.readFileToArrayOfLines: " + fnfe.getMessage());
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Error: FileTools.readFileToArrayOfLines: " + e.getMessage());
 		}
 	}
 

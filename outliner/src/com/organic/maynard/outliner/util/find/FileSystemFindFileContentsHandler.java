@@ -68,7 +68,8 @@ public class FileSystemFindFileContentsHandler extends FileContentsInspector {
 	
 	// Constructors
 	public FileSystemFindFileContentsHandler(String query, FindReplaceResultsModel results, boolean isRegexp, boolean ignoreCase, String lineEnding) {
-		super(lineEnding);
+		super(lineEnding, FileContentsHandler.MODE_ARRAYS, Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur);
+		//super(lineEnding);
 		this.results = results;
 		this.isRegexp = isRegexp;
 		this.ignoreCase = ignoreCase;
@@ -81,6 +82,47 @@ public class FileSystemFindFileContentsHandler extends FileContentsInspector {
 	}
 	
 	// Overridden Methods
+	protected void inspectContents(File file, ArrayList lines, ArrayList lineEndings) {
+		for (int lineCount = 1; lineCount <= lines.size(); lineCount++) {
+			String line = (String) lines.get(lineCount - 1);
+			
+			if (isRegexp) {
+				input = new PatternMatcherInput(line);
+				try {
+					while(util.match(query, input)) {
+						result = util.getMatch();
+						results.addResult(new FindReplaceResult(file, lineCount, result.beginOffset(0), result.group(0), "", false));
+					}
+				} catch (MalformedPerl5PatternException e) {
+					System.out.println("MalformedPerl5PatternException: " + e.getMessage());
+					System.out.println("Valid expression: [m]/pattern/[i][m][s][x]");
+					return;
+				}
+			} else {
+				String searchLine = null;
+				if (ignoreCase) {
+					searchLine = line.toLowerCase();
+				} else {
+					searchLine = line;
+				}
+				
+				int start = 0;
+				int end = line.length();
+				
+				while (start < end) {
+					start = searchLine.indexOf(query, start);
+					if (start != -1) {
+						String match = StringTools.substring(line, start, start + query.length());
+						results.addResult(new FindReplaceResult(file, lineCount, start, match, "", false));
+						start = start + query.length();
+					} else {
+						start = end;
+					}
+				}
+			}
+		}
+	}
+
 	protected void inspectContents(File file, String contents) {
 		// Split it into lines
 		StringSplitter splitter = new StringSplitter(contents, getLineEnding());
@@ -116,7 +158,8 @@ public class FileSystemFindFileContentsHandler extends FileContentsInspector {
 				while (start < end) {
 					start = searchLine.indexOf(query, start);
 					if (start != -1) {
-						results.addResult(new FindReplaceResult(file, lineCount, start, line.substring(start,start + query.length()), "", false));
+						String match = StringTools.substring(line, start, start + query.length());
+						results.addResult(new FindReplaceResult(file, lineCount, start, match, "", false));
 						start = start + query.length();
 					} else {
 						start = end;
@@ -126,5 +169,6 @@ public class FileSystemFindFileContentsHandler extends FileContentsInspector {
 			
 			lineCount++;
 		}
-	}	
+	}
+
 }

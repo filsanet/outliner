@@ -175,12 +175,16 @@ public class FileSystemReplaceFileContentsHandler extends FileContentsHandler {
 					start = searchLine.indexOf(query, start);
 					
 					if (start != -1) {
-						// Record Match
-						String match = line.substring(start, start + query.length());
+						// Get New Strings the memory efficient way.
+						String match = StringTools.substring(line, start, start + query.length());
+						String lineStart = StringTools.substring(line, 0, start);
+						String lineEnd = StringTools.substring(line, start + query.length(), line.length());
+						String searchLineStart = StringTools.substring(searchLine, 0, start);
+						String searchLineEnd = StringTools.substring(searchLine, start + query.length(), searchLine.length());
 						
 						// Apply change to line
-						line = line.substring(0, start) + replacement + line.substring(start + query.length(), line.length());
-						searchLine = searchLine.substring(0, start) + replacement + searchLine.substring(start + query.length(), searchLine.length());
+						line = lineStart + replacement + lineEnd;
+						searchLine = searchLineStart + replacement + searchLineEnd;
 						
 						// Add Result
 						results.addResult(new FindReplaceResult(file, lineCount, start, match, replacement, true));

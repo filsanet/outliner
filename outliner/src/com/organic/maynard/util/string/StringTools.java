@@ -40,6 +40,18 @@ public class StringTools {
 	public StringTools() {}
 	
 	
+	public static String substring(String s, int beginIndex, int endIndex) throws IndexOutOfBoundsException {
+		// Discovered somthing new. String.substring is basically a 
+		// memory leak. See: http://developer.java.sun.com/developer/bugParade/bugs/4637640.html for more details.
+		// Use string.getChars to avoid this whenever you will be keeping the substring around for a while.
+		// basically what happens is the substring has a ref to the original string so it doesn't get GC'd.
+		int length = endIndex - beginIndex;
+		char[] charArray = new char[length];
+		s.getChars(beginIndex, endIndex, charArray, 0);
+		return new String(charArray);
+	}
+	
+	
 	// Class Methods
 	public static String replace(String in, String match, String replacement) {
 		// [srk] bug fix

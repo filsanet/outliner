@@ -74,6 +74,7 @@ public class ProgressDialog extends AbstractOutlinerJDialog implements ActionLis
 			new WindowAdapter() {
 				public void windowClosing(WindowEvent e) {
 					setCanceled(true);
+					close(); // Explicit close since the GUI might be stuck if an exception occured in the thread responsible for handling the cancel.
 				}
 			}
 		);

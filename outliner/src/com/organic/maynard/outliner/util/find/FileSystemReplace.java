@@ -78,5 +78,11 @@ import java.util.*;
 		if (status == DirectoryCrawler.SUCCESS) {
 			// TBD: handle errors
 		}
+		
+		// Cleanup so things get GC'd
+		crawler.setFileHandler(null);
+		crawler.setFileFilter(null);
+		crawler.setDirectoryFilter(null);
+		crawler.setProgressDialog(null);
 	}
 }

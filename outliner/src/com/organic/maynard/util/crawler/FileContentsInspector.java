@@ -31,10 +31,20 @@
 
 package com.organic.maynard.util.crawler;
 
+import java.util.*;
 import java.io.*;
 import com.organic.maynard.io.*;
 
 public class FileContentsInspector implements FileHandler {
+	// Constants
+	public static final int MODE_UNKNOWN = -1;
+	public static final int MODE_BIG_CHUNK = 1;
+	public static final int MODE_ARRAYS = 2;
+
+	// Declare Fields
+	private int processMode = MODE_UNKNOWN;
+	private String openEncoding = "UTF-8";
+
 
 	// Declare Fields
 	private String lineEnding = null;
@@ -42,21 +52,46 @@ public class FileContentsInspector implements FileHandler {
 	
 	// Constructors
 	public FileContentsInspector(String lineEnding) {
-		setLineEnding(lineEnding);
+		this(lineEnding, MODE_BIG_CHUNK, "UTF-8");
 	}
-	
+
+	public FileContentsInspector(
+		String lineEnding, 
+		int processMode, 
+		String openEncoding
+	) {
+		setLineEnding(lineEnding);
+		setProcessMode(processMode);
+		setOpenEncoding(openEncoding);
+	}
+
 	
 	// Accessors
 	public String getLineEnding() {return lineEnding;}
 	public void setLineEnding(String lineEnding) {this.lineEnding = lineEnding;}
 
+	public int getProcessMode() {return processMode;}
+	public void setProcessMode(int processMode) {this.processMode = processMode;}
+
+	public String getOpenEncoding() {return openEncoding;}
+	public void setOpenEncoding(String openEncoding) {this.openEncoding = openEncoding;}
+
 	
 	// FileHandler Interface
 	public void handleFile(File file) {
-		inspectContents(file, FileTools.readFileToString(file, lineEnding));
+		if (getProcessMode() == MODE_BIG_CHUNK) {
+			inspectContents(file, FileTools.readFileToString(file, lineEnding));
+		} else if (getProcessMode() == MODE_ARRAYS) {
+			ArrayList lines = new ArrayList();
+			ArrayList lineEndings = new ArrayList();
+			FileTools.readFileToArrayOfLines(file, getOpenEncoding(), lines, lineEndings);
+			inspectContents(file, lines, lineEndings);
+		} else {
+			System.out.println("Error: Unknown process mode.");
+		}
 	}
 	
-	protected void inspectContents(File file, String contents) {
-		System.out.println("Contents: " + contents);
-	}
+	protected void inspectContents(File file, String contents) {}
+
+	protected void inspectContents(File file, ArrayList lines, ArrayList lineEndings) {}
 }
