@@ -85,7 +85,7 @@ public class WebFile extends File
 
 		try
 		{
-			BufferedReader r = httpPost(url, getPath(), "exists", "1");
+			BufferedReader r = new BufferedReader(new InputStreamReader(httpPost(url, getPath(), "exists", "1")));
 			String result = br2string(r);
 			if ("1".equals(result)) {
 				return true;
@@ -112,8 +112,7 @@ public class WebFile extends File
 			dest.getPath());
 		try
 		{
-			BufferedReader r = httpPost(url,  getPath(),
-										"rename", dest.getName());
+			BufferedReader r = new BufferedReader(new InputStreamReader(httpPost(url,  getPath(), "rename", dest.getName())));
 			String result = br2string(r);
 			if ("1".equals(result)) {
 				dbg("sucess");
@@ -139,7 +138,7 @@ public class WebFile extends File
 
 		try
 		{
-			BufferedReader r = httpPost(url, getPath(), "mkdir", "1");
+			BufferedReader r = new BufferedReader(new InputStreamReader(httpPost(url, getPath(), "mkdir", "1")));
 			String result = br2string(r);
 			if ("1".equals(result)) {
 				return true;
@@ -166,7 +165,8 @@ public class WebFile extends File
 
 		try
 		{
-			BufferedReader r = httpPost(url, getPath(), null, null);
+			BufferedReader r = new BufferedReader(new InputStreamReader(httpPost(url, getPath(), null, null)));
+			
 			String s;
 
 			while((s = r.readLine()) != null)
@@ -188,7 +188,7 @@ public class WebFile extends File
 	 * Opens the given file.  These were made static since Outliner
 	 * wants to pass strings rather than a file.
 	 */
-	public static BufferedReader open(String host, String path)
+	public static InputStream open(String host, String path)
 		throws IOException
 	{
 		dbg("open: " + path);
@@ -199,14 +199,14 @@ public class WebFile extends File
 	 * Saves a file to the web server.  These were made static since
 	 * Outliner wants to pass strings rather than a file.
 	 */
-	public static boolean save(String url, String path, String text)
+	public static boolean save(String url, String path, byte[] bytes)
 		throws IOException
 	{
 		dbg("save, url=" + url + " path=" + path);
 
 		try
 		{
-			BufferedReader r = httpPost(url, path, "save", text);
+			BufferedReader r = new BufferedReader(new InputStreamReader(httpPost(url, path, "save", new String(bytes))));
 			String result = br2string(r);
 			if ("1".equals(result)) {
 				return true;
@@ -297,7 +297,7 @@ public class WebFile extends File
 	 * @return the data returned from the web server, could either
 	 * be a boolean type result, like "1" or "0", or the actual data.
 	 */
-	public static BufferedReader httpPost(String url, String path,
+	public static InputStream httpPost(String url, String path,
 										  String name, String value)
 
 		throws IOException
@@ -326,7 +326,7 @@ public class WebFile extends File
 		}
 		out.close();
 
-		return new BufferedReader(new InputStreamReader(c.getInputStream()));
+		return c.getInputStream();
 	}
 
 	/**
