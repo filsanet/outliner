@@ -98,19 +98,19 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	
 	
 	// Static Accessors
-	public static ArrayList getDocInfoList() {
+	static ArrayList getDocInfoList() {
 		return docInfoList;
 	}
 	
-	public static int getSizeOfDocInfoList() {
+	static int getSizeOfDocInfoList() {
 		return docInfoList.size();
 	}
 	
-	public static void setDocInfoList(ArrayList list) {
+	static void setDocInfoList(ArrayList list) {
 		docInfoList = list;
 	}
 	
-	public static void addDocumentInfo(DocumentInfo docInfo) {
+	static void addDocumentInfo(DocumentInfo docInfo) {
 		docInfoList.add(docInfo);
 	}
 
@@ -125,21 +125,21 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		
 		setEnabled(false);
 
-		// Add this menuItem to the parent menu.
+		// Add us to our parent menu.
 		JMenu menu = (JMenu) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 2);
 		menu.add(this);
 		
-		// Try to load the list of recent files from disk.
+		// Try to load the docInfoList from disk.
 		docInfoList = (ArrayList) ReadObjectFromFile(Outliner.RECENT_FILES_FILE);
 		
 		// if nothing was read from disk
 		if (docInfoList == null) {
-			// start a new list
+			// start a new docInfoList
 			docInfoList = new ArrayList();
 		} // end if
 		
 		// apply our display settings
-		// this will also populate the menu
+		// this also populates the menu correctly
 		applyDisplaySettings() ;
 		
 		
@@ -148,44 +148,132 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	// call on our UI panel to apply the latest display options
 	private void applyDisplaySettings () {
 		
+		// grab ahold of our prefs panel
 		PreferencesPanelRecentFiles prefsPanel = (PreferencesPanelRecentFiles) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_PANEL_RECENT_FILES);
+
+		// have it apply its current settings
 		prefsPanel.applyCurrentToApplication() ;
 		
 	} // end method applyDisplaySettings
 	
-	// set display options -- rebuild menu and alfaAscii structures if necessary
+	// set display options -- adjust menu and treeset structures as necessary
 	// called from PreferencesPanelRecentFiles
 	void setDisplayOptions (int ordering, int nameForm, int direction) {
-		// has anything changed ?
-		boolean change = false ;
-		
-		// see if we've got a change
-		change = (currentDisplayOrdering != ordering)
+		// we are lazy, only work on change
+		boolean orderingChange = (currentDisplayOrdering != ordering) ;
+		boolean change = orderingChange
 			|| (currentDisplayNameForm !=nameForm)
 			|| (currentDisplayDirection != direction) ;
 		
-		// if we do have a change ...
+		// if they do ...
 		if (change) {
 			// apply the new values
 			currentDisplayOrdering = ordering ;
 			currentDisplayNameForm = nameForm ;
 			currentDisplayDirection = direction ;
 			
-			// populate the menu
-			populateMenu() ;
+			// if necessary, adjust the tree sets
+			if (orderingChange) {
+				adjustTreeSets() ;
+			} // end if
+			
+			// adjust the menu items
+			adjustMenuItems() ;
 			
 		} // end if we have a change
 		
 	} // end method setDisplayOptions
 	
-	// populate the menu with file designators
-	private void populateMenu () {
+	// ensure that the treesets contain the necessary info
+	private void adjustTreeSets () {
+		
+		// if we don't have trees, leave
+		if ( (! ensurePathnameTree())  ||  (! ensureFilenameTree()) ) {
+			return ;
+		} // end if
+		
+		// empty them out
+		pathnameTree.clear() ;
+		filenameTree.clear() ;
+		
+		// if this ordering does not use them, leave
+		if ( (currentDisplayOrdering != ALFA_ORDER)  
+			&&  (currentDisplayOrdering != ASCII_ORDER) ) {
+			return ;
+		} // end if
+		
+		// if docInfoList is empty, leave
+		int numEntries = docInfoList.size() ;
+		if (numEntries == 0) {
+			return ;
+		} // end if
+				
+		// okay, we have some docInfoList entries
+		// let's go mine their data
+		DocumentInfo docInfo = null ;
+		StrungDocumentInfo strungDocInfo = null ;
+		
+		// for each item in docInfoList
+		for (int i = 0; i < numEntries; i++) {
+			// grab the docInfo
+			docInfo = (DocumentInfo) docInfoList.get(i) ;
+			
+			// package the docInfo up with the pathname
+			strungDocInfo= new StrungDocumentInfo(docInfo.getPath(), docInfo) ;
+			
+			// set ascii/alfa switch
+			switch (currentDisplayOrdering) {
+			
+			case ALFA_ORDER:
+			default:
+				strungDocInfo.setIgnoreCase(true) ;
+				break ;
+				
+			case ASCII_ORDER:
+				strungDocInfo.setIgnoreCase(false) ;
+				break ;
+				
+			} // end switch
+			
+			// add it to the pathname treeset
+			pathnameTree.add(strungDocInfo) ;
+			
+			// package the docInfo up with the filename
+			strungDocInfo= new StrungDocumentInfo(
+				StanStringTools.getFileNameFromPathName(docInfo.getPath()),
+				docInfo) ;
+			
+			// set ascii/alfa switch
+			switch (currentDisplayOrdering) {
+			
+			case ALFA_ORDER:
+			default:
+				strungDocInfo.setIgnoreCase(true) ;
+				break ;
+				
+			case ASCII_ORDER:
+				strungDocInfo.setIgnoreCase(false) ;
+				break ;
+				
+			} // end switch
+			
+			// add it to the filename treeset
+			filenameTree.add(strungDocInfo) ;
+			
+		} // end for
+		
+	} // end method adjustTreeSets
+
+		
+	// ensure that this menu contains the proper set of menu items
+	private void adjustMenuItems () {
+		// local vars
 		StrungDocumentInfo sdi = null ;
 		
-		// clear out any existing menu entries
+		// start with a clean slate
 		removeAll() ;
 		
-		// if docInfoList is empty, do nothing
+		// if docInfoList is empty, leave
 		if (docInfoList.size() == 0) {
 			return ;
 		} // end if
@@ -197,7 +285,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		default:
 			// add each item in doc list order to the menu
 			for (int i = 0, size=docInfoList.size(); i < size; i++) {
-				addFileName((DocumentInfo) docInfoList.get(i));
+				addMenuItemForFileToMenu((DocumentInfo) docInfoList.get(i));
 			} // end for
 
 			break ; // case CHRONO_ORDER
@@ -212,7 +300,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 				// add each item in pathname tree order to the menu 
 				for (Iterator i = pathnameTree.iterator(); i.hasNext();) {
 					sdi = (StrungDocumentInfo) i.next();
-					addFileName(sdi.getDocumentInfo());
+					addMenuItemForFileToMenu(sdi.getDocumentInfo());
 				} // end for
 			
 				break ;
@@ -221,49 +309,47 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 				// add each item in filename tree order to the menu 
 				for (Iterator i = filenameTree.iterator(); i.hasNext();) {
 					sdi = (StrungDocumentInfo) i.next();
-					addFileName(sdi.getDocumentInfo());
+					addMenuItemForFileToMenu(sdi.getDocumentInfo());
 				} // end for
 			
 				break ;
-		
 			} // end switch on nameform
-			
 			
 			break ;
 			
 		} // end switch on currentDisplayOrdering	
 		
-	} // end method populateMenu
+	} // end method adjustMenuItems
 		
 
 	public void endSetup(AttributeList atts) {}
 
-	// add a file to the menu list
-	private void addFileName(DocumentInfo docInfo) {
-		
-		RecentFilesListItem item = null ;
+	// add a menu item for a file to the menu
+	private void addMenuItemForFileToMenu(DocumentInfo docInfo) {
+		// local vars
+		RecentFilesListItem menuItem = null ;
 		StrungDocumentInfo strungItem = null ;
 		
-		// switch on nameform to create item
+		// switch on nameform to create menu item
 		switch (currentDisplayNameForm) {
 			
 		case FULL_PATHNAME: 
 		default:
-			// create a list item
-			item = new RecentFilesListItem(docInfo.getPath(), docInfo);
+			// create a menu item
+			menuItem = new RecentFilesListItem(docInfo.getPath(), docInfo);
 			break ;
 			
 		case JUST_FILENAME:
 			// create a list item
-			item = new RecentFilesListItem(
+			menuItem = new RecentFilesListItem(
 				StanStringTools.getFileNameFromPathName(docInfo.getPath()), 
 				docInfo);
 			break ;
 		
 		} // end switch on nameform
 		
-		// we want it to listen to this
-		item.addActionListener(this);
+		// we want this menu to listen to the menu item
+		menuItem.addActionListener(this);
 		
 		// switch on ordering
 		switch (currentDisplayOrdering) {
@@ -307,13 +393,13 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 				
 			case TOP_TO_BOTTOM:
 			default:
-				// append that item to the menu
-				add(item);
+				// append the menu item to the menu
+				add(menuItem);
 				break ;
 				
 			case BOTTOM_TO_TOP:
-				// prepend that item to the menu
-				insert(item,0);
+				// prepend the menu item to the menu
+				insert(menuItem,0);
 				break ;
 				
 			}  // end switch on direction
@@ -324,12 +410,12 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		// since we've got at least one item on our menu, we're enabled
 		setEnabled(true);
 
-	} // end method addFileName
+	} // end method addMenuItemForFileToMenu
 
 	private static boolean ensureFilenameTree () {
 		
 		// if we're pointin' to a treeset, we're cool
-		if ( (filenameTree != null) && (filenameTree.getClass().getName() == "TreeSet") ) {
+		if ( (filenameTree != null) && (filenameTree.getClass().getName().equals("TreeSet")) ) {
 			return true ;
 		} // end if
 		
@@ -337,14 +423,14 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		filenameTree = new TreeSet() ;
 		
 		// return a result
-		return ( (filenameTree != null) && (filenameTree.getClass().getName() == "TreeSet") ) ;
+		return ( (filenameTree != null) && (filenameTree.getClass().getName().equals("TreeSet")) ) ;
 		
 	} // end method ensureFilenameTree
 
 	private static boolean ensurePathnameTree () {
 		
 		// if we're pointin' to a treeset, we're cool
-		if ( (pathnameTree != null) && (pathnameTree.getClass().getName() == "TreeSet") ) {
+		if ( (pathnameTree != null) && (pathnameTree.getClass().getName().equals("TreeSet")) ) {
 			return true ;
 		} // end if
 		
@@ -352,13 +438,13 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		pathnameTree = new TreeSet() ;
 		
 		// return a result
-		return ( (pathnameTree != null) && (pathnameTree.getClass().getName() == "TreeSet") ) ;
+		return ( (pathnameTree != null) && (pathnameTree.getClass().getName().equals("TreeSet")) ) ;
 		
 	} // end method ensurePathnameTree
 
 	// Static methods
 	
-	// this method is called when a file is open or imported
+	// this method is called by outsiders when a file is open or imported
 	static void addFileNameToList(DocumentInfo docInfo) {
 		String filename = docInfo.getPath();
 		
@@ -387,7 +473,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 			docInfoList.add(docInfo);
 
 			// Add to menus
-			menu.addFileName(docInfo);
+			menu.addMenuItemForFileToMenu(docInfo);
 			
 		} // end if this item is not yet in the list	
 		
@@ -453,7 +539,7 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		}		
 	}
 
-	public static boolean isFileNameUnique(String filename) {
+	private static boolean isFileNameUnique(String filename) {
 		
 		for (int i = 0; i < docInfoList.size(); i++) {
 			if (filename.equals(((DocumentInfo) docInfoList.get(i)).getPath())) {

@@ -52,7 +52,7 @@ public class StrungDocumentInfo
 	// Instance Fields		
 	private DocumentInfo docInfo = null;
 	private String string = null ;
-	boolean ignoreCase = false ;
+	private boolean ignoreCase = false ;
 
 	// The Constructors
 	public StrungDocumentInfo(
@@ -81,6 +81,9 @@ public class StrungDocumentInfo
 		docInfo = someDocInfo ;
 	} // end method setDocumentInfo
 	
+	public void setIgnoreCase (boolean newSetting) {
+		ignoreCase = newSetting ;
+	} // end method setIgnoreCase
 	
 	// Comparable interface methods
 	public int compareTo(Object obj) {
