@@ -9,14 +9,14 @@ Windows Installation:
 
 2) On the Windows platform, run.bat gets JOE going. 
 
-  Run.bat opens in an MS-DOS window whose environment space is set to a 
-  default value of 256 bytes. 
+   Run.bat opens in an MS-DOS window whose environment space is set to a 
+   default value of 256 bytes. 
 
-  On non-trivial Windows systems, that may not be enough. Without enough 
-  environment space, JOE won't run, because the SET statements in run.bat 
-  will fail.  
+   On non-trivial Windows systems, that may not be enough. Without enough 
+   environment space, JOE won't run, because the SET statements in run.bat 
+   will fail.  
 
-  The fix: set run.bat so that it has lots of environment space: 
+   The fix: set run.bat so that it has lots of environment space: 
 
     [1] Right-click run.bat. 
     [2] A popup menu appears. 
@@ -32,4 +32,13 @@ Windows Installation:
 
 UNIX Installation:
 
-1) Edit run_joe.sh so the INSTALL_DIR points to the directory you installed JOE into.
+1) Edit run_joe.sh so that INSTALL_DIR points to the directory you installed JOE into.
+   Make sure to make it executable and put it somewhere in your PATH. 
+
+   One thing to note is, things like 
+
+   run_joe ../../file.opml 
+
+   won't work. because it needs to change in to the JOE directory to run it, the script 
+   cuts off any path info, and then adds on the current directory, so it always passes 
+   $CWD/filename.opml to JOE. 
