@@ -41,8 +41,8 @@ import com.organic.maynard.util.string.Replace;
 
 public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 
+	// private instance vars
 	private OutlinerFileChooser chooser = null;
-	
 	private boolean isInitialized = false;
 	
 	// Constructors
@@ -84,11 +84,9 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 		if (option == JFileChooser.APPROVE_OPTION) {
 			String filename = chooser.getSelectedFile().getPath();
 			
-			// part of proposed bug # 495512 fix    SRK    12/25/01 2:41PM
 			String lineEnd ;
 			String encoding ;
 			String fileFormat ;
-			// end of part of proposed bug # 495512 fix
 			
 			if (!Outliner.isFileNameUnique(filename) && (!filename.equals(document.getFileName()))) {
 				String msg = GUITreeLoader.reg.getText("message_cannot_save_file_already_open");
@@ -100,15 +98,6 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 			}
 			
 			// Pull Preference Values from the file chooser
-			
-			/* bug # 495512  - the following code always assumes export    SRK   12/25/01 2:43PM
-			String lineEnd = chooser.getExportLineEnding();
-			String encoding = chooser.getExportEncoding();
-			String fileFormat = chooser.getExportFileFormat();
-			end bug # 495512 */
-			
-			// part of bug # 495512 fix    switch on type   SRK   12/25/01 2:43PM
-			// pull proper preference values from the file chooser
 			switch (type) {
 				case FileProtocol.SAVE:
 					lineEnd = chooser.getSaveLineEnding();
@@ -125,7 +114,6 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 					return false;
 				} // end switch
 				
-			// end of part of proposed bug # 495512 fix
 
 			// Update the document settings
 			document.settings.lineEnd.def = lineEnd;
@@ -179,20 +167,17 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 		// Handle User Input
 		if (option == JFileChooser.APPROVE_OPTION) {
 			String filename = chooser.getSelectedFile().getPath();
-
-			String lineEnding ;
+			
 			String encoding ;
 			String fileFormat ;
 
 			// pull proper preference values from the file chooser
 			switch (type) {
 				case FileProtocol.OPEN:
-//					lineEnding = chooser.getOpenLineEnding();
 					encoding = chooser.getOpenEncoding();
 					fileFormat = chooser.getOpenFileFormat();
 					break ;
 				case FileProtocol.IMPORT:
-//					lineEnding = chooser.getImportLineEnding() ;
 					encoding = chooser.getImportEncoding();
 					fileFormat = chooser.getImportFileFormat();
 					break ;
@@ -204,7 +189,6 @@ public class LocalFileSystemFileProtocol extends AbstractFileProtocol {
 			
 			// store data into docInfo structure
 			docInfo.setPath(filename);
-//			docInfo.setLineEnding(lineEnding);
 			docInfo.setEncodingType(encoding);
 			docInfo.setFileFormat(fileFormat);
 			

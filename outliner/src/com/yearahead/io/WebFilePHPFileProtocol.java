@@ -43,8 +43,8 @@ import javax.swing.filechooser.*;
 
 public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 
+	// private instance vars
 	private OutlinerFileChooser chooser = null;
-	
 	private boolean isInitialized = false;
 	
 	// Constructors
@@ -71,7 +71,6 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 	public boolean selectFileToSave(OutlinerDocument document, int type) {
 		lazyInstantiation();
 		
-		// Setup the File Chooser
 		String hostname = null;
 		try {
 			URL url = new URL(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur);
@@ -80,16 +79,17 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 			System.out.println("IOException: " + e.getMessage());
 			return false;
 		}
-		
+		// Setup the File Chooser to save or export
 		if (type == FileProtocol.SAVE) {
 			chooser.configureForSave(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
 		} else if (type == FileProtocol.EXPORT) {
 			chooser.configureForExport(document, getName(), Preferences.getPreferenceString(Preferences.MOST_RECENT_OPEN_DIR).cur);
 		} else {
-			System.out.println("ERROR: invalid save type used. (" + type +")");
+			System.out.println("ERROR: invalid save/export type used. (" + type +")");
 			return false;
 		}
 
+		// run the File chooser
 		int option = chooser.showSaveDialog(Outliner.outliner);
 				
 		// Handle User Input
@@ -155,7 +155,6 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 	public boolean selectFileToOpen(DocumentInfo docInfo, int type) {
 		lazyInstantiation();
 		
-		// Setup the File Chooser
 		String hostname = null;
 		try {
 			URL url = new URL(Preferences.getPreferenceString(Preferences.WEB_FILE_URL).cur);
@@ -164,22 +163,45 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 			System.out.println("IOException: " + e.getMessage());
 			return false;
 		}
-		if (type == FileProtocol.OPEN) {
-			chooser.configureForOpen(getName(), hostname);
-		} else if (type == FileProtocol.IMPORT) {
-			chooser.configureForImport(getName(), hostname);
-		} else {
-			System.out.println("ERROR: invalid open/import type used. (" + type +")");
-			return false;
-		}
+		// Setup the File Chooser to open or import
+		switch (type) {
+			case FileProtocol.OPEN:
+				chooser.configureForOpen(getName(), hostname);
+				break ;
+			case FileProtocol.IMPORT:
+				chooser.configureForImport(getName(), hostname);
+				break ;
+			default:
+				System.out.println("ERROR: invalid open/import type used. (" + type +")");
+				return false;
+			} // end switch
+
+		// run the File Chooser
 		int option = chooser.showOpenDialog(Outliner.outliner);
 
 		// Handle User Input
 		if (option == JFileChooser.APPROVE_OPTION) {
 			String filename = chooser.getSelectedFile().getPath();
-			String encoding = chooser.getOpenEncoding();
-			String fileFormat = chooser.getOpenFileFormat();
 			
+			String encoding ;
+			String fileFormat ;
+			
+			// pull proper preference values from the file chooser
+			switch (type) {
+				case FileProtocol.OPEN:
+					encoding = chooser.getOpenEncoding();
+					fileFormat = chooser.getOpenFileFormat();
+					break ;
+				case FileProtocol.IMPORT:
+					encoding = chooser.getImportEncoding();
+					fileFormat = chooser.getImportFileFormat();
+					break ;
+				default:
+					System.out.println("ERROR: invalid open/import type used. (" + type +")");
+					return false;
+				} // end switch
+
+			// store data into docInfo structure
 			docInfo.setPath(filename);
 			docInfo.setEncodingType(encoding);
 			docInfo.setFileFormat(fileFormat);
