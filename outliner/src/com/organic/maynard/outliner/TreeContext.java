@@ -225,21 +225,18 @@ public class TreeContext {
 	}
 	
 	public void removeNode(Node node) {
-		node.removeFromVisibleNodesCache(this);
+		node.removeFromVisibleNodesCache();
 	}
 
 	public void insertNode(Node node) {
 		// Find the first Ancestor that is in the cache or Root
 		Node ancestor = node.getYoungestVisibleAncestor();
-		if (ancestor == null) {
-			ancestor = rootNode;
-		}
 		
 		// Expand all nodes in the path down to the node
 		node.expandAllAncestors();
 		
 		// Walk the tree Downwards inserting all expanded nodes and their children
-		ancestor.insertChildrenIntoVisibleNodesCache(this,visibleNodes.indexOf(ancestor));
+		ancestor.insertChildrenIntoVisibleNodesCache(visibleNodes.indexOf(ancestor));
 	}
 
 	public int insertNodeAfter(Node existingNode, Node newNode) {

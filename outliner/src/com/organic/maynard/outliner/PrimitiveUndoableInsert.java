@@ -57,6 +57,4 @@ public class PrimitiveUndoableInsert implements Undoable {
 		node.getTree().insertNode(node);
 		node.getTree().addNodeToSelection(node);
 	}
-	
-	public int getType() {return Undoable.PRIMITIVE_INSERT_TYPE;}
 }

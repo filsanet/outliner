@@ -46,7 +46,7 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 	}
 
 	public void undo() {
-		Node youngestNode = ((PrimitiveUndoableMove) primitives.elementAt(0)).getNode();
+		Node youngestNode = ((PrimitiveUndoableMove) primitives.get(0)).getNode();
 		TreeContext tree = youngestNode.getTree();
 
 		// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
@@ -57,7 +57,7 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 		tree.setSelectedNodesParent(parent);
 
 		for (int i = primitives.size() - 1; i >= 0; i--) {
-			((PrimitiveUndoableMove) primitives.elementAt(i)).undo();
+			((PrimitiveUndoableMove) primitives.get(i)).undo();
 		}
 
 		// Record the EditingNode
@@ -80,7 +80,7 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 	}
 	
 	public void redo() {
-		Node youngestNode = ((PrimitiveUndoableMove) primitives.elementAt(0)).getNode();
+		Node youngestNode = ((PrimitiveUndoableMove) primitives.get(0)).getNode();
 		TreeContext tree = youngestNode.getTree();
 
 		// Store nodeToDrawFrom if neccessary. Used when the selection is dissconnected.
@@ -91,7 +91,7 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 		tree.setSelectedNodesParent(targetParent);
 		
 		for (int i = 0; i < primitives.size(); i++) {
-			((PrimitiveUndoableMove) primitives.elementAt(i)).redo();
+			((PrimitiveUndoableMove) primitives.get(i)).redo();
 		}
 
 		// Record the EditingNode
@@ -112,6 +112,4 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 		
 		layout.draw(tree.getYoungestInSelection(), OutlineLayoutManager.ICON);
 	}
-	
-	public int getType() {return Undoable.COMPOUND_MOVE_TYPE;}
 }

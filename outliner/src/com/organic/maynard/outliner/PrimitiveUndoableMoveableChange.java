@@ -52,6 +52,4 @@ public class PrimitiveUndoableMoveableChange implements Undoable, PrimitiveUndoa
 	public void redo() {
 		node.setMoveableState(newState);
 	}
-	
-	public int getType() {return Undoable.PRIMITIVE_COMMENT_PROPERTY_CHANGE_TYPE;}
 }

@@ -22,14 +22,14 @@ import java.util.*;
 
 public abstract class AbstractCompoundUndoable implements CompoundUndoable {
 
-	protected Vector primitives = new Vector(1,25);
+	protected ArrayList primitives = new ArrayList(5);
 	
 	// The Constructors
 	public AbstractCompoundUndoable() {}
 	
 	// Accessors
 	public void addPrimitive(Undoable primitive) {
-		primitives.addElement(primitive);
+		primitives.add(primitive);
 	}
 	
 	public boolean isEmpty() {
@@ -51,5 +51,4 @@ public abstract class AbstractCompoundUndoable implements CompoundUndoable {
 
 	public abstract void undo();
 	public abstract void redo();
-	public abstract int getType();
 }

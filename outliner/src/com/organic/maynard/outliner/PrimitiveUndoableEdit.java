@@ -18,9 +18,6 @@
  
 package com.organic.maynard.outliner;
 
-import java.util.*;
-import java.awt.*;
-
 public class PrimitiveUndoableEdit implements Undoable {
 
 	private Node node = null;
@@ -49,6 +46,4 @@ public class PrimitiveUndoableEdit implements Undoable {
 	public void redo() {
 		node.setValue(newText);
 	}
-	
-	public int getType() {return Undoable.PRIMITIVE_EDIT_TYPE;}
 }

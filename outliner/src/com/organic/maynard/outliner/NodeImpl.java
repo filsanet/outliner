@@ -99,6 +99,8 @@ public class NodeImpl implements Node {
 	private int lineNumberUpdateKey = -1;
 	
 	public int getLineNumber() {
+		// This for when we need to get a line number but we don't want the
+		// key to get in the way. -2 will never be a normal key for things.
 		return getLineNumber(-2);
 	}
 	
@@ -258,40 +260,43 @@ public class NodeImpl implements Node {
 	}
 	
 	public Node getYoungestVisibleAncestor() {
-		if (getParent().isRoot()) {
-			return null;
-		}
+		Node parent = getParent();
 		
-		if (tree.visibleNodes.contains(getParent())) {
-			return getParent();
+		if (parent.isRoot()) {
+			return parent;
+		} else if (tree.visibleNodes.contains(parent)) {
+			return parent;
 		} else {
-			return getParent().getYoungestVisibleAncestor();
+			return parent.getYoungestVisibleAncestor();
 		}
 	}
 	
 	// This method could be optomized better by first finding the range and then doing a batch insert.
-	public int insertChildrenIntoVisibleNodesCache(TreeContext tree, int index) {
+	public int insertChildrenIntoVisibleNodesCache(int index) {
 		if (isExpanded()) {
-			for (int i = 0; i < this.numOfChildren(); i++) {
+			int childrenCount = this.numOfChildren();
+			for (int i = 0; i < childrenCount; i++) {
 				index++;
 				Node child = getChild(i);
 				if (!tree.visibleNodes.contains(child)) {
 					tree.visibleNodes.add(index,child);
 				}
-				index = child.insertChildrenIntoVisibleNodesCache(tree,index);
+				index = child.insertChildrenIntoVisibleNodesCache(index);
 			}		
 		}
 		return index;
 	}
 	
 	// This method could be optomized better by first finding the range and then doing a batch removal.
-	public void removeFromVisibleNodesCache(TreeContext tree) {
+	public void removeFromVisibleNodesCache() {
 		int index = tree.visibleNodes.indexOf(this);
+		
 		if (index != -1) {
 			tree.visibleNodes.remove(index);
 			if (isExpanded()) {
-				for (int i = 0; i < this.numOfChildren(); i++) {
-					getChild(i).removeFromVisibleNodesCache(tree);
+				int childrenCount = this.numOfChildren();
+				for (int i = 0; i < childrenCount; i++) {
+					getChild(i).removeFromVisibleNodesCache();
 				}		
 			}
 		}
@@ -453,7 +458,8 @@ public class NodeImpl implements Node {
 	
 	public void setDepthRecursively(int depth) {
 		setDepth(depth);
-		for (int i = 0; i < numOfChildren(); i++) {
+		int childrenCount = numOfChildren();
+		for (int i = 0; i < childrenCount; i++) {
 			getChild(i).setDepthRecursively(depth + 1);
 		}						
 	}
@@ -503,18 +509,20 @@ public class NodeImpl implements Node {
 	}
 
 	public void expandAllAncestors() {
-		if (getParent().isRoot()) {
+		Node parent = getParent();
+		if (parent.isRoot()) {
 			return;
 		}
-		getParent().setExpandedClean(true);
-		getParent().expandAllAncestors();
+		parent.setExpandedClean(true);
+		parent.expandAllAncestors();
 	}
 
 	public int currentIndex() {
-		if (getParent() == null) {
+		Node parent = getParent();
+		if (parent == null) {
 			return -1;
 		} else {
-			return getParent().getChildIndex(this);
+			return parent.getChildIndex(this);
 		}
 	}
 	

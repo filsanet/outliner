@@ -72,6 +72,4 @@ public class PrimitiveUndoableMove implements Undoable {
 		node.setDepthRecursively(undoable.getTargetParent().getDepth() + 1);
 		node.getTree().addNodeToSelection(node);
 	}
-	
-	public int getType() {return Undoable.PRIMITIVE_MOVE_TYPE;}
 }

@@ -52,6 +52,4 @@ public class PrimitiveUndoableEditableChange implements Undoable, PrimitiveUndoa
 	public void redo() {
 		node.setEditableState(newState);
 	}
-	
-	public int getType() {return Undoable.PRIMITIVE_COMMENT_PROPERTY_CHANGE_TYPE;}
 }

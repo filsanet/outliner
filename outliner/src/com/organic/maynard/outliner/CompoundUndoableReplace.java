@@ -58,12 +58,12 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 		
 		// Replace Everything
 		for (int i = 0; i < primitives.size(); i++) {
-			((PrimitiveUndoableReplace) primitives.elementAt(i)).undo();
+			((PrimitiveUndoableReplace) primitives.get(i)).undo();
 		}
 
 		// Find fallback node for drawing and editing
 		if (tree.selectedNodes.size() <= 0) {
-			Node fallbackNode = ((PrimitiveUndoableReplace) primitives.lastElement()).getNewNode();
+			Node fallbackNode = ((PrimitiveUndoableReplace) primitives.get(primitives.size() - 1)).getNewNode();
 			if (fallbackNode != null) {
 				fallbackNode = fallbackNode.next();
 				if (fallbackNode.isRoot()) {
@@ -101,7 +101,7 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 		boolean allWillBeDeleted = false;
 		Node fallbackNode = null;
 		if (deleteMode) {
-			Node oldNode = ((PrimitiveUndoableReplace) primitives.lastElement()).getOldNode();
+			Node oldNode = ((PrimitiveUndoableReplace) primitives.get(primitives.size() - 1)).getOldNode();
 			fallbackNode = oldNode.nextUnSelectedNode();
 			
 			if (fallbackNode.isRoot()) {
@@ -111,7 +111,7 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 				}
 			}
 		} else {
-			Node oldNode = ((PrimitiveUndoableReplace) primitives.firstElement()).getOldNode();
+			Node oldNode = ((PrimitiveUndoableReplace) primitives.get(0)).getOldNode();
 			fallbackNode = oldNode.prev();
 			
 			if (fallbackNode.isRoot()) {
@@ -126,7 +126,7 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 		
 		// Replace Everything
 		for (int i = primitives.size() - 1; i >= 0; i--) {
-			((PrimitiveUndoableReplace) primitives.elementAt(i)).redo();
+			((PrimitiveUndoableReplace) primitives.get(i)).redo();
 		}
 		
 		if (tree.selectedNodes.size() <= 0) {
@@ -176,6 +176,4 @@ public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 		
 		return newSelectedNode;
 	}
-	
-	public int getType() {return Undoable.COMPOUND_REPLACE_TYPE;}
 }

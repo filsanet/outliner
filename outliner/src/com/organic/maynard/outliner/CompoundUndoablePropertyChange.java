@@ -38,7 +38,7 @@ public class CompoundUndoablePropertyChange extends AbstractCompoundUndoable {
 	
 	public void undo() {
 		for (int i = primitives.size() - 1; i >= 0; i--) {
-			((Undoable) primitives.elementAt(i)).undo();
+			((Undoable) primitives.get(i)).undo();
 		}
 		
 		Node node = ((PrimitiveUndoablePropertyChange) primitives.get(0)).getNode();
@@ -55,7 +55,7 @@ public class CompoundUndoablePropertyChange extends AbstractCompoundUndoable {
 	
 	public void redo() {
 		for (int i = 0; i < primitives.size(); i++) {
-			((Undoable) primitives.elementAt(i)).redo();
+			((Undoable) primitives.get(i)).redo();
 		}
 
 		Node node = ((PrimitiveUndoablePropertyChange) primitives.get(0)).getNode();
@@ -69,6 +69,4 @@ public class CompoundUndoablePropertyChange extends AbstractCompoundUndoable {
 		tree.doc.panel.layout.draw(node, OutlineLayoutManager.ICON);
 		tree.doc.attPanel.update();
 	}
-	
-	public int getType() {return Undoable.COMPOUND_PROPERTY_CHANGE_TYPE;}
 }

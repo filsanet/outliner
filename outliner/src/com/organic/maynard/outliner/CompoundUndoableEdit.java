@@ -18,8 +18,6 @@
  
 package com.organic.maynard.outliner;
 
-import java.util.*;
-
 public class CompoundUndoableEdit extends AbstractCompoundUndoable {
 
 	private TreeContext tree = null;
@@ -39,17 +37,16 @@ public class CompoundUndoableEdit extends AbstractCompoundUndoable {
 	
 	public void undo() {
 		for (int i = primitives.size() - 1; i >= 0; i--) {
-			((PrimitiveUndoableEdit) primitives.elementAt(i)).undo();
+			((PrimitiveUndoableEdit) primitives.get(i)).undo();
 		}
 		tree.doc.panel.layout.draw();	
 	}
 	
 	public void redo() {
-		for (int i = 0; i < primitives.size(); i++) {
-			((PrimitiveUndoableEdit) primitives.elementAt(i)).redo();
+		int size = primitives.size(); // In theory it should be faster to do this out here so we don't check the size for each loop.
+		for (int i = 0; i < size; i++) {
+			((PrimitiveUndoableEdit) primitives.get(i)).redo();
 		}
 		tree.doc.panel.layout.draw();	
 	}
-	
-	public int getType() {return Undoable.COMPOUND_EDIT_TYPE;}
 }

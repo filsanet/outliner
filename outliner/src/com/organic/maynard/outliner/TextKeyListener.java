@@ -805,7 +805,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		CompoundUndoableReplace undoableReplace = new CompoundUndoableReplace(parent);
 		undoableReplace.addPrimitive(new PrimitiveUndoableReplace(parent, currentNode, null));
 		
-		CompoundUndoableImpl undoable = new CompoundUndoableImpl(tree);
+		CompoundUndoableImpl undoable = new CompoundUndoableImpl();
 		undoable.addPrimitive(undoableReplace);
 		undoable.addPrimitive(undoableEdit);
 		
@@ -849,7 +849,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		CompoundUndoableReplace undoableReplace = new CompoundUndoableReplace(parent);
 		undoableReplace.addPrimitive(new PrimitiveUndoableReplace(parent, currentNode, null));
 		
-		CompoundUndoableImpl undoable = new CompoundUndoableImpl(tree);
+		CompoundUndoableImpl undoable = new CompoundUndoableImpl();
 		undoable.addPrimitive(undoableReplace);
 		undoable.addPrimitive(undoableEdit);
 		
@@ -896,7 +896,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		CompoundUndoableInsert undoableInsert = new CompoundUndoableInsert(newNode.getParent());
 		undoableInsert.addPrimitive(new PrimitiveUndoableInsert(newNode.getParent(),newNode,newNode.currentIndex()));
 		
-		CompoundUndoableImpl undoable = new CompoundUndoableImpl(tree);
+		CompoundUndoableImpl undoable = new CompoundUndoableImpl();
 		undoable.addPrimitive(undoableEdit);
 		undoable.addPrimitive(undoableInsert);
 		

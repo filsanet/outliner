@@ -18,11 +18,9 @@
  
 package com.organic.maynard.outliner;
 
-import java.util.*;
-import java.awt.*;
-
 public class UndoableEdit implements Undoable {
 
+	// Fields
 	private Node node = null;
 
 	private String newText = "";
@@ -35,7 +33,8 @@ public class UndoableEdit implements Undoable {
 	private int oldMarkPosition = 0;
 	
 	private boolean frozen = false;
-	
+
+
 	// The Constructors
 	public UndoableEdit(
 		Node node, 
@@ -79,30 +78,35 @@ public class UndoableEdit implements Undoable {
 	
 	// Undoable Interface
 	public void undo() {
+		TreeContext tree = node.getTree();
+		
 		node.setValue(oldText);
-		node.getTree().setCursorPosition(oldPosition);
-		node.getTree().doc.setPreferredCaretPosition(oldPosition);
-		node.getTree().setCursorMarkPosition(oldMarkPosition);
-		node.getTree().setEditingNode(node);
-		node.getTree().clearSelection();
-		node.getTree().insertNode(node); // Used for visibility
-		node.getTree().doc.panel.layout.draw(node, OutlineLayoutManager.TEXT);
+		tree.setCursorPosition(oldPosition);
+		tree.doc.setPreferredCaretPosition(oldPosition);
+		tree.setCursorMarkPosition(oldMarkPosition);
+		tree.setEditingNode(node);
+		tree.clearSelection();
+		tree.insertNode(node); // Used for visibility
+		
+		tree.doc.panel.layout.draw(node, OutlineLayoutManager.TEXT);
 	}
 	
 	public void redo() {
-		node.setValue(newText);
-		node.getTree().setCursorPosition(newPosition);
-		node.getTree().doc.setPreferredCaretPosition(newPosition);
-		node.getTree().setCursorMarkPosition(newMarkPosition);
-		node.getTree().setEditingNode(node);
-		node.getTree().clearSelection();
-		node.getTree().insertNode(node); // Used for visibility
-		node.getTree().doc.panel.layout.draw(node, OutlineLayoutManager.TEXT);
-	}
-	
-	public int getType() {return Undoable.EDIT_TYPE;}
+		TreeContext tree = node.getTree();
 
-	// Other Methods
+		node.setValue(newText);
+		tree.setCursorPosition(newPosition);
+		tree.doc.setPreferredCaretPosition(newPosition);
+		tree.setCursorMarkPosition(newMarkPosition);
+		tree.setEditingNode(node);
+		tree.clearSelection();
+		tree.insertNode(node); // Used for visibility
+		
+		tree.doc.panel.layout.draw(node, OutlineLayoutManager.TEXT);
+	}
+
+
+	// Static Methods
 	public static void freezeUndoEdit(Node currentNode) {
 		UndoableEdit undoable = currentNode.getTree().doc.undoQueue.getIfEdit();
 		if ((undoable != null) && (undoable.getNode() == currentNode)) {

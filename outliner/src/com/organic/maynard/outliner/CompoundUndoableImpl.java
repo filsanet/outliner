@@ -18,38 +18,18 @@
  
 package com.organic.maynard.outliner;
 
-import java.util.*;
-
 public class CompoundUndoableImpl extends AbstractCompoundUndoable {
-
-	private TreeContext tree = null;
 	
-	// The Constructors
-	public CompoundUndoableImpl(TreeContext tree) {
-		super();
-		this.tree = tree;
-	}
-
-
 	// Undoable Interface
-	public void destroy() {
-		super.destroy();
-		tree = null;
-	}
-	
 	public void undo() {
 		for (int i = primitives.size() - 1; i >= 0; i--) {
-			((Undoable) primitives.elementAt(i)).undo();
+			((Undoable) primitives.get(i)).undo();
 		}
-		//tree.doc.panel.layout.draw();	
 	}
 	
 	public void redo() {
 		for (int i = 0; i < primitives.size(); i++) {
-			((Undoable) primitives.elementAt(i)).redo();
+			((Undoable) primitives.get(i)).redo();
 		}
-		//tree.doc.panel.layout.draw();	
 	}
-	
-	public int getType() {return Undoable.COMPOUND_UNDOABLE_TYPE;}
 }

@@ -63,12 +63,7 @@ public class PrimitiveUndoableReplace implements Undoable {
 			
 			// Handle Selection
 			tree.addNodeToSelection(oldNode);
-	
-			// Handle updating the Node to Draw From
-			/*OutlineLayoutManager layout = tree.doc.panel.layout;
-			if (layout.getNodeToDrawFrom() == newNode) {
-				layout.setNodeToDrawFrom(oldNode, tree.visibleNodes.indexOf(oldNode));
-			}*/		
+		
 		} else {
 			// Swap the nodes
 			parent.insertChild(oldNode,index);
@@ -99,38 +94,12 @@ public class PrimitiveUndoableReplace implements Undoable {
 			// Handle Selection
 			tree.addNodeToSelection(newNode);
 	
-			// Handle updating the Node to Draw From
-			//OutlineLayoutManager layout = tree.doc.panel.layout;
-			//if (layout.getNodeToDrawFrom().isDecendantOf(oldNode)) {
-				//layout.setNodeToDrawFrom(newNode, tree.visibleNodes.indexOf(newNode));
-			//}
 		} else {
-			// Store a node to draw from just in case
-			//Node nodeToDrawFrom = getNodeToDrawFrom();
-			
 			// Remove node from visible nodes cache
 			tree.removeNode(oldNode);
 			
 			// Swap the nodes
-			parent.removeChild(oldNode);
-			
-			// Handle updating the Node to Draw From
-			//OutlineLayoutManager layout = tree.doc.panel.layout;
-			//if (layout.getNodeToDrawFrom().isDecendantOf(oldNode)) {
-				//layout.setNodeToDrawFrom(nodeToDrawFrom, tree.visibleNodes.indexOf(nodeToDrawFrom));
-			//}		
+			parent.removeChild(oldNode);	
 		}
 	}
-	
-	public Node getNodeToDrawFrom() {
-		Node nodeToDrawFrom = oldNode.prev();
-		if (nodeToDrawFrom.isRoot()) {
-			System.out.println("ROOT!");
-			nodeToDrawFrom = oldNode.next();
-			parent.getTree().doc.panel.layout.setNodeToDrawFrom(nodeToDrawFrom, parent.getTree().visibleNodes.indexOf(nodeToDrawFrom));
-		}
-		return nodeToDrawFrom;
-	}
-	
-	public int getType() {return Undoable.PRIMITIVE_REPLACE_TYPE;}
 }

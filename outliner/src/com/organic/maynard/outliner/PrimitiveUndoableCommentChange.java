@@ -52,6 +52,4 @@ public class PrimitiveUndoableCommentChange implements Undoable, PrimitiveUndoab
 	public void redo() {
 		node.setCommentState(newState);
 	}
-	
-	public int getType() {return Undoable.PRIMITIVE_COMMENT_PROPERTY_CHANGE_TYPE;}
 }

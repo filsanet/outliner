@@ -19,7 +19,6 @@
 package com.organic.maynard.outliner;
 
 public interface CompoundUndoable extends Undoable {
-
 	public void addPrimitive(Undoable primitive);
 	public boolean isEmpty();
 }

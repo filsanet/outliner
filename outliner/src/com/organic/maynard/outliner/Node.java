@@ -51,8 +51,8 @@ public interface Node {
 	public Node getLastDecendent();
 	public Node getLastViewableDecendent();
 	public Node getYoungestVisibleAncestor();
-	public int insertChildrenIntoVisibleNodesCache(TreeContext tree, int index);
-	public void removeFromVisibleNodesCache(TreeContext tree);
+	public int insertChildrenIntoVisibleNodesCache(int index);
+	public void removeFromVisibleNodesCache();
 	public void insertChild(Node node, int i);
 	
 	public int getChildIndex(Node node);

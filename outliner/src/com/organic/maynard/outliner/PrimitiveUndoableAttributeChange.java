@@ -88,6 +88,4 @@ public class PrimitiveUndoableAttributeChange implements Undoable, PrimitiveUndo
 			}		
 		}
 	}
-	
-	public int getType() {return Undoable.PRIMITIVE_ATTRIBUTE_PROPERTY_CHANGE_TYPE;}
 }

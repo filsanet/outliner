@@ -33,10 +33,6 @@ public class UndoQueue {
 	}
 	
 	public void destroy() {
-		//for (int i = 0; i < queue.size(); i++) {
-		//	((Undoable) queue.get(i)).destroy();
-		//}
-		
 		doc = null;
 		queue = null;
 	}
@@ -44,15 +40,16 @@ public class UndoQueue {
 	public void add(Undoable undoable) {
 		doc.setFileModified(true);
 		
+		int queueSize = Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).cur;
+		
 		// Short Circuit if undo is disabled.
-		if (Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).cur == 0) {
-			
+		if (queueSize == 0) {
 			return;
 		}
 		
 		trim();
 		
-		if (queue.size() < Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).cur) {
+		if (queue.size() < queueSize) {
 			cursor++;
 			queue.addElement(undoable);
 		} else {
@@ -112,6 +109,7 @@ public class UndoQueue {
 		if (isUndoable()) {
 			primitiveUndo();
 			updateMenuBar(doc);
+			doc.setFileModified(true);
 		}
 	}
 
@@ -120,12 +118,12 @@ public class UndoQueue {
 			primitiveUndo();
 		}
 		updateMenuBar(doc);
+		doc.setFileModified(true);
 	}
 
 	private void primitiveUndo() {
 		((Undoable) queue.elementAt(cursor)).undo();
 		cursor--;
-		doc.setFileModified(true);
 	}
 	
 	public boolean isUndoable() {
@@ -142,6 +140,7 @@ public class UndoQueue {
 		if (isRedoable()) {
 			primitiveRedo();
 			updateMenuBar(doc);
+			doc.setFileModified(true);	
 		}	
 	}
 
@@ -150,12 +149,12 @@ public class UndoQueue {
 			primitiveRedo();
 		}
 		updateMenuBar(doc);
+		doc.setFileModified(true);	
 	}
 	
 	private void primitiveRedo() {
 		cursor++;
 		((Undoable) queue.elementAt(cursor)).redo();
-		doc.setFileModified(true);	
 	}
 
 	public boolean isRedoable() {
@@ -173,6 +172,7 @@ public class UndoQueue {
 		JMenuItem redoItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.REDO_MENU_ITEM);
 		JMenuItem undoAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.UNDO_ALL_MENU_ITEM);
 		JMenuItem redoAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.REDO_ALL_MENU_ITEM);
+		
 		if (doc == null) {
 			undoItem.setEnabled(false);
 			undoAllItem.setEnabled(false);

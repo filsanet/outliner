@@ -301,8 +301,9 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		// Increment the LineCountKey
 		node.getTree().incrementLineCountKey();
 		
+		OutlinerCellRendererImpl renderer;
 		while (true) {
-			OutlinerCellRendererImpl renderer = textAreas[numNodesDrawn];
+			renderer = textAreas[numNodesDrawn];
 			renderer.drawDown(startPoint, node);
 			renderer.setVisible(true);
 			renderer.node.setVisible(true);
@@ -362,6 +363,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		if (node == null) {return;}
 
 		int nodeIndex = ioNodeToDrawFrom;
+		ioLastVisNode = ioNodeToDrawFrom;
 
 		// Pre-compute some values
 		int effectiveTop = top + Preferences.getPreferenceInt(Preferences.TOP_MARGIN).cur;
@@ -372,9 +374,10 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		Node newNodeToDrawFrom = null;
 		int ioNewNodeToDrawFrom = nodeIndex;
 		int offset = 0;
-			
+		
+		OutlinerCellRendererImpl renderer;
 		while (true) {
-			OutlinerCellRendererImpl renderer = textAreas[numNodesDrawn];
+			renderer = textAreas[numNodesDrawn];
 			renderer.drawUp(startPoint, node);
 			renderer.setVisible(true);
 			renderer.node.setVisible(true);
@@ -426,7 +429,6 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 			partialCellDrawn = false;
 		}
 		
-		ioLastVisNode = panel.doc.tree.visibleNodes.indexOf(textAreas[0].node);
 		ioFirstVisNode = ioLastVisNode - (numNodesDrawn - 1);
 		if (ioLastVisNode >= panel.doc.tree.visibleNodes.size()) {
 			ioLastVisNode = panel.doc.tree.visibleNodes.size() - 1;
@@ -456,8 +458,9 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		// Pre-compute some values
 		int effectiveBottom = bottom - Preferences.getPreferenceInt(Preferences.BOTTOM_MARGIN).cur;
 		
+		OutlinerCellRendererImpl renderer;
 		while (true) {
-			OutlinerCellRendererImpl renderer = textAreas[numNodesDrawn];
+			renderer = textAreas[numNodesDrawn];
 			renderer.drawDown(startPoint, node);
 			renderer.setVisible(true);
 			renderer.node.setVisible(true);
@@ -560,8 +563,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		// Explicit call to draw and focus, so that we can scroll away from our current component focus.
 		setNodeToDrawFrom((Node) panel.doc.tree.visibleNodes.get(e.getValue()), e.getValue());		
 		drawingDirection = DOWN;
-		draw();
-		setFocus(panel.doc.tree.getEditingNode(), panel.doc.tree.getComponentFocus());
+		redraw();
 	}
 	
 	

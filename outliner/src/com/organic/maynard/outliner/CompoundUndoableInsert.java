@@ -18,8 +18,6 @@
  
 package com.organic.maynard.outliner;
 
-import java.util.*;
-
 public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 
 	private Node parent = null;
@@ -42,31 +40,27 @@ public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 	
 	public void undo() {
 		// Find the node we will change focus too, note may end up null
-		Node youngestNode = ((PrimitiveUndoableInsert) primitives.lastElement()).getNode();
-		TreeContext tree = youngestNode.getTree();
-		OutlineLayoutManager layout = tree.doc.panel.layout;
+		Node youngestNode = ((PrimitiveUndoableInsert) primitives.get(primitives.size() - 1)).getNode();
 		Node newSelectedNode = youngestNode.prev();
 		
-		boolean parentWasSelected = false;
-		if (newSelectedNode == youngestNode.getParent()) {
-			parentWasSelected = true;
-		}
+		// Shorthand
+		TreeContext tree = youngestNode.getTree();
+		OutlineLayoutManager layout = tree.doc.panel.layout;
 		
 		// Delete Everything
 		for (int i = 0; i < primitives.size(); i++) {
-			((PrimitiveUndoableInsert) primitives.elementAt(i)).undo();
+			((PrimitiveUndoableInsert) primitives.get(i)).undo();
 		}
 
-		
-		if (parentWasSelected && !newSelectedNode.isLeaf()) {
+		if ((newSelectedNode == youngestNode.getParent()) && !newSelectedNode.isLeaf()) {
 			newSelectedNode = newSelectedNode.getFirstChild();
 		}
 		
 		// If the newSelectedNode is null, then select the first node in the tree
 		if (newSelectedNode == null) {
 			tree.setSelectedNodesParent(tree.rootNode);
-			tree.addNodeToSelection(tree.rootNode.getFirstChild());
 			newSelectedNode = tree.rootNode.getFirstChild();
+			tree.addNodeToSelection(newSelectedNode);
 		} else {
 			tree.setSelectedNodesParent(newSelectedNode.getParent());
 			tree.addNodeToSelection(newSelectedNode);
@@ -87,14 +81,14 @@ public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 	}
 	
 	public void redo() {
-		Node youngestNode = ((PrimitiveUndoableInsert) primitives.lastElement()).getNode();
+		Node youngestNode = ((PrimitiveUndoableInsert) primitives.get(primitives.size() - 1)).getNode();
 		TreeContext tree = youngestNode.getTree();
 
 		// Do all the Inserts
 		tree.setSelectedNodesParent(parent);
 		
 		for (int i = primitives.size() - 1; i >= 0; i--) {
-			((PrimitiveUndoableInsert) primitives.elementAt(i)).redo();
+			((PrimitiveUndoableInsert) primitives.get(i)).redo();
 		}
 
 		// Record the EditingNode
@@ -104,6 +98,4 @@ public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 		// Redraw and Set Focus
 		tree.doc.panel.layout.draw(youngestNode,OutlineLayoutManager.ICON);		
 	}
-	
-	public int getType() {return Undoable.COMPOUND_DELETE_TYPE;}
 }
