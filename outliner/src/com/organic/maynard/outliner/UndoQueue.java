@@ -167,11 +167,19 @@ public class UndoQueue {
 
 
 	// Static Methods
+	private static JMenuItem undoItem = null;
+	private static JMenuItem redoItem = null;
+	private static JMenuItem undoAllItem = null;
+	private static JMenuItem redoAllItem = null;
+	
 	public static void updateMenuBar(OutlinerDocument doc) {
-		JMenuItem undoItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.UNDO_MENU_ITEM);
-		JMenuItem redoItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.REDO_MENU_ITEM);
-		JMenuItem undoAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.UNDO_ALL_MENU_ITEM);
-		JMenuItem redoAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.REDO_ALL_MENU_ITEM);
+		// Lazy instantiation of references to JMenuItems.
+		if (undoItem == null) {
+			undoItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.UNDO_MENU_ITEM);
+			redoItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.REDO_MENU_ITEM);
+			undoAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.UNDO_ALL_MENU_ITEM);
+			redoAllItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.REDO_ALL_MENU_ITEM);
+		}
 		
 		if (doc == null) {
 			undoItem.setEnabled(false);

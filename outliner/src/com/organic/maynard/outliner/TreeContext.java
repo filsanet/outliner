@@ -171,11 +171,18 @@ public class TreeContext extends AttributeContainerImpl {
 	
 	public int getCursorPosition() {return cursorPosition;}
 
+	private static JMenuItem cutItem = null;
+	private static JMenuItem copyItem = null;
+	private static JMenuItem deleteItem = null;
+	private static JMenuItem selectInverseItem = null;
+
 	public void updateEditMenu() {
-		JMenuItem cutItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CUT_MENU_ITEM);
-		JMenuItem copyItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.COPY_MENU_ITEM);
-		JMenuItem deleteItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.DELETE_MENU_ITEM);
-		JMenuItem selectInverseItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SELECT_INVERSE_MENU_ITEM);
+		if (cutItem == null) {
+			cutItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.CUT_MENU_ITEM);
+			copyItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.COPY_MENU_ITEM);
+			deleteItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.DELETE_MENU_ITEM);
+			selectInverseItem = (JMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SELECT_INVERSE_MENU_ITEM);
+		}
 
 		if (getComponentFocus() == OutlineLayoutManager.TEXT) {
 			selectInverseItem.setEnabled(false);
@@ -249,6 +256,9 @@ public class TreeContext extends AttributeContainerImpl {
 		return nodeIndex;
 	}
 
+	public void insertNode(Node node, int index) {
+		visibleNodes.add(index, node);
+	}
 	
 	// Handling Node Selection
 	private Node mostRecentNodeTouched = null;

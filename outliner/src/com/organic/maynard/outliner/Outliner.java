@@ -123,7 +123,10 @@ public class Outliner extends JFrame implements ClipboardOwner, GUITreeComponent
 				if (!toFile.exists()) {
 					try {
 						FileTools.copy(fromFile, toFile);
-						appendBuffer.append("\n").append(indexedLines.get(fromFile.getName()));
+						String line = (String) indexedLines.get(fromFile.getName());
+						if (line != null) {
+							appendBuffer.append(Preferences.LINE_END_DEFAULT).append(line);
+						}
 						System.out.println("\tCopying macro: " + fromFile.getName());
 					} catch (Exception e) {
 						e.printStackTrace();

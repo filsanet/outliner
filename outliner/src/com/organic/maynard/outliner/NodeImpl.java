@@ -290,7 +290,12 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 			for (int i = 0; i < childrenCount; i++) {
 				index++;
 				Node child = getChild(i);
-				if (!tree.visibleNodes.contains(child)) {
+				
+				if (index < tree.visibleNodes.size()) {
+					if (tree.visibleNodes.get(index) != child) {
+						tree.visibleNodes.add(index,child);
+					}
+				} else {
 					tree.visibleNodes.add(index,child);
 				}
 				index = child.insertChildrenIntoVisibleNodesCache(index);
@@ -489,12 +494,19 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 		
 		this.expanded = expanded;
 		
+		if (isLeaf()) {
+			return;
+		}
+		
 		if (isExpanded()) {
+			int index = tree.visibleNodes.indexOf(this) + 1;
 			for (int i = this.numOfChildren() - 1; i >= 0; i--) {
-				tree.insertNodeAfter(this,getChild(i));
+				//tree.insertNodeAfter(this,getChild(i));
+				tree.insertNode(getChild(i), index);
 			}				
 		} else {
-			for (int i = 0; i < this.numOfChildren(); i++) {
+			int childCount = this.numOfChildren();
+			for (int i = 0; i < childCount; i++) {
 				Node child = getChild(i);
 				tree.removeNode(child);
 				if (child.isExpanded()) {

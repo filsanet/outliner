@@ -224,7 +224,7 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 
 	// File Saving and Modification
 	private String fileName = "";
-	private boolean fileModified = false;
+	private boolean fileModified = true;
 	
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
@@ -234,6 +234,11 @@ public class OutlinerDocument extends JInternalFrame implements ComponentListene
 	public String getFileName() {return fileName;}
 
 	public void setFileModified(boolean fileModified) {
+		// Abort if we're not changing state.
+		if (fileModified == this.fileModified) {
+			return;
+		}
+		
 		this.fileModified = fileModified;
 		Outliner.updateSaveMenuItem();
 		Outliner.updateSaveAllMenuItem();

@@ -186,11 +186,12 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 			
 			// Save it to disk as a serialized object.
 			saveMacro(macro);
+		
+			hide();
 		} else {
 			JOptionPane.showMessageDialog(this, GUITreeLoader.reg.getText("message_an_error_occurred"));
 		}
-		
-		hide();
+
 	}
 	
 	private void update() {
@@ -217,12 +218,11 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 			// Save it to disk as a serialized object.
 			deleteMacro(new File(Outliner.MACROS_DIR + oldName));
 			saveMacro(macro);
-			
+		
+			hide();			
 		} else {
 			JOptionPane.showMessageDialog(this, GUITreeLoader.reg.getText("message_an_error_occurred"));
 		}
-		
-		hide();
 	}
 
 	private void delete() {
@@ -245,11 +245,11 @@ public class MacroEditor extends AbstractGUITreeJDialog implements ActionListene
 			
 			// Remove it from disk
 			deleteMacro(new File(Outliner.MACROS_DIR + macro.getFileName()));
+		
+			hide();
 		} else {
 			JOptionPane.showMessageDialog(this, GUITreeLoader.reg.getText("message_an_error_occurred"));
 		}
-		
-		hide();
 	}
 	
 	private void cancel() {

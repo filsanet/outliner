@@ -49,7 +49,6 @@ public class LoadMacroCommand extends Command {
 			File file = new File(Outliner.MACROS_DIR + path);
 
 			// Create Instance
-			System.out.println("  " + path);
 			Macro obj = (Macro) Class.forName(className).newInstance();
 			
 			// Initialize it
@@ -63,13 +62,18 @@ public class LoadMacroCommand extends Command {
 			}
 
 			// Add it to the MacroPopupMenu
-			int i = Outliner.macroPopup.addMacro(obj);
-			
-			// Add it to the list in the MacroManager
-			if (obj instanceof SortMacro) {
-				((DefaultListModel) Outliner.macroManager.sortMacroList.getModel()).insertElementAt(obj.getName(),i);
+			if (MacroPopupMenu.validateUniqueness(obj.getName()) && MacroPopupMenu.validateRestrictedChars(obj.getName())) {
+				System.out.println("  " + path);
+				int i = Outliner.macroPopup.addMacro(obj);
+				
+				// Add it to the list in the MacroManager
+				if (obj instanceof SortMacro) {
+					((DefaultListModel) Outliner.macroManager.sortMacroList.getModel()).insertElementAt(obj.getName(),i);
+				} else {
+					((DefaultListModel) Outliner.macroManager.macroList.getModel()).insertElementAt(obj.getName(),i);
+				}			
 			} else {
-				((DefaultListModel) Outliner.macroManager.macroList.getModel()).insertElementAt(obj.getName(),i);
+				System.out.println("  WARNING: duplicate macro entry: " + path);			
 			}
 		} catch (ClassNotFoundException cnfe) {
 			System.out.println("Exception: " + className + " " + cnfe);
