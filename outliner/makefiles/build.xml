@@ -8,7 +8,6 @@
 			<property name="src" value="src"/>
 			<property name="src-outliner" value="${src}/com/organic/maynard/outliner"/>
 			<property name="src-maynard" value="${src}/com/organic/maynard"/>
-			<property name="src-jmousewheel" value="${src}/gui"/>
 			<property name="src-webfilephp" value="${src}/com/yearahead"/>
 			<property name="src-wikiff" value="${src}/com/psm/wiki"/>
 			<property name="lib" value="lib"/>
@@ -32,10 +31,6 @@ Targets:
      compile-outliner: Compiles all class files for the outliner src tree.
          jar-outliner: Creates outliner.jar
 
-    clean-jmousewheel: Removes all .class files for the jmousewheel src tree.
-  compile-jmousewheel: Compiles all class files for the jmousewheel src tree.
-      jar-jmousewheel: Creates jmousewheel.jar
-
      clean-webfilephp: Removes all .class files for the webfilephp src tree.
    compile-webfilephp: Compiles all class files for the webfilephp src tree.
        jar-webfilephp: Creates com.yearahead.io.webfile.jar
@@ -52,7 +47,6 @@ Targets:
 	<!-- GLOBAL TARGETS -->
 		<target name="jar" depends="init" description="Cleans, compiles, and jars everything for JOE.">
 			<antcall target="jar-maynard"/>
-			<antcall target="jar-jmousewheel"/>
 			<antcall target="jar-outliner"/>
 			<antcall target="jar-webfilephp"/>
 			<antcall target="jar-wikiff"/>
@@ -70,29 +64,11 @@ Targets:
 			>
 			</javadoc>
 		</target>
-	<!-- jmousewheel TARGETS -->
-		<target name="compile-jmousewheel" depends="init, clean-jmousewheel" description="Compiles all class files for the jmousewheel src tree.">
-			<javac debug="false" optimize="true" deprecation="false" srcdir="${src-jmousewheel}"/>
-		</target>
-		<target name="jar-jmousewheel" depends="compile-jmousewheel" description="Creates jmousewheel.jar">
-			<jar basedir="${src}" compress="true" jarfile="${lib}/jmousewheel.jar">
-				<include name="gui/**"/>
-				<exclude name="**/*.java"/>
-			</jar>
-		</target>
-		<target name="clean-jmousewheel" description="Removes all .class files for the jmousewheel src tree.">
-			<delete>
-				<fileset dir="${src-jmousewheel}">
-					<include name="**/*.class"/>
-				</fileset>
-			</delete>
-		</target>
 	<!-- webfilephp TARGETS -->
 		<target name="compile-webfilephp" depends="init, clean-webfilephp" description="Compiles all class files for the webfilephp src tree.">
 			<javac debug="false" optimize="true" deprecation="false" srcdir="${src-webfilephp}">
 				<classpath>
 					<pathelement path="${lib}/com.organic.maynard.jar"/>
-					<pathelement path="${lib}/jmousewheel.jar"/>
 					<pathelement path="${lib}/outliner.jar"/>
 					<pathelement path="${lib}/sax.jar"/>
 				</classpath>
@@ -116,7 +92,6 @@ Targets:
 			<javac debug="false" optimize="true" deprecation="false" srcdir="${src-wikiff}">
 				<classpath>
 					<pathelement path="${lib}/com.organic.maynard.jar"/>
-					<pathelement path="${lib}/jmousewheel.jar"/>
 					<pathelement path="${lib}/outliner.jar"/>
 					<pathelement path="${lib}/sax.jar"/>
 				</classpath>
@@ -146,7 +121,6 @@ Targets:
 					<pathelement path="${lib}/xerces.jar"/>
 					<pathelement path="${lib}/xp.jar"/>
 					<pathelement path="${lib}/outliner.jar"/>
-					<pathelement path="${lib}/jmousewheel.jar"/>
 				</classpath>
 				<exclude name="outliner/**"/>
 			</javac>
@@ -175,7 +149,6 @@ Targets:
 					<pathelement path="${lib}/com.yearahead.io.webfile.jar"/>
 					<pathelement path="${lib}/xmlrpc.jar"/>
 					<pathelement path="${lib}/jakarta-oro.jar"/>
-					<pathelement path="${lib}/jmousewheel.jar"/>
 					<pathelement path="${lib}/sax.jar"/>
 					<pathelement path="${lib}/xp.jar"/>
 					<pathelement path="${lib}/jazzy-core.jar"/>

@@ -27,8 +27,7 @@ CP=$CP:$RP/sax.jar
 CP=$CP:$RP/xp.jar 
 CP=$CP:$RP/xmlrpc.jar 
 CP=$CP:$RP/bsh.jar 
-CP=$CP:$RP/jakarta-oro.jar 
-CP=$CP:$RP/jmousewheel.jar 
+CP=$CP:$RP/jakarta-oro.jar  
 CP=$CP:$RP/jazzy-core.jar 
 
 java -cp $CP -Xincgc com.organic.maynard.outliner.Outliner en $FILENAME 

@@ -19,7 +19,6 @@ set CP=%CP%;%root_path%xp.jar
 set CP=%CP%;%root_path%xmlrpc.jar
 set CP=%CP%;%root_path%bsh.jar
 set CP=%CP%;%root_path%jakarta-oro.jar
-set CP=%CP%;%root_path%jmousewheel.jar
 set CP=%CP%;%root_path%jazzy-core.jar
 
 REM Classpath for XML Module
