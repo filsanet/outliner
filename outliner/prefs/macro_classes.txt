@@ -4,3 +4,4 @@ macro_class|com.organic.maynard.outliner.URLEncodeMacro|URL Encoding
 macro_class|com.organic.maynard.outliner.HTMLEscapeMacro|HTML Escaping
 macro_class|com.organic.maynard.outliner.XMLRPCMacro|XMLRPC
 macro_class|com.organic.maynard.outliner.BSHMacro|BeanShell
+macro_class|com.organic.maynard.outliner.SortMacro|Sort
