@@ -3,7 +3,7 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide.en.opml</title>
 <dateCreated>Tue, 17 Jul 2001 02:49:03 GMT</dateCreated>
-<dateModified>Mon, 13 Aug 2001 06:06:56 GMT</dateModified>
+<dateModified>Mon, 13 Aug 2001 06:47:02 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
@@ -689,17 +689,15 @@
 </outline>
 <outline isEditable="true" isMoveable="true" text="ssh">
 <outline isEditable="true" isMoveable="true" text="How to avoid having to type in ssh password when command-lining a cvs command">
-<outline isEditable="true" isMoveable="true" text="we're almost there .....">
-<outline isEditable="true" isMoveable="true" text="I've got it down to typing a one-character RSA catchphrase"/>
-</outline>
 <outline isEditable="true" isMoveable="true" text="the path so far">
 <outline isEditable="true" isMoveable="true" text="create a public key ">
-<outline isEditable="true" isMoveable="true" text="run ssh-keygen -C &quot;hostname&quot;"/>
+<outline isEditable="true" isMoveable="true" text="run ssh-keygen -C &quot;someUsefulIdentifier&quot;"/>
+<outline isEditable="true" isMoveable="true" text="if your machine is secure, use an empty passphrase"/>
 <outline isEditable="true" isMoveable="true" text="sample">
-<outline isEditable="true" isMoveable="true" text="C:\&gt;ssh-keygen -C &quot;hostname&quot;"/>
+<outline isEditable="true" isMoveable="true" text="C:\Home\.ssh&gt;ssh-keygen -C JoeOnSourceForge"/>
 <outline isEditable="true" isMoveable="true" text="Initializing random number generator..."/>
-<outline isEditable="true" isMoveable="true" text="Generating p:  ..++ (distance 28)"/>
-<outline isEditable="true" isMoveable="true" text="Generating q:  ...............++ (distance 258)"/>
+<outline isEditable="true" isMoveable="true" text="Generating p:  ..........................................++ (distance 880)"/>
+<outline isEditable="true" isMoveable="true" text="Generating q:  ................++ (distance 190)"/>
 <outline isEditable="true" isMoveable="true" text="Computing the keys..."/>
 <outline isEditable="true" isMoveable="true" text="Testing the keys..."/>
 <outline isEditable="true" isMoveable="true" text="Key generation complete."/>
@@ -711,16 +709,19 @@
 <outline isEditable="true" isMoveable="true" text="99999999999999999999999999999999999999"/>
 <outline isEditable="true" isMoveable="true" text="99999999999999999999999999999999999999"/>
 <outline isEditable="true" isMoveable="true" text="99999999999999999999999999999999999999"/>
-<outline isEditable="true" isMoveable="true" text="99999999999999999999999999999999999999"/>
-<outline isEditable="true" isMoveable="true" text="99999999999999999999999999999999999999"/>
-<outline isEditable="true" isMoveable="true" text="99999999999999999999999999999999999999hostname"/>
+<outline isEditable="true" isMoveable="true" text="99999999999999999999999999999999999999JoeOnSourceForge"/>
 <outline isEditable="true" isMoveable="true" text="Your public key has been saved in c:\home/.ssh/identity.pub"/>
-<outline isEditable="true" isMoveable="true" text=""/>
 </outline>
 </outline>
-<outline isEditable="true" isMoveable="true" text="open up the public key file, and copy its contents"/>
+<outline isEditable="true" isMoveable="true" text="copy the public key to the clipboard">
+<outline isEditable="true" isMoveable="true" text="open up the public key file in a text editor">
+<outline isEditable="true" isMoveable="true" text="in our example, that's c:\home\.ssh\identity.pub"/>
+</outline>
+<outline isEditable="true" isMoveable="true" text="Select All and copy its contents"/>
+</outline>
+<outline isEditable="true" isMoveable="true" text="stick that data up on SourceForge">
 <outline isEditable="true" isMoveable="true" text="Log onto SourceForge"/>
-<outline isEditable="true" isMoveable="true" text="Go to Account Maintenance"/>
+<outline isEditable="true" isMoveable="true" text="Go to your Account Maintenance page"/>
 <outline isEditable="true" isMoveable="true" text="At the bottom of the page, there's a section called Shell Account Information"/>
 <outline isEditable="true" isMoveable="true" text="There's a line like this">
 <outline isEditable="true" isMoveable="true" text="CVS/SSH Shared Authorized Keys: "/>
@@ -729,6 +730,9 @@
 <outline isEditable="true" isMoveable="true" text="Click on Edit Keys"/>
 <outline isEditable="true" isMoveable="true" text="Paste in the key you copied"/>
 <outline isEditable="true" isMoveable="true" text="Click Okay"/>
+</outline>
+<outline isEditable="true" isMoveable="true" text="Wait 6 to 12 hours for the key to take effect"/>
+<outline isEditable="true" isMoveable="true" text="check it out">
 <outline isEditable="true" isMoveable="true" text="Open up a command line window"/>
 <outline isEditable="true" isMoveable="true" text="Give a CVS command"/>
 <outline isEditable="true" isMoveable="true" text="Your project gets added to the set of hosts"/>
@@ -743,11 +747,18 @@
 <outline isEditable="true" isMoveable="true" text="M DocumentManager.java"/>
 <outline isEditable="true" isMoveable="true" text="cvs server: nothing known about JOEReturnCodes.java"/>
 </outline>
-<outline isEditable="true" isMoveable="true" text="Wait 6 hours"/>
 <outline isEditable="true" isMoveable="true" text="open up a command line window"/>
-<outline isEditable="true" isMoveable="true" text="give a CVS command"/>
-<outline isEditable="true" isMoveable="true" text="you'll be asked for a catchphrase"/>
-<outline isEditable="true" isMoveable="true" text=""/>
+<outline isEditable="true" isMoveable="true" text="give a CVS command">
+<outline isEditable="true" isMoveable="true" text="example">
+<outline isEditable="true" isMoveable="true" text="E:\stan's java projects\Joe\outliner\dox&gt;cvs commit -m &quot;ongoing writing/editing/organizing&quot; &quot;JOE User Guide.en.opml&quot;"/>
+</outline>
+</outline>
+<outline isEditable="true" isMoveable="true" text="you'll be asked for a passphrase">
+<outline isEditable="true" isMoveable="true" text="example">
+<outline isEditable="true" isMoveable="true" text="Enter passphrase for RSA key 'hostname':"/>
+</outline>
+</outline>
+</outline>
 </outline>
 </outline>
 </outline>
