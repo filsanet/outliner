@@ -1,21 +1,36 @@
 /**
- * Copyright (C) 2001 Maynard Demmon, maynard@organic.com
+ * Portions copyright (C) 2001 Maynard Demmon, maynard@organic.com
+ * Portions copyright (C) 2002   Stan Krute <Stan@StanKrute.com>
  * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * Redistribution and use in source and binary forms, with or 
+ * without modification, are permitted provided that the 
+ * following conditions are met:
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  - Redistributions of source code must retain the above copyright 
+ *    notice, this list of conditions and the following disclaimer. 
  * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *  - Redistributions in binary form must reproduce the above 
+ *    copyright notice, this list of conditions and the following 
+ *    disclaimer in the documentation and/or other materials provided 
+ *    with the distribution. 
+ * 
+ *  - Neither the names "Java Outline Editor", "JOE" nor the names of its 
+ *    contributors may be used to endorse or promote products derived 
+ *    from this software without specific prior written permission. 
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+ * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.yearahead.io;
 
 import com.organic.maynard.outliner.*;
@@ -52,7 +67,7 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 	}
 
 	
-	// FileProtocol Interface
+	// select a file to save or export
 	public boolean selectFileToSave(OutlinerDocument document, int type) {
 		lazyInstantiation();
 		
@@ -81,6 +96,10 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 		if (option == JFileChooser.APPROVE_OPTION) {
 			String filename = chooser.getSelectedFile().getPath();
 			
+			String lineEnd ;
+			String encoding ;
+			String fileFormat ;
+
 			if (!Outliner.isFileNameUnique(filename) && (!filename.equals(document.getFileName()))) {
 				String msg = GUITreeLoader.reg.getText("message_cannot_save_file_already_open");
 				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, filename);
@@ -90,10 +109,23 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 				return false;
 			}
 			
-			// Pull Preference Values from the file chooser
-			String lineEnd = chooser.getLineEnding();
-			String encoding = chooser.getSaveEncoding();
-			String fileFormat = chooser.getSaveFileFormat();
+			// Pull Preference Values from the file chooser		[srk] 1/1/02 3:02AM
+			switch (type) {
+				case FileProtocol.SAVE:
+					lineEnd = chooser.getLineEnding();
+					encoding = chooser.getSaveEncoding();
+					fileFormat = chooser.getSaveFileFormat();
+					break ;
+				case FileProtocol.EXPORT:
+					lineEnd = chooser.getExportLineEnding();
+					encoding = chooser.getExportEncoding();
+					fileFormat = chooser.getExportFileFormat();
+					break ;
+				default:
+					System.out.println("ERROR: invalid save type used. (" + type +")");
+					return false;
+				} // end switch
+				
 
 			// Update the document settings
 			document.settings.lineEnd.def = lineEnd;
@@ -119,7 +151,8 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 		}
 	}
 	
-	public boolean selectFileToOpen(DocumentInfo docInfo) {
+	// select a file to open or import
+	public boolean selectFileToOpen(DocumentInfo docInfo, int type) {
 		lazyInstantiation();
 		
 		// Setup the File Chooser
@@ -131,8 +164,14 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 			System.out.println("IOException: " + e.getMessage());
 			return false;
 		}
-		chooser.configureForOpen(getName(), hostname);
-		
+		if (type == FileProtocol.OPEN) {
+			chooser.configureForOpen(getName(), hostname);
+		} else if (type == FileProtocol.IMPORT) {
+			chooser.configureForImport(getName(), hostname);
+		} else {
+			System.out.println("ERROR: invalid open/import type used. (" + type +")");
+			return false;
+		}
 		int option = chooser.showOpenDialog(Outliner.outliner);
 
 		// Handle User Input
