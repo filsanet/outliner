@@ -65,12 +65,24 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	
 	public void mousePressed(MouseEvent e) {
 		recordRenderer(e.getComponent());
-		
-		// This is detection for Solaris
-		if (e.isPopupTrigger() && textArea.node.isSelected()) {
+
+ 		// Shorthand
+ 		Node currentNode = textArea.node;
+ 		TreeContext tree = currentNode.getTree();
+ 		OutlineLayoutManager layout = tree.doc.panel.layout;
+
+		// This is detection for Solaris, I think mac does this too.
+		if (e.isPopupTrigger() && (currentNode.isAncestorSelected() || (tree.getEditingNode() == currentNode))) {
 			Outliner.macroPopup.show(e.getComponent(),e.getX(), e.getY());
+			e.consume();
+			return;
 		}
-		
+
+		// This is to block clicks when a right click is generated in windows.
+		if ((Outliner.isWindows()) && e.getModifiers() == InputEvent.BUTTON3_MASK) {
+			return;
+		}
+				
 		// Handle clicks. The modulo is to deal with rapid clicks that would register as a triple click or more.
 		if ((e.getClickCount() % 2) == 1) {
 			processSingleClick(e);
@@ -79,15 +91,15 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		}
 		
 		// Record the EditingNode and CursorPosition and ComponentFocus
- 		TreeContext tree = textArea.node.getTree();
+ 		//TreeContext tree = textArea.node.getTree();
 		tree.setEditingNode(textArea.node);
 		tree.setComponentFocus(OutlineLayoutManager.ICON);
 		
 		// Store the node since it may get lost by the time we want to throw the new mouse event.
-		Node node = textArea.node;
+		//Node node = textArea.node;
 		
 		// Redraw and set focus
-		tree.doc.panel.layout.redraw();
+		layout.redraw();
 		
 		// Consume the current event and then propogate a new event to
 		// the DnD listener since if a drawUp() happened, the old event
@@ -95,7 +107,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		e.consume();
 
 		MouseEvent eNew = new MouseEvent(
-			tree.doc.panel.layout.getUIComponent(node).button, 
+			tree.doc.panel.layout.getUIComponent(currentNode).button, 
 			e.getID(), 
 			e.getWhen(), 
 			e.getModifiers(), 
@@ -108,11 +120,21 @@ public class IconKeyListener implements KeyListener, MouseListener {
 	}
 	
 	public void mouseReleased(MouseEvent e) {
-		recordRenderer(e.getComponent());
-		
+ 		// Catch for Solaris/Mac if they did the popup trigger.
+ 		if (e.isConsumed()) {
+ 			return;
+ 		}
+ 
+ 		recordRenderer(e.getComponent());
+
+		// Shorthand
+		Node currentNode = textArea.node;
+ 		TreeContext tree = currentNode.getTree();
+
 		// This is detection for Windows
-		if (e.isPopupTrigger() && textArea.node.isSelected()) {
+		if (e.isPopupTrigger() && (currentNode.isAncestorSelected() || (tree.getEditingNode() == currentNode))) {
 			Outliner.macroPopup.show(e.getComponent(),e.getX(), e.getY());
+			return;
 		}
 	}
 	

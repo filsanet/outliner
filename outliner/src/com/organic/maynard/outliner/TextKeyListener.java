@@ -51,11 +51,18 @@ public class TextKeyListener implements KeyListener, MouseListener {
  		TreeContext tree = currentNode.getTree();
  		OutlineLayoutManager layout = tree.doc.panel.layout;
 
-		// This is detection for Solaris
-		if (e.isPopupTrigger() && (currentNode.isSelected() || (tree.getEditingNode() == currentNode))) {
+		// This is detection for Solaris, I think mac does this too.
+		if (e.isPopupTrigger() && (currentNode.isAncestorSelected() || (tree.getEditingNode() == currentNode))) {
 			Outliner.macroPopup.show(e.getComponent(),e.getX(), e.getY());
+			e.consume();
+			return;
 		}
-	
+
+		// This is to block clicks when a right click is generated in windows.
+		if ((Outliner.isWindows()) && e.getModifiers() == InputEvent.BUTTON3_MASK) {
+			return;
+		}
+			
  		// Clear the selection
  		int selectionSize = tree.selectedNodes.size();
 		tree.clearSelection();
@@ -85,12 +92,23 @@ public class TextKeyListener implements KeyListener, MouseListener {
  	}
  	
  	public void mouseReleased(MouseEvent e) {
+ 		// Catch for Solaris/Mac if they did the popup trigger.
+ 		if (e.isConsumed()) {
+ 			return;
+ 		}
+ 		
  		textArea = (OutlinerCellRendererImpl) e.getComponent();
  		
 		// Shorthand
 		Node currentNode = textArea.node;
  		TreeContext tree = currentNode.getTree();
 
+		// This is detection for Windows
+		if (e.isPopupTrigger() && (currentNode.isAncestorSelected() || (tree.getEditingNode() == currentNode))) {
+			Outliner.macroPopup.show(e.getComponent(),e.getX(), e.getY());
+			return;
+		}
+		
 		// Set the Mark
 		tree.setCursorMarkPosition(textArea.getCaret().getMark());
 		tree.setCursorPosition(textArea.getCaretPosition(),false);
@@ -100,11 +118,6 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		if ((undoable != null) && (undoable.getNode() == currentNode)) {
 			undoable.setNewPosition(textArea.getCaretPosition());
 			undoable.setNewMarkPosition(textArea.getCaret().getMark());
-		}
-
-		// This is detection for Windows
-		if (e.isPopupTrigger() && (currentNode.isSelected() || (tree.getEditingNode() == currentNode))) {
-			Outliner.macroPopup.show(e.getComponent(),e.getX(), e.getY());
 		}
 	}
 
