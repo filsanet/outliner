@@ -105,16 +105,17 @@ abstract class AbstractPreferencesGUITreeComponent implements PreferencesGUITree
 		setLabelText(atts.getValue(A_LABEL));
 
 		// Set the Preference
-		Preference pref = (Preference) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 2);
+		Preference pref = (Preference) GUITreeLoader.getAncestorElementOfClass("com.organic.maynard.outliner.Preference");
+		
 		setPreference(pref);
 		
 		// Add it to the PreferenceList in the parent panel
-		PreferencesPanel prefPanel = (PreferencesPanel) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 3);
+		PreferencesPanel prefPanel = (PreferencesPanel) GUITreeLoader.getAncestorElementOfClass("com.organic.maynard.outliner.PreferencesPanel");
 		prefPanel.addPreference(this);
 	}
 
 	public void endSetup(AttributeList atts) {
-		AbstractPreferencesPanel prefPanel = (AbstractPreferencesPanel) GUITreeLoader.elementStack.get(GUITreeLoader.elementStack.size() - 3);
+		AbstractPreferencesPanel prefPanel = (AbstractPreferencesPanel) GUITreeLoader.getAncestorElementOfClass("com.organic.maynard.outliner.AbstractPreferencesPanel");
 		
 		// Get the style to use
 		String style = atts.getValue(A_STYLE);
