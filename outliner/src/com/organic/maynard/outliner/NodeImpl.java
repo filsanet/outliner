@@ -78,14 +78,17 @@ public class NodeImpl extends AttributeContainerImpl implements Node {
 
 	// The Constructors
 	public NodeImpl(JoeTree tree, String value) {
+		
 		this.tree = tree;
 		this.value = value;
 		
 		// Set Creation Date
-		if (tree.getDocument() != null && tree.getDocument().settings.getUseCreateModDates().cur) {
+		if (tree != null && tree.getDocument() != null && tree.getDocument().getSettings().getUseCreateModDates().cur) {
 			setAttribute(KEY_CREATED, tree.getDocument().settings.dateFormat.format(new Date()), true);
 		}
-	}
+			
+	} // end constructor NodeImpl
+	
 
 	public void destroy() {
 		if (children != null) {
