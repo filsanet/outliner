@@ -15,15 +15,49 @@
 		<target name="init">
 			<tstamp/>
 		</target>
+	<!-- HELP MESSAGE -->
+		<target name="help" description="Prints a help message to the console">
+			<echo><![CDATA[
+Useage: ant <target>
+Targets:
+                 help: Prints this help message to the console.
+                  jar: Cleans, compiles, and jars all everything 
+		       for JOE.
+              javadoc: Generates source code documentation in the 
+	               javadoc format.
+
+		 init: Sets a timestamp.
+
+       clean-outliner: Removes all .class files for the outliner src tree.
+     compile-outliner: Compiles all class files for the outliner src tree.
+         jar-outliner: Creates outliner.jar
+
+    clean-jmousewheel: Removes all .class files for the jmousewheel src tree.
+  compile-jmousewheel: Compiles all class files for the jmousewheel src tree.
+      jar-jmousewheel: Creates jmousewheel.jar
+
+     clean-webfilephp: Removes all .class files for the webfilephp src tree.
+   compile-webfilephp: Compiles all class files for the webfilephp src tree.
+       jar-webfilephp: Creates com.yearahead.io.webfile.jar
+
+         clean-wikiff: Removes all .class files for the wikiff src tree.
+       compile-wikiff: Compiles all class files for the wikiff src tree.
+           jar-wikiff: Creates com.psm.wiki.jar
+
+        clean-maynard: Removes all .class files for the maynard src tree.
+      compile-maynard: Compiles all class files for the maynard src tree.
+          jar-maynard: Creates com.organic.maynard.jar
+			]]></echo>
+		</target>
 	<!-- GLOBAL TARGETS -->
-		<target name="jar" depends="init" description="Cleans, compiles, and jars for all jar files.">
+		<target name="jar" depends="init" description="Cleans, compiles, and jars everything for JOE.">
 			<antcall target="jar-maynard"/>
 			<antcall target="jar-jmousewheel"/>
 			<antcall target="jar-outliner"/>
 			<antcall target="jar-webfilephp"/>
 			<antcall target="jar-wikiff"/>
 		</target>
-		<target name="javadoc" depends="init" description="Generates Documentation.">
+		<target name="javadoc" depends="init" description="Generates source code documentation in the javadoc format.">
 			<delete dir="dox/api"/>
 			<mkdir  dir="dox/api"/>
 			<javadoc packagenames="com.*, gui.*"
@@ -37,16 +71,16 @@
 			</javadoc>
 		</target>
 	<!-- jmousewheel TARGETS -->
-		<target name="compile-jmousewheel" depends="init, clean-jmousewheel" description="Compile classes for jmousewheel.">
+		<target name="compile-jmousewheel" depends="init, clean-jmousewheel" description="Compiles all class files for the jmousewheel src tree.">
 			<javac debug="false" optimize="true" deprecation="false" srcdir="${src-jmousewheel}"/>
 		</target>
-		<target name="jar-jmousewheel" depends="compile-jmousewheel" description="Create jmousewheel.jar">
+		<target name="jar-jmousewheel" depends="compile-jmousewheel" description="Creates jmousewheel.jar">
 			<jar basedir="${src}" compress="true" jarfile="${lib}/jmousewheel.jar">
 				<include name="gui/**"/>
 				<exclude name="**/*.java"/>
 			</jar>
 		</target>
-		<target name="clean-jmousewheel" description="Clean all .class files for jmousewheel.">
+		<target name="clean-jmousewheel" description="Removes all .class files for the jmousewheel src tree.">
 			<delete>
 				<fileset dir="${src-jmousewheel}">
 					<include name="**/*.class"/>
@@ -54,7 +88,7 @@
 			</delete>
 		</target>
 	<!-- webfilephp TARGETS -->
-		<target name="compile-webfilephp" depends="init, clean-webfilephp" description="Compile classes for webfilephp.">
+		<target name="compile-webfilephp" depends="init, clean-webfilephp" description="Compiles all class files for the webfilephp src tree.">
 			<javac debug="false" optimize="true" deprecation="false" srcdir="${src-webfilephp}">
 				<classpath>
 					<pathelement path="${lib}/com.organic.maynard.jar"/>
@@ -64,13 +98,13 @@
 				</classpath>
 			</javac>
 		</target>
-		<target name="jar-webfilephp" depends="compile-webfilephp" description="Create com.yearahead.io.webfile.jar">
+		<target name="jar-webfilephp" depends="compile-webfilephp" description="Creates com.yearahead.io.webfile.jar">
 			<jar basedir="${src}" compress="true" jarfile="${lib}/com.yearahead.io.webfile.jar">
 				<include name="com/yearahead/**"/>
 				<exclude name="**/*.java"/>
 			</jar>
 		</target>
-		<target name="clean-webfilephp" description="Clean all .class files for webfilephp.">
+		<target name="clean-webfilephp" description="Removes all .class files for the webfilephp src tree.">
 			<delete>
 				<fileset dir="${src-webfilephp}">
 					<include name="**/*.class"/>
@@ -78,7 +112,7 @@
 			</delete>
 		</target>
 	<!-- wikiff TARGETS -->
-		<target name="compile-wikiff" depends="init, clean-wikiff" description="Compile classes for wikiff.">
+		<target name="compile-wikiff" depends="init, clean-wikiff" description="Compiles all class files for the wikiff src tree.">
 			<javac debug="false" optimize="true" deprecation="false" srcdir="${src-wikiff}">
 				<classpath>
 					<pathelement path="${lib}/com.organic.maynard.jar"/>
@@ -88,13 +122,13 @@
 				</classpath>
 			</javac>
 		</target>
-		<target name="jar-wikiff" depends="compile-wikiff" description="Create com.psm.wiki.jar">
+		<target name="jar-wikiff" depends="compile-wikiff" description="Creates com.psm.wiki.jar">
 			<jar basedir="${src}" compress="true" jarfile="${lib}/com.psm.wiki.jar">
 				<include name="com/psm/wiki/**"/>
 				<exclude name="**/*.java"/>
 			</jar>
 		</target>
-		<target name="clean-wikiff" description="Clean all .class files for wikiff.">
+		<target name="clean-wikiff" description="Removes all .class files for the wikiff src tree.">
 			<delete>
 				<fileset dir="${src-wikiff}">
 					<include name="**/*.class"/>
@@ -102,7 +136,7 @@
 			</delete>
 		</target>
 	<!-- maynard TARGETS -->
-		<target name="compile-maynard" depends="init, clean-maynard" description="Compile classes for maynard.">
+		<target name="compile-maynard" depends="init, clean-maynard" description="Compiles all class files for the maynard src tree.">
 			<javac debug="false" optimize="true" deprecation="false" srcdir="${src-maynard}">
 				<classpath>
 					<pathelement path="${lib}/bsh.jar"/>
@@ -117,14 +151,14 @@
 				<exclude name="outliner/**"/>
 			</javac>
 		</target>
-		<target name="jar-maynard" depends="compile-maynard" description="Create com.organic.maynard.jar">
+		<target name="jar-maynard" depends="compile-maynard" description="Creates com.organic.maynard.jar">
 			<jar basedir="${src}" compress="true" jarfile="${lib}/com.organic.maynard.jar">
 				<exclude name="com/organic/maynard/outliner/**"/>
 				<exclude name="**/*.java"/>
 				<exclude name="graphics/**"/>
 			</jar>
 		</target>
-		<target name="clean-maynard" description="Clean all .class files for maynard.">
+		<target name="clean-maynard" description="Removes all .class files for the maynard src tree.">
 			<delete>
 				<fileset dir="${src-maynard}">
 					<exclude name="outliner/**"/>
@@ -133,7 +167,7 @@
 			</delete>
 		</target>
 	<!-- outliner TARGETS -->
-		<target name="compile-outliner" depends="init, clean-outliner" description="Compile classes for outliner.">
+		<target name="compile-outliner" depends="init, clean-outliner" description="Compiles all class files for the outliner src tree.">
 			<javac debug="true" optimize="true" deprecation="false" srcdir="${src-outliner}">
 				<classpath>
 					<pathelement path="${lib}/bsh.jar"/>
@@ -147,14 +181,14 @@
 				</classpath>
 			</javac>
 		</target>
-		<target name="jar-outliner" depends="compile-outliner" description="Create outliner.jar">
+		<target name="jar-outliner" depends="compile-outliner" description="Creates outliner.jar">
 			<jar basedir="${src}" compress="true" jarfile="${lib}/outliner.jar">
 				<include name="com/organic/maynard/outliner/**"/>
 				<include name="graphics/**"/>
 				<exclude name="**/*.java"/>
 			</jar>
 		</target>
-		<target name="clean-outliner" description="Clean all .class files for outliner.">
+		<target name="clean-outliner" description="Removes all .class files for the outliner src tree.">
 			<delete>
 				<fileset dir="${src-outliner}">
 					<include name="**/*.class"/>
