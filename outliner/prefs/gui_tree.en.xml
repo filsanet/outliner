@@ -52,7 +52,7 @@
 		<asset type="text" key="error_file_format_does_not_support_moveability" value="The file format you are saving with: {$value_1}, does not support moveability settings.\nThe document contains moveable node settings that will NOT be saved.\nDo you want to save?"/>
 		<asset type="text" key="error_file_not_found" value="An error occurred. File not found: {$value_1}"/>
 		<asset type="text" key="error_window_monitor_save_changes" value="The text in the {$value_1} file has changed.\nDo you want to save the changes?"/>
-		<asset type="text" key="error_window_monitor_untitled_save_changes" value="The text in the Untitled file has changed.\nDo you want to save the changes?"/>
+		<asset type="text" key="error_window_monitor_untitled_save_changes" value="The text in the {$value_1} file has changed.\nDo you want to save the changes?"/>
 		<asset type="text" key="escape" value="Escape"/>
 		<asset type="text" key="file_encoding" value="File Encoding"/>
 		<asset type="text" key="file_format" value="File Format"/>
