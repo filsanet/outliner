@@ -514,6 +514,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 	
 	public void keyReleased(KeyEvent e) {
 		textArea = (OutlinerCellRendererImpl) e.getComponent();
+		int keyCode = e.getKeyCode();
 
 		// Create some short names for convienence
 		Node currentNode = textArea.node;
@@ -529,49 +530,71 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		if (e.isControlDown()) {
 			if (e.isShiftDown()) {
 				return;
-			} else if ((e.getKeyCode() == KeyEvent.VK_X) || ((e.getKeyCode() == KeyEvent.VK_V) && inlinePaste)) {
+			} else if ((keyCode == KeyEvent.VK_X) || ((keyCode == KeyEvent.VK_V) && inlinePaste)) {
 				// Do Nothing
 			} else {
 				return;
 			}
 		}
 		
+		// Keep any meta keys from effecting undoability.
+		if (e.isAltDown() || e.isAltGraphDown() || e.isMetaDown()) {
+			return;
+		}
+		
 		// Keep unwanted keystrokes from effecting undoability.
 		boolean doUndo = true;
-		switch(e.getKeyCode()) {
-			case KeyEvent.VK_SHIFT:
-				return;
-			case KeyEvent.VK_CONTROL:
-				return;
-			case KeyEvent.VK_PAGE_UP:
-				return;
-			case KeyEvent.VK_PAGE_DOWN:
-				return;
-			case KeyEvent.VK_UP:
-				return;
-			case KeyEvent.VK_DOWN:
-				return;
-			case KeyEvent.VK_LEFT:
-				return;
-			case KeyEvent.VK_RIGHT:
-				return;
+		switch(keyCode) {
 			case KeyEvent.VK_ENTER:
-				return;
-			case KeyEvent.VK_INSERT:
-				return;
 			case KeyEvent.VK_TAB:
+			case KeyEvent.VK_SHIFT:
+			case KeyEvent.VK_CONTROL:
+			case KeyEvent.VK_ALT:
+			case KeyEvent.VK_CAPS_LOCK:
+			case KeyEvent.VK_ESCAPE:
+			case KeyEvent.VK_PAGE_UP:
+			case KeyEvent.VK_PAGE_DOWN:
+			case KeyEvent.VK_LEFT:
+			case KeyEvent.VK_UP:
+			case KeyEvent.VK_RIGHT:
+			case KeyEvent.VK_DOWN:
+			case KeyEvent.VK_NUM_LOCK:
+			case KeyEvent.VK_SCROLL_LOCK:
+			case KeyEvent.VK_F1:
+			case KeyEvent.VK_F2:
+			case KeyEvent.VK_F3:
+			case KeyEvent.VK_F4:
+			case KeyEvent.VK_F5:
+			case KeyEvent.VK_F6:
+			case KeyEvent.VK_F7:
+			case KeyEvent.VK_F8:
+			case KeyEvent.VK_F9:
+			case KeyEvent.VK_F10:
+			case KeyEvent.VK_F11:
+			case KeyEvent.VK_F12:
+			case KeyEvent.VK_F13:
+			case KeyEvent.VK_F14:
+			case KeyEvent.VK_F15:
+			case KeyEvent.VK_F16:
+			case KeyEvent.VK_F17:
+			case KeyEvent.VK_F18:
+			case KeyEvent.VK_F19:
+			case KeyEvent.VK_F20:
+			case KeyEvent.VK_F21:
+			case KeyEvent.VK_F22:
+			case KeyEvent.VK_F23:
+			case KeyEvent.VK_F24:
+			case KeyEvent.VK_PRINTSCREEN:
+			case KeyEvent.VK_INSERT:
+			case KeyEvent.VK_HELP:
+			case KeyEvent.VK_META:
 				return;
+				
 			// These keystrokes should not effect undoablility, but do 
 			// effect cursor position and redraw.
 			case KeyEvent.VK_BACK_SPACE: // Undoability already recorded in keyTyped.
-				doUndo = false;
-				break;
 			case KeyEvent.VK_DELETE: // Undoability already recorded in keyTyped.
-				doUndo = false;
-				break;
 			case KeyEvent.VK_HOME:
-				doUndo = false;
-				break;
 			case KeyEvent.VK_END:
 				doUndo = false;
 				break;
@@ -589,7 +612,7 @@ public class TextKeyListener implements KeyListener, MouseListener {
 			// Put the Undoable onto the UndoQueue
 			UndoableEdit undoable = tree.getDocument().undoQueue.getIfEdit();
 			if ((undoable != null) && (undoable.getNode() == currentNode) && (!undoable.isFrozen())) {
-				if (e.isControlDown() && ((e.getKeyCode() == KeyEvent.VK_X) || (e.getKeyCode() == KeyEvent.VK_V))) {
+				if (e.isControlDown() && ((keyCode == KeyEvent.VK_X) || (keyCode == KeyEvent.VK_V))) {
 					tree.getDocument().undoQueue.add(new UndoableEdit(currentNode, oldText, newText, tree.getCursorPosition(), caretPosition, tree.getCursorMarkPosition(), caretPosition));
 				} else {
 					undoable.setNewText(newText);
