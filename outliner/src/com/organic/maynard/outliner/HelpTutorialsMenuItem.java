@@ -85,7 +85,7 @@ public class HelpTutorialsMenuItem
 
 
 	// try to open up the Help system's Tutorials document
-	protected static boolean openHelpTutorialsDocument() {
+	protected static int openHelpTutorialsDocument() {
 		// set up 
 		String encoding = "ISO-8859-1";
 		String fileFormat = "OPML";
