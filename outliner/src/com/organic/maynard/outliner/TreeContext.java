@@ -221,13 +221,14 @@ public class TreeContext extends AttributeContainerImpl implements JoeTree {
 				cutItem.setEnabled(false);
 				deleteItem.setEnabled(false);
 				exportSelectionItem.setEnabled(false);
-			} else if (selectedNodes.size() == 1) {
-				if (node.isLeaf()) {
-					hoistItem.setEnabled(false);
-				} else {
-					hoistItem.setEnabled(true);
-				}
 			} else {
+				if (selectedNodes.size() == 1) {
+					if (node.isLeaf()) {
+						hoistItem.setEnabled(false);
+					} else {
+						hoistItem.setEnabled(true);
+					}
+				}
 				copyItem.setEnabled(true);
 				cutItem.setEnabled(true);
 				deleteItem.setEnabled(true);
