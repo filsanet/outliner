@@ -236,6 +236,7 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		OutlinerCellRendererImpl.textAreaWidth = panel.getWidth()
 			 - OutlinerCellRendererImpl.lineNumberOffset 
 			 - OutlineLineNumber.LINE_NUMBER_WIDTH 
+			 - OutlineButton.BUTTON_WIDTH
 			 - Preferences.getPreferenceInt(Preferences.RIGHT_MARGIN).cur 
 			 - scrollBar.getWidth();
 			 
