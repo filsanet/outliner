@@ -28,8 +28,8 @@ public class NodeImpl implements Node {
 	private Node parent = null;
 	private String value = null;
 	private HashMap attributes = null;
-	// IMPROVE: Could children be initially null and do lazy instantiation. This could save memory.
-	private ArrayList children = new ArrayList(10);
+	private ArrayList children = null;
+	private static final int INITIAL_ARRAY_LIST_SIZE = 10;
 
 	private int depth = -1; // -1 so that children of root will be depth 0.
 	
@@ -54,9 +54,11 @@ public class NodeImpl implements Node {
 	}
 
 	public void destroy() {
-		for (int i = 0; i < children.size(); i++) {
-			Node child = (Node) children.get(i);
-			child.destroy();
+		if (children != null) {
+			for (int i = 0; i < children.size(); i++) {
+				Node child = (Node) children.get(i);
+				child.destroy();
+			}
 		}
 		
 		tree = null;
@@ -157,9 +159,19 @@ public class NodeImpl implements Node {
 	public Node getParent() {return parent;}
 	
 	// Child Methods
-	public int numOfChildren() {return children.size();}
+	public int numOfChildren() {
+		if (children != null) {
+			return children.size();
+		} else {
+			return 0;
+		}
+	}
 	
 	public void appendChild(Node node) {
+		if (children == null) {
+			children = new ArrayList(INITIAL_ARRAY_LIST_SIZE);
+		}
+		
 		children.add(node);
 		node.setParent(this);
 		
@@ -176,6 +188,10 @@ public class NodeImpl implements Node {
 	}
 	
 	public void removeChild(Node node) {
+		if (children == null) {
+			return;
+		}
+		
 		node.setParent(null);
 		children.remove(node);
 
@@ -184,6 +200,10 @@ public class NodeImpl implements Node {
 	}
 	
 	public Node getChild(int i) {
+		if (children == null) {
+			return null;
+		}
+		
 		try {
 			return (Node) children.get(i);
 		} catch (IndexOutOfBoundsException iofbe) {
@@ -192,6 +212,10 @@ public class NodeImpl implements Node {
 	}
 
 	public Node getFirstChild() {
+		if (children == null) {
+			return null;
+		}
+	
 		if (isLeaf()) {
 			return null;
 		} else {
@@ -200,6 +224,10 @@ public class NodeImpl implements Node {
 	}
 	
 	public Node getLastChild() {
+		if (children == null) {
+			return null;
+		}
+
 		if (isLeaf()) {
 			return null;
 		} else {
@@ -270,6 +298,10 @@ public class NodeImpl implements Node {
 	}
 	
 	public void insertChild(Node node, int i) {
+		if (children == null) {
+			children = new ArrayList(INITIAL_ARRAY_LIST_SIZE);
+		}
+
 		children.add(i,node);
 		node.setParent(this);
 
@@ -279,10 +311,18 @@ public class NodeImpl implements Node {
 	}
 	
 	public int getChildIndex(Node node) {
+		if (children == null) {
+			return -1;
+		}
+
 		return children.indexOf(node);
 	}
 	
 	public boolean isLeaf() {
+		if (children == null) {
+			return true;
+		}
+
 		if (children.isEmpty()) {
 			return true;
 		} else {
@@ -648,8 +688,6 @@ public class NodeImpl implements Node {
 
 	// String Representation Methods	
 	public void depthPaddedValue(StringBuffer buf, String lineEndString) {
-		//StringBuffer retVal = new StringBuffer();
-		
 		if (!isRoot()) {
 			for (int i = 0; i < this.depth; i++) {
 				buf.append(Preferences.DEPTH_PAD_STRING);
@@ -661,8 +699,6 @@ public class NodeImpl implements Node {
 		for (int i = 0; i < this.numOfChildren(); i++) {
 			this.getChild(i).depthPaddedValue(buf, lineEndString);
 		}
-		
-		//return retVal.toString();
 	}
 	
 	public void getMergedValue(StringBuffer buf) {
