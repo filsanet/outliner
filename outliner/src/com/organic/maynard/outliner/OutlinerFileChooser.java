@@ -54,11 +54,9 @@ public class OutlinerFileChooser extends JFileChooser {
 	private JComboBox saveEncodingComboBox = new JComboBox();
 	private JComboBox saveFormatComboBox = new JComboBox();
 
-//	private JComboBox openLineEndComboBox = new JComboBox(PlatformCompatibility.PLATFORM_IDENTIFIERS);
 	private JComboBox openEncodingComboBox = new JComboBox();
 	private JComboBox openFormatComboBox = new JComboBox();
 
-//	private JComboBox importLineEndComboBox = new JComboBox(PlatformCompatibility.PLATFORM_IDENTIFIERS);
 	private JComboBox importEncodingComboBox = new JComboBox();
 	private JComboBox importFormatComboBox = new JComboBox();
 
@@ -142,11 +140,6 @@ public class OutlinerFileChooser extends JFileChooser {
 		// Layout open panel
 		Box box2 = Box.createVerticalBox();
 
-//		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("line_terminator")), box2);
-//		addSingleItemCentered(openLineEndComboBox, box2);
-
-//		box2.add(Box.createVerticalStrut(5));
-		
 		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_encoding")), box2);
 		addSingleItemCentered(openEncodingComboBox, box2);
 
@@ -160,11 +153,6 @@ public class OutlinerFileChooser extends JFileChooser {
 		// Layout import panel
 		Box box4 = Box.createVerticalBox();
 
-//		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("line_terminator")), box4);
-//		addSingleItemCentered(importLineEndComboBox, box4);
-
-//		box4.add(Box.createVerticalStrut(5));
-		
 		addSingleItemCentered(new JLabel(GUITreeLoader.reg.getText("file_encoding")), box4);
 		addSingleItemCentered(importEncodingComboBox, box4);
 
@@ -245,7 +233,6 @@ public class OutlinerFileChooser extends JFileChooser {
 		setAccessory(openAccessory);
 		
 		// Set the Accessory GUI state.
-		//openLineEndComboBox.setSelectedItem(doc.settings.lineEnd.cur);
 		openEncodingComboBox.setSelectedItem(Preferences.getPreferenceString(Preferences.OPEN_ENCODING).cur);
 		openFormatComboBox.setSelectedItem(Preferences.getPreferenceString(Preferences.OPEN_FORMAT).cur);
 
@@ -264,7 +251,6 @@ public class OutlinerFileChooser extends JFileChooser {
 		setAccessory(openAccessory);
 		
 		// Set the Accessory GUI state.
-//		importLineEndComboBox.setSelectedItem(doc.settings.lineEnd.cur);
 		importEncodingComboBox.setSelectedItem(Preferences.getPreferenceString(Preferences.IMPORT_ENCODING).cur);
 		importFormatComboBox.setSelectedItem(Preferences.getPreferenceString(Preferences.IMPORT_FORMAT).cur);
 
@@ -278,11 +264,9 @@ public class OutlinerFileChooser extends JFileChooser {
 	// Accessors
 //	public String getLineEnding() {return (String) lineEndComboBox.getSelectedItem();}
 
-//	public String getOpenLineEnding() {return (String) openLineEndComboBox.getSelectedItem();}
 	public String getOpenEncoding() {return (String) openEncodingComboBox.getSelectedItem();}
 	public String getOpenFileFormat() {return (String) openFormatComboBox.getSelectedItem();}
 
-//	public String getImportLineEnding() {return (String) importLineEndComboBox.getSelectedItem();}
 	public String getImportEncoding() {return (String) importEncodingComboBox.getSelectedItem();}
 	public String getImportFileFormat() {return (String) importFormatComboBox.getSelectedItem();}
 
