@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
-<script>// Description: This script prompts the user for a directory path. It then crawls the
-// directory structure creating an HTML file in each directory that displays each Image
-// with it's width and height.
+<script>// Description: This script interprets the currently selected node as a filepath. It then
+// proceeds to crawl the directory structure creating a node for every gif or jpg it finds. The
+// text of the node is the name of the file and the width and height.
 
+import java.awt.Dimension;
 import java.io.File;
 import javax.swing.ImageIcon;
 import com.organic.maynard.io.FileTools;
+import com.organic.maynard.imaging.ImageTools;
 
 String path = "";
 
@@ -22,9 +24,16 @@ promptForPath() {
 	}
 }
 
+long fixedArea = 10000;
+double arFloor = 0.5;
+double arCeiling = 2.0;
+
 generateManifestsRecursively(String path) {
 	File file = new File(path);
 	File[] files = file.listFiles();
+
+	// Sort the list
+	Arrays.sort(files);
 
 	File manifestFile = new File(path + "/manifest.html");
 	StringBuffer buf = new StringBuffer("&lt;html>&lt;head>&lt;title>manifest&lt;/title>&lt;/head>&lt;body>");
@@ -32,7 +41,7 @@ generateManifestsRecursively(String path) {
 	StringBuffer subDirs = new StringBuffer("");
 
 	// Prep fileList header
-	fileList.append("&lt;tr valign=\"top\" bgcolor=\"#aaaaaa\">&lt;td>&lt;b>Name&lt;/b>&lt;/td>&lt;td>&lt;b>Dimensions&lt;/b>&lt;/td>&lt;td>&lt;b>Image&lt;/b>&lt;/td>&lt;/tr>");
+	fileList.append("&lt;tr valign=\"top\" bgcolor=\"#aaaaaa\">&lt;td>&lt;b>Name&lt;/b>&lt;/td>&lt;td>&lt;b>Dimensions&lt;/b>&lt;/td>&lt;td>&lt;b>Aspect&amp;#160;Ratio&lt;br>Valid&amp;#160;Range:&amp;#160;" + arFloor + "&amp;#160;-&amp;#160;" + arCeiling + "&lt;/b>&lt;/td>&lt;td>&lt;b>Sizing&amp;#160;for&amp;#160;Area of&amp;#160;" + fixedArea + "&amp;#160;pixels&lt;/b>&lt;/td>&lt;td>&lt;b>Image&lt;/b>&lt;/td>&lt;/tr>");
 
 	// Loop over the files in the directory.
 	boolean even = false;
@@ -58,6 +67,16 @@ generateManifestsRecursively(String path) {
 			}
 			fileList.append("&lt;td>&lt;a href=\"" + src + "\">" + src + "&lt;/a>&lt;/td>");
 			fileList.append("&lt;td> " + width + "x" + height + "&lt;/td>");
+			double ar = ImageTools.getAspectRatio(width, height);
+			if (ar &lt; arFloor) {
+				fileList.append("&lt;td>&lt;font color=\"#ffff00\"> " + ar + "&lt;/font>&lt;/td>");
+			} else if (ar > arCeiling) {
+				fileList.append("&lt;td>&lt;font color=\"#ff0000\"> " + ar + "&lt;/font>&lt;/td>");
+			} else {
+				fileList.append("&lt;td> " + ar + "&lt;/td>");
+			}
+			Dimension d = ImageTools.resizeToArea(width, height, fixedArea);
+			fileList.append("&lt;td> " + d.width + "x" + d.height + "&lt;/td>");
 			fileList.append("&lt;td>&lt;a href=\"" + src + "\">&lt;img src=\"" + src + "\" width=\"" + width + "\" height=\"" + height + "\" border=\"0\" alt=\"\">&lt;/a>&lt;/td>");
 			fileList.append("&lt;/tr>");
 
@@ -72,6 +91,9 @@ generateManifestsRecursively(String path) {
 	buf.append("&lt;a href=\"../manifest.html\">Parent&lt;/a>&lt;br>");
 	buf.append("&lt;h2>Subdirectories&lt;/h2>" + subDirs.toString());
 	buf.append("&lt;h2>Files&lt;/h2>" + fileList.toString());
+
+	// Footer
+	buf.append("&lt;p>&lt;i>Last Rendered: " + DocumentInfo.getCurrentDateTimeString() + "&lt;/i>&lt;/p>");
 	buf.append("&lt;/body>&lt;/html>");
 
 	// Save the manifest to disk.
@@ -88,7 +110,5 @@ if (path == null) {
 
 while (true) {
 	generateManifestsRecursively(path);
-	// Adjust the time below to set the frequency with which the
-	// image manifets are created. Currently set to 30sec.
 	Thread.sleep(30000);
 }</script>
