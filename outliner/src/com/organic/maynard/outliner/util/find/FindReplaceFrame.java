@@ -74,9 +74,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 	
 	// Constants
 	private static final int MINIMUM_WIDTH = 550;
-	private static final int MINIMUM_HEIGHT = 650;
+	private static final int MINIMUM_HEIGHT = 600;
  	private static final int INITIAL_WIDTH = 550;
-	private static final int INITIAL_HEIGHT = 650;
+	private static final int INITIAL_HEIGHT = 600;
 	
 	private static final String REGEX_MATCH_START = "m/";
 	private static final String REGEX_MATCH_END = "/";
@@ -88,13 +88,14 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 	private static final String REGEX_REPLACE_END_IGNORE_CASE = "/i";
 	
 	
+	// Pseudo Constants
 	// Perl Regex
 	private static Perl5Util util = null;
 	private static PatternMatcherInput input = null;
 	private static MatchResult result = null;
 	private static Perl5Compiler compiler = null;
 	
-        
+	
 	// Button Text and Other Copy
 	private static String FIND = null;
 	private static String FIND_ALL = null;
@@ -109,6 +110,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 	private static String SELECTION_ONLY = null;
 	private static String IGNORE_CASE = null;
 	private static String INCLUDE_READ_ONLY_NODES = null;
+	private static String INCLUDE_READ_ONLY_NODES_ALL_DOCUMENTS = null;
 	private static String REGEXP = null;
 	
 	private static String CURRENT_DOCUMENT = GUITreeLoader.reg.getText("current_document");
@@ -138,27 +140,21 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 	private static String TT_FILTER = GUITreeLoader.reg.getText("instruction_type_globs");
 	
 	// Define Fields and Buttons
+	private static JTabbedPane tabs;
+	private static Component tabDocument;
+	private static Component tabAllDocuments;
+	private static Component tabFileSystem;
+	
+	private static JTextArea TEXTAREA_FIND = null;
+	private static JTextArea TEXTAREA_REPLACE = null;
+	
 	private static JCheckBox CHECKBOX_START_AT_TOP = null;
 	private static JCheckBox CHECKBOX_WRAP_AROUND = null;
 	private static JCheckBox CHECKBOX_SELECTION_ONLY = null;
 	private static JCheckBox CHECKBOX_IGNORE_CASE = null;
 	private static JCheckBox CHECKBOX_INCLUDE_READ_ONLY_NODES = null;
+	private static JCheckBox CHECKBOX_INCLUDE_READ_ONLY_NODES_ALL_DOCUMENTS = null;
 	private static JCheckBox CHECKBOX_REGEXP = null;
-	
-	private static JRadioButton RADIO_CURRENT_DOCUMENT = null;
-	private static JRadioButton RADIO_ALL_OPEN_DOCUMENTS = null;
-	private static JRadioButton RADIO_FILE_SYSTEM = null;
-	
-	private static JButton BUTTON_FIND = null;
-	private static JButton BUTTON_FIND_ALL = null;
-	private static JButton BUTTON_REPLACE = null;
-	private static JButton BUTTON_REPLACE_ALL = null;
-	
-	private static JLabel LABEL_FIND = null;
-	private static JTextArea TEXTAREA_FIND = null;
-	
-	private static JLabel LABEL_REPLACE = null;
-	private static JTextArea TEXTAREA_REPLACE = null;
 	
 	private static JLabel LABEL_PATH = null;
 	private static JTextField TEXTFIELD_PATH = null;
@@ -166,7 +162,6 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 	private static JCheckBox CHECKBOX_INCLUDE_SUB_DIRECTORIES = null;
 	private static JCheckBox CHECKBOX_MAKE_BACKUPS = null;
 	
-	private static JLabel LABEL_FILE_FILTER = null;
 	private static JLabel LABEL_FILE_FILTER_INCLUDE = null;
 	private static JLabel LABEL_FILE_FILTER_EXCLUDE = null;
 	private static JTextField TEXTFIELD_FILE_FILTER_INCLUDE = null;
@@ -174,7 +169,6 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 	private static JCheckBox CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE = null;
 	private static JCheckBox CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE = null;
 	
-	private static JLabel LABEL_DIR_FILTER = null;
 	private static JLabel LABEL_DIR_FILTER_INCLUDE = null;
 	private static JLabel LABEL_DIR_FILTER_EXCLUDE = null;
 	private static JTextField TEXTFIELD_DIR_FILTER_INCLUDE = null;
@@ -182,126 +176,103 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 	private static JCheckBox CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE = null;
 	private static JCheckBox CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE = null;
 	
-	// Define the left panel
-	protected static JList LIST = null;
-	private static JScrollPane jsp = null;
+	private static JButton BUTTON_FIND = null;
+	private static JButton BUTTON_FIND_ALL = null;
+	private static JButton BUTTON_REPLACE = null;
+	private static JButton BUTTON_REPLACE_ALL = null;
+	
+	// Define the right panel
+	protected static JList FIND_REPLACE_LIST = null;
 	
 	private static JButton BUTTON_NEW = null;
 	private static JButton BUTTON_DELETE = null;
 	
-	
 	// Model
 	public static FindReplaceModel model = null;
-	
 	private static FindReplaceDialog findReplaceDialog = null;
-	
-	// File Chooser
 	private static JFileChooser fileChooser = null;
 	
+	
+	// Static Fields
+	
+	
+	// Instance Fields
+	private boolean initialized = false;
+	
+	
 	// Static Methods
-	private static boolean documentRadiosEnabled = true;
-	
-	private static void enableButtons() {
-		RADIO_CURRENT_DOCUMENT.setEnabled(true);
-		RADIO_ALL_OPEN_DOCUMENTS.setEnabled(true);
-		
-		if (RADIO_CURRENT_DOCUMENT.isSelected()) {
-			BUTTON_FIND.setEnabled(true);
-			BUTTON_FIND_ALL.setEnabled(true);
-			BUTTON_REPLACE.setEnabled(true);
-			BUTTON_REPLACE_ALL.setEnabled(true);
-			CHECKBOX_START_AT_TOP.setEnabled(true);
-			CHECKBOX_WRAP_AROUND.setEnabled(true);
-			CHECKBOX_SELECTION_ONLY.setEnabled(true);
-			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
-			TEXTFIELD_PATH.setEnabled(false);
-			BUTTON_SELECT.setEnabled(false);
-			CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(false);
-			CHECKBOX_MAKE_BACKUPS.setEnabled(false);
-			TEXTFIELD_FILE_FILTER_INCLUDE.setEnabled(false);
-			TEXTFIELD_FILE_FILTER_EXCLUDE.setEnabled(false);
-			CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
-			CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
-			TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(false);
-			TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(false);
-			CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
-			CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
-			LABEL_PATH.setEnabled(false);
-			LABEL_FILE_FILTER.setEnabled(false);
-			LABEL_FILE_FILTER_INCLUDE.setEnabled(false);
-			LABEL_FILE_FILTER_EXCLUDE.setEnabled(false);
-			LABEL_DIR_FILTER.setEnabled(false);
-			LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
-			LABEL_DIR_FILTER_EXCLUDE.setEnabled(false);
-			
-		} else if (RADIO_ALL_OPEN_DOCUMENTS.isSelected()) {
-			BUTTON_FIND.setEnabled(true);
-			BUTTON_FIND_ALL.setEnabled(true);
-			BUTTON_REPLACE.setEnabled(true);
-			BUTTON_REPLACE_ALL.setEnabled(true);
-			CHECKBOX_START_AT_TOP.setEnabled(false);
-			CHECKBOX_WRAP_AROUND.setEnabled(false);
-			CHECKBOX_SELECTION_ONLY.setEnabled(false);
-			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
-			TEXTFIELD_PATH.setEnabled(false);
-			BUTTON_SELECT.setEnabled(false);
-			CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(false);
-			CHECKBOX_MAKE_BACKUPS.setEnabled(false);
-			TEXTFIELD_FILE_FILTER_INCLUDE.setEnabled(false);
-			TEXTFIELD_FILE_FILTER_EXCLUDE.setEnabled(false);
-			CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
-			CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
-			TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(false);
-			TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(false);
-			CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
-			CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
-			LABEL_PATH.setEnabled(false);
-			LABEL_FILE_FILTER.setEnabled(false);
-			LABEL_FILE_FILTER_INCLUDE.setEnabled(false);
-			LABEL_FILE_FILTER_EXCLUDE.setEnabled(false);
-			LABEL_DIR_FILTER.setEnabled(false);
-			LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
-			LABEL_DIR_FILTER_EXCLUDE.setEnabled(false);
+	private static void updateButtons() {
+		int doc_count = Outliner.documents.openDocumentCount();
+		Component selectedTab = tabs.getSelectedComponent();
+		if (doc_count <= 0) {
+			tabs.setEnabledAt(0, false);
+			tabs.setEnabledAt(1, false);
+			if (tabDocument == selectedTab || tabAllDocuments == selectedTab) {
+				BUTTON_FIND.setEnabled(false);
+				BUTTON_FIND_ALL.setEnabled(false);
+				BUTTON_REPLACE.setEnabled(false);
+				BUTTON_REPLACE_ALL.setEnabled(false);
+				CHECKBOX_START_AT_TOP.setEnabled(false);
+				CHECKBOX_WRAP_AROUND.setEnabled(false);
+				CHECKBOX_SELECTION_ONLY.setEnabled(false);
+				CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(false);
+				CHECKBOX_INCLUDE_READ_ONLY_NODES_ALL_DOCUMENTS.setEnabled(false);
+			} else if (selectedTab == tabFileSystem) {
+				BUTTON_FIND.setEnabled(false);
+				BUTTON_FIND_ALL.setEnabled(true);
+				BUTTON_REPLACE.setEnabled(false);
+				BUTTON_REPLACE_ALL.setEnabled(true);
+				if (CHECKBOX_INCLUDE_SUB_DIRECTORIES.isSelected()) {
+					LABEL_DIR_FILTER_INCLUDE.setEnabled(true);
+					LABEL_DIR_FILTER_EXCLUDE.setEnabled(true);
+					TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(true);
+					TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(true);
+					CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(true);
+					CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(true);
+				} else {
+					LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
+					LABEL_DIR_FILTER_EXCLUDE.setEnabled(false);
+					TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(false);
+					TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(false);
+					CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
+					CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
+				}
+			}
+		} else {
+			tabs.setEnabledAt(0, true);
+			tabs.setEnabledAt(1, true);
+			if (tabDocument == selectedTab || tabAllDocuments == selectedTab) {
+				BUTTON_FIND.setEnabled(true);
+				BUTTON_FIND_ALL.setEnabled(true);
+				BUTTON_REPLACE.setEnabled(true);
+				BUTTON_REPLACE_ALL.setEnabled(true);
+				CHECKBOX_START_AT_TOP.setEnabled(true);
+				CHECKBOX_WRAP_AROUND.setEnabled(true);
+				CHECKBOX_SELECTION_ONLY.setEnabled(true);
+				CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
+				CHECKBOX_INCLUDE_READ_ONLY_NODES_ALL_DOCUMENTS.setEnabled(true);
+			} else if (selectedTab == tabFileSystem) {
+				BUTTON_FIND.setEnabled(false);
+				BUTTON_FIND_ALL.setEnabled(true);
+				BUTTON_REPLACE.setEnabled(false);
+				BUTTON_REPLACE_ALL.setEnabled(true);
+				if (CHECKBOX_INCLUDE_SUB_DIRECTORIES.isSelected()) {
+					LABEL_DIR_FILTER_INCLUDE.setEnabled(true);
+					LABEL_DIR_FILTER_EXCLUDE.setEnabled(true);
+					TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(true);
+					TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(true);
+					CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(true);
+					CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(true);
+				} else {
+					LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
+					LABEL_DIR_FILTER_EXCLUDE.setEnabled(false);
+					TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(false);
+					TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(false);
+					CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
+					CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
+				}
+			}
 		}
-		
-		documentRadiosEnabled = true;
-	}
-	
-	private static void disableButtons() {
-		RADIO_CURRENT_DOCUMENT.setEnabled(false);
-		RADIO_ALL_OPEN_DOCUMENTS.setEnabled(false);
-		
-		if (RADIO_CURRENT_DOCUMENT.isSelected() || RADIO_ALL_OPEN_DOCUMENTS.isSelected()) {
-			BUTTON_FIND.setEnabled(false);
-			BUTTON_FIND_ALL.setEnabled(false);
-			BUTTON_REPLACE.setEnabled(false);
-			BUTTON_REPLACE_ALL.setEnabled(false);
-			CHECKBOX_START_AT_TOP.setEnabled(false);
-			CHECKBOX_WRAP_AROUND.setEnabled(false);
-			CHECKBOX_SELECTION_ONLY.setEnabled(false);
-			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(false);
-			TEXTFIELD_PATH.setEnabled(false);
-			BUTTON_SELECT.setEnabled(false);
-			CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(false);
-			CHECKBOX_MAKE_BACKUPS.setEnabled(false);
-			TEXTFIELD_FILE_FILTER_INCLUDE.setEnabled(false);
-			TEXTFIELD_FILE_FILTER_EXCLUDE.setEnabled(false);
-			CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
-			CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
-			TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(false);
-			TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(false);
-			CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
-			CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
-			LABEL_PATH.setEnabled(false);
-			LABEL_FILE_FILTER.setEnabled(false);
-			LABEL_FILE_FILTER_INCLUDE.setEnabled(false);
-			LABEL_FILE_FILTER_EXCLUDE.setEnabled(false);
-			LABEL_DIR_FILTER.setEnabled(false);
-			LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
-			LABEL_DIR_FILTER_EXCLUDE.setEnabled(false);
-		}
-		
-		documentRadiosEnabled = false;
 	}
 	
 	
@@ -313,29 +284,50 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 	}
 	
 	private void initialize() {
+		// Initialize Perl RegExp
 		util = new Perl5Util();
 		compiler = new Perl5Compiler();
-		LIST = new JList();
 		monitor = new ProgressDialog();
 		
+		// Setup FindReplaceList in GUI before initializing model since callbacks
+		// are made to the FIND_REPLACE_LIST
+		FIND_REPLACE_LIST = new JList();
+		FIND_REPLACE_LIST.setModel(new DefaultListModel());
+		FIND_REPLACE_LIST.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		FIND_REPLACE_LIST.addListSelectionListener(this);
 		
+		FIND_REPLACE_LIST.addMouseListener(
+			new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					if (e.getClickCount() == 2) {
+						int index = FIND_REPLACE_LIST.locationToIndex(e.getPoint());
+						DefaultListModel model = (DefaultListModel) FIND_REPLACE_LIST.getModel();
+						findReplaceDialog.show(FindReplaceDialog.MODE_RENAME);
+					}
+				}
+			}
+		);
+		
+		JScrollPane jsp = new JScrollPane(FIND_REPLACE_LIST);
+		
+		// Initialize Model
+		model = new FindReplaceModel();
+		
+		findReplaceDialog = new FindReplaceDialog();
+		Outliner.documents.addDocumentRepositoryListener(this);
+		
+		// Setup GUI
 		FIND = GUITreeLoader.reg.getText("find");
 		FIND_ALL = GUITreeLoader.reg.getText("find_all");
 		REPLACE = GUITreeLoader.reg.getText("replace");
 		REPLACE_ALL = GUITreeLoader.reg.getText("replace_all");
-		
-		RADIO_CURRENT_DOCUMENT = new JRadioButton(CURRENT_DOCUMENT);
-		RADIO_CURRENT_DOCUMENT.addActionListener(this);
-		RADIO_ALL_OPEN_DOCUMENTS = new JRadioButton(ALL_OPEN_DOCUMENTS);
-		RADIO_ALL_OPEN_DOCUMENTS.addActionListener(this);
-		RADIO_FILE_SYSTEM = new JRadioButton(FILE_SYSTEM);
-		RADIO_FILE_SYSTEM.addActionListener(this);
 		
 		START_AT_TOP = GUITreeLoader.reg.getText("start_at_top");
 		WRAP_ARROUND = GUITreeLoader.reg.getText("wrap_around");
 		SELECTION_ONLY = GUITreeLoader.reg.getText("selection_only");
 		IGNORE_CASE = GUITreeLoader.reg.getText("ignore_case");
 		INCLUDE_READ_ONLY_NODES = GUITreeLoader.reg.getText("include_read_only_nodes");
+		INCLUDE_READ_ONLY_NODES_ALL_DOCUMENTS = GUITreeLoader.reg.getText("include_read_only_nodes") + " "; // The extra space ensures that this activates a different action listener key.
 		REGEXP = GUITreeLoader.reg.getText("regexp");
 		
 		CHECKBOX_REGEXP = new JCheckBox(REGEXP);
@@ -350,7 +342,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		CHECKBOX_IGNORE_CASE.addActionListener(this);
 		CHECKBOX_INCLUDE_READ_ONLY_NODES = new JCheckBox(INCLUDE_READ_ONLY_NODES);
 		CHECKBOX_INCLUDE_READ_ONLY_NODES.addActionListener(this);
-		
+		CHECKBOX_INCLUDE_READ_ONLY_NODES_ALL_DOCUMENTS = new JCheckBox(INCLUDE_READ_ONLY_NODES_ALL_DOCUMENTS);
+		CHECKBOX_INCLUDE_READ_ONLY_NODES_ALL_DOCUMENTS.addActionListener(this);
 		
 		LABEL_PATH = new JLabel(PATH);
 		TEXTFIELD_PATH = new JTextField();
@@ -361,7 +354,6 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		CHECKBOX_MAKE_BACKUPS = new JCheckBox(MAKE_BACKUPS);
 		CHECKBOX_MAKE_BACKUPS.addActionListener(this);
 		
-		LABEL_FILE_FILTER = new JLabel(FILE_FILTER);
 		LABEL_FILE_FILTER_INCLUDE = new JLabel(INCLUDE);
 		TEXTFIELD_FILE_FILTER_INCLUDE = new JTextField();
 		TEXTFIELD_FILE_FILTER_INCLUDE.setToolTipText(TT_FILTER);
@@ -375,7 +367,6 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.addActionListener(this);
 		CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.setActionCommand(FILE_FILTER_EXCLUDE_IGNORE_CASE);
 		
-		LABEL_DIR_FILTER = new JLabel(DIR_FILTER);
 		LABEL_DIR_FILTER_INCLUDE = new JLabel(INCLUDE);
 		TEXTFIELD_DIR_FILTER_INCLUDE = new JTextField();
 		TEXTFIELD_DIR_FILTER_INCLUDE.setToolTipText(TT_FILTER);
@@ -389,25 +380,16 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.addActionListener(this);
 		CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setActionCommand(DIR_FILTER_EXCLUDE_IGNORE_CASE);	
 		
-		// Add the radio buttons to a group.
-		ButtonGroup radioButtonGroup = new ButtonGroup();
-		radioButtonGroup.add(RADIO_CURRENT_DOCUMENT);
-		radioButtonGroup.add(RADIO_ALL_OPEN_DOCUMENTS);
-		radioButtonGroup.add(RADIO_FILE_SYSTEM);
-		RADIO_CURRENT_DOCUMENT.setSelected(true);
-		
 		BUTTON_FIND = new JButton(FIND);
 		BUTTON_FIND_ALL = new JButton(FIND_ALL);
 		BUTTON_REPLACE = new JButton(REPLACE);
 		BUTTON_REPLACE_ALL = new JButton(REPLACE_ALL);
 		
-		LABEL_FIND = new JLabel(FIND);
 		TEXTAREA_FIND = new JTextArea();
-		TEXTAREA_FIND.getDocument().addDocumentListener(new FindReplaceJTextAreaDocumentListener(FindReplaceJTextAreaDocumentListener.TYPE_FIND));
+		TEXTAREA_FIND.getDocument().addDocumentListener(new FindReplaceJTextAreaDocumentListener(FindReplaceJTextAreaDocumentListener.TYPE_FIND, model));
 		
-		LABEL_REPLACE = new JLabel(REPLACE);
 		TEXTAREA_REPLACE = new JTextArea();
-		TEXTAREA_REPLACE.getDocument().addDocumentListener(new FindReplaceJTextAreaDocumentListener(FindReplaceJTextAreaDocumentListener.TYPE_REPLACE));
+		TEXTAREA_REPLACE.getDocument().addDocumentListener(new FindReplaceJTextAreaDocumentListener(FindReplaceJTextAreaDocumentListener.TYPE_REPLACE, model));
 		
 		Insets insets = new Insets(1,3,1,3);
 		Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
@@ -424,47 +406,18 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		TEXTAREA_REPLACE.setMargin(insets);
 		TEXTAREA_REPLACE.setRows(3);
 		
-		// Left Panel
+		// Right Panel
 		NEW = GUITreeLoader.reg.getText("new");
 		DELETE = GUITreeLoader.reg.getText("delete");
 		
 		BUTTON_NEW = new JButton(NEW);
 		BUTTON_DELETE = new JButton(DELETE);
 		
-		LIST.setModel(new DefaultListModel());
-		LIST.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		LIST.addListSelectionListener(this);
-		
-		LIST.addMouseListener(
-			new MouseAdapter() {
-				public void mouseClicked(MouseEvent e) {
-					if (e.getClickCount() == 2) {
-						int index = LIST.locationToIndex(e.getPoint());
-						DefaultListModel model = (DefaultListModel) LIST.getModel();
-						findReplaceDialog.show(FindReplaceDialog.MODE_RENAME);
-					}
-				}
-			}
-		);
-		
-		jsp = new JScrollPane(LIST);
-		
-		disableButtons();
-		
 		// Setup JFileChooser
 		fileChooser = new JFileChooser();
 		fileChooser.setFileHidingEnabled(false);
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		fileChooser.setApproveButtonText(SELECT);
-		
-		model = new FindReplaceModel();
-		findReplaceDialog = new FindReplaceDialog();
-		
-		Outliner.documents.addDocumentRepositoryListener(this);
-		
-		JPanel rightPanel = new JPanel();
-		rightPanel.setLayout(new BorderLayout());
-		rightPanel.setBorder(new CompoundBorder(new BevelBorder(BevelBorder.RAISED), new EmptyBorder(new Insets(5,5,5,5))));
 		
 		// Match Options
 		JPanel matchOptionsPanel = new JPanel();
@@ -476,69 +429,210 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		matchOptionsPanel.add(matchOptionsBox, BorderLayout.CENTER);
 		
 		// Scope Options
-		JPanel scopeOptionsPanel = new JPanel();
-		scopeOptionsPanel.setLayout(new BorderLayout());
-		scopeOptionsPanel.setBorder(new TitledBorder(GUITreeLoader.reg.getText("border_title_scope")));
-		
-		Box scopeOptionsBox = Box.createVerticalBox();
-		
-		Box documentScopeBox1 = Box.createHorizontalBox();
-		documentScopeBox1.add(RADIO_CURRENT_DOCUMENT);
-		documentScopeBox1.add(Box.createHorizontalStrut(15));
-		documentScopeBox1.add(RADIO_ALL_OPEN_DOCUMENTS);
-		scopeOptionsBox.add(documentScopeBox1);
-		
-		scopeOptionsBox.add(CHECKBOX_START_AT_TOP);
-		scopeOptionsBox.add(CHECKBOX_WRAP_AROUND);
-		scopeOptionsBox.add(CHECKBOX_SELECTION_ONLY);
-		scopeOptionsBox.add(CHECKBOX_INCLUDE_READ_ONLY_NODES);
-		
-		scopeOptionsBox.add(Box.createVerticalStrut(5));
-		
-		Box documentScopeBox2 = Box.createHorizontalBox();
-		documentScopeBox2.add(RADIO_FILE_SYSTEM);
-		scopeOptionsBox.add(documentScopeBox2);
 		
 		// Define Box for File System Search
-		Box fileSystemSearch = Box.createVerticalBox();
-			Box fileSystemPathBox = Box.createHorizontalBox();
-				fileSystemPathBox.add(LABEL_PATH);
-				fileSystemPathBox.add(Box.createHorizontalStrut(5));
-				fileSystemPathBox.add(TEXTFIELD_PATH);
-				fileSystemPathBox.add(Box.createHorizontalStrut(5));
-				fileSystemPathBox.add(BUTTON_SELECT);
-			fileSystemSearch.add(fileSystemPathBox);
-			Box fileSystemPathCheckBoxBox = Box.createHorizontalBox();
-				fileSystemPathCheckBoxBox.add(CHECKBOX_INCLUDE_SUB_DIRECTORIES);
-				fileSystemPathCheckBoxBox.add(Box.createHorizontalStrut(5));
-				fileSystemPathCheckBoxBox.add(CHECKBOX_MAKE_BACKUPS);
-			fileSystemSearch.add(fileSystemPathCheckBoxBox);
-			JPanel filterPanel = new JPanel();
-				filterPanel.setLayout(new GridLayout(4,4));
-				
-				filterPanel.add(LABEL_FILE_FILTER);
-				filterPanel.add(LABEL_FILE_FILTER_INCLUDE);
-				filterPanel.add(TEXTFIELD_FILE_FILTER_INCLUDE);
-				filterPanel.add(CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE);
-				
-				filterPanel.add(new JLabel(""));
-				filterPanel.add(LABEL_FILE_FILTER_EXCLUDE);
-				filterPanel.add(TEXTFIELD_FILE_FILTER_EXCLUDE);
-				filterPanel.add(CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE);
-				
-				filterPanel.add(LABEL_DIR_FILTER);
-				filterPanel.add(LABEL_DIR_FILTER_INCLUDE);
-				filterPanel.add(TEXTFIELD_DIR_FILTER_INCLUDE);
-				filterPanel.add(CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE);
-				
-				filterPanel.add(new JLabel(""));
-				filterPanel.add(LABEL_DIR_FILTER_EXCLUDE);
-				filterPanel.add(TEXTFIELD_DIR_FILTER_EXCLUDE);
-				filterPanel.add(CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE);
-			fileSystemSearch.add(filterPanel);
-		scopeOptionsBox.add(fileSystemSearch);
+		Box fileSystemPathCheckBoxBox = Box.createHorizontalBox();
+			fileSystemPathCheckBoxBox.add(CHECKBOX_INCLUDE_SUB_DIRECTORIES);
+			fileSystemPathCheckBoxBox.add(Box.createHorizontalStrut(5));
+			fileSystemPathCheckBoxBox.add(CHECKBOX_MAKE_BACKUPS);
+			
+		// File Filter Panel
+		JPanel fileFilterPanel = new JPanel();
+		fileFilterPanel.setBorder(new TitledBorder(" " + FILE_FILTER + " "));
+		GridBagLayout fileFilterPanelLayout = new GridBagLayout();
+		fileFilterPanel.setLayout(fileFilterPanelLayout);
 		
-		scopeOptionsPanel.add(scopeOptionsBox, BorderLayout.CENTER);
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(2,2,2,2);
+		
+		c.weighty = 1;
+		c.weightx = 0;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		fileFilterPanelLayout.setConstraints(LABEL_FILE_FILTER_INCLUDE, c);
+		fileFilterPanel.add(LABEL_FILE_FILTER_INCLUDE);
+		
+		c.weighty = 1;
+		c.weightx = 1;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		fileFilterPanelLayout.setConstraints(TEXTFIELD_FILE_FILTER_INCLUDE, c);
+		fileFilterPanel.add(TEXTFIELD_FILE_FILTER_INCLUDE);
+		
+		c.weighty = 1;
+		c.weightx = 0;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		fileFilterPanelLayout.setConstraints(CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE, c);
+		fileFilterPanel.add(CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE);
+		
+		c.weighty = 1;
+		c.weightx = 0;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		fileFilterPanelLayout.setConstraints(LABEL_FILE_FILTER_EXCLUDE, c);
+		fileFilterPanel.add(LABEL_FILE_FILTER_EXCLUDE);
+		
+		c.weighty = 1;
+		c.weightx = 1;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		fileFilterPanelLayout.setConstraints(TEXTFIELD_FILE_FILTER_EXCLUDE, c);
+		fileFilterPanel.add(TEXTFIELD_FILE_FILTER_EXCLUDE);
+		
+		c.weighty = 1;
+		c.weightx = 0;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		fileFilterPanelLayout.setConstraints(CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE, c);
+		fileFilterPanel.add(CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE);
+		
+		// Directory Filter Panel
+		JPanel dirFilterPanel = new JPanel();
+		dirFilterPanel.setBorder(new TitledBorder(" " + DIR_FILTER + " "));
+		GridBagLayout dirFilterPanelLayout = new GridBagLayout();
+		dirFilterPanel.setLayout(dirFilterPanelLayout);
+		
+		c.weighty = 1;
+		c.weightx = 0;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		dirFilterPanelLayout.setConstraints(LABEL_DIR_FILTER_INCLUDE, c);
+		dirFilterPanel.add(LABEL_DIR_FILTER_INCLUDE);
+		
+		c.weighty = 1;
+		c.weightx = 1;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		dirFilterPanelLayout.setConstraints(TEXTFIELD_DIR_FILTER_INCLUDE, c);
+		dirFilterPanel.add(TEXTFIELD_DIR_FILTER_INCLUDE);
+		
+		c.weighty = 1;
+		c.weightx = 0;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		dirFilterPanelLayout.setConstraints(CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE, c);
+		dirFilterPanel.add(CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE);
+		
+		c.weighty = 1;
+		c.weightx = 0;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		dirFilterPanelLayout.setConstraints(LABEL_DIR_FILTER_EXCLUDE, c);
+		dirFilterPanel.add(LABEL_DIR_FILTER_EXCLUDE);
+		
+		c.weighty = 1;
+		c.weightx = 1;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		dirFilterPanelLayout.setConstraints(TEXTFIELD_DIR_FILTER_EXCLUDE, c);
+		dirFilterPanel.add(TEXTFIELD_DIR_FILTER_EXCLUDE);
+		
+		c.weighty = 1;
+		c.weightx = 0;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		dirFilterPanelLayout.setConstraints(CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE, c);
+		dirFilterPanel.add(CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE);
+		
+		// File System Panel
+		JPanel fileSystemPanel = new JPanel();
+		GridBagLayout fileSystemPanelLayout = new GridBagLayout();
+		fileSystemPanel.setLayout(fileSystemPanelLayout);
+		
+		c.weighty = 1;
+		c.weightx = 0;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		fileSystemPanelLayout.setConstraints(LABEL_PATH, c);
+		fileSystemPanel.add(LABEL_PATH);
+		
+		c.weighty = 1;
+		c.weightx = 1;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		fileSystemPanelLayout.setConstraints(TEXTFIELD_PATH, c);
+		fileSystemPanel.add(TEXTFIELD_PATH);
+		
+		c.weighty = 1;
+		c.weightx = 0;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.fill = GridBagConstraints.NONE;
+		fileSystemPanelLayout.setConstraints(BUTTON_SELECT, c);
+		fileSystemPanel.add(BUTTON_SELECT);
+		
+		c.weighty = 1;
+		c.weightx = 1;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		fileSystemPanelLayout.setConstraints(fileSystemPathCheckBoxBox, c);
+		fileSystemPanel.add(fileSystemPathCheckBoxBox);
+		
+		c.weighty = 1;
+		c.weightx = 1;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		fileSystemPanelLayout.setConstraints(fileFilterPanel, c);
+		fileSystemPanel.add(fileFilterPanel);
+		
+		c.weighty = 1;
+		c.weightx = 1;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		fileSystemPanelLayout.setConstraints(dirFilterPanel, c);
+		fileSystemPanel.add(dirFilterPanel);
+		
+		tabFileSystem = fileSystemPanel;
+		
+		// Define Box for Document Scope
+		Box documentScopeBox = Box.createVerticalBox();
+		documentScopeBox.add(CHECKBOX_START_AT_TOP);
+		documentScopeBox.add(CHECKBOX_WRAP_AROUND);
+		documentScopeBox.add(CHECKBOX_SELECTION_ONLY);
+		documentScopeBox.add(CHECKBOX_INCLUDE_READ_ONLY_NODES);
+		tabDocument = documentScopeBox;
+		
+		// Define Box for All Documents Scope
+		Box allDocumentsScopeBox = Box.createVerticalBox();
+		allDocumentsScopeBox.add(CHECKBOX_INCLUDE_READ_ONLY_NODES_ALL_DOCUMENTS);
+		tabAllDocuments = allDocumentsScopeBox;
+		
+		// Setup Tabs
+		tabs = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
+		tabs.addTab(CURRENT_DOCUMENT, null, tabDocument, "Scope options for Find/Replace actions on the current document."); // FIXME: i18n
+		tabs.addTab(ALL_OPEN_DOCUMENTS, null, tabAllDocuments, "Scope options for Find/Replace actions on all open documents."); // FIXME: i18n
+		tabs.addTab(FILE_SYSTEM, null, tabFileSystem, "Scope options for Find/Replace actions on the file system."); // FIXME: i18n
+		
+		tabs.addChangeListener(
+			new ChangeListener() {
+				public void stateChanged(ChangeEvent e) {
+					updateButtons();
+				}
+			}
+		);
+		
+		// Scope Options Panel
+		JPanel scopeOptionsPanel = new JPanel();
+		scopeOptionsPanel.setLayout(new BorderLayout());
+		scopeOptionsPanel.add(tabs, BorderLayout.CENTER);
 		
 		// Define Button Box
 		BUTTON_FIND.addActionListener(this);
@@ -559,31 +653,54 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		// Set the default button.
 		getRootPane().setDefaultButton(BUTTON_FIND);
 		
-		// Define FindReplace Box
+		// Define Find Panel
+		JPanel findPanel = new JPanel();
+		findPanel.setLayout(new BorderLayout());
+		findPanel.setBorder(new TitledBorder(" " + FIND + " "));
 		TEXTAREA_FIND.addKeyListener(this);
-		TEXTAREA_REPLACE.addKeyListener(this);
-		
-		Box findReplaceBox = Box.createVerticalBox();
-		
-		findReplaceBox.add(LABEL_FIND);
 		JScrollPane findScrollPane = new JScrollPane(TEXTAREA_FIND);
-		findReplaceBox.add(findScrollPane);
+		findPanel.add(findScrollPane, BorderLayout.CENTER);
 		
-		findReplaceBox.add(Box.createVerticalStrut(10));
-		
-		findReplaceBox.add(LABEL_REPLACE);
+		// Define Replace Panel
+		JPanel replacePanel = new JPanel();
+		replacePanel.setLayout(new BorderLayout());
+		replacePanel.setBorder(new TitledBorder(" " + REPLACE + " "));
+		TEXTAREA_REPLACE.addKeyListener(this);
 		JScrollPane replaceScrollPane = new JScrollPane(TEXTAREA_REPLACE);
-		findReplaceBox.add(replaceScrollPane);
+		replacePanel.add(replaceScrollPane, BorderLayout.CENTER);
 		
-		findReplaceBox.add(Box.createVerticalStrut(10));
+		// Define FindReplace Panel
+		JPanel findReplacePanel = new JPanel();
+		findReplacePanel.setBorder(new CompoundBorder(new BevelBorder(BevelBorder.RAISED), new EmptyBorder(new Insets(5,5,5,5))));
+		GridBagLayout findReplacePanelLayout = new GridBagLayout();
+		findReplacePanel.setLayout(findReplacePanelLayout);
 		
-		findReplaceBox.add(matchOptionsPanel);
-		findReplaceBox.add(scopeOptionsPanel);
-		findReplaceBox.add(buttonBox);
+		c.weighty = 1;
+		c.weightx = 1;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.fill = GridBagConstraints.BOTH;
+		findReplacePanelLayout.setConstraints(findPanel, c);
+		findReplacePanel.add(findPanel);
 		
-		rightPanel.add(findReplaceBox, BorderLayout.CENTER);
+		findReplacePanelLayout.setConstraints(replacePanel, c);
+		findReplacePanel.add(replacePanel);
 		
-		getContentPane().add(rightPanel, BorderLayout.CENTER);
+		c.weighty = 0;
+		c.weightx = 1;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		findReplacePanelLayout.setConstraints(matchOptionsPanel, c);
+		findReplacePanel.add(matchOptionsPanel);
+		
+		findReplacePanelLayout.setConstraints(scopeOptionsPanel, c);
+		findReplacePanel.add(scopeOptionsPanel);
+		
+		findReplacePanelLayout.setConstraints(buttonBox, c);
+		findReplacePanel.add(buttonBox);
+		
+		getContentPane().add(findReplacePanel, BorderLayout.CENTER);
 		
 		// Define Left Panel
 		JPanel leftPanel = new JPanel();
@@ -602,20 +719,12 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		
 		getContentPane().add(leftPanel, BorderLayout.EAST);
 		
-		LIST.setSelectedIndex(0);
+		FIND_REPLACE_LIST.setSelectedIndex(0);
 		
 		syncToModel();
 		
 		pack();
-		
-		if (Outliner.documents.openDocumentCount() <= 0) {
-			disableButtons();
-		} else {
-			enableButtons();
-		}
 	}
-	
-	private boolean initialized = false;
 	
 	public boolean isInitialized() {
 		return this.initialized;
@@ -629,7 +738,21 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		}
 		
 		TEXTAREA_FIND.requestFocus();
+		
+		int doc_count = Outliner.documents.openDocumentCount();
+		if (doc_count <= 0) {
+			tabs.setSelectedIndex(2);
+		} else {
+			tabs.setSelectedIndex(0);
+		}
 		super.show();
+	}
+	
+	/**
+	 * Gets the current index of the find/replace items list.
+	 */
+	protected int getFindReplaceItemIndex() {
+		return FIND_REPLACE_LIST.getSelectedIndex();
 	}
 	
 	
@@ -639,19 +762,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 	public void documentRemoved(DocumentRepositoryEvent e) {}
 	
 	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
-		if (e.getDocument() == null) {
-			disableButtons();
-		} else {
-			enableButtons();
-		}
+		updateButtons();
 	}
 	
 	
 	// ListSelectionListenerInterface
-	protected int currentIndex = -1;
-	
 	public void valueChanged(ListSelectionEvent e) {
-		this.currentIndex = LIST.getSelectedIndex();
+		int currentIndex = getFindReplaceItemIndex();
 		
 		// Sync View to Model for new index
 		if ((currentIndex >= 0) && (currentIndex < model.getSize())) {
@@ -659,6 +776,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 			CHECKBOX_REGEXP.setSelected(model.getRegExp(currentIndex));
 			TEXTAREA_FIND.setText(model.getFind(currentIndex));
 			TEXTAREA_REPLACE.setText(model.getReplace(currentIndex));
+		}
+		
+		// Enable/Disable "Delete" button for the first index
+		if (currentIndex <= 0) {
+			BUTTON_DELETE.setEnabled(false);
+		} else {
+			BUTTON_DELETE.setEnabled(true);
 		}
 	}
 	
@@ -678,7 +802,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 			
 			if (text.getName().equals(FIND)) {
 				if (e.isShiftDown()) {
-					LIST.requestFocus();
+					FIND_REPLACE_LIST.requestFocus();
 				} else {
 					TEXTAREA_REPLACE.requestFocus();
 				}
@@ -704,6 +828,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		CHECKBOX_WRAP_AROUND.setSelected(model.getWrapAround());
 		CHECKBOX_SELECTION_ONLY.setSelected(model.getSelectionOnly());
 		CHECKBOX_INCLUDE_READ_ONLY_NODES.setSelected(model.getIncludeReadOnly());
+		CHECKBOX_INCLUDE_READ_ONLY_NODES_ALL_DOCUMENTS.setSelected(model.getIncludeReadOnlyAllDocuments());
 		TEXTFIELD_PATH.setText(model.getPath());
 		CHECKBOX_INCLUDE_SUB_DIRECTORIES.setSelected(model.getIncludeSubDirs());
 		CHECKBOX_MAKE_BACKUPS.setSelected(model.getMakeBackups());
@@ -718,21 +843,15 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		
 		int mode = model.getSelectionMode();
 		if (mode == FindReplaceModel.MODE_CURRENT_DOCUMENT) {
-			RADIO_CURRENT_DOCUMENT.setSelected(true);
-			if (Outliner.documents.openDocumentCount() > 0) {
-				updateForCurrentDocumentRadio();
-			}
+			tabs.setSelectedIndex(0);
 		} else if (mode == FindReplaceModel.MODE_ALL_OPEN_DOCUMENTS) {
-			RADIO_ALL_OPEN_DOCUMENTS.setSelected(true);
-			if (Outliner.documents.openDocumentCount() > 0) {
-				updateForAllOpenDocumentsRadio();
-			}
+			tabs.setSelectedIndex(1);
 		} else if (mode == FindReplaceModel.MODE_FILE_SYSTEM) {
-			RADIO_FILE_SYSTEM.setSelected(true);
-			updateForSelectFileSystemRadio();
+			tabs.setSelectedIndex(2);
 		} else {
 			System.out.println("Unknown File Selection Mode: " + mode);
 		}
+		updateButtons();
 	}
 	
 	public void hide() {
@@ -770,9 +889,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		
 		// CheckBoxes
 		} else if (e.getActionCommand().equals(IGNORE_CASE)) {
-			model.setIgnoreCase(currentIndex, CHECKBOX_IGNORE_CASE.isSelected());
+			model.setIgnoreCase(getFindReplaceItemIndex(), CHECKBOX_IGNORE_CASE.isSelected());
 		} else if (e.getActionCommand().equals(REGEXP)) {
-			model.setRegExp(currentIndex, CHECKBOX_REGEXP.isSelected());
+			model.setRegExp(getFindReplaceItemIndex(), CHECKBOX_REGEXP.isSelected());
 			
 		} else if (e.getActionCommand().equals(START_AT_TOP)) {
 			model.setStartAtTop(CHECKBOX_START_AT_TOP.isSelected());
@@ -782,6 +901,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 			model.setSelectionOnly(CHECKBOX_SELECTION_ONLY.isSelected());
 		} else if (e.getActionCommand().equals(INCLUDE_READ_ONLY_NODES)) {
 			model.setIncludeReadOnly(CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected());
+		} else if (e.getActionCommand().equals(INCLUDE_READ_ONLY_NODES_ALL_DOCUMENTS)) {
+			model.setIncludeReadOnlyAllDocuments(CHECKBOX_INCLUDE_READ_ONLY_NODES_ALL_DOCUMENTS.isSelected());
 			
 		} else if (e.getActionCommand().equals(MAKE_BACKUPS)) {
 			model.setMakeBackups(CHECKBOX_MAKE_BACKUPS.isSelected());
@@ -800,7 +921,6 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 			model.setIncludeSubDirs(CHECKBOX_INCLUDE_SUB_DIRECTORIES.isSelected());
 			
 			if (CHECKBOX_INCLUDE_SUB_DIRECTORIES.isSelected()) {
-				LABEL_DIR_FILTER.setEnabled(true);
 				LABEL_DIR_FILTER_INCLUDE.setEnabled(true);
 				LABEL_DIR_FILTER_EXCLUDE.setEnabled(true);
 				TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(true);
@@ -808,7 +928,6 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 				CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(true);
 				CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(true);
 			} else {
-				LABEL_DIR_FILTER.setEnabled(false);
 				LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
 				LABEL_DIR_FILTER_EXCLUDE.setEnabled(false);
 				TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(false);
@@ -816,128 +935,16 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 				CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
 				CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
 			}
-		
-		// RadioButtons
-		} else if (e.getActionCommand().equals(CURRENT_DOCUMENT)) {
-			model.setSelectionMode(FindReplaceModel.MODE_CURRENT_DOCUMENT);
-			updateForCurrentDocumentRadio();
-			
-		} else if (e.getActionCommand().equals(ALL_OPEN_DOCUMENTS)) {
-			model.setSelectionMode(FindReplaceModel.MODE_ALL_OPEN_DOCUMENTS);
-			updateForAllOpenDocumentsRadio();
-			
-		} else if (e.getActionCommand().equals(FILE_SYSTEM)) {
-			model.setSelectionMode(FindReplaceModel.MODE_FILE_SYSTEM);
-			updateForSelectFileSystemRadio();
-		}
-	}
-	
-	private void updateForCurrentDocumentRadio() {
-		BUTTON_FIND.setEnabled(true);
-		BUTTON_FIND_ALL.setEnabled(true);
-		BUTTON_REPLACE.setEnabled(true);
-		BUTTON_REPLACE_ALL.setEnabled(true);
-		CHECKBOX_START_AT_TOP.setEnabled(true);
-		CHECKBOX_WRAP_AROUND.setEnabled(true);
-		CHECKBOX_SELECTION_ONLY.setEnabled(true);
-		CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
-		TEXTFIELD_PATH.setEnabled(false);
-		BUTTON_SELECT.setEnabled(false);
-		CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(false);
-		CHECKBOX_MAKE_BACKUPS.setEnabled(false);
-		TEXTFIELD_FILE_FILTER_INCLUDE.setEnabled(false);
-		TEXTFIELD_FILE_FILTER_EXCLUDE.setEnabled(false);
-		CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
-		CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
-		TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(false);
-		TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(false);
-		CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
-		CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
-		LABEL_PATH.setEnabled(false);
-		LABEL_FILE_FILTER.setEnabled(false);
-		LABEL_FILE_FILTER_INCLUDE.setEnabled(false);
-		LABEL_FILE_FILTER_EXCLUDE.setEnabled(false);
-		LABEL_DIR_FILTER.setEnabled(false);
-		LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
-		LABEL_DIR_FILTER_EXCLUDE.setEnabled(false);
-	}
-	
-	private void updateForAllOpenDocumentsRadio() {
-		BUTTON_FIND.setEnabled(true);
-		BUTTON_FIND_ALL.setEnabled(true);
-		BUTTON_REPLACE.setEnabled(true);
-		BUTTON_REPLACE_ALL.setEnabled(true);
-		CHECKBOX_START_AT_TOP.setEnabled(false);
-		CHECKBOX_WRAP_AROUND.setEnabled(false);
-		CHECKBOX_SELECTION_ONLY.setEnabled(false);
-		CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
-		TEXTFIELD_PATH.setEnabled(false);
-		BUTTON_SELECT.setEnabled(false);
-		CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(false);
-		CHECKBOX_MAKE_BACKUPS.setEnabled(false);
-		TEXTFIELD_FILE_FILTER_INCLUDE.setEnabled(false);
-		TEXTFIELD_FILE_FILTER_EXCLUDE.setEnabled(false);
-		CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
-		CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
-		TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(false);
-		TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(false);
-		CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
-		CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
-		LABEL_PATH.setEnabled(false);
-		LABEL_FILE_FILTER.setEnabled(false);
-		LABEL_FILE_FILTER_INCLUDE.setEnabled(false);
-		LABEL_FILE_FILTER_EXCLUDE.setEnabled(false);
-		LABEL_DIR_FILTER.setEnabled(false);
-		LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
-		LABEL_DIR_FILTER_EXCLUDE.setEnabled(false);
-	}
-	
-	private void updateForSelectFileSystemRadio() {
-		BUTTON_FIND.setEnabled(false);
-		BUTTON_FIND_ALL.setEnabled(true);
-		BUTTON_REPLACE.setEnabled(false);
-		BUTTON_REPLACE_ALL.setEnabled(true);
-		CHECKBOX_START_AT_TOP.setEnabled(false);
-		CHECKBOX_WRAP_AROUND.setEnabled(false);
-		CHECKBOX_SELECTION_ONLY.setEnabled(false);
-		CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(false);
-		TEXTFIELD_PATH.setEnabled(true);
-		BUTTON_SELECT.setEnabled(true);
-		CHECKBOX_INCLUDE_SUB_DIRECTORIES.setEnabled(true);
-		CHECKBOX_MAKE_BACKUPS.setEnabled(true);
-		TEXTFIELD_FILE_FILTER_INCLUDE.setEnabled(true);
-		TEXTFIELD_FILE_FILTER_EXCLUDE.setEnabled(true);
-		CHECKBOX_FILE_FILTER_INCLUDE_IGNORE_CASE.setEnabled(true);
-		CHECKBOX_FILE_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(true);
-		LABEL_PATH.setEnabled(true);
-		LABEL_FILE_FILTER.setEnabled(true);
-		LABEL_FILE_FILTER_INCLUDE.setEnabled(true);
-		LABEL_FILE_FILTER_EXCLUDE.setEnabled(true);
-		if (CHECKBOX_INCLUDE_SUB_DIRECTORIES.isSelected()) {
-			LABEL_DIR_FILTER.setEnabled(true);
-			LABEL_DIR_FILTER_INCLUDE.setEnabled(true);
-			LABEL_DIR_FILTER_EXCLUDE.setEnabled(true);
-			TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(true);
-			TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(true);
-			CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(true);
-			CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(true);
-		} else {
-			LABEL_DIR_FILTER.setEnabled(false);
-			LABEL_DIR_FILTER_INCLUDE.setEnabled(false);
-			LABEL_DIR_FILTER_EXCLUDE.setEnabled(false);
-			TEXTFIELD_DIR_FILTER_INCLUDE.setEnabled(false);
-			TEXTFIELD_DIR_FILTER_EXCLUDE.setEnabled(false);
-			CHECKBOX_DIR_FILTER_INCLUDE_IGNORE_CASE.setEnabled(false);
-			CHECKBOX_DIR_FILTER_EXCLUDE_IGNORE_CASE.setEnabled(false);
 		}
 	}
 	
 	private static int getFindReplaceMode() {
-		if (RADIO_CURRENT_DOCUMENT.isSelected()) {
+		Component selectedTab = tabs.getSelectedComponent();
+		if (tabDocument == selectedTab) {
 			return FindReplaceModel.MODE_CURRENT_DOCUMENT;
-		} else if (RADIO_ALL_OPEN_DOCUMENTS.isSelected()) {
+		} else if (tabAllDocuments == selectedTab) {
 			return FindReplaceModel.MODE_ALL_OPEN_DOCUMENTS;
-		} else if (RADIO_FILE_SYSTEM.isSelected()) {
+		} else if (tabFileSystem == selectedTab) {
 			return FindReplaceModel.MODE_FILE_SYSTEM;
 		} else {
 			return FindReplaceModel.MODE_UNKNOWN;
@@ -949,7 +956,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 	}
 	
 	private void deleteFindReplace() {
-		int selectedIndex = LIST.getSelectedIndex();
+		int selectedIndex = FIND_REPLACE_LIST.getSelectedIndex();
 		
 		if (selectedIndex != -1) { // Don't delete if there's no selection.
 			if (selectedIndex != 0) { // Never delete the default.
@@ -959,8 +966,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 				int result = JOptionPane.showConfirmDialog(Outliner.findReplace, msg, confirm_delete, JOptionPane.OK_CANCEL_OPTION);
 				if (result == JOptionPane.OK_OPTION) {
 					model.remove(selectedIndex);
-					LIST.setSelectedIndex(selectedIndex - 1);
-					LIST.requestFocus();
+					FIND_REPLACE_LIST.setSelectedIndex(selectedIndex - 1);
+					FIND_REPLACE_LIST.requestFocus();
 				}
 			}
 		}
@@ -991,7 +998,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 					CHECKBOX_SELECTION_ONLY.isSelected(), 
 					CHECKBOX_START_AT_TOP.isSelected(),
 					CHECKBOX_IGNORE_CASE.isSelected(), 
-					CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
+					CHECKBOX_INCLUDE_READ_ONLY_NODES_ALL_DOCUMENTS.isSelected(), 
 					CHECKBOX_WRAP_AROUND.isSelected(),
 					CHECKBOX_REGEXP.isSelected()
 				);
@@ -1036,7 +1043,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 					CHECKBOX_SELECTION_ONLY.isSelected(), 
 					CHECKBOX_START_AT_TOP.isSelected(),
 					CHECKBOX_IGNORE_CASE.isSelected(), 
-					CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
+					CHECKBOX_INCLUDE_READ_ONLY_NODES_ALL_DOCUMENTS.isSelected(), 
 					CHECKBOX_WRAP_AROUND.isSelected(),
 					CHECKBOX_REGEXP.isSelected()
 				);
@@ -1113,7 +1120,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 					CHECKBOX_SELECTION_ONLY.isSelected(), 
 					CHECKBOX_START_AT_TOP.isSelected(),
 					CHECKBOX_IGNORE_CASE.isSelected(), 
-					CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
+					CHECKBOX_INCLUDE_READ_ONLY_NODES_ALL_DOCUMENTS.isSelected(), 
 					CHECKBOX_WRAP_AROUND.isSelected(),
 					CHECKBOX_REGEXP.isSelected()
 				);
@@ -1156,7 +1163,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 					CHECKBOX_SELECTION_ONLY.isSelected(), 
 					CHECKBOX_START_AT_TOP.isSelected(),
 					CHECKBOX_IGNORE_CASE.isSelected(), 
-					CHECKBOX_INCLUDE_READ_ONLY_NODES.isSelected(), 
+					CHECKBOX_INCLUDE_READ_ONLY_NODES_ALL_DOCUMENTS.isSelected(), 
 					CHECKBOX_WRAP_AROUND.isSelected(),
 					CHECKBOX_REGEXP.isSelected()
 				);
@@ -2225,7 +2232,21 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 					int cursor = doc.tree.getCursorPosition();
 					int mark = doc.tree.getCursorMarkPosition();
 					
-					location = findText(node, Math.min(cursor,mark), node, Math.max(cursor,mark), textToMatch, replacement, false, true, isReplace, ignoreCase, includeReadOnlyNodes, wrapAround, isRegexp);
+					location = findText(
+						node, 
+						Math.min(cursor,mark), 
+						node, 
+						Math.max(cursor,mark), 
+						textToMatch, 
+						replacement, 
+						false, 
+						true, 
+						isReplace, 
+						ignoreCase, 
+						includeReadOnlyNodes, 
+						wrapAround, 
+						isRegexp
+					);
 				}
 			} else {
 				for (int i = 0; i < doc.tree.getSelectedNodes().size(); i++) {
@@ -2235,7 +2256,21 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 					Node nodeEnd = nodeStart.getLastDecendent();
 					int cursorEnd = nodeEnd.getValue().length();
 					
-					location = findText(nodeStart, cursorStart, nodeEnd, cursorEnd, textToMatch, replacement, false, false, isReplace, ignoreCase, includeReadOnlyNodes, wrapAround, isRegexp);
+					location = findText(
+						nodeStart, 
+						cursorStart, 
+						nodeEnd, 
+						cursorEnd, 
+						textToMatch, 
+						replacement, 
+						false, 
+						false, 
+						isReplace, 
+						ignoreCase, 
+						includeReadOnlyNodes, 
+						wrapAround, 
+						isRegexp
+					);
 					
 					if (location != null) {
 						break;
@@ -2255,17 +2290,31 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 				nodeStart = doc.tree.getRootNode().getFirstChild();
 				nodeEnd = doc.tree.getRootNode().getLastDecendent();
 				cursorStart = 0;
+				cursorEnd = nodeEnd.getValue().length();
 			} else {
 				nodeStart = doc.tree.getEditingNode();
 				cursorStart = doc.tree.getCursorPosition();
+				if (nodeStart.isSelected()) {
+					cursorStart = 0;
+					cursorEnd = 0;
+				}
 			}
 			
-			if (nodeStart.isSelected()) {
-				cursorStart = 0;
-				cursorEnd = 0;
-			}
-			
-			location = findText(nodeStart, cursorStart, nodeEnd, cursorEnd, textToMatch, replacement, false, false, isReplace, ignoreCase, includeReadOnlyNodes, wrapAround, isRegexp);
+			location = findText(
+				nodeStart, 
+				cursorStart, 
+				nodeEnd, 
+				cursorEnd, 
+				textToMatch, 
+				replacement, 
+				false, 
+				false, 
+				isReplace, 
+				ignoreCase, 
+				includeReadOnlyNodes, 
+				wrapAround, 
+				isRegexp
+			);
 		}
 		
 		return location;
@@ -2291,7 +2340,10 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		if (startNode == null
 			|| endNode == null
 			|| match == null
-			|| replacement == null) { return null; }
+			|| replacement == null
+		) {
+			return null;
+		}
 		
 		String text = startNode.getValue();
 		
@@ -2346,7 +2398,21 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		}
 		
 		// Try it again
-		return findText(nextNodeToSearch, 0, endNode, end, match, replacement, loopedOver, done, isReplace, ignoreCase, includeReadOnlyNodes, wrapAround, isRegexp);
+		return findText(
+			nextNodeToSearch, 
+			0, 
+			endNode, 
+			end, 
+			match, 
+			replacement, 
+			loopedOver, 
+			done, 
+			isReplace, 
+			ignoreCase, 
+			includeReadOnlyNodes, 
+			wrapAround, 
+			isRegexp
+		);
 	}
 	
 	
@@ -2359,8 +2425,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements JoeRetur
 		StringBuffer retVal = new StringBuffer();
 		
 		// Escape '/' characters
-		match = StringTools.escape(match, '\\',  reservedRegexChars);
-		replacement = StringTools.escape(replacement, '\\',  reservedRegexChars);
+		match = StringTools.replace(match, "/", "\\/");
+		replacement = StringTools.replace(replacement, "/", "\\/");
 		
 		if (isReplace) {
 			retVal.append(REGEX_REPLACE_START).append(match).append(REGEX_REPLACE_MIDDLE).append(replacement);
@@ -2516,28 +2582,48 @@ class FindReplaceDialog extends JDialog implements ActionListener {
 		
 		// Define the Bottom Panel
 		JPanel bottomPanel = new JPanel();
-		
 		bottomPanel.setLayout(new FlowLayout());
-		
 		buttonOK.addActionListener(this);
 		bottomPanel.add(buttonOK);
-		
 		buttonCancel.addActionListener(this);
 		bottomPanel.add(buttonCancel);
-		
-		getContentPane().add(bottomPanel,BorderLayout.SOUTH);
+		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		
 		// Define the Center Panel
-		Box box = Box.createVerticalBox();
+		JLabel label = new JLabel(NAME);
 		
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(NAME), box);
-		AbstractPreferencesPanel.addSingleItemCentered(nameField, box);
+		JPanel mainPanel = new JPanel();
+		GridBagLayout mainPanelLayout = new GridBagLayout();
+		mainPanel.setLayout(mainPanelLayout);
 		
-		box.add(Box.createVerticalStrut(5));
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(2,2,2,2);
 		
-		AbstractPreferencesPanel.addSingleItemCentered(errorLabel, box);
+		c.weighty = 1;
+		c.weightx = 0;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		mainPanelLayout.setConstraints(label, c);
+		mainPanel.add(label);
 		
-		getContentPane().add(box,BorderLayout.CENTER);
+		c.weighty = 1;
+		c.weightx = 1;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		mainPanelLayout.setConstraints(nameField, c);
+		mainPanel.add(nameField);
+		
+		c.weighty = 1;
+		c.weightx = 1;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		mainPanelLayout.setConstraints(errorLabel, c);
+		mainPanel.add(errorLabel);
+		
+		getContentPane().add(mainPanel, BorderLayout.CENTER);
 		
 		// Set the default button
 		getRootPane().setDefaultButton(buttonOK);
@@ -2554,7 +2640,7 @@ class FindReplaceDialog extends JDialog implements ActionListener {
 		} else if (mode == MODE_RENAME) {
 			setTitle(RENAME_FIND_REPLACE);
 			FindReplaceModel model = Outliner.findReplace.model;
-			String name = model.getName(Outliner.findReplace.LIST.getSelectedIndex());
+			String name = model.getName(Outliner.findReplace.getFindReplaceItemIndex());
 			nameField.setText(name);
 		}
 		
@@ -2589,16 +2675,14 @@ class FindReplaceDialog extends JDialog implements ActionListener {
 		// All is good so lets make the change
 		FindReplaceModel model = Outliner.findReplace.model;
 		
-		JList list = Outliner.findReplace.LIST;
-		
 		if (currentMode == MODE_NEW) {
 			model.add(model.getSize(), name, "", "", false, false);
-			list.setSelectedIndex(model.getSize() - 1);
+			Outliner.findReplace.FIND_REPLACE_LIST.setSelectedIndex(model.getSize() - 1);
 		} else if (currentMode == MODE_RENAME) {
-			model.setName(Outliner.findReplace.LIST.getSelectedIndex(), name);
+			model.setName(Outliner.findReplace.getFindReplaceItemIndex(), name);
 		}
 		
-		list.requestFocus();
+		Outliner.findReplace.FIND_REPLACE_LIST.requestFocus();
 		
 		this.hide();
 	}
@@ -2608,34 +2692,68 @@ class FindReplaceDialog extends JDialog implements ActionListener {
 	}
 }
 
+
+// Inner Classes
+/**
+ * Listends for changes to the text in either the "find" and "replace" text areas
+ * and communicates these changes to the FindReplaceModel.
+ */
 class FindReplaceJTextAreaDocumentListener implements DocumentListener {
+	// Constants
 	public static final int TYPE_FIND = 0;
 	public static final int TYPE_REPLACE = 1;
+	public static final int TYPE_UNKNOWN = -1;
 	
-	private int type = -1;
-	public FindReplaceJTextAreaDocumentListener(int type) {
+	
+	// Instance Fields
+	private int type = TYPE_UNKNOWN;
+	private FindReplaceModel model;
+	
+	
+	// Constructor
+	public FindReplaceJTextAreaDocumentListener(
+		int type,
+		FindReplaceModel model
+	) {
 		this.type = type;
+		this.model = model;
 	}
 	
-	public void changedUpdate(DocumentEvent e) {update(e);}
-	public void insertUpdate(DocumentEvent e) {update(e);}
-	public void removeUpdate(DocumentEvent e) {update(e);}
 	
+	// DocumentListener Interface
+	public void changedUpdate(DocumentEvent e) {
+		update(e);
+	}
+	
+	public void insertUpdate(DocumentEvent e) {
+		update(e);
+	}
+	
+	public void removeUpdate(DocumentEvent e) {
+		update(e);
+	}
+	
+	
+	// Methods
 	private void update(DocumentEvent e) {
-		javax.swing.text.Document doc = e.getDocument();
+		javax.swing.text.Document textarea_doc = e.getDocument();
 		
-		int currentIndex = Outliner.findReplace.currentIndex;
+		// Get the text from the textarea
 		String text = "";
 		try {
-			text = doc.getText(0, doc.getLength());
+			text = textarea_doc.getText(0, textarea_doc.getLength());
 		} catch (javax.swing.text.BadLocationException ble) {
 			ble.printStackTrace();
 		}
 		
+		// Get the index?
+		int currentIndex = Outliner.findReplace.getFindReplaceItemIndex();
+		
+		// Update the model based on the type
 		if (type == TYPE_FIND) {
-			Outliner.findReplace.model.setFind(currentIndex, text);
+			model.setFind(currentIndex, text);
 		} else if (type == TYPE_REPLACE) {
-			Outliner.findReplace.model.setReplace(currentIndex, text);
+			model.setReplace(currentIndex, text);
 		}
 	}
 }

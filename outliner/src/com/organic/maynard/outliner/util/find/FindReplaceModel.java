@@ -82,6 +82,7 @@ public class FindReplaceModel extends XMLProcessor {
 	private static final String A_WRAP_AROUND = "wrap_around";
 	private static final String A_SELECTION_ONLY = "selection_only";
 	private static final String A_INCLUDE_READ_ONLY = "include_read_only";
+	private static final String A_INCLUDE_READ_ONLY_ALL_DOCUMENTS = "include_read_only_all_documents";
 	
 	private static final String A_PATH = "path";
 	private static final String A_INCLUDE_SUB_DIRS = "include_sub_dirs";
@@ -111,6 +112,7 @@ public class FindReplaceModel extends XMLProcessor {
 	private boolean wrapAround = false;
 	private boolean selectionOnly = false;
 	private boolean includeReadOnly = false;
+	private boolean includeReadOnlyAllDocuments = false;
 	
 	private String path = "";
 	private boolean includeSubDirs = false;
@@ -198,7 +200,7 @@ public class FindReplaceModel extends XMLProcessor {
 			regExps.remove(i);
 			
 			// Remove from JList
-			((DefaultListModel) Outliner.findReplace.LIST.getModel()).removeElementAt(i);
+			((DefaultListModel) Outliner.findReplace.FIND_REPLACE_LIST.getModel()).removeElementAt(i);
 		} else {
 			System.out.println("Error: attempt to remove a find/replace item with an invalid index: " + i);
 		}
@@ -213,12 +215,12 @@ public class FindReplaceModel extends XMLProcessor {
 	
 	public void setName(int i, String s) {
 		this.names.set(i, s);
-		((DefaultListModel) Outliner.findReplace.LIST.getModel()).setElementAt(s,i);
+		((DefaultListModel) Outliner.findReplace.FIND_REPLACE_LIST.getModel()).setElementAt(s,i);
 	}
 	
 	public void addName(int i, String s) {
 		this.names.add(i, s);
-		((DefaultListModel) Outliner.findReplace.LIST.getModel()).insertElementAt(s,i);
+		((DefaultListModel) Outliner.findReplace.FIND_REPLACE_LIST.getModel()).insertElementAt(s,i);
 	}
 	
 	public String getFind(int i) {
@@ -355,6 +357,18 @@ public class FindReplaceModel extends XMLProcessor {
 	
 	public void setIncludeReadOnly(String includeReadOnly) {
 		this.includeReadOnly = Boolean.valueOf(includeReadOnly).booleanValue();
+	}
+	
+	public boolean getIncludeReadOnlyAllDocuments() {
+		return this.includeReadOnlyAllDocuments;
+	}
+	
+	public void setIncludeReadOnlyAllDocuments(boolean includeReadOnlyAllDocuments) {
+		this.includeReadOnlyAllDocuments = includeReadOnlyAllDocuments;
+	}
+	
+	public void setIncludeReadOnlyAllDocuments(String includeReadOnlyAllDocuments) {
+		this.includeReadOnlyAllDocuments = Boolean.valueOf(includeReadOnlyAllDocuments).booleanValue();
 	}
 	
 	
@@ -498,6 +512,7 @@ public class FindReplaceModel extends XMLProcessor {
 			buf.append(" ").append(A_WRAP_AROUND).append("=\"").append(XMLTools.escapeXMLAttribute("" + getWrapAround())).append("\"");
 			buf.append(" ").append(A_SELECTION_ONLY).append("=\"").append(XMLTools.escapeXMLAttribute("" + getSelectionOnly())).append("\"");
 			buf.append(" ").append(A_INCLUDE_READ_ONLY).append("=\"").append(XMLTools.escapeXMLAttribute("" + getIncludeReadOnly())).append("\"");
+			buf.append(" ").append(A_INCLUDE_READ_ONLY_ALL_DOCUMENTS).append("=\"").append(XMLTools.escapeXMLAttribute("" + getIncludeReadOnlyAllDocuments())).append("\"");
 			buf.append(" ").append(A_PATH).append("=\"").append(XMLTools.escapeXMLAttribute("" + getPath())).append("\"");
 			buf.append(" ").append(A_INCLUDE_SUB_DIRS).append("=\"").append(XMLTools.escapeXMLAttribute("" + getIncludeSubDirs())).append("\"");
 			buf.append(" ").append(A_MAKE_BACKUPS).append("=\"").append(XMLTools.escapeXMLAttribute("" + getMakeBackups())).append("\"");
@@ -546,6 +561,7 @@ public class FindReplaceModel extends XMLProcessor {
 			setWrapAround(atts.getValue(A_WRAP_AROUND));
 			setSelectionOnly(atts.getValue(A_SELECTION_ONLY));
 			setIncludeReadOnly(atts.getValue(A_INCLUDE_READ_ONLY));
+			setIncludeReadOnlyAllDocuments(atts.getValue(A_INCLUDE_READ_ONLY_ALL_DOCUMENTS));
 			
 			setPath(atts.getValue(A_PATH));
 			setIncludeSubDirs(atts.getValue(A_INCLUDE_SUB_DIRS));
