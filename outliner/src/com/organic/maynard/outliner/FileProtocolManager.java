@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
+ * Portions opyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
+ * Portions opyright (C) 2002  Stan Krute <Stan@StanKrute.com>
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or 
@@ -131,6 +132,10 @@ public class FileProtocolManager {
 		OpenFileMenuItem openMenuItem = (OpenFileMenuItem) openMenu.getItem(0);
 		openMenuItem.setProtocol(getDefault());
 		
+		OutlinerSubMenuItem importMenu = (OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.IMPORT_MENU_ITEM);
+		ImportFileMenuItem importMenuItem = (ImportFileMenuItem) importMenu.getItem(0);
+		importMenuItem.setProtocol(getDefault());
+
 		OutlinerSubMenuItem saveAsMenu = (OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM);
 		SaveAsFileMenuItem saveAsMenuItem = (SaveAsFileMenuItem) saveAsMenu.getItem(0);
 		saveAsMenuItem.setProtocol(getDefault());
@@ -165,6 +170,7 @@ public class FileProtocolManager {
 
 	private void addDefaultMenuItems(FileProtocol protocol) {
 		addDefaultMenuItem(GUITreeComponentRegistry.OPEN_MENU_ITEM, new OpenFileMenuItem(protocol), 'O');
+		addDefaultMenuItem(GUITreeComponentRegistry.IMPORT_MENU_ITEM, new ImportFileMenuItem(protocol), ' ');
 		addDefaultMenuItem(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM, new SaveAsFileMenuItem(protocol), ' ');
 		addDefaultMenuItem(GUITreeComponentRegistry.EXPORT_MENU_ITEM, new ExportFileMenuItem(protocol), ' ');
 		addDefaultMenuItem(GUITreeComponentRegistry.EXPORT_SELECTION_MENU_ITEM, new ExportSelectionFileMenuItem(protocol), ' ');
@@ -180,6 +186,7 @@ public class FileProtocolManager {
 			
 	private void addMenuItems(FileProtocol protocol) {
 		addMenuItem(GUITreeComponentRegistry.OPEN_MENU_ITEM, new OpenFileMenuItem(protocol));
+		addMenuItem(GUITreeComponentRegistry.IMPORT_MENU_ITEM, new ImportFileMenuItem(protocol));
 		addMenuItem(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM, new SaveAsFileMenuItem(protocol));
 		addMenuItem(GUITreeComponentRegistry.EXPORT_MENU_ITEM, new ExportFileMenuItem(protocol));
 		addMenuItem(GUITreeComponentRegistry.EXPORT_SELECTION_MENU_ITEM, new ExportSelectionFileMenuItem(protocol));
@@ -192,6 +199,7 @@ public class FileProtocolManager {
 
 	private void addSeparators() {
 		((OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.OPEN_MENU_ITEM)).addSeparator();
+		((OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.IMPORT_MENU_ITEM)).addSeparator();
 		((OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.SAVE_AS_MENU_ITEM)).addSeparator();
 		((OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_MENU_ITEM)).addSeparator();
 		((OutlinerSubMenuItem) GUITreeLoader.reg.get(GUITreeComponentRegistry.EXPORT_SELECTION_MENU_ITEM)).addSeparator();

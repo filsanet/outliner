@@ -65,7 +65,7 @@
  *				[TBD] int processSortInfo (byte[])
  *		
  * Copyright (C) 2001 Stan Krute <Stan@StanKrute.com>
- * Last Touched: 12/30/01 3:47AM
+ * Last Touched: 12/30/01 5:48AM
  *
  * Redistribution and use in source and binary forms, with or 
  * without modification, are permitted provided that the 
@@ -285,7 +285,6 @@ public class PdbSPReaderWriter
 				siblingAheadLevels = null ;
 				
 				} // end else there are no more nodes
-			
 			
 			// phew
 			

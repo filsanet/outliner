@@ -56,6 +56,7 @@ public class Preferences implements GUITreeComponent {
 
 	public static final Vector ENCODINGS = new Vector();
 	public static final Vector FILE_FORMATS_OPEN = new Vector();
+	public static final Vector FILE_FORMATS_IMPORT = new Vector();
 	public static final Vector FILE_FORMATS_SAVE = new Vector();
 	public static final Vector FILE_FORMATS_EXPORT = new Vector();
 

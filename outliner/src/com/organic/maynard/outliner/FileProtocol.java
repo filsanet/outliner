@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
+ * Portions copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
+ * Portions copyright (C) 2002   Stan Krute <Stan@StanKrute.com>
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or 
@@ -48,6 +49,18 @@ public interface FileProtocol {
 	public static final int EXPORT = 1;
 	
 	/**
+	 * Used by the <code>selectFileToOpen</code> method to indicate that the 
+	 * GUI should be configured for an open.
+	 */	
+	public static final int OPEN = 2;
+	
+	/**
+	 * Used by the <code>selectFileToOpen</code> method to indicate that the 
+	 * GUI should be configured for an import.
+	 */	
+	public static final int IMPORT = 3;
+	
+	/**
 	 * Gets the name of this protocol.
 	 *
 	 * @return this protocol's unique name.
@@ -71,10 +84,11 @@ public interface FileProtocol {
 	 *
 	 * @param docInfo the <code>DocumentInfo</code> object to store the results 
 	 *                of the selection process.
+	 * @param type     indicates if this is an Open or an Import.
 	 * @return        <code>true</code> indicates success and <code>false</code> 
 	 *                indicates failure.
 	 */		
-	public boolean selectFileToOpen(DocumentInfo docInfo);
+	public boolean selectFileToOpen(DocumentInfo docInfo, int type);
 
 	/**
 	 * Handles selection of a file to save. All GUI elements involved in the 

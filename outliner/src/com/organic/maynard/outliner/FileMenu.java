@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
+ * Portions copyright (C) 2000, 2001 Maynard Demmon, maynard@organic.com
+ * Portions copyright (C) 2001 Stan Krute <Stan@StanKrute.com>
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or 
@@ -297,6 +298,19 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		return success;
 	}
 	
+	// import a file
+	// similar to opening a file
+	// key diff is that we don't assume we can save it
+	protected static void importFile(DocumentInfo docInfo, FileProtocol protocol) {
+		
+		if (Outliner.DEBUG) { 
+			System.out.println("Stan_Debug:\tFileMenu:importFile: at the start" ); 
+		} // end if
+		
+		
+	} // end method importFile
+	
+
 	protected static void openFile(DocumentInfo docInfo, FileProtocol protocol) {
 		// Get the TreeContext
 		TreeContext tree = new TreeContext();
