@@ -1,10 +1,10 @@
 set|print_environment|false
 set|desktop_background_color|0,0,0
-set|panel_background_color|0,38,103
-set|textarea_background_color|0,62,133
-set|textarea_foreground_color|205,241,255
+set|panel_background_color|0,0,0
+set|textarea_background_color|102,0,102
+set|textarea_foreground_color|255,204,0
 set|indent|15
-set|vertical_spacing|2
+set|vertical_spacing|1
 set|left_margin|5
 set|top_margin|5
 set|right_margin|5
@@ -12,7 +12,7 @@ set|bottom_margin|5
 set|undo_queue_size|1000
 set|recent_files_list_size|15
 set|selected_child_color|255,255,153
-set|font_size|13
+set|font_size|14
 set|font_face|Courier New
 set|line_end|Windows
 set|open_encoding|ISO-8859-1
@@ -22,8 +22,12 @@ set|new_doc_on_startup|false
 set|is_maximized|true
 set|open_format|Plaintext
 set|save_format|Plaintext
-set|most_recent_open_dir|.
-set|most_recent_save_dir|.
+set|most_recent_open_dir|C:\\temp
+set|most_recent_save_dir|C:\\WINDOWS\\Desktop
 set|owner_name|
 set|owner_email|
 set|time_zone_for_saving_dates|GMT
+set|line_number_color|75,0,74
+set|line_number_selected_color|102,54,45
+set|line_number_selected_child_color|82,45,45
+set|show_line_numbers|true
