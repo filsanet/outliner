@@ -3,17 +3,19 @@
 <head>
 <title>e:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Sat, 4 Aug 2001 03:45:17 GMT</dateModified>
+<dateModified>Sun, 5 Aug 2001 03:04:24 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
-<expansionState>17</expansionState>
+<expansionState>19</expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>10</windowTop>
-<windowLeft>10</windowLeft>
-<windowBottom>455</windowBottom>
-<windowRight>347</windowRight>
+<windowTop>20</windowTop>
+<windowLeft>217</windowLeft>
+<windowBottom>504</windowBottom>
+<windowRight>544</windowRight>
 </head>
 <body>
+<outline text="JOE User Guide"/>
+<outline text="-------------------"/>
 <outline text="Front End">
 <outline text="About JOE - the Java Outline Editor">
 <outline text="What It Is">
@@ -202,7 +204,12 @@
 <outline text="Printing to a Printer"/>
 <outline text="Printing to a File"/>
 </outline>
-<outline text="Closing Outlines"/>
+<outline text="Closing Outlines">
+<outline text="File:Close"/>
+<outline text="File:Close All"/>
+<outline text="The X Box"/>
+<outline text="What Makes a File Dirty"/>
+</outline>
 <outline text="Opening Outlines"/>
 <outline text="Hyperlinks in Outlines">
 <outline text="Link Nodes"/>

@@ -3,17 +3,19 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide - English.opml</title>
 <dateCreated>Tue, 17 Jul 2001 02:49:03 GMT</dateCreated>
-<dateModified>Tue, 31 Jul 2001 09:26:57 GMT</dateModified>
+<dateModified>Sun, 5 Aug 2001 04:58:26 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
-<expansionState></expansionState>
-<vertScrollState>1</vertScrollState>
+<expansionState>6,7,17,19,20,23,25,27,30</expansionState>
+<vertScrollState>7</vertScrollState>
 <windowTop>122</windowTop>
 <windowLeft>116</windowLeft>
 <windowBottom>385</windowBottom>
 <windowRight>577</windowRight>
 </head>
 <body>
+<outline text="JOE Developer Guide"/>
+<outline text="--------------------------"/>
 <outline text="Front End">
 <outline text="About JOE">
 <outline text="Notable Features">
