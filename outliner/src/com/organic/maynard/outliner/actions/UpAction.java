@@ -97,7 +97,7 @@ public class UpAction extends AbstractAction {
 				if (isIconFocused) {
 					select(tree, layout, UP);
 				} else {
-					
+					selectUpText(textArea, tree, layout);
 				}
 				break;
 			case 2:
@@ -147,6 +147,32 @@ public class UpAction extends AbstractAction {
 		}
 	}
 
+	public static void selectUpText(OutlinerCellRendererImpl textArea, JoeTree tree, OutlineLayoutManager layout) {
+		Node currentNode = textArea.node;
+		
+		int currentPosition = textArea.getCaretPosition();
+
+		if (currentPosition == 0) {
+			return;
+		}
+		
+		// Update Preferred Caret Position
+		int newCaretPosition = 0;
+		tree.getDocument().setPreferredCaretPosition(newCaretPosition);
+
+		// Record the CursorPosition only since the EditingNode should not have changed
+		tree.setCursorPosition(newCaretPosition, false);
+
+		textArea.moveCaretPosition(newCaretPosition);
+
+		// Redraw and Set Focus if this node is currently offscreen
+		if (!currentNode.isVisible()) {
+			layout.draw(currentNode,OutlineLayoutManager.TEXT);
+		}
+		
+		// Freeze Undo Editing
+		UndoableEdit.freezeUndoEdit(currentNode);
+	}
 
 	// IconFocusedMethods
 	public static void deselect(JoeTree tree, OutlineLayoutManager layout, int type) {
