@@ -41,9 +41,9 @@ import java.util.*;
 
 public class DocumentSettings {
 	private OutlinerDocument doc = null;
-
+	
 	private boolean useDocumentSettings = false;
-
+	
 	// Editable Settings
 	protected PreferenceLineEnding lineEnd = new PreferenceLineEnding(Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur, Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur, "");
 	protected PreferenceString saveEncoding = new PreferenceString(Preferences.getPreferenceString(Preferences.SAVE_ENCODING).cur, Preferences.getPreferenceString(Preferences.SAVE_ENCODING).cur, "");
@@ -55,7 +55,7 @@ public class DocumentSettings {
 	protected PreferenceBoolean applyFontStyleForMoveability = new PreferenceBoolean(Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur, Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY).cur, "");
 	protected PreferenceBoolean useCreateModDates = new PreferenceBoolean(Preferences.getPreferenceBoolean(Preferences.USE_CREATE_MOD_DATES).cur, Preferences.getPreferenceBoolean(Preferences.USE_CREATE_MOD_DATES).cur, ""); 
 	protected PreferenceString createModDatesFormat = new PreferenceString(Preferences.getPreferenceString(Preferences.CREATE_MOD_DATES_FORMAT).cur, Preferences.getPreferenceString(Preferences.CREATE_MOD_DATES_FORMAT).cur, "");
-
+	
 	// Hidden Settings: Has application level settings.
 	protected PreferenceString fileProtocol = new PreferenceString(Preferences.getPreferenceString(Preferences.FILE_PROTOCOL).cur, Preferences.getPreferenceString(Preferences.FILE_PROTOCOL).cur, "");
 	
@@ -65,14 +65,14 @@ public class DocumentSettings {
 	
 	// TBD: This could have an app level value.
 	protected SimpleDateFormat dateFormat = null;
-
-
+	
+	
 	// The Constructors
 	public DocumentSettings(OutlinerDocument document) {
 		this.doc = document;
 		updateSimpleDateFormat(createModDatesFormat.cur);
 	}
-
+	
 	public void destroy() {
 		doc = null;
 		lineEnd = null;
@@ -90,7 +90,7 @@ public class DocumentSettings {
 		createModDatesFormat = null;
 		dateFormat = null;
 	}
-
+	
 	public void syncToGlobal() {
 		lineEnd.cur = Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END).cur;
 		saveEncoding.cur = Preferences.getPreferenceString(Preferences.SAVE_ENCODING).cur;
@@ -103,7 +103,7 @@ public class DocumentSettings {
 		useCreateModDates.cur = Preferences.getPreferenceBoolean(Preferences.USE_CREATE_MOD_DATES).cur;
 		createModDatesFormat.cur = Preferences.getPreferenceString(Preferences.CREATE_MOD_DATES_FORMAT).cur;
 	}
-
+	
 	public void restoreTemporaryToCurrent() {
 		lineEnd.restoreTemporaryToCurrent();
 		saveEncoding.restoreTemporaryToCurrent();
@@ -116,30 +116,17 @@ public class DocumentSettings {
 		useCreateModDates.restoreTemporaryToCurrent();
 		createModDatesFormat.restoreTemporaryToCurrent();
 	}
-
+	
 	
 	// Accessors
 	public OutlinerDocument getDocument() {return this.doc;}
-
+	
 	public boolean useDocumentSettings() {return this.useDocumentSettings;}
-	public void setUseDocumentSettings(boolean useDocumentSettings) {
-		if (this.useDocumentSettings == useDocumentSettings) {
-			// Abort if we're not changing the value.
-			return;
-		}
-		
-		this.useDocumentSettings = useDocumentSettings;
-		
-		if (useDocumentSettings) {
-			// Sync up to latest values of the application level settings since we're changing to document level settings.
-			syncToGlobal();
-			restoreTemporaryToCurrent();
-		}
-	}
-
+	public void setUseDocumentSettings(boolean useDocumentSettings) {this.useDocumentSettings = useDocumentSettings;}
+	
 	public String getDateCreated() {return this.dateCreated;}
 	public void setDateCreated(String dateCreated) {this.dateCreated = dateCreated;}
-
+	
 	public String getDateModified() {return this.dateModified;}
 	public void setDateModified(String dateModified) {this.dateModified = dateModified;}
 	
@@ -150,7 +137,7 @@ public class DocumentSettings {
 			return Preferences.getPreferenceBoolean(Preferences.USE_CREATE_MOD_DATES);
 		}
 	}
-
+	
 	public PreferenceString getCreateModDatesFormat() {
 		if (useDocumentSettings()) {
 			return this.createModDatesFormat;
@@ -158,7 +145,7 @@ public class DocumentSettings {
 			return Preferences.getPreferenceString(Preferences.CREATE_MOD_DATES_FORMAT);
 		}
 	}
-
+	
 	public PreferenceLineEnding getLineEnd() {
 		if (useDocumentSettings()) {
 			return this.lineEnd;
@@ -166,39 +153,39 @@ public class DocumentSettings {
 			return Preferences.getPreferenceLineEnding(Preferences.SAVE_LINE_END);
 		}
 	}
-
+	
 	public PreferenceString getSaveEncoding() {
 		if (useDocumentSettings()) {
 			return this.saveEncoding;
 		} else {
 			return Preferences.getPreferenceString(Preferences.SAVE_ENCODING);
 		}
-	}	
-
+	}
+	
 	public PreferenceString getSaveFormat() {
 		if (useDocumentSettings()) {
 			return this.saveFormat;
 		} else {
 			return Preferences.getPreferenceString(Preferences.SAVE_FORMAT);
 		}
-	}	
-
+	}
+	
 	public PreferenceString getOwnerName() {
 		if (useDocumentSettings()) {
 			return this.ownerName;
 		} else {
 			return Preferences.getPreferenceString(Preferences.OWNER_NAME);
 		}
-	}	
-
+	}
+	
 	public PreferenceString getOwnerEmail() {
 		if (useDocumentSettings()) {
 			return this.ownerEmail;
 		} else {
 			return Preferences.getPreferenceString(Preferences.OWNER_EMAIL);
 		}
-	}	
-
+	}
+	
 	public PreferenceBoolean getApplyFontStyleForComments() {
 		if (useDocumentSettings()) {
 			return this.applyFontStyleForComments;
@@ -214,7 +201,7 @@ public class DocumentSettings {
 			return Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_EDITABILITY);
 		}
 	}
-
+	
 	public PreferenceBoolean getApplyFontStyleForMoveability() {
 		if (useDocumentSettings()) {
 			return this.applyFontStyleForMoveability;
@@ -222,16 +209,16 @@ public class DocumentSettings {
 			return Preferences.getPreferenceBoolean(Preferences.APPLY_FONT_STYLE_FOR_MOVEABILITY);
 		}
 	}
-
+	
 	public PreferenceString getFileProtocol() {
 		if (useDocumentSettings()) {
 			return this.fileProtocol;
 		} else {
 			return Preferences.getPreferenceString(Preferences.FILE_PROTOCOL);
 		}
-	}	
-
-
+	}
+	
+	
 	// Date Methods
 	public void updateSimpleDateFormat(String format) {
 		this.dateFormat = new SimpleDateFormat(format);
