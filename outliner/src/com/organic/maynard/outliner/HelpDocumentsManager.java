@@ -115,6 +115,14 @@ public class HelpDocumentsManager
 		
 		} // end method startSetup	
 
+	// do special subclass document closing stuff
+	protected void docClosingChores (OutlinerDocument document) {
+		
+		// remove it from frameInfoList
+		RecentFilesList.removeFileNameFromList(document.getDocumentInfo());
+		
+	} // end docClosingChores		
+	
 
 		
 	} // end class HelpDocumentsManager

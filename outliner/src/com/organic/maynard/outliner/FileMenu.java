@@ -339,6 +339,8 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 
 				// Update the Recent File List
 				
+				// TBD [srk] collapse this if/else/if now that 
+				//	addFileNameToList is smarter 
 				// if we were imported ...
 				if (wereImported) {
 					RecentFilesList.addFileNameToList(docInfo);
@@ -351,7 +353,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				// else we weren't imported and haven't changed our name on a Save As op
 				} else {
 					
-					RecentFilesList.updateFileNameInList(filename, docInfo);
+					RecentFilesList.addFileNameToList(docInfo);
 				} // end else
 
 				//document.setFileName(filename);
@@ -462,7 +464,7 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 				msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
 
 				JOptionPane.showMessageDialog(Outliner.outliner, msg);
-				RecentFilesList.removeFileNameFromList(docInfo.getPath());
+				RecentFilesList.removeFileNameFromList(docInfo);
 			} else if (openOrImportResult != FAILURE_USER_ABORTED) {
 				// Deal with a childless RootNode or an Empty or Null Tree
 				if ((tree.getRootNode() == null) || (tree.getRootNode().numOfChildren() <= 0)) {

@@ -252,7 +252,7 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
 
 			JOptionPane.showMessageDialog(Outliner.outliner, msg);
-			RecentFilesList.removeFileNameFromList(docInfo.getPath());
+			RecentFilesList.removeFileNameFromList(docInfo);
 			return false;
 			
 		} catch (Exception e) {
@@ -260,7 +260,7 @@ public class WebFilePHPFileProtocol extends AbstractFileProtocol {
 			msg = Replace.replace(msg,GUITreeComponentRegistry.PLACEHOLDER_1, docInfo.getPath());
 
 			JOptionPane.showMessageDialog(Outliner.outliner, msg);
-			RecentFilesList.removeFileNameFromList(docInfo.getPath());
+			RecentFilesList.removeFileNameFromList(docInfo);
 			return false;
 		}	
 	}

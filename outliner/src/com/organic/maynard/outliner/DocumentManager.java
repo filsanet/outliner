@@ -222,10 +222,21 @@ public class DocumentManager
 			
 			// decrement ourDocsOpen counter
 			ourDocsOpen -- ;
+	
+			// do other document closing stuff
+			docClosingChores(document) ;
+			
 			} // END if
 		
 		} // end method someDocumentJustClosed
 
+	// do document closing stuff
+	// meant for subclassing
+	// no need for subclasses to call super
+	protected void docClosingChores (OutlinerDocument document) {
+	} // end docClosingChores		
+	
+	
 	// -------------------- accessors
 	
 	int getOurDocsOpen () { return ourDocsOpen ; }

@@ -549,6 +549,48 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 	} // end method addFileNameToList
 
 
+	// this method is called by outsiders when a file is to be removed from Recent Files List
+	
+	// if the file is not in frameInfoList, we do nothing
+	// if the file is in frameInfoList, we remove it, then sync up the treeset and the menu items
+	
+	// we then sync up treeset and the menu
+	public static void removeFileNameFromList(DocumentInfo docInfo) {
+		// local vars
+		String filename = docInfo.getPath();
+//		StrungDocumentInfo strungDocInfo = null ;
+		
+		// check to see if this file is in frameInfoList 
+		int position = filePositionInFrameInfoList (filename) ;
+		
+		// if it's not in frameInfoList ...
+		if (position == NOT_THERE) {
+			
+			// leave
+			return ;
+			
+		} //end if
+		
+		// okay, it's in frameInfoList
+		
+		// move it to the tail of the list
+		StanVectorTools.moveElementToTail(frameInfoList, position) ;
+		
+		// cut off the tail
+		frameInfoList.setSize(frameInfoList.size() - 1) ;
+		
+		// grab the RFL menu
+		RecentFilesList menu = (RecentFilesList) GUITreeLoader.reg.get(GUITreeComponentRegistry.RECENT_FILE_MENU);
+
+		// sync up the tree set
+		menu.syncTreeSet() ;
+					
+		// sync up the menu items
+		menu.syncMenuItems() ;
+			
+	} // end method removeFileNameFromList
+
+
 	// called by outsiders when the size of the recent files list may have been changed
 	static void syncSize() {
 		 
@@ -614,127 +656,127 @@ public class RecentFilesList extends JMenu implements ActionListener, GUITreeCom
 		return null;
 	}
 	
-	public static void updateFileNameInList(String oldFilename, DocumentInfo docInfo) {
-		removeFileNameFromList(oldFilename);
-		addFileNameToList(docInfo);		
-	}
-
-	// remove an item from the frameInfoList, menu, and, if necessary, alfaAscii tree
-	public static void removeFileNameFromList(String pathname) {
-		// local vars
-		int position = -1;
-		DocumentInfo docInfo = null ;
-		StrungDocumentInfo strungDocInfo = null ;
-		RecentFilesList menu = null ;
-		
-		// is this item in the frameInfoList ?
-		for (int i = 0; i < frameInfoList.size(); i++) {
-			docInfo = (DocumentInfo) frameInfoList.get(i) ;
-			String text = docInfo.getPath();
-			if (text.equals(pathname)) {
-				position = i;
-				break;
-			} // end if
-		} // end for
-		
-		// if it wasn't there
-		if (position == -1) {
-			return;
-		} // end if
-		
-		// it's there
-
-		// grab a ref to this menu
-		menu = (RecentFilesList) GUITreeLoader.reg.get
-			(GUITreeComponentRegistry.RECENT_FILE_MENU);
-		
-		// we need to handle this based on ordering
-		switch (currentDisplayOrdering) {
-			
-		case ALFA_ORDER:
-		case ASCII_ORDER:
-			// if we've got an alfa-ascii ordering tree 
-			if (ensureAlfaAsciiTree()) {
-			
-				// we've got to remove the file's entry there
-				
-				// we've got the docInfo
-				// we're going to package that up
-				
-				// switch on name form
-				switch (currentDisplayNameForm) {
-					
-				case FULL_PATHNAME: 
-				default:
-				
-					// package the docInfo up with the full pathname
-					strungDocInfo= new StrungDocumentInfo(docInfo.getPath(), docInfo) ;
-					break ;
-					
-				case TRUNC_PATHNAME:
-					// package the docInfo up with a truncated pathname
-					strungDocInfo= new StrungDocumentInfo(
-						StanStringTools.getTruncatedPathName(docInfo.getPath(),TRUNC_STRING),
-						docInfo) ; 
-					break ;
-					
-				case JUST_FILENAME:
-					// package the docInfo up with the filename
-					strungDocInfo= new StrungDocumentInfo(
-						StanStringTools.getFileNameFromPathName(docInfo.getPath()),
-						docInfo) ;
-					break ;
-				
-				} // end switch on name form	
-				
-				// remove this item's entry from the alfaAscii tree
-				alfaAsciiTree.remove(strungDocInfo) ;
-				
-			} // end if we're got an alfaAscii tree
-
-			// Remove item from frameInfoList
-			frameInfoList.remove(position);
-			
-			// adjust the menu items to reflect the new alfaAscii ordering
-			menu.syncMenuItems() ;
-			
-			break ;
-				
-		case CHRONO_ORDER:
-		default:
-
-			// Remove from frameInfoList
-			frameInfoList.remove(position);
-
-			// now to nail down our position in the menu
-			// switch out on direction
-			switch (currentDisplayDirection) {
-				
-			case TOP_TO_BOTTOM:
-			default:
-				break ;
-				
-			case BOTTOM_TO_TOP:
-				// oldest item is at the bottom
-				position = menu.getItemCount() - 1 - position ;
-				break ;
-				
-			}  // end switch on direction
-			
-			// remove item from menu
-			menu.remove(position);
-
-			break ;
-
-		} // end switch on ordering
-
-		// if the menu's empty, disable it
-		if (menu.getItemCount() <= 0) {
-			menu.setEnabled(false);
-		} // end if
-		
-	} // end method
-	
+//	public static void updateFileNameInList(String oldFilename, DocumentInfo docInfo) {
+//		removeFileNameFromList(docInfo);
+//		addFileNameToList(docInfo);		
+//	}
+//
+//	// remove an item from the frameInfoList, menu, and, if necessary, alfaAscii tree
+//	public static void removeFileNameFromList(String pathname) {
+//		// local vars
+//		int position = -1;
+//		DocumentInfo docInfo = null ;
+//		StrungDocumentInfo strungDocInfo = null ;
+//		RecentFilesList menu = null ;
+//		
+//		// is this item in the frameInfoList ?
+//		for (int i = 0; i < frameInfoList.size(); i++) {
+//			docInfo = (DocumentInfo) frameInfoList.get(i) ;
+//			String text = docInfo.getPath();
+//			if (text.equals(pathname)) {
+//				position = i;
+//				break;
+//			} // end if
+//		} // end for
+//		
+//		// if it wasn't there
+//		if (position == -1) {
+//			return;
+//		} // end if
+//		
+//		// it's there
+//
+//		// grab a ref to this menu
+//		menu = (RecentFilesList) GUITreeLoader.reg.get
+//			(GUITreeComponentRegistry.RECENT_FILE_MENU);
+//		
+//		// we need to handle this based on ordering
+//		switch (currentDisplayOrdering) {
+//			
+//		case ALFA_ORDER:
+//		case ASCII_ORDER:
+//			// if we've got an alfa-ascii ordering tree 
+//			if (ensureAlfaAsciiTree()) {
+//			
+//				// we've got to remove the file's entry there
+//				
+//				// we've got the docInfo
+//				// we're going to package that up
+//				
+//				// switch on name form
+//				switch (currentDisplayNameForm) {
+//					
+//				case FULL_PATHNAME: 
+//				default:
+//				
+//					// package the docInfo up with the full pathname
+//					strungDocInfo= new StrungDocumentInfo(docInfo.getPath(), docInfo) ;
+//					break ;
+//					
+//				case TRUNC_PATHNAME:
+//					// package the docInfo up with a truncated pathname
+//					strungDocInfo= new StrungDocumentInfo(
+//						StanStringTools.getTruncatedPathName(docInfo.getPath(),TRUNC_STRING),
+//						docInfo) ; 
+//					break ;
+//					
+//				case JUST_FILENAME:
+//					// package the docInfo up with the filename
+//					strungDocInfo= new StrungDocumentInfo(
+//						StanStringTools.getFileNameFromPathName(docInfo.getPath()),
+//						docInfo) ;
+//					break ;
+//				
+//				} // end switch on name form	
+//				
+//				// remove this item's entry from the alfaAscii tree
+//				alfaAsciiTree.remove(strungDocInfo) ;
+//				
+//			} // end if we're got an alfaAscii tree
+//
+//			// Remove item from frameInfoList
+//			frameInfoList.remove(position);
+//			
+//			// adjust the menu items to reflect the new alfaAscii ordering
+//			menu.syncMenuItems() ;
+//			
+//			break ;
+//				
+//		case CHRONO_ORDER:
+//		default:
+//
+//			// Remove from frameInfoList
+//			frameInfoList.remove(position);
+//
+//			// now to nail down our position in the menu
+//			// switch out on direction
+//			switch (currentDisplayDirection) {
+//				
+//			case TOP_TO_BOTTOM:
+//			default:
+//				break ;
+//				
+//			case BOTTOM_TO_TOP:
+//				// oldest item is at the bottom
+//				position = menu.getItemCount() - 1 - position ;
+//				break ;
+//				
+//			}  // end switch on direction
+//			
+//			// remove item from menu
+//			menu.remove(position);
+//
+//			break ;
+//
+//		} // end switch on ordering
+//
+//		// if the menu's empty, disable it
+//		if (menu.getItemCount() <= 0) {
+//			menu.setEnabled(false);
+//		} // end if
+//		
+//	} // end method
+//	
 
 	
 	// Config File
