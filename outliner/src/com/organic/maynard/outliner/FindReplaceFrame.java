@@ -939,6 +939,13 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		boolean wrapAround,
 		boolean isRegexp
 	) {
+		// [srk] possible bug w/ bad params
+		// check for nulls
+		if (startNode = null
+			|| endNode = null
+			|| match = null
+			|| replacement = null) { return ; }
+				
 		String text = startNode.getValue();
 		
 		// Find the match
