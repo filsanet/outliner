@@ -164,69 +164,54 @@ public class OutlinerFileChooser extends JFileChooser implements ItemListener {
 		String fileEncodingText = GUITreeLoader.reg.getText("file_encoding");
 		String fileFormatText = GUITreeLoader.reg.getText("file_format");
 
+
 		// Lay out save panel
-		Box saveBox = Box.createVerticalBox();
+		saveAccessory.setLayout(new GridBagLayout());
 
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(lineTerminatorText), saveBox);
-		AbstractPreferencesPanel.addSingleItemCentered(saveLineEndComboBox, saveBox);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(lineTerminatorText), saveAccessory);
+		AbstractPreferencesPanel.addSingleItemCentered(saveLineEndComboBox, saveAccessory);
 
-		saveBox.add(Box.createVerticalStrut(5));
-
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileEncodingText), saveBox);
-		AbstractPreferencesPanel.addSingleItemCentered(saveEncodingComboBox, saveBox);
-
-		saveBox.add(Box.createVerticalStrut(5));
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileEncodingText), saveAccessory);
+		AbstractPreferencesPanel.addSingleItemCentered(saveEncodingComboBox, saveAccessory);
 
 		saveFormatComboBox.addItemListener(this);
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileFormatText), saveBox);
-		AbstractPreferencesPanel.addSingleItemCentered(saveFormatComboBox, saveBox);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileFormatText), saveAccessory);
+		AbstractPreferencesPanel.addSingleItemCentered(saveFormatComboBox, saveAccessory);
 
-		saveAccessory.add(saveBox, BorderLayout.CENTER);
 
 		// Lay out export panel
-		Box exportBox = Box.createVerticalBox();
+		exportAccessory.setLayout(new GridBagLayout());
 
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(lineTerminatorText), exportBox);
-		AbstractPreferencesPanel.addSingleItemCentered(exportLineEndComboBox, exportBox);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(lineTerminatorText), exportAccessory);
+		AbstractPreferencesPanel.addSingleItemCentered(exportLineEndComboBox, exportAccessory);
 
-		exportBox.add(Box.createVerticalStrut(5));
-
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileEncodingText), exportBox);
-		AbstractPreferencesPanel.addSingleItemCentered(exportEncodingComboBox, exportBox);
-
-		exportBox.add(Box.createVerticalStrut(5));
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileEncodingText), exportAccessory);
+		AbstractPreferencesPanel.addSingleItemCentered(exportEncodingComboBox, exportAccessory);
 
 		exportFormatComboBox.addItemListener(this);
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileFormatText), exportBox);
-		AbstractPreferencesPanel.addSingleItemCentered(exportFormatComboBox, exportBox);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileFormatText), exportAccessory);
+		AbstractPreferencesPanel.addSingleItemCentered(exportFormatComboBox, exportAccessory);
 
-		exportAccessory.add(exportBox, BorderLayout.CENTER);
 
 		// Layout open panel
-		Box openBox = Box.createVerticalBox();
+		openAccessory.setLayout(new GridBagLayout());
 
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileEncodingText), openBox);
-		AbstractPreferencesPanel.addSingleItemCentered(openEncodingComboBox, openBox);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileEncodingText), openAccessory);
+		AbstractPreferencesPanel.addSingleItemCentered(openEncodingComboBox, openAccessory);
 
-		openBox.add(Box.createVerticalStrut(5));
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileFormatText), openAccessory);
+		AbstractPreferencesPanel.addSingleItemCentered(openFormatComboBox, openAccessory);
 
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileFormatText), openBox);
-		AbstractPreferencesPanel.addSingleItemCentered(openFormatComboBox, openBox);
-
-		openAccessory.add(openBox, BorderLayout.CENTER);
 
 		// Layout import panel
-		Box importBox = Box.createVerticalBox();
+		importAccessory.setLayout(new GridBagLayout());
+		
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileEncodingText), importAccessory);
+		AbstractPreferencesPanel.addSingleItemCentered(importEncodingComboBox, importAccessory);
 
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileEncodingText), importBox);
-		AbstractPreferencesPanel.addSingleItemCentered(importEncodingComboBox, importBox);
+		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileFormatText), importAccessory);
+		AbstractPreferencesPanel.addSingleItemCentered(importFormatComboBox, importAccessory);
 
-		importBox.add(Box.createVerticalStrut(5));
-
-		AbstractPreferencesPanel.addSingleItemCentered(new JLabel(fileFormatText), importBox);
-		AbstractPreferencesPanel.addSingleItemCentered(importFormatComboBox, importBox);
-
-		importAccessory.add(importBox, BorderLayout.CENTER);
 
 		// Set the flag
 		isInitialized = true;

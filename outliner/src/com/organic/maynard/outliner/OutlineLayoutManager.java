@@ -623,9 +623,14 @@ public class OutlineLayoutManager implements LayoutManager, AdjustmentListener {
 		if (drawBlock) {return;}
 		
 		// Explicit call to draw and focus, so that we can scroll away from our current component focus.
-		setNodeToDrawFrom(panel.doc.tree.getVisibleNodes().get(e.getValue()), e.getValue());		
-		drawingDirection = DOWN;
-		redraw();
+		int value = e.getValue();
+		JoeNodeList list = panel.doc.tree.getVisibleNodes();
+		
+		if (value < list.size()) {
+			setNodeToDrawFrom(list.get(value), value);		
+			drawingDirection = DOWN;
+			redraw();
+		}
 	}
 	
 	
