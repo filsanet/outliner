@@ -150,6 +150,19 @@ public class SetPrefCommand extends Command {
 
 		} else if (variableName.equals(Preferences.TIME_ZONE_FOR_SAVING_DATES.getCommand())) {
 			setStringPref(signature, Preferences.TIME_ZONE_FOR_SAVING_DATES);
+
+		// WebFile
+		} else if (variableName.equals(Preferences.WEB_FILE_SYSTEM.getCommand())) {
+			setBooleanPref(signature, Preferences.WEB_FILE_SYSTEM, BOOLEAN_VALIDATOR);
+
+		} else if (variableName.equals(Preferences.WEB_FILE_URL.getCommand())) {
+			setStringPref(signature, Preferences.WEB_FILE_URL);
+
+		} else if (variableName.equals(Preferences.WEB_FILE_USER.getCommand())) {
+			setStringPref(signature, Preferences.WEB_FILE_USER);
+
+		} else if (variableName.equals(Preferences.WEB_FILE_PASSWORD.getCommand())) {
+			setStringPref(signature, Preferences.WEB_FILE_PASSWORD);
 		
 		} else if (variableName.equals(COMMAND_RECENT_FILE)) {
 			if (RecentFilesList.docInfoList.size() < Preferences.RECENT_FILES_LIST_SIZE.cur) {

@@ -115,6 +115,12 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 		public static final JTextField OWNER_NAME_FIELD = new JTextField(10);
 		public static final JTextField OWNER_EMAIL_FIELD = new JTextField(10);
 
+			// WebFile
+			public static final JCheckBox WEB_FILE_SYSTEM_CHECKBOX = new JCheckBox();
+			public static final JTextField WEB_FILE_URL_FIELD = new JTextField(10);
+			public static final JTextField WEB_FILE_USER_FIELD = new JTextField(10);
+			public static final JTextField WEB_FILE_PASSWORD_FIELD = new JTextField(10);
+
 		// Open And Save Panel
 		public static final JComboBox LINE_END_COMBOBOX = new JComboBox(Preferences.PLATFORM_IDENTIFIERS);
 		public static final JComboBox OPEN_ENCODING_COMBOBOX = new JComboBox();
@@ -192,6 +198,12 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 			NEW_DOC_ON_STARTUP_CHECKBOX.addActionListener(new CheckboxListener(NEW_DOC_ON_STARTUP_CHECKBOX, Preferences.NEW_DOC_ON_STARTUP));
 			OWNER_NAME_FIELD.addFocusListener(new TextFieldListener(OWNER_NAME_FIELD, Preferences.OWNER_NAME));
 			OWNER_EMAIL_FIELD.addFocusListener(new TextFieldListener(OWNER_EMAIL_FIELD, Preferences.OWNER_EMAIL));
+
+				// WebFile
+				WEB_FILE_SYSTEM_CHECKBOX.addActionListener(new CheckboxListener(WEB_FILE_SYSTEM_CHECKBOX, Preferences.WEB_FILE_SYSTEM));
+				WEB_FILE_URL_FIELD.addFocusListener(new TextFieldListener(WEB_FILE_URL_FIELD, Preferences.WEB_FILE_URL));
+				WEB_FILE_USER_FIELD.addFocusListener(new TextFieldListener(WEB_FILE_USER_FIELD, Preferences.WEB_FILE_USER));
+				WEB_FILE_PASSWORD_FIELD.addFocusListener(new TextFieldListener(WEB_FILE_PASSWORD_FIELD, Preferences.WEB_FILE_PASSWORD));
 		}
 		
 	// The Constructor
@@ -452,6 +464,14 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 		addPreferenceItem("New Document On Startup", NEW_DOC_ON_STARTUP_CHECKBOX, miscBox);
 		addPreferenceItem("Owner Name", OWNER_NAME_FIELD, miscBox);
 		addPreferenceItem("Owner Email", OWNER_EMAIL_FIELD, miscBox);
+
+		// WebFile
+		miscBox.add(Box.createVerticalStrut(10));
+
+		addPreferenceItem("Open/Save Remotely", WEB_FILE_SYSTEM_CHECKBOX, miscBox);
+		addPreferenceItem("Remote URL", WEB_FILE_URL_FIELD, miscBox);
+		addPreferenceItem("Remote Username", WEB_FILE_USER_FIELD, miscBox);
+		addPreferenceItem("Remote Password", WEB_FILE_PASSWORD_FIELD, miscBox);
 
 		miscBox.add(Box.createVerticalStrut(10));
 
@@ -761,6 +781,19 @@ public class MiscAction implements ActionListener {
 
 				PreferencesFrame.OWNER_EMAIL_FIELD.setText(String.valueOf(Preferences.OWNER_EMAIL.def));
 				Preferences.OWNER_EMAIL.restoreTemporaryToDefault();
+
+				// WebFile
+				PreferencesFrame.WEB_FILE_SYSTEM_CHECKBOX.setSelected(Preferences.WEB_FILE_SYSTEM.def);
+				Preferences.WEB_FILE_SYSTEM.restoreTemporaryToDefault();
+
+				PreferencesFrame.WEB_FILE_URL_FIELD.setText(String.valueOf(Preferences.WEB_FILE_URL.def));
+				Preferences.WEB_FILE_URL.restoreTemporaryToDefault();
+
+				PreferencesFrame.WEB_FILE_USER_FIELD.setText(String.valueOf(Preferences.WEB_FILE_USER.def));
+				Preferences.WEB_FILE_USER.restoreTemporaryToDefault();
+
+				PreferencesFrame.WEB_FILE_PASSWORD_FIELD.setText(String.valueOf(Preferences.WEB_FILE_PASSWORD.def));
+				Preferences.WEB_FILE_PASSWORD.restoreTemporaryToDefault();
 			} catch (Exception ex) {
 				System.out.println("Exception: " + ex);
 			}
@@ -773,6 +806,12 @@ public class MiscAction implements ActionListener {
 		PreferencesFrame.NEW_DOC_ON_STARTUP_CHECKBOX.setSelected(Preferences.NEW_DOC_ON_STARTUP.cur);
 		PreferencesFrame.OWNER_NAME_FIELD.setText(String.valueOf(Preferences.OWNER_NAME.cur));
 		PreferencesFrame.OWNER_EMAIL_FIELD.setText(String.valueOf(Preferences.OWNER_EMAIL.cur));
+		
+		// WebFile
+		PreferencesFrame.WEB_FILE_SYSTEM_CHECKBOX.setSelected(Preferences.WEB_FILE_SYSTEM.cur);
+		PreferencesFrame.WEB_FILE_URL_FIELD.setText(String.valueOf(Preferences.WEB_FILE_URL.cur));
+		PreferencesFrame.WEB_FILE_USER_FIELD.setText(String.valueOf(Preferences.WEB_FILE_USER.cur));
+		PreferencesFrame.WEB_FILE_PASSWORD_FIELD.setText(String.valueOf(Preferences.WEB_FILE_PASSWORD.cur));
 	}
 }
 

@@ -54,6 +54,12 @@ public class RecentFilesList extends JMenu implements ActionListener {
 	
 	// Static methods
 	public static void addFileNameToList(DocumentInfo docInfo) {
+		// WebFile
+		// Let's turn off the recent file list for remote files since it isn't designed to handle remote files yet.
+		if (Preferences.WEB_FILE_SYSTEM.cur) {
+			return;
+		}
+	
 		String filename = docInfo.getPath();
 		
 		// Short Circuit if undo is disabled.
@@ -168,6 +174,12 @@ public class RecentFilesList extends JMenu implements ActionListener {
 	
 	// ActionListener Interface
 	public void actionPerformed(ActionEvent e) {
+		// WebFile
+		// Let's turn off the recent file list for remote files since it isn't designed to handle remote files yet.
+		if (Preferences.WEB_FILE_SYSTEM.cur) {
+			return;
+		}
+
 		DocumentInfo docInfo = ((RecentFilesListItem) e.getSource()).getDocumentInfo();
 		String filename = docInfo.getPath();
 		if (!Outliner.isFileNameUnique(filename)) {

@@ -26,6 +26,11 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+// WebFile
+import com.yearahead.io.*;
+import javax.swing.filechooser.*;
+
+
 public class OutlinerFileChooser extends JFileChooser {
 
 	private JPanel openAccessory = new JPanel();
@@ -39,7 +44,12 @@ public class OutlinerFileChooser extends JFileChooser {
 
 	
 	// The Constructor
-	public OutlinerFileChooser() {		
+
+	// WebFile - ctr changed, requires FSV (which may be null)
+	public OutlinerFileChooser(FileSystemView fsv) {		
+		// WebFile
+		super(fsv);
+
 		for (int i = 0; i < Preferences.ENCODINGS.size(); i++) {
 			String encoding = (String) Preferences.ENCODINGS.elementAt(i);
 			saveEncodingComboBox.addItem(encoding);
@@ -109,8 +119,11 @@ public class OutlinerFileChooser extends JFileChooser {
 		if (!currentFileName.equals("")) {
 			setSelectedFile(new File(currentFileName));
 		} else {
-			setCurrentDirectory(new File(Preferences.MOST_RECENT_SAVE_DIR.cur));
-			setSelectedFile(null);
+			// WebFile
+			if (!Preferences.WEB_FILE_SYSTEM.cur) {
+				setCurrentDirectory(new File(Preferences.MOST_RECENT_SAVE_DIR.cur));
+				setSelectedFile(null);
+			}
 		}
 	}
 
@@ -122,9 +135,12 @@ public class OutlinerFileChooser extends JFileChooser {
 		openEncodingComboBox.setSelectedItem(encoding);
 		openFormatComboBox.setSelectedItem(format);
 
-		// Set the current directory location and selected file.
-		setCurrentDirectory(new File(Preferences.MOST_RECENT_OPEN_DIR.cur));
-		setSelectedFile(null);
+		// WebFile
+		if (!Preferences.WEB_FILE_SYSTEM.cur) {
+			// Set the current directory location and selected file.
+			setCurrentDirectory(new File(Preferences.MOST_RECENT_OPEN_DIR.cur));
+			setSelectedFile(null);
+		}
 	}
 
 	

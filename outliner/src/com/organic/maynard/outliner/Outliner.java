@@ -28,6 +28,10 @@ import javax.swing.*;
 
 import com.organic.maynard.util.*;
 
+// WebFile
+import javax.swing.filechooser.*;
+import com.yearahead.io.*;
+
 public class Outliner extends JFrame implements ClipboardOwner {
 	
 	// Directory setup
@@ -179,8 +183,23 @@ public class Outliner extends JFrame implements ClipboardOwner {
 		jsp.getViewport().setBackground(Preferences.DESKTOP_BACKGROUND_COLOR.cur);
 		desktop.setBackground(Preferences.DESKTOP_BACKGROUND_COLOR.cur);
 		
+		// WebFile
+		// Note the outliner will have to be restarted if user switches
+		// file system preferences since the chooser is created just once.
+		// There seems to be a bug where the WEB_FILE_SYSTEM will not
+		// work once the native file system is set, otherwise you could
+		// just call setFileSystemView() on the file chooser.
+		FileSystemView fsv = null;
+		if (Preferences.WEB_FILE_SYSTEM.cur) {
+			// if you have authentication enabled on your web server,
+			// pass non-null user/password
+			fsv = new WebFileSystemView(Preferences.WEB_FILE_URL.cur,
+										Preferences.WEB_FILE_USER.cur,
+										Preferences.WEB_FILE_PASSWORD.cur);
+		}
+
 		// Setup the File Chooser
-		chooser = new OutlinerFileChooser();
+		chooser = new OutlinerFileChooser(fsv);
 
 		setVisible(true);
 

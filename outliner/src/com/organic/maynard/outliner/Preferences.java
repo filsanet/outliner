@@ -30,7 +30,6 @@ public class Preferences {
 	// The Constructors
 	public Preferences() {}
 	
-	
 	// Constants
 	public static final String DEPTH_PAD_STRING = "\t";
 	public static final String LINE_END_STRING = "\n";
@@ -50,7 +49,7 @@ public class Preferences {
 
 
 	// Static Fields (Global Preferences) These are saved.
-	public static final Preference[] pref_list = new Preference[34];
+	public static final Preference[] pref_list = new Preference[38];
 
 	public static final Vector ENCODINGS = new Vector();
 	public static final Vector FILE_FORMATS_OPEN = new Vector();
@@ -58,6 +57,12 @@ public class Preferences {
 	
 	// Default Values
 	public static final int RENDERER_WIDGIT_CACHE_SIZE_DEFAULT = 40;
+
+		// WebFile
+		public static boolean WEB_FILE_SYSTEM_DEFAULT = false;
+		public static String  WEB_FILE_URL_DEFAULT = "http://localhost/outliner.php";
+		public static String  WEB_FILE_USER_DEFAULT = "";
+		public static String  WEB_FILE_PASSWORD_DEFAULT = "";
 
 	public static final String TIME_ZONE_FOR_SAVING_DATES_DEFAULT = "GMT";
 	public static final String MOST_RECENT_SAVE_DIR_DEFAULT = ".";
@@ -139,6 +144,11 @@ public class Preferences {
 	public static final PreferenceInt RECENT_FILES_LIST_SIZE = new PreferenceInt(RECENT_FILES_LIST_SIZE_DEFAULT,RECENT_FILES_LIST_SIZE_DEFAULT,"recent_files_list_size",SetPrefCommand.RECENT_FILES_LIST_SIZE_VALIDATOR);
 	public static final PreferenceString OWNER_NAME = new PreferenceString(OWNER_NAME_DEFAULT,OWNER_NAME_DEFAULT,"owner_name");
 	public static final PreferenceString OWNER_EMAIL = new PreferenceString(OWNER_EMAIL_DEFAULT,OWNER_EMAIL_DEFAULT,"owner_email");
+
+		public static final PreferenceBoolean WEB_FILE_SYSTEM = new PreferenceBoolean(WEB_FILE_SYSTEM_DEFAULT,false,"web_file_system");
+		public static final PreferenceString  WEB_FILE_URL = new PreferenceString(WEB_FILE_URL_DEFAULT,WEB_FILE_URL_DEFAULT,"web_file_url");
+		public static final PreferenceString  WEB_FILE_USER = new PreferenceString(WEB_FILE_USER_DEFAULT,WEB_FILE_USER_DEFAULT,"web_file_user");
+		public static final PreferenceString  WEB_FILE_PASSWORD = new PreferenceString(WEB_FILE_PASSWORD_DEFAULT,WEB_FILE_PASSWORD_DEFAULT,"web_file_password");
 		
 	// Preferences that are not configured through the GUI
 	public static final PreferenceString MOST_RECENT_OPEN_DIR = new PreferenceString(MOST_RECENT_OPEN_DIR_DEFAULT,MOST_RECENT_OPEN_DIR_DEFAULT,"most_recent_open_dir");
@@ -183,6 +193,10 @@ public class Preferences {
 		pref_list[31] = LINE_NUMBER_SELECTED_CHILD_COLOR;	
 		pref_list[32] = SHOW_LINE_NUMBERS;	
 		pref_list[33] = RENDERER_WIDGIT_CACHE_SIZE;
+		pref_list[34] = WEB_FILE_SYSTEM;
+		pref_list[35] = WEB_FILE_URL;
+		pref_list[36] = WEB_FILE_USER;
+		pref_list[37] = WEB_FILE_PASSWORD;
 	}
 		
 	// Static Methods	
@@ -205,6 +219,9 @@ public class Preferences {
 	}
 
 	public static void applyTemporaryToCurrent() {
+		// WebFile
+		// Need code here to toggle between the two file choosers.
+		
 		// Update the undo queue for all the documents immediatly if it is being downsized.
 		if (UNDO_QUEUE_SIZE.tmp < UNDO_QUEUE_SIZE.cur) {
 			UNDO_QUEUE_SIZE.applyTemporaryToCurrent();

@@ -24,6 +24,10 @@ import com.organic.maynard.util.string.StringTools;
 
 import org.xml.sax.*;
 
+// WebFile
+import com.yearahead.io.*;
+import java.net.MalformedURLException;
+
 public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenFileFormat {
 
 	// Constants
@@ -60,11 +64,31 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 	
 	// SaveFileFormat Interface
 	public boolean save(TreeContext tree, DocumentInfo docInfo) {
-		return FileFormatManager.writeFile(
-			docInfo.getPath(), 
-			docInfo.getEncodingType(), 
-			prepareFile(tree, docInfo)
-		);
+
+		String text = prepareFile(tree, docInfo);
+
+		// WebFile
+		if (Preferences.WEB_FILE_SYSTEM.cur)
+		{
+			try
+			{
+				return WebFile.save(Preferences.WEB_FILE_URL.cur,
+									docInfo.getPath(), text);
+			}
+			catch(IOException x)
+			{
+				x.printStackTrace();
+				return false;
+			}
+		}
+		else
+		{
+			return FileFormatManager.writeFile(
+			    docInfo.getPath(), 
+			    docInfo.getEncodingType(),
+				text
+				);
+		}
 	}
 	
 	public boolean supportsComments() {return true;}
@@ -153,9 +177,20 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		errorOccurred = false;
 		
 		try {
-			FileInputStream fileInputStream = new FileInputStream(docInfo.getPath());
-			InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, docInfo.getEncodingType());
-			BufferedReader buffer = new BufferedReader(inputStreamReader);
+
+			// WebFile
+			BufferedReader buffer;
+			if (Preferences.WEB_FILE_SYSTEM.cur)
+			{
+				buffer = WebFile.open(Preferences.WEB_FILE_URL.cur,
+									  docInfo.getPath());
+			}
+			else
+			{
+				FileInputStream fileInputStream = new FileInputStream(docInfo.getPath());
+				InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, docInfo.getEncodingType());
+				buffer = new BufferedReader(inputStreamReader);
+			}
 
 			parser.parse(new InputSource(buffer));
 			if (errorOccurred) {

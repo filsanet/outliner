@@ -22,6 +22,10 @@ package com.organic.maynard.outliner;
 import javax.swing.*;
 import java.io.*;
 
+// WebFile
+import com.yearahead.io.*;
+import java.net.MalformedURLException;
+
 public class SimpleFileFormat implements SaveFileFormat, OpenFileFormat {
 	
 	// Constructors
@@ -30,11 +34,29 @@ public class SimpleFileFormat implements SaveFileFormat, OpenFileFormat {
 	
 	// SaveFileFormat Interface
 	public boolean save(TreeContext tree, DocumentInfo docInfo) {
-		return FileFormatManager.writeFile(
-			docInfo.getPath(), 
-			docInfo.getEncodingType(), 
-			tree.rootNode.depthPaddedValue(Preferences.platformToLineEnding(docInfo.getLineEnding()))
-		);
+		String text = tree.rootNode.depthPaddedValue(Preferences.platformToLineEnding(docInfo.getLineEnding()));
+
+		// WebFile
+		if (Preferences.WEB_FILE_SYSTEM.cur)
+		{
+			try
+			{
+				return WebFile.save(Preferences.WEB_FILE_URL.cur,
+									docInfo.getPath(), text);
+			}
+			catch(IOException x)
+			{
+				x.printStackTrace();
+				return false;
+			}
+		}
+		else
+		{
+			return FileFormatManager.writeFile(
+			    docInfo.getPath(), 
+				docInfo.getEncodingType(), 
+				text);
+		}
 	}
 	
 	public boolean supportsComments() {return false;}
@@ -44,7 +66,37 @@ public class SimpleFileFormat implements SaveFileFormat, OpenFileFormat {
 	public int open(TreeContext tree, DocumentInfo docInfo) {
 		int success = OpenFileFormat.FAILURE;
 
-		String text = FileFormatManager.loadFile(docInfo.getPath(), docInfo.getEncodingType());
+		// WebFile
+		String text = null;
+
+		if (Preferences.WEB_FILE_SYSTEM.cur)
+		{
+			try
+			{
+				BufferedReader r = WebFile.open(Preferences.WEB_FILE_URL.cur,
+												docInfo.getPath());
+
+				StringBuffer sb = new StringBuffer();
+				String s;
+				while((s = r.readLine()) != null)
+				{
+					sb.append(s);
+					sb.append(Preferences.LINE_END_STRING);
+				}
+
+				text = sb.toString();
+			}
+			catch(IOException x)
+			{
+				x.printStackTrace();
+			}
+		}
+		else
+		{
+			text = FileFormatManager.loadFile(docInfo.getPath(), docInfo.getEncodingType());
+		}
+
+
 		if (text != null) {
 			Node newNode = new NodeImpl(tree,"");
 			int padSuccess = PadSelection.pad(text, tree, 0,Preferences.LINE_END_UNIX, newNode);
