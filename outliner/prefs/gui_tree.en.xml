@@ -221,7 +221,6 @@
 			<separator/>
 			<menuitem id="preferences" class="com.organic.maynard.outliner.PreferencesMenuItem" text="Application Preferences..."/>
 			<menuitem id="edit_document_settings" class="com.organic.maynard.outliner.EditDocumentSettingsMenuItem" text="Document Preferences..."/>
-			<menuitem id="macros" class="com.organic.maynard.outliner.MacrosMenuItem" text="Macros..."/>
 		</menu>
 		<menu id="outline" class="com.organic.maynard.outliner.OutlineMenu" text="Outline">
 			<menuitem id="comment_submenu" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Comments">
@@ -276,6 +275,12 @@
 			<separator/>
 			<menuitem id="find" class="com.organic.maynard.outliner.FindMenuItem" text="Find/Replace..." keybinding="F" keybindingmodifiers="control"/>
 		</menu>
+		<menu id="script" class="com.organic.maynard.outliner.ScriptMenu" text="Script">
+			<menuitem id="macros" class="com.organic.maynard.outliner.MacrosMenuItem" text="Macros..."/>
+			<separator/>
+			<run_as_bsh_script id="run_as_bsh_script" class="com.organic.maynard.outliner.RunAsBSHScriptMenuItem" text="Run as Bean Shell Script"/>
+			<menuitem id="bsh_console" class="com.organic.maynard.outliner.BSHConsoleMenuItem" text="Bean Shell Console"/>
+		</menu>
 		<menu id="window" class="com.organic.maynard.outliner.WindowMenu" text="Window">
 			<menuitem id="statistics" class="com.organic.maynard.outliner.StatisticsMenuItem" text="Document Statistics..."/>
 			<separator/>
@@ -301,4 +306,6 @@
 		<macro_manager id="macro_manager" class="com.organic.maynard.outliner.MacroManagerFrame" title="Macro Manager"/>
 		<macro_editor id="macro_editor" class="com.organic.maynard.outliner.MacroEditor" title="Macro Editor"/>
 		<find_replace id="find_replace" class="com.organic.maynard.outliner.FindReplaceFrame" title="Find/Replace"/>
+		<goto_dialog id="goto_dialog" class="com.organic.maynard.outliner.GoToDialog" title="Go To Line"/>
+		<bsh_console id="bsh_console" class="com.organic.maynard.outliner.BSHConsole" title="Bean Shell Console"/>
 </root>
