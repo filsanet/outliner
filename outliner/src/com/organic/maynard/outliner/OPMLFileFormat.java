@@ -338,6 +338,10 @@ public class OPMLFileFormat
 						
 			currentParent.appendChild(node);
 			currentParent = node;
+			
+		} else if (name.equals(ELEMENT_DOCUMENT_ATTRIBUTE)) {
+			String key = atts.getValue(ATTRIBUTE_KEY);
+			tree.setAttribute(key, ""); // Set here so we will catch empty document attributes.
 		}
 	}
 	
