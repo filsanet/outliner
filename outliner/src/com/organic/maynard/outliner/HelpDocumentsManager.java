@@ -70,6 +70,7 @@
 
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.util.preferences.*;
 import com.organic.maynard.outliner.dom.Document;
 
 /**

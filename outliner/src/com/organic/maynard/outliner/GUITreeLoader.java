@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.util.preferences.*;
 import java.io.*;
 import java.util.*;
 import com.organic.maynard.util.string.StringTools;
@@ -187,7 +188,7 @@ public class GUITreeLoader extends HandlerBase implements JoeXMLConstants {
 			System.out.println("Exception: " + className + " " + cnfe);
 		} catch (Exception e) {
 			System.out.println("Exception: Something went wrong during processing in the GUITreeLoader.java.");
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		
 

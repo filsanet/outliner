@@ -35,6 +35,7 @@
 
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.util.preferences.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -175,7 +176,7 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 	
 	// set display options -- adjust menu and treeset structures as necessary
 	// called from PreferencesPanelRecentFiles.applyCurrentToApplication
-	void setDisplayOptions (int ordering, int nameForm, int direction) {
+	public void setDisplayOptions (int ordering, int nameForm, int direction) {
 		
 		// we are lazy, only work on change
 		boolean change = (currentDisplayOrdering != ordering)
@@ -525,7 +526,7 @@ public class RecentFilesList extends AbstractOutlinerMenu implements ActionListe
 
 
 	// called by outsiders when the size of the recent files list may have been changed
-	static void syncSize() {
+	public static void syncSize() {
 		 
 		// grab a handle to this menu
 		RecentFilesList menu = (RecentFilesList) GUITreeLoader.reg.get(GUITreeComponentRegistry.RECENT_FILE_MENU);

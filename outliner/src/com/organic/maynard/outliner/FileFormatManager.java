@@ -81,10 +81,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-// we're part of this
 package com.organic.maynard.outliner;
 
-// we use these
+import com.organic.maynard.outliner.util.preferences.*;
 import java.io.*;
 import java.util.*;
 
@@ -92,6 +91,7 @@ import java.util.*;
  * @author  $Author$
  * @version $Revision$, $Date$
  */
+ 
 public class FileFormatManager {
 
 	// public class constants

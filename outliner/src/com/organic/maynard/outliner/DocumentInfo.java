@@ -38,10 +38,9 @@
  * @version $Revision$, $Date$
  */
 
-// we're part of this
 package com.organic.maynard.outliner;
 
-// we use these 
+import com.organic.maynard.outliner.util.preferences.*;
 import com.organic.maynard.util.string.StringTools;
 import com.organic.maynard.util.string.StringSplitter;
 import java.util.*;

@@ -34,8 +34,10 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.util.preferences.*;
 import com.organic.maynard.outliner.dom.*;
 import com.organic.maynard.outliner.util.undo.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -391,7 +393,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	// fills document title name form choices into combo box
 	// callable by outsiders
 	// currently called by preference panel endSetup methods
-	static void fillTitleNameFormCombo () {
+	public static void fillTitleNameFormCombo () {
 		
 		AbstractPreferencesPanel.addArrayToComboBox(DOCUMENT_TITLES_NAME_FORMS, 
 			GUITreeComponentRegistry.COMPONENT_DOCUMENT_TITLES_NAME_FORM);
@@ -403,7 +405,7 @@ public class OutlinerDocument extends JInternalFrame implements Document, Compon
 	// any open docs get tweaked
 	// along with their entries in the Windows menu
 	// all future docs will open titled correctly
-	static void syncTitleNameForms() {
+	public static void syncTitleNameForms() {
 		// local vars
 		int nameFormIndex = 0 ;
 		int limit = 0 ;

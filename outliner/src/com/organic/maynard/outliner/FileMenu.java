@@ -87,6 +87,7 @@
 // we're part of this
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.util.preferences.*;
 import com.organic.maynard.outliner.util.undo.*;
 import java.io.*;
 import java.util.*;

@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.util.preferences.*;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;

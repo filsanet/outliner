@@ -34,6 +34,7 @@
  
 package com.organic.maynard.outliner.util.find;
 
+import com.organic.maynard.outliner.util.preferences.*;
 import com.organic.maynard.outliner.*;
 import com.organic.maynard.util.crawler.*;
 
