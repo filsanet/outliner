@@ -75,7 +75,8 @@
 #define NO_JAVA_1  "for this OS. JOE cannot run on this system."
 
 #define JRE_INFO_0  "Java Runtime Environment [JRE] version "
-#define JRE_INFO_1   " is installed on your computer system."
+#define JRE_INFO_1  " is installed on your computer system."
+
 #define JRE_UPGRADE_0  " will not run correctly under this JRE."
 #define JRE_UPGRADE_1  "Would you like to install a newer JRE (version "
 
@@ -184,8 +185,8 @@ const char * MS_DOS_SYS_SECTION_STRINGS [] = {
 
 
 // dialogs
-#define ID_HELP   150
-#define ID_TEXT   200
+#define ID_HELP150
+#define ID_TEXT200
 
 
 // ---------- datatypes
@@ -254,7 +255,15 @@ char g_Current_Display_Message [MAX_LINE] ;
 // ---------- functions
 
 int allWin32RegDeleteKey(HKEY, char*) ;
+int centerWindowOnScreen (HWND) ;
+int copyOurFiles(char *);
+int copyFilesAsNecessary(char *);
 int determineWindowsVersion(windows_version *) ;
+int displayInfoExit(LPSTR);
+int displayInfoExitStart(LPSTR);
+int displayInfoNextCancel(LPSTR) ;
+int displayInfoReboot(LPSTR, int*);
+BOOL CALLBACK displayMyMessageDlgProc (HWND, UINT, WPARAM, LPARAM); 
 int ensureSuitableEnvironment() ;
 int failureFeedback() ;
 int fileExists(char *) ;
@@ -270,12 +279,17 @@ int javaAppLaunchersCool() ;
 int javaRegEntriesCool() ;
 int joinRegistry () ;
 int machineHasNuffOomph() ;
+int msDosSysExtract(ms_dos_sys_section, char *, char *) ; 
 int osFeedback(windows_version) ;
 int placeShortcuts() ;
 int rebootRequired(windows_version) ;
+int runningFromCdRom();
+int runningFromTempFolder();
+int runningLocally ();
+int selectDirectory(char *);
 int set_APP_HOME() ;
 int setAllEnvVars() ;
-int setAllPaths() ;
+int setAllPaths(char *) ;
 int setAutoExecEnvVar(char *, char *, char *); 
 int setEnvVar(char *, char *, char *, windows_version);
 int setRegistryEnvVar(char *, char *, environment_target);  
@@ -286,17 +300,10 @@ int shortcutToProgramsMenu() ;
 int shortcutToQuickLaunch() ;
 int shortcutToStartMenu() ;
 int strToUpper(char *) ;
-int successFeedbackReboot(int *) ;
 int successFeedbackNoReboot() ;
+int successFeedbackReboot(int *) ;
 int trimFileOffPath(char *) ;
 int weCanRunOnThisSystem() ;
 int weHaveJ2RE() ;
-int wePlugIntoSystem() ;
 int welcome() ;
-int msDosSysExtract(ms_dos_sys_section, char *, char *) ;
-int DisplayInfoNextCancel(LPSTR) ;
-BOOL CALLBACK DisplayMyMessageDlgProc (HWND, UINT, WPARAM, LPARAM);
-int centerWindowOnScreen (HWND) ;
-int DisplayInfoReboot(LPSTR, int*);
-int DisplayInfoExitStart(LPSTR);
-int DisplayInfoExit(LPSTR);
+int wePlugIntoSystem() ;

@@ -63,7 +63,7 @@ PSTR szCmdLine, int iCmdShow) {
 	
 	// set up a log file
 	// TBD
-	
+		
 	// if the user doesn't choose to Cancel at the welcome screen ...
 	if (welcome() 
 	
@@ -138,7 +138,7 @@ int welcome () {
 	// strcat(welcomeString, WELCOME_STRING_21) ;
 	
 	// run the dialog
-	return DisplayInfoNextCancel (welcomeString) ;
+	return displayInfoNextCancel (welcomeString) ;
 	
 } // end function welcome
 
@@ -227,36 +227,24 @@ int weHaveJ2RE () {
 int wePlugIntoSystem () {
 	// local vars
 	int result = 1 ;
+	char appHomeDir[MAX_PATH] ;
 	
-	// if we're running from a CD,
+	// if we succeed at any needed file copying ...
+	if (copyFilesAsNecessary(appHomeDir) 
 	
-//	if (runningFromCD()) 
-//		// copy folder to hard drive
-//		if (! copyAppFoldersToLocalDrive())
-//			return 0 ;
-	// TBD
+	// and we're able to set up paths
+	&& setAllPaths(appHomeDir) 
 	
-	// if we're running on another machine
-	// if (runningFromOtherMachine())
-//	if (runningFromOtherMachine())
-		// copy folder to local hard drive
-//		if (! copyAppFoldersToLocalDrive())
-//			return 0 ;
-	// TBD
-	
-	// if we can determine paths
-	if (setAllPaths() 
-	
-	// and can set environment variables
+	// and we can set environment variables
 	&& setAllEnvVars() 
 	
-	// join the registry
+	// and we're able to join the registry
 	&& joinRegistry() 
 	
-	// place shortcuts
+	// and place shortcuts
 	&& placeShortcuts() 
 	
-	// per user choice set app to
+	// and, per user choice, set app to
 	// handle particular types of documents
 	&& hookupAllDocTypes() )
 	
@@ -284,7 +272,7 @@ int successFeedbackReboot (int * startApp) {
 	strcat (feedbackString, REBOOT_SUGGESTION) ;
 	
 	// return the dialog result
-	return DisplayInfoReboot (feedbackString, startApp) ;
+	return displayInfoReboot (feedbackString, startApp) ;
 	
 } // end function successFeedbackReboot
 
@@ -297,7 +285,7 @@ int successFeedbackNoReboot () {
 	strcpy (feedbackString, SUCCESS_FEEDBACK_0) ;
 	
 	// return the dialog result
-	return DisplayInfoExitStart (feedbackString) ;
+	return displayInfoExitStart (feedbackString) ;
 	
 } // end function successFeedback
 
@@ -310,7 +298,7 @@ int failureFeedback () {
 	strcpy (feedbackString, FAILURE_FEEDBACK_0) ;
 	
 	// print the feedback string
-	return DisplayInfoExit (feedbackString) ;
+	return displayInfoExit (feedbackString) ;
 
 } // end function failureFeedback 
 
@@ -516,7 +504,7 @@ int java2available (windows_version windowsVersion) {
 			strcat (feedbackString, "\n\n") ;
 
 			// print the feedback string
-			DisplayInfoNextCancel (feedbackString) ;
+			displayInfoNextCancel (feedbackString) ;
 						
 			break ;
 			
@@ -549,27 +537,38 @@ int machineHasNuffOomph () {
 
 
 // sets up paths that are useful to us
-int setAllPaths () {
-	
-	// sets the following paths
-	//	g_AppHomePath
-	
-	// if installed from CD, we are already set
-	// if we installed from another drive, we are already set/
-	// we are installing from dir on hard drive
-	
+int setAllPaths (char * appHomePath) {
+	// local vars
 	char shortPathBuffer[MAX_PATH] ;
 	
-	// if we can't obtain short pathname for current directory
-	if (! getShortPathCurDir (shortPathBuffer))
-		// leave in failure
-		return 0 ;
+	// if appHomePath is NULL, or pointer to 0
+	if ((appHomePath == NULL) || (appHomePath[0] == 0)){
+	
+		// then we use cur dir for g_App_Home_Path
+		
+		// if we can't obtain short pathname for current directory
+		if (! getShortPathCurDir (shortPathBuffer))
+			// leave in failure
+			return 0 ;
 
+	// otherwise we use appHomePath for g_App_Home_Path
+	} else { 
+		
+		// if we can't obtain short pathname for that path
+		if (! GetShortPathName(appHomePath, shortPathBuffer, MAX_PATH))
+			// leave in failure
+			return 0 ;
+	} // end if-else
+	
 	// append a backslash
 	strcat (shortPathBuffer, "\\") ;
 	
+	// copy it in
 	strcpy (g_App_Home_Path, shortPathBuffer) ;
 	
+	// set any other paths
+	// TBD
+
 	return 1 ;
 
 } // end function setAllPaths
@@ -1330,7 +1329,7 @@ int osFeedback (windows_version windowsVersion) {
 	strcat (feedbackString, "\n\n") ;
 
 	// print the feedback string
-	return DisplayInfoNextCancel (feedbackString) ;
+	return displayInfoNextCancel (feedbackString) ;
 
 } // end function osFeedback 
 
@@ -1352,7 +1351,7 @@ int sevFeedback (int result, char * varName, char * varValue) {
 	strcat (feedbackString, SEV_FEEDBACK_STRING_3) ;
 	strcat (feedbackString, varValue) ;
 	strcat (feedbackString, "\n\n") ;
-	return DisplayInfoNextCancel (feedbackString) ;
+	return displayInfoNextCancel (feedbackString) ;
 	
 } // end sevFeedback
 
@@ -1461,7 +1460,7 @@ int shortcutToProgramsMenu() {
 	strcat(feedbackString, SHORTCUT_TO_PROG_MENU) ;
 	strcat(feedbackString, "\n") ;
 	
-	return (result & DisplayInfoNextCancel (feedbackString)) ;
+	return (result & displayInfoNextCancel (feedbackString)) ;
 		
 } // end function shortCutToProgramsMenu
 
@@ -1502,7 +1501,7 @@ int shortcutToStartMenu() {
 	strcat(feedbackString, SHORTCUT_TO_START_MENU) ;
 	strcat(feedbackString, "\n") ;
 	
-	return (result & DisplayInfoNextCancel (feedbackString)) ;
+	return (result & displayInfoNextCancel (feedbackString)) ;
 	
 } // end function shortcutToStartMenu
 
@@ -1543,7 +1542,7 @@ int shortcutToDesktop() {
 	strcat(feedbackString, SHORTCUT_TO_DESKTOP) ;
 	strcat(feedbackString, "\n") ;
 
-	return (result & DisplayInfoNextCancel (feedbackString)) ;
+	return (result & displayInfoNextCancel (feedbackString)) ;
 	
 } // end function shortcutToDesktop
 
@@ -1700,7 +1699,7 @@ int hookupDocType(doc_type_info * ptr2DocTypeInfo) {
 	strcat(feedbackString, ".") ;
 	strcat(feedbackString, "\n") ;
 	
-	return result & DisplayInfoNextCancel (feedbackString) ;
+	return result & displayInfoNextCancel (feedbackString) ;
 	
 	// done
 } // end function hookupDocType
@@ -2024,7 +2023,7 @@ int javaRegEntriesCool() {
 //
 
 
-int DisplayInfoNextCancel(LPSTR info)
+int displayInfoNextCancel(LPSTR info)
 {
 	// copy the string into global holding area	
 	strcpy(g_Current_Display_Message, info) ;
@@ -2033,12 +2032,12 @@ int DisplayInfoNextCancel(LPSTR info)
 	// returns 1 on Next, 0 on Cancel
 	// WM_INITDIALOG handler will center it and pick up the string
 	return DialogBox (GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NEXT_CANCEL), 
-			NULL, DisplayMyMessageDlgProc) ;
+			NULL, displayMyMessageDlgProc) ;
 
-} // end function DisplayInfoNextCancel
+} // end function displayInfoNextCancel
 
 
-int DisplayInfoReboot(LPSTR info, int * startApp){
+int displayInfoReboot(LPSTR info, int * startApp){
 	// local vars
 	int result ;
 	
@@ -2051,7 +2050,7 @@ int DisplayInfoReboot(LPSTR info, int * startApp){
 	// so a returns 3, 1, or 0
 	// WM_INITDIALOG handler will center it and pick up the string
 	result =  DialogBox (GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_REBOOT_LATER_NOW), 
-			NULL, DisplayMyMessageDlgProc) ;
+			NULL, displayMyMessageDlgProc) ;
 	
 	// start the app after a reboot ?
 	if (result & START_AFTER_REBOOT_FLAG) 
@@ -2062,36 +2061,36 @@ int DisplayInfoReboot(LPSTR info, int * startApp){
 	// done	
 	return (result & REBOOT_FLAG) ;
 
-} // end function DisplayInfoReboot
+} // end function displayInfoReboot
 
 
 // returns 1 to start the app, 0 for a quiet exit
-int DisplayInfoExitStart(LPSTR info){
+int displayInfoExitStart(LPSTR info){
 	// copy the string into global holding area	
 	strcpy(g_Current_Display_Message, info) ;
 	
 	// run the dialog box
 	// WM_INITDIALOG handler will center it and pick up the string
 	return DialogBox (GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_EXIT_START), 
-			NULL, DisplayMyMessageDlgProc) ;
+			NULL, displayMyMessageDlgProc) ;
 			
-} // end function DisplayInfoFinish
+} // end function displayInfoFinish
 
 
 // returns 0 always
-int DisplayInfoExit(LPSTR info){
+int displayInfoExit(LPSTR info){
 	// copy the string into global holding area	
 	strcpy(g_Current_Display_Message, info) ;
 	
 	// run the dialog box
 	// WM_INITDIALOG handler will center it and pick up the string
 	return DialogBox (GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_EXIT), 
-			NULL, DisplayMyMessageDlgProc) ;
+			NULL, displayMyMessageDlgProc) ;
 			
-} // end function DisplayInfoFinish
+} // end function displayInfoFinish
 
 
-BOOL CALLBACK DisplayMyMessageDlgProc 
+BOOL CALLBACK displayMyMessageDlgProc 
 	(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam){
 	
 	// local vars
@@ -2180,3 +2179,84 @@ int centerWindowOnScreen (HWND someWindow) {
 	
 } // end function 
 
+
+int copyFilesAsNecessary(char * copyTarget) { 
+	// local vars
+	int copyFiles = 0 ;
+	
+	// if we're running on this machine
+	if (runningLocally()) 
+		
+		// we'll copy files if we're running from a CD ROM or a temp folder
+		copyFiles = runningFromCdRom() | runningFromTempFolder() ;
+	
+	// else we're running from another machine	
+	else 
+		// we'll copy files
+		copyFiles = 1 ;
+	
+	// if we're copying files	
+	if (copyFiles) {
+		
+		// if the user doesn't choose a directory
+		if (! selectDirectory(copyTarget)) 
+			return 0 ;
+		
+		// if copying fails	
+		if (! copyOurFiles(copyTarget))
+			return 0 ;
+	
+	// else we're not copying files
+	} else 
+	
+		// set the copy target to nuttin'
+		*copyTarget = 0 ;
+	
+	// if we get here, we're cool	
+	return 1 ;
+	
+} // end function copyFilesAsNecessary
+
+
+int runningLocally () {
+	// TBD
+	// fake for now
+	return 1 ;
+} // end function runningLocally
+
+
+int runningFromCdRom() {
+	// TBD
+	// fake for now
+	return 0 ;
+} // end function runningFromCdRom
+
+
+int runningFromTempFolder() {
+	// TBD
+	// fake for now
+	return 0 ;
+} // end function runningFromCdRom
+
+
+int selectDirectory(char * directoryPath){
+	
+	// TBD
+	// user selects a directory
+	// if not in existence, will be created
+	// fake for now
+	strcpy (directoryPath, "e:\\JOE Fun") ;
+	return 1 ;
+	
+} // end function selectDirectory
+
+
+int copyOurFiles(char * targetDir) {
+	
+	// TBD
+	// fake for now
+	return 1 ;
+	
+	// copy everything from currentDir to targetDir
+	
+} // end function copyFiles
