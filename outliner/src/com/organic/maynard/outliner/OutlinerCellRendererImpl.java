@@ -345,6 +345,12 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	}
 	
 	private void updateFont() {
+		// [srk] same protection added to updateColors
+		// make sure node is not null
+		if (node == null) {
+			return ;
+		} // end if
+		
 		if (node.isEditable()) {
 			setEditable(true);
 		
@@ -373,6 +379,12 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	}
 	
 	private void updateColors() {
+		// [srk] bug -- we got a null pointer exception here
+		// make sure node is not null
+		if (node == null) {
+			return ;
+		} // end if
+		
 		if (node.isAncestorSelected()) {
 			if (node.isComment() && pApplyFontStyleForComments) {
 				setForeground(pCommentColor);				
@@ -417,6 +429,12 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	}
 	
 	private void updateButton() {
+		// [srk] same protection added to updateColors
+		// make sure node is not null
+		if (node == null) {
+			return ;
+		} // end if
+		
 		if (node.isAncestorSelected()) {
 			button.setSelected(true);
 		} else {
@@ -438,6 +456,12 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	}
 	
 	private void updateCommentIndicator() {
+		// [srk] same protection added to updateColors
+		// make sure node is not null
+		if (node == null) {
+			return ;
+		} // end if
+		
 		if (node.getCommentState() == Node.COMMENT_TRUE) {
 			iComment.setPropertyInherited(false);
 			iComment.setProperty(true);
@@ -455,6 +479,12 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	}
 	
 	private void updateEditableIndicator() {
+		// [srk] same protection added to updateColors
+		// make sure node is not null
+		if (node == null) {
+			return ;
+		} // end if
+		
 		if (node.getEditableState() == Node.EDITABLE_TRUE) {
 			iEditable.setPropertyInherited(false);
 			iEditable.setProperty(true);
@@ -472,6 +502,12 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	}
 
 	private void updateMoveableIndicator() {
+		// [srk] same protection added to updateColors
+		// make sure node is not null
+		if (node == null) {
+			return ;
+		} // end if
+		
 		if (node.getMoveableState() == Node.MOVEABLE_TRUE) {
 			iMoveable.setPropertyInherited(false);
 			iMoveable.setProperty(true);
