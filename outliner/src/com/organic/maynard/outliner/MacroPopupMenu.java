@@ -21,10 +21,13 @@ package com.organic.maynard.outliner;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
 import java.util.*;
+
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
 
 public class MacroPopupMenu extends JPopupMenu implements ActionListener, MouseListener {
 

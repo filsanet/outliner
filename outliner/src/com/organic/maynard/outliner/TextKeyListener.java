@@ -52,12 +52,8 @@ public class TextKeyListener implements KeyListener, MouseListener {
  		OutlineLayoutManager layout = tree.doc.panel.layout;
 
 		// This is detection for Solaris
-		if (e.isPopupTrigger()) {
-			if (textArea.node.isSelected()) {
-				Outliner.macroPopup.show(e.getComponent(),e.getX(), e.getY());
-			} else if (tree.getEditingNode() == textArea.node) {
-				Outliner.macroPopup.show(e.getComponent(),e.getX(), e.getY());
-			}
+		if (e.isPopupTrigger() && (currentNode.isSelected() || (tree.getEditingNode() == currentNode))) {
+			Outliner.macroPopup.show(e.getComponent(),e.getX(), e.getY());
 		}
 	
  		// Clear the selection
@@ -107,12 +103,8 @@ public class TextKeyListener implements KeyListener, MouseListener {
 		}
 
 		// This is detection for Windows
-		if (e.isPopupTrigger()) {
-			if (textArea.node.isSelected()) {
-				Outliner.macroPopup.show(e.getComponent(),e.getX(), e.getY());
-			} else if (tree.getEditingNode() == textArea.node) {
-				Outliner.macroPopup.show(e.getComponent(),e.getX(), e.getY());
-			}
+		if (e.isPopupTrigger() && (currentNode.isSelected() || (tree.getEditingNode() == currentNode))) {
+			Outliner.macroPopup.show(e.getComponent(),e.getX(), e.getY());
 		}
 	}
 
