@@ -32,7 +32,7 @@ public class OutlineCommentIndicator extends JLabel {
 	
 	public static int SPACING = 4;
 	
-	private static int TRUE_WIDTH = ICON_IS_NOT_COMMENTED.getIconWidth();
+	public static int TRUE_WIDTH = ICON_IS_NOT_COMMENTED.getIconWidth();
 	
 	public static int WIDTH_DEFAULT = ICON_IS_NOT_COMMENTED.getIconWidth() + SPACING;
 	public static int BUTTON_WIDTH = WIDTH_DEFAULT;
@@ -115,7 +115,10 @@ public class OutlineCommentIndicator extends JLabel {
 		AffineTransformOp at = new AffineTransformOp(AffineTransform.getRotateInstance((java.lang.Math.PI), TRUE_WIDTH/2, BUTTON_HEIGHT/2), AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
 		at.filter(image, commentedImage);
 
-		lightenFilter redFilter = new lightenFilter(0x00ff0000);
+		Color c = Preferences.getPreferenceColor(Preferences.TEXTAREA_COMMENT_COLOR).cur;
+		int hexColor = ((c.getRed() << 16) | (c.getGreen() << 8) | c.getBlue());
+		
+		lightenFilter redFilter = new lightenFilter(hexColor);
 		FilteredImageSource commentedSource = new FilteredImageSource(commentedImage.getSource(), redFilter);
 		Image commentedImage2 = Outliner.outliner.createImage(commentedSource);
 

@@ -52,26 +52,29 @@ public class IndicatorMouseListener implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		Component c = e.getComponent();
 		if (c instanceof OutlineCommentIndicator) {
-			textArea = ((OutlineCommentIndicator) c).renderer;
-			Node node = textArea.node;
- 			TreeContext tree = textArea.node.getTree();
-			
-			if (e.isControlDown()) {
-				if (e.isShiftDown()) {
-					clearComment(tree);
+			// Make sure it's in the icon, not just the JLabel.
+			Point p = e.getPoint();
+			if ((p.x <= OutlineCommentIndicator.TRUE_WIDTH) && (p.y <= OutlineCommentIndicator.BUTTON_HEIGHT)) {
+				textArea = ((OutlineCommentIndicator) c).renderer;
+				Node node = textArea.node;
+	 			TreeContext tree = textArea.node.getTree();
+				
+				if (e.isControlDown()) {
+					if (e.isShiftDown()) {
+						clearComment(tree);
+					} else {
+						toggleCommentInheritance(tree);
+					}
+				} else if (e.isShiftDown()) {
+					toggleComment(tree);
 				} else {
-					toggleCommentInheritance(tree);
-				}
-			} else if (e.isShiftDown()) {
-				toggleComment(tree);
-			} else {
-				toggleCommentAndClear(tree);
-			}			
-
-			// Redraw and set focus
-			tree.doc.panel.layout.draw();
-			tree.doc.panel.layout.setFocus(tree.getEditingNode(), tree.getComponentFocus());
-
+					toggleCommentAndClear(tree);
+				}			
+	
+				// Redraw and set focus
+				tree.doc.panel.layout.draw();
+				tree.doc.panel.layout.setFocus(tree.getEditingNode(), tree.getComponentFocus());
+			}
 		}
 	}
 	

@@ -46,6 +46,9 @@ public class PreferencesPanelLookAndFeel extends AbstractPreferencesPanel implem
 				doc.panel.layout.textAreas[j].setSelectedTextColor(pTextareaBackgroundColor.cur);
 				doc.panel.layout.textAreas[j].setCaretColor(pSelectedChildColor.cur);
 			}
-		}	
+		}
+		
+		// Update the Comment Icons
+		OutlineCommentIndicator.createIcons();	
 	}
 }

@@ -31,6 +31,9 @@ public class HoistStackItem {
 	
 	private Node oldNodeSet = null;
 	private int lineCountOffset = 0;
+	
+	private boolean oldTreeCommentState = false;
+	private boolean newTreeCommentState = false;
 		
 	
 	// The Constructor
@@ -42,6 +45,9 @@ public class HoistStackItem {
 		
 		this.oldNodeSet = hoistedNode.getTree().getRootNode();
 		this.lineCountOffset = hoistedNode.getLineNumber();
+		
+		this.oldTreeCommentState = hoistedNode.getTree().getRootNodeCommentState();
+		this.newTreeCommentState = hoistedNode.isComment();
 	}
 	
 	public void destroy() {
@@ -60,7 +66,8 @@ public class HoistStackItem {
 	public void dehoist() {
 		// Shorthand
 		TreeContext tree = hoistedNode.getTree();
-
+		tree.setRootNodeCommentState(oldTreeCommentState);
+		
 		hoistedNode.setHoisted(false);
 
 		// Prune things
@@ -80,6 +87,7 @@ public class HoistStackItem {
 		
 		// Shorthand
 		TreeContext tree = hoistedNode.getTree();
+		tree.setRootNodeCommentState(newTreeCommentState);
 		
 		hoistedNode.setHoisted(true);
 		

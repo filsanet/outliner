@@ -25,7 +25,7 @@ import javax.swing.*;
 public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellRenderer {
 
 	private static Font font = null;
-	private static Font commentFont = null;
+	private static Font readOnlyFont = null;
 	
 	private static Cursor cursor = new Cursor(Cursor.TEXT_CURSOR);
 	private static Insets marginInsets = new Insets(1,3,1,3);
@@ -80,7 +80,7 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 
 	public static void updateFonts() {
 		font = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.PLAIN, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
-		commentFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.ITALIC, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
+		readOnlyFont = new Font(Preferences.getPreferenceString(Preferences.FONT_FACE).cur, Font.ITALIC, Preferences.getPreferenceInt(Preferences.FONT_SIZE).cur);
 	}
 
 	// Used to fire key events
@@ -234,11 +234,11 @@ public class OutlinerCellRendererImpl extends JTextArea implements OutlinerCellR
 	}
 	
 	private void updateFont() {
-		if (node.isComment()) {
-			setFont(commentFont);
-		} else {
+		//if (node.isReadOnly()) {
+		//	setFont(readonlyFont);
+		//} else {
 			setFont(font);
-		}	
+		//}	
 	}
 	
 	private void updateColors() {

@@ -820,6 +820,7 @@ public class IconKeyListener implements KeyListener, MouseListener {
 		if (isNodeSet) {
 			for (int i = nodeSet.getSize() - 1; i >= 0; i--) {
 				Node node = nodeSet.getNode(i);
+				node.setTree(tree, true);
 				parentForNewNode.insertChild(node, indexForNewNode + 1);
 				node.setDepthRecursively(parentForNewNode.getDepth() + 1);
 				tree.insertNode(node);

@@ -67,6 +67,18 @@ public class TreeContext {
 	}
 	
 	
+	// Comments
+	private boolean comment = false;
+	
+	public void setRootNodeCommentState(boolean comment) {
+		this.comment = comment;
+	}
+	
+	public boolean getRootNodeCommentState() {
+		return this.comment;
+	}
+
+
 	// Line Count Control
 	private int lineCountKey = 0;
 	

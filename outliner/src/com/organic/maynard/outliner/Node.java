@@ -63,6 +63,7 @@ public interface Node {
 	
 	// Tree Accessor Methods
 	public TreeContext getTree();
+	public void setTree(TreeContext tree, boolean recursive);
 	
 	// Comment Methods
 	public static final int COMMENT_INHERITED = 0;

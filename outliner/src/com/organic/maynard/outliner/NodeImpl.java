@@ -298,6 +298,16 @@ public class NodeImpl implements Node {
 	// Tree Accessor Methods
 	public TreeContext getTree() {return tree;}
 	
+	public void setTree(TreeContext tree, boolean recursive) {
+		this.tree = tree;
+		if (recursive) {
+			for (int i = 0; i < numOfChildren(); i++) {
+				getChild(i).setTree(tree, true);
+			}
+		}
+	}
+	
+	
 	// Visibility Methods	
 	public void setVisible(boolean visible) {this.visible = visible;}
 	public boolean isVisible() {return visible;}
@@ -316,31 +326,13 @@ public class NodeImpl implements Node {
 			return false;
 		} else {
 			if (isRoot()) {
-				return false;
+				return getTree().getRootNodeCommentState();
 			} else {
 				return getParent().isComment();
 			}
 		}
 	}
-	
 
-	/*public boolean isAncestorComment() {
-		if (isRoot()) {
-			return false;
-		} else {
-			return getParent().isAncestorOrSelfComment();
-		}
-	}
-
-	public boolean isAncestorOrSelfComment() {
-		if (isComment()) {
-			return true;
-		} else if (isRoot()) {
-			return false;
-		} else {
-			return getParent().isAncestorOrSelfComment();
-		}
-	}*/
 
 	// Hoisting Methods
 	public void setHoisted(boolean hoisted) {this.hoisted = hoisted;}
