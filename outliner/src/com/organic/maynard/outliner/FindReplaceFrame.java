@@ -144,13 +144,17 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		RADIO_ALL_OPEN_DOCUMENTS.setEnabled(true);
 		
 		if (RADIO_CURRENT_DOCUMENT.isSelected()) {
-			enableActionButtons();
+			BUTTON_FIND.setEnabled(true);
+			BUTTON_REPLACE.setEnabled(true);
+			BUTTON_REPLACE_ALL.setEnabled(true);
 			CHECKBOX_START_AT_TOP.setEnabled(true);
 			CHECKBOX_WRAP_AROUND.setEnabled(true);
 			CHECKBOX_SELECTION_ONLY.setEnabled(true);
 			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
 		} else if (RADIO_ALL_OPEN_DOCUMENTS.isSelected()) {
-			enableActionButtons();		
+			BUTTON_FIND.setEnabled(true);
+			BUTTON_REPLACE.setEnabled(true);
+			BUTTON_REPLACE_ALL.setEnabled(true);
 			CHECKBOX_START_AT_TOP.setEnabled(false);
 			CHECKBOX_WRAP_AROUND.setEnabled(false);
 			CHECKBOX_SELECTION_ONLY.setEnabled(false);
@@ -165,7 +169,9 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		RADIO_ALL_OPEN_DOCUMENTS.setEnabled(false);
 
 		if (RADIO_CURRENT_DOCUMENT.isSelected() || RADIO_ALL_OPEN_DOCUMENTS.isSelected()) {
-			disableActionButtons();
+			BUTTON_FIND.setEnabled(false);
+			BUTTON_REPLACE.setEnabled(false);
+			BUTTON_REPLACE_ALL.setEnabled(false);
 			CHECKBOX_START_AT_TOP.setEnabled(false);
 			CHECKBOX_WRAP_AROUND.setEnabled(false);
 			CHECKBOX_SELECTION_ONLY.setEnabled(false);
@@ -175,17 +181,6 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		documentRadiosEnabled = false;
 	}
 
-	private static void enableActionButtons() {
-		BUTTON_FIND.setEnabled(true);
-		BUTTON_REPLACE.setEnabled(true);
-		BUTTON_REPLACE_ALL.setEnabled(true);
-	}
-
-	private static void disableActionButtons() {
-		BUTTON_FIND.setEnabled(false);
-		BUTTON_REPLACE.setEnabled(false);
-		BUTTON_REPLACE_ALL.setEnabled(false);
-	}
 		
 	// The Constructor
 	public FindReplaceFrame() {
@@ -480,21 +475,27 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 		
 		// RadioButtons
 		} else if (e.getActionCommand().equals(CURRENT_DOCUMENT)) {
-			enableActionButtons();
+			BUTTON_FIND.setEnabled(true);
+			BUTTON_REPLACE.setEnabled(true);
+			BUTTON_REPLACE_ALL.setEnabled(true);
 			CHECKBOX_START_AT_TOP.setEnabled(true);
 			CHECKBOX_WRAP_AROUND.setEnabled(true);
 			CHECKBOX_SELECTION_ONLY.setEnabled(true);
 			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
 
 		} else if (e.getActionCommand().equals(ALL_OPEN_DOCUMENTS)) {
-			enableActionButtons();
+			BUTTON_FIND.setEnabled(true);
+			BUTTON_REPLACE.setEnabled(true);
+			BUTTON_REPLACE_ALL.setEnabled(true);
 			CHECKBOX_START_AT_TOP.setEnabled(false);
 			CHECKBOX_WRAP_AROUND.setEnabled(false);
 			CHECKBOX_SELECTION_ONLY.setEnabled(false);
 			CHECKBOX_INCLUDE_READ_ONLY_NODES.setEnabled(true);
 			
 		} else if (e.getActionCommand().equals(FILE_SYSTEM)) {
-			enableActionButtons();
+			BUTTON_FIND.setEnabled(false);
+			BUTTON_REPLACE.setEnabled(false);
+			BUTTON_REPLACE_ALL.setEnabled(true);
 			CHECKBOX_START_AT_TOP.setEnabled(false);
 			CHECKBOX_WRAP_AROUND.setEnabled(false);
 			CHECKBOX_SELECTION_ONLY.setEnabled(false);
