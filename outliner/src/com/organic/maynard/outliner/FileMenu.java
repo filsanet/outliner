@@ -508,8 +508,16 @@ public class FileMenu extends AbstractOutlinerMenu implements GUITreeComponent, 
 		newDoc.settings.saveEncoding.def = docInfo.getEncodingType();
 		newDoc.settings.saveEncoding.restoreCurrentToDefault();
 		newDoc.settings.saveEncoding.restoreTemporaryToDefault();
-		
-		newDoc.settings.saveFormat.def = docInfo.getFileFormat();
+		 
+		// if we were imported ....
+		if (mode == MODE_IMPORT) {
+			// the doc's default save format is the app's default save format
+			newDoc.settings.saveFormat.def = Preferences.getPreferenceString(Preferences.SAVE_FORMAT).cur;
+		// else we weren't imported
+		} else {
+			// the doc's default save format is its existing format
+			newDoc.settings.saveFormat.def = docInfo.getFileFormat();
+		} // end else
 		newDoc.settings.saveFormat.restoreCurrentToDefault();
 		newDoc.settings.saveFormat.restoreTemporaryToDefault();
 		
