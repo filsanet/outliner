@@ -147,6 +147,7 @@ Targets:
 				<exclude name="com/organic/maynard/outliner/**"/>
 				<exclude name="**/*.java"/>
 				<exclude name="graphics/**"/>
+				<exclude name="rsrc/**"/>
 			</jar>
 		</target>
 		<target name="clean-maynard" description="Removes all .class files for the maynard src tree.">
@@ -176,7 +177,16 @@ Targets:
 			<jar basedir="${src}" compress="true" jarfile="${lib}/outliner.jar">
 				<include name="com/organic/maynard/outliner/**"/>
 				<include name="graphics/**"/>
+				<include name="rsrc/**"/>
 				<exclude name="**/*.java"/>
+				<manifest>
+					<attribute name="Built-By" value="${user.name}"/>
+					<attribute name="Class-Path" value="com.organic.maynard.jar com.yearahead.io.webfile.jar com.psm.wiki.jar sax.jar xp.jar xmlrpc.jar bsh.jar jakarta-oro.jar jazzy-core.jar"/>
+					<attribute name="Main-Class" value="com.organic.maynard.outliner.Outliner"/>
+					<section name="common/class1.class">
+						<attribute name="Sealed" value="false"/>
+					</section>
+				</manifest>
 			</jar>
 		</target>
 		<target name="clean-outliner" description="Removes all .class files for the outliner src tree.">
