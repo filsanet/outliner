@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\About JOE.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Sat, 25 Aug 2001 06:41:02 GMT</dateModified>
+<dateModified>Wed, 26 Dec 2001 12:17:38 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
-<vertScrollState>1</vertScrollState>
-<windowTop>86</windowTop>
-<windowLeft>96</windowLeft>
-<windowBottom>313</windowBottom>
-<windowRight>396</windowRight>
+<vertScrollState>2</vertScrollState>
+<windowTop>5</windowTop>
+<windowLeft>5</windowLeft>
+<windowBottom>455</windowBottom>
+<windowRight>455</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -20,7 +20,7 @@
 <outline isEditable="true" isMoveable="true" text="About JOE" isMoveableInherited="true" isEditableInherited="true"/>
 <outline isEditable="true" isMoveable="true" text="------------" isMoveableInherited="true" isEditableInherited="true"/>
 <outline isEditable="true" isMoveable="true" text="Version" isMoveableInherited="true" isEditableInherited="true">
-	<outline isEditable="true" isMoveable="true" text="1.8.4"/>
+	<outline isEditable="true" isMoveable="true" text="1.8.7"/>
 </outline>
 <outline isEditable="true" isMoveable="true" text="Credits" isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="Maynard Demmon">
@@ -31,12 +31,225 @@
 	<outline isEditable="true" isMoveable="true" text="Stanley Krute">
 		<outline isEditable="true" isMoveable="true" text="mailto:Stan@JavaOutlineEditor.org"/>
 	</outline>
+	<outline text="Daniel Ericsson"/>
 </outline>
 <outline isEditable="true" isMoveable="true" text="Copyright" isMoveableInherited="true" isEditableInherited="true">
-	<outline isEditable="true" isMoveable="true" text="[note: copyright holders are listed in chronological order by date of first contribution to the code base]"/>
-	<outline isEditable="true" isMoveable="true" text="Portions Copyright 2000-2001 by Maynard Demmon. All rights reserved."/>
-	<outline isEditable="true" isMoveable="true" text="Portions Copyright 2001 by Steven Spencer. All rights reserved."/>
-	<outline isEditable="true" isMoveable="true" text="Portions Copyright 2001 by Stanley Krute. All rights reserved."/>
+	<outline text="JOE developers">
+		<outline isEditable="true" isMoveable="true" text="[copyright holders are listed in chronological order by date of first contribution to the code base]"/>
+		<outline isEditable="true" isMoveable="true" text="Portions Copyright 2000-2001 by Maynard Demmon. All rights reserved."/>
+		<outline isEditable="true" isMoveable="true" text="Portions Copyright 2001 by Steven Spencer. All rights reserved."/>
+		<outline isEditable="true" isMoveable="true" text="Portions Copyright 2001 by Stanley Krute. All rights reserved."/>
+		<outline text="Portions Copyright 2001 by Daniel Ericsson. All rights reserved."/>
+	</outline>
+	<outline text="included Open Source software">
+		<outline text="This product includes software developed by the Apache Software Foundation (http://www.apache.org/)."/>
+		<outline text="Helma XML-RPC Portions Copyright (c) 1999-2001, Hannes Wallnöfer (hannes@helma.at). All rights reserved.  "/>
+	</outline>
+</outline>
+<outline text="Licensing">
+	<outline text="Portions of JOE are distributed subject to the following Open Source software licenses.">
+		<outline text="Each source code file contains licensing information that applies to that file's code."/>
+		<outline text="Further info on Open Source licenses">
+			<outline text="http://www.opensource.org/licenses/"/>
+		</outline>
+	</outline>
+	<outline text="JOE License">
+		<outline text="http://JavaOutlineEditor.org/license.txt"/>
+		<outline text="license text">
+			<outline text=" * Redistribution and use in source and binary forms, with or "/>
+			<outline text=" * without modification, are permitted provided that the "/>
+			<outline text=" * following conditions are met:"/>
+			<outline text=" * "/>
+			<outline text=" *  - Redistributions of source code must retain the above copyright "/>
+			<outline text=" *    notice, this list of conditions and the following disclaimer. "/>
+			<outline text=" * "/>
+			<outline text=" *  - Redistributions in binary form must reproduce the above "/>
+			<outline text=" *    copyright notice, this list of conditions and the following "/>
+			<outline text=" *    disclaimer in the documentation and/or other materials provided "/>
+			<outline text=" *    with the distribution. "/>
+			<outline text=" * "/>
+			<outline text=" *  - Neither the names &quot;Java Outline Editor&quot;, &quot;JOE&quot; nor the names of its "/>
+			<outline text=" *    contributors may be used to endorse or promote products derived "/>
+			<outline text=" *    from this software without specific prior written permission. "/>
+			<outline text=" * "/>
+			<outline text=" * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "/>
+			<outline text=" * &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT "/>
+			<outline text=" * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS "/>
+			<outline text=" * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE "/>
+			<outline text=" * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, "/>
+			<outline text=" * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, "/>
+			<outline text=" * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; "/>
+			<outline text=" * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER "/>
+			<outline text=" * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT "/>
+			<outline text=" * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN "/>
+			<outline text=" * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE "/>
+			<outline text=" * POSSIBILITY OF SUCH DAMAGE."/>
+		</outline>
+		<outline text="plain-English summary">
+			<outline text="legal disclaimer">
+				<outline text="This plain-English summary means nothing legally. It is provided solely as an aid to understanding. The license itself is the legally-binding entity. "/>
+			</outline>
+			<outline text="&lt;forthcoming&gt;"/>
+		</outline>
+	</outline>
+	<outline text="Apache Software License">
+		<outline text="http://www.apache.org/license.txt"/>
+		<outline text="license text">
+			<outline text="/* ===================================================================="/>
+			<outline text=" * The Apache Software License, Version 1.1"/>
+			<outline text=" *"/>
+			<outline text=" * Copyright (c) 2000 The Apache Software Foundation.  All rights"/>
+			<outline text=" * reserved."/>
+			<outline text=" *"/>
+			<outline text=" * Redistribution and use in source and binary forms, with or without"/>
+			<outline text=" * modification, are permitted provided that the following conditions"/>
+			<outline text=" * are met:"/>
+			<outline text=" *"/>
+			<outline text=" * 1. Redistributions of source code must retain the above copyright"/>
+			<outline text=" *    notice, this list of conditions and the following disclaimer."/>
+			<outline text=" *"/>
+			<outline text=" * 2. Redistributions in binary form must reproduce the above copyright"/>
+			<outline text=" *    notice, this list of conditions and the following disclaimer in"/>
+			<outline text=" *    the documentation and/or other materials provided with the"/>
+			<outline text=" *    distribution."/>
+			<outline text=" *"/>
+			<outline text=" * 3. The end-user documentation included with the redistribution,"/>
+			<outline text=" *    if any, must include the following acknowledgment:"/>
+			<outline text=" *       &quot;This product includes software developed by the"/>
+			<outline text=" *        Apache Software Foundation (http://www.apache.org/).&quot;"/>
+			<outline text=" *    Alternately, this acknowledgment may appear in the software itself,"/>
+			<outline text=" *    if and wherever such third-party acknowledgments normally appear."/>
+			<outline text=" *"/>
+			<outline text=" * 4. The names &quot;Apache&quot; and &quot;Apache Software Foundation&quot; must"/>
+			<outline text=" *    not be used to endorse or promote products derived from this"/>
+			<outline text=" *    software without prior written permission. For written"/>
+			<outline text=" *    permission, please contact apache@apache.org."/>
+			<outline text=" *"/>
+			<outline text=" * 5. Products derived from this software may not be called &quot;Apache&quot;,"/>
+			<outline text=" *    nor may &quot;Apache&quot; appear in their name, without prior written"/>
+			<outline text=" *    permission of the Apache Software Foundation."/>
+			<outline text=" *"/>
+			<outline text=" * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED"/>
+			<outline text=" * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES"/>
+			<outline text=" * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE"/>
+			<outline text=" * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR"/>
+			<outline text=" * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,"/>
+			<outline text=" * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT"/>
+			<outline text=" * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF"/>
+			<outline text=" * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND"/>
+			<outline text=" * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,"/>
+			<outline text=" * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT"/>
+			<outline text=" * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF"/>
+			<outline text=" * SUCH DAMAGE."/>
+			<outline text=" * ===================================================================="/>
+			<outline text=" *"/>
+			<outline text=" * This software consists of voluntary contributions made by many"/>
+			<outline text=" * individuals on behalf of the Apache Software Foundation.  For more"/>
+			<outline text=" * information on the Apache Software Foundation, please see"/>
+			<outline text=" * &lt;http://www.apache.org/&gt;."/>
+			<outline text=" *"/>
+			<outline text=" * Portions of this software are based upon public domain software"/>
+			<outline text=" * originally written at the National Center for Supercomputing Applications,"/>
+			<outline text=" * University of Illinois, Urbana-Champaign."/>
+			<outline text=" */"/>
+			<outline text=""/>
+			<outline text=""/>
+		</outline>
+		<outline text="plain-English summary">
+			<outline text="legal disclaimer">
+				<outline text="This plain-English summary means nothing legally. It is provided solely as an aid to understanding. The license itself is the legally-binding entity. "/>
+			</outline>
+			<outline text="&lt;forthcoming&gt;"/>
+		</outline>
+	</outline>
+	<outline text="Helma XML-RPC License ">
+		<outline text="http://xmlrpc.helma.org/download/license"/>
+		<outline text="license text">
+			<outline text="Copyright (c) 1999-2001, Hannes Wallnöfer (hannes@helma.at). "/>
+			<outline text="All rights reserved. "/>
+			<outline text=""/>
+			<outline text="Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met: "/>
+			<outline text=""/>
+			<outline text=""/>
+			<outline text=""/>
+			<outline text="Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. "/>
+			<outline text=""/>
+			<outline text=""/>
+			<outline text="Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution. "/>
+			<outline text=""/>
+			<outline text=""/>
+			<outline text="Neither the name of Helma nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission."/>
+			<outline text=""/>
+			<outline text="THIS SOFTWARE IS PROVIDED BY HANNES WALLNÖFER &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL HANNES WALLNÖFER BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."/>
+		</outline>
+		<outline text="plain-English summary">
+			<outline text="legal disclaimer">
+				<outline text="This plain-English summary means nothing legally. It is provided solely as an aid to understanding. The license itself is the legally-binding entity. "/>
+			</outline>
+			<outline text="&lt;forthcoming&gt;"/>
+		</outline>
+	</outline>
+	<outline text="XP - an XML Parser in Java License ">
+		<outline text="http://www.jclark.com/xml/xp/copying.txt"/>
+		<outline text="license text">
+			<outline text="Copyright (c) 1997, 1998 James Clark"/>
+			<outline text=""/>
+			<outline text="Permission is hereby granted, free of charge, to any person obtaining"/>
+			<outline text="a copy of this software and associated documentation files (the"/>
+			<outline text="``Software''), to deal in the Software without restriction, including"/>
+			<outline text="without limitation the rights to use, copy, modify, merge, publish,"/>
+			<outline text="distribute, sublicense, and/or sell copies of the Software, and to"/>
+			<outline text="permit persons to whom the Software is furnished to do so, subject to"/>
+			<outline text="the following conditions:"/>
+			<outline text=""/>
+			<outline text="The above copyright notice and this permission notice shall be included"/>
+			<outline text="in all copies or substantial portions of the Software."/>
+			<outline text=""/>
+			<outline text="THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND, EXPRESS"/>
+			<outline text="OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF"/>
+			<outline text="MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT."/>
+			<outline text="IN NO EVENT SHALL JAMES CLARK BE LIABLE FOR ANY CLAIM, DAMAGES OR"/>
+			<outline text="OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,"/>
+			<outline text="ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR"/>
+			<outline text="OTHER DEALINGS IN THE SOFTWARE."/>
+			<outline text=""/>
+			<outline text="Except as contained in this notice, the name of James Clark shall"/>
+			<outline text="not be used in advertising or otherwise to promote the sale, use or"/>
+			<outline text="other dealings in this Software without prior written authorization"/>
+			<outline text="from James Clark."/>
+			<outline text=""/>
+		</outline>
+		<outline text="plain-English summary">
+			<outline text="legal disclaimer">
+				<outline text="This plain-English summary means nothing legally. It is provided solely as an aid to understanding. The license itself is the legally-binding entity. "/>
+			</outline>
+			<outline text="&lt;forthcoming&gt;"/>
+		</outline>
+	</outline>
+</outline>
+<outline text="Open Source Inclusions">
+	<outline text="Helma XML-RPC for Java">
+		<outline text="website">
+			<outline text="http://xmlrpc.helma.org"/>
+		</outline>
+		<outline text="license">
+			<outline text="Helma XML-RPC License "/>
+		</outline>
+	</outline>
+	<outline text="Jakarta ORO">
+		<outline text="website">
+			<outline text="http://jakarta.apache.org/oro"/>
+		</outline>
+		<outline text="Apache Software License"/>
+	</outline>
+	<outline text="XP - an XML Parser in Java">
+		<outline text="website">
+			<outline text="http://www.jclark.com/xml/xp/"/>
+		</outline>
+		<outline text="license">
+			<outline text="XP - an XML Parser in Java License "/>
+		</outline>
+	</outline>
 </outline>
 <outline isEditable="true" isMoveable="true" text="Feedback" isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="http://JavaOutlineEditor.org/feedback"/>
