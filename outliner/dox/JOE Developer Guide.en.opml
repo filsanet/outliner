@@ -3,15 +3,15 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE Developer Guide.en.opml</title>
 <dateCreated>Thu, 1 Nov 2001 12:22:52 GMT</dateCreated>
-<dateModified>Sun, 27 Jan 2002 09:50:34 GMT</dateModified>
+<dateModified>Thu, 31 Jan 2002 05:34:43 GMT</dateModified>
 <ownerName>Stan Krute</ownerName>
 <ownerEmail>Stan@StanKrute.com</ownerEmail>
 <expansionState></expansionState>
-<vertScrollState>5</vertScrollState>
-<windowTop>5</windowTop>
-<windowLeft>5</windowLeft>
-<windowBottom>455</windowBottom>
-<windowRight>455</windowRight>
+<vertScrollState>1</vertScrollState>
+<windowTop>76</windowTop>
+<windowLeft>215</windowLeft>
+<windowBottom>656</windowBottom>
+<windowRight>1079</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
@@ -210,62 +210,18 @@
 				</outline>
 			</outline>
 		</outline>
-		<outline isEditable="true" isMoveable="true" text="Places">
-			<outline isEditable="true" isMoveable="true" text="Enroll at SourceForge"/>
-			<outline isEditable="true" isMoveable="true" text="Set Up Directories on Local Machine">
-				<outline isEditable="true" isMoveable="true" text="home at root of some drive">
-					<outline isEditable="true" isMoveable="true" text="mine is c:\home"/>
-					<outline isEditable="true" isMoveable="true" text="lots of unixoid programs will store data sub this directory"/>
-				</outline>
-				<outline isEditable="true" isMoveable="true" text="cvs at root of some drive">
-					<outline isEditable="true" isMoveable="true" text="mine is c:\cvs"/>
-				</outline>
-				<outline isEditable="true" isMoveable="true" text="ssh at root of some drive">
-					<outline isEditable="true" isMoveable="true" text="mine is c:\ssh"/>
-				</outline>
-				<outline isEditable="true" isMoveable="true" text="a project directory somewhere">
-					<outline isEditable="true" isMoveable="true" text="mine is at e:\stan's java projects\Joe"/>
-				</outline>
-			</outline>
-			<outline isEditable="true" isMoveable="true" text="Set up CVS directory on SourceForge">
-				<outline isEditable="true" isMoveable="true" text="Open up a command prompt"/>
-				<outline isEditable="true" isMoveable="true" text="Give this command">
-					<outline isEditable="true" isMoveable="true" text="ssh -l &lt;user_name&gt; cvs.sourceforge.net">
-						<outline isEditable="true" isMoveable="true" text="ssh -l stanley_krute cvs.sourceforge.net"/>
+		<outline isEditable="true" isMoveable="true" text="Tool Setup">
+			<outline isEditable="true" isMoveable="true" text="a Programmer's Text Editor">
+				<outline text="recommended by Stan">
+					<outline isEditable="true" isMoveable="true" text="Ultra-Edit 32">
+						<outline text="Stan lives in this tool"/>
+						<outline text="http://www.ultraedit.com"/>
+					</outline>
+					<outline isEditable="true" isMoveable="true" text="jEdit">
+						<outline text="Big Java open-source project"/>
+						<outline text="http://www.jedit.com"/>
 					</outline>
 				</outline>
-				<outline isEditable="true" isMoveable="true" text="When prompted, supply your SourceForge password"/>
-				<outline isEditable="true" isMoveable="true" text="You'll be disconnected when the setup is done"/>
-				<outline isEditable="true" isMoveable="true" text="Sample output">
-					<outline isEditable="true" isMoveable="true" text="E:\stan's java projects\Joe\outliner&gt;ssh -l stanley_krute cvs.sourceforge.net"/>
-					<outline isEditable="true" isMoveable="true" text="Host 'cvs.sourceforge.net' added to the list of known hosts."/>
-					<outline isEditable="true" isMoveable="true" text="Password:"/>
-					<outline isEditable="true" isMoveable="true" text="Creating home directory '/home/users/s/st/stanley_krute'."/>
-					<outline isEditable="true" isMoveable="true" text="Linux usw-pr-cvs1 2.2.18pre11-va2.0-servers4 #1 SMP Thu Mar 29 20:48:12 PST 2001"/>
-					<outline isEditable="true" isMoveable="true" text=" i686 unknown"/>
-					<outline isEditable="true" isMoveable="true" text=""/>
-					<outline isEditable="true" isMoveable="true" text="Most of the programs included with the Debian GNU/Linux system are"/>
-					<outline isEditable="true" isMoveable="true" text="freely redistributable; the exact distribution terms for each program"/>
-					<outline isEditable="true" isMoveable="true" text="are described in the individual files in /usr/doc/*/copyright"/>
-					<outline isEditable="true" isMoveable="true" text=""/>
-					<outline isEditable="true" isMoveable="true" text="Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent"/>
-					<outline isEditable="true" isMoveable="true" text="permitted by applicable law."/>
-					<outline isEditable="true" isMoveable="true" text=""/>
-					<outline isEditable="true" isMoveable="true" text="Welcome to cvs.sourceforge.net"/>
-					<outline isEditable="true" isMoveable="true" text=""/>
-					<outline isEditable="true" isMoveable="true" text="This is a restricted Shell Account"/>
-					<outline isEditable="true" isMoveable="true" text="You cannot execute anything here."/>
-					<outline isEditable="true" isMoveable="true" text=""/>
-					<outline isEditable="true" isMoveable="true" text="Connection to cvs.sourceforge.net closed."/>
-					<outline isEditable="true" isMoveable="true" text=""/>
-					<outline isEditable="true" isMoveable="true" text="E:\stan's java projects\Joe\outliner&gt;"/>
-				</outline>
-			</outline>
-		</outline>
-		<outline isEditable="true" isMoveable="true" text="Tools">
-			<outline isEditable="true" isMoveable="true" text="a Programmer's Text Editor">
-				<outline isEditable="true" isMoveable="true" text="jEdit"/>
-				<outline isEditable="true" isMoveable="true" text="Ultra-Edit 32"/>
 			</outline>
 			<outline isEditable="true" isMoveable="true" text="a Secure Terminal Shell">
 				<outline isEditable="true" isMoveable="true" text="Obtain and Install ssh">
@@ -553,6 +509,60 @@
 				</outline>
 			</outline>
 		</outline>
+		<outline isEditable="true" isMoveable="true" text="Setting up CVS">
+			<outline isEditable="true" isMoveable="true" text="Enroll at SourceForge"/>
+			<outline text="Get yourself added to the project as a developer"/>
+			<outline isEditable="true" isMoveable="true" text="Set up some directories on your local machine">
+				<outline isEditable="true" isMoveable="true" text="home at root of some drive">
+					<outline isEditable="true" isMoveable="true" text="mine is c:\home"/>
+					<outline isEditable="true" isMoveable="true" text="lots of unixoid programs will store data sub this directory"/>
+				</outline>
+				<outline isEditable="true" isMoveable="true" text="cvs at root of some drive">
+					<outline isEditable="true" isMoveable="true" text="mine is c:\cvs"/>
+				</outline>
+				<outline isEditable="true" isMoveable="true" text="ssh at root of some drive">
+					<outline isEditable="true" isMoveable="true" text="mine is c:\ssh"/>
+				</outline>
+				<outline isEditable="true" isMoveable="true" text="a project directory somewhere">
+					<outline isEditable="true" isMoveable="true" text="mine is at e:\stan's java projects\Joe"/>
+				</outline>
+			</outline>
+			<outline isEditable="true" isMoveable="true" text="Set up CVS directory on SourceForge">
+				<outline isEditable="true" isMoveable="true" text="Open up a command prompt"/>
+				<outline isEditable="true" isMoveable="true" text="Give this command">
+					<outline isEditable="true" isMoveable="true" text="ssh -l &lt;user_name&gt; cvs.sourceforge.net"/>
+					<outline text="example">
+						<outline isEditable="true" isMoveable="true" text="ssh -l stanley_krute cvs.sourceforge.net"/>
+					</outline>
+				</outline>
+				<outline isEditable="true" isMoveable="true" text="When prompted, supply your SourceForge password"/>
+				<outline isEditable="true" isMoveable="true" text="You'll be disconnected when the setup is done"/>
+				<outline isEditable="true" isMoveable="true" text="Sample output">
+					<outline isEditable="true" isMoveable="true" text="E:\stan's java projects\Joe\outliner&gt;ssh -l stanley_krute cvs.sourceforge.net"/>
+					<outline isEditable="true" isMoveable="true" text="Host 'cvs.sourceforge.net' added to the list of known hosts."/>
+					<outline isEditable="true" isMoveable="true" text="Password:"/>
+					<outline isEditable="true" isMoveable="true" text="Creating home directory '/home/users/s/st/stanley_krute'."/>
+					<outline isEditable="true" isMoveable="true" text="Linux usw-pr-cvs1 2.2.18pre11-va2.0-servers4 #1 SMP Thu Mar 29 20:48:12 PST 2001"/>
+					<outline isEditable="true" isMoveable="true" text=" i686 unknown"/>
+					<outline isEditable="true" isMoveable="true" text=""/>
+					<outline isEditable="true" isMoveable="true" text="Most of the programs included with the Debian GNU/Linux system are"/>
+					<outline isEditable="true" isMoveable="true" text="freely redistributable; the exact distribution terms for each program"/>
+					<outline isEditable="true" isMoveable="true" text="are described in the individual files in /usr/doc/*/copyright"/>
+					<outline isEditable="true" isMoveable="true" text=""/>
+					<outline isEditable="true" isMoveable="true" text="Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent"/>
+					<outline isEditable="true" isMoveable="true" text="permitted by applicable law."/>
+					<outline isEditable="true" isMoveable="true" text=""/>
+					<outline isEditable="true" isMoveable="true" text="Welcome to cvs.sourceforge.net"/>
+					<outline isEditable="true" isMoveable="true" text=""/>
+					<outline isEditable="true" isMoveable="true" text="This is a restricted Shell Account"/>
+					<outline isEditable="true" isMoveable="true" text="You cannot execute anything here."/>
+					<outline isEditable="true" isMoveable="true" text=""/>
+					<outline isEditable="true" isMoveable="true" text="Connection to cvs.sourceforge.net closed."/>
+					<outline isEditable="true" isMoveable="true" text=""/>
+					<outline isEditable="true" isMoveable="true" text="E:\stan's java projects\Joe\outliner&gt;"/>
+				</outline>
+			</outline>
+		</outline>
 		<outline isEditable="true" isMoveable="true" text="Download Project Files">
 			<outline isEditable="true" isMoveable="true" text="Open up a command prompt"/>
 			<outline isEditable="true" isMoveable="true" text="go to the directory where your project will live"/>
@@ -605,7 +615,8 @@
 <outline isEditable="true" isMoveable="true" text="Development Tool Resources" isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="Links">
 		<outline isEditable="true" isMoveable="true" text="ssh">
-			<outline isEditable="true" isMoveable="true" text="Latest versions available at TBD"/>
+			<outline isEditable="true" isMoveable="true" text="Version 1.2.26"/>
+			<outline text="http://www.ai.mit.edu/people/hqm/downloads/ssh-1.2.26rb2.exe"/>
 		</outline>
 		<outline isEditable="true" isMoveable="true" text="CVS ">
 			<outline isEditable="true" isMoveable="true" text="Latest versions">
