@@ -63,26 +63,39 @@
 #define SYSTEM_DIR_NT  "\\system32"
 #define SYSTEM_DIR_9X  "\\system"
 
+// Java Runtime Environment
 #define LAUNCHER_0  "java.exe"
 #define LAUNCHER_1  "javaw.exe"
+#define MINIMUM_JRE  "1.3"
+#define JRE_ENCLOSURE_VERSION  "1.3.1_02"
 
+#define NO_JAVA_0  "There's no Java 2 Runtime Environment"
+#define NO_JAVA_1  "for this OS. JOE cannot run on this system."
+
+#define JRE_INFO_0  "Java Runtime Environment [JRE] version "
+#define JRE_INFO_1   " is installed on your computer system."
+#define JRE_UPGRADE_0  " will not run correctly under this JRE."
+#define JRE_UPGRADE_1  "Would you like to install a newer JRE (version "
+
+
+
+// operating system info
 #define OS_FEEDBACK_STRING_0  "Your computer is running the "
 #define OS_FEEDBACK_STRING_1  " operating system."
 
+// environment variables
 #define SEV_FEEDBACK_STRING_0  "Set "
 #define SEV_FEEDBACK_STRING_1  "Unable to set "
 #define SEV_FEEDBACK_STRING_2  "the environment variable "
 #define SEV_FEEDBACK_STRING_3  "to the value "
 
+// overall results
 #define SUCCESS_FEEDBACK_0  "JOE installed successfully on your system."
 #define SUCCESS_FEEDBACK_1  "Press the Enter key to finish: "
 #define REBOOT_SUGGESTION  "You'll need to reboot your system before running JOE."
 
 #define FAILURE_FEEDBACK_0  "INSTALLATION FAILED."
 #define FAILURE_FEEDBACK_1  "Press Enter key to finish: "
-
-#define NO_JAVA_0  "There's no Java 2 Runtime Environment"
-#define NO_JAVA_1  "for this OS. JOE cannot run on this system."
 
 const char * WINDOWS_VERSION_STRINGS [] = {
 	"<cannot determine Windows version>",

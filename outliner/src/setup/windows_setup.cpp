@@ -1817,8 +1817,149 @@ int javaRegEntriesCool() {
 	// if so ... does it point to a reality ??
 	// if so .... we cool
 	// otherwise we no cool
+
+	// local vars
+	HKEY rootKey = JAVA_ROOT_KEY ;
+	char keyPath [MAX_REG_PATH] ;
 	
-	// fake for now
-	return 1 ;
+	HKEY jreInfoKey = NULL;
+
+	LONG getResult = 0;
+	LONG closeResult = 0;
+	int funcResult = 0 ;
+	
+	// set up path to JRE info
+	strcpy(keyPath, JRE_HOME_PATH) ;
+	
+	// if we can open the JRE info key
+	if (RegOpenKeyEx(rootKey, keyPath, 0, KEY_READ, & jreInfoKey) == ERROR_SUCCESS) {
+		
+		// we need to find the freshest entry
+		
+			// enumerate keys
+			// latest will be last in alfa order
+			// TBD
+		
+		// if latest is fresh enuf ??
+		
+		
+			// if it has a valid javahome entry  
+			
+				funcResult = 1 ;	
+				
+			// else
+				// funcResult = 0 ;
+				
+		// else latest is NOT fresh enuf
+		
+			// funcResult = 0 ;
+		
+		
+		// close the JRE info key
+		closeResult = RegCloseKey (jreInfoKey) ;
+
+
+
+//		// okay, we've got the environment key
+//		
+//		// try to write the name/value pair to it
+//		// will create n/v pair if it doesn't already exist
+//		setResult = RegSetValueEx (enviroKey, envVarName, 0, REG_SZ,
+//				(LPBYTE)envVarValue, strlen(envVarValue) + 1) ;
+//		
+//		// close the environment key
+//		closeResult = RegCloseKey (enviroKey) ;
+//		
+//		// done
+//		return ((setResult == ERROR_SUCCESS) & (closeResult == ERROR_SUCCESS)) ;
+	
+
+		
+		
+		
+	// else we couldn't open the JRE info
+	} else {
+		
+		funcResult = 0;
+		
+		
+	} // end if-else
+	
+	
+	// done
+	return funcResult ;
+	
+//	// if it doesn't exist, will try to create it
+//	if (RegCreateKeyEx (rootKey, keyPath, 0,
+//				0,REG_OPTION_NON_VOLATILE, KEY_WRITE, 0, 
+//				& enviroKey, & createKeyDisposition)== ERROR_SUCCESS) {
+//	
+//		// okay, we've got the environment key
+//		
+//		// try to write the name/value pair to it
+//		// will create n/v pair if it doesn't already exist
+//		setResult = RegSetValueEx (enviroKey, envVarName, 0, REG_SZ,
+//				(LPBYTE)envVarValue, strlen(envVarValue) + 1) ;
+//		
+//		// close the environment key
+//		closeResult = RegCloseKey (enviroKey) ;
+//		
+//		// done
+//		return ((setResult == ERROR_SUCCESS) & (closeResult == ERROR_SUCCESS)) ;
+	
 	
 }  // end function javaRegEntriesCool
+
+
+
+//	// local vars
+//	HKEY rootKey = NULL ;
+//	char keyPath [MAX_REG_PATH] ;
+//	
+//	HKEY enviroKey = NULL;
+//	DWORD createKeyDisposition = 0;
+//
+//	LONG setResult = 0;
+//	LONG closeResult = 0;
+//	
+//	// are we setting this for all users, or just the current user ?
+//	switch (envTarget) {
+//		case USER:
+//			rootKey = USER_ENVIRONMENT_ROOT_KEY ;
+//			strcpy (keyPath, USER_ENVIRONMENT_KEY_PATH) ;
+//			break ;
+//			
+//		case SYSTEM:
+//		default:
+//			rootKey = SYSTEM_ENVIRONMENT_ROOT_KEY ;
+//			strcpy (keyPath, SYSTEM_ENVIRONMENT_KEY_PATH) ;
+//			break ;
+//	} // end switch target
+//		
+//	// try to open up the environment key
+//	// if it doesn't exist, will try to create it
+//	if (RegCreateKeyEx (rootKey, keyPath, 0,
+//				0,REG_OPTION_NON_VOLATILE, KEY_WRITE, 0, 
+//				& enviroKey, & createKeyDisposition)== ERROR_SUCCESS) {
+//	
+//		// okay, we've got the environment key
+//		
+//		// try to write the name/value pair to it
+//		// will create n/v pair if it doesn't already exist
+//		setResult = RegSetValueEx (enviroKey, envVarName, 0, REG_SZ,
+//				(LPBYTE)envVarValue, strlen(envVarValue) + 1) ;
+//		
+//		// close the environment key
+//		closeResult = RegCloseKey (enviroKey) ;
+//		
+//		// done
+//		return ((setResult == ERROR_SUCCESS) & (closeResult == ERROR_SUCCESS)) ;
+//		
+//	// else we couldn't get at the environment key
+//	} else {
+//		// sigh
+//		return 0 ;
+//	} // end if-else
+//
+//} // end function setRegistryEnvVar
+//
