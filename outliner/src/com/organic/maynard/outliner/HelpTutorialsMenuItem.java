@@ -77,7 +77,7 @@ public class HelpTutorialsMenuItem
 			} // end if
 		else {
 			// it's not open; try to open it
-			openHelpTutorialsDocument() ;
+			int result = openHelpTutorialsDocument() ;
 			
 			} // end else
 		
