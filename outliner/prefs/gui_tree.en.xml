@@ -401,14 +401,14 @@
 				</menuitem>
 				<menuitem id="editable_submenu" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Read-Only Node Settings">
 					<menuitem id="toggle_editable_and_clear" class="com.organic.maynard.outliner.ToggleEditableAndClearMenuItem" text="Toggle Read-Only State and Clear Subnodes" keybinding="f11"/>
-					<menuitem id="clear_editables" class="com.organic.maynard.outliner.ClearEditablesMenuItem" text="Clear Read-Only State in selected nodes" keybinding="f11" keybindingmodifiers="control shift"/>
+					<menuitem id="clear_editables" class="com.organic.maynard.outliner.ClearEditablesMenuItem" text="Clear Read-Only State in Selected Nodes" keybinding="f11" keybindingmodifiers="control shift"/>
 					<separator/>
 					<menuitem id="toggle_editable" class="com.organic.maynard.outliner.ToggleEditableMenuItem" text="Toggle Read-Only State" keybinding="f11" keybindingmodifiers="shift"/>
 					<menuitem id="toggle_editable_inheritance" class="com.organic.maynard.outliner.ToggleEditableInheritanceMenuItem" text="Toggle Read-Only State Inheritance" keybinding="f11" keybindingmodifiers="control"/>
 				</menuitem>
 				<menuitem id="moveable_submenu" class="com.organic.maynard.outliner.OutlinerSubMenuItem" text="Moveable Node Settings">
 					<menuitem id="toggle_moveable_and_clear" class="com.organic.maynard.outliner.ToggleMoveableAndClearMenuItem" text="Toggle Moveable Settings and Clear Subnodes" keybinding="f12"/>
-					<menuitem id="clear_moveables" class="com.organic.maynard.outliner.ClearMoveablesMenuItem" text="Clear Moveable Settings in selected nodes" keybinding="f12" keybindingmodifiers="control shift"/>
+					<menuitem id="clear_moveables" class="com.organic.maynard.outliner.ClearMoveablesMenuItem" text="Clear Moveable Settings in Selected Nodes" keybinding="f12" keybindingmodifiers="control shift"/>
 					<separator/>
 					<menuitem id="toggle_moveable" class="com.organic.maynard.outliner.ToggleMoveableMenuItem" text="Toggle Moveable Settings" keybinding="f12" keybindingmodifiers="shift"/>
 					<menuitem id="toggle_moveable_inheritance" class="com.organic.maynard.outliner.ToggleMoveableInheritanceMenuItem" text="Toggle Moveable Settings Inheritance" keybinding="f12" keybindingmodifiers="control"/>
