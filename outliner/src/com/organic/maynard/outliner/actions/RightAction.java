@@ -186,6 +186,7 @@ public class RightAction extends AbstractAction {
 		}
 	
 		JoeNodeList nodeList = tree.getSelectedNodes();
+		int moveCount = 0;
 		for (int i = nodeList.size() - 1; i >= 0; i--) {
 			// Record the Insert in the undoable
 			Node nodeToMove = nodeList.get(i);
@@ -196,7 +197,7 @@ public class RightAction extends AbstractAction {
 			}
 		
 			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), targetIndex));
-
+			moveCount++;
 			if ((!node.isLeaf() && node.isExpanded()) || (nodeToMove.getParent() != node.getParent())) {
 				// Do Nothing.
 			} else {
@@ -205,6 +206,11 @@ public class RightAction extends AbstractAction {
 		}
 
 		if (!undoable.isEmpty()) {
+			if (moveCount == 1) {
+				undoable.setName("Move Node Down");
+			} else {
+				undoable.setName(new StringBuffer().append("Move ").append(moveCount).append(" Nodes Down").toString());
+			}
 			tree.getDocument().getUndoQueue().add(undoable);
 			undoable.redo();
 		}

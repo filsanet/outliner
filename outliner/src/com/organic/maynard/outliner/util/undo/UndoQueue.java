@@ -48,10 +48,13 @@ import javax.swing.*;
  */
 
 public class UndoQueue implements com.organic.maynard.outliner.util.Destructible {
-
+	
+	// Class Fields
+	public static int MAX_QUEUE_SIZE = 0;
+	
 	// Instance Fields
 	private Document doc = null;
-	private UndoableList queue = new UndoableList(Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).cur);
+	private UndoableList queue = new UndoableList(MAX_QUEUE_SIZE);
 	private int cursor = -1;
 
 
@@ -73,6 +76,13 @@ public class UndoQueue implements com.organic.maynard.outliner.util.Destructible
 		queue = null;
 	}
 
+
+	/**
+	 * Gets the current size of the UndoQueue.
+	 */
+	public int getSize() {
+		return queue.size();
+	}
 	
 	/**
 	 * Adds the <code>Undoable</code> to this <code>UndoQueue</code>. The
@@ -85,7 +95,7 @@ public class UndoQueue implements com.organic.maynard.outliner.util.Destructible
 	public void add(Undoable undoable) {
 		doc.setModified(true);
 		
-		int queueSize = Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).cur;
+		int queueSize = MAX_QUEUE_SIZE;
 		
 		// Short Circuit if undo is disabled.
 		if (queueSize == 0) {
@@ -142,7 +152,7 @@ public class UndoQueue implements com.organic.maynard.outliner.util.Destructible
 
 	/**
 	 * Trims the undo queue to the current size of the UNDO_QUEUE_SIZE Preference.
-	 * Starts by trimming redoables then trims undoables if neccessary. An
+	 * Starts by trimming ALL redoables then trims undoables if neccessary. An
 	 * UndoQueueEvent is fired.
 	 */	
 	public void trim() {
@@ -150,9 +160,9 @@ public class UndoQueue implements com.organic.maynard.outliner.util.Destructible
 		queue.trim(cursor + 1);
 		
 		// Next, trim undoables.
-		int range = queue.size() - Preferences.getPreferenceInt(Preferences.UNDO_QUEUE_SIZE).cur;
+		int range = queue.size() - MAX_QUEUE_SIZE;
 		if (range > 0) {
-			queue.removeRange(0, range - 1);
+			queue.removeRange(0, range);
 			cursor -= range;
 		}
 
@@ -230,6 +240,51 @@ public class UndoQueue implements com.organic.maynard.outliner.util.Destructible
 		}
 	}
 
+	/**
+	 * Gets a String that shows where we are in the undo stack.
+	 * The String looks like [24/65/1000] to indicate we can undo
+	 * 24 times out of a total of 65 undoable actions on the stack,
+	 * and a maximum stack size of 1000.
+	 *
+	 * @return the formatted value.
+	 */	
+	public String getUndoRangeString() {
+		StringBuffer buf = new StringBuffer();
+		buf.append("[").append(cursor + 1).append("/").append(queue.size()).append("/").append(MAX_QUEUE_SIZE).append("]");
+		return buf.toString();
+	}
+
+	/**
+	 * Gets a String that shows where we are in the undo stack.
+	 * The String looks like [24/65/1000] to indicate we can redo
+	 * 24 times out of a total of 65 undoable actions on the stack,
+	 * and a maximum stack size of 1000.
+	 *
+	 * @return the formatted value.
+	 */	
+	public String getRedoRangeString() {
+		StringBuffer buf = new StringBuffer();
+		buf.append("[").append(queue.size() - cursor - 1).append("/").append(queue.size()).append("/").append(MAX_QUEUE_SIZE).append("]");
+		return buf.toString();
+	}
+	
+	/**
+	 * Gets a descriptive name for the current undoable action.
+	 *
+	 * @return the name of the current undoable action.
+	 */	
+	public String getUndoName() {
+		return queue.get(cursor).getName();
+	}
+
+	/**
+	 * Gets a descriptive name for the current redoable action.
+	 *
+	 * @return the name of the current redoable action.
+	 */	
+	public String getRedoName() {
+		return queue.get(cursor + 1).getName();
+	}
 
 	/**
 	 * Calls the redo() method on the current <code>Undoable</code> if the

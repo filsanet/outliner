@@ -44,7 +44,7 @@ import java.awt.*;
  * @version $Revision$, $Date$
  */
  
-public class PrimitiveUndoableCommentChange implements Undoable, PrimitiveUndoablePropertyChange {
+public class PrimitiveUndoableCommentChange extends AbstractUndoable implements Undoable, PrimitiveUndoablePropertyChange {
 
 	private Node node = null;
 	private int oldState = 0;

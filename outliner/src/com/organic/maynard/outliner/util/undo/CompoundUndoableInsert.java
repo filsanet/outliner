@@ -43,6 +43,11 @@ import com.organic.maynard.outliner.*;
  
 public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 
+	// Constants
+	private static final String DEFAULT_NAME = "Insert Node";
+	
+	
+	// Instance Fields
 	private Node parent = null;
 	
 	// The Constructors
@@ -63,6 +68,15 @@ public class CompoundUndoableInsert extends AbstractCompoundUndoable {
 	public void destroy() {
 		super.destroy();
 		parent = null;
+	}
+
+	public String getName() {
+		String name = super.getName();
+		if (name == null) {
+			return DEFAULT_NAME;
+		} else {
+			return name;
+		}
 	}
 	
 	public void undo() {

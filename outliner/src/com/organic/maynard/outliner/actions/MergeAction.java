@@ -163,6 +163,7 @@ public class MergeAction extends AbstractAction {
 		undoable.addPrimitive(new PrimitiveUndoableReplace(parent, youngestNode, newNode));
 
 		// Iterate over the remaining selected nodes deleting each one
+		int mergeCount = 1;
 		for (int i = 0, limit = nodeList.size(); i < limit; i++) {
 			Node node = nodeList.get(i);
 			
@@ -172,9 +173,23 @@ public class MergeAction extends AbstractAction {
 			}
 
 			undoable.addPrimitive(new PrimitiveUndoableReplace(parent,node,null));
+			mergeCount++;
 		}
 
 		if (!undoable.isEmpty()) {
+			if (withSpaces) {
+				if (mergeCount == 1) {
+					undoable.setName("Merge Node with Spaces");
+				} else {
+					undoable.setName(new StringBuffer().append("Merge ").append(mergeCount).append(" Nodes with Spaces").toString());
+				}
+			} else {
+				if (mergeCount == 1) {
+					undoable.setName("Merge Node");
+				} else {
+					undoable.setName(new StringBuffer().append("Merge ").append(mergeCount).append(" Nodes").toString());			
+				}
+			}
 			tree.getDocument().getUndoQueue().add(undoable);
 			undoable.redo();		
 		}

@@ -114,6 +114,7 @@ public class PromoteDemoteAction extends AbstractAction {
 		}
 		
 		CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(),targetNode);
+		undoable.setName("Promote Node");
 		tree.getDocument().getUndoQueue().add(undoable);
 
 		// Record the Insert in the undoable
@@ -140,6 +141,7 @@ public class PromoteDemoteAction extends AbstractAction {
 		Node targetNode = currentNode.prevSibling();
 
 		CompoundUndoableMove undoable = new CompoundUndoableMove(currentNode.getParent(), targetNode);
+		undoable.setName("Demote Node");
 		tree.getDocument().getUndoQueue().add(undoable);
 		
 		// Record the Insert in the undoable
@@ -169,6 +171,7 @@ public class PromoteDemoteAction extends AbstractAction {
 		CompoundUndoableMove undoable = new CompoundUndoableMove(parent, targetNode);
 
 		JoeNodeList nodeList = tree.getSelectedNodes();
+		int moveCount = 0;
 		for (int i = nodeList.size() - 1; i >= 0; i--) {
 			// Record the Insert in the undoable
 			Node nodeToMove = nodeList.get(i);
@@ -179,9 +182,15 @@ public class PromoteDemoteAction extends AbstractAction {
 			}
 		
 			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), targetIndex));
+			moveCount++;
 		}
 		
 		if (!undoable.isEmpty()) {
+			if (moveCount == 1) {
+				undoable.setName("Promote Node");
+			} else {
+				undoable.setName(new StringBuffer().append("Promote ").append(moveCount).append(" Nodes").toString());
+			}
 			tree.getDocument().getUndoQueue().add(undoable);
 			undoable.redo();
 		}
@@ -199,6 +208,7 @@ public class PromoteDemoteAction extends AbstractAction {
 		
 		int existingChildren = targetNode.numOfChildren();
 		JoeNodeList nodeList = tree.getSelectedNodes();
+		int moveCount = 0;
 		for (int i = nodeList.size() - 1; i >= 0; i--) {
 			// Record the Insert in the undoable
 			Node nodeToMove = nodeList.get(i);
@@ -209,9 +219,15 @@ public class PromoteDemoteAction extends AbstractAction {
 			}
 
 			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), existingChildren));
+			moveCount++;
 		}
 
 		if (!undoable.isEmpty()) {
+			if (moveCount == 1) {
+				undoable.setName("Demote Node");
+			} else {
+				undoable.setName(new StringBuffer().append("Demote ").append(moveCount).append(" Nodes").toString());
+			}
 			tree.getDocument().getUndoQueue().add(undoable);
 			undoable.redo();
 		}

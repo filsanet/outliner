@@ -44,7 +44,7 @@ import java.awt.*;
  * @version $Revision$, $Date$
  */
  
-public class PrimitiveUndoableAttributeChange implements Undoable, PrimitiveUndoablePropertyChange {
+public class PrimitiveUndoableAttributeChange extends AbstractUndoable implements Undoable, PrimitiveUndoablePropertyChange {
 
 	private Node node = null;
 	private String oldKey = null;
@@ -74,7 +74,9 @@ public class PrimitiveUndoableAttributeChange implements Undoable, PrimitiveUndo
 
 
 	// PrimitiveUndoablePropertyChangeInterface
-	public Node getNode() {return node;}
+	public Node getNode() {
+		return node;
+	}
 
 
 	// Undoable Interface

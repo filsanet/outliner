@@ -45,6 +45,11 @@ import java.util.*;
  
 public class CompoundUndoablePropertyChange extends AbstractCompoundUndoable {
 	
+	// Constants
+	private static final String DEFAULT_NAME = "Property Change";
+	
+	
+	// Instance Fields	
 	private JoeTree tree = null;
 	
 	// The Constructors
@@ -62,7 +67,16 @@ public class CompoundUndoablePropertyChange extends AbstractCompoundUndoable {
 		super.destroy();
 		tree = null;
 	}
-	
+
+	public String getName() {
+		String name = super.getName();
+		if (name == null) {
+			return DEFAULT_NAME;
+		} else {
+			return name;
+		}
+	}
+
 	public void undo() {
 		for (int i = primitives.size() - 1; i >= 0; i--) {
 			primitives.get(i).undo();

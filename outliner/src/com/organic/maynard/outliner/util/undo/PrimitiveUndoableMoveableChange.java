@@ -44,7 +44,7 @@ import java.awt.*;
  * @version $Revision$, $Date$
  */
  
-public class PrimitiveUndoableMoveableChange implements Undoable, PrimitiveUndoablePropertyChange {
+public class PrimitiveUndoableMoveableChange extends AbstractUndoable implements Undoable, PrimitiveUndoablePropertyChange {
 
 	private Node node = null;
 	private int oldState = 0;
@@ -64,7 +64,9 @@ public class PrimitiveUndoableMoveableChange implements Undoable, PrimitiveUndoa
 
 
 	// PrimitiveUndoablePropertyChangeInterface
-	public Node getNode() {return node;}
+	public Node getNode() {
+		return node;
+	}
 	
 	
 	// Undoable Interface

@@ -44,7 +44,7 @@ import java.awt.*;
  * @version $Revision$, $Date$
  */
  
-public class PrimitiveUndoableInsert implements Undoable {
+public class PrimitiveUndoableInsert extends AbstractUndoable implements Undoable {
 
 	private Node parent = null;
 	private Node node = null;
@@ -64,9 +64,14 @@ public class PrimitiveUndoableInsert implements Undoable {
 	}
 
 	// Accessors
-	public void setNode(Node node) {this.node = node;}
-	public Node getNode() {return this.node;}
+	public void setNode(Node node) {
+		this.node = node;
+	}
 	
+	public Node getNode() {
+		return this.node;
+	}
+
 	public void undo() {
 		// Remove the Node
 		node.getTree().removeNode(node);

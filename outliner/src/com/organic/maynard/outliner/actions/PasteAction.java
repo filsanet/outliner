@@ -121,7 +121,9 @@ public class PasteAction extends AbstractAction {
 
 						String newText = new StringBuffer().append(oldText.substring(0,textArea.getSelectionStart())).append(text).append(oldText.substring(textArea.getSelectionEnd(),oldText.length())).toString();
 						int newCaretPosition = textArea.getSelectionStart() + text.length();
-						doc.getUndoQueue().add(new UndoableEdit(currentNode, oldText, newText, oldCaretPosition, newCaretPosition, oldMarkPosition, newCaretPosition));
+						Undoable undoable = new UndoableEdit(currentNode, oldText, newText, oldCaretPosition, newCaretPosition, oldMarkPosition, newCaretPosition);
+						undoable.setName("Paste Text");
+						doc.getUndoQueue().add(undoable);
 						UndoableEdit.freezeUndoEdit(currentNode);
 						
 						textArea.node.setValue(newText);
@@ -171,6 +173,7 @@ public class PasteAction extends AbstractAction {
 		CompoundUndoableInsert undoable = new CompoundUndoableInsert(parentForNewNode);
 		doc.getUndoQueue().add(undoable);
 
+		int pasteCount = 0;
 		if (isNodeSet) {
 			for (int i = nodeSet.getSize() - 1; i >= 0; i--) {
 				Node node = nodeSet.getNode(i);
@@ -184,6 +187,7 @@ public class PasteAction extends AbstractAction {
 				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode, node, index));
 
 				tree.addNodeToSelection(node);
+				pasteCount++;
 			}
 		} else {
 			Node tempRoot = PadSelection.pad(text, tree, depth, Preferences.LINE_END_STRING);
@@ -198,7 +202,14 @@ public class PasteAction extends AbstractAction {
 				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode, node, index));
 
 				tree.addNodeToSelection(node);
+				pasteCount++;
 			}
+		}
+
+		if (pasteCount == 1) {
+			undoable.setName("Paste Node");
+		} else {
+			undoable.setName(new StringBuffer().append("Paste ").append(pasteCount).append(" Nodes").toString());
 		}
 			
 		Node nodeThatMustBeVisible = tree.getYoungestInSelection();
@@ -252,6 +263,7 @@ public class PasteAction extends AbstractAction {
 		// Put the Undoable onto the UndoQueue
 		CompoundUndoableInsert undoable = new CompoundUndoableInsert(parentForNewNode);
 		
+		int pasteCount = 0;
 		if (isNodeSet) {
 			for (int i = nodeSet.getSize() - 1; i >= 0; i--) {
 				Node node = nodeSet.getNode(i);
@@ -265,6 +277,7 @@ public class PasteAction extends AbstractAction {
 				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode, node, index));
 
 				tree.addNodeToSelection(node);
+				pasteCount++;
 			}
 		} else {
 			Node tempRoot = PadSelection.pad(text, tree, depth, Preferences.LINE_END_STRING);
@@ -279,9 +292,16 @@ public class PasteAction extends AbstractAction {
 				undoable.addPrimitive(new PrimitiveUndoableInsert(parentForNewNode, node, index));
 
 				tree.addNodeToSelection(node);
+				pasteCount++;
 			}
 		}
 
+		if (pasteCount == 1) {
+			undoable.setName("Paste Node");
+		} else {
+			undoable.setName(new StringBuffer().append("Paste ").append(pasteCount).append(" Nodes").toString());
+		}
+		
 		tree.getDocument().getUndoQueue().add(undoable);
 
 		Node nodeThatMustBeVisible = tree.getYoungestInSelection();

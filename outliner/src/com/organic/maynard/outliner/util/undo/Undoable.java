@@ -59,4 +59,16 @@ public interface Undoable extends Destructible {
 	 * Call this method to redo the action this Undoable object encapsulates.
 	 */	
 	public void redo();
+
+	/**
+	 * Gets the name that describes the type of undo/redo object this is. This
+	 * value is displayed in the Undo and Redo menuItems so the user will have
+	 * a better idea what they can undo or redo.
+	 */	
+	public String getName();
+
+	/**
+	 * Sets the name for this undoable.
+	 */		
+	public void setName(String name);
 }

@@ -44,7 +44,7 @@ import java.awt.*;
  * @version $Revision$, $Date$
  */
  
-public class PrimitiveUndoableReplace implements Undoable {
+public class PrimitiveUndoableReplace extends AbstractUndoable implements Undoable {
 
 	private Node parent = null;
 	private Node oldNode = null;
@@ -67,9 +67,14 @@ public class PrimitiveUndoableReplace implements Undoable {
 	}
 
 	// Accessors
-	public Node getOldNode() {return oldNode;}
-	public Node getNewNode() {return newNode;}
-			
+	public Node getOldNode() {
+		return oldNode;
+	}
+	
+	public Node getNewNode() {
+		return newNode;
+	}
+		
 	public void undo() {
 		JoeTree tree = parent.getTree();
 		

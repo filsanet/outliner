@@ -49,6 +49,11 @@ import com.organic.maynard.outliner.*;
 public interface CompoundUndoable extends Undoable {
 
 	/**
+	 * Returns the number of primitive Undoables in this CompoundUndoable.
+	 */
+	public int getPrimitiveCount();
+
+	/**
 	 * Adds an undoable to this CompoundUndoable. Undoables added to a
 	 * ComoundUndoable are referred to as PrimitiveUndoables, although no
 	 * marker interface exists to indicate this. Any Undoable may serve

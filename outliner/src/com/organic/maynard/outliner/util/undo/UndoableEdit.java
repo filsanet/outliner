@@ -46,9 +46,13 @@ import com.organic.maynard.outliner.*;
  * @version $Revision$, $Date$
  */
  
-public class UndoableEdit implements Undoable {
-
-	// Fields
+public class UndoableEdit extends AbstractUndoable implements Undoable {
+	
+	// Constants
+	private static final String DEFAULT_NAME = "Text Edit";
+	
+	
+	// Instance Fields
 	private Node node = null;
 
 	private String newText = "";
@@ -89,22 +93,56 @@ public class UndoableEdit implements Undoable {
 	}
 	
 	// Accessors
-	public void setNode(Node node) {this.node = node;}
-	public Node getNode() {return this.node;}
-
-	public void setNewText(String newText) {this.newText = newText;}
-	public String getNewText() {return this.newText;}
-
-	public void setNewPosition(int newPosition) {this.newPosition = newPosition;}
-	public int getNewPosition() {return this.newPosition;}
-
-	public void setNewMarkPosition(int newMarkPosition) {this.newMarkPosition = newMarkPosition;}
-	public int getNewMarkPosition() {return this.newMarkPosition;}
+	public void setNode(Node node) {
+		this.node = node;
+	}
 	
-	public void setFrozen(boolean frozen) {this.frozen = frozen;}
-	public boolean isFrozen() {return frozen;}
+	public Node getNode() {
+		return this.node;
+	}
+
+	public void setNewText(String newText) {
+		this.newText = newText;
+	}
+	
+	public String getNewText() {
+		return this.newText;
+	}
+
+	public void setNewPosition(int newPosition) {
+		this.newPosition = newPosition;
+	}
+	
+	public int getNewPosition() {
+		return this.newPosition;
+	}
+
+	public void setNewMarkPosition(int newMarkPosition) {
+		this.newMarkPosition = newMarkPosition;
+	}
+	
+	public int getNewMarkPosition() {
+		return this.newMarkPosition;
+	}
+	
+	public void setFrozen(boolean frozen) {
+		this.frozen = frozen;
+	}
+	
+	public boolean isFrozen() {
+		return frozen;
+	}
 	
 	// Undoable Interface
+	public String getName() {
+		String name = super.getName();
+		if (name == null) {
+			return DEFAULT_NAME;
+		} else {
+			return name;
+		}
+	}
+	
 	public void undo() {
 		JoeTree tree = node.getTree();
 		

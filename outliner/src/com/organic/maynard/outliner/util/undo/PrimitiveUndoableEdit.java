@@ -44,7 +44,7 @@ import com.organic.maynard.outliner.*;
  * @version $Revision$, $Date$
  */
  
-public class PrimitiveUndoableEdit implements Undoable {
+public class PrimitiveUndoableEdit extends AbstractUndoable implements Undoable {
 
 	private Node node = null;
 	private String oldText = null;

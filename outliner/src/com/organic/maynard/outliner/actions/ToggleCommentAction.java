@@ -118,6 +118,7 @@ public class ToggleCommentAction extends AbstractAction {
 		clearCommentForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Clear Comment for Node");
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -130,6 +131,7 @@ public class ToggleCommentAction extends AbstractAction {
 		toggleCommentAndClearForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Toggle Comment and Clear Decendants for Node");
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -142,6 +144,7 @@ public class ToggleCommentAction extends AbstractAction {
 		toggleCommentForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Toggle Comment for Node");
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -154,6 +157,7 @@ public class ToggleCommentAction extends AbstractAction {
 		toggleCommentInheritanceForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Toggle Comment Inheritance for Node");
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -172,6 +176,11 @@ public class ToggleCommentAction extends AbstractAction {
 		}
 		
 		if (!undoable.isEmpty()) {
+			if (undoable.getPrimitiveCount() == 1) {
+				undoable.setName("Clear Comment for Node");
+			} else {
+				undoable.setName(new StringBuffer().append("Clear Comment for ").append(undoable.getPrimitiveCount()).append(" Nodes").toString());
+			}
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -201,6 +210,11 @@ public class ToggleCommentAction extends AbstractAction {
 		}
 		
 		if (!undoable.isEmpty()) {
+			if (undoable.getPrimitiveCount() == 1) {
+				undoable.setName("Toggle Comment and Clear Decendants for Node");
+			} else {
+				undoable.setName(new StringBuffer().append("Toggle Comment and Clear Decendants for ").append(undoable.getPrimitiveCount()).append(" Nodes").toString());
+			}
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -224,6 +238,11 @@ public class ToggleCommentAction extends AbstractAction {
 		}
 		
 		if (!undoable.isEmpty()) {
+			if (undoable.getPrimitiveCount() == 1) {
+				undoable.setName("Toggle Comment for Node");
+			} else {
+				undoable.setName(new StringBuffer().append("Toggle Comment for ").append(undoable.getPrimitiveCount()).append(" Nodes").toString());
+			}
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -265,6 +284,11 @@ public class ToggleCommentAction extends AbstractAction {
 		}
 		
 		if (!undoable.isEmpty()) {
+			if (undoable.getPrimitiveCount() == 1) {
+				undoable.setName("Toggle Comment Inheritance for Node");
+			} else {
+				undoable.setName(new StringBuffer().append("Toggle Comment Inheritance for ").append(undoable.getPrimitiveCount()).append(" Nodes").toString());
+			}
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 

@@ -37,64 +37,24 @@ package com.organic.maynard.outliner.util.undo;
 import com.organic.maynard.outliner.*;
 
 /**
- * Holds a series of simple text changes. Currently used by the
- * find/replace code when doing text replacements to open documents.
- * This undoable should only be filled with PrimitiveUndoableEdit
- * objects.
- *
  * @author  $Author$
  * @version $Revision$, $Date$
  */
  
-public class CompoundUndoableEdit extends AbstractCompoundUndoable {
+public abstract class AbstractUndoable implements Undoable {
 
-	
-	// Constants
-	private static final String DEFAULT_NAME = "Multiple Text Edits";
-	
-	
 	// Instance Fields
-	private JoeTree tree = null;
+	private String name = null;
 	
-	// The Constructors
-	public CompoundUndoableEdit(JoeTree tree) {
-		this(true, tree);
-	}
-
-	public CompoundUndoableEdit(boolean isUpdatingGui, JoeTree tree) {
-		super(isUpdatingGui);
-		this.tree = tree;
-	}
-
-
-	// Destructible Interface
-	public void destroy() {
-		super.destroy();
-		tree = null;
-	}
-
-
 	// Undoable Interface
 	public String getName() {
-		String name = super.getName();
-		if (name == null) {
-			return DEFAULT_NAME;
-		} else {
-			return name;
-		}
-	}
-
-	public void undo() {
-		for (int i = primitives.size() - 1; i >= 0; i--) {
-			primitives.get(i).undo();
-		}
-		tree.getDocument().panel.layout.redraw();
+		return this.name;
 	}
 	
-	public void redo() {
-		for (int i = 0, limit = primitives.size(); i < limit; i++) {
-			primitives.get(i).redo();
-		}
-		tree.getDocument().panel.layout.redraw();
+	public void setName(String name) {
+		this.name = name;
 	}
+	
+	public abstract void undo();
+	public abstract void redo();
 }

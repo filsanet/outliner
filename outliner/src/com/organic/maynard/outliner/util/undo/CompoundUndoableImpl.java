@@ -47,12 +47,25 @@ import com.organic.maynard.outliner.*;
  
 public class CompoundUndoableImpl extends AbstractCompoundUndoable {
 
+	// Constants
+	private static final String DEFAULT_NAME = "Compound Undoable";
+	
+
 	// The Constructors
 	public CompoundUndoableImpl(boolean isUpdatingGui) {
 		super(isUpdatingGui);
 	}
 	
 	// Undoable Interface
+	public String getName() {
+		String name = super.getName();
+		if (name == null) {
+			return DEFAULT_NAME;
+		} else {
+			return name;
+		}
+	}
+
 	public void undo() {
 		for (int i = primitives.size() - 1; i >= 0; i--) {
 			primitives.get(i).undo();

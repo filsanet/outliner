@@ -41,7 +41,7 @@ import com.organic.maynard.outliner.*;
  * @version $Revision$, $Date$
  */
  
-public abstract class AbstractCompoundUndoable implements CompoundUndoable {
+public abstract class AbstractCompoundUndoable extends AbstractUndoable implements CompoundUndoable {
 
 	/**
 	 * An <code>UndoableList</code> that holds the Primitives for this
@@ -60,6 +60,10 @@ public abstract class AbstractCompoundUndoable implements CompoundUndoable {
 
 
 	// CompoundUndoable Interface
+	public int getPrimitiveCount() {
+		return primitives.size();
+	}
+	
 	public void addPrimitive(Undoable primitive) {
 		primitives.add(primitive);
 	}
@@ -89,8 +93,4 @@ public abstract class AbstractCompoundUndoable implements CompoundUndoable {
 
 		primitives = null;
 	}
-
-	// Undoable Interface
-	public abstract void undo();
-	public abstract void redo();
 }

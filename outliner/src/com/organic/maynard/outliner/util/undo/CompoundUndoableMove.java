@@ -44,7 +44,12 @@ import java.util.*;
  */
 
 public class CompoundUndoableMove extends AbstractCompoundUndoable {
-
+	
+	// Constants
+	private static final String DEFAULT_NAME = "Move Node";
+	
+	
+	// Instance Fields
 	private Node parent = null;
 	private Node targetParent = null;
 	
@@ -69,6 +74,15 @@ public class CompoundUndoableMove extends AbstractCompoundUndoable {
 		super.destroy();
 		parent = null;
 		targetParent = null;
+	}
+
+	public String getName() {
+		String name = super.getName();
+		if (name == null) {
+			return DEFAULT_NAME;
+		} else {
+			return name;
+		}
 	}
 
 	public void undo() {

@@ -118,6 +118,7 @@ public class ToggleEditableAction extends AbstractAction {
 		clearEditableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Clear Editability for Node");
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -131,6 +132,7 @@ public class ToggleEditableAction extends AbstractAction {
 		toggleEditableAndClearForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Toggle Editability and Clear Decendants for Node");
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -144,6 +146,7 @@ public class ToggleEditableAction extends AbstractAction {
 		toggleEditableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Toggle Editability for Node");
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -157,6 +160,7 @@ public class ToggleEditableAction extends AbstractAction {
 		toggleEditableInheritanceForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Toggle Editability Inheritance for Node");
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -176,6 +180,11 @@ public class ToggleEditableAction extends AbstractAction {
 		}
 		
 		if (!undoable.isEmpty()) {
+			if (undoable.getPrimitiveCount() == 1) {
+				undoable.setName("Clear Editability for Node");
+			} else {
+				undoable.setName(new StringBuffer().append("Clear Editability for ").append(undoable.getPrimitiveCount()).append(" Nodes").toString());
+			}
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -206,6 +215,11 @@ public class ToggleEditableAction extends AbstractAction {
 		}
 		
 		if (!undoable.isEmpty()) {
+			if (undoable.getPrimitiveCount() == 1) {
+				undoable.setName("Toggle Editability and Clear Decendants for Node");
+			} else {
+				undoable.setName(new StringBuffer().append("Toggle Editability and Clear Decendants for ").append(undoable.getPrimitiveCount()).append(" Nodes").toString());
+			}
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -230,6 +244,11 @@ public class ToggleEditableAction extends AbstractAction {
 		}
 		
 		if (!undoable.isEmpty()) {
+			if (undoable.getPrimitiveCount() == 1) {
+				undoable.setName("Toggle Editability for Node");
+			} else {
+				undoable.setName(new StringBuffer().append("Toggle Editability for ").append(undoable.getPrimitiveCount()).append(" Nodes").toString());
+			}
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -272,6 +291,11 @@ public class ToggleEditableAction extends AbstractAction {
 		}
 		
 		if (!undoable.isEmpty()) {
+			if (undoable.getPrimitiveCount() == 1) {
+				undoable.setName("Toggle Editability Inheritance for Node");
+			} else {
+				undoable.setName(new StringBuffer().append("Toggle Editability Inheritance for ").append(undoable.getPrimitiveCount()).append(" Nodes").toString());
+			}
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 

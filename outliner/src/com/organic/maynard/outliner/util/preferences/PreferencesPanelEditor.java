@@ -34,8 +34,10 @@
  
 package com.organic.maynard.outliner.util.preferences;
 
+import com.organic.maynard.outliner.util.undo.UndoQueue;
 import com.organic.maynard.outliner.guitree.*;
 import com.organic.maynard.outliner.*;
+import com.organic.maynard.outliner.event.UndoQueueEvent;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -64,6 +66,9 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 		PreferenceBoolean pUseCreateModDates = (PreferenceBoolean) prefs.getPreference(Preferences.USE_CREATE_MOD_DATES);
 		PreferenceString pCreateModDatesFormat = (PreferenceString) prefs.getPreference(Preferences.CREATE_MOD_DATES_FORMAT);
 
+		// Push UndoQueueSize into UndoQueue
+		UndoQueue.MAX_QUEUE_SIZE = pUndoQueueSize.cur;
+		
 		// Update expand_mode in IconKeyListener
 		if (pSingleClickExpand.cur) {
 			IconKeyListener.expand_mode = IconKeyListener.MODE_EXPAND_SINGLE_CLICK;
@@ -106,7 +111,12 @@ public class PreferencesPanelEditor extends AbstractPreferencesPanel implements 
 			OutlinerDocument doc = (OutlinerDocument) Outliner.documents.getDocument(i);
 
 			// Update the undo queue for all the documents immediatly if it is being downsized.
-			doc.getUndoQueue().trim();
+			if (doc.getUndoQueue().getSize() > pUndoQueueSize.cur) {
+				doc.getUndoQueue().trim();
+			} else {
+				// Send an event since trim would normally do this, but we skipped it.
+				Outliner.documents.fireUndoQueueEvent(doc, UndoQueueEvent.TRIM);
+			}
 
 			for (int j = 0; j < OutlineLayoutManager.CACHE_SIZE; j++) {
 				OutlinerCellRendererImpl renderer = doc.panel.layout.textAreas[j];

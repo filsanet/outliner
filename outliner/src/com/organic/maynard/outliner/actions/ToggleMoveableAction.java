@@ -118,6 +118,7 @@ public class ToggleMoveableAction extends AbstractAction {
 		clearMoveableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Clear Moveability for Node");
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -130,6 +131,7 @@ public class ToggleMoveableAction extends AbstractAction {
 		toggleMoveableAndClearForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Toggle Moveability and Clear Decendants for Node");
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -142,6 +144,7 @@ public class ToggleMoveableAction extends AbstractAction {
 		toggleMoveableForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Toggle Moveability for Node");
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -154,6 +157,7 @@ public class ToggleMoveableAction extends AbstractAction {
 		toggleMoveableInheritanceForSingleNode(currentNode, undoable);
 
 		if (!undoable.isEmpty()) {
+			undoable.setName("Toggle Moveability Inheritance for Node");
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -172,6 +176,11 @@ public class ToggleMoveableAction extends AbstractAction {
 		}
 		
 		if (!undoable.isEmpty()) {
+			if (undoable.getPrimitiveCount() == 1) {
+				undoable.setName("Clear Moveability for Node");
+			} else {
+				undoable.setName(new StringBuffer().append("Clear Moveability for ").append(undoable.getPrimitiveCount()).append(" Nodes").toString());
+			}
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -201,6 +210,11 @@ public class ToggleMoveableAction extends AbstractAction {
 		}
 		
 		if (!undoable.isEmpty()) {
+			if (undoable.getPrimitiveCount() == 1) {
+				undoable.setName("Toggle Moveability and Clear Decendants for Node");
+			} else {
+				undoable.setName(new StringBuffer().append("Toggle Moveability and Clear Decendants for ").append(undoable.getPrimitiveCount()).append(" Nodes").toString());
+			}
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -224,6 +238,11 @@ public class ToggleMoveableAction extends AbstractAction {
 		}
 		
 		if (!undoable.isEmpty()) {
+			if (undoable.getPrimitiveCount() == 1) {
+				undoable.setName("Toggle Moveability for Node");
+			} else {
+				undoable.setName(new StringBuffer().append("Toggle Moveability for ").append(undoable.getPrimitiveCount()).append(" Nodes").toString());
+			}
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 
@@ -265,6 +284,11 @@ public class ToggleMoveableAction extends AbstractAction {
 		}
 		
 		if (!undoable.isEmpty()) {
+			if (undoable.getPrimitiveCount() == 1) {
+				undoable.setName("Toggle Moveability Inheritance for Node");
+			} else {
+				undoable.setName(new StringBuffer().append("Toggle Moveability Inheritance for ").append(undoable.getPrimitiveCount()).append(" Nodes").toString());
+			}
 			tree.getDocument().getUndoQueue().add(undoable);
 		}
 

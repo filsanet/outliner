@@ -50,6 +50,8 @@ import org.xml.sax.*;
 
 public class UndoAllMenuItem extends AbstractOutlinerMenuItem implements UndoQueueListener, DocumentRepositoryListener, ActionListener, GUITreeComponent {
 
+	private static String TEXT = null;
+	
 	// UndoQueueListener Interface
 	public void undo(UndoQueueEvent e) {
 		if (e.getDocument() == Outliner.documents.getMostRecentDocumentTouched()) {
@@ -59,8 +61,10 @@ public class UndoAllMenuItem extends AbstractOutlinerMenuItem implements UndoQue
 	
 	private void calculateEnabledState(Document doc) {
 		if (doc == null) {
+			setText(TEXT);
 			setEnabled(false);
 		} else {
+			setText(new StringBuffer().append(TEXT).append(" ").append(doc.getUndoQueue().getUndoRangeString()).toString());
 			if(doc.getUndoQueue().isUndoable()) {
 				setEnabled(true);
 			} else {
@@ -83,6 +87,8 @@ public class UndoAllMenuItem extends AbstractOutlinerMenuItem implements UndoQue
 	// GUITreeComponent interface
 	public void startSetup(AttributeList atts) {
 		super.startSetup(atts);
+		
+		TEXT = atts.getValue(A_TEXT);
 		
 		setEnabled(false);
 		

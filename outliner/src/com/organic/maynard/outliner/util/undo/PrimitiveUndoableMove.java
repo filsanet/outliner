@@ -44,7 +44,7 @@ import java.awt.*;
  * @version $Revision$, $Date$
  */
  
-public class PrimitiveUndoableMove implements Undoable {
+public class PrimitiveUndoableMove extends AbstractUndoable implements Undoable {
 
 	private CompoundUndoableMove undoable = null;
 	
@@ -67,11 +67,21 @@ public class PrimitiveUndoableMove implements Undoable {
 	}
 	
 	// Accessors
-	public void setNode(Node node) {this.node = node;}
-	public Node getNode() {return this.node;}
+	public void setNode(Node node) {
+		this.node = node;
+	}
+	
+	public Node getNode() {
+		return this.node;
+	}
 
-	public int getIndex() {return this.index;}
-	public int getTargetIndex() {return this.targetIndex;}
+	public int getIndex() {
+		return this.index;
+	}
+	
+	public int getTargetIndex() {
+		return this.targetIndex;
+	}
 	
 	public void undo() {
 		// Remove the Node

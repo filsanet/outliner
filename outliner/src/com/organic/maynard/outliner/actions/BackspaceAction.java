@@ -178,6 +178,7 @@ public class BackspaceAction extends AbstractAction {
 					oldMarkPosition, 
 					newMarkPosition
 				);
+				newUndoable.setName("Delete Text");
 				tree.getDocument().getUndoQueue().add(newUndoable);
 			}
 
@@ -236,6 +237,7 @@ public class BackspaceAction extends AbstractAction {
 		CompoundUndoableImpl undoable = new CompoundUndoableImpl(true);
 		undoable.addPrimitive(undoableReplace);
 		undoable.addPrimitive(undoableEdit);
+		undoable.setName("Merge with Previous Node");
 		
 		tree.getDocument().getUndoQueue().add(undoable);
 				
@@ -271,6 +273,7 @@ public class BackspaceAction extends AbstractAction {
 
 		// Iterate over the remaining selected nodes deleting each one
 		JoeNodeList nodeList = tree.getSelectedNodes();
+		int deleteCount = 0;
 		for (int i = startDeleting, limit = nodeList.size(); i < limit; i++) {
 			Node node = nodeList.get(i);
 
@@ -280,9 +283,15 @@ public class BackspaceAction extends AbstractAction {
 			}
 			
 			undoable.addPrimitive(new PrimitiveUndoableReplace(parent, node, null));
+			deleteCount++;
 		}
 
 		if (!undoable.isEmpty()) {
+			if (deleteCount == 1) {
+				undoable.setName("Delete Node");
+			} else {
+				undoable.setName(new StringBuffer().append("Delete ").append(deleteCount).append(" Nodes").toString());
+			}
 			tree.getDocument().getUndoQueue().add(undoable);
 			undoable.redo();
 		}

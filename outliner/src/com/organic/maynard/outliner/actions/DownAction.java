@@ -156,6 +156,7 @@ public class DownAction extends AbstractAction {
 		
 		// Do the move
 		JoeNodeList nodeList = tree.getSelectedNodes();
+		int moveCount = 0;
 		for (int i = nodeList.size() - 1; i >= 0; i--) {
 			// Record the Insert in the undoable
 			Node nodeToMove = nodeList.get(i);
@@ -167,9 +168,15 @@ public class DownAction extends AbstractAction {
 		
 			undoable.addPrimitive(new PrimitiveUndoableMove(undoable, nodeToMove, nodeToMove.currentIndex(), targetIndex));
 			targetIndex--;
+			moveCount++;
 		}
 
 		if (!undoable.isEmpty()) {
+			if (moveCount == 1) {
+				undoable.setName("Move Node Below Sibling");
+			} else {
+				undoable.setName(new StringBuffer().append("Move ").append(moveCount).append(" Nodes Below Sibling").toString());
+			}
 			tree.getDocument().getUndoQueue().add(undoable);
 			undoable.redo();
 		}

@@ -144,6 +144,7 @@ public class InsertAndSplitAction extends AbstractAction {
 		undoableInsert.addPrimitive(new PrimitiveUndoableInsert(newNode.getParent(),newNode,newNode.currentIndex()));
 		
 		CompoundUndoableImpl undoable = new CompoundUndoableImpl(true);
+		undoable.setName("Split Text and Insert Above");
 		undoable.addPrimitive(undoableEdit);
 		undoable.addPrimitive(undoableInsert);
 		
@@ -192,6 +193,7 @@ public class InsertAndSplitAction extends AbstractAction {
 		undoableInsert.addPrimitive(new PrimitiveUndoableInsert(newNode.getParent(),newNode,newNode.currentIndex()));
 		
 		CompoundUndoableImpl undoable = new CompoundUndoableImpl(true);
+		undoable.setName("Split Text and Insert Below");
 		undoable.addPrimitive(undoableEdit);
 		undoable.addPrimitive(undoableInsert);
 		
@@ -233,6 +235,7 @@ public class InsertAndSplitAction extends AbstractAction {
 
 		// Put the Undoable onto the UndoQueue
 		CompoundUndoableInsert undoable = new CompoundUndoableInsert(newNodeParent);
+		undoable.setName("Insert Node Below");
 		undoable.addPrimitive(new PrimitiveUndoableInsert(newNodeParent, newNode, newNodeIndex));
 		tree.getDocument().getUndoQueue().add(undoable);
 		
@@ -262,6 +265,7 @@ public class InsertAndSplitAction extends AbstractAction {
 
 		// Put the Undoable onto the UndoQueue
 		CompoundUndoableInsert undoable = new CompoundUndoableInsert(newNodeParent);
+		undoable.setName("Insert Node Above");
 		undoable.addPrimitive(new PrimitiveUndoableInsert(newNodeParent, newNode, newNodeIndex));
 		tree.getDocument().getUndoQueue().add(undoable);
 		
@@ -308,6 +312,7 @@ public class InsertAndSplitAction extends AbstractAction {
 
 		// Put the Undoable onto the UndoQueue
 		CompoundUndoableInsert undoable = new CompoundUndoableInsert(newNodeParent);
+		undoable.setName("Insert Node Below");
 		undoable.addPrimitive(new PrimitiveUndoableInsert(newNodeParent, newNode, newNodeIndex));
 		tree.getDocument().getUndoQueue().add(undoable);
 		

@@ -114,7 +114,9 @@ public class CutAction extends AbstractAction {
 
 		String newText = new StringBuffer().append(oldText.substring(0,textArea.getSelectionStart())).append(oldText.substring(textArea.getSelectionEnd(),oldText.length())).toString();
 		int newCaretPosition = textArea.getSelectionStart();
-		tree.getDocument().getUndoQueue().add(new UndoableEdit(currentNode, oldText, newText, oldCaretPosition, newCaretPosition, oldMarkPosition, newCaretPosition));
+		Undoable undoable = new UndoableEdit(currentNode, oldText, newText, oldCaretPosition, newCaretPosition, oldMarkPosition, newCaretPosition);
+		undoable.setName("Cut Text");
+		tree.getDocument().getUndoQueue().add(undoable);
 		UndoableEdit.freezeUndoEdit(currentNode);
 		
 		textArea.node.setValue(newText);
@@ -182,6 +184,7 @@ public class CutAction extends AbstractAction {
 		}
 
 		// Iterate over the remaining selected nodes deleting each one
+		int deleteCount = 0;
 		for (int i = startDeleting, limit = nodeList.size(); i < limit; i++) {
 			Node node = nodeList.get(i);
 
@@ -191,9 +194,15 @@ public class CutAction extends AbstractAction {
 			}
 			
 			undoable.addPrimitive(new PrimitiveUndoableReplace(parent, node, null));
+			deleteCount++;
 		}
 
 		if (!undoable.isEmpty()) {
+			if (deleteCount == 1) {
+				undoable.setName("Cut Node");
+			} else {
+				undoable.setName(new StringBuffer().append("Cut ").append(deleteCount).append(" Nodes").toString());
+			}
 			tree.getDocument().getUndoQueue().add(undoable);
 			undoable.redo();
 		}
