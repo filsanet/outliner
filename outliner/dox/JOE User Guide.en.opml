@@ -3,23 +3,23 @@
 <head>
 <title>E:\stan's java projects\Joe\outliner\dox\JOE User Guide.en.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Wed, 29 Aug 2001 06:53:00 GMT</dateModified>
+<dateModified>Sun, 28 Oct 2001 09:24:12 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
 <expansionState></expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>25</windowTop>
-<windowLeft>0</windowLeft>
-<windowBottom>721</windowBottom>
-<windowRight>709</windowRight>
+<windowTop>19</windowTop>
+<windowLeft>77</windowLeft>
+<windowBottom>665</windowBottom>
+<windowRight>612</windowRight>
 <applyStyleForComments>false</applyStyleForComments>
 <applyStyleForEditability>false</applyStyleForEditability>
 <applyStyleForMoveability>false</applyStyleForMoveability>
 </head>
 <body>
-<outline isComment="false" isEditable="true" isMoveable="true" text="JOE User Guide [JUG]" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
-<outline isComment="false" isEditable="true" isMoveable="true" text="-------------------------" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
-<outline isComment="false" isEditable="true" isMoveable="true" text="Front End" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline isComment="false" isEditable="true" isMoveable="true" text="JOE User Guide [JUG]" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true"/>
+<outline isComment="false" isEditable="true" isMoveable="true" text="-------------------------" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true"/>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Front End" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="About JOE - the Java Outline Editor">
 		<outline isEditable="true" isMoveable="true" text="What It Is">
 			<outline isEditable="true" isMoveable="true" text="JOE is an outliner. "/>
@@ -138,14 +138,18 @@
 		<outline text="Portions Copyright (c) 2001 by Maynard Demmon. All rights reserved."/>
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="Version">
-		<outline isEditable="true" isMoveable="true" text="JUG versionStamp: 2001.08.29.11.12.am.pst"/>
+		<outline isEditable="true" isMoveable="true" text="JUG versionStamp">
+			<outline text="2001.10.28.16.00.00.pst">
+				<outline text="yyyy.mm.dd.hh.mm.ss.tz"/>
+			</outline>
+		</outline>
 	</outline>
 	<outline isEditable="true" isMoveable="true" text="Cataloging Info">
 		<outline isEditable="true" isMoveable="true" text="Library of Congress Classification System"/>
 		<outline isEditable="true" isMoveable="true" text="Dewey Decimal System"/>
 	</outline>
 </outline>
-<outline isComment="true" isEditable="true" isMoveable="true" text="Installation and Setup" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline isComment="true" isEditable="true" isMoveable="true" text="Installation and Setup" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="Prepare your system">
 		<outline isEditable="true" isMoveable="true" text="Linux/Unix"/>
 		<outline isEditable="true" isMoveable="true" text="Macintosh"/>
@@ -172,7 +176,7 @@
 	<outline isEditable="true" isMoveable="true" text="Set JOE application preferences"/>
 	<outline isEditable="true" isMoveable="true" text="Set JOE user preferences [forthcoming]"/>
 </outline>
-<outline isComment="false" isEditable="true" isMoveable="true" text="Your First Outline" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline isComment="false" isEditable="true" isMoveable="true" text="Your First Outline" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="Some terminology"/>
 	<outline isEditable="true" isMoveable="true" text="Create a new outline"/>
 	<outline isEditable="true" isMoveable="true" text="Type in some info"/>
@@ -180,12 +184,12 @@
 	<outline isEditable="true" isMoveable="true" text="Delete nodes"/>
 	<outline isEditable="true" isMoveable="true" text="Save your outline"/>
 </outline>
-<outline isComment="false" isEditable="true" isMoveable="true" text="Creating Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline isComment="false" isEditable="true" isMoveable="true" text="Creating Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="Options"/>
 	<outline isEditable="true" isMoveable="true" text="Menu commands"/>
 	<outline isEditable="true" isMoveable="true" text="Keystroke Shortcuts"/>
 </outline>
-<outline isComment="false" isEditable="true" isMoveable="true" text="Playing with Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline isComment="false" isEditable="true" isMoveable="true" text="Playing with Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="Creating Nodes"/>
 	<outline isEditable="true" isMoveable="true" text="Destroying Nodes"/>
 	<outline isEditable="true" isMoveable="true" text="Read-Only Nodes"/>
@@ -207,7 +211,7 @@
 	<outline isEditable="true" isMoveable="true" text="Nodes by Reference"/>
 	<outline isEditable="true" isMoveable="true" text="Keyboard Shortcuts"/>
 </outline>
-<outline isComment="false" isEditable="true" isMoveable="true" text="Saving Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Saving Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true"/>
 <outline isComment="false" isEditable="true" isMoveable="true" text="Node Attributes">
 	<outline text="isComment">
 		<outline text="originator"/>
@@ -255,33 +259,33 @@
 		<outline text="Thought Manager z.zz"/>
 	</outline>
 </outline>
-<outline isComment="false" isEditable="true" isMoveable="true" text="Printing Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline isComment="false" isEditable="true" isMoveable="true" text="Printing Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="Printing to a Printer"/>
 	<outline isEditable="true" isMoveable="true" text="Printing to a File"/>
 </outline>
-<outline isComment="false" isEditable="true" isMoveable="true" text="Closing Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline isComment="false" isEditable="true" isMoveable="true" text="Closing Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="File:Close"/>
 	<outline isEditable="true" isMoveable="true" text="File:Close All"/>
 	<outline isEditable="true" isMoveable="true" text="The X Box"/>
 	<outline isEditable="true" isMoveable="true" text="What Makes a File Dirty"/>
 </outline>
-<outline isComment="false" isEditable="true" isMoveable="true" text="Opening Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
-<outline isComment="false" isEditable="true" isMoveable="true" text="Hyperlinks in Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline isComment="false" isEditable="true" isMoveable="true" text="Opening Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true"/>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Hyperlinks in Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="Link Nodes"/>
 	<outline isEditable="true" isMoveable="true" text="Links in Nodes"/>
 </outline>
-<outline isComment="false" isEditable="true" isMoveable="true" text="Connecting Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
-<outline isComment="false" isEditable="true" isMoveable="true" text="Sharing Outlines" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
-<outline isComment="false" isEditable="true" isMoveable="true" text="Using JOE To ..." isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline isComment="false" isEditable="true" isMoveable="true" text="Connecting Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true"/>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Sharing Outlines" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true"/>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Using JOE To ..." isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="Edit XML Files"/>
 	<outline text="Edit HTML Files"/>
 	<outline text="Edit Java Files"/>
 	<outline text="Blog with Blogger"/>
 	<outline text="Blog with Manila"/>
 </outline>
-<outline isComment="false" isEditable="true" isMoveable="true" text="Custom JOE" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
-<outline isComment="false" isEditable="true" isMoveable="true" text="Macros" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true"/>
-<outline isComment="false" isEditable="true" isMoveable="true" text="XML-RPC" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline isComment="false" isEditable="true" isMoveable="true" text="Custom JOE" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true"/>
+<outline isComment="false" isEditable="true" isMoveable="true" text="Macros" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true"/>
+<outline isComment="false" isEditable="true" isMoveable="true" text="XML-RPC" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline text="About XML-RPC">
 		<outline text="XML-RPC lets you make remote procedure calls over HTTP."/>
 		<outline text="JOE uses Hannes Wallnoefer's Helma XML-RPC package. Thanks Hannes.">
@@ -345,7 +349,7 @@
 	</outline>
 	<outline text="XML-RPC Macro Examples"/>
 </outline>
-<outline isComment="false" isEditable="true" isMoveable="true" text="Menu Commands Reference" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline isComment="false" isEditable="true" isMoveable="true" text="Menu Commands Reference" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="File">
 		<outline isEditable="true" isMoveable="true" text="New">
 			<outline isEditable="true" isMoveable="true" text="keystroke shortcut: Ctrl+N"/>
@@ -432,7 +436,7 @@
 	<outline isEditable="true" isMoveable="true" text="Window"/>
 	<outline isEditable="true" isMoveable="true" text="Help"/>
 </outline>
-<outline isComment="false" isEditable="true" isMoveable="true" text="Keystroke Shortcuts Reference" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline isComment="false" isEditable="true" isMoveable="true" text="Keystroke Shortcuts Reference" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline text="Ctrl-A"/>
 	<outline text="Ctrl-C">
 		<outline text="Edit:Copy menu command"/>
@@ -476,7 +480,7 @@
 	<outline text="Shift-uP"/>
 	<outline text="Tab"/>
 </outline>
-<outline isComment="false" isEditable="true" isMoveable="true" text="Outline Formats" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline isComment="false" isEditable="true" isMoveable="true" text="Outline Formats" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="tabbed text">
 		<outline isEditable="true" isMoveable="true" text="each node is terminated by one of these line-ending character sequences">
 			<outline isEditable="true" isMoveable="true" text="0D 0A [CR LF] [DOS Windows standard]"/>
@@ -495,7 +499,7 @@
 	<outline isEditable="true" isMoveable="true" text="BrainForest .pdf"/>
 	<outline isEditable="true" isMoveable="true" text="Thought Manager .pdf"/>
 </outline>
-<outline isComment="false" isEditable="true" isMoveable="true" text="Glossary" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline isComment="false" isEditable="true" isMoveable="true" text="Glossary" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="Abbreviations and Acronyms">
 		<outline isEditable="true" isMoveable="true" text="Three-Letter Acronyms [TLA's]">
 			<outline isEditable="true" isMoveable="true" text="JOE"/>
@@ -591,7 +595,7 @@
 		<outline isEditable="true" isMoveable="true" text="Z"/>
 	</outline>
 </outline>
-<outline isComment="false" isEditable="true" isMoveable="true" text="Index" isMoveableInherited="true" isCommentInherited="true" isEditableInherited="true">
+<outline isComment="false" isEditable="true" isMoveable="true" text="Index" isCommentInherited="true" isMoveableInherited="true" isEditableInherited="true">
 	<outline isEditable="true" isMoveable="true" text="A-E">
 		<outline isEditable="true" isMoveable="true" text="A"/>
 		<outline isEditable="true" isMoveable="true" text="B"/>
