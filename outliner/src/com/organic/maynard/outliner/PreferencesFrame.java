@@ -103,6 +103,8 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 		public static final JCheckBox PRINT_ENVIRONMENT_CHECKBOX = new JCheckBox();
 		public static final JCheckBox NEW_DOC_ON_STARTUP_CHECKBOX = new JCheckBox();
 		public static final JButton RESTORE_DEFAULT_MISC_BUTTON = new JButton(RESTORE_DEFAULTS);
+		public static final JTextField OWNER_NAME_FIELD = new JTextField(10);
+		public static final JTextField OWNER_EMAIL_FIELD = new JTextField(10);
 
 		// Open And Save Panel
 		public static final JComboBox LINE_END_COMBOBOX = new JComboBox(Preferences.PLATFORM_IDENTIFIERS);
@@ -171,6 +173,8 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 			RECENT_FILES_LIST_SIZE_FIELD.addFocusListener(new TextFieldListener(RECENT_FILES_LIST_SIZE_FIELD, Preferences.RECENT_FILES_LIST_SIZE));
 			PRINT_ENVIRONMENT_CHECKBOX.addActionListener(new CheckboxListener(PRINT_ENVIRONMENT_CHECKBOX, Preferences.PRINT_ENVIRONMENT));
 			NEW_DOC_ON_STARTUP_CHECKBOX.addActionListener(new CheckboxListener(NEW_DOC_ON_STARTUP_CHECKBOX, Preferences.NEW_DOC_ON_STARTUP));
+			OWNER_NAME_FIELD.addFocusListener(new TextFieldListener(OWNER_NAME_FIELD, Preferences.OWNER_NAME));
+			OWNER_EMAIL_FIELD.addFocusListener(new TextFieldListener(OWNER_EMAIL_FIELD, Preferences.OWNER_EMAIL));
 		}
 		
 	// The Constructor
@@ -414,6 +418,8 @@ public class PreferencesFrame extends JFrame implements TreeSelectionListener, A
 		addPreferenceItem("Recent Files List Size", RECENT_FILES_LIST_SIZE_FIELD, miscBox);
 		addPreferenceItem("Print Environemnt", PRINT_ENVIRONMENT_CHECKBOX, miscBox);
 		addPreferenceItem("New Document On Startup", NEW_DOC_ON_STARTUP_CHECKBOX, miscBox);
+		addPreferenceItem("Owner Name", OWNER_NAME_FIELD, miscBox);
+		addPreferenceItem("Owner Email", OWNER_EMAIL_FIELD, miscBox);
 
 		miscBox.add(Box.createVerticalStrut(10));
 
@@ -461,11 +467,16 @@ public class TextFieldListener implements FocusListener {
 	}
 	
 	private void handleUpdate() {
+		// We can simplify this when we move more methods into the Preference Interface.
 		if (pref instanceof PreferenceInt) {
 			PreferenceInt prefInt = (PreferenceInt) pref;
 			prefInt.setTmp(field.getText());
 			field.setText(String.valueOf(prefInt.tmp));
-		}	
+		} else if (pref instanceof PreferenceString) {
+			PreferenceString prefString = (PreferenceString) pref;
+			prefString.setTmp(field.getText());
+			field.setText(prefString.tmp);
+		}
 	}
 }
 
@@ -677,6 +688,12 @@ public class MiscAction implements ActionListener {
 
 				PreferencesFrame.NEW_DOC_ON_STARTUP_CHECKBOX.setSelected(Preferences.NEW_DOC_ON_STARTUP.def);
 				Preferences.NEW_DOC_ON_STARTUP.restoreTemporaryToDefault();
+
+				PreferencesFrame.OWNER_NAME_FIELD.setText(String.valueOf(Preferences.OWNER_NAME.def));
+				Preferences.OWNER_NAME.restoreTemporaryToDefault();
+
+				PreferencesFrame.OWNER_EMAIL_FIELD.setText(String.valueOf(Preferences.OWNER_EMAIL.def));
+				Preferences.OWNER_EMAIL.restoreTemporaryToDefault();
 			} catch (Exception ex) {
 				System.out.println("Exception: " + ex);
 			}
@@ -687,6 +704,8 @@ public class MiscAction implements ActionListener {
 		PreferencesFrame.RECENT_FILES_LIST_SIZE_FIELD.setText(String.valueOf(Preferences.RECENT_FILES_LIST_SIZE.cur));
 		PreferencesFrame.PRINT_ENVIRONMENT_CHECKBOX.setSelected(Preferences.PRINT_ENVIRONMENT.cur);
 		PreferencesFrame.NEW_DOC_ON_STARTUP_CHECKBOX.setSelected(Preferences.NEW_DOC_ON_STARTUP.cur);
+		PreferencesFrame.OWNER_NAME_FIELD.setText(String.valueOf(Preferences.OWNER_NAME.cur));
+		PreferencesFrame.OWNER_EMAIL_FIELD.setText(String.valueOf(Preferences.OWNER_EMAIL.cur));
 	}
 }
 

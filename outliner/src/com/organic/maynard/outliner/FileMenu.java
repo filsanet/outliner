@@ -20,6 +20,7 @@ package com.organic.maynard.outliner;
 
 import java.io.*;
 import java.util.*;
+import java.text.SimpleDateFormat;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -291,7 +292,23 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 				docInfo.addExpandedNodeNum(i);
 			}
 		}
-					
+		docInfo.setOwnerName(document.settings.ownerName.cur);
+		docInfo.setOwnerEmail(document.settings.ownerEmail.cur);
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z");
+		if (!Preferences.TIME_ZONE_FOR_SAVING_DATES.cur.equals("")) {
+			dateFormat.setTimeZone(TimeZone.getTimeZone(Preferences.TIME_ZONE_FOR_SAVING_DATES.cur));
+		}
+		String currentDateString = dateFormat.format(new Date());
+		if(saveAs) {
+			docInfo.setDateCreated(currentDateString);
+			docInfo.setDateModified(currentDateString);
+		} else {
+			docInfo.setDateCreated(document.settings.dateCreated);
+			docInfo.setDateModified(currentDateString);
+		}
+		
+							
 		boolean success = saveFileFormat.save(document.tree, docInfo);
 		if (!success) {
 			JOptionPane.showMessageDialog(document, "An error occurred. Could not save file: " + Outliner.chooser.getSelectedFile().getPath());
@@ -350,6 +367,7 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 			newDoc.setBounds(docInfo.getWindowLeft(), docInfo.getWindowTop(), docInfo.getWidth(), docInfo.getHeight());
 		}
 		
+		// Update DocumentSettings
 		newDoc.settings.syncPrefs();
 		newDoc.settings.saveEncoding.def = encoding;
 		newDoc.settings.saveEncoding.cur = encoding;
@@ -359,65 +377,22 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		newDoc.settings.saveFormat.tmp = fileFormat;
 		newDoc.settings.useDocumentSettings = true;
 		
-		// Clear current selection
-		tree.clearSelection();
-		
-		// Clear the VisibleNodeCache
-		tree.visibleNodes.clear();
-		
-		// Insert nodes into the VisibleNodes Cache
-		for (int i = 0; i < tree.rootNode.numOfChildren(); i++) {
-			tree.addNode(tree.rootNode.getChild(i));
-		}
-		
-		// Update the menuBar
-		newDoc.setFileName(filename);
-		newDoc.setFileModified(false);
-		newDoc.setTitle(filename);
+		newDoc.settings.dateCreated = docInfo.getDateCreated();
+		newDoc.settings.dateModified = docInfo.getDateModified();
 
 		// Move it to the bottom of the recent files list
 		RecentFilesList.updateFileNameInList(filename, docInfo);
-
-		// Expand Nodes
-		Vector expandedNodes = docInfo.getExpandedNodes();
-		for (int i = 0; i < expandedNodes.size(); i++) {
-			int nodeNum = ((Integer) expandedNodes.elementAt(i)).intValue();
-			try {
-				Node node = (Node) newDoc.tree.visibleNodes.get(nodeNum);
-				node.setExpanded(true);
-			} catch (Exception e) {
-				break;
-			}
-		}
 		
-		// Record the current location
-		Node firstVisibleNode;
-		int index = -1;
-		try {
-			index = docInfo.getVerticalScrollState() - 1;
-			firstVisibleNode = (Node) tree.visibleNodes.get(index);
-		} catch (IndexOutOfBoundsException e) {
-			index = 0;
-			firstVisibleNode = (Node) tree.visibleNodes.get(0);
-		}
-		
-		tree.setEditingNode(firstVisibleNode);
-		tree.setCursorPosition(0);
-		tree.setComponentFocus(outlineLayoutManager.TEXT);
-		
-		// Redraw
-		outlineLayoutManager layout = newDoc.panel.layout;
-		layout.setNodeToDrawFrom(firstVisibleNode,index);
-		//layout.draw(firstVisibleNode, outlineLayoutManager.TEXT);
-		layout.draw();
+		setupAndDraw(docInfo, newDoc);
 	}
 
 	protected static void revertFile(String filename, OutlinerDocument document) {
+		String fileFormat = document.settings.saveFormat.cur;
+
 		// Get the file format object
-		String fileFormatName = document.settings.saveFormat.cur;
-		OpenFileFormat openFileFormat = Outliner.fileFormatManager.getOpenFormat(fileFormatName);
+		OpenFileFormat openFileFormat = Outliner.fileFormatManager.getOpenFormat(fileFormat);
 		if (openFileFormat == null) {
-			JOptionPane.showMessageDialog(document, "An error occurred. Could not revert file: " + filename + " because I couldn't retrieve the file format: " + fileFormatName);
+			JOptionPane.showMessageDialog(document, "An error occurred. Could not revert file: " + filename + " because I couldn't retrieve the file format: " + fileFormat);
 			return;
 		}
 		
@@ -440,6 +415,13 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		
 		// Clear the UndoQueue
 		document.undoQueue.clear();
+
+		setupAndDraw(docInfo, document);
+	}
+	
+	private static void setupAndDraw(DocumentInfo docInfo, OutlinerDocument doc) {
+		TreeContext tree = doc.tree;
+		String filename = docInfo.getPath();
 		
 		// Clear current selection
 		tree.clearSelection();
@@ -453,17 +435,45 @@ public class FileMenu extends AbstractOutlinerMenu implements ActionListener {
 		}
 		
 		// Update the menuBar
-		document.setFileName(filename);
-		document.setFileModified(false);
+		doc.setFileName(filename);
+		doc.setFileModified(false);
+		doc.setTitle(filename);
+
+		// Expand Nodes
+		Vector expandedNodes = docInfo.getExpandedNodes();
+		for (int i = 0; i < expandedNodes.size(); i++) {
+			int nodeNum = ((Integer) expandedNodes.elementAt(i)).intValue();
+			try {
+				Node node = (Node) doc.tree.visibleNodes.get(nodeNum);
+				node.setExpanded(true);
+			} catch (Exception e) {
+				break;
+			}
+		}
 		
 		// Record the current location
-		tree.setEditingNode((Node) tree.visibleNodes.get(0));
+		Node firstVisibleNode;
+		int index = -1;
+		try {
+			index = docInfo.getVerticalScrollState() - 1;
+			firstVisibleNode = (Node) tree.visibleNodes.get(index);
+		} catch (IndexOutOfBoundsException e) {
+			index = 0;
+			firstVisibleNode = (Node) tree.visibleNodes.get(0);
+		}
+		
+		// Record Document Settings
+		doc.settings.ownerName.cur = docInfo.getOwnerName();
+		doc.settings.ownerEmail.cur = docInfo.getOwnerEmail();
+		
+		tree.setEditingNode(firstVisibleNode);
 		tree.setCursorPosition(0);
 		tree.setComponentFocus(outlineLayoutManager.TEXT);
 		
 		// Redraw
-		outlineLayoutManager layout = document.panel.layout;
-		layout.setNodeToDrawFrom((Node) tree.visibleNodes.get(0), 0);
-		layout.draw((Node) tree.visibleNodes.get(0), outlineLayoutManager.TEXT);
+		outlineLayoutManager layout = doc.panel.layout;
+		layout.setNodeToDrawFrom(firstVisibleNode,index);
+		layout.draw();
+		layout.setFocus(firstVisibleNode, outlineLayoutManager.TEXT);
 	}
 }

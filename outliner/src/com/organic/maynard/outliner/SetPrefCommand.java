@@ -156,6 +156,18 @@ public class SetPrefCommand extends Command {
 		} else if (variableName.equals(Preferences.MOST_RECENT_SAVE_DIR.getCommand())) {
 			Preferences.MOST_RECENT_SAVE_DIR.cur = (String) signature.elementAt(2);
 			Preferences.MOST_RECENT_SAVE_DIR.restoreTemporaryToCurrent();
+
+		} else if (variableName.equals(Preferences.OWNER_NAME.getCommand())) {
+			Preferences.OWNER_NAME.cur = (String) signature.elementAt(2);
+			Preferences.OWNER_NAME.restoreTemporaryToCurrent();
+
+		} else if (variableName.equals(Preferences.OWNER_EMAIL.getCommand())) {
+			Preferences.OWNER_EMAIL.cur = (String) signature.elementAt(2);
+			Preferences.OWNER_EMAIL.restoreTemporaryToCurrent();
+
+		} else if (variableName.equals(Preferences.TIME_ZONE_FOR_SAVING_DATES.getCommand())) {
+			Preferences.TIME_ZONE_FOR_SAVING_DATES.cur = (String) signature.elementAt(2);
+			Preferences.TIME_ZONE_FOR_SAVING_DATES.restoreTemporaryToCurrent();
 		
 		} else if (variableName.equals(COMMAND_RECENT_FILE)) {
 			if (RecentFilesList.docInfoList.size() < Preferences.RECENT_FILES_LIST_SIZE.cur) {

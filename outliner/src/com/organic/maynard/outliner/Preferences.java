@@ -50,13 +50,14 @@ public class Preferences {
 
 
 	// Static Fields (Global Preferences) These are saved.
-	public static final Preference[] pref_list = new Preference[26];
+	public static final Preference[] pref_list = new Preference[29];
 
 	public static final Vector ENCODINGS = new Vector();
 	public static final Vector FILE_FORMATS_OPEN = new Vector();
 	public static final Vector FILE_FORMATS_SAVE = new Vector();
 	
 	// Default Values
+	public static final String TIME_ZONE_FOR_SAVING_DATES_DEFAULT = "GMT";
 	public static final String MOST_RECENT_SAVE_DIR_DEFAULT = ".";
 	public static final String MOST_RECENT_OPEN_DIR_DEFAULT = ".";
 	public static final boolean IS_MAXIMIZED_DEFAULT = false;
@@ -86,6 +87,9 @@ public class Preferences {
 
 	public static final String OPEN_FORMAT_DEFAULT = "Plaintext";
 	public static final String SAVE_FORMAT_DEFAULT = "Plaintext";
+
+	public static final String OWNER_NAME_DEFAULT = "";
+	public static final String OWNER_EMAIL_DEFAULT = "";
 
 	
 	// Editing Settings
@@ -123,11 +127,14 @@ public class Preferences {
 	public static final PreferenceBoolean PRINT_ENVIRONMENT = new PreferenceBoolean(PRINT_ENVIRONMENT_DEFAULT,false,"print_environment");
 	public static final PreferenceBoolean NEW_DOC_ON_STARTUP = new PreferenceBoolean(NEW_DOC_ON_STARTUP_DEFAULT,false,"new_doc_on_startup");
 	public static final PreferenceInt RECENT_FILES_LIST_SIZE = new PreferenceInt(RECENT_FILES_LIST_SIZE_DEFAULT,RECENT_FILES_LIST_SIZE_DEFAULT,"recent_files_list_size",SetPrefCommand.RECENT_FILES_LIST_SIZE_VALIDATOR);
-
+	public static final PreferenceString OWNER_NAME = new PreferenceString(OWNER_NAME_DEFAULT,OWNER_NAME_DEFAULT,"owner_name");
+	public static final PreferenceString OWNER_EMAIL = new PreferenceString(OWNER_EMAIL_DEFAULT,OWNER_EMAIL_DEFAULT,"owner_email");
+		
 	// Preferences that are not configured through the GUI
 	public static final PreferenceString MOST_RECENT_OPEN_DIR = new PreferenceString(MOST_RECENT_OPEN_DIR_DEFAULT,MOST_RECENT_OPEN_DIR_DEFAULT,"most_recent_open_dir");
 	public static final PreferenceString MOST_RECENT_SAVE_DIR = new PreferenceString(MOST_RECENT_SAVE_DIR_DEFAULT,MOST_RECENT_SAVE_DIR_DEFAULT,"most_recent_save_dir");
 	public static final PreferenceBoolean IS_MAXIMIZED = new PreferenceBoolean(IS_MAXIMIZED_DEFAULT,false,"is_maximized");
+	public static final PreferenceString TIME_ZONE_FOR_SAVING_DATES = new PreferenceString(TIME_ZONE_FOR_SAVING_DATES_DEFAULT,TIME_ZONE_FOR_SAVING_DATES_DEFAULT,"time_zone_for_saving_dates");
 
 	static {
 		pref_list[0] = PRINT_ENVIRONMENT;
@@ -156,6 +163,9 @@ public class Preferences {
 		pref_list[23] = SAVE_FORMAT;	
 		pref_list[24] = MOST_RECENT_OPEN_DIR;	
 		pref_list[25] = MOST_RECENT_SAVE_DIR;	
+		pref_list[26] = OWNER_NAME;	
+		pref_list[27] = OWNER_EMAIL;	
+		pref_list[28] = TIME_ZONE_FOR_SAVING_DATES;	
 	}
 		
 	// Static Methods	

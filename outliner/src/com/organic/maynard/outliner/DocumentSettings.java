@@ -36,10 +36,18 @@ import com.organic.maynard.util.string.*;
 public class DocumentSettings extends JDialog implements ActionListener {
 	OutlinerDocument doc = null;
 	
-	// Instance Fields (Document Preferences) These are NOT saved.
+	// Editable Settings
 	public PreferenceString lineEnd = new PreferenceString(Preferences.LINE_END.cur,Preferences.LINE_END.cur,"");
 	public PreferenceString saveEncoding = new PreferenceString(Preferences.SAVE_ENCODING.cur,Preferences.SAVE_ENCODING.cur,"");
 	public PreferenceString saveFormat = new PreferenceString(Preferences.SAVE_FORMAT.cur,Preferences.SAVE_FORMAT.cur,"");
+
+	public PreferenceString ownerName = new PreferenceString(Preferences.OWNER_NAME.cur,Preferences.OWNER_NAME.cur,"");
+	public PreferenceString ownerEmail = new PreferenceString(Preferences.OWNER_EMAIL.cur,Preferences.OWNER_EMAIL.cur,"");
+
+	// Hidden Settings
+	public String dateCreated = new String("");
+	public String dateModified = new String("");
+	//public PreferenceString title = new PreferenceString(Preferences.SAVE_FORMAT.cur,Preferences.SAVE_FORMAT.cur,"");
 
 	// GUI Elements
 	public JButton buttonOK = new JButton("OK");
@@ -48,6 +56,8 @@ public class DocumentSettings extends JDialog implements ActionListener {
 	public JComboBox lineEndComboBox = new JComboBox(Preferences.PLATFORM_IDENTIFIERS);
 	public JComboBox saveEncodingComboBox = new JComboBox();
 	public JComboBox saveFormatComboBox = new JComboBox();
+	public JTextField ownerNameField = new JTextField(10);
+	public JTextField ownerEmailField = new JTextField(10);
 
 	// The Constructors
 	public DocumentSettings(OutlinerDocument document) {
@@ -56,7 +66,7 @@ public class DocumentSettings extends JDialog implements ActionListener {
 		this.doc = document;
 		
 		// Create the Layout
-		setSize(250,275);
+		setSize(250,325);
 		setResizable(false);
 		
 		// Define the Bottom Panel
@@ -85,6 +95,9 @@ public class DocumentSettings extends JDialog implements ActionListener {
 		saveEncodingComboBox.addItemListener(new ComboBoxListener(saveEncodingComboBox, saveEncoding));		
 		saveFormatComboBox.addItemListener(new ComboBoxListener(saveFormatComboBox, saveFormat));		
 
+		ownerNameField.addFocusListener(new TextFieldListener(ownerNameField, ownerName));
+		ownerEmailField.addFocusListener(new TextFieldListener(ownerEmailField, ownerEmail));
+			
 		// Define the Center Panel
 		buttonRestoreToGlobal.addActionListener(this);
 		
@@ -98,10 +111,20 @@ public class DocumentSettings extends JDialog implements ActionListener {
 		addSingleItemCentered(new JLabel("Encoding when saving."), box);
 		addSingleItemCentered(saveEncodingComboBox, box);
 
-		box.add(Box.createVerticalStrut(10));
+		box.add(Box.createVerticalStrut(5));
 
 		addSingleItemCentered(new JLabel("Format when saving."), box);
 		addSingleItemCentered(saveFormatComboBox, box);
+
+		box.add(Box.createVerticalStrut(5));
+
+		addSingleItemCentered(new JLabel("Owner Name"), box);
+		addSingleItemCentered(ownerNameField, box);
+
+		box.add(Box.createVerticalStrut(5));
+
+		addSingleItemCentered(new JLabel("Owner Email"), box);
+		addSingleItemCentered(ownerEmailField, box);
 
 		box.add(Box.createVerticalStrut(10));
 
@@ -131,6 +154,12 @@ public class DocumentSettings extends JDialog implements ActionListener {
 
 		saveFormat.restoreTemporaryToCurrent();
 		saveFormatComboBox.setSelectedItem(saveFormat.tmp);
+
+		ownerName.restoreTemporaryToCurrent();
+		ownerNameField.setText(ownerName.tmp);
+
+		ownerEmail.restoreTemporaryToCurrent();
+		ownerEmailField.setText(ownerEmail.tmp);
 	}
 	
 	// Misc methods
@@ -162,6 +191,8 @@ public class DocumentSettings extends JDialog implements ActionListener {
 		lineEnd.cur = lineEnd.tmp;
 		saveEncoding.cur = saveEncoding.tmp;
 		saveFormat.cur = saveFormat.tmp;
+		ownerName.cur = ownerName.tmp;
+		ownerEmail.cur = ownerEmail.tmp;
 		this.hide();
 	}
 
@@ -173,9 +204,13 @@ public class DocumentSettings extends JDialog implements ActionListener {
 		lineEnd.tmp = Preferences.LINE_END.cur;
 		saveEncoding.tmp = Preferences.SAVE_ENCODING.cur;
 		saveFormat.tmp = Preferences.SAVE_FORMAT.cur;
+		ownerName.tmp = Preferences.OWNER_NAME.cur;
+		ownerEmail.tmp = Preferences.OWNER_EMAIL.cur;
 		
 		lineEndComboBox.setSelectedItem(lineEnd.tmp);
 		saveEncodingComboBox.setSelectedItem(saveEncoding.tmp);
 		saveFormatComboBox.setSelectedItem(saveFormat.tmp);
+		ownerNameField.setText(ownerName.tmp);
+		ownerEmailField.setText(ownerEmail.tmp);
 	}
 }

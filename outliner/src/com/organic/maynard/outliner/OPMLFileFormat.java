@@ -76,7 +76,7 @@ public class OPMLFileFormat extends HandlerBase implements SaveFileFormat, OpenF
 		
 		buf.append("<head>" + lineEnding);
 
-		buf.append("<title>" + escapeXMLText(docInfo.getTitle()) + "</title>" + lineEnding);
+		buf.append("<title>" + escapeXMLText(docInfo.getPath()) + "</title>" + lineEnding); // We'll use path for the title since that is how our outliner difines window titles.
 		buf.append("<dateCreated>" + escapeXMLText(docInfo.getDateCreated()) + "</dateCreated>" + lineEnding);
 		buf.append("<dateModified>" + escapeXMLText(docInfo.getDateModified()) + "</dateModified>" + lineEnding);
 		buf.append("<ownerName>" + escapeXMLText(docInfo.getOwnerName()) + "</ownerName>" + lineEnding);
