@@ -995,7 +995,8 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 			
 			case FindReplaceModel.MODE_FILE_SYSTEM:
 				Thread t = new Thread(new Runnable() { 
-					public void run() { 
+					public void run() {
+						//System.out.println("Thread started.");
 						findAllFileSystem(
 							results,
 							TEXTFIELD_PATH.getText(),
@@ -1012,8 +1013,10 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 							CHECKBOX_IGNORE_CASE.isSelected(), 
 							CHECKBOX_REGEXP.isSelected()
 						);
+						//System.out.println("Thread ended.");
 					} 
 				});
+				monitor.setCanceled(false);
 				t.start();
 				monitor.setTitle("File System Find");
 				monitor.show(); // Modal dialog, blocks thread.
@@ -1134,6 +1137,7 @@ public class FindReplaceFrame extends AbstractGUITreeJDialog implements ActionLi
 						);
 					} 
 				});
+				monitor.setCanceled(false);
 				t.start();
 				monitor.setTitle("File System Replace");
 				monitor.show(); // Modal dialog, blocks thread.
