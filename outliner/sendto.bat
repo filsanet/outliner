@@ -18,5 +18,8 @@ set CP=%CP%;%root_path%jakarta-oro-2.0.4.jar
 set CP=%CP%;%root_path%jmousewheel.jar
 
 REM java -cp %CP% -Duser.language=ja -Duser.region=JP -Xincgc com.organic.maynard.outliner.Outliner ja %1
-java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner  en %1
+REM java -cp %CP% -Duser.language=de -Duser.region=DE -Xincgc com.organic.maynard.outliner.Outliner de %1
+REM java -cp %CP% -Duser.language=es -Duser.region=ES -Xincgc com.organic.maynard.outliner.Outliner es %1
+java -cp %CP% -Xincgc com.organic.maynard.outliner.Outliner en %1
+
 @echo on
