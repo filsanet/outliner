@@ -3,15 +3,15 @@
 <head>
 <title>e:\stan's java projects\Joe\outliner\dox\JOE User Guide - English.opml</title>
 <dateCreated></dateCreated>
-<dateModified>Mon, 30 Jul 2001 07:11:24 GMT</dateModified>
+<dateModified>Mon, 30 Jul 2001 08:27:20 GMT</dateModified>
 <ownerName></ownerName>
 <ownerEmail></ownerEmail>
-<expansionState>14</expansionState>
+<expansionState>16</expansionState>
 <vertScrollState>1</vertScrollState>
-<windowTop>5</windowTop>
-<windowLeft>58</windowLeft>
-<windowBottom>504</windowBottom>
-<windowRight>523</windowRight>
+<windowTop>0</windowTop>
+<windowLeft>86</windowLeft>
+<windowBottom>499</windowBottom>
+<windowRight>551</windowRight>
 </head>
 <body>
 <outline text="Front End">
@@ -159,25 +159,42 @@
 <outline text="Delete nodes"/>
 <outline text="Save your outline"/>
 </outline>
-<outline text="Creating New Outlines">
+<outline text="Creating Outlines">
 <outline text="Options"/>
 <outline text="Menu commands"/>
 <outline text="Keystroke Shortcuts"/>
 </outline>
-<outline text="Editing Outlines">
-<outline text="Alphabetizing a Set of Nodes"/>
-<outline text="Promoting and Demoting Nodes"/>
-<outline text="Expanding a Node"/>
-<outline text="Collapsing a Node"/>
+<outline text="Playing with Outlines">
+<outline text="Creating Nodes"/>
+<outline text="Destroying Nodes"/>
+<outline text="Copying Nodes"/>
+<outline text="Pasting Nodes"/>
+<outline text="Alphabetizing Nodes"/>
+<outline text="Promoting Nodes"/>
+<outline text="Demoting Nodes"/>
+<outline text="Expanding Nodes"/>
+<outline text="Collapsing Nodes"/>
+<outline text="Moving Nodes"/>
+<outline text="Merging Nodes"/>
+<outline text="Merging Outlines"/>
+<outline text="Hoisting Nodes"/>
+<outline text="Undoing Node Play"/>
+<outline text="Nodes by Reference"/>
+<outline text="Keyboard Shortcuts"/>
 </outline>
 <outline text="Saving Outlines"/>
 <outline text="Printing Outlines">
 <outline text="Printing to a Printer"/>
 <outline text="Printing to a File"/>
 </outline>
+<outline text="Closing Outlines"/>
 <outline text="Opening Outlines"/>
-<outline text="Sharing Outlines"/>
+<outline text="Links">
+<outline text="Link Nodes"/>
+<outline text="Links in Nodes"/>
+</outline>
 <outline text="Connecting Outlines"/>
+<outline text="Sharing Outlines"/>
 <outline text="Custom JOE"/>
 <outline text="Macros"/>
 <outline text="XML-RPC"/>
