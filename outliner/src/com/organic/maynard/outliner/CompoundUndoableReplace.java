@@ -19,33 +19,30 @@
 package com.organic.maynard.outliner;
 
 import java.util.*;
-import java.awt.*;
 
-public class CompoundUndoableReplace implements Undoable {
+public class CompoundUndoableReplace extends AbstractCompoundUndoable {
 
-	private Vector primitives = new Vector(1,25);
-	public Node parent = null;
+	private Node parent = null;
 	
 	// The Constructors
 	public CompoundUndoableReplace(Node parent) {
+		super();
 		this.parent = parent;
 	}
 
-	public void destroy() {
-		for (int i = 0; i < primitives.size(); i++) {
-			((Undoable) primitives.get(i)).destroy();
-		}
 
-		primitives = null;
+	// Accessors
+	public Node getParent() {
+		return this.parent;
+	}
+
+
+	// Undoable Interface
+	public void destroy() {
+		super.destroy();
 		parent = null;
 	}
 	
-	// Accessors
-	public void addPrimitive(PrimitiveUndoableReplace primitive) {
-		primitives.addElement(primitive);
-	}
-	
-	// Undoable Interface
 	public void undo() {		
 		// Shorthand
 		TreeContext tree = parent.getTree();

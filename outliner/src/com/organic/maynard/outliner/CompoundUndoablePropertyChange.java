@@ -19,41 +19,23 @@
 package com.organic.maynard.outliner;
 
 import java.util.*;
-import java.awt.*;
 
-public class CompoundUndoablePropertyChange implements Undoable {
-
-	private Vector primitives = new Vector(1,25);
+public class CompoundUndoablePropertyChange extends AbstractCompoundUndoable {
+	
 	private TreeContext tree = null;
 	
 	// The Constructors
 	public CompoundUndoablePropertyChange(TreeContext tree) {
+		super();
 		this.tree = tree;
-	}
-
-	public void destroy() {
-		for (int i = 0; i < primitives.size(); i++) {
-			((Undoable) primitives.get(i)).destroy();
-		}
-
-		primitives = null;
-		tree = null;
-	}
-	
-	// Accessors
-	public void addPrimitive(PrimitiveUndoablePropertyChange primitive) {
-		primitives.addElement(primitive);
-	}
-	
-	public boolean isEmpty() {
-		if (primitives.size() > 0) {
-			return false;
-		} else {
-			return true;
-		}
 	}
 	
 	// Undoable Interface
+	public void destroy() {
+		super.destroy();
+		tree = null;
+	}
+	
 	public void undo() {
 		for (int i = primitives.size() - 1; i >= 0; i--) {
 			((Undoable) primitives.elementAt(i)).undo();

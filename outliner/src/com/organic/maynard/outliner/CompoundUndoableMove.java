@@ -19,40 +19,32 @@
 package com.organic.maynard.outliner;
 
 import java.util.*;
-import java.awt.*;
 
-public class CompoundUndoableMove implements Undoable {
+public class CompoundUndoableMove extends AbstractCompoundUndoable {
 
-	private Vector primitives = new Vector(1,25);
 	private Node parent = null;
 	private Node targetParent = null;
 	
 	// The Constructors
 	public CompoundUndoableMove(Node parent, Node targetParent) {
+		super();
 		this.parent = parent;
 		this.targetParent = targetParent;
 	}
 
-	public void destroy() {
-		for (int i = 0; i < primitives.size(); i++) {
-			((Undoable) primitives.get(i)).destroy();
-		}
 		
-		primitives = null;
+	// Accessors
+	public Node getParent() {return parent;}
+	public Node getTargetParent() {return targetParent;}
+	
+	
+	// Undoable Interface
+	public void destroy() {
+		super.destroy();
 		parent = null;
 		targetParent = null;
 	}
-		
-	// Accessors
-	public void addPrimitive(PrimitiveUndoableMove primitive) {
-		primitives.addElement(primitive);
-	}
-	
-	public Node getParent() {return parent;}
-	
-	public Node getTargetParent() {return targetParent;}
-	
-	// Undoable Interface
+
 	public void undo() {
 		Node youngestNode = ((PrimitiveUndoableMove) primitives.elementAt(0)).getNode();
 		TreeContext tree = youngestNode.getTree();

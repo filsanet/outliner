@@ -18,31 +18,38 @@
  
 package com.organic.maynard.outliner;
 
-public interface Undoable {
+import java.util.*;
+
+public abstract class AbstractCompoundUndoable implements CompoundUndoable {
+
+	protected Vector primitives = new Vector(1,25);
 	
-	public static final int EDIT_TYPE = 0;
+	// The Constructors
+	public AbstractCompoundUndoable() {}
+	
+	// Accessors
+	public void addPrimitive(Undoable primitive) {
+		primitives.addElement(primitive);
+	}
+	
+	public boolean isEmpty() {
+		if (primitives.size() > 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	// Undoable Interface
+	public void destroy() {
+		for (int i = 0; i < primitives.size(); i++) {
+			((Undoable) primitives.get(i)).destroy();
+		}
 
-	public static final int PRIMITIVE_DELETE_TYPE = 1;
-	public static final int COMPOUND_DELETE_TYPE = 2;
+		primitives = null;
+	}
 
-	public static final int PRIMITIVE_INSERT_TYPE = 3;
-	public static final int COMPOUND_INSERT_TYPE = 4;
-
-	public static final int PRIMITIVE_MOVE_TYPE = 5;
-	public static final int COMPOUND_MOVE_TYPE = 6;
-
-	public static final int PRIMITIVE_EDIT_TYPE = 7;
-	public static final int COMPOUND_EDIT_TYPE = 8;
-
-	public static final int PRIMITIVE_REPLACE_TYPE = 9;
-	public static final int COMPOUND_REPLACE_TYPE = 10;
-
-	public static final int COMPOUND_PROPERTY_CHANGE_TYPE = 11;
-	public static final int PRIMITIVE_COMMENT_PROPERTY_CHANGE_TYPE = 12;
-
-	public void destroy();
-
-	public void undo();
-	public void redo();
-	public int getType();
+	public abstract void undo();
+	public abstract void redo();
+	public abstract int getType();
 }
