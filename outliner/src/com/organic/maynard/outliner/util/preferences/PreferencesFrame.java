@@ -62,11 +62,15 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 
 
 	// Instance Fields
+	public JTree tree = null;
+	
 	private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("");
 	private DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
 
 	private DefaultMutableTreeNode lastNode = rootNode;
 	private int lastNodeDepth = -1;
+
+	private HashMap panelJspMap = new HashMap();
 
 
 	// Main Component Containers
@@ -74,9 +78,6 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 	public static final CardLayout CARD_LAYOUT = new CardLayout();
 	public static final JPanel BOTTOM_PANEL = new JPanel();
 	
-	// Instance Fields
-	private JScrollPane jsp2 = null;
-	public JTree tree = null;
 		
 	// Button Text and Other Copy
 	public static String OK = null;
@@ -139,10 +140,9 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 
 		// Put it all together
 		JScrollPane jsp = new JScrollPane(tree);
-		jsp.setMinimumSize(new Dimension(175,0));
-		jsp2 = new JScrollPane(RIGHT_PANEL);
+		jsp.setMinimumSize(new Dimension(165,0));
 
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, jsp, jsp2);
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, jsp, RIGHT_PANEL);
 		splitPane.setResizeWeight(0.0);
 		
 		getContentPane().add(BOTTOM_PANEL, BorderLayout.SOUTH);
@@ -151,7 +151,15 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 		super.endSetup(atts);		
 	}
 	
-	public void addPanelToTree(String name, int depth) {
+	public void addPanel(AbstractPreferencesPanel panel, String title, int depth) {
+		JScrollPane jsp = new JScrollPane(panel);
+		panelJspMap.put(title,jsp);
+		PreferencesFrame.RIGHT_PANEL.add(jsp, title);
+		
+		addPanelToTree(title,depth);
+	}
+	
+	private void addPanelToTree(String name, int depth) {
 		DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(name);
 		
 		if (depth > lastNodeDepth) {
@@ -178,8 +186,10 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 	// TreeSelectionListener interface
 	public void valueChanged(TreeSelectionEvent e) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
-		CARD_LAYOUT.show(RIGHT_PANEL, (String) node.getUserObject());
-		jsp2.getVerticalScrollBar().setValue(0); // Scrolls the right panel back to the top whenever we change cards.
+		String key = (String) node.getUserObject();
+		JScrollPane jsp = (JScrollPane) panelJspMap.get(key);
+		jsp.getVerticalScrollBar().setValue(0); // Scrolls the right panel back to the top whenever we change cards.
+		CARD_LAYOUT.show(RIGHT_PANEL, key);
 	}
 
 
@@ -220,7 +230,6 @@ public class PreferencesFrame extends AbstractGUITreeJDialog implements TreeSele
 			PreferencesPanel panel = prefs.getPreferencesPanel(key);
 			panel.setToCurrent();
 		}
-				
 
 		hide();
 	}

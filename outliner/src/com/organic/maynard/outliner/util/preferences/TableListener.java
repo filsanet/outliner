@@ -97,14 +97,26 @@ public class TableListener implements FocusListener {
 			// Update pref
 			PreferenceHashMap prefHashMap = (PreferenceHashMap) pref;
 			
-			TableModel model = table.getModel();
+			DefaultTableModel model = (DefaultTableModel) table.getModel();
 			
 			HashMap map = new HashMap();
 			
 			// Turn model into a hashmap
 			for (int i = 0; i < model.getRowCount(); i++) {
-				Object key = model.getValueAt(i,0);
-				Object value = model.getValueAt(i,1);
+				String key = (String) model.getValueAt(i,1);
+				String value = (String) model.getValueAt(i,2);
+				if (key == null) {
+					key = "";
+					model.setValueAt(key,i,1);
+				}
+				if (value == null) {
+					value = "";
+					model.setValueAt(value,i,2);
+				}
+				if (map.containsKey(key)) {
+					key = "";
+					model.setValueAt(key,i,1);
+				}
 				map.put(key,value);
 			}
 			
@@ -112,6 +124,7 @@ public class TableListener implements FocusListener {
 			
 			// Update
 			table.setModel(model);
+			model.fireTableDataChanged();
 		}
 	}
 }

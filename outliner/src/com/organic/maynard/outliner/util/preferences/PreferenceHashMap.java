@@ -118,15 +118,21 @@ public class PreferenceHashMap extends AbstractPreference implements GUITreeComp
 			String key = null;
 			String value = null;
 			if (tokenizerMinor.hasMoreTokens()) {
-				key = tokenizerMinor.nextToken();
+				key = URLDecoder.decode(tokenizerMinor.nextToken());
 			}
 			if (tokenizerMinor.hasMoreTokens()) {
-				value = tokenizerMinor.nextToken();
+				value = URLDecoder.decode(tokenizerMinor.nextToken());
 			}
 			
-			if (key != null) {
-				map.put(key,value);
+			if (value == null) {
+				value = "";
 			}
+			
+			if (key == null) {
+				key = "";
+			}
+			
+			map.put(key,value);
 		}
 		
 		return map;
@@ -156,11 +162,9 @@ public class PreferenceHashMap extends AbstractPreference implements GUITreeComp
 		to.clear();
 
 		Iterator it = from.keySet().iterator();
-		
 		while (it.hasNext()) {
 			String key = (String) it.next();
 			String value = (String) from.get(key);
-			
 			to.put(key,value);
 		}
 	}

@@ -36,6 +36,8 @@ package com.organic.maynard.outliner.util.preferences;
 
 import com.organic.maynard.outliner.*;
 
+import java.util.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -51,18 +53,122 @@ import org.xml.sax.*;
  * @version $Revision$, $Date$
  */
 
-public class PreferencesGUITreeTableComponent extends AbstractPreferencesGUITreeComponent {
+public class PreferencesGUITreeTableComponent extends AbstractPreferencesGUITreeComponent implements MouseListener {
 
 	// Constants
+	public static final String A_COL_LABELS = "col_labels";
+	
+	public static final String DELIMITER = ",";
+
+
+	protected RemoveColumnHeaderRenderer removeColumnHeaderRenderer = new RemoveColumnHeaderRenderer();
+	
+	protected JTable table = new JTable();
+	protected SimpleTableModel model = new SimpleTableModel();
+	protected TableColumnModel colModel = table.getColumnModel();
+
 	public void startSetup(AttributeList atts) {
-		JTable table = new JTable();
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		model.setColumnCount(2);
+		table.setModel(model);
 		
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
+		table.setPreferredScrollableViewportSize(new Dimension(100,100));
+		
+		// Get Column Labels
+		ArrayList colLabels = new ArrayList();
+		String colLabelsString = atts.getValue(A_COL_LABELS);
+		
+		colLabels.add("New");
+		
+		StringTokenizer tokenizer = new StringTokenizer(colLabelsString,DELIMITER);
+		while (tokenizer.hasMoreTokens()) {
+			colLabels.add(tokenizer.nextToken());
+		}
+		
+		// Setup Table Model
+		model.setColumnCount(colLabels.size());
+		for (int i = 0; i < colLabels.size(); i++) {
+			colModel.getColumn(i).setHeaderValue(colLabels.get(i));
+		}
+
+		// Setup Remove Column
+		TableColumn removeColumn = colModel.getColumn(0);
+		
+		removeColumn.setMinWidth(90);
+		removeColumn.setMaxWidth(90);
+		removeColumn.setResizable(false);
+
+		RemoveCellEditor editor = new RemoveCellEditor(this);
+		removeColumn.setCellRenderer(editor);
+		removeColumn.setCellEditor(editor);
+
+		removeColumn.setHeaderRenderer(removeColumnHeaderRenderer);
+
+		// Setup Table Header
+		table.getTableHeader().addMouseListener(this);   
+		table.getTableHeader().setReorderingAllowed(false); 
+
+		// Put it all together		
 		JScrollPane component = new JScrollPane(table);
 		
 		setComponent(component);
 		super.startSetup(atts);
 		table.addFocusListener(new TableListener(table, getPreference()));
+	}
+
+	// MouseListener Interface
+	public void mouseClicked(MouseEvent e) {
+		int col = table.getTableHeader().columnAtPoint(e.getPoint());
+		if (col == 0) {
+			// Add new row
+			Object[] data = {"Remove","",""};
+			model.addRow(data);
+			model.fireTableDataChanged();
+		}
+	}
+
+	public void mouseEntered(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {}
+	public void mousePressed(MouseEvent e) {}
+	public void mouseReleased(MouseEvent e) {}
+}
+
+class SimpleTableModel extends DefaultTableModel {
+    public void setValueAt(Object value, int row, int col) {
+    	if (col != 0) {
+    		super.setValueAt(value,row,col);
+		}
+	}
+}
+
+class RemoveColumnHeaderRenderer extends JButton implements TableCellRenderer {
+	public RemoveColumnHeaderRenderer() {
+		super("New");
+	}
+
+	public Component getTableCellRendererComponent(
+		JTable table, 
+		Object value, 
+		boolean isSelected, 
+		boolean hasFocus, 
+		int row, 
+		int column
+	) {
+		return this;
+	}
+}
+
+class RemoveCellEditor extends ButtonCellEditor {
+
+	private PreferencesGUITreeTableComponent component = null;
+
+	public RemoveCellEditor(PreferencesGUITreeTableComponent component) {
+		super(new JCheckBox());
+		this.component = component;
+	}
+
+	protected void doEditing() {
+		if (this.col == 0) {
+			component.model.removeRow(this.row);
+		}
 	}
 }

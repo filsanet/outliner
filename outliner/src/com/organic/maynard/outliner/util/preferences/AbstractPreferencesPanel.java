@@ -58,12 +58,20 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 	public static final String A_TITLE = "title";
 	public static final String A_ID = "id";
 
+
 	// GUI Components
-	public Box box = Box.createVerticalBox();
+	private static final Insets INSETS = new Insets(2,2,2,2);
 	protected final JButton RESTORE_DEFAULT_EDITOR_BUTTON = new JButton(PreferencesFrame.RESTORE_DEFAULTS);
 
+	protected GridBagLayout gridbag = new GridBagLayout();
+	protected static GridBagConstraints c = new GridBagConstraints();
+
+
 	// The Constructor
-	public AbstractPreferencesPanel() {}
+	public AbstractPreferencesPanel() {
+		c.insets = INSETS;
+		setLayout(gridbag);
+	}
 
 
 	// GUITreeComponent interface
@@ -76,8 +84,7 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 		String id = atts.getValue(A_ID);
 
 
-		// Add this panel to the PreferencesFrame.
-		PreferencesFrame.RIGHT_PANEL.add(this, title);
+		// Add this panel to the PreferencesFrame.		
 		PreferencesFrame pf = (PreferencesFrame) GUITreeLoader.reg.get(GUITreeComponentRegistry.PREFERENCES_FRAME);
 		
 		// Add the preference panel at the appropriate depth.
@@ -89,25 +96,18 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 				break;
 			}
 		}
-		pf.addPanelToTree(title, depth);
+		pf.addPanel(this, title, depth);
 		
 		// Add this panel to the PreferencesPanel Registry
 		Outliner.prefs.addPreferencesPanel(id, this);
 
 		// Start setting up box
-		addSingleItemCentered(new JLabel(title), box);
-		
-		box.add(Box.createVerticalStrut(10));
+		addSingleItemCentered(new JLabel(title), this);
 	}
 	
 	public void endSetup(AttributeList atts) {
-
 		RESTORE_DEFAULT_EDITOR_BUTTON.addActionListener(this);		
-		
-		box.add(Box.createVerticalStrut(5));
-		AbstractPreferencesPanel.addSingleItemCentered(RESTORE_DEFAULT_EDITOR_BUTTON, box);
-
-		add(box);
+		AbstractPreferencesPanel.addLastItem(RESTORE_DEFAULT_EDITOR_BUTTON, this);
 		
 		// Update all the prefs.
 		setToCurrent();
@@ -121,7 +121,7 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 		if (containerStack.size() > 0) {
 			return (Container) containerStack.get(containerStack.size() - 1);
 		} else {
-			return this.box;
+			return this;
 		}
 	}
 	
@@ -132,7 +132,6 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 	public void endAddSubContainer(Container c) {
 		containerStack.remove(containerStack.size() - 1);
 		AbstractPreferencesPanel.addSingleItemCentered((JComponent) c, getCurrentContainer());
-		getCurrentContainer().add(Box.createVerticalStrut(5));
 	}
 
 	private ArrayList prefs = new ArrayList();
@@ -194,12 +193,12 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 				while (it.hasNext()) {
 					String key = (String) it.next();
 					String value = (String) map.get(key);
-					
-					Object[] data = {key,value};
+					Object[] data = {"Remove",key,value};
 					model.addRow(data);
 				}
 				
 				table.setModel(model);
+				model.fireTableDataChanged();
 			}
 		}
 	}
@@ -254,12 +253,12 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 						while (it.hasNext()) {
 							String key = (String) it.next();
 							String value = (String) map.get(key);
-							
-							Object[] data = {key,value};
+							Object[] data = {"Remove",key,value};
 							model.addRow(data);
 						}
 						
 						table.setModel(model);
+						model.fireTableDataChanged();
 					}
 					
 					pref.restoreTemporaryToDefault();
@@ -272,31 +271,77 @@ public abstract class AbstractPreferencesPanel extends JPanel implements Prefere
 	
 	
 	// Static Methods
-	public static void addArrayToComboBox(Object[] array, String componentID) {
-		JComboBox component = (JComboBox) ((PreferencesGUITreeComboBoxComponent) GUITreeLoader.reg.get(componentID)).getComponent();
-		for (int i = 0; i < array.length; i++) {
-			component.addItem(array[i].toString());
-		}	
-	}
-	
 	private static Dimension prefDim = new Dimension(3,1);
-	
+
 	public static void addPreferenceItem(String text, JComponent field, Container container) {
-		Box box = Box.createHorizontalBox();
-		box.add(Box.createHorizontalGlue());
-		box.add(new JLabel(text));
-		box.add(Box.createRigidArea(prefDim));
+		LayoutManager layout = container.getLayout();
+
+		JLabel label = new JLabel(text);
 		field.setMaximumSize(field.getPreferredSize());
-		box.add(field);
-		container.add(box);
+		
+		if (layout instanceof GridBagLayout) {
+			GridBagLayout gridbag = (GridBagLayout) layout;
+			
+			c.weighty = 0;
+			
+			c.weightx = 0;
+			c.fill = GridBagConstraints.NONE;
+			c.anchor = GridBagConstraints.EAST;
+			c.gridwidth = 1; //reset to the default
+			gridbag.setConstraints(label, c);
+	        container.add(label);
+
+			c.weightx = 1;
+			c.fill = GridBagConstraints.BOTH;	        
+	        c.anchor = GridBagConstraints.WEST;
+	        c.gridwidth = GridBagConstraints.REMAINDER; //end row
+			gridbag.setConstraints(field, c);
+	        container.add(field);		
+		} else {
+			Box box = Box.createHorizontalBox();
+			box.add(Box.createHorizontalGlue());
+			box.add(label);
+			box.add(Box.createRigidArea(prefDim));
+			box.add(field);
+			container.add(box);		
+		}
 	}
 
 	public static void addSingleItemCentered(JComponent component, Container container) {
-		Box box = Box.createHorizontalBox();
-		box.add(Box.createHorizontalGlue());
+		LayoutManager layout = container.getLayout();
+
 		component.setMaximumSize(component.getPreferredSize());
-		box.add(component);
-		box.add(Box.createHorizontalGlue());
-		container.add(box);
+		
+		if (layout instanceof GridBagLayout) {
+			GridBagLayout gridbag = (GridBagLayout) layout;
+			
+			c.weighty = 0;
+			c.weightx = 1;
+			c.fill = GridBagConstraints.BOTH;
+			c.anchor = GridBagConstraints.CENTER;
+			c.gridwidth = GridBagConstraints.REMAINDER; //end row
+			gridbag.setConstraints(component, c);
+	        container.add(component);		
+		} else {
+			Box box = Box.createHorizontalBox();
+			box.add(Box.createHorizontalGlue());
+			box.add(component);
+			box.add(Box.createHorizontalGlue());
+			container.add(box);
+			container.add(component);		
+		}
+	}
+
+	public static void addLastItem(JComponent component, Container container) {
+		GridBagLayout gridbag = (GridBagLayout) container.getLayout();
+
+		component.setMaximumSize(component.getPreferredSize());
+		
+		c.weighty = 1;
+		c.fill = GridBagConstraints.NONE;
+		c.anchor = GridBagConstraints.NORTH;
+		c.gridwidth = GridBagConstraints.REMAINDER; //end row
+		gridbag.setConstraints(component, c);
+        container.add(component);
 	}
 }

@@ -163,8 +163,12 @@ public class GUITreeLoader extends HandlerBase implements JoeXMLConstants {
 				menu.insertSeparator(menu.getItemCount());
 				return;
 			} else if (E_VERTICAL_STRUT.equals(name)) {
-				Box box = ((AbstractPreferencesPanel) elementStack.get(elementStack.size() - 1)).box;
+				AbstractPreferencesPanel panel = (AbstractPreferencesPanel) elementStack.get(elementStack.size() - 1);
+				JPanel boxPanel = new JPanel();
+				Box box = Box.createVerticalBox();
 				box.add(Box.createVerticalStrut(Integer.parseInt(atts.getValue(A_SIZE))));
+				boxPanel.add(box);
+				AbstractPreferencesPanel.addSingleItemCentered(boxPanel, panel);
 				return;		
 			} else if (E_ASSET.equals(name)) {
 				reg.addText(atts.getValue(A_KEY), atts.getValue(A_VALUE));

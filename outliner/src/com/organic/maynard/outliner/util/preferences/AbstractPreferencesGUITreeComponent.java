@@ -120,7 +120,5 @@ public abstract class AbstractPreferencesGUITreeComponent implements Preferences
 		} else {
 			AbstractPreferencesPanel.addPreferenceItem(getLabelText(), getComponent(), c);
 		}
-		
-		c.add(Box.createVerticalStrut(5));
 	}
 }

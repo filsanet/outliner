@@ -60,21 +60,12 @@ public class PreferencesGUITreeSubContainer extends JPanel implements GUITreeCom
 
 
 	// GUI Components
-	private Box box = Box.createVerticalBox();
 	private static final Insets insets = new Insets(5,5,5,5);
-	
 	
 	// Constructor
 	public PreferencesGUITreeSubContainer() {
-		super.add(box);
+		setLayout(new GridBagLayout());
 	}
-	
-	// Overidden Methods from Container
-	public Component add(Component c) {
-		box.add(c);
-		return c;
-	}
-
 
 	// GUITreeComponent interface
 	private String id = null;
