@@ -44,8 +44,14 @@ import javax.swing.table.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
 public class DocumentAttributesPanel extends AbstractAttributesPanel {
 
+	// Instance Fields
 	private DocumentAttributesView view = null;
 
 
@@ -65,15 +71,17 @@ public class DocumentAttributesPanel extends AbstractAttributesPanel {
 		model.readOnly.clear();
 		clearSelection();
 
-		Iterator it = node.getAttributeKeys();
-		if (it != null) {
-			while (it.hasNext()) {
-				String key = (String) it.next();
-				Object value = node.getAttribute(key);
-				boolean readOnly = node.isReadOnly(key);
-				model.keys.add(key);
-				model.values.add(value);
-				model.readOnly.add(new Boolean(readOnly));
+		if (node != null) {
+			Iterator it = node.getAttributeKeys();
+			if (it != null) {
+				while (it.hasNext()) {
+					String key = (String) it.next();
+					Object value = node.getAttribute(key);
+					boolean readOnly = node.isReadOnly(key);
+					model.keys.add(key);
+					model.values.add(value);
+					model.readOnly.add(new Boolean(readOnly));
+				}
 			}
 		}
 
@@ -88,11 +96,16 @@ public class DocumentAttributesPanel extends AbstractAttributesPanel {
 
 	// Data Modification
 	public void newAttribute(String key, Object value, boolean isReadOnly, AttributeTableModel model) {
+		AttributeContainer node = view.tree;
+
+		if (node == null) {
+			return;
+		}
+		
  		model.keys.add(key);
 		model.values.add(value);
 		model.readOnly.add(new Boolean(isReadOnly));
 
-		AttributeContainer node = view.tree;
 		node.setAttribute(key, value);
 
 		view.tree.getDocument().setModified(true);
@@ -103,6 +116,11 @@ public class DocumentAttributesPanel extends AbstractAttributesPanel {
 	// Delete Attribute
 	public void deleteAttribute(int row, AttributeTableModel model) {
 		AttributeContainer node = view.tree;
+
+		if (node == null) {
+			return;
+		}
+		
 		String key = (String) model.keys.get(row);
 
 		node.removeAttribute(key);
@@ -118,6 +136,11 @@ public class DocumentAttributesPanel extends AbstractAttributesPanel {
 	// Toggle Editability
 	public void toggleEditability(int row, AttributeTableModel model) {
 		AttributeContainer node = view.tree;
+
+		if (node == null) {
+			return;
+		}
+		
 		String key = (String) model.keys.get(row);
 		
 		boolean oldValue = true;
@@ -139,8 +162,13 @@ public class DocumentAttributesPanel extends AbstractAttributesPanel {
 	}
 	
 	// Set Value
-    public void setValueAt(Object value, int row, AttributeTableModel model) {
+	public void setValueAt(Object value, int row, AttributeTableModel model) {
 		AttributeContainer node = view.tree;
+
+		if (node == null) {
+			return;
+		}
+		
 		String key = (String) model.keys.get(row);
 
     	model.values.set(row, value);
@@ -153,11 +181,20 @@ public class DocumentAttributesPanel extends AbstractAttributesPanel {
 
 	// Misc
     protected boolean isCellEditable() {
-    	return true;
+    	if (view.tree == null) {
+    		return false;
+    	} else {
+    		return true;
+    	}
 	}
 
 	protected boolean isCellEditable(int row) {
 		AttributeContainer node = view.tree;
+
+		if (node == null) {
+			return false;
+		}
+		
 		String key = (String) model.keys.get(row);
 
 		if (node.isReadOnly(key)) {

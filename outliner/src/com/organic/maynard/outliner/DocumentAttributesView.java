@@ -34,14 +34,23 @@
  
 package com.organic.maynard.outliner;
 
+import com.organic.maynard.outliner.io.*;
 import com.organic.maynard.outliner.guitree.*;
+import com.organic.maynard.outliner.dom.*;
+import com.organic.maynard.outliner.event.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 import org.xml.sax.*;
 
-public class DocumentAttributesView extends AbstractGUITreeJDialog implements ActionListener {
+/**
+ * @author  $Author$
+ * @version $Revision$, $Date$
+ */
+ 
+public class DocumentAttributesView extends AbstractGUITreeJDialog implements ActionListener, DocumentRepositoryListener {
 	
 	// Constants
 	private static final int INITIAL_WIDTH = 350;
@@ -59,9 +68,11 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 
 	// The Constructors
 	public DocumentAttributesView() {
-		super(false, false, true, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
+		super(false, false, false, INITIAL_WIDTH, INITIAL_HEIGHT, MINIMUM_WIDTH, MINIMUM_HEIGHT);
 		
 		Outliner.documentAttributes = this;
+
+		Outliner.documents.addDocumentRepositoryListener(this);
 	}
 
 	private void initialize() {
@@ -110,6 +121,30 @@ public class DocumentAttributesView extends AbstractGUITreeJDialog implements Ac
 		attPanel.update(this);
 
 		super.show();
+	}
+
+
+	// DocumentRepositoryListener Interface
+	public void documentAdded(DocumentRepositoryEvent e) {}
+	
+	public void documentRemoved(DocumentRepositoryEvent e) {}
+	
+	public void changedMostRecentDocumentTouched(DocumentRepositoryEvent e) {
+		calculateEnabledState(e.getDocument());
+	}
+
+	private void calculateEnabledState(Document doc) {
+		if (doc == null) {
+			this.tree = null;
+			if (this.isVisible()) {
+				attPanel.update(this);
+			}
+		} else if (doc.getTree() != this.tree) {
+			this.tree = doc.getTree();
+			if (this.isVisible()) {
+				attPanel.update(this);
+			}
+		}
 	}
 
 
