@@ -41,11 +41,11 @@ public class VectorTools {
 	
 	
 	// Class Methods
-	public static Vector enumerationToVector(Enumeration enum) {
+	public static Vector enumerationToVector(Enumeration en) {
 		Vector v = new Vector();
 		
-		while (enum.hasMoreElements()) {
-			v.add(enum.nextElement());
+		while (en.hasMoreElements()) {
+			v.add(en.nextElement());
 		}
 		
 		return v;

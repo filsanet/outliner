@@ -182,9 +182,9 @@ public class XMLRPCMacro extends MacroImpl {
 			
 			buf.append("hashtable:\n");
 			
-			Enumeration enum = h.keys();
-			while (enum.hasMoreElements()) {
-				Object key = enum.nextElement();
+			Enumeration en = h.keys();
+			while (en.hasMoreElements()) {
+				Object key = en.nextElement();
 				Object value = h.get(key);
 				convertObjectToString(key, buf, depth + 1);
 				convertObjectToString(value, buf, depth + 2);
