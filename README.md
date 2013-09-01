@@ -20,3 +20,10 @@ Used this excellent script to convert SF CVS to git.
 http://www.pete-woods.com/blog/convertingacvsrepositoryonsourceforgetoagitrepository
 
 The original Sourceforge code is in the `sourceforge-copy` branch
+
+Other Forks
+-----------
+
+- [tiny outliner](https://code.google.com/p/tiny-outliner/source/list) - Forked 2010, no releases
+- [JOutliner](https://github.com/181dev/JOutliner/) - Forked 2013, Windows.EXE release via L4J
+
